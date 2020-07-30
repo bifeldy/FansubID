@@ -31,18 +31,23 @@ export class LeftMenuComponent implements OnInit {
     {
       name: 'Anime List',
       link: '/anime',
-      icon: 'tv'
+      icon: 'live_tv'
+    },
+    {
+      name: 'Drama List',
+      link: '/drama',
+      icon: 'movie_filter'
     },
     {
       name: 'Fansub List',
       link: '/fansub',
-      icon: 'subtitles'
+      icon: 'closed_caption'
     }
   ];
 
   public miscMenus: Menu[] = [
     {
-      name: 'Tentang Kami',
+      name: 'About',
       link: '/about',
       icon: 'info'
     }

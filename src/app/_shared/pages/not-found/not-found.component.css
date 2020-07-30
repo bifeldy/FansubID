@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Knewave');
+
+h1 {
+  color: red;
+  font-family: 'Knewave', cursive;
+  text-shadow: 5px 5px whitesmoke;
+  font-size: xx-large;
+}
+
+.not-found-banner {
+  height: 100%;
+  background-size: cover;
+  background-position: 75% 50%;
+  background-image: url('/assets/img/404-not-found.jpg');
+}

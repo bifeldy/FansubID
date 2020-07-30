@@ -8,9 +8,9 @@ const routes: Routes = [
   //   loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
   //   canActivate: [AuthGuardService],
   //   data: {
-  //     title: 'Admin Panel',
+  //     title: 'Admin Panel Management',
   //     description: 'Halaman Khusus Untuk Administrasi',
-  //     keywords: 'Blockchain E-Voting',
+  //     keywords: 'Admin Fansub Database',
   //     roles: [Role.Admin]
   //   }
   // },
@@ -18,7 +18,7 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule),
     data: {
-      title: 'Home Page',
+      title: 'Beranda',
       description: 'Halaman Beranda',
       keywords: 'Beranda',
       roles: []
@@ -28,9 +28,9 @@ const routes: Routes = [
     path: 'anime',
     loadChildren: () => import('./_pages/anime/anime.module').then(m => m.AnimeModule),
     data: {
-      title: 'Anime Page',
-      description: 'Halaman Anime',
-      keywords: 'Anime',
+      title: 'Anime List',
+      description: 'Halaman Daftar Isi Anime Yang Baru Saja Rilis Subtitle Indonesianya',
+      keywords: 'Anime Subtitle Indonesia',
       roles: []
     }
   },
@@ -38,9 +38,9 @@ const routes: Routes = [
     path: 'fansub',
     loadChildren: () => import('./_pages/fansub/fansub.module').then(m => m.FansubModule),
     data: {
-      title: 'Fansub Page',
-      description: 'Halaman Fansub',
-      keywords: 'Fansub',
+      title: 'Fansub List',
+      description: 'Halaman Daftar Isi Seluruh Fansub Indonesia',
+      keywords: 'Fansub Indonesia',
       roles: []
     }
   },
@@ -48,16 +48,25 @@ const routes: Routes = [
     path: 'about',
     loadChildren: () => import('./_pages/about/about.module').then(m => m.AboutModule),
     data: {
-      title: 'About Page',
+      title: 'About',
       description: 'Halaman Mengenai Website',
       keywords: 'About',
       roles: []
     }
   },
   {
+    path: 'error',
+    loadChildren: () => import('./_shared/pages/not-found/not-found.module').then(m => m.NotFoundModule),
+    data: {
+      title: 'Error - 404',
+      description: 'Whoops! Halaman Tidak Ditemukan',
+      keywords: '404 - Not Found',
+      roles: []
+    }
+  },
+  {
     path: '**',
-    redirectTo: 'home'
-    // loadChildren: () => import('./not-found/not-found.module').then(m => m.NotFoundModule)
+    redirectTo: 'error'
   }
 ];
 

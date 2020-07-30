@@ -1,11 +1,11 @@
 <!-- Header -->
-<app-header [sidenav]="leftSidenav"></app-header>
+<app-header [sidenav]="leftSideNav"></app-header>
 
 <!-- Side Menu Drawer & Content -->
 <mat-sidenav-container class="sidenav-container">
 
   <!-- Side Menu -->
-  <mat-sidenav #leftSidenav mode="side" opened [ngStyle]="{
+  <mat-sidenav #leftSideNav mode="side" opened [ngStyle]="{
     'background-image': 'url(/assets/img/bg-side-menu.png)'
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-left-menu></app-left-menu>
@@ -13,13 +13,11 @@
 
   <!-- Main Content -->
   <!-- <mat-sidenav-content [@onMainContentChange]="onSideNavChange ? 'open': 'close'"> -->
-  <mat-sidenav-content style="background-image: url(/assets/img/bg-main.jpg); background-position: bottom right; background-size: 128px; background-repeat: no-repeat;">
+  <mat-sidenav-content style="background-image: url(/assets/img/bg-main.png); background-position: bottom right; background-size: 128px; background-repeat: no-repeat;">
 
     <!-- Routing Content -->
     <div class="main_content">
-      <div fxLayout="column" fxLayoutAlign="space-around center">
-        <router-outlet></router-outlet>
-      </div>
+      <router-outlet></router-outlet>
     </div>
 
   </mat-sidenav-content>
