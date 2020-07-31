@@ -17,7 +17,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AnimeListComponent, AnimeDetailComponent],
+  declarations: [
+    AnimeListComponent,
+    AnimeDetailComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes)
