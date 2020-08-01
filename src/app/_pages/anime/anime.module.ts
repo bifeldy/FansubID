@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
+import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
 
 import { AnimeListComponent } from './anime-list/anime-list.component';
 import { AnimeDetailComponent } from './anime-detail/anime-detail.component';
@@ -14,7 +15,7 @@ const routes: Routes = [
     component: AnimeListComponent
   },
   {
-    path: ':id',
+    path: ':animeId',
     component: AnimeDetailComponent
   }
 ];
@@ -28,7 +29,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedMaterialModule,
-    MaterialTabModule
+    MaterialTabModule,
+    MaterialExpansionPanelModule
   ]
 })
 export class AnimeModule { }

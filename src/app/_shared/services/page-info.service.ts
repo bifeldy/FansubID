@@ -37,10 +37,10 @@ export class PageInfoService {
   }
 
   updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string): void {
-    this.titleService.setTitle(`${this.siteName} | ${newTitle}`);
-    this.meta.updateTag({ name: 'og:title', content: `${this.siteName} | ${newTitle}` });
-    this.meta.updateTag({ name: 'description', content: `${this.siteName} | ${newDescription}` });
-    this.meta.updateTag({ name: 'og:description', content: `${this.siteName} | ${newDescription}` });
-    this.meta.updateTag({ name: 'keywords', content: `${this.siteName} | ${newKeywords}` });
+    this.titleService.setTitle(`${newTitle}`);
+    this.meta.updateTag({ name: 'og:title', content: `${newTitle}` });
+    this.meta.updateTag({ name: 'description', content: `${newDescription}` });
+    this.meta.updateTag({ name: 'og:description', content: `${newDescription}` });
+    this.meta.updateTag({ name: 'keywords', content: `${newKeywords}` });
   }
 }

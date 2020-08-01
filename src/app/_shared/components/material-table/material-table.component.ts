@@ -10,21 +10,20 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class MaterialTableComponent implements OnInit {
 
-  @Input() data: any;
-
-  displayedColumns: string[] = ['createdAt', 'title', 'description', 'author'];
-  dataSource: MatTableDataSource<any>;
+  @Input() tableDataRow: any;
+  @Input() tableDataColumn: any;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  dataSource: MatTableDataSource<any>;
   rippleDisabled = null;
 
   constructor() {
   }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.data);
+    this.dataSource = new MatTableDataSource(this.tableDataRow);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.rippleDisabled = (window.innerWidth >= 992) ? true : false;

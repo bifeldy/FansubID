@@ -1,5 +1,5 @@
 <!-- Input Form Filter -->
-<mat-form-field hintLabel="Judul / Deskripsi / Author / etc." class="px-3 mb-3">
+<mat-form-field hintLabel="Judul / Author / etc." class="px-3 mb-3">
   <mat-label>Filter Dan Pencarian</mat-label>
   <input matInput #input placeholder="Ex. Bifeldy" (keyup)="applyFilter($event)" />
   <mat-icon matSuffix>search</mat-icon>
@@ -8,36 +8,18 @@
 
 <!-- Table -->
 <table mat-table [dataSource]="dataSource" matSort>
-  <ng-container matColumnDef="createdAt">
+  <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      <h4 class="m-0" [style.color]="'#ff4081'">Uploaded</h4>
+      <h4 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h4>
     </th>
-    <td mat-cell *matCellDef="let row"> {{ row.createdAt }} </td>
-  </ng-container>
-  <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      <h4 class="m-0" [style.color]="'#ff4081'">Title</h4>
-    </th>
-    <td mat-cell *matCellDef="let row"> {{ row.title }} </td>
-  </ng-container>
-  <ng-container matColumnDef="description">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      <h4 class="m-0" [style.color]="'#ff4081'">Description</h4>
-    </th>
-    <td mat-cell *matCellDef="let row"> {{ row.description }}</td>
-  </ng-container>
-  <ng-container matColumnDef="author">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      <h4 class="m-0" [style.color]="'#ff4081'">Author</h4>
-    </th>
-    <td mat-cell *matCellDef="let row" [style.color]="'#3f51b5'">
-      <img matListAvatar src="/favicon.ico" style="width: 32px;" />
-      {{ row.author }}
+    <td mat-cell *matCellDef="let row">
+      <img matListAvatar src="/favicon.ico" style="width: 32px;" *ngIf="tdc == 'Pemilik'" />
+      {{ row[tdc] }}
     </td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>  
+  <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>  
   <tr mat-row matRipple [matRippleDisabled]="rippleDisabled" (window:resize)="onResize($event)"
-    *matRowDef="let row; columns: displayedColumns;" (click)="openData(this.row)"></tr>
+    *matRowDef="let row; columns: tableDataColumn;" (click)="openData(this.row)"></tr>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">Tidak Ada Data Yang Sesuai :: "{{ input.value }}"</td>
   </tr>

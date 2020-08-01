@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { onSideNavChange, animateText } from '../../animations/animations';
 
-import { LeftMenuService } from '../../services/left-menu.service';
-
 import { Menu } from '../../models/Menu';
+
+import { LeftMenuService } from '../../services/left-menu.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-left-menu',
@@ -13,6 +14,8 @@ import { Menu } from '../../models/Menu';
   animations: [onSideNavChange, animateText]
 })
 export class LeftMenuComponent implements OnInit {
+
+  currentUser = null;
 
   public mainMenus: Menu[] = [
     {
@@ -46,11 +49,15 @@ export class LeftMenuComponent implements OnInit {
   ];
 
   constructor(
-    private lms: LeftMenuService
+    private lms: LeftMenuService,
+    private as: AuthService
   ) {
   }
 
   ngOnInit(): void {
+    this.as.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
   }
 
   get sideNavExpanded(): any {

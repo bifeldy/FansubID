@@ -1,4 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { GlobalService } from 'src/app/_shared/services/global.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -6,6 +8,47 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
   styleUrls: ['./fansub-detail.component.css']
 })
 export class FansubDetailComponent implements OnInit {
+
+  fansubId = 0;
+
+  panelData = [];
+
+  tabData = [
+    {
+      name: 'Proyek Anime',
+      icon: 'live_tv',
+      type: 'grid',
+      data: [
+        { title: 'Anime 01 Long Title' },
+        { title: 'Anime 02 Long Title' },
+        { title: 'Anime 03 Long Title' },
+        { title: 'Anime 04 Long Title' },
+        { title: 'Anime 05 Long Title' },
+        { title: 'Anime 06 Long Title' },
+        { title: 'Anime 07 Long Title' },
+        { title: 'Anime 08 Long Title' },
+        { title: 'Anime 09 Long Title' },
+        { title: 'Anime 10 Long Title' },
+      ]
+    },
+    {
+      name: 'Berkas Terkait',
+      icon: 'file_copy',
+      type: 'table',
+      data: {
+        column: ['Tanggal Upload', 'Nama File', 'Pemilik'],
+        row: [
+          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 01 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' },
+          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 02 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' },
+          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 03 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' },
+          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 04 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' },
+          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 05 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' }
+        ]
+      }
+    }
+  ];
+
+  /** TODO: */
 
   banner = 'https://db.silveryasha.web.id/upload/fansub/logo/bac9f307efff2768dac6d978e1bc69ab.jpg';
 
@@ -19,56 +62,19 @@ export class FansubDetailComponent implements OnInit {
     { id_tag: 3, name: 'Sering Delay', color: 'warn' }
   ];
 
-  tabData = [
-    {
-      name: 'Proyek Anime',
-      icon: 'live_tv',
-      type: 'grid',
-      data: [
-        { title: 'Anime 01 Long Title', },
-        { title: 'Anime 02 Long Title', },
-        { title: 'Anime 03 Long Title', },
-        { title: 'Anime 04 Long Title', },
-        { title: 'Anime 05 Long Title', },
-        { title: 'Anime 06 Long Title', },
-        { title: 'Anime 07 Long Title', },
-        { title: 'Anime 08 Long Title', },
-        { title: 'Anime 09 Long Title', },
-        { title: 'Anime 10 Long Title', },
-        { title: 'Anime 11 Long Title', },
-        { title: 'Anime 12 Long Title', },
-        { title: 'Anime 13 Long Title', },
-        { title: 'Anime 14 Long Title', },
-        { title: 'Anime 15 Long Title', },
-        { title: 'Anime 16 Long Title', },
-        { title: 'Anime 17 Long Title', },
-        { title: 'Anime 18 Long Title', },
-        { title: 'Anime 19 Long Title', },
-        { title: 'Anime 20 Long Title', }
-      ]
-    },
-    {
-      name: 'Berkas Terkait',
-      icon: 'file_copy',
-      type: 'table',
-      data: [
-        { title: 'Berkas_01.mkv', description: 'Berkas Description 01 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_02.mkv', description: 'Berkas Description 02 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_03.mkv', description: 'Berkas Description 03 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_04.mkv', description: 'Berkas Description 04 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_05.mkv', description: 'Berkas Description 05 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_06.mkv', description: 'Berkas Description 06 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_07.mkv', description: 'Berkas Description 07 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_08.mkv', description: 'Berkas Description 08 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_09.mkv', description: 'Berkas Description 09 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' },
-        { title: 'Berkas_10.mkv', description: 'Berkas Description 10 With Very Long Text ...', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' }
-      ]
-    }
-  ];
+  /** TODO: */
 
-  constructor() { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private gs: GlobalService
+  ) { }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe(params => {
+      this.fansubId = params.fansubId;
+      this.gs.log('[FANSUB_DETAIL_PAGE]', this.fansubId);
+      this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.description });
+    });
   }
 
   openWeb(linkAddress: string): void {

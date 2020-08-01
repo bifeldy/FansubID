@@ -18,24 +18,51 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
 
   gridListBreakpoint = 1;
 
-  @Input() tabData = [
-    {
-      name: 'Nama Tab 1',
-      icon: 'subject',
-      type: 'grid',
-      data: [
-        { title: 'Data Title 01', description: 'Data Description 01' },
-        { title: 'Data Title 02', description: 'Data Description 02' }
-      ]
-    },
-    {
-      name: 'Nama Tab 2',
-      icon: 'subject',
-      type: 'list',
-      data: [
-        { title: 'Berkas Title 01', description: 'Berkas Description 01', author: 'Bifeldy', createdAt: '12:34:56 AM JST+9' }
-      ]
-    }
+  @Input() tabData: any = [
+    // {
+    //   name: 'Nama Tab 1',
+    //   icon: 'subject',
+    //   type: 'grid', // list & grid
+    //   data: [
+    //     { title: 'Data Title 01', description: 'Data Description 01' },
+    //     { title: 'Data Title 02', description: 'Data Description 02' }
+    //   ]
+    // },
+    // {
+    //   name: 'Nama Tab 2',
+    //   icon: 'subject',
+    //   type: 'table',
+    //   data: {
+    //     column: ['Tanggal Upload', 'Nama File', 'Pemilik'],
+    //     row: [
+    //       {
+    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 01 [BD][1080p].mkv',
+    //         Pemilik: 'Bifeldy',
+    //         TanggalUpload: '12:34:56 AM JST+9'
+    //       },
+    //       {
+    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 02 [BD][1080p].mkv',
+    //         Pemilik: 'Bifeldy',
+    //         TanggalUpload: '12:34:56 AM JST+9'
+    //       },
+    //       {
+    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 03 [BD][1080p].mkv',
+    //         Pemilik: 'Bifeldy',
+    //         TanggalUpload: '12:34:56 AM JST+9'
+    //       },
+    //       {
+    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 04 [BD][1080p].mkv',
+    //         Pemilik: 'Bifeldy',
+    //         TanggalUpload: '12:34:56 AM JST+9'
+    //       },
+    //       {
+    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 05 [BD][1080p].mkv',
+    //         Pemilik: 'Bifeldy',
+    //         TanggalUpload: '12:34:56 AM JST+9'
+    //       }
+    //     ]
+    //   }
+    // }
   ];
 
   constructor() { }

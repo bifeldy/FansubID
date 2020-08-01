@@ -1,5 +1,5 @@
 .sidenav_container {
-  min-width: 256px;
+  min-width: 64px !important;
   max-width: 1024px;
   height: calc(100vh - 88px);
 }

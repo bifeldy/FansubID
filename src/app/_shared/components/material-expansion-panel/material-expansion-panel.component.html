@@ -1,0 +1,18 @@
+<mat-accordion class="example-headers-align" multi (window:resize)="onResize($event)" *ngIf="panelData.length > 0">
+  <mat-expansion-panel *ngFor="let d of panelData; first as isFirst" [expanded]="defaultFirstOpened && isFirst">
+
+    <!-- Header -->
+    <mat-expansion-panel-header>
+      <mat-panel-title class="font-weight-bold">{{ d.title }}</mat-panel-title>
+      <mat-panel-description>
+        <mat-icon class="ml-auto">{{ d.icon }}</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <!-- Content -->
+    <ng-template matExpansionPanelContent>
+      <h3 class="m-0 text-justify">{{ d.text }}</h3>
+    </ng-template>
+
+  </mat-expansion-panel>
+</mat-accordion>

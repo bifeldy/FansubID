@@ -8,7 +8,7 @@
       </ng-template>
       <div class="p-3">
         <mat-selection-list [multiple]="false" class="p-0">
-          <mat-grid-list [cols]="gridListBreakpoint" rowHeight="2:0.5" (window:resize)="onResize($event)">
+          <mat-grid-list [cols]="gridListBreakpoint" rowHeight="5:1" (window:resize)="onResize($event)">
             <mat-grid-tile *ngFor="let d of tab.data">
               <mat-list-option (click)="openData(d)">
                 <img matListAvatar src="/favicon.ico" class="ml-3" />
@@ -41,7 +41,7 @@
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3">
-        <app-material-table [data]="tab.data"></app-material-table>
+        <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row"></app-material-table>
       </div>
     </div>
   </mat-tab>

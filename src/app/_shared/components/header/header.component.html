@@ -4,14 +4,14 @@
   <button mat-icon-button (click)="toggleSideNav()">
     <mat-icon>menu</mat-icon>
   </button>
-  <span class="logo-title" style="margin-left: 1rem;">
+  <span matLine class="logo-title text-truncate" style="margin-left: 1rem;">
     <!-- <img src="/favicon.ico" width="32px" /> -->
     {{ this.pi.getTitle }}
   </span>
 
   <span class="spacer"></span>
 
-  <button mat-icon-button (click)="openDiscord()">
+  <button mat-icon-button class="ml-3" (click)="openDiscord()">
     <img src="/assets/img/discord-logo.png" width="32px" />
   </button>
 

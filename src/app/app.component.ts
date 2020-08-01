@@ -5,8 +5,11 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 
 import { onMainContentChange } from './_shared/animations/animations';
 
+import { environment } from '../environments/environment';
+
 import { LeftMenuService } from './_shared/services/left-menu.service';
 import { PageInfoService } from './_shared/services/page-info.service';
+import { AuthService } from './_shared/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +25,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private pi: PageInfoService,
-    private lms: LeftMenuService
+    private lms: LeftMenuService,
+    private as: AuthService
   ) {
   }
 
@@ -42,7 +46,12 @@ export class AppComponent implements OnInit {
       this.pi.updatePageMetaData(event.title, event.description, event.keywords);
       this.pi.updatePageData(event.title, event.description, event.keywords);
       this.updateBackgroundImage();
+      document.querySelector('mat-sidenav-content').scroll({top: 0, left: 10, behavior: 'smooth'});
     });
+    const token = localStorage.getItem(environment.tokenName);
+    if (token) {
+      this.as.verify(token).subscribe(success => {}, error => this.as.logout());
+    }
   }
 
   updateBackgroundImage(): void {
