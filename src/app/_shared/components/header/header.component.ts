@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 
 import { PageInfoService } from '../../services/page-info.service';
+import { LeftMenuService } from '../../services/left-menu.service';
 
 @Component({
   selector: 'app-header',
@@ -10,15 +11,18 @@ import { PageInfoService } from '../../services/page-info.service';
 })
 export class HeaderComponent implements OnInit {
 
-  @Input() sidenav: MatSidenav;
-
   discordUrl = 'https://discord.gg/xGWdExk';
 
   constructor(
+    private lms: LeftMenuService,
     public pi: PageInfoService
   ) { }
 
   ngOnInit(): void {
+  }
+
+  toggleSideNav(): void {
+    this.lms.onSideNavToggle();
   }
 
   openDiscord(): void {

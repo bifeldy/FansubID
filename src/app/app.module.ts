@@ -1,11 +1,14 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
+import { NgModule, Injectable } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 
-import { SharedMaterialModule } from './_shared/shared-material.module';
+import { SharedMaterialModule } from './_shared/helpers/shared-material.module';
+import { MyHammerConfig } from './_shared/helpers/my-hammer.config';
 
 import { LeftMenuService } from './_shared/services/left-menu.service';
 
@@ -25,11 +28,14 @@ import { FooterComponent } from './_shared/components/footer/footer.component';
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     SharedMaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    HammerModule
   ],
   providers: [
-    LeftMenuService
+    LeftMenuService,
+    { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig }
   ],
   bootstrap: [AppComponent]
 })

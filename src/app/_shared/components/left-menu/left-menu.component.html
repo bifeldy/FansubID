@@ -1,27 +1,35 @@
 <!-- Left Side Menu -->
-<div class="sidenav_container" [@onSideNavChange]="sideNavState ? 'open' : 'close'"
+<div class="sidenav_container" [@onSideNavChange]="sideNavExpanded ? 'open' : 'close'"
   (mouseenter)="onMouseHoverIn()" (mouseleave)="onMouseHoverOut()" [ngStyle]="{
-    'overflow-y': sideNavState ? 'auto' : 'hidden'
+    'overflow-y': sideNavExpanded ? 'auto' : 'hidden'
   }">
 
   <div fxLayout="column">
 
     <mat-nav-list>
       <a mat-list-item routerLink="/profile" routerLinkActive="side-menu-link-active" (click)="onMouseHoverOut()">
-        <img class="jim" src="/assets/img/favicon.png" />
+        <img class="jim" src="/favicon.ico" />
         <span [@animateText]="linkText ? 'show' : 'hide'"  style="padding-left: 1.2em;">
           Basilius Bias Astho Christyono <br /> bifeldy@gmail.com 
         </span>
       </a>
     </mat-nav-list>
-
-    <mat-divider style="margin-top: 8px;"></mat-divider>
-
     <mat-nav-list>
-      <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of userMenus" routerLinkActive="side-menu-link-active"
-        (click)="onMouseHoverOut()">
-        <mat-icon style="padding-left: 0.2em;">{{ menu?.icon }}</mat-icon>
-        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em;">{{ menu?.name }} </span>
+      <a mat-list-item (click)="logout()">
+        <mat-icon style="padding-left: 0.2em;">power_settings_new</mat-icon>
+        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em;">Keluar</span>
+      </a>
+    </mat-nav-list>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/login" (click)="onMouseHoverOut()" routerLinkActive="side-menu-link-active">
+        <mat-icon style="padding-left: 0.2em;">login</mat-icon>
+        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em;">Masuk</span>
+      </a>
+    </mat-nav-list>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/register" (click)="onMouseHoverOut()" routerLinkActive="side-menu-link-active">
+        <mat-icon style="padding-left: 0.2em;">group_add</mat-icon>
+        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em;">Daftar</span>
       </a>
     </mat-nav-list>
 
@@ -31,7 +39,7 @@
       <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of mainMenus" routerLinkActive="side-menu-link-active"
         (click)="onMouseHoverOut()">
         <mat-icon style="padding-left: 0.2em;">{{ menu?.icon }}</mat-icon>
-        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em;">{{ menu?.name }} </span>
+        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em;">{{ menu?.name }}</span>
       </a>
     </mat-nav-list>
 
@@ -41,7 +49,7 @@
       <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of miscMenus" routerLinkActive="side-menu-link-active"
         (click)="onMouseHoverOut()">
         <mat-icon style="padding-left: 0.2em;">{{ menu?.icon }}</mat-icon>
-        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em;">{{ menu?.name }} </span>
+        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em;">{{ menu?.name }}</span>
       </a>
     </mat-nav-list>
 

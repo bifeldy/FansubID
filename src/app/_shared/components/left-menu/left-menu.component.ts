@@ -14,34 +14,26 @@ import { Menu } from '../../models/Menu';
 })
 export class LeftMenuComponent implements OnInit {
 
-  public sideNavState = false;
-  public linkText = false;
-
-  sideMoveTimeout = 0;
-
-  public userMenus: Menu[] = [
+  public mainMenus: Menu[] = [
     {
       name: 'Beranda',
       link: '/home',
-      icon: 'home'
-    }
-  ];
-
-  public mainMenus: Menu[] = [
+      icon: 'dashboard'
+    },
+    {
+      name: 'Katalog Fansub',
+      link: '/fansub',
+      icon: 'closed_caption'
+    },
     {
       name: 'Anime List',
       link: '/anime',
       icon: 'live_tv'
     },
     {
-      name: 'Drama List',
+      name: 'Film & Drama',
       link: '/drama',
       icon: 'movie_filter'
-    },
-    {
-      name: 'Fansub List',
-      link: '/fansub',
-      icon: 'closed_caption'
     }
   ];
 
@@ -61,31 +53,31 @@ export class LeftMenuComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  get sideNavExpanded(): any {
+    return this.lms.sideNavExpanded;
+  }
+
+  get linkText(): any {
+    return this.lms.linkText;
+  }
+
   changeSideNavState(): void {
-    clearTimeout(this.sideMoveTimeout);
-    this.sideMoveTimeout = setTimeout(() => {
-      this.linkText = this.sideNavState;
-    }, 200);
-    this.lms.sideNavState$.next(this.sideNavState);
+    this.lms.changeSideNavState();
   }
 
   onSideNavToggle(): void {
-    this.sideNavState = !this.sideNavState;
-    this.changeSideNavState();
+    this.lms.changeSideNavState();
   }
 
   onMouseHoverIn(): void {
-    if (this.sideNavState === false) {
-      this.sideNavState = true;
-      this.changeSideNavState();
-    }
+    this.lms.onMouseHoverIn();
   }
 
   onMouseHoverOut(): void {
-    if (this.sideNavState === true) {
-      this.sideNavState = false;
-      this.changeSideNavState();
-    }
+    this.lms.onMouseHoverOut();
+  }
+
+  logout(): void {
   }
 
 }

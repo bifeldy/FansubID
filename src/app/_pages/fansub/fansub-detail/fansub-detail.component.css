@@ -1,0 +1,34 @@
+.fansub-banner {
+  height: 128px;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(10px) brightness(100%);
+  opacity: 0.5;
+}
+
+.fansub-banner-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.fansub-banner-2 {
+  position: absolute;
+  top: 128px;
+  left: 0;
+}
+
+.fansub-info {
+  position: relative;
+  height: 256px;
+  z-index: 1;
+}
+
+.fansub-button {
+  z-index: 1;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}

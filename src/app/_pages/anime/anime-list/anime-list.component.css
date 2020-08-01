@@ -2,5 +2,6 @@
   height: 128px;
   width: 100%;
   background-size: contain;
-  background-position: bottom center;
+  background-position: 75% 50%;
+  background-repeat: repeat-x;
 }

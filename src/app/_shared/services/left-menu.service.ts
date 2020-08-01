@@ -1,13 +1,41 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeftMenuService {
 
-  // With this subject you can save the sidenav state and consumed later into other pages.
-  public sideNavState$: Subject<boolean> = new Subject();
+  sideNavExpanded = false;
 
-  constructor() { }
+  linkText = false;
+  sideMoveTimeout = 0;
+
+  constructor() {
+  }
+
+  changeSideNavState(): void {
+    clearTimeout(this.sideMoveTimeout);
+    this.sideMoveTimeout = setTimeout(() => {
+      this.linkText = this.sideNavExpanded;
+    }, 200);
+  }
+
+  onSideNavToggle(): void {
+    this.sideNavExpanded = !this.sideNavExpanded;
+    this.changeSideNavState();
+  }
+
+  onMouseHoverIn(): void {
+    if (this.sideNavExpanded === false) {
+      this.sideNavExpanded = true;
+      this.changeSideNavState();
+    }
+  }
+
+  onMouseHoverOut(): void {
+    if (this.sideNavExpanded === true) {
+      this.sideNavExpanded = false;
+      this.changeSideNavState();
+    }
+  }
 }

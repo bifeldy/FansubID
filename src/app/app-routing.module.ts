@@ -38,7 +38,7 @@ const routes: Routes = [
     path: 'fansub',
     loadChildren: () => import('./_pages/fansub/fansub.module').then(m => m.FansubModule),
     data: {
-      title: 'Fansub List',
+      title: 'Katalog Fansub',
       description: 'Halaman Daftar Isi Seluruh Fansub Indonesia',
       keywords: 'Fansub Indonesia',
       roles: []

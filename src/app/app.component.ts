@@ -16,7 +16,7 @@ import { PageInfoService } from './_shared/services/page-info.service';
 })
 export class AppComponent implements OnInit {
 
-  public onSideNavChange: boolean;
+  selectedBackgroundImage = '';
 
   constructor(
     private router: Router,
@@ -24,9 +24,6 @@ export class AppComponent implements OnInit {
     private pi: PageInfoService,
     private lms: LeftMenuService
   ) {
-    this.lms.sideNavState$.subscribe(res => {
-      this.onSideNavChange = res;
-    });
   }
 
   ngOnInit(): void {
@@ -44,7 +41,22 @@ export class AppComponent implements OnInit {
     .subscribe((event) => {
       this.pi.updatePageMetaData(event.title, event.description, event.keywords);
       this.pi.updatePageData(event.title, event.description, event.keywords);
+      this.updateBackgroundImage();
     });
+  }
+
+  updateBackgroundImage(): void {
+    switch (this.router.url.substr(1).split('/').length) {
+      case 1:
+        this.selectedBackgroundImage = `/assets/img/router/bg-${this.router.url.substr(1).split('/')[0]}.png`;
+        break;
+      default:
+        this.selectedBackgroundImage = ``;
+    }
+  }
+
+  closeSideNav(): void {
+    this.lms.onMouseHoverOut();
   }
 
 }

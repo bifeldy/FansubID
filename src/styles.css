@@ -1,7 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -9,13 +15,21 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 ::-webkit-scrollbar-track {
-  background: #20ff6b;
+  background: rgba(255, 64, 129, 0.25);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #fbce78;
+  background: #ff4081;
 }
 
 .spacer {
   flex: 1 1 auto;
+}
+
+.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+  display: none !important;
+}
+
+.mat-list-item-content.mat-list-item-content-reverse {
+  padding: 0 !important;
 }

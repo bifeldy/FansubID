@@ -12,8 +12,9 @@
 }
 
 .side-menu-link-active {
-  background: rgba(63,81,181,.15);
-  color: #3f51b5;
+  background: rgba(255, 64, 129, 0.15);
+  color: #ff4081;
+  font-weight: bold;
 }
 
 .mat-list-item-content {

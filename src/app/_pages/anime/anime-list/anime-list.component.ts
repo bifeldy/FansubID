@@ -15,6 +15,8 @@ export class AnimeListComponent implements OnInit {
   ];
 
   currentMonth = null;
+  currentYear = null;
+
   selectedSeasonName = null;
   selectedSeasonBannerImg = null;
 
@@ -23,10 +25,11 @@ export class AnimeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentMonth = new Date().getMonth() + 1;
-    this.changeSeason(this.currentMonth);
+    this.currentYear = new Date().getFullYear();
+    this.changeSeasonBannerImage(this.currentMonth);
   }
 
-  changeSeason(monthNumberOrSeasonName: any): void {
+  changeSeasonBannerImage(monthNumberOrSeasonName: any): void {
     if (typeof monthNumberOrSeasonName === 'number') {
       this.selectedSeasonName = this.seasonalBanner.find(sB => sB.id === Math.ceil(monthNumberOrSeasonName / 3)).name;
     }

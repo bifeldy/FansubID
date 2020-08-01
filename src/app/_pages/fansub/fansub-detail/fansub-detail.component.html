@@ -1,1 +1,49 @@
-<p>fansub-detail works!</p>
+<div class="container">
+  <div class="fansub-info align-items-center">
+    <div class="media row py-3 px-2">
+      <div class="col-md-5 col-xl-3 px-3">
+        <div class="row sticky-top pt-3">
+          <div class="col-12">
+            <img class="border w-100" [src]="banner" />
+          </div>
+          <div class="col-12 text-center pt-3">
+            <button mat-stroked-button class="w-100" color="accent">
+              <mat-icon>calendar_today</mat-icon>
+              &nbsp; Berdiri Sejak Tahun 2013
+            </button>
+          </div>
+          <div class="col-12 text-center pt-3">
+            <button mat-stroked-button class="w-100" color="primary">
+              <mat-icon>facebook</mat-icon>
+              Facebook Fanpage
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7 col-xl-9 pt-3">
+        <div class="row py-3 px-0 mt-auto">
+          <h1 class="m-0">
+            <b>{{ title }}</b>
+          </h1>
+        </div>
+        <div class="row py-3">
+          <mat-chip-list>
+            <mat-chip *ngFor="let t of tags" color="{{ t.color }}" selected>{{ t.name }}</mat-chip>
+          </mat-chip-list>
+        </div>
+        <div class="row py-3">
+          <h3 class="m-0 text-justify">{{ description }}</h3>
+        </div>
+        <div class="row py-3">
+          <div class="col-12">
+            <app-material-tab [tabData]="tabData"></app-material-tab>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fansub-banner fansub-banner-1 align-items-center" [style.background-image]="'url(' + banner + ')'"></div>
+  <div class="fansub-banner fansub-banner-2 align-items-center"></div>
+  <button (click)="openWeb(url)" mat-fab class="mr-3 mb-5 fansub-button"><mat-icon>web</mat-icon>
+  </button>
+</div>

@@ -1,5 +1,5 @@
 <!-- Header -->
-<app-header [sidenav]="leftSideNav"></app-header>
+<app-header></app-header>
 
 <!-- Side Menu Drawer & Content -->
 <mat-sidenav-container class="sidenav-container">
@@ -12,8 +12,8 @@
   </mat-sidenav>
 
   <!-- Main Content -->
-  <!-- <mat-sidenav-content [@onMainContentChange]="onSideNavChange ? 'open': 'close'"> -->
-  <mat-sidenav-content style="background-image: url(/assets/img/bg-main.png); background-position: bottom right; background-size: 128px; background-repeat: no-repeat;">
+  <mat-sidenav-content style="background-position: bottom right; background-size: 128px; background-repeat: no-repeat;"
+    [style.background-image]="'url(' + selectedBackgroundImage + ')'" (click)="closeSideNav()">
 
     <!-- Routing Content -->
     <div class="main_content">
