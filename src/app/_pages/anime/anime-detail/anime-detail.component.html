@@ -27,13 +27,14 @@
             <img class="border w-100" [src]="banner" />
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="primary">
+            <button mat-stroked-button class="w-100" color="primary" matTooltip="Lihat Semua Anime Musim Sekarang">
               <mat-icon>dynamic_feed</mat-icon> {{ episodes }} Eps &nbsp;
               <mat-icon>schedule</mat-icon> {{ status }}
             </button>
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="warn" (click)="openMAL('https://myanimelist.net/topanime.php?limit=' + (rank - 1))">
+            <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyAnimeList"
+              (click)="openMAL('https://myanimelist.net/topanime.php?limit=' + (rank - 1))">
               <mat-icon>star_half</mat-icon> {{ score }} &nbsp;
               <mat-icon>timeline</mat-icon> {{ rank }} &nbsp;
               <mat-icon>local_fire_department</mat-icon> {{ popularity }}
