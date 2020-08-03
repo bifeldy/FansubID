@@ -5,9 +5,7 @@ const domino = require('domino');
 const fs = require('fs');
 const path = require('path');
 
-console.log('[SERVER_PATH]', __dirname);
-
-const templateA = fs.readFileSync(path.join(__dirname + '/../browser', 'index.html')).toString();
+const templateA = fs.readFileSync(path.join(process.cwd(), 'dist/hikki/browser', 'index.html')).toString();
 const win = domino.createWindow(templateA);
 
 global.window = win;
@@ -30,7 +28,7 @@ export function app(): express.Express {
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   server.engine('html', ngExpressEngine({
-    bootstrap: AppServerModule,
+    bootstrap: AppServerModule
   }));
 
   server.set('view engine', 'html');

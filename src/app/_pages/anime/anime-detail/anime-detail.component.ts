@@ -96,7 +96,7 @@ export class AnimeDetailComponent implements OnInit {
       this.animeId = params.animeId;
       this.jikan.getAnime(this.animeId).subscribe(
         res => {
-          this.animeData = res;
+          this.animeData = res.data;
           this.chipData = this.animeData.genres;
           this.chipData.map(g => (g.selected = true, g.color = Warna.PINK));
           this.pi.updatePageMetaData(
@@ -119,20 +119,17 @@ export class AnimeDetailComponent implements OnInit {
     });
   }
 
-  openMAL(linkAddress: string): void {
-    window.open(linkAddress, '_blank');
+  openRank(): void {
+    window.open(`https://myanimelist.net/topanime.php?limit=${this.animeData.rank - 1}`, '_blank');
   }
 
-  openSeasonalAnime(SEASONAL_YEAR: string): void {
-    const queryParams: any = {};
-    const seasonYear = SEASONAL_YEAR.toLocaleLowerCase().split(' ');
-    if (seasonYear[0]) {
-      queryParams.season = seasonYear[0];
-    }
-    if (seasonYear[1]) {
-      queryParams.year = seasonYear[1];
-    }
-    this.router.navigate(['/anime'], { queryParams });
+  openSeasonalAnime(): void {
+    this.router.navigate(['/anime'], {
+      queryParams: {
+        season: this.animeData.season,
+        year: this.animeData.year
+      }
+    });
   }
 
   openGenre(data): void {

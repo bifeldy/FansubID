@@ -38,7 +38,7 @@ export class ApiService {
 
   getData(path: string, timedOut = 5000): Observable<any> {
     this.gs.log('[API_GET]', path);
-    return this.http.get(path.startsWith('http') ? environment.sniffCors + path : environment.apiUrl + path).pipe(
+    return this.http.get(path.startsWith('http') ? path : environment.apiUrl + path).pipe(
       catchError(err => throwError(err)),
       map(res => res), timeout(timedOut)
     );
@@ -55,7 +55,7 @@ export class ApiService {
       body = this.prepareFormData(model);
       timer = 90000;
     }
-    return this.http.post(path.startsWith('http') ? environment.sniffCors + path : environment.apiUrl + path, body, options).pipe(
+    return this.http.post(path.startsWith('http') ? path : environment.apiUrl + path, body, options).pipe(
       catchError(err => throwError(err)),
       map(res => res), timeout(timer)
     );
@@ -70,7 +70,7 @@ export class ApiService {
       Object.assign(options, { headers });
       body = this.prepareFormData(model);
     }
-    return this.http.put(path.startsWith('http') ? environment.sniffCors + path : environment.apiUrl + path, body, options).pipe(
+    return this.http.put(path.startsWith('http') ? path : environment.apiUrl + path, body, options).pipe(
       catchError(err => throwError(err)),
       map(res => res), timeout(timedOut)
     );
@@ -78,7 +78,7 @@ export class ApiService {
 
   deleteData(path: string, timedOut = 15000): Observable<any> {
     this.gs.log('[API_DEL]', path);
-    return this.http.delete(path.startsWith('http') ? environment.sniffCors + path : environment.apiUrl + path).pipe(
+    return this.http.delete(path.startsWith('http') ? path : environment.apiUrl + path).pipe(
       catchError(err => throwError(err)),
       map(res => res), timeout(timedOut)
     );

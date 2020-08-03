@@ -26,10 +26,10 @@
       <div class="col-md-4 col-xl-3 px-3 order-1 order-md-2">
         <div class="row sticky-top pt-3">
           <div class="col-12">
-            <img class="border w-100" [src]="animeData.image_url" />
+            <img class="border w-100" [src]="animeData.images.jpg.image_url" />
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="primary" (click)="openSeasonalAnime(animeData.premiered)"
+            <button mat-stroked-button class="w-100" color="primary" (click)="openSeasonalAnime()"
               matTooltip="Lihat Semua Anime Pada Musim '{{ animeData.premiered }}'">
               <mat-icon>dynamic_feed</mat-icon> {{ animeData.episodes }} Eps &nbsp;
               <mat-icon>star_half</mat-icon> {{ animeData.score }} <br />
@@ -38,7 +38,7 @@
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyAnimeList"
-              (click)="openMAL('https://myanimelist.net/topanime.php?limit=' + (animeData.rank - 1))">
+              (click)="openRank()">
               <mat-icon>timeline</mat-icon> {{ animeData.rank }} &nbsp;
               <mat-icon>local_fire_department</mat-icon> {{ animeData.popularity }} <br />
               <mat-icon>schedule</mat-icon> {{ animeData.status }}
@@ -48,6 +48,6 @@
       </div>
     </div>
   </div>
-  <div class="anime-banner anime-banner-1 align-items-center" [style.background-image]="'url(' + animeData.image_url + ')'"></div>
+  <div class="anime-banner anime-banner-1 align-items-center" [style.background-image]="'url(' + animeData.images.jpg.image_url + ')'"></div>
   <div class="anime-banner anime-banner-2 align-items-center"></div>
 </div>

@@ -125,15 +125,15 @@ export class AnimeListComponent implements OnInit {
             Poster: sad.image_url,
             'Judul Anime': sad.title,
             'Nama Fansub': [
-              { type: 'chip', selected: true, id: 1, name: 'Fansub 1', url: '/', color: Warna.BIRU },
-              { type: 'chip', selected: true, id: 2, name: 'Fansub 2', url: '/', color: Warna.UNGU },
+              { type: 'chip', selected: true, id: 1, name: 'Fansub 1', url: '/', color: Warna.UNGU },
+              // { type: 'chip', selected: true, id: 2, name: 'Fansub 2', url: '/', color: Warna.BIRU },
               { type: 'chip', selected: true, id: 3, name: 'Fansub 3', url: '/', color: Warna.HITAM },
               // { type: 'chip', selected: true, id: 4, name: 'Fansub 4', url: '/', color: Warna.ABU },
-              // { type: 'chip', selected: true, id: 5, name: 'Fansub 5', url: '/', color: Warna.MERAH },
+              { type: 'chip', selected: true, id: 5, name: 'Fansub 5', url: '/', color: Warna.MERAH },
               // { type: 'chip', selected: true, id: 6, name: 'Fansub 6', url: '/', color: Warna.PINK },
               // { type: 'chip', selected: true, id: 7, name: 'Fansub 7', url: '/', color: Warna.OREN },
               // { type: 'chip', selected: true, id: 8, name: 'Fansub 8', url: '/', color: Warna.KUNING },
-              // { type: 'chip', selected: true, id: 9, name: 'Fansub 9', url: '/', color: Warna.HIJAU }
+              { type: 'chip', selected: true, id: 9, name: 'Fansub 9', url: '/', color: Warna.HIJAU }
             ]
           });
         });
