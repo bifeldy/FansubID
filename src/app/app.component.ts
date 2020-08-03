@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
@@ -11,6 +11,7 @@ import { LeftMenuService } from './_shared/services/left-menu.service';
 import { PageInfoService } from './_shared/services/page-info.service';
 import { AuthService } from './_shared/services/auth.service';
 import { FabService } from './_shared/services/fab.service';
+import { BusyService } from './_shared/services/busy.service';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private bs: BusyService,
     private pi: PageInfoService,
     private lms: LeftMenuService,
     private as: AuthService,
@@ -35,23 +37,22 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.router.events
-    .pipe(filter((event) => event instanceof NavigationEnd))
-    .pipe(map(() => this.route))
-    .pipe(map((route) => {
-      while (route.firstChild) {
-        route = route.firstChild;
+    this.router.events.subscribe(e1 => {
+      if (e1 instanceof RouteConfigLoadStart) {
+        this.bs.busy();
       }
-      return route;
-    }))
-    .pipe(filter((route) => route.outlet === 'primary'))
-    .pipe(mergeMap((route) => route.data))
-    .subscribe((event) => {
-      this.pi.updatePageMetaData(event.title, event.description, event.keywords);
-      this.pi.updatePageData(event.title, event.description, event.keywords);
-      this.updateBackgroundImage();
-      this.leftSideNavContent.nativeElement.scrollTop = 0;
-      this.fs.removeFab();
+      else if (e1 instanceof RouteConfigLoadEnd) {
+        this.bs.idle();
+      }
+      else if (e1 instanceof NavigationEnd) {
+        this.route.firstChild.data.subscribe(e2 => {
+          this.pi.updatePageMetaData(e2.title, e2.description, e2.keywords);
+          this.pi.updatePageData(e2.title, e2.description, e2.keywords);
+          this.updateBackgroundImage();
+          this.leftSideNavContent.nativeElement.scrollTop = 0;
+          this.fs.removeFab();
+        });
+      }
     });
     const token = localStorage.getItem(environment.tokenName);
     if (token) {
