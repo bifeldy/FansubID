@@ -25,10 +25,3 @@
   height: 256px;
   z-index: 1;
 }
-
-.fansub-button {
-  z-index: 1;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-}

@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
+import { MaterialChipModule } from 'src/app/_shared/components/material-chip/material-chip.module';
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
 
 import { FansubListComponent } from './fansub-list/fansub-list.component';
@@ -30,7 +31,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedMaterialModule,
     MaterialTabModule,
-    MaterialExpansionPanelModule
+    MaterialExpansionPanelModule,
+    MaterialChipModule
   ]
 })
 export class FansubModule { }

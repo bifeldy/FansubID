@@ -20,8 +20,13 @@ export class JikanService {
   }
 
   getAnime(animeId: number): any {
-    this.gs.log('[JIKAN_GET_ANIME]', animeId);
+    this.gs.log('[JIKAN_GET_ANIME_DETAIL]', animeId);
     return this.http.get(`${environment.sniffCors}${environment.jikanMAL}/anime/${animeId}`).pipe(catchError(err => throwError(err)));
+  }
+
+  getSeasonalAnime(year: number, season: string): any {
+    this.gs.log('[JIKAN_GET_ANIME_SEASONAL]', `${year}/${season}`);
+    return this.http.get(`${environment.sniffCors}${environment.jikanMAL}/season/${year}/${season}`).pipe(catchError(err => throwError(err)));
   }
 
 }

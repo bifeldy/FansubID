@@ -11,8 +11,10 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 
-import { SharedMaterialModule } from './_shared/helpers/shared-material.module';
 import { MyHammerConfig } from './_shared/helpers/my-hammer.config';
+
+import { SharedMaterialModule } from './_shared/helpers/shared-material.module';
+import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
 
 import { FakeBackendProvider } from './_shared/backends/fake-backend';
 import { HttpRequestInterceptor } from './_shared/interceptors/http-request.interceptor';
@@ -41,6 +43,7 @@ import { FooterComponent } from './_shared/components/footer/footer.component';
     SharedMaterialModule,
     FlexLayoutModule,
     HammerModule,
+    MaterialFabModule,
     NgxSpinnerModule
   ],
   providers: [

@@ -25,13 +25,3 @@
   height: 256px;
   z-index: 1;
 }
-
-.mal-button {
-  z-index: 1;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  background-image: url('/assets/img/mal-logo.png');
-  background-size: contain;
-  background-position: center;
-}

@@ -14,4 +14,41 @@
   </div> -->
 </div>
 
-<p>anime-list works!</p>
+<!-- Content -->
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 pb-3 sticky-top" style="background-color: #fafafa !important;">
+          <h3 class="m-0 border-bottom border-primary row">
+            <mat-form-field class="pt-3 col-6 col-md-4 col-lg-2">
+              <mat-label>Tema Musim</mat-label>
+              <mat-select [(value)]="selectedSeasonName" (valueChange)="changeSeasonalAnime()">
+                <mat-option value="winter">Winter</mat-option>
+                <mat-option value="spring">Spring</mat-option>
+                <mat-option value="summer">Summer</mat-option>
+                <mat-option value="fall">Fall</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="pt-3 col-6 col-md-4 col-lg-2">
+              <mat-label>Tahun</mat-label>
+              <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" [formControl]="currentDate" disabled />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)" disabled="false"></mat-datepicker>
+            </mat-form-field>
+          </h3>
+        </div>
+        <div class="col-12">
+          <app-card-anime (cardClicked)="openAnimePage($event)" [animeData]="seasonalAnimeData"></app-card-anime>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="seasonalAnimeData.length > 0">
+    <app-material-tab (chipClicked)="openFansub($event)" (tableRowClicked)="openAnimePage($event)" [tabData]="tabData"></app-material-tab>
+  </div>
+</div>
+
+<!-- <button (click)="resetSeason()" mat-fab class="mr-3 mb-5 reset-season-button" matTooltip="Kembali Ke Musim Sekarang">
+  <mat-icon>settings_backup_restore</mat-icon>
+</button> -->

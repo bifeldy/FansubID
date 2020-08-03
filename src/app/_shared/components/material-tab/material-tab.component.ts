@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
 
 @Component({
@@ -20,8 +20,8 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
 
   @Input() tabData: any = [
     // {
-    //   name: 'Nama Tab 1',
-    //   icon: 'subject',
+    //   name: 'Anime Fansub',
+    //   icon: 'closed_caption',
     //   type: 'grid', // list & grid
     //   data: [
     //     { title: 'Data Title 01', description: 'Data Description 01' },
@@ -29,8 +29,8 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
     //   ]
     // },
     // {
-    //   name: 'Nama Tab 2',
-    //   icon: 'subject',
+    //   name: 'Berkas',
+    //   icon: 'file_copy',
     //   type: 'table',
     //   data: {
     //     column: ['Tanggal Upload', 'Nama File', 'Pemilik'],
@@ -39,40 +39,43 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
     //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 01 [BD][1080p].mkv',
     //         Pemilik: 'Bifeldy',
     //         TanggalUpload: '12:34:56 AM JST+9'
-    //       },
+    //       }
+    //     ]
+    //   }
+    // },
+    // {
+    //   name: 'Garapan',
+    //   icon: 'closed_caption',
+    //   type: 'table',
+    //   data: {
+    //     column: ['Jenis', 'Judul Anime', 'Nama Fansub'],
+    //     row: [
     //       {
-    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 02 [BD][1080p].mkv',
-    //         Pemilik: 'Bifeldy',
-    //         TanggalUpload: '12:34:56 AM JST+9'
-    //       },
-    //       {
-    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 03 [BD][1080p].mkv',
-    //         Pemilik: 'Bifeldy',
-    //         TanggalUpload: '12:34:56 AM JST+9'
-    //       },
-    //       {
-    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 04 [BD][1080p].mkv',
-    //         Pemilik: 'Bifeldy',
-    //         TanggalUpload: '12:34:56 AM JST+9'
-    //       },
-    //       {
-    //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 05 [BD][1080p].mkv',
-    //         Pemilik: 'Bifeldy',
-    //         TanggalUpload: '12:34:56 AM JST+9'
+    //         Jenis: 'TV',
+    //         'Judul Anime': 'Judul Anime SPECIAL Yang Biasanya Sangat Panjang',
+    //         'Nama Fansub': [
+    //           { id: 1, name: 'Bifeldy', router: '/', selected: true, color: Warna.BIRU },
+    //           { id: 2, name: 'Fansub Lain', router: '/', selected: true, color: Warna.UNGU },
+    //         ]
     //       }
     //     ]
     //   }
     // }
   ];
 
+  @Output() chipClicked = new EventEmitter();
+  @Output() gridClicked = new EventEmitter();
+  @Output() listClicked = new EventEmitter();
+  @Output() tableRowClicked = new EventEmitter();
+
   constructor() { }
 
   ngOnInit(): void {
-    this.gridListBreakpoint = (window.innerWidth >= 1400) ? 3 : (window.innerWidth >= 1200) ? 2 : 1;
+    this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
   onResize(event): void {
-    this.gridListBreakpoint = (window.innerWidth >= 1400) ? 3 : (window.innerWidth >= 1200) ? 2 : 1;
+    this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
   ngAfterViewInit(): void {
@@ -80,7 +83,6 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
   }
 
   swipe(eType): void {
-    console.log(eType);
     if (eType === this.SWIPE_ACTION.RIGHT && this.selectedIndexTab > 0) {
       this.selectedIndexTab--;
     }
@@ -89,8 +91,19 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openData(data: any): void {
-    console.log(data);
+  onGridClicked(data: any): void {
+    this.gridClicked.emit(data);
   }
 
+  onListClicked(data: any): void {
+    this.listClicked.emit(data);
+  }
+
+  onTableRowClicked(data: any): void {
+    this.tableRowClicked.emit(data);
+  }
+
+  onChipClicked(data: any): void {
+    this.chipClicked.emit(data);
+  }
 }

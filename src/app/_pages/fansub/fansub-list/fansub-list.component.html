@@ -1,1 +1,23 @@
-<p>fansub-list works!</p>
+<!-- Seasonal Banner (1920px * 128px)-->
+<div class="container-fluid fansub-banner"></div>
+
+<!-- Content -->
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 pb-3 sticky-top" style="background-color: #fafafa !important;">
+          <h3 class="m-0 border-bottom border-primary row">
+            // TODO: Grafik Pie Chart
+          </h3>
+        </div>
+        <div class="col-12">
+          // asdasd
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="fansubData.length > 0">
+    <app-material-tab (tableRowClicked)="openFansub($event)" [tabData]="tabData"></app-material-tab>
+  </div>
+</div>

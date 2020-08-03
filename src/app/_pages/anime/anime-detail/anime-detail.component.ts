@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { Warna } from '../../../_shared/models/Warna';
 
 import { JikanService } from '../../../_shared/services/jikan.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
+import { FabService } from 'src/app/_shared/services/fab.service';
 
 @Component({
   selector: 'app-anime-detail',
@@ -14,6 +17,8 @@ export class AnimeDetailComponent implements OnInit {
 
   animeId = 0;
   animeData = null;
+
+  chipData = [];
 
   panelData = [];
 
@@ -40,32 +45,60 @@ export class AnimeDetailComponent implements OnInit {
       icon: 'file_copy',
       type: 'table',
       data: {
-        column: ['Tanggal Upload', 'Nama File', 'Pemilik'],
+        column: ['Upload', 'Nama File', 'Pemilik'],
         row: [
-          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 01 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' },
-          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 02 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' },
-          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 03 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' },
-          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 04 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' },
-          { 'Nama File': '[FanSub] Berkas Dengan Judul Anime - 05 [BD][1080p].mkv', Pemilik: 'Bifeldy', 'Tanggal Upload': '12:34:56 AM JST+9' }
+          {
+            type: 'text',
+            Pemilik: 'H.265/MPEGH Part 2 HEVC',
+            Upload: '12:34:56',
+            'Nama File': '[Fansub] Judul Anime - 00 [BD 4K x265 10bit FLAC][CRC32].mkv'
+          },
+          {
+            type: 'text',
+            Pemilik: 'H.264/MPEG4 Part 10 AVC',
+            Upload: '12:34:56',
+            'Nama File': '[Fansub] Judul Anime - 01 [BD 1080p x264 10bit AAC][CRC32].mkv'
+          },
+          {
+            type: 'text',
+            Pemilik: 'H.263/MPEG4 Part 2',
+            Upload: '12:34:56',
+            'Nama File': '[Fansub] Judul Anime - 02 [BD 720p x263 8bit AAC][CRC32].mkv'
+          },
+          {
+            type: 'text',
+            Pemilik: 'H.262/MPEG2 Standard',
+            Upload: '12:34:56',
+            'Nama File': '[Fansub] Judul Anime - 03 [BD 480p x262 8bit MP3][CRC32].mkv'
+          },
+          {
+            type: 'text',
+            Pemilik: 'H.261',
+            Upload: '12:34:56',
+            'Nama File': '[Fansub] Judul Anime - 04 [BD 360p x261 6bit MP3][CRC32].mkv'
+          }
         ]
       }
     }
   ];
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private pi: PageInfoService,
-    private jikan: JikanService
+    private jikan: JikanService,
+    private fs: FabService
   ) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.animeId = params.animeId;
-      this.gs.log('[ANIME_DETAIL_PAGE]', this.animeId);
       this.jikan.getAnime(this.animeId).subscribe(
         res => {
           this.animeData = res;
+          this.chipData = this.animeData.genres;
+          this.chipData.map(g => (g.selected = true, g.color = Warna.PINK));
           this.pi.updatePageMetaData(
             `Anime | ${this.animeData.title}`,
             `${this.animeData.synopsis}`,
@@ -77,6 +110,7 @@ export class AnimeDetailComponent implements OnInit {
             `${this.animeData.title_synonyms.join(', ')}`
           );
           this.panelData.push({ title: 'Synopsis', icon: 'history_edu', text: this.animeData.synopsis });
+          this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
         },
         err => {
           this.gs.log(err);
@@ -87,6 +121,30 @@ export class AnimeDetailComponent implements OnInit {
 
   openMAL(linkAddress: string): void {
     window.open(linkAddress, '_blank');
+  }
+
+  openSeasonalAnime(SEASONAL_YEAR: string): void {
+    const queryParams: any = {};
+    const seasonYear = SEASONAL_YEAR.toLocaleLowerCase().split(' ');
+    if (seasonYear[0]) {
+      queryParams.season = seasonYear[0];
+    }
+    if (seasonYear[1]) {
+      queryParams.year = seasonYear[1];
+    }
+    this.router.navigate(['/anime'], { queryParams });
+  }
+
+  openGenre(data): void {
+    window.open(data.url, '_blank');
+  }
+
+  openFansub(data): void {
+    this.gs.log(data);
+  }
+
+  openFile(data): void {
+    this.gs.log(data);
   }
 
 }

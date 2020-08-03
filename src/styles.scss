@@ -1,0 +1,96 @@
+.s-wrapper.swiper.swiper-container.swiper-container-initialized.swiper-container-horizontal {
+  padding-bottom: 2rem;
+}
+
+.swiper-button-disabled {
+  display: none;
+}
+
+.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets {
+  bottom: -5px !important;
+}
+
+swiper
+  > .swiper.s-wrapper.swiper-container-horizontal
+  > .swiper-pagination
+  .swiper-pagination-handle
+  .swiper-pagination-bullet.swiper-pagination-bullet-last,
+swiper
+  > .swiper.s-wrapper.swiper-container-horizontal
+  > .swiper-pagination
+  .swiper-pagination-handle
+  .swiper-pagination-bullet.swiper-pagination-bullet-first {
+  margin: 0 !important;
+}
+
+swiper
+  > .swiper.s-wrapper
+  .swiper-pagination
+  .swiper-pagination-handle
+  .swiper-pagination-bullet.swiper-pagination-bullet-last,
+swiper
+  > .swiper.s-wrapper
+  .swiper-pagination
+  .swiper-pagination-handle
+  .swiper-pagination-bullet.swiper-pagination-bullet-first {
+  border: none !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #e84360 !important;
+}
+
+.swiper-button-prev,
+.carousel-control-prev-icon {
+  // background-image: url("/assets/icon/chevron-left-white.svg") !important;
+  left: 0 !important;
+  // background-origin: content-box;
+}
+
+.swiper-button-prev:hover,
+.carousel-control-prev-icon:hover {
+  // background-image: url("/assets/icon/chevron-left-pink.svg") !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  top: 0 !important;
+  bottom: 0 !important;
+  margin-top: 0 !important;
+  // margin-bottom: 2rem;
+  height: calc(100% - 2rem) !important;
+  background-color: rgba($color: #ff4081, $alpha: 0.25) !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  background-clip: content-box;
+}
+
+.swiper-button-next,
+.carousel-control-next-icon {
+  // background-image: url("/assets/icon/chevron-right-white.svg") !important;
+  right: -1px !important;
+  // background-origin: content-box;
+}
+
+.swiper-button-next:hover,
+.carousel-control-next-icon:hover {
+  // background-image: url("/assets/icon/chevron-right-pink.svg") !important;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba($color: #ff4081, $alpha: 0.25) !important;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+.carousel-control-prev {
+  margin-left: 7.5%;
+}
+
+.carousel-control-next {
+  margin-right: 7.5%;
+}

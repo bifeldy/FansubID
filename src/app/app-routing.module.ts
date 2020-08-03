@@ -28,8 +28,8 @@ const routes: Routes = [
     path: 'anime',
     loadChildren: () => import('./_pages/anime/anime.module').then(m => m.AnimeModule),
     data: {
-      title: 'Anime List',
-      description: 'Halaman Daftar Isi Anime Yang Baru Saja Rilis Subtitle Indonesianya',
+      title: 'List | Anime & Garapan Musiman',
+      description: 'Daftar Isi Anime Musiman Yang Baru Saja Rilis Subtitle Indonesianya',
       keywords: 'Anime Subtitle Indonesia',
       roles: []
     }
@@ -38,8 +38,8 @@ const routes: Routes = [
     path: 'fansub',
     loadChildren: () => import('./_pages/fansub/fansub.module').then(m => m.FansubModule),
     data: {
-      title: 'Katalog Fansub',
-      description: 'Halaman Daftar Isi Seluruh Fansub Indonesia',
+      title: 'Katalog | Informasi Seluruh Fansub Indonesia',
+      description: 'Daftar Isi Seluruh Fansub Indonesia',
       keywords: 'Fansub Indonesia',
       roles: []
     }
@@ -56,7 +56,7 @@ const routes: Routes = [
   },
   {
     path: 'error',
-    loadChildren: () => import('./_shared/pages/not-found/not-found.module').then(m => m.NotFoundModule),
+    loadChildren: () => import('./_pages/not-found/not-found.module').then(m => m.NotFoundModule),
     data: {
       title: 'Error - 404',
       description: 'Whoops! Halaman Tidak Ditemukan',

@@ -1,4 +1,4 @@
-<mat-tab-group class="border rounded px-0" dynamicHeight mat-stroked-button [color]="'accent'" [backgroundColor]=""
+<mat-tab-group class="px-0" dynamicHeight mat-stroked-button [color]="'accent'" [backgroundColor]=""
   [selectedIndex]="selectedIndexTab" (swipeleft)="swipe($event.type)" (swiperight)="swipe($event.type)">
   <mat-tab *ngFor="let tab of tabData">
     <div *ngIf="tab.type == 'grid'">
@@ -8,11 +8,12 @@
       </ng-template>
       <div class="p-3">
         <mat-selection-list [multiple]="false" class="p-0">
-          <mat-grid-list [cols]="gridListBreakpoint" rowHeight="5:1" (window:resize)="onResize($event)">
+          <mat-grid-list [cols]="gridListBreakpoint" rowHeight="4:1" (window:resize)="onResize($event)">
             <mat-grid-tile *ngFor="let d of tab.data">
-              <mat-list-option (click)="openData(d)">
-                <img matListAvatar src="/favicon.ico" class="ml-3" />
-                <h4 matLine>{{ d.title }}</h4>
+              <mat-list-option (click)="onGridClicked(d)">
+                <img matListAvatar src="https://cdn.myanimelist.net/images/anime/1444/108005.jpg" class="ml-3" style="border-radius: 0;" />
+                <h4 matLine *ngIf="d.description">{{ d.title }}</h4>
+                <h4 *ngIf="!d.description">{{ d.title }}</h4>
                 <p matLine>{{ d.description }}</p>
               </mat-list-option>
             </mat-grid-tile>
@@ -27,9 +28,10 @@
       </ng-template>
       <div class="p-3">
         <mat-selection-list [multiple]="false">
-          <mat-list-option *ngFor="let d of tab.data" (click)="openData(d)">
-            <img matListAvatar src="/favicon.ico" />
-            <h4 matLine>{{ d.title }}</h4>
+          <mat-list-option *ngFor="let d of tab.data" (click)="onListClicked(d)">
+            <img matListAvatar src="https://cdn.myanimelist.net/images/anime/1444/108005.jpg" class="ml-3" style="border-radius: 0;" />
+            <h4 matLine *ngIf="d.description">{{ d.title }}</h4>
+            <h4 *ngIf="!d.description">{{ d.title }}</h4>
             <p matLine>{{ d.description }}</p>
           </mat-list-option>
         </mat-selection-list>
@@ -41,8 +43,18 @@
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3">
-        <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row"></app-material-table>
+        <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row"
+          (chipClicked)="onChipClicked($event)" (rowClicked)="onTableRowClicked($event)"></app-material-table>
       </div>
+    </div>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="mr-3">comment</mat-icon>
+      <h3 class="m-0">Komentar</h3>
+    </ng-template>
+    <div class="p-3">
+      // TODO: Discuss Comment
     </div>
   </mat-tab>
 </mat-tab-group>

@@ -1,0 +1,7 @@
+<!-- Chips -->
+<mat-chip-list>
+  <mat-chip *ngFor="let chip of chipData" (click)="onChipClicked(chip)"
+    [ngStyle]="{ 'background-color': chip.color }" [selected]="chip.selected">
+    {{ chip.name }}
+  </mat-chip>
+</mat-chip-list>

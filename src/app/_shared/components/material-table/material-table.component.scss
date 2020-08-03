@@ -14,7 +14,7 @@ td.mat-column-star {
     background-color: #e9f3ff;
   }
   a {
-    color: #3e75ff;
+    color: #7289da;
     text-decoration: none;
     &:hover {
     text-decoration: underline;
@@ -28,10 +28,10 @@ td.mat-column-star {
 }
 
 .mat-icon {
-  color: #3e75ff;
+  color: #7289da;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 992px) {
   .mat-elevation-z8 {
     background: transparent;
     box-shadow: none;

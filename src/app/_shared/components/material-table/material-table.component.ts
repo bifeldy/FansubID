@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,10 +8,13 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './material-table.component.html',
   styleUrls: ['./material-table.component.scss']
 })
-export class MaterialTableComponent implements OnInit {
+export class MaterialTableComponent implements OnInit, OnChanges {
 
-  @Input() tableDataRow: any;
-  @Input() tableDataColumn: any;
+  @Input() tableDataRow: any = [];
+  @Input() tableDataColumn: any = [];
+
+  @Output() chipClicked = new EventEmitter();
+  @Output() rowClicked = new EventEmitter();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -19,7 +22,13 @@ export class MaterialTableComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
   rippleDisabled = null;
 
+  pageSizeOptions = [5, 10, 25, 50, 100, 250, 500];
+
   constructor() {
+  }
+
+  checkIsArray(data): boolean {
+    return Array.isArray(data);
   }
 
   ngOnInit(): void {
@@ -27,6 +36,13 @@ export class MaterialTableComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
+  }
+
+  ngOnChanges(): void {
+    if (this.dataSource) {
+      this.dataSource.data = this.tableDataRow;
+      this.paginator._changePageSize(5);
+    }
   }
 
   applyFilter(event: Event): void {
@@ -41,8 +57,12 @@ export class MaterialTableComponent implements OnInit {
     this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
   }
 
-  openData(data: any): void {
-    console.log(data);
+  onRowClicked(data: any): void {
+    this.rowClicked.emit(data);
+  }
+
+  onChipClicked(data: any): void {
+    this.chipClicked.emit(data);
   }
 
 }

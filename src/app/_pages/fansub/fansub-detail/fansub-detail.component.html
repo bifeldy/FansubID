@@ -1,10 +1,12 @@
 <div class="container">
   <div class="fansub-info align-items-center">
     <div class="media row py-3 px-2">
-      <div class="col-md-5 col-xl-3 px-3">
+
+      <!-- Information -->
+      <div class="col-md-4 col-xl-3 px-3">
         <div class="row sticky-top pt-3">
           <div class="col-12">
-            <img class="border w-100" [src]="banner" />
+            <img class="border w-100" [src]="fansubData.banner" />
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="accent" matTooltip="Fansub Sudah Tidak Aktif Lagi">
@@ -20,30 +22,28 @@
           </div>
         </div>
       </div>
-      <div class="col-md-7 col-xl-9 pt-3">
+
+      <!-- Content -->
+      <div class="col-md-8 col-xl-9 pt-3">
         <div class="row py-3 px-0 mt-auto">
           <h1 class="m-0">
-            <b>{{ title }}</b>
+            <b>{{ fansubData.title }}</b>
           </h1>
         </div>
         <div class="row py-3">
-          <mat-chip-list>
-            <mat-chip *ngFor="let t of tags" color="{{ t.color }}" selected>{{ t.name }}</mat-chip>
-          </mat-chip-list>
+          <app-material-chip (chipClicked)="openTag($event)" [chipData]="chipData"></app-material-chip>
         </div>
         <div class="row py-3">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
         </div>
         <div class="row py-3">
           <div class="col-12">
-            <app-material-tab [tabData]="tabData"></app-material-tab>
+            <app-material-tab (listClicked)="openAnime($event)" (tableRowClicked)="openFile($event)" [tabData]="tabData"></app-material-tab>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="fansub-banner fansub-banner-1 align-items-center" [style.background-image]="'url(' + banner + ')'"></div>
+  <div class="fansub-banner fansub-banner-1 align-items-center" [style.background-image]="'url(' + fansubData.banner + ')'"></div>
   <div class="fansub-banner fansub-banner-2 align-items-center"></div>
-  <button (click)="openWeb(url)" mat-fab class="mr-3 mb-5 fansub-button"><mat-icon>web</mat-icon>
-  </button>
 </div>

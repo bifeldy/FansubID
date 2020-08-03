@@ -1,27 +1,56 @@
 <!-- Input Form Filter -->
-<mat-form-field hintLabel="Judul / Author / etc." class="px-3 mb-3">
+<mat-form-field hintLabel="Anime / Fansub / Uploader / etc." class="px-3 mb-3" style="background-color: #fafafa !important;">
   <mat-label>Filter Dan Pencarian</mat-label>
-  <input matInput #input placeholder="Ex. Bifeldy" (keyup)="applyFilter($event)" />
+  <input matInput #input maxlength="200" placeholder="Ex. [Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32]" (keyup)="applyFilter($event)" />
   <mat-icon matSuffix>search</mat-icon>
-  <mat-hint align="end">{{ input.value?.length || 0 }} Huruf</mat-hint>
+  <mat-hint align="end">{{ input.value?.length || 0 }} / 200 Huruf</mat-hint>
 </mat-form-field>
 
 <!-- Table -->
-<table mat-table [dataSource]="dataSource" matSort>
+<table mat-table [dataSource]="dataSource" matSort (window:resize)="onResize($event)">
   <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      <h4 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h4>
+      <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
     </th>
     <td mat-cell *matCellDef="let row">
-      <img matListAvatar src="/favicon.ico" style="width: 32px;" *ngIf="tdc == 'Pemilik'" />
-      {{ row[tdc] }}
+      <div *ngIf="checkIsArray(row[tdc]) == false">
+        <h3 class="m-0" [style.color]="
+          tdc == 'Pemilik' ? '#3f51b5' :
+            tdc == 'Upload' ? '#28a745' :
+              tdc == 'Jenis' ? '#7289da' :
+                tdc == 'Status' ? '#f44336' :
+        '#343a40'">
+          <img matListAvatar src="/favicon.ico" style="width: 32px;" *ngIf="tdc == 'Pemilik'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px;" *ngIf="tdc == 'Poster' || tdc == 'Logo'" />
+          {{ tdc != 'Poster' && tdc != 'Logo' ? row[tdc] : '' }}
+        </h3>
+      </div>
+      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc][0].type == 'chip'" class="py-3">
+        <app-material-chip (chipClicked)="onChipClicked($event)" [chipData]="row[tdc]"></app-material-chip>
+      </div>
+      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc][0].type == 'button'" class="py-3">
+        <a mat-icon-button href="{{ rt.url }}" target="_blank" *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}">
+          <mat-icon *ngIf="rt.icon">{{ rt.icon }}</mat-icon>
+          <img src="{{ rt.image }}" width="24px" *ngIf="rt.image" />
+        </a>
+      </div>
     </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>  
-  <tr mat-row matRipple [matRippleDisabled]="rippleDisabled" (window:resize)="onResize($event)"
-    *matRowDef="let row; columns: tableDataColumn;" (click)="openData(this.row)"></tr>
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="4">Tidak Ada Data Yang Sesuai :: "{{ input.value }}"</td>
+  <tr mat-row matRipple [matRippleDisabled]="rippleDisabled"
+    *matRowDef="let row; columns: tableDataColumn;" (click)="onRowClicked(this.row)"></tr>
+  <tr class="mat-row" *matNoDataRow matRipple [matRippleDisabled]="rippleDisabled">
+    <td class="mat-cell text-center align-items-center p-0" [attr.colspan]="tableDataColumn.length"
+      style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+      <div class="row align-items-center h-100">
+        <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+          <h3 class="m-0">
+            Tidak Ada Data <br *ngIf="!rippleDisabled" /> ¯\_(ツ)_/¯
+          </h3>
+          <h3 class="m-0">{{ input.value ? '"' + input.value + '"' : ''  }}</h3>
+        </div>
+      </div>
+    </td>
   </tr>
 </table>
-<mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]"></mat-paginator>
+<mat-paginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>

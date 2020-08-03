@@ -10,6 +10,7 @@ import { environment } from '../environments/environment';
 import { LeftMenuService } from './_shared/services/left-menu.service';
 import { PageInfoService } from './_shared/services/page-info.service';
 import { AuthService } from './_shared/services/auth.service';
+import { FabService } from './_shared/services/fab.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,8 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private pi: PageInfoService,
     private lms: LeftMenuService,
-    private as: AuthService
+    private as: AuthService,
+    private fs: FabService
   ) {
   }
 
@@ -47,6 +49,7 @@ export class AppComponent implements OnInit {
       this.pi.updatePageData(event.title, event.description, event.keywords);
       this.updateBackgroundImage();
       document.querySelector('mat-sidenav-content').scroll({top: 0, left: 10, behavior: 'smooth'});
+      this.fs.removeFab();
     });
     const token = localStorage.getItem(environment.tokenName);
     if (token) {
@@ -57,7 +60,7 @@ export class AppComponent implements OnInit {
   updateBackgroundImage(): void {
     switch (this.router.url.substr(1).split('/').length) {
       case 1:
-        this.selectedBackgroundImage = `/assets/img/router/bg-${this.router.url.substr(1).split('/')[0]}.png`;
+        this.selectedBackgroundImage = `/assets/img/router/bg-${this.router.url.substr(1).split('/')[0].split('?')[0]}.png`;
         break;
       default:
         this.selectedBackgroundImage = ``;

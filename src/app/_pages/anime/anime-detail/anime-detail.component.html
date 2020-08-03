@@ -1,43 +1,47 @@
 <div class="container" *ngIf="animeData">
   <div class="anime-info align-items-center">
     <div class="media row py-3 px-2 d-flex">
-      <div class="col-md-7 col-xl-9 pt-3 order-2 order-md-1">
+
+      <!-- Content -->
+      <div class="col-md-8 col-xl-9 pt-3 order-2 order-md-1">
         <div class="row py-3 px-0 mt-auto">
           <h1 class="m-0">
             <b>{{ animeData.title }}</b>
           </h1>
         </div>
         <div class="row py-3">
-          <mat-chip-list>
-            <mat-chip *ngFor="let genre of animeData.genres" color="accent" selected (click)="openMAL(genre.url)">{{ genre.name }}</mat-chip>
-          </mat-chip-list>
+          <app-material-chip (chipClicked)="openGenre($event)" [chipData]="chipData"></app-material-chip>
         </div>
         <div class="row py-3">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
         </div>
         <div class="row py-3">
           <div class="col-12">
-            <app-material-tab [tabData]="tabData"></app-material-tab>
+            <app-material-tab (gridClicked)="openFansub($event)" (tableRowClicked)="openFile($event)" [tabData]="tabData"></app-material-tab>
           </div>
         </div>
       </div>
-      <div class="col-md-5 col-xl-3 px-3 order-1 order-md-2">
+
+      <!-- Information -->
+      <div class="col-md-4 col-xl-3 px-3 order-1 order-md-2">
         <div class="row sticky-top pt-3">
           <div class="col-12">
             <img class="border w-100" [src]="animeData.image_url" />
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="primary" matTooltip="Lihat Semua Anime Musim Sekarang">
+            <button mat-stroked-button class="w-100" color="primary" (click)="openSeasonalAnime(animeData.premiered)"
+              matTooltip="Lihat Semua Anime Pada Musim '{{ animeData.premiered }}'">
               <mat-icon>dynamic_feed</mat-icon> {{ animeData.episodes }} Eps &nbsp;
-              <mat-icon>schedule</mat-icon> {{ animeData.status }}
+              <mat-icon>star_half</mat-icon> {{ animeData.score }} <br />
+              <mat-icon>date_range</mat-icon> {{ animeData.premiered }}
             </button>
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyAnimeList"
               (click)="openMAL('https://myanimelist.net/topanime.php?limit=' + (animeData.rank - 1))">
-              <mat-icon>star_half</mat-icon> {{ animeData.score }} &nbsp;
               <mat-icon>timeline</mat-icon> {{ animeData.rank }} &nbsp;
-              <mat-icon>local_fire_department</mat-icon> {{ animeData.popularity }}
+              <mat-icon>local_fire_department</mat-icon> {{ animeData.popularity }} <br />
+              <mat-icon>schedule</mat-icon> {{ animeData.status }}
             </button>
           </div>
         </div>
@@ -46,5 +50,4 @@
   </div>
   <div class="anime-banner anime-banner-1 align-items-center" [style.background-image]="'url(' + animeData.image_url + ')'"></div>
   <div class="anime-banner anime-banner-2 align-items-center"></div>
-  <button (click)="openMAL(animeData.url)" mat-fab class="mr-3 mb-5 mal-button"></button>
 </div>
