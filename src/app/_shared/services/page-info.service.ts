@@ -37,8 +37,8 @@ export class PageInfoService {
   }
 
   updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string): void {
-    this.titleService.setTitle(`${newTitle}`);
-    this.meta.updateTag({ name: 'og:title', content: `${newTitle}` });
+    this.titleService.setTitle(`${newTitle} | ${this.siteName}`);
+    this.meta.updateTag({ name: 'og:title', content: `${newTitle} | ${this.siteName}` });
     this.meta.updateTag({ name: 'description', content: `${newDescription}` });
     this.meta.updateTag({ name: 'og:description', content: `${newDescription}` });
     this.meta.updateTag({ name: 'keywords', content: `${newKeywords}` });

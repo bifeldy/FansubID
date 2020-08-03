@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { CookieService } from 'ngx-cookie-service';
 
+import User from '../models/User';
+
 import { environment } from '../../../environments/environment';
 
 import { GlobalService } from './global.service';
-
-import User from '../models/User';
 import { CryptoService } from './crypto.service';
-import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -63,8 +63,7 @@ export class AuthService {
 
   logout(): any {
     this.currentUserSubject.next(null);
-    localStorage.removeItem(environment.sessionName);
-    localStorage.removeItem(environment.tokenName);
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 

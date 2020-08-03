@@ -16,7 +16,7 @@
     [style.background-image]="'url(' + selectedBackgroundImage + ')'" (click)="closeSideNav()">
 
     <!-- Routing Content -->
-    <div class="main_content">
+    <div class="main_content" #leftSideNavContent>
       <router-outlet></router-outlet>
     </div>
 

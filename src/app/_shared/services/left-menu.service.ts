@@ -8,7 +8,7 @@ export class LeftMenuService {
   sideNavExpanded = false;
 
   linkText = false;
-  sideMoveTimeout = 0;
+  sideMoveTimeout = null;
 
   constructor() {
   }

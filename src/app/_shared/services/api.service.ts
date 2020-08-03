@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { catchError, timeout, retry, map } from 'rxjs/operators';
+import { catchError, timeout, map } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';

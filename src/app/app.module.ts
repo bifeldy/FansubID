@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { TransferHttpCacheModule } from '@nguniversal/common';
 
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
@@ -19,6 +20,8 @@ import { MaterialFabModule } from './_shared/components/material-fab/material-fa
 import { FakeBackendProvider } from './_shared/backends/fake-backend';
 import { HttpRequestInterceptor } from './_shared/interceptors/http-request.interceptor';
 import { HttpErrorInterceptor } from './_shared/interceptors/http-error.interceptor';
+import { ServerStateInterceptor } from './_shared/interceptors/server-state.interceptor';
+import { BrowserStateInterceptor } from './_shared/interceptors/browser-state.interceptor';
 
 import { LeftMenuService } from './_shared/services/left-menu.service';
 
@@ -38,6 +41,7 @@ import { FooterComponent } from './_shared/components/footer/footer.component';
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
+    TransferHttpCacheModule,
     ReactiveFormsModule,
     HttpClientModule,
     SharedMaterialModule,
@@ -50,6 +54,8 @@ import { FooterComponent } from './_shared/components/footer/footer.component';
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ServerStateInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: BrowserStateInterceptor, multi: true },
     FakeBackendProvider, Title, CookieService, NgxSpinnerService, LeftMenuService
   ],
   bootstrap: [AppComponent]

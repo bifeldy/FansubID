@@ -100,7 +100,7 @@ export class AnimeDetailComponent implements OnInit {
           this.chipData = this.animeData.genres;
           this.chipData.map(g => (g.selected = true, g.color = Warna.PINK));
           this.pi.updatePageMetaData(
-            `Anime | ${this.animeData.title}`,
+            `${this.animeData.title}`,
             `${this.animeData.synopsis}`,
             `${this.animeData.title_synonyms.join(', ')}`
           );

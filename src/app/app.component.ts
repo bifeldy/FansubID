@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
@@ -19,6 +19,8 @@ import { FabService } from './_shared/services/fab.service';
   animations: [ onMainContentChange ]
 })
 export class AppComponent implements OnInit {
+
+  @ViewChild('leftSideNavContent') leftSideNavContent;
 
   selectedBackgroundImage = '';
 
@@ -48,7 +50,7 @@ export class AppComponent implements OnInit {
       this.pi.updatePageMetaData(event.title, event.description, event.keywords);
       this.pi.updatePageData(event.title, event.description, event.keywords);
       this.updateBackgroundImage();
-      document.querySelector('mat-sidenav-content').scroll({top: 0, left: 10, behavior: 'smooth'});
+      this.leftSideNavContent.nativeElement.scrollTop = 0;
       this.fs.removeFab();
     });
     const token = localStorage.getItem(environment.tokenName);

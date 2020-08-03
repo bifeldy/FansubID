@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment';
 import { GlobalService } from '../services/global.service';
 import { BusyService } from '../services/busy.service';
-import { finalize } from 'rxjs/operators';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {

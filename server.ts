@@ -1,4 +1,18 @@
 import 'zone.js/dist/zone-node';
+import 'localstorage-polyfill';
+
+const domino = require('domino');
+const fs = require('fs');
+const path = require('path');
+
+console.log('[SERVER_PATH]', __dirname);
+
+const templateA = fs.readFileSync(path.join(__dirname + '/../browser', 'index.html')).toString();
+const win = domino.createWindow(templateA);
+
+global.window = win;
+global.document = win.document;
+global.localStorage = localStorage;
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
@@ -23,7 +37,12 @@ export function app(): express.Express {
   server.set('views', distFolder);
 
   // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
+  server.get('/api/**', (req, res) => {
+    res.json({
+      info: 'API Home Page',
+      version: '1.0.0'
+    });
+  });
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, {
