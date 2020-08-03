@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
-import { onSideNavChange, animateText } from '../../animations/animations';
+import { onSideNavChange, animateText } from '../../animations/anim-side-menu';
 
 import { Menu } from '../../models/Menu';
 
 import { LeftMenuService } from '../../services/left-menu.service';
 import { AuthService } from '../../services/auth.service';
+import { GlobalService } from '../../services/global.service';
 
 @Component({
   selector: 'app-left-menu',
@@ -50,7 +51,8 @@ export class LeftMenuComponent implements OnInit {
 
   constructor(
     private lms: LeftMenuService,
-    private as: AuthService
+    private as: AuthService,
+    private gs: GlobalService
   ) {
   }
 
@@ -85,6 +87,7 @@ export class LeftMenuComponent implements OnInit {
   }
 
   logout(): void {
+    this.gs.log('[LOGOUT]');
   }
 
 }

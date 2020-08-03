@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
-import { onMainContentChange } from './_shared/animations/animations';
+import { onMainContentChange } from './_shared/animations/anim-side-menu';
 
 import { environment } from '../environments/environment';
 

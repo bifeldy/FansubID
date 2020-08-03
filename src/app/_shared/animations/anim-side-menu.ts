@@ -1,6 +1,5 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
-
 export const onSideNavChange = trigger('onSideNavChange', [
   state('close',
     style({
@@ -16,7 +15,6 @@ export const onSideNavChange = trigger('onSideNavChange', [
   transition('open => close', animate('250ms ease-in')),
 ]);
 
-
 export const onMainContentChange = trigger('onMainContentChange', [
   state('close',
     style({
@@ -31,7 +29,6 @@ export const onMainContentChange = trigger('onMainContentChange', [
   transition('close => open', animate('250ms ease-in')),
   transition('open => close', animate('250ms ease-in')),
 ]);
-
 
 export const animateText = trigger('animateText', [
   state('hide',
