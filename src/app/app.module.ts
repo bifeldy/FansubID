@@ -14,9 +14,6 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { MyHammerConfig } from './_shared/helpers/my-hammer.config';
 
-import { SharedMaterialModule } from './_shared/helpers/shared-material.module';
-import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
-
 import { FakeBackendProvider } from './_shared/backends/fake-backend';
 import { HttpRequestInterceptor } from './_shared/interceptors/http-request.interceptor';
 import { HttpErrorInterceptor } from './_shared/interceptors/http-error.interceptor';
@@ -26,21 +23,24 @@ import { BrowserStateInterceptor } from './_shared/interceptors/browser-state.in
 import { LeftMenuService } from './_shared/services/left-menu.service';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './_shared/components/header/header.component';
-import { LeftMenuComponent } from './_shared/components/left-menu/left-menu.component';
-import { FooterComponent } from './_shared/components/footer/footer.component';
+
+import { SharedMaterialModule } from './_shared/helpers/shared-material.module';
+import { HeaderModule } from './_shared/components/header/header.module';
+import { LeftMenuModule } from './_shared/components/left-menu/left-menu.module';
+import { FooterModule } from './_shared/components/footer/footer.module';
+import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeaderComponent,
-    LeftMenuComponent,
-    FooterComponent
+    AppComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
+    HeaderModule,
+    LeftMenuModule,
+    FooterModule,
     TransferHttpCacheModule,
     ReactiveFormsModule,
     HttpClientModule,
