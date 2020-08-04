@@ -7,6 +7,7 @@ import { Menu } from '../../models/Menu';
 import { LeftMenuService } from '../../services/left-menu.service';
 import { AuthService } from '../../services/auth.service';
 import { GlobalService } from '../../services/global.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-left-menu',
@@ -50,6 +51,7 @@ export class LeftMenuComponent implements OnInit {
   ];
 
   constructor(
+    private router: Router,
     private lms: LeftMenuService,
     private as: AuthService,
     private gs: GlobalService
@@ -87,7 +89,8 @@ export class LeftMenuComponent implements OnInit {
   }
 
   logout(): void {
-    this.gs.log('[LOGOUT]');
+    this.as.logout();
+    this.router.navigate(['/home']);
   }
 
 }

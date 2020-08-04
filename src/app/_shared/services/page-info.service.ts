@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class PageInfoService {
 
-  siteName = 'Hikki';
+  siteName = environment.siteName;
 
   title = '';
   description = '';
   keywords = '';
+  image = '';
 
   constructor(
-    private titleService: Title,
-    private meta: Meta
+    private t: Title,
+    private m: Meta
   ) {
+    this.m.updateTag({ property: 'og:site_name', content: this.siteName });
   }
 
   get getTitle(): string {
@@ -30,17 +34,16 @@ export class PageInfoService {
     return this.keywords;
   }
 
-  updatePageData(newTitle: string, newDescription: string, newKeywords: string): void {
+  updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = '/favicon.ico'): void {
     this.title = newTitle;
     this.description = newDescription;
     this.keywords = newKeywords;
-  }
-
-  updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string): void {
-    this.titleService.setTitle(`${newTitle} | ${this.siteName}`);
-    this.meta.updateTag({ name: 'og:title', content: `${newTitle} | ${this.siteName}` });
-    this.meta.updateTag({ name: 'description', content: `${newDescription}` });
-    this.meta.updateTag({ name: 'og:description', content: `${newDescription}` });
-    this.meta.updateTag({ name: 'keywords', content: `${newKeywords}` });
+    this.image = newImage;
+    this.t.setTitle(`${this.title} | ${this.siteName}`);
+    this.m.updateTag({ name: 'description', content: this.description });
+    this.m.updateTag({ name: 'keywords', content: this.keywords });
+    this.m.updateTag({ property: 'og:title', content: this.title });
+    this.m.updateTag({ property: 'og:description', content: this.description });
+    this.m.updateTag({ property: 'og:image', content: this.image });
   }
 }

@@ -47,7 +47,6 @@ export class AppComponent implements OnInit {
       else if (e1 instanceof NavigationEnd) {
         this.route.firstChild.data.subscribe(e2 => {
           this.pi.updatePageMetaData(e2.title, e2.description, e2.keywords);
-          this.pi.updatePageData(e2.title, e2.description, e2.keywords);
           this.updateBackgroundImage();
           this.leftSideNavContent.nativeElement.scrollTop = 0;
           this.fs.removeFab();

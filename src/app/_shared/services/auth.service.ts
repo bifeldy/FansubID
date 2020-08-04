@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -22,7 +21,6 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
     private gs: GlobalService,
     private crypt: CryptoService,
     private cs: CookieService
@@ -64,7 +62,6 @@ export class AuthService {
   logout(): any {
     this.currentUserSubject.next(null);
     localStorage.clear();
-    this.router.navigate(['/login']);
   }
 
   register(registerData: any): any {

@@ -102,12 +102,8 @@ export class AnimeDetailComponent implements OnInit {
           this.pi.updatePageMetaData(
             `${this.animeData.title}`,
             `${this.animeData.synopsis}`,
-            `${this.animeData.title_synonyms.join(', ')}`
-          );
-          this.pi.updatePageData(
-            `Anime | ${this.animeData.title}`,
-            `${this.animeData.synopsis}`,
-            `${this.animeData.title_synonyms.join(', ')}`
+            `${this.animeData.title_synonyms.join(', ')}`,
+            this.animeData.images.jpg.image_url
           );
           this.panelData.push({ title: 'Synopsis', icon: 'history_edu', text: this.animeData.synopsis });
           this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
