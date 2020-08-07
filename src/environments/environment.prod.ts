@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   siteName: '「💤 Hikki ✨」',
   tokenName: 'bifeldy_token',
   sessionName: 'bifeldy_session',

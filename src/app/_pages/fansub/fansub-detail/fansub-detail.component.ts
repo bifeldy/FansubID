@@ -33,7 +33,7 @@ export class FansubDetailComponent implements OnInit {
 
   tabData = [
     {
-      name: 'Proyek Anime',
+      name: 'Proyek',
       icon: 'live_tv',
       type: 'list',
       data: [

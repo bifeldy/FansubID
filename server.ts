@@ -1,16 +1,21 @@
 import 'zone.js/dist/zone-node';
 import 'localstorage-polyfill';
+import 'reflect-metadata';
+
+import fs from 'fs';
+import path from 'path';
+
+import cors from 'cors';
 
 const domino = require('domino');
-const fs = require('fs');
-const path = require('path');
-
-const templateA = fs.readFileSync(path.join(process.cwd(), 'dist/hikki/browser', 'index.html')).toString();
-const win = domino.createWindow(templateA);
+const ssrPage = fs.readFileSync(path.join(process.cwd(), 'dist/hikki/browser', 'index.html')).toString();
+const win = domino.createWindow(ssrPage);
 
 global.window = win;
 global.document = win.document;
 global.localStorage = localStorage;
+
+import { createConnection } from 'typeorm';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
@@ -19,6 +24,27 @@ import { join } from 'path';
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { existsSync } from 'fs';
+
+import MorganChalk from './src/api/helpers/morganChalk';
+
+// Model
+import { User } from './src/api/entities/User';
+import { KartuTandaPenduduk } from './src/api/entities/KartuTandaPenduduk';
+
+const typeOrmConfig: any = {
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: '',
+  database: 'hikki',
+  synchronize: true,
+  logging: false,
+  entities: [User, KartuTandaPenduduk]
+};
+
+// Express Router
+import indexRouter from './src/api/routes';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -34,13 +60,25 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', distFolder);
 
-  // Example Express Rest API endpoints
-  server.get('/api/**', (req, res) => {
-    res.json({
-      info: 'API Home Page',
-      version: '1.0.0'
-    });
-  });
+  // middleware
+  server.use(MorganChalk.morganChalk);
+  server.use(express.json());
+  server.use(express.urlencoded({ extended: false }));
+  server.use(cors({
+    exposedHeaders: [
+      'Cache-Control',
+      'Content-Language',
+      'Content-Type',
+      'Expires',
+      'Last-Modified',
+      'Pragma',
+      'Content-Length',
+      'Content-Disposition'
+    ],
+  }));
+
+  // Express rest api endpoints
+  server.use('/api', indexRouter);
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, {
@@ -56,13 +94,16 @@ export function app(): express.Express {
 }
 
 function run(): void {
-  const port = process.env.PORT || 4000;
-
-  // Start up the Node server
-  const server = app();
-  server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
-  });
+  createConnection({
+    ...typeOrmConfig
+  }).then(async connection => {
+    console.log(`📚 MySQL Database ~ ${typeOrmConfig.username}@${typeOrmConfig.host}:${typeOrmConfig.port}/${typeOrmConfig.database} 🎀`);
+    const port = process.env.PORT || 4000;
+    const server = app();
+    server.listen(port, () => {
+      console.log(`✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`);
+    });
+  }).catch(error => console.log(error));
 }
 
 // Webpack will replace 'require' with '__webpack_require__'

@@ -1,0 +1,19 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "",
+  "database": "hikki",
+  "synchronize": true,
+  "logging": false,
+  "entities": [
+    "src/api/entities/**/*.ts"
+  ],
+  "migrations": [
+    "src/api/migrations/**/*.ts"
+  ],
+  "subscribers": [
+    "src/api/subscribers/**/*.ts"
+  ]
+}

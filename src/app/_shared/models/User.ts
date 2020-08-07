@@ -1,30 +1,14 @@
 import { Role } from './Role';
+import { KartuTandaPenduduk } from './KartuTandaPenduduk';
 
 interface User {
   id: number;
-  phone: string;
+  username: string;
+  email: string;
   role: Role;
   created_at: number;
   updated_at: number;
-
-  nik: number;
-  email: string;
-  telepon: string;
-  password: string;
-  nama: string;
-  tempat_lahir: string;
-  tanggal_lahir: number;
-  jenis_kelamin: string;
-  golongan_darah: string;
-  alamat: string;
-  rt: number;
-  rw: number;
-  kelurahan_desa: string;
-  kecamatan: string;
-  agama: string;
-  status_perkawinan: string;
-  pekerjaan: string;
-  kewarganegaraan: string;
+  kartu_tanda_penduduk_: KartuTandaPenduduk;
 }
 
 export default User;

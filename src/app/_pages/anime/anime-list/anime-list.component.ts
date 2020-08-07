@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -39,14 +39,15 @@ export const MY_FORMATS = {
 })
 export class AnimeListComponent implements OnInit {
 
+  fg: FormGroup;
+
   seasonalBanner = [
     { id: 1, name: 'winter', img: '/assets/img/season/winter.png' },
     { id: 2, name: 'spring', img: '/assets/img/season/spring.png' },
     { id: 3, name: 'summer', img: '/assets/img/season/summer.png' },
-    { id: 4, name: 'fall', img: '/assets/img/season/fall.png' },
+    { id: 4, name: 'fall', img: '/assets/img/season/fall.png' }
   ];
 
-  currentDate = null;
   currentMonth = null;
   currentYear = null;
 
@@ -73,16 +74,19 @@ export class AnimeListComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private fb: FormBuilder,
     private gs: GlobalService,
     private fs: FabService,
     private jikan: JikanService
   ) { }
 
   ngOnInit(): void {
-    this.currentDate = new FormControl(moment());
-    this.currentMonth = new Date(this.currentDate.value.format()).getMonth() + 1;
-    this.currentYear = new Date(this.currentDate.value.format()).getFullYear();
-    this.minDate = new Date(this.currentYear - 103, 0, 1);
+    this.fg = new FormGroup({
+      currentDate: new FormControl({ value: moment(), disabled: true }, Validators.required),
+    });
+    this.currentMonth = new Date(this.fg.value.currentDate.format()).getMonth() + 1;
+    this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
+    this.minDate = new Date('1917-01-01');
     this.maxDate = new Date(this.currentYear + 1, 11, 31);
     this.watchUrlRoute();
   }
@@ -90,7 +94,7 @@ export class AnimeListComponent implements OnInit {
   watchUrlRoute(): void {
     this.activatedRoute.queryParams.subscribe(p => {
       this.currentYear = p.year ? parseInt(p.year, 10) : new Date().getFullYear();
-      this.currentDate = new FormControl(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
+      this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
       this.selectedSeasonName = p.season ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth);
       this.selectedSeasonBannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
       this.getSeasonalAnime(p.year && p.season);
@@ -102,11 +106,11 @@ export class AnimeListComponent implements OnInit {
   }
 
   chosenYearHandler(normalizedYear: Moment, datepicker: MatDatepicker<Moment>): void {
-    const ctrlValue = this.currentDate.value;
+    const ctrlValue = this.fg.value.currentDate;
     ctrlValue.year(normalizedYear.year());
-    this.currentDate.setValue(ctrlValue);
-    this.currentMonth = new Date(this.currentDate.value.format()).getMonth() + 1;
-    this.currentYear = new Date(this.currentDate.value.format()).getFullYear();
+    this.fg.controls.currentDate.setValue(ctrlValue);
+    this.currentMonth = new Date(this.fg.value.currentDate.format()).getMonth() + 1;
+    this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
     datepicker.close();
     this.changeSeasonalAnime();
   }
@@ -114,11 +118,11 @@ export class AnimeListComponent implements OnInit {
   getSeasonalAnime(showFab = false): void {
     this.jikan.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
       res => {
-        this.seasonalAnimeData = res.anime.filter(a =>
+        this.seasonalAnimeData = res.results.filter(a =>
           a.continuing === false && a.type === 'TV' && a.r18 === false && a.kids === false
         ).sort((a, b) => b.score - a.score);
         this.tabData[0].data.row = [];
-        res.anime.forEach(sad => {
+        res.results.forEach(sad => {
           this.tabData[0].data.row.push({
             mal_id: sad.mal_id,
             Jenis: sad.type,

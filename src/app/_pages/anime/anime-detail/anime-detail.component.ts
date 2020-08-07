@@ -96,7 +96,7 @@ export class AnimeDetailComponent implements OnInit {
       this.animeId = params.animeId;
       this.jikan.getAnime(this.animeId).subscribe(
         res => {
-          this.animeData = res.data;
+          this.animeData = res.result;
           this.chipData = this.animeData.genres;
           this.chipData.map(g => (g.selected = true, g.color = Warna.PINK));
           this.pi.updatePageMetaData(
