@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 const domino = require('domino');
 const ssrPage = fs.readFileSync(path.join(process.cwd(), 'dist/hikki/browser', 'index.html')).toString();
@@ -48,7 +49,14 @@ import indexRouter from './src/api/routes';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
+
+  const apiLimiter = rateLimit({
+    windowMs: 1000, // 1 Second
+    max: 2, // 2 Request
+    message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 💩'
+  });
   const server = express();
+
   const distFolder = join(process.cwd(), 'dist/hikki/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
@@ -78,7 +86,7 @@ export function app(): express.Express {
   }));
 
   // Express rest api endpoints
-  server.use('/api', indexRouter);
+  server.use('/api', apiLimiter, indexRouter);
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, {
