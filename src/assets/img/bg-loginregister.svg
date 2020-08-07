@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-5 {
+        filter: url(#Path_3859);
+      }
+
+      .cls-6 {
+        filter: url(#Path_3858);
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_2324" data-name="Rectangle 2324" class="cls-1" width="1280" height="720"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.104" y1="0.461" x2="0.814" y2="0.705" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#e84360"/>
+      <stop offset="1" stop-color="#7764e4"/>
+    </linearGradient>
+    <filter id="Path_3858" x="-121.387" y="-171.438" width="768.135" height="367.85" filterUnits="userSpaceOnUse">
+      <feOffset dy="2" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-opacity="0.122"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="linear-gradient-2" x1="0.359" y1="0.284" x2="0.256" y2="1.222" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f8c246"/>
+      <stop offset="1" stop-color="#e84360"/>
+    </linearGradient>
+    <filter id="Path_3859" x="954.613" y="426.562" width="768.135" height="367.85" filterUnits="userSpaceOnUse">
+      <feOffset dy="-2" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="6" result="blur-2"/>
+      <feFlood flood-opacity="0.122"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Mask_Group_1" data-name="Mask Group 1" class="cls-2">
+    <g class="cls-6" transform="matrix(1, 0, 0, 1, 0, 0)">
+      <path id="Path_3858-2" data-name="Path 3858" class="cls-3" d="M-216.387,126.229C134.371,220.214-46.962-6.017,160.681,55.766S240.729-67.97,429.4-54.887s9.335-127.551,9.335-127.551L-173.07-104.7Z" transform="translate(113 27)"/>
+    </g>
+    <g class="cls-5" transform="matrix(1, 0, 0, 1, 0, 0)">
+      <path id="Path_3859-2" data-name="Path 3859" class="cls-4" d="M515.748-159.255C164.99-253.24,346.323-27.009,138.68-88.792S58.631,34.944-130.042,21.861s-9.335,127.551-9.335,127.551L472.431,71.67Z" transform="translate(1189 629)"/>
+    </g>
+  </g>
+</svg>

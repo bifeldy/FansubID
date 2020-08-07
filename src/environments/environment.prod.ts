@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  siteName: '「💤 Hikki ✨」',
+  siteName: 'Hikki',
   tokenName: 'bifeldy_token',
   sessionName: 'bifeldy_session',
   apiUrl: '/api'

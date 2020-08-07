@@ -20,7 +20,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
     method: 'GET',
     uri: `${jikanV3}/season/${year}/${season}`
   }, (error, result, body) => {
-    return res.json({
+    return res.status(result.statusCode).json({
       info: `😅 Seasonal Anime API :: ${season} ${year} 🤣`,
       results: JSON.parse(body).anime
     });
@@ -33,7 +33,7 @@ router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
     method: 'GET',
     uri: `${jikanV4}/anime/${req.params.id}`
   }, (error, result, body) => {
-    return res.json({
+    return res.status(result.statusCode).json({
       info: `😅 Detail Anime API :: ${req.params.id} 🤣`,
       result: JSON.parse(body).data
     });

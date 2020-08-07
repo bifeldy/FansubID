@@ -22,6 +22,10 @@ body {
   background: #ff4081;
 }
 
+.form-control {
+  background-color: #0000 !important;
+}
+
 .spacer {
   flex: 1 1 auto;
 }

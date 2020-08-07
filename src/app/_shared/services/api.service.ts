@@ -44,7 +44,7 @@ export class ApiService {
     );
   }
 
-  postData(path: string, model = {}, multipart = false, timedOut = 60000): Observable<any> {
+  postData(path: string, model = {}, multipart = false, timedOut = 5000): Observable<any> {
     this.gs.log('[API_POST]', path);
     const options = {};
     let body = model;
@@ -53,7 +53,7 @@ export class ApiService {
       const headers = new HttpHeaders().append('Content-Type', 'multipart/form-data');
       Object.assign(options, { headers });
       body = this.prepareFormData(model);
-      timer = 90000;
+      timer = 10000;
     }
     return this.http.post(path.startsWith('http') ? path : environment.apiUrl + path, body, options).pipe(
       catchError(err => throwError(err)),
@@ -61,7 +61,7 @@ export class ApiService {
     );
   }
 
-  putData(path: string, model = {}, multipart = false, timedOut = 30000): Observable<any> {
+  putData(path: string, model = {}, multipart = false, timedOut = 5000): Observable<any> {
     this.gs.log('[API_PUT]', path);
     const options = {};
     let body = model;
@@ -76,7 +76,7 @@ export class ApiService {
     );
   }
 
-  deleteData(path: string, timedOut = 15000): Observable<any> {
+  deleteData(path: string, timedOut = 5000): Observable<any> {
     this.gs.log('[API_DEL]', path);
     return this.http.delete(path.startsWith('http') ? path : environment.apiUrl + path).pipe(
       catchError(err => throwError(err)),

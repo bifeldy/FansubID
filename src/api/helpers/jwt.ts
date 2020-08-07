@@ -7,14 +7,14 @@ const jwtAlgorithm = 'HS512';
 const jwtIssuer = 'Bifeldy';
 const jwtAudience = environment.siteName;
 const jwtSecretKey = `Bifeldy-${jwtAudience}`;
-const jwtExpiredIn = 60 * 60;
+const jwtExpiredIn = 24 * 60 * 60;
 
 function JwtEncode(user: any, rememberMe = false): any {
   return JWT.sign({ user }, jwtSecretKey, {
     algorithm: jwtAlgorithm,
     issuer: jwtIssuer,
     audience: jwtAudience,
-    expiresIn: rememberMe === true ? (24 * 60 * 60) : jwtExpiredIn,
+    expiresIn: rememberMe === true ? (7 * 24 * 60 * 60) : jwtExpiredIn,
   });
 }
 

@@ -96,6 +96,7 @@ export class AnimeDetailComponent implements OnInit {
       this.animeId = params.animeId;
       this.jikan.getAnime(this.animeId).subscribe(
         res => {
+          this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
           this.animeData = res.result;
           this.chipData = this.animeData.genres;
           this.chipData.map(g => (g.selected = true, g.color = Warna.PINK));
@@ -109,7 +110,8 @@ export class AnimeDetailComponent implements OnInit {
           this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
         },
         err => {
-          this.gs.log(err);
+          this.gs.log('[ANIME_DETAIL_ERROR]', err);
+          this.router.navigateByUrl('/anime');
         }
       );
     });
@@ -129,15 +131,16 @@ export class AnimeDetailComponent implements OnInit {
   }
 
   openGenre(data): void {
+    this.gs.log('[ANIME_DETAIL_OPEN_GENRE]', data);
     window.open(data.url, '_blank');
   }
 
   openFansub(data): void {
-    this.gs.log(data);
+    this.gs.log('[ANIME_DETAIL_OPEN_FANSUB]', data);
   }
 
   openFile(data): void {
-    this.gs.log(data);
+    this.gs.log('[ANIME_DETAIL_OPEN_FILE]', data);
   }
 
 }

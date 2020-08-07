@@ -15,6 +15,26 @@ const routes: Routes = [
   //   }
   // },
   {
+    path: 'login',
+    loadChildren: () => import('./_pages/login/login.module').then(m => m.LoginModule),
+    data: {
+      title: 'Masuk',
+      description: 'Halaman Login',
+      keywords: 'Login',
+      roles: []
+    }
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./_pages/register/register.module').then(m => m.RegisterModule),
+    data: {
+      title: 'Pendaftaran',
+      description: 'Halaman Pembuatan Akun Baru',
+      keywords: 'Register',
+      roles: []
+    }
+  },
+  {
     path: 'home',
     loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule),
     data: {
@@ -28,7 +48,7 @@ const routes: Routes = [
     path: 'anime',
     loadChildren: () => import('./_pages/anime/anime.module').then(m => m.AnimeModule),
     data: {
-      title: 'List | Anime & Garapan Musiman',
+      title: 'List Anime & Garapan Musiman',
       description: 'Daftar Isi Anime Musiman Yang Baru Saja Rilis Subtitle Indonesianya',
       keywords: 'Anime Subtitle Indonesia',
       roles: []
@@ -38,7 +58,7 @@ const routes: Routes = [
     path: 'fansub',
     loadChildren: () => import('./_pages/fansub/fansub.module').then(m => m.FansubModule),
     data: {
-      title: 'Katalog | Informasi Seluruh Fansub Indonesia',
+      title: 'Katalog Informasi Seluruh Fansub Indonesia',
       description: 'Daftar Isi Seluruh Fansub Indonesia',
       keywords: 'Fansub Indonesia',
       roles: []

@@ -75,7 +75,6 @@ export class FansubDetailComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.fansubId = params.fansubId;
-      this.gs.log('[FANSUB_DETAIL_PAGE]', this.fansubId);
       this.chipData.map(g => (g.selected = true, g.color = Warna.BIRU));
       this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
       this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.fansubData.url, true);
@@ -83,15 +82,15 @@ export class FansubDetailComponent implements OnInit {
   }
 
   openTag(data): void {
-    this.gs.log(data);
+    this.gs.log('[FANSUB_DETAIL_OPEN_TAG]', data);
   }
 
   openAnime(data): void {
-    this.gs.log(data);
+    this.gs.log('[FANSUB_DETAIL_OPEN_ANIME]', data);
   }
 
   openFile(data): void {
-    this.gs.log(data);
+    this.gs.log('[FANSUB_DETAIL_OPEN_FILE]', data);
   }
 
 }

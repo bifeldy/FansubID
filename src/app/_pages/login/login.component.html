@@ -1,0 +1,73 @@
+<div class="container-fluid align-items-center w-100 h-100" [style.background-image]="'url(' + bgLoginImg + ')'"
+  style="background-size: cover; background-repeat: repeat; background-position: center; transform: rotateY(180deg);">
+  <div class="row align-items-center h-100 m-0" style="transform: rotateY(180deg);">
+    <div class="col-12 col-md-10 m-auto">
+      <div class="row border rounded bg-light">
+        <div class="col-lg-5 col-md-3 ml-auto p-0" [ngStyle]="{
+          'background-position': 'center',
+          'background-size': 'cover',
+          'background-image': 'url(' + loginImg + ')'
+        }"></div>
+        <div class="col-lg-7 col-md-9 mr-auto p-0">
+          <div class="card bg-transparent border-0">
+            <div class="card-body">
+              <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()">
+                <div class="text-center mb-4">
+                  <img class="mb-4" src="/favicon.ico" />
+                  <h1 class="h3 mb-3 font-weight-normal">Hai, Jumpa Lagi! >_<"</h1>
+                  <p class="text-danger">{{ loginInfo }}</p>
+                </div>
+                <div class="form-group row py-2">
+                  <label for="userNameOrEmail" class="col-md-4 col-form-label text-md-right">Nama Pengguna</label>
+                  <div class="col-md-8">
+                    <input type="text" id="userNameOrEmail" class="form-control {{
+                        !fg.get('userNameOrEmail').valid && fg.get('userNameOrEmail').touched ? 'is-invalid' : ''
+                      }}" placeholder="Username / E-Mail" required autofocus formControlName="userNameOrEmail" autocomplete="email, username" />
+                    <span class="invalid-feedback" role="alert">
+                      <strong>Username Tidak Boleh Kosong!</strong>
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group row py-2">
+                  <label for="password" class="col-md-4 col-form-label text-md-right">Kata Sandi</label>
+                  <div class="col-md-8">
+                    <input type="password" id="password" class="form-control {{
+                        !fg.get('password').valid && fg.get('password').touched ? 'is-invalid' : ''
+                      }}" placeholder="Password" required formControlName="password" autocomplete="current-password, new-password" />
+                    <span role="alert" *ngIf="!fg.get('password').valid && fg.get('password').touched" style="font-size: 80%; color: #dc3545;">
+                      <strong>Password Tidak Boleh Kosong!</strong>
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group row py-2">
+                  <div class="col offset-md-4">
+                    <div class="form-check">
+                      <input id="rememberMe" class="form-check-input" type="checkbox" formControlName="rememberMe" />
+                      <label class="form-check-label" for="rememberMe">Biarkan Saya Tetap Login Hingga 7 Hari</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row mb-0 py-2">
+                  <div class="col-md-8 offset-md-4">
+                    <div class="row">
+                      <div class="col-lg-5 col-12">
+                        <button mat-flat-button color="primary" class="w-100" type="submit" [disabled]="submitted || fg.invalid">
+                          Masuk <mat-icon class="ml-1">vpn_key</mat-icon>
+                        </button>
+                      </div>
+                      <div class="col-lg-7 col-12">
+                        <a mat-stroked-button color="warn" class="w-100" type="button" routerLink="/register" [disabled]="submitted">
+                          <mat-icon class="mr-1">close</mat-icon> Belum Punya Akun~
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

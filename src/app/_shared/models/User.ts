@@ -6,6 +6,7 @@ interface User {
   username: string;
   email: string;
   role: Role;
+  image_url: string;
   created_at: number;
   updated_at: number;
   kartu_tanda_penduduk_: KartuTandaPenduduk;

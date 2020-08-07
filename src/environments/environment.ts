@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  siteName: '「💤 Hikki ✨」',
+  siteName: 'Hikki',
   tokenName: 'bifeldy_token',
   sessionName: 'bifeldy_session',
-  apiUrl: '/api'
+  apiUrl: 'http://localhost:4000/api'
 };
 
 /*

@@ -118,6 +118,7 @@ export class AnimeListComponent implements OnInit {
   getSeasonalAnime(showFab = false): void {
     this.jikan.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
       res => {
+        this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
         this.seasonalAnimeData = res.results.filter(a =>
           a.continuing === false && a.type === 'TV' && a.r18 === false && a.kids === false
         ).sort((a, b) => b.score - a.score);
@@ -146,7 +147,7 @@ export class AnimeListComponent implements OnInit {
         }
       },
       err => {
-        this.gs.log(err);
+        this.gs.log('[ANIME_SEASONAL_ERROR]', err);
       }
     );
   }
@@ -161,11 +162,12 @@ export class AnimeListComponent implements OnInit {
   }
 
   openAnimePage(data): void {
+    this.gs.log('[ANIME_SEASONAL_OPEN_FANSUB]', data);
     this.router.navigateByUrl(`/anime/${data.mal_id}`);
   }
 
   openFansub(data): void {
-    this.gs.log(data);
+    this.gs.log('[ANIME_SEASONAL_OPEN_FANSUB]', data);
   }
 
 }

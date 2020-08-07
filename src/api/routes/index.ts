@@ -17,9 +17,32 @@ router.get('/', (req, res) => {
   res.redirect('/');
 });
 
+// POST `/api/register`
+router.post('/register', auth.registerModule, (req: any, res: Response, next) => {
+  res.status(200).json({
+    info: '😚 Berhasil Registrasi. Yeay! 🤩',
+    result: {
+      token: req.user.session_token
+    }
+  });
+});
+
 // POST `/api/login`
-router.post('/login', (req: any, res: Response, next) => {
-  auth.loginModule(req, res, next);
+router.post('/login', auth.loginModule, (req: any, res: Response, next) => {
+  res.status(200).json({
+    info: '😚 Berhasil Login. Yeay! 🤩',
+    result: {
+      token: req.user.session_token
+    }
+  });
+});
+
+// DEL `/api/logout`
+router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: any, res: Response, next) => {
+  res.status(200).json({
+    info: '😍 200 - Berhasil Keluar~ 🥰',
+    result: req.user
+  });
 });
 
 // POST `/api/verify`

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { onSideNavChange, animateText } from '../../animations/anim-side-menu';
 
@@ -6,8 +7,8 @@ import { Menu } from '../../models/Menu';
 
 import { LeftMenuService } from '../../services/left-menu.service';
 import { AuthService } from '../../services/auth.service';
-import { GlobalService } from '../../services/global.service';
-import { Router } from '@angular/router';
+
+import User from '../../models/User';
 
 @Component({
   selector: 'app-left-menu',
@@ -17,7 +18,7 @@ import { Router } from '@angular/router';
 })
 export class LeftMenuComponent implements OnInit {
 
-  currentUser = null;
+  currentUser: User = null;
 
   public mainMenus: Menu[] = [
     {
@@ -53,8 +54,7 @@ export class LeftMenuComponent implements OnInit {
   constructor(
     private router: Router,
     private lms: LeftMenuService,
-    private as: AuthService,
-    private gs: GlobalService
+    private as: AuthService
   ) {
   }
 
@@ -90,7 +90,6 @@ export class LeftMenuComponent implements OnInit {
 
   logout(): void {
     this.as.logout();
-    this.router.navigate(['/home']);
   }
 
 }

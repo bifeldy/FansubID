@@ -12,6 +12,7 @@ import { PageInfoService } from './_shared/services/page-info.service';
 import { AuthService } from './_shared/services/auth.service';
 import { FabService } from './_shared/services/fab.service';
 import { BusyService } from './_shared/services/busy.service';
+import { GlobalService } from './_shared/services/global.service';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,8 @@ export class AppComponent implements OnInit {
     private pi: PageInfoService,
     private lms: LeftMenuService,
     private as: AuthService,
-    private fs: FabService
+    private fs: FabService,
+    private gs: GlobalService
   ) {
   }
 
@@ -55,7 +57,16 @@ export class AppComponent implements OnInit {
     });
     const token = localStorage.getItem(environment.tokenName);
     if (token) {
-      this.as.verify(token).subscribe(success => {}, error => this.as.logout());
+      this.as.verify(token).subscribe(
+        success => {
+          this.gs.log('[VERIFY_SUCCESS]', success);
+        },
+        error => {
+          this.gs.log('[VERIFY_ERROR]', error);
+          this.as.logout();
+          localStorage.clear();
+        }
+      );
     }
   }
 
