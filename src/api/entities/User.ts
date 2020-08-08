@@ -21,7 +21,7 @@ export class User {
   @Column({ type: 'varchar', length: 255 })
   email: string;
 
-  @Column({ type: 'varchar', length: 255, default: '/favicon.ico' })
+  @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name
   image_url: string;
 

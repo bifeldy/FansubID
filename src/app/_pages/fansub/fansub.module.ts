@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { ChartsModule } from 'ng2-charts';
+
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { MaterialChipModule } from 'src/app/_shared/components/material-chip/material-chip.module';
@@ -32,7 +34,8 @@ const routes: Routes = [
     SharedMaterialModule,
     MaterialTabModule,
     MaterialExpansionPanelModule,
-    MaterialChipModule
+    MaterialChipModule,
+    ChartsModule
   ]
 })
 export class FansubModule { }

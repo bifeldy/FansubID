@@ -16,16 +16,12 @@ export class UserService {
     return this.api.getData('/user');
   }
 
-  getUserData(userAddress): any {
-    return this.api.getData(`/user/${userAddress}`);
+  getUserData(username): any {
+    return this.api.getData(`/user/${username}`);
   }
 
   cekNik(data): any {
-    return this.api.postData('/kpu/cek-nik', data);
-  }
-
-  cekAccount(data): any {
-    return this.api.postData('/check-account', data);
+    return this.api.postData('/cek-nik', data);
   }
 
   registerAccount(data): any {

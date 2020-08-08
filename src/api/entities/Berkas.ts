@@ -13,19 +13,31 @@ export class Berkas {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  urls: string;
+  @Column({ type: 'boolean', default: false })
+  private: boolean;
 
-  @Column({ type: 'varchar', length: 255, default: '/favicon.ico' })
+  @Column({ type: 'text' })
+  // tslint:disable-next-line: variable-name
+  download_url: string;
+
+  @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name
   image_url: string;
 
   @Column({ type: 'bigint', nullable: true })
   // tslint:disable-next-line: variable-name
-  api_id: number;
+  mal_id: number;
+
+  @Column({ type: 'int', nullable: true })
+  // tslint:disable-next-line: variable-name
+  episode: number;
+
+  @Column({ type: 'bigint', default: 0, nullable: true })
+  // tslint:disable-next-line: variable-name
+  view_count: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   // tslint:disable-next-line: variable-name

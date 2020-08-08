@@ -56,7 +56,9 @@
             "scripts": [],
             "allowedCommonJsDependencies": [
               "hammerjs",
-              "crypto-js"
+              "crypto-js",
+              "chart.js",
+              "lodash"
             ]
           },
           "configurations": {

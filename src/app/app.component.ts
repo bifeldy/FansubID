@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
-import { filter, map, mergeMap } from 'rxjs/operators';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
 
@@ -39,6 +37,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: 'Development' With Log Enabled 📌`);
     this.router.events.subscribe(e1 => {
       if (e1 instanceof RouteConfigLoadStart) {
         this.bs.busy();

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="fansubData">
   <div class="fansub-info align-items-center">
     <div class="media row py-3 px-2">
 
@@ -6,18 +6,24 @@
       <div class="col-md-4 col-xl-3 px-3">
         <div class="row sticky-top pt-3">
           <div class="col-12">
-            <img class="border w-100" [src]="fansubData.banner" />
+            <img class="w-100" [src]="fansubData.image_url" />
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="accent" matTooltip="Fansub Sudah Tidak Aktif Lagi">
-              <mat-icon>calendar_today</mat-icon>
-              &nbsp; Berdiri Sejak Tahun 2013
+            <button mat-stroked-button class="w-100" color="accent" matTooltip="Status Fansub :: {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}">
+              <mat-icon>calendar_today</mat-icon> {{ fansubData.born | date:'longDate' }} &nbsp;
+              <mat-icon>history</mat-icon> {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}
             </button>
           </div>
-          <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="primary" matTooltip="Buka Fanpage Resmi Di Facebook">
+          <div class="col-12 text-center pt-3" *ngIf="getUrlByName('facebook')">
+            <a [href]="getUrlByName('facebook')" mat-stroked-button class="w-100" color="primary" matTooltip="Kunjungi Halaman Fanpage">
               <mat-icon>facebook</mat-icon>
               Facebook Fanpage
+            </a>
+          </div>
+          <div class="col-12 text-center pt-3">
+            <button mat-stroked-button class="w-100 text-success" matTooltip="Perbaharui Data Fansub" (click)="editFansubData()">
+              <mat-icon>edit</mat-icon>
+              Perbaharui Informasi
             </button>
           </div>
         </div>
@@ -27,13 +33,13 @@
       <div class="col-md-8 col-xl-9 pt-3">
         <div class="row py-3 px-0 mt-auto">
           <h1 class="m-0">
-            <b>{{ fansubData.title }}</b>
+            <b>{{ fansubData.name }}</b>
           </h1>
         </div>
         <div class="row py-3">
           <app-material-chip (chipClicked)="openTag($event)" [chipData]="chipData"></app-material-chip>
         </div>
-        <div class="row py-3">
+        <div class="row py-3" *ngIf="panelData.length > 0">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
         </div>
         <div class="row py-3">
@@ -44,6 +50,6 @@
       </div>
     </div>
   </div>
-  <div class="fansub-banner fansub-banner-1 align-items-center" [style.background-image]="'url(' + fansubData.banner + ')'"></div>
+  <div class="fansub-banner fansub-banner-1 align-items-center" [style.background-image]="'url(' + fansubData.image_url + ')'"></div>
   <div class="fansub-banner fansub-banner-2 align-items-center"></div>
 </div>

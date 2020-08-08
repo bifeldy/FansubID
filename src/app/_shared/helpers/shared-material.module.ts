@@ -17,6 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSortModule } from '@angular/material/sort';
 
 // import { A11yModule } from '@angular/cdk/a11y';
 // import { ClipboardModule } from '@angular/cdk/clipboard';
@@ -41,7 +42,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // import { MatSliderModule } from '@angular/material/slider';
 // import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 // import { MatSnackBarModule } from '@angular/material/snack-bar';
-// import { MatSortModule } from '@angular/material/sort';
 // import { MatTreeModule } from '@angular/material/tree';
 // import { OverlayModule } from '@angular/cdk/overlay';
 
@@ -65,6 +65,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatSortModule
   ]
 })
 export class SharedMaterialModule {}

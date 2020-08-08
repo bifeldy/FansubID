@@ -29,8 +29,11 @@ import { existsSync } from 'fs';
 import MorganChalk from './src/api/helpers/morganChalk';
 
 // Model
-import { User } from './src/api/entities/User';
 import { KartuTandaPenduduk } from './src/api/entities/KartuTandaPenduduk';
+import { User } from './src/api/entities/User';
+import { ProjectType } from 'src/api/entities/ProjectType';
+import { Fansub } from 'src/api/entities/Fansub';
+import { Berkas } from 'src/api/entities/Berkas';
 
 const typeOrmConfig: any = {
   type: 'mysql',
@@ -41,7 +44,7 @@ const typeOrmConfig: any = {
   database: 'hikki',
   synchronize: true,
   logging: false,
-  entities: [User, KartuTandaPenduduk]
+  entities: [User, KartuTandaPenduduk, ProjectType, Fansub, Berkas]
 };
 
 // Express Router

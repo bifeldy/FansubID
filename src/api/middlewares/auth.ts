@@ -1,6 +1,9 @@
-import createError from 'http-errors';
 
 import { getRepository } from 'typeorm';
+
+import { Response, NextFunction } from 'express';
+
+import { UserRequest } from '../models/UserRequest';
 
 import { User } from '../entities/User';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
@@ -11,14 +14,14 @@ import * as CryptoJS from 'crypto-js';
 import jwt from '../helpers/jwt';
 
 // tslint:disable-next-line: typedef
-async function registerModule(req, res, next) {
+async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
     if (
       'username' in req.body &&
       'name' in req.body &&
       'email' in req.body &&
       'password' in req.body &&
-      'agree' in req.body
+      'agree' in req.body && (JSON.parse(req.body.agree) === true)
     ) {
       const userRepo = getRepository(User);
       const selectedUser = await userRepo.find({
@@ -31,22 +34,17 @@ async function registerModule(req, res, next) {
         const ktpRepo = getRepository(KartuTandaPenduduk);
         const newUserKtp = new KartuTandaPenduduk();
         newUserKtp.nama = req.body.name;
-        await ktpRepo.save(newUserKtp);
-        let newUser = new User();
+        const resKtpSave = await ktpRepo.save(newUserKtp);
+        const newUser = new User();
         newUser.username = req.body.username;
         newUser.email = req.body.email;
         newUser.password = CryptoJS.SHA512(req.body.password).toString();
-        newUser.kartu_tanda_penduduk_ = newUserKtp;
-        await userRepo.save(newUser);
-        newUser = await userRepo.findOneOrFail({
-          username: newUser.username,
-          email: newUser.email,
-          password: newUser.password
-        });
-        const { password, session_token, ...noPwdSsToken } = newUser;
+        newUser.kartu_tanda_penduduk_ = resKtpSave;
+        let resUserSave = await userRepo.save(newUser);
+        const { password, session_token, ...noPwdSsToken } = resUserSave;
         newUser.session_token = jwt.JwtEncode(noPwdSsToken, false);
-        await userRepo.save(newUser);
-        req.user = newUser;
+        resUserSave = await userRepo.save(newUser);
+        req.user = (resUserSave as any);
         return next();
       } else {
         const result: any = {};
@@ -77,7 +75,7 @@ async function registerModule(req, res, next) {
 }
 
 // tslint:disable-next-line: typedef
-async function loginModule(req, res, next) {
+async function loginModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
     if ('userNameOrEmail' in req.body && 'password' in req.body) {
       const reqBodyPassword = CryptoJS.SHA512(req.body.password).toString();
@@ -90,8 +88,8 @@ async function loginModule(req, res, next) {
       });
       const { password, session_token, ...noPwdSsToken } = selectedUser;
       selectedUser.session_token = jwt.JwtEncode(noPwdSsToken, ('rememberMe' in req.body && JSON.parse(req.body.rememberMe) === true));
-      await userRepo.save(selectedUser);
-      req.user = selectedUser;
+      const resUserSave = await userRepo.save(selectedUser);
+      req.user = (resUserSave as any);
       return next();
     } else {
       throw new Error('Username, Email, atau Password tidak tepat!');
@@ -107,7 +105,7 @@ async function loginModule(req, res, next) {
 }
 
 // tslint:disable-next-line: typedef
-async function isAuthorized(req, res, next) {
+async function isAuthorized(req: UserRequest, res: Response, next: NextFunction) {
   const decoded = jwt.JwtDecode(req, res, next);
   if (decoded && 'token' in decoded && 'id' in decoded.user) {
     const userRepo = getRepository(User);
@@ -123,16 +121,21 @@ async function isAuthorized(req, res, next) {
       delete selectedUser[0].kartu_tanda_penduduk_.id;
       delete selectedUser[0].kartu_tanda_penduduk_.created_at;
       delete selectedUser[0].kartu_tanda_penduduk_.updated_at;
-      req.user = selectedUser[0];
+      req.user = (selectedUser[0] as any);
       return next();
     } else {
-      return next(createError(401));
+      res.status(401).json({
+        info: '🙄 401 - Authorisasi Sesi Gagal! 😪',
+        result: {
+          message: 'Akses Token Ditolak!'
+        }
+      });
     }
   }
 }
 
 // tslint:disable-next-line: typedef
-async function logoutModule(req, res, next) {
+async function logoutModule(req: UserRequest, res: Response, next: NextFunction) {
   const decoded = jwt.JwtDecode(req, res, next);
   if (decoded && 'token' in decoded && 'id' in decoded.user) {
     try {
@@ -142,10 +145,10 @@ async function logoutModule(req, res, next) {
           { id: decoded.user.id, session_token: decoded.token }
         ]
       });
-      const { password, session_token, ...noPwdSsToken } = selectedUser;
       selectedUser.session_token = null;
-      await userRepo.save(selectedUser);
-      req.user = noPwdSsToken;
+      const resUserSave = await userRepo.save(selectedUser);
+      const { password, session_token, ...noPwdSsToken } = resUserSave;
+      req.user = (noPwdSsToken as any);
       return next();
     } catch (error) {
       res.status(400).json({

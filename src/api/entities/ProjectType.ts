@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'berkas' })
+@Entity({ name: 'project_types' })
 export class ProjectType {
 
   @PrimaryGeneratedColumn('increment')
@@ -9,10 +9,10 @@ export class ProjectType {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name
   image_url: string;
 

@@ -6,7 +6,7 @@ import { Warna } from '../../../_shared/models/Warna';
 import { JikanService } from '../../../_shared/services/jikan.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
-import { FabService } from 'src/app/_shared/services/fab.service';
+import { FabService } from '../../../_shared/services/fab.service';
 
 @Component({
   selector: 'app-anime-detail',
@@ -28,16 +28,16 @@ export class AnimeDetailComponent implements OnInit {
       icon: 'closed_caption',
       type: 'grid',
       data: [
-        { title: 'Fansub 01 Long Name', description: 'http://01' },
-        { title: 'Fansub 02 Long Name', description: 'http://02' },
-        { title: 'Fansub 03 Long Name', description: 'http://03' },
-        { title: 'Fansub 04 Long Name', description: 'http://04' },
-        { title: 'Fansub 05 Long Name', description: 'http://05' },
-        { title: 'Fansub 06 Long Name', description: 'http://06' },
-        { title: 'Fansub 07 Long Name', description: 'http://07' },
-        { title: 'Fansub 08 Long Name', description: 'http://08' },
-        { title: 'Fansub 09 Long Name', description: 'http://09' },
-        { title: 'Fansub 10 Long Name', description: 'http://10' }
+        { title: 'Fansub 01 Slug Name', description: 'http://01' },
+        { title: 'Fansub 02 Slug Name', description: 'http://02' },
+        { title: 'Fansub 03 Slug Name', description: 'http://03' },
+        { title: 'Fansub 04 Slug Name', description: 'http://04' },
+        { title: 'Fansub 05 Slug Name', description: 'http://05' },
+        { title: 'Fansub 06 Slug Name', description: 'http://06' },
+        { title: 'Fansub 07 Slug Name', description: 'http://07' },
+        { title: 'Fansub 08 Slug Name', description: 'http://08' },
+        { title: 'Fansub 09 Slug Name', description: 'http://09' },
+        { title: 'Fansub 10 Slug Name', description: 'http://10' }
       ]
     },
     {
@@ -111,7 +111,11 @@ export class AnimeDetailComponent implements OnInit {
         },
         err => {
           this.gs.log('[ANIME_DETAIL_ERROR]', err);
-          this.router.navigateByUrl('/anime');
+          this.router.navigate(['/error'], {
+            queryParams: {
+              returnUrl: '/anime'
+            }
+          });
         }
       );
     });
@@ -131,16 +135,17 @@ export class AnimeDetailComponent implements OnInit {
   }
 
   openGenre(data): void {
-    this.gs.log('[ANIME_DETAIL_OPEN_GENRE]', data);
+    this.gs.log('[ANIME_DETAIL_CLICK_GENRE]', data.mal_id);
     window.open(data.url, '_blank');
   }
 
   openFansub(data): void {
-    this.gs.log('[ANIME_DETAIL_OPEN_FANSUB]', data);
+    this.gs.log('[ANIME_DETAIL_CLICK_FANSUB]', data);
+    this.router.navigateByUrl(`/fansub/${data.id}`);
   }
 
   openFile(data): void {
-    this.gs.log('[ANIME_DETAIL_OPEN_FILE]', data);
+    this.gs.log('[ANIME_DETAIL_CLICK_FILE]', data);
   }
 
 }

@@ -22,7 +22,7 @@ export class MaterialTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<any>;
   rippleDisabled = null;
 
-  pageSizeOptions = [5, 10, 25, 50, 100, 250, 500];
+  pageSizeOptions = [10, 25, 50, 100, 250, 500];
 
   constructor() {
   }
@@ -41,7 +41,7 @@ export class MaterialTableComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     if (this.dataSource) {
       this.dataSource.data = this.tableDataRow;
-      this.paginator._changePageSize(5);
+      this.paginator._changePageSize(this.pageSizeOptions[0]);
     }
   }
 

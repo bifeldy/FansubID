@@ -6,11 +6,17 @@ import auth from '../middlewares/auth';
 
 // Child router
 import seasonalRouter from './anime';
+import projectRouter from './project';
+import fansubRouter from './fansub';
+import berkasRouter from './berkas';
 
 const router = Router();
 
 // Child route url
 router.use('/anime', seasonalRouter);
+router.use('/project', projectRouter);
+router.use('/fansub', fansubRouter);
+router.use('/berkas', berkasRouter);
 
 // GET `/api`
 router.get('/', (req, res) => {

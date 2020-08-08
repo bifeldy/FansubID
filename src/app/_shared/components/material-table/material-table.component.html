@@ -7,12 +7,12 @@
 </mat-form-field>
 
 <!-- Table -->
-<table mat-table [dataSource]="dataSource" matSort (window:resize)="onResize($event)">
+<table mat-table matSort [dataSource]="dataSource" matSort (window:resize)="onResize($event)">
   <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="px-3">
       <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
     </th>
-    <td mat-cell *matCellDef="let row">
+    <td mat-cell *matCellDef="let row" class="px-3">
       <div *ngIf="checkIsArray(row[tdc]) == false">
         <h3 class="m-0" [style.color]="
           tdc == 'Pemilik' ? '#3f51b5' :
@@ -25,10 +25,10 @@
           {{ tdc != 'Poster' && tdc != 'Logo' ? row[tdc] : '' }}
         </h3>
       </div>
-      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc][0].type == 'chip'" class="py-3">
+      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc][0].type == 'chip'">
         <app-material-chip (chipClicked)="onChipClicked($event)" [chipData]="row[tdc]"></app-material-chip>
       </div>
-      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc][0].type == 'button'" class="py-3">
+      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc][0].type == 'button'">
         <a mat-icon-button href="{{ rt.url }}" target="_blank" *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}">
           <mat-icon *ngIf="rt.icon">{{ rt.icon }}</mat-icon>
           <img src="{{ rt.image }}" width="24px" *ngIf="rt.image" />
@@ -53,4 +53,4 @@
     </td>
   </tr>
 </table>
-<mat-paginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
