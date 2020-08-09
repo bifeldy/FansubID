@@ -10,11 +10,16 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class MaterialTableComponent implements OnInit, OnChanges {
 
+  @Input() count = 0;
+  @Input() serverSide = false;
+  @Output() serverSideFilter = new EventEmitter();
+
   @Input() tableDataRow: any = [];
   @Input() tableDataColumn: any = [];
 
   @Output() chipClicked = new EventEmitter();
   @Output() rowClicked = new EventEmitter();
+  @Output() paginatorClicked = new EventEmitter();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -22,7 +27,7 @@ export class MaterialTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<any>;
   rippleDisabled = null;
 
-  pageSizeOptions = [10, 25, 50, 100, 250, 500];
+  pageSizeOptions = [10, 25, 50, 100];
 
   constructor() {
   }
@@ -33,28 +38,45 @@ export class MaterialTableComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.tableDataRow);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    if (!this.serverSide) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
     this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
   }
 
   ngOnChanges(): void {
     if (this.dataSource) {
       this.dataSource.data = this.tableDataRow;
-      this.paginator._changePageSize(this.pageSizeOptions[0]);
+      if (!this.serverSide) {
+        this.paginator._changePageSize(this.pageSizeOptions[0]);
+        this.paginator.firstPage();
+      }
     }
   }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    if (!this.serverSide) {
+      this.dataSource.filter = filterValue;
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
+    } else {
+      this.onServerSideFilter(filterValue);
     }
   }
 
   onResize(event): void {
     this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
+  }
+
+  onServerSideFilter(data: any): void {
+    this.serverSideFilter.emit(data);
+  }
+
+  onPaginatorClicked(data: any): void {
+    this.paginatorClicked.emit(data);
   }
 
   onRowClicked(data: any): void {

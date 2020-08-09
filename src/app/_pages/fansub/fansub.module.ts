@@ -7,6 +7,7 @@ import { ChartsModule } from 'ng2-charts';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { MaterialChipModule } from 'src/app/_shared/components/material-chip/material-chip.module';
+import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
 
 import { FansubListComponent } from './fansub-list/fansub-list.component';
@@ -35,7 +36,8 @@ const routes: Routes = [
     MaterialTabModule,
     MaterialExpansionPanelModule,
     MaterialChipModule,
-    ChartsModule
+    ChartsModule,
+    NotificationsModule
   ]
 })
 export class FansubModule { }

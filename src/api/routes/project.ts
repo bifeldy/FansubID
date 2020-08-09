@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository } from 'typeorm';
+import { getRepository, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -15,30 +15,24 @@ const router = Router();
 // GET `/api/project`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const projectRepo = getRepository(ProjectType);
-  const projects = await projectRepo.find();
-  projects.forEach(p => {
-    delete p.description;
-    delete p.created_at;
-    delete p.updated_at;
+  const [projects, count] = await projectRepo.findAndCount({
+    skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+    take: req.query.row > 0 ? req.query.row : 10
   });
+  for (const p of projects) {
+    const date = new Date(p.created_at);
+    p.created_at = (
+      ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + '@' + ' ' +
+      ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
+    );
+    delete p.description;
+    delete p.updated_at;
+  }
   res.status(200).json({
     info: `😅 Project Type API :: List All 🤣`,
+    count,
     results: projects
   });
-});
-
-// GET `/api/project/:id`
-router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) => {
-  try {
-    const projectRepo = getRepository(ProjectType);
-    const project = await projectRepo.findOneOrFail(req.params.id);
-    res.status(200).json({
-      info: `😅 Project Type API :: Detail ${req.params.id} 🤣`,
-      result: project
-    });
-  } catch (error) {
-    return next(createError(404));
-  }
 });
 
 // POST `/api/project`
@@ -49,11 +43,9 @@ router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, nex
     const projectRepo = getRepository(ProjectType);
     const project = new ProjectType();
     project.name = req.body.name;
+    project.image_url = req.body.image_url || '/favicon.ico';
     if (req.body.description) {
       project.description = req.body.description;
-    }
-    if (req.body.image_url) {
-      project.image_url = req.body.image_url;
     }
     const resProjectSave = await projectRepo.save(project);
     res.status(200).json({
@@ -70,6 +62,24 @@ router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, nex
   }
 });
 
+// GET `/api/project/:id`
+router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const projectRepo = getRepository(ProjectType);
+    const project = await projectRepo.findOneOrFail({
+      where: [
+        { id: Equal(req.params.id) }
+      ]
+    });
+    res.status(200).json({
+      info: `😅 Project Type API :: Detail ${req.params.id} 🤣`,
+      result: project
+    });
+  } catch (error) {
+    return next(createError(404));
+  }
+});
+
 // PUT `/api/project/:id`
 router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -79,7 +89,11 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       'image_url' in req.body
     ) {
       const projectRepo = getRepository(ProjectType);
-      const project = await projectRepo.findOneOrFail(req.params.id);
+      const project = await projectRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.id) }
+        ]
+      });
       if (req.body.name) {
         project.name = req.body.name;
       }

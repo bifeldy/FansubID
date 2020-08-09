@@ -6,12 +6,12 @@
         <mat-icon class="mr-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
-      <div class="p-3">
+      <div class="p-3" *ngIf="tab.data.length >= 0">
         <mat-selection-list [multiple]="false" class="p-0">
           <mat-grid-list [cols]="gridListBreakpoint" rowHeight="4:1" (window:resize)="onResize($event)">
             <mat-grid-tile *ngFor="let d of tab.data">
               <mat-list-option (click)="onGridClicked(d)">
-                <img matListAvatar src="https://cdn.myanimelist.net/images/anime/1444/108005.jpg" class="ml-3" style="border-radius: 0;" />
+                <img matListAvatar src="{{ d.image }}" class="ml-3" style="border-radius: 0;" />
                 <h4 matLine *ngIf="d.description">{{ d.title }}</h4>
                 <h4 *ngIf="!d.description">{{ d.title }}</h4>
                 <p matLine>{{ d.description }}</p>
@@ -20,21 +20,41 @@
           </mat-grid-list>
         </mat-selection-list>
       </div>
+      <div class="p-3" *ngIf="tab.data.length <= 0"
+        style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+        <div class="row align-items-center h-100">
+          <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+            <h3 class="m-0">
+              Tidak Ada Data ¯\_(ツ)_/¯
+            </h3>
+          </div>
+        </div>
+      </div>
     </div>
     <div *ngIf="tab.type == 'list'">
       <ng-template mat-tab-label>
         <mat-icon class="mr-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
-      <div class="p-3">
+      <div class="p-3" *ngIf="tab.data.length >= 0">
         <mat-selection-list [multiple]="false">
           <mat-list-option *ngFor="let d of tab.data" (click)="onListClicked(d)">
-            <img matListAvatar src="https://cdn.myanimelist.net/images/anime/1444/108005.jpg" class="ml-3" style="border-radius: 0;" />
+            <img matListAvatar src="{{ d.image }}" class="ml-3" style="border-radius: 0;" />
             <h4 matLine *ngIf="d.description">{{ d.title }}</h4>
             <h4 *ngIf="!d.description">{{ d.title }}</h4>
             <p matLine>{{ d.description }}</p>
           </mat-list-option>
         </mat-selection-list>
+      </div>
+      <div class="p-3" *ngIf="tab.data.length <= 0"
+        style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+        <div class="row align-items-center h-100">
+          <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+            <h3 class="m-0">
+              Tidak Ada Data ¯\_(ツ)_/¯
+            </h3>
+          </div>
+        </div>
       </div>
     </div>
     <div *ngIf="tab.type == 'table'">
@@ -43,8 +63,8 @@
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3">
-        <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row"
-          (chipClicked)="onChipClicked($event)" (rowClicked)="onTableRowClicked($event)"></app-material-table>
+        <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row" [count]="count" [serverSide]="serverSide" (serverSideFilter)="onServerSideFilter($event)"
+          (chipClicked)="onChipClicked($event)" (rowClicked)="onTableRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)"></app-material-table>
       </div>
     </div>
   </mat-tab>

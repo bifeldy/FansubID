@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class NotFoundComponent implements OnInit {
 
-  returnUrl = null;
+  returnUrl = '/';
 
   constructor(
     private router: Router,
@@ -16,7 +16,7 @@ export class NotFoundComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || null;
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
     if (this.returnUrl) {
       setTimeout(() => {
         this.router.navigateByUrl(this.returnUrl);

@@ -25,12 +25,12 @@ export class GlobalService {
 
   getDirtyValues(formGroup: FormGroup): any {
     const dirtyValues = {};
-    Object.keys(formGroup.controls).forEach(control => {
+    for (const control of Object.keys(formGroup.controls)) {
       const currentControl = formGroup.get(control);
       if (currentControl.dirty) {
         dirtyValues[control] = currentControl.value;
       }
-    });
+    }
     return dirtyValues;
   }
 

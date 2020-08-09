@@ -1,7 +1,7 @@
 <!-- Input Form Filter -->
 <mat-form-field hintLabel="Anime / Fansub / Uploader / etc." class="px-3 mb-3" style="background-color: #fafafa !important;">
   <mat-label>Filter Dan Pencarian</mat-label>
-  <input matInput #input maxlength="200" placeholder="Ex. [Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32]" (keyup)="applyFilter($event)" />
+  <input matInput #input maxlength="200" placeholder="Ex. [Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32]" (keyup.enter)="applyFilter($event)" />
   <mat-icon matSuffix>search</mat-icon>
   <mat-hint align="end">{{ input.value?.length || 0 }} / 200 Huruf</mat-hint>
 </mat-form-field>
@@ -21,14 +21,14 @@
                 tdc == 'Status' ? '#f44336' :
         '#343a40'">
           <img matListAvatar src="/favicon.ico" style="width: 32px;" *ngIf="tdc == 'Pemilik'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px;" *ngIf="tdc == 'Poster' || tdc == 'Logo'" />
-          {{ tdc != 'Poster' && tdc != 'Logo' ? row[tdc] : '' }}
+          <img matListAvatar [src]="row[tdc]" style="width: 64px;" *ngIf="tdc == 'Poster' || tdc == 'Logo' || tdc == 'Image'" />
+          {{ tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' ? row[tdc] : '' }}
         </h3>
       </div>
-      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc][0].type == 'chip'">
+      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc].length > 0 && row[tdc][0].type == 'chip'">
         <app-material-chip (chipClicked)="onChipClicked($event)" [chipData]="row[tdc]"></app-material-chip>
       </div>
-      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc][0].type == 'button'">
+      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc].length > 0 && row[tdc][0].type == 'button'">
         <a mat-icon-button href="{{ rt.url }}" target="_blank" *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}">
           <mat-icon *ngIf="rt.icon">{{ rt.icon }}</mat-icon>
           <img src="{{ rt.image }}" width="24px" *ngIf="rt.image" />
@@ -53,4 +53,4 @@
     </td>
   </tr>
 </table>
-<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="onPaginatorClicked($event)" [length]="count"></mat-paginator>

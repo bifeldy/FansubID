@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
+import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
+
 import { HomeComponent } from './home.component';
 
 const routes: Routes = [
@@ -15,7 +18,9 @@ const routes: Routes = [
   declarations: [HomeComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MaterialTabModule,
+    NotificationsModule
   ]
 })
 export class HomeModule { }

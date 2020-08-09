@@ -31,6 +31,9 @@ export class User {
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
+  @Column({ type: 'boolean', default: false })
+  verified: boolean;
+
   @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name
   session_token: string;

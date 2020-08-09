@@ -7,12 +7,14 @@ import { MatDatepicker } from '@angular/material/datepicker';
 
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
+import { sample } from 'rxjs/operators';
 
 import { Warna } from '../../../_shared/models/Warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { JikanService } from '../../../_shared/services/jikan.service';
-import { FabService } from 'src/app/_shared/services/fab.service';
+import { AnimeService } from '../../../_shared/services/anime.service';
+import { FabService } from '../../../_shared/services/fab.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 const moment = _rollupMoment || _moment;
 
@@ -52,12 +54,12 @@ export class AnimeListComponent implements OnInit {
   currentYear = null;
 
   selectedSeasonName = null;
-  selectedSeasonBannerImg = null;
 
   minDate: Date;
   maxDate: Date;
 
-  seasonalAnimeData = [];
+  seasonalAnimeCard = [];
+  seasonalAnime = [];
 
   tabData = [
     {
@@ -77,8 +79,12 @@ export class AnimeListComponent implements OnInit {
     private fb: FormBuilder,
     private gs: GlobalService,
     private fs: FabService,
-    private jikan: JikanService
-  ) { }
+    private anime: AnimeService,
+    public notif: NotificationsService
+  ) {
+    this.notif.bgRepeat = true;
+    this.notif.sizeContain = true;
+  }
 
   ngOnInit(): void {
     this.fg = new FormGroup({
@@ -96,7 +102,7 @@ export class AnimeListComponent implements OnInit {
       this.currentYear = p.year ? parseInt(p.year, 10) : new Date().getFullYear();
       this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
       this.selectedSeasonName = p.season ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth);
-      this.selectedSeasonBannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
+      this.notif.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
       this.getSeasonalAnime(p.year && p.season);
     });
   }
@@ -116,42 +122,55 @@ export class AnimeListComponent implements OnInit {
   }
 
   getSeasonalAnime(showFab = false): void {
-    this.jikan.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
+    this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
       res => {
         this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
-        const resApiData = [];
-        this.tabData[0].data.row = [];
-        res.results.forEach(sad => {
-          const namaFansubs = [
-            { type: 'chip', selected: true, id: 1, name: 'Fansub 1', url: '/', color: Warna.UNGU },
-            // { type: 'chip', selected: true, id: 2, name: 'Fansub 2', url: '/', color: Warna.BIRU },
-            { type: 'chip', selected: true, id: 3, name: 'Fansub 3', url: '/', color: Warna.HITAM },
-            // { type: 'chip', selected: true, id: 4, name: 'Fansub 4', url: '/', color: Warna.ABU },
-            { type: 'chip', selected: true, id: 5, name: 'Fansub 5', url: '/', color: Warna.MERAH },
-            // { type: 'chip', selected: true, id: 6, name: 'Fansub 6', url: '/', color: Warna.PINK },
-            // { type: 'chip', selected: true, id: 7, name: 'Fansub 7', url: '/', color: Warna.OREN },
-            // { type: 'chip', selected: true, id: 8, name: 'Fansub 8', url: '/', color: Warna.KUNING },
-            { type: 'chip', selected: true, id: 9, name: 'Fansub 9', url: '/', color: Warna.HIJAU }
-          ];
-          this.tabData[0].data.row.push({
-            mal_id: sad.mal_id,
-            Jenis: sad.type,
-            Poster: sad.image_url,
-            'Judul Anime': sad.title,
-            'Nama Fansub': namaFansubs
-          });
-          sad.namaFansubs = namaFansubs;
-          resApiData.push(sad);
-        });
-        this.seasonalAnimeData = resApiData.filter(a =>
-          a.continuing === false && a.type === 'TV' && a.r18 === false && a.kids === false
-        ).sort((a, b) => b.score - a.score);
+        this.seasonalAnime = res.results.filter(a => a.continuing === false && a.kids === false).sort((a, b) => b.score - a.score);
         if (showFab) {
           this.fs.initializeFab('settings_backup_restore', null, 'Kembali Ke Musim Sekarang', '/anime', false);
         }
+        this.getFansubAnime();
       },
       err => {
         this.gs.log('[ANIME_SEASONAL_ERROR]', err);
+      }
+    );
+  }
+
+  getFansubAnime(): void {
+    this.tabData[0].data.row = [];
+    const seasonalAnimeListId = [];
+    for (const sA of this.seasonalAnime) {
+      seasonalAnimeListId.push(sA.mal_id);
+    }
+    this.anime.getFansubAnime(seasonalAnimeListId).subscribe(
+      res => {
+        this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
+        let seasonalAnimeWithFansub = [];
+        for (const sA of this.seasonalAnime) {
+          sA.namaFansubs = res.results[sA.mal_id];
+          for (const f of sA.namaFansubs) {
+            f.selected = true;
+            f.type = 'chip';
+            f.name = f.slug;
+            delete f.slug;
+          }
+          seasonalAnimeWithFansub.push({
+            mal_id: sA.mal_id,
+            Jenis: sA.type,
+            Poster: sA.image_url,
+            'Judul Anime': sA.title,
+            'Nama Fansub': sA.namaFansubs,
+          });
+        }
+        seasonalAnimeWithFansub = seasonalAnimeWithFansub.sort((a, b) => b['Nama Fansub'].length - a['Nama Fansub'].length);
+        this.tabData[0].data.row = seasonalAnimeWithFansub;
+        this.seasonalAnimeCard = this.seasonalAnime.filter(a =>
+          a.continuing === false && a.type === 'TV' && a.r18 === false && a.kids === false
+        ).sort((a, b) => b.score - a.score);
+      },
+      err => {
+        this.gs.log('[FANSUB_ANIME_ERROR]', err);
       }
     );
   }
@@ -173,6 +192,10 @@ export class AnimeListComponent implements OnInit {
   openFansub(data): void {
     this.gs.log('[ANIME_SEASONAL_CLICK_FANSUB]', data);
     this.router.navigateByUrl(`/fansub/${data.id}`);
+  }
+
+  onPaginatorClicked(data): void {
+    this.gs.log('[ANIME_SEASONAL_CLICK_PAGINATOR]', data);
   }
 
 }

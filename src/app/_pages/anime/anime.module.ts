@@ -8,6 +8,7 @@ import { MaterialTabModule } from '../../_shared/components/material-tab/materia
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
 import { CardAnimeModule } from '../../_shared/components/card-anime/card-anime.module';
+import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
 import { AnimeListComponent } from './anime-list/anime-list.component';
 import { AnimeDetailComponent } from './anime-detail/anime-detail.component';
@@ -37,7 +38,8 @@ const routes: Routes = [
     MaterialTabModule,
     MaterialExpansionPanelModule,
     MaterialChipModule,
-    CardAnimeModule
+    CardAnimeModule,
+    NotificationsModule
   ]
 })
 export class AnimeModule { }

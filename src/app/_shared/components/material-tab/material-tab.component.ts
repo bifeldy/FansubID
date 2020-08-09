@@ -8,6 +8,10 @@ import { MatTabGroup, MatTab } from '@angular/material/tabs';
 })
 export class MaterialTabComponent implements OnInit, AfterViewInit {
 
+  @Input() count = 0;
+  @Input() serverSide = false;
+  @Output() serverSideFilter = new EventEmitter();
+
   SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
 
   @ViewChild(MatTabGroup) tabGroup;
@@ -67,6 +71,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
   @Output() gridClicked = new EventEmitter();
   @Output() listClicked = new EventEmitter();
   @Output() tableRowClicked = new EventEmitter();
+  @Output() paginatorClicked = new EventEmitter();
 
   constructor() { }
 
@@ -105,5 +110,13 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
 
   onChipClicked(data: any): void {
     this.chipClicked.emit(data);
+  }
+
+  onPaginatorClicked(data: any): void {
+    this.paginatorClicked.emit(data);
+  }
+
+  onServerSideFilter(data: any): void {
+    this.serverSideFilter.emit(data);
   }
 }

@@ -3,6 +3,8 @@
 
 <!-- Content -->
 <div class="container">
+
+  <!-- Summaries -->
   <div class="row p-3">
     <div class="col-12 col-md-6 py-1" *ngIf="barChartData.length > 0 && barChartLabels.length > 0 && barChartData.length == barChartLabels.length">
       <canvas baseChart [data]="barChartData" [labels]="barChartLabels" [chartType]="barChartType"
@@ -15,7 +17,9 @@
       </canvas>
     </div>
   </div>
+
+  <!-- Detail -->
   <div class="row" *ngIf="fansubData.length > 0">
-    <app-material-tab (tableRowClicked)="openFansub($event)" [tabData]="tabData"></app-material-tab>
+    <app-material-tab (tableRowClicked)="openFansub($event)" (paginatorClicked)="onPaginatorClicked($event)" [tabData]="tabData" [count]="count"></app-material-tab>
   </div>
 </div>

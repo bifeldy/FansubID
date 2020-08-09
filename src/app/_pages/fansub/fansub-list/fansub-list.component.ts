@@ -7,6 +7,7 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-fansub-list',
@@ -48,12 +49,20 @@ export class FansubListComponent implements OnInit {
   fansubActive = 0;
   fansubInActive = 0;
 
+  count = 0;
+  page = 1;
+  row = 10;
+
   constructor(
     private router: Router,
     private gs: GlobalService,
     private fs: FabService,
-    private fansub: FansubService
+    private fansub: FansubService,
+    public notif: NotificationsService
   ) {
+    this.notif.bannerImg = '/assets/img/fansub-banner.png';
+    this.notif.sizeContain = false;
+    this.notif.bgRepeat = false;
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
@@ -62,7 +71,9 @@ export class FansubListComponent implements OnInit {
     this.fansub.getAllFansub().subscribe(
       res => {
         this.gs.log('[FANSUB_LIST_SUCCESS]', res);
-        res.results.forEach(r => {
+        this.count = res.count;
+        this.fansubData = [];
+        for (const r of res.results) {
           const tautanLink = [];
           if (Array.isArray(r.urls)) {
             for (const i of r.urls) {
@@ -80,7 +91,7 @@ export class FansubListComponent implements OnInit {
             Logo: r.image_url,
             Status: r.active ? 'AKTIF' : 'TIDAK AKTIF',
             'Nama Fansub': r.name,
-            'Total Proyek': '123 Garapan',
+            'Total Proyek': '// TODO: ? Garapan',
             'Tautan Komunitas': tautanLink
           });
           if (r.active) {
@@ -88,11 +99,21 @@ export class FansubListComponent implements OnInit {
           } else if (!r.active) {
             this.fansubInActive++;
           }
-        });
-        this.fansubData.sort((a: any, b: any) => ((a.name > b.name) as any) * 2 - 1);
-        this.barChartLabels = ['Fansub A', 'Fansub B', 'Fansub C', 'Fansub D', 'Fansub E', 'Fansub F', 'Fansub G', 'Fansub H', 'Fansub I', 'Fansub J'];
+        }
+        this.barChartLabels = [
+          '// TODO: Fansub 01',
+          '// TODO: Fansub 02',
+          '// TODO: Fansub 03',
+          '// TODO: Fansub 04',
+          '// TODO: Fansub 05',
+          '// TODO: Fansub 06',
+          '// TODO: Fansub 07',
+          '// TODO: Fansub 08',
+          '// TODO: Fansub 09',
+          '// TODO: Fansub 10'
+        ];
         this.barChartData = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
-        this.pieChartLabels = ['Aktif', 'Tidak Aktif'];
+        this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
         this.pieChartData = [this.fansubActive, this.fansubInActive];
         this.tabData[0].data.row = this.fansubData;
         this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/add', false);
@@ -104,7 +125,12 @@ export class FansubListComponent implements OnInit {
   }
 
   openFansub(data): void {
+    this.gs.log('[FANSUB_LIST_OPEN_FANSUB]', data);
     this.router.navigateByUrl(`/fansub/${data.id}`);
+  }
+
+  onPaginatorClicked(data): void {
+    this.gs.log('[FANSUB_LIST_CLICK_PAGINATOR]', data);
   }
 
 }

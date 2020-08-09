@@ -7,6 +7,7 @@ interface User {
   email: string;
   role: Role;
   image_url: string;
+  verified: boolean;
   created_at: number;
   updated_at: number;
   kartu_tanda_penduduk_: KartuTandaPenduduk;

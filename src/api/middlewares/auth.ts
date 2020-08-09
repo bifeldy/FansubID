@@ -1,5 +1,5 @@
 
-import { getRepository } from 'typeorm';
+import { getRepository, Equal } from 'typeorm';
 
 import { Response, NextFunction } from 'express';
 
@@ -26,8 +26,8 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
       const userRepo = getRepository(User);
       const selectedUser = await userRepo.find({
         where: [
-          { username: req.body.username },
-          { email: req.body.email }
+          { username: Equal(req.body.username) },
+          { email: Equal(req.body.email) }
         ]
       });
       if (selectedUser.length === 0) {
@@ -38,6 +38,7 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
         const newUser = new User();
         newUser.username = req.body.username;
         newUser.email = req.body.email;
+        newUser.image_url = '/favicon.ico';
         newUser.password = CryptoJS.SHA512(req.body.password).toString();
         newUser.kartu_tanda_penduduk_ = resKtpSave;
         let resUserSave = await userRepo.save(newUser);
@@ -48,14 +49,14 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
         return next();
       } else {
         const result: any = {};
-        selectedUser.forEach(sU => {
+        for (const sU of selectedUser) {
           if (sU.username === req.body.username) {
             result.username = `${sU.username} Sudah Terpakai`;
           }
           if (sU.email === req.body.email) {
             result.email = `${sU.email} Sudah Terpakai`;
           }
-        });
+        }
         res.status(400).json({
           info: '🙄 400 - Pendaftaran Gagal! 😪',
           result
@@ -82,8 +83,8 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
       const userRepo = getRepository(User);
       const selectedUser = await userRepo.findOneOrFail({
         where: [
-          { username: req.body.userNameOrEmail, password: reqBodyPassword },
-          { email: req.body.userNameOrEmail, password: reqBodyPassword }
+          { username: Equal(req.body.userNameOrEmail), password: Equal(reqBodyPassword) },
+          { email: Equal(req.body.userNameOrEmail), password: Equal(reqBodyPassword) }
         ]
       });
       const { password, session_token, ...noPwdSsToken } = selectedUser;
@@ -111,7 +112,7 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.find({
       where: [
-        { id: decoded.user.id, session_token: decoded.token }
+        { id: Equal(decoded.user.id), session_token: Equal(decoded.token) }
       ],
       relations: ['kartu_tanda_penduduk_'],
     });
@@ -142,7 +143,7 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       const userRepo = getRepository(User);
       const selectedUser = await userRepo.findOneOrFail({
         where: [
-          { id: decoded.user.id, session_token: decoded.token }
+          { id: Equal(decoded.user.id), session_token: Equal(decoded.token) }
         ]
       });
       selectedUser.session_token = null;

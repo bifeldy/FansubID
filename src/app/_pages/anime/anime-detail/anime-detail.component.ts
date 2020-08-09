@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Warna } from '../../../_shared/models/Warna';
 
-import { JikanService } from '../../../_shared/services/jikan.service';
+import { AnimeService } from '../../../_shared/services/anime.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -18,27 +18,24 @@ export class AnimeDetailComponent implements OnInit {
   animeId = 0;
   animeData = null;
 
+  count = 0;
+  page = 1;
+  row = 10;
+  q = '';
+
+  fansubAnime = [];
+  berkasAnime = [];
+
   chipData = [];
 
   panelData = [];
 
-  tabData = [
+  tabData: any = [
     {
       name: 'Daftar Fansub',
       icon: 'closed_caption',
       type: 'grid',
-      data: [
-        { title: 'Fansub 01 Slug Name', description: 'http://01' },
-        { title: 'Fansub 02 Slug Name', description: 'http://02' },
-        { title: 'Fansub 03 Slug Name', description: 'http://03' },
-        { title: 'Fansub 04 Slug Name', description: 'http://04' },
-        { title: 'Fansub 05 Slug Name', description: 'http://05' },
-        { title: 'Fansub 06 Slug Name', description: 'http://06' },
-        { title: 'Fansub 07 Slug Name', description: 'http://07' },
-        { title: 'Fansub 08 Slug Name', description: 'http://08' },
-        { title: 'Fansub 09 Slug Name', description: 'http://09' },
-        { title: 'Fansub 10 Slug Name', description: 'http://10' }
-      ]
+      data: []
     },
     {
       name: 'Berkas Terkait',
@@ -46,38 +43,7 @@ export class AnimeDetailComponent implements OnInit {
       type: 'table',
       data: {
         column: ['Upload', 'Nama File', 'Pemilik'],
-        row: [
-          {
-            type: 'text',
-            Pemilik: 'H.265/MPEGH Part 2 HEVC',
-            Upload: '12:34:56',
-            'Nama File': '[Fansub] Judul Anime - 00 [BD 4K x265 10bit FLAC][CRC32].mkv'
-          },
-          {
-            type: 'text',
-            Pemilik: 'H.264/MPEG4 Part 10 AVC',
-            Upload: '12:34:56',
-            'Nama File': '[Fansub] Judul Anime - 01 [BD 1080p x264 10bit AAC][CRC32].mkv'
-          },
-          {
-            type: 'text',
-            Pemilik: 'H.263/MPEG4 Part 2',
-            Upload: '12:34:56',
-            'Nama File': '[Fansub] Judul Anime - 02 [BD 720p x263 8bit AAC][CRC32].mkv'
-          },
-          {
-            type: 'text',
-            Pemilik: 'H.262/MPEG2 Standard',
-            Upload: '12:34:56',
-            'Nama File': '[Fansub] Judul Anime - 03 [BD 480p x262 8bit MP3][CRC32].mkv'
-          },
-          {
-            type: 'text',
-            Pemilik: 'H.261',
-            Upload: '12:34:56',
-            'Nama File': '[Fansub] Judul Anime - 04 [BD 360p x261 6bit MP3][CRC32].mkv'
-          }
-        ]
+        row: []
       }
     }
   ];
@@ -87,14 +53,15 @@ export class AnimeDetailComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private pi: PageInfoService,
-    private jikan: JikanService,
+    private anime: AnimeService,
     private fs: FabService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.animeId = params.animeId;
-      this.jikan.getAnime(this.animeId).subscribe(
+      this.anime.getAnime(this.animeId).subscribe(
         res => {
           this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
           this.animeData = res.result;
@@ -108,6 +75,8 @@ export class AnimeDetailComponent implements OnInit {
           );
           this.panelData.push({ title: 'Synopsis', icon: 'history_edu', text: this.animeData.synopsis });
           this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
+          this.getFansubAnime();
+          this.getBerkasAnime();
         },
         err => {
           this.gs.log('[ANIME_DETAIL_ERROR]', err);
@@ -134,6 +103,55 @@ export class AnimeDetailComponent implements OnInit {
     });
   }
 
+  onServerSideFilter(data: any): void {
+    this.gs.log('[BERKAS_ANIME_ENTER_FILTER]', data);
+    this.q = data;
+    this.getBerkasAnime();
+  }
+
+  getBerkasAnime(): void {
+    this.anime.getBerkasAnime([this.animeId], this.q, this.page, this.row).subscribe(
+      res => {
+        this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
+        this.count = res.count;
+        this.berkasAnime = [];
+        for (const r of res.results[this.animeId]) {
+          this.berkasAnime.push({
+            id: r.id,
+            Pemilik: r.user_.username,
+            Upload: r.created_at,
+            'Nama File': r.name
+          });
+        }
+        this.tabData[1].data.row = this.berkasAnime;
+      },
+      err => {
+        this.gs.log('[BERKAS_ANIME_ERROR]', err);
+      }
+    );
+  }
+
+  getFansubAnime(): void {
+    this.anime.getFansubAnime([this.animeId]).subscribe(
+      res => {
+        this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
+        this.fansubAnime = [];
+        for (const r of res.results[this.animeId]) {
+          this.fansubAnime.push({
+            id: r.id,
+            image: r.image_url,
+            title: r.name,
+            description: `${r.slug} :: ${r.active ? 'Aktif' : 'Non-Aktif'}`
+          });
+        }
+        this.tabData[0].data = this.fansubAnime;
+      },
+      err => {
+        this.gs.log('[FANSUB_ANIME_ERROR]', err);
+      }
+    );
+  }
+
   openGenre(data): void {
     this.gs.log('[ANIME_DETAIL_CLICK_GENRE]', data.mal_id);
     window.open(data.url, '_blank');
@@ -144,8 +162,13 @@ export class AnimeDetailComponent implements OnInit {
     this.router.navigateByUrl(`/fansub/${data.id}`);
   }
 
+  onPaginatorClicked(data): void {
+    this.gs.log('[ANIME_DETAIL_CLICK_PAGINATOR]', data);
+  }
+
   openFile(data): void {
-    this.gs.log('[ANIME_DETAIL_CLICK_FILE]', data);
+    this.gs.log('[ANIME_DETAIL_CLICK_BERKAS]', data);
+    this.router.navigateByUrl(`/berkas/${data.id}`);
   }
 
 }

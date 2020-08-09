@@ -1,11 +1,12 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository } from 'typeorm';
+import { getRepository, Like, Equal, In } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
 import { Fansub } from '../entities/Fansub';
+import { Berkas } from '../entities/Berkas';
 
 // Middleware
 import auth from '../middlewares/auth';
@@ -15,34 +16,30 @@ const router = Router();
 // GET `/api/fansub`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const fansubRepo = getRepository(Fansub);
-  const fansubs = await fansubRepo.find();
-  fansubs.forEach(f => {
+  const [fansubs, count] = await fansubRepo.findAndCount({
+    order: {
+      name: 'ASC',
+      active: 'DESC'
+    },
+    skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+    take: req.query.row > 0 ? req.query.row : 10
+  });
+  for (const f of fansubs) {
+    const date = new Date(f.created_at);
+    f.created_at = (
+      ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + '@' + ' ' +
+      ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
+    );
     delete f.description;
-    delete f.created_at;
     delete f.updated_at;
     f.urls = JSON.parse(f.urls) || null;
     f.tags = JSON.parse(f.tags) || null;
-  });
+  }
   res.status(200).json({
     info: `😅 Fansub API :: List All 🤣`,
+    count,
     results: fansubs
   });
-});
-
-// GET `/api/fansub/:id`
-router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) => {
-  try {
-    const fansubRepo = getRepository(Fansub);
-    const fansub = await fansubRepo.findOneOrFail(req.params.id);
-    fansub.urls = JSON.parse(fansub.urls) || null;
-    fansub.tags = JSON.parse(fansub.tags) || null;
-    res.status(200).json({
-      info: `😅 Fansub API :: Detail ${req.params.id} 🤣`,
-      result: fansub
-    });
-  } catch (error) {
-    return next(createError(404));
-  }
 });
 
 // POST `/api/fansub`
@@ -59,21 +56,19 @@ router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, nex
     fansub.born = req.body.born;
     fansub.slug = req.body.slug;
     const filteredUrls = [];
-    req.body.urls.forEach(u => {
+    for (const u of req.body.urls) {
       if ('url' in u && 'name' in u) {
         filteredUrls.push(u);
       }
-    });
+    }
     fansub.urls = JSON.stringify(filteredUrls);
+    fansub.image_url = req.body.image_url || '/favicon.ico';
     if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
       const filteredTagsUnique = [...new Set(req.body.tags)];
       fansub.tags = JSON.stringify(filteredTagsUnique);
     }
     if (req.body.description) {
       fansub.description = req.body.description;
-    }
-    if (req.body.image_url) {
-      fansub.image_url = req.body.image_url;
     }
     const resFansubSave = await fansubRepo.save(fansub);
     res.status(200).json({
@@ -90,6 +85,135 @@ router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, nex
   }
 });
 
+// POST `/api/fansub/berkas`
+router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
+  const fansubId = Array.isArray(req.body.fansubId) ? req.body.fansubId : [];
+  try {
+    if (fansubId.length > 0) {
+      const fileRepo = getRepository(Berkas);
+      const [files, count] = await fileRepo.findAndCount({
+        where: [
+          {
+            fansub_: { id: In([fansubId]) },
+            private: false,
+            name: Like(`%${req.query.q ? req.query.q : ''}%`)
+          }
+        ],
+        order: {
+          updated_at: 'DESC',
+          created_at: 'DESC',
+          name: 'ASC'
+        },
+        relations: ['project_type_', 'fansub_', 'user_'],
+        skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+        take: req.query.row > 0 ? req.query.row : 10
+      });
+      const results: any = {};
+      for (const i of fansubId) {
+        results[i] = [];
+      }
+      for (const f of files) {
+        const date = new Date(f.created_at);
+        f.created_at = (
+          ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + '@' + ' ' +
+          ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
+        );
+        delete f.private;
+        delete f.download_url;
+        delete f.description;
+        delete f.updated_at;
+        delete f.project_type_.created_at;
+        delete f.project_type_.updated_at;
+        delete f.fansub_.description;
+        delete f.fansub_.urls;
+        delete f.fansub_.tags;
+        delete f.fansub_.created_at;
+        delete f.fansub_.updated_at;
+        delete f.user_.role;
+        delete f.user_.password;
+        delete f.user_.session_token;
+        delete f.user_.created_at;
+        delete f.user_.updated_at;
+        results[f.fansub_.id].push(f);
+      }
+      res.status(200).json({
+        info: `😅 Berkas Fansub API :: ${fansubId.join(', ')} 🤣`,
+        count, results
+      });
+    } else {
+      throw new Error('Data Tidak Lengkap!');
+    }
+  } catch (error) {
+    res.status(400).json({
+      info: `🙄 400 - Gagal Mencari Berkas :: ${fansubId.join(', ')} 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
+
+// POST `/api/fansub/anime`
+router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
+  const fansubId = Array.isArray(req.body.fansubId) ? req.body.fansubId : [];
+  try {
+    if (fansubId.length > 0) {
+      const fileRepo = getRepository(Berkas);
+      const [files, count] = await fileRepo.findAndCount({
+        where: [
+          {
+            fansub_: { id: In([fansubId]) },
+          }
+        ],
+        relations: ['fansub_']
+      });
+      const results: any = {};
+      for (const i of fansubId) {
+        results[i] = [];
+      }
+      for (const f of files) {
+        results[f.fansub_.id].push(f.mal_id);
+      }
+      for (const [key, value] of Object.entries(results)) {
+        results[key] = [...new Set(value as any)];
+      }
+      res.status(200).json({
+        info: `😅 Anime Fansub API :: ${fansubId.join(', ')} 🤣`,
+        count, results
+      });
+    } else {
+      throw new Error('Data Tidak Lengkap!');
+    }
+  } catch (error) {
+    res.status(400).json({
+      info: `🙄 400 - Gagal Mencari Anime :: ${fansubId.join(', ')} 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
+
+// GET `/api/fansub/:id`
+router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const fansubRepo = getRepository(Fansub);
+    const fansub = await fansubRepo.findOneOrFail({
+      where: [
+        { id: Equal(req.params.id) }
+      ]
+    });
+    fansub.urls = JSON.parse(fansub.urls) || null;
+    fansub.tags = JSON.parse(fansub.tags) || null;
+    res.status(200).json({
+      info: `😅 Fansub API :: Detail ${req.params.id} 🤣`,
+      result: fansub
+    });
+  } catch (error) {
+    return next(createError(404));
+  }
+});
+
 // PUT `/api/fansub/:id`
 router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -99,7 +223,11 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
       const fansubRepo = getRepository(Fansub);
-      const fansub = await fansubRepo.findOneOrFail(req.params.id);
+      const fansub = await fansubRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.id) }
+        ]
+      });
       if (req.body.name) {
         fansub.name = req.body.name;
       }
@@ -117,11 +245,11 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       }
       if (req.body.urls){
         const filteredUrls = [];
-        req.body.urls.forEach(u => {
+        for (const u of req.body.urls) {
           if ('url' in u && 'name' in u) {
             filteredUrls.push(u);
           }
-        });
+        }
         fansub.urls = JSON.stringify(filteredUrls);
       }
       if (req.body.tags){
@@ -144,40 +272,6 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       }
     });
   }
-});
-
-// POST `/api/fansub/anime`
-router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const fansubsId = Array.isArray(req.params.fansubsId) ? req.params.fansubsId : [];
-  // try {
-  //   const fansubRepo = getRepository(Fansub);
-  //   const fansub = await fansubRepo.findOneOrFail(req.params.id);
-  //   fansub.urls = JSON.parse(fansub.urls) || null;
-  //   fansub.tags = JSON.parse(fansub.tags) || null;
-  //   res.status(200).json({
-  //     info: `😅 Fansub API :: Anime ${fansubsId} 🤣`,
-  //     result: fansub
-  //   });
-  // } catch (error) {
-  return next(createError(404));
-  // }
-});
-
-// POST `/api/fansub/berkas`
-router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const fansubsId = Array.isArray(req.params.fansubsId) ? req.params.fansubsId : [];
-  // try {
-  //   const fansubRepo = getRepository(Fansub);
-  //   const fansub = await fansubRepo.findOneOrFail(req.params.id);
-  //   fansub.urls = JSON.parse(fansub.urls) || null;
-  //   fansub.tags = JSON.parse(fansub.tags) || null;
-  //   res.status(200).json({
-  //     info: `😅 Fansub API :: Berkas ${fansubsId} 🤣`,
-  //     result: fansub
-  //   });
-  // } catch (error) {
-  return next(createError(404));
-  // }
 });
 
 export default router;

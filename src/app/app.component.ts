@@ -11,6 +11,7 @@ import { AuthService } from './_shared/services/auth.service';
 import { FabService } from './_shared/services/fab.service';
 import { BusyService } from './_shared/services/busy.service';
 import { GlobalService } from './_shared/services/global.service';
+import { NotificationsService } from './_shared/services/notifications.service';
 
 @Component({
   selector: 'app-root',
@@ -32,12 +33,13 @@ export class AppComponent implements OnInit {
     private lms: LeftMenuService,
     private as: AuthService,
     private fs: FabService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    public notif: NotificationsService
   ) {
   }
 
   ngOnInit(): void {
-    this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: 'Development' With Log Enabled 📌`);
+    this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: 'Development' With Logging Enabled 📌`);
     this.router.events.subscribe(e1 => {
       if (e1 instanceof RouteConfigLoadStart) {
         this.bs.busy();
