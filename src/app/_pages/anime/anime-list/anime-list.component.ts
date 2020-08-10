@@ -7,14 +7,12 @@ import { MatDatepicker } from '@angular/material/datepicker';
 
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-import { sample } from 'rxjs/operators';
 
 import { Warna } from '../../../_shared/models/Warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
 import { FabService } from '../../../_shared/services/fab.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 const moment = _rollupMoment || _moment;
 
@@ -79,11 +77,10 @@ export class AnimeListComponent implements OnInit {
     private fb: FormBuilder,
     private gs: GlobalService,
     private fs: FabService,
-    private anime: AnimeService,
-    public notif: NotificationsService
+    private anime: AnimeService
   ) {
-    this.notif.bgRepeat = true;
-    this.notif.sizeContain = true;
+    this.gs.bgRepeat = true;
+    this.gs.sizeContain = true;
   }
 
   ngOnInit(): void {
@@ -102,7 +99,7 @@ export class AnimeListComponent implements OnInit {
       this.currentYear = p.year ? parseInt(p.year, 10) : new Date().getFullYear();
       this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
       this.selectedSeasonName = p.season ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth);
-      this.notif.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
+      this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
       this.getSeasonalAnime(p.year && p.season);
     });
   }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ChartsModule } from 'ng2-charts';
 
@@ -12,11 +13,22 @@ import { MaterialExpansionPanelModule } from '../../_shared/components/material-
 
 import { FansubListComponent } from './fansub-list/fansub-list.component';
 import { FansubDetailComponent } from './fansub-detail/fansub-detail.component';
+import { FansubCreateComponent } from './fansub-create/fansub-create.component';
 
 const routes: Routes = [
   {
     path: '',
     component: FansubListComponent
+  },
+  {
+    path: 'create',
+    component: FansubCreateComponent,
+    data: {
+      title: 'Fansub - Buat Baru',
+      description: 'Halaman Menambahkan Fansub Baru',
+      keywords: 'Create Fansub',
+      roles: []
+    }
   },
   {
     path: ':fansubId',
@@ -27,7 +39,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     FansubListComponent,
-    FansubDetailComponent
+    FansubDetailComponent,
+    FansubCreateComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +50,9 @@ const routes: Routes = [
     MaterialExpansionPanelModule,
     MaterialChipModule,
     ChartsModule,
-    NotificationsModule
+    NotificationsModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class FansubModule { }

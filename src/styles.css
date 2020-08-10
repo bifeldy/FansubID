@@ -61,3 +61,11 @@ body {
 .mat-paginator-container {
   justify-content: flex-start !important;
 }
+
+.border-bottom-dotted {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-style: dotted;
+  border-color: #ff4081;
+}

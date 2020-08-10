@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { BerkasService } from '../../_shared/services/berkas.service';
-import { NotificationsService } from '../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-home',
@@ -34,12 +33,11 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
     private gs: GlobalService,
-    private bs: BerkasService,
-    public notif: NotificationsService
+    private bs: BerkasService
   ) {
-    this.notif.bannerImg = '/assets/img/home-banner.png';
-    this.notif.sizeContain = false;
-    this.notif.bgRepeat = false;
+    this.gs.bannerImg = '/assets/img/home-banner.png';
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {

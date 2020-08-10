@@ -7,7 +7,6 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-fansub-list',
@@ -57,12 +56,11 @@ export class FansubListComponent implements OnInit {
     private router: Router,
     private gs: GlobalService,
     private fs: FabService,
-    private fansub: FansubService,
-    public notif: NotificationsService
+    private fansub: FansubService
   ) {
-    this.notif.bannerImg = '/assets/img/fansub-banner.png';
-    this.notif.sizeContain = false;
-    this.notif.bgRepeat = false;
+    this.gs.bannerImg = '/assets/img/fansub-banner.png';
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
@@ -116,7 +114,7 @@ export class FansubListComponent implements OnInit {
         this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
         this.pieChartData = [this.fansubActive, this.fansubInActive];
         this.tabData[0].data.row = this.fansubData;
-        this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/add', false);
+        this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/create', false);
       },
       err => {
         this.gs.log('[FANSUB_LIST_ERROR]', err);

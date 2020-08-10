@@ -6,6 +6,10 @@ import { FormGroup } from '@angular/forms';
 })
 export class GlobalService {
 
+  public bannerImg = null;
+  public sizeContain = false;
+  public bgRepeat = false;
+
   constructor() {
   }
 
