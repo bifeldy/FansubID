@@ -54,16 +54,16 @@ export class FansubCreateComponent implements OnInit {
 
   initForm(): void {
     this.fg = this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      born: [null, Validators.compose([Validators.required, this.dateValidator, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      active: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      slug: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      tags: [[], Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      web: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      facebook: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      discord: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      name: ['', Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      description: ['', Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      born: ['', Validators.compose([Validators.required, this.dateValidator, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      active: ['', Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      slug: ['', Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      tags: [[], Validators.compose([])],
+      image: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      web: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      facebook: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      discord: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
   }
 

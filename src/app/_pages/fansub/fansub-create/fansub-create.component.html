@@ -4,7 +4,7 @@
   <!-- Detail -->
   <div class="row px-3">
     <div class="col-12">
-      <form [formGroup]="fg" (submit)="onSubmit();">
+      <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
         <div class="row mt-3 mb-3">
           <div class="col-12 sticky-top bg-light">
             <h2 class="pt-3 border-bottom-dotted">
@@ -32,16 +32,18 @@
                     <mat-label>Nama Fansub</mat-label>
                     <input matInput formControlName="name" placeholder="Fansub Jalanan" />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
-                    <mat-error *ngIf="fg.get('name').hasError('required')">
-                      <strong>Nama Fansub Tidak Boleh Kosong</strong>
+                    <mat-error>
+                      <strong *ngIf="fg.get('name').hasError('required')">Nama Fansub Tidak Boleh Kosong</strong>
+                      <strong *ngIf="fg.get('name').hasError('pattern')">Nama Fansub Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-5">
                     <mat-label>Singkatan</mat-label>
                     <input matInput formControlName="slug" placeholder="Jalsub" />
                     <mat-icon matSuffix>short_text</mat-icon>
-                    <mat-error *ngIf="fg.get('slug').hasError('required')">
-                      <strong>Singkatan Tidak Boleh Kosong</strong>
+                    <mat-error>
+                      <strong *ngIf="fg.get('slug').hasError('required')">Singkatan Tidak Boleh Kosong</strong>
+                      <strong *ngIf="fg.get('slug').hasError('pattern')">Singkatan Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 w-100">
@@ -50,8 +52,9 @@
                       placeholder="Sejarah Singkat Atau Cerita Dan Informasi Mengenai Fansubnya Mungkin ?"></textarea>
                     <mat-icon matSuffix>receipt_long</mat-icon>
                     <mat-hint align="end">{{ deskripsi.value?.length || 0 }} Huruf</mat-hint>
-                    <mat-error *ngIf="fg.get('description').hasError('required')">
-                      <strong>Deskripsi Tidak Boleh Kosong</strong>
+                    <mat-error>
+                      <strong *ngIf="fg.get('description').hasError('required')">Deskripsi Tidak Boleh Kosong</strong>
+                      <strong *ngIf="fg.get('description').hasError('pattern')">Deskripsi Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-6">
@@ -59,8 +62,9 @@
                     <input matInput [matDatepicker]="kalender" formControlName="born" (focus)="kalender.open()" placeholder="{{ currentDate | date:'longDate'}}" />
                     <mat-datepicker-toggle matSuffix [for]="kalender"></mat-datepicker-toggle>
                     <mat-datepicker #kalender disabled="false"></mat-datepicker>
-                    <mat-error *ngIf="fg.get('born').hasError('required')">
-                      <strong>Tanggal Tidak Valid</strong>
+                    <mat-error>
+                      <strong *ngIf="fg.get('born').hasError('required')">Tanggal Tidak Valid</strong>
+                      <strong *ngIf="fg.get('born').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-6">
@@ -70,8 +74,9 @@
                       <mat-option value="1">Aktif</mat-option>
                     </mat-select>
                     <mat-hint align="end">Status Kehidupan Fansub Saat Ini</mat-hint>
-                    <mat-error *ngIf="fg.get('active').hasError('required')">
-                      <strong>Mohon Pilih Salah Satu</strong>
+                    <mat-error>
+                      <strong *ngIf="fg.get('active').hasError('required')">Mohon Pilih Salah Satu</strong>
+                      <strong *ngIf="fg.get('active').hasError('pattern')">Status Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -103,11 +108,17 @@
                     <mat-label>Tautan Website</mat-label>
                     <input matInput formControlName="web" placeholder="http://www.domain.id" />
                     <mat-icon matSuffix>web</mat-icon>
+                    <mat-error>
+                      <strong *ngIf="fg.get('web').hasError('pattern')">Website Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
                     <mat-label>Facebook Fanpage</mat-label>
                     <input matInput formControlName="facebook" placeholder="http://www.facebook.com" />
                     <mat-icon matSuffix>facebook</mat-icon>
+                    <mat-error>
+                      <strong *ngIf="fg.get('facebook').hasError('pattern')">Facebook Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
                     <mat-label>Tautan Discord</mat-label>
@@ -115,6 +126,9 @@
                     <mat-icon matSuffix>
                       <img src="/assets/img/discord-black.png" width="24px" />
                     </mat-icon>
+                    <mat-error>
+                      <strong *ngIf="fg.get('discord').hasError('pattern')">Discord Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -124,7 +138,7 @@
                 <div class="row">
                   <div class="col"></div>
                   <div class="col-12 col-md-3 pb-3">
-                    <a mat-stroked-button href="/fansub" class="w-100" [disabled]="submitted">
+                    <a mat-stroked-button routerLink="../" class="w-100" [disabled]="submitted">
                       <mat-icon class="mr-1">undo</mat-icon>
                       Batal
                     </a>

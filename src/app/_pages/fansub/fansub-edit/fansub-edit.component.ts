@@ -20,7 +20,6 @@ export class FansubEditComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   fansubId = 0;
-  fansubData = null;
 
   fg: FormGroup;
 
@@ -59,7 +58,6 @@ export class FansubEditComponent implements OnInit {
         res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
           this.initForm(res.result);
-          this.fansubData = res.result;
         },
         err => {
           this.gs.log('[FANSUB_DETAIL_ERROR]', err);
@@ -86,7 +84,7 @@ export class FansubEditComponent implements OnInit {
       born: [data.born, Validators.compose([Validators.required, this.dateValidator, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      tags: [data.tags, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      tags: [data.tags, Validators.compose([])],
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       web: [WEB ? WEB.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       facebook: [FACEBOOK ? FACEBOOK.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
