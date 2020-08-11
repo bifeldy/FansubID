@@ -116,12 +116,6 @@ export class FansubDetailComponent implements OnInit {
     }
   }
 
-  onServerSideFilter(data: any): void {
-    this.gs.log('[BERKAS_FANSUB_ENTER_FILTER]', data);
-    this.q = data;
-    this.getBerkasFansub();
-  }
-
   getBerkasFansub(): void {
     this.fansub.getBerkasFansub({
       data: window.btoa(JSON.stringify({
@@ -148,8 +142,21 @@ export class FansubDetailComponent implements OnInit {
     );
   }
 
+  editFansubData(): void {
+    this.router.navigateByUrl(`/fansub/${this.fansubId}/edit`);
+  }
+
+  onServerSideFilter(data: any): void {
+    this.gs.log('[BERKAS_FANSUB_ENTER_FILTER]', data);
+    this.q = data;
+    this.getBerkasFansub();
+  }
+
   onPaginatorClicked(data): void {
     this.gs.log('[FANSUB_DETAIL_CLICK_PAGINATOR]', data);
+    this.page = data.pageIndex + 1;
+    this.row = data.pageSize;
+    this.getBerkasFansub();
   }
 
   openFile(data): void {
@@ -157,16 +164,12 @@ export class FansubDetailComponent implements OnInit {
     this.router.navigateByUrl(`/berkas/${data.id}`);
   }
 
-  openTag(data): void {
-    this.gs.log('[FANSUB_DETAIL_OPEN_TAG]', data);
-  }
-
   openAnime(data): void {
     this.gs.log('[FANSUB_DETAIL_OPEN_ANIME]', data);
   }
 
-  editFansubData(): void {
-    this.router.navigateByUrl(`/fansub/${this.fansubId}/edit`);
+  openTag(data): void {
+    this.gs.log('[FANSUB_DETAIL_OPEN_TAG]', data);
   }
 
 }

@@ -172,6 +172,9 @@ export class AnimeDetailComponent implements OnInit {
 
   onPaginatorClicked(data): void {
     this.gs.log('[ANIME_DETAIL_CLICK_PAGINATOR]', data);
+    this.page = data.pageIndex + 1;
+    this.row = data.pageSize;
+    this.getBerkasAnime();
   }
 
   openFile(data): void {

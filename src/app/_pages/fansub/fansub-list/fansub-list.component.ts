@@ -48,10 +48,6 @@ export class FansubListComponent implements OnInit {
   fansubActive = 0;
   fansubInActive = 0;
 
-  count = 0;
-  page = 1;
-  row = 10;
-
   constructor(
     private router: Router,
     private gs: GlobalService,
@@ -69,7 +65,6 @@ export class FansubListComponent implements OnInit {
     this.fansub.getAllFansub().subscribe(
       res => {
         this.gs.log('[FANSUB_LIST_SUCCESS]', res);
-        this.count = res.count;
         this.fansubData = [];
         for (const r of res.results) {
           const tautanLink = [];
@@ -125,10 +120,6 @@ export class FansubListComponent implements OnInit {
   openFansub(data): void {
     this.gs.log('[FANSUB_LIST_OPEN_FANSUB]', data);
     this.router.navigateByUrl(`/fansub/${data.id}`);
-  }
-
-  onPaginatorClicked(data): void {
-    this.gs.log('[FANSUB_LIST_CLICK_PAGINATOR]', data);
   }
 
 }

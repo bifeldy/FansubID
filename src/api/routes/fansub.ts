@@ -42,9 +42,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     order: {
       name: 'ASC',
       active: 'DESC'
-    },
-    skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-    take: req.query.row > 0 ? req.query.row : 10
+    }
   });
   for (const f of fansubs) {
     const date = new Date(f.created_at);

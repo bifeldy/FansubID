@@ -20,6 +20,6 @@
 
   <!-- Detail -->
   <div class="row" *ngIf="fansubData.length > 0">
-    <app-material-tab (tableRowClicked)="openFansub($event)" (paginatorClicked)="onPaginatorClicked($event)" [tabData]="tabData" [count]="count"></app-material-tab>
+    <app-material-tab (tableRowClicked)="openFansub($event)" [tabData]="tabData"></app-material-tab>
   </div>
 </div>

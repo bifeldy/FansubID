@@ -195,8 +195,4 @@ export class AnimeListComponent implements OnInit {
     this.router.navigateByUrl(`/fansub/${data.id}`);
   }
 
-  onPaginatorClicked(data): void {
-    this.gs.log('[ANIME_SEASONAL_CLICK_PAGINATOR]', data);
-  }
-
 }
