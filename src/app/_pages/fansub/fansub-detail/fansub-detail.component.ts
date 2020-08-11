@@ -152,16 +152,17 @@ export class FansubDetailComponent implements OnInit {
     this.gs.log('[FANSUB_DETAIL_CLICK_PAGINATOR]', data);
   }
 
+  openFile(data): void {
+    this.gs.log('[FANSUB_DETAIL_OPEN_FILE]', data);
+    this.router.navigateByUrl(`/berkas/${data.id}`);
+  }
+
   openTag(data): void {
     this.gs.log('[FANSUB_DETAIL_OPEN_TAG]', data);
   }
 
   openAnime(data): void {
     this.gs.log('[FANSUB_DETAIL_OPEN_ANIME]', data);
-  }
-
-  openFile(data): void {
-    this.gs.log('[FANSUB_DETAIL_OPEN_FILE]', data);
   }
 
   editFansubData(): void {

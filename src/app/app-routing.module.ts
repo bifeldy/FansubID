@@ -2,7 +2,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
   // {
   //   path: 'admin',
   //   loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
@@ -39,6 +43,15 @@ const routes: Routes = [
       title: 'Beranda',
       description: 'Halaman Beranda',
       keywords: 'Beranda'
+    }
+  },
+  {
+    path: 'berkas',
+    loadChildren: () => import('./_pages/berkas/berkas.module').then(m => m.BerkasModule),
+    data: {
+      title: 'Berkas',
+      description: 'Kelola Berkas',
+      keywords: 'Berkas File'
     }
   },
   {
