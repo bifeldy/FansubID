@@ -6,6 +6,8 @@ import { FormGroup } from '@angular/forms';
 })
 export class GlobalService {
 
+  readonly allKeyboardKeysRegex = /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/;
+
   public bannerImg = null;
   public sizeContain = false;
   public bgRepeat = false;

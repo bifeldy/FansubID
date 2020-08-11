@@ -3,5 +3,6 @@ export const environment = {
   siteName: 'Hikki',
   tokenName: 'bifeldy_token',
   sessionName: 'bifeldy_session',
-  apiUrl: '/api'
+  apiUrl: '/api',
+  uploadFolder: 'dist/hikki/uploads'
 };

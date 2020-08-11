@@ -2,9 +2,10 @@ import createError from 'http-errors';
 import request from 'request';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, Equal, In } from 'typeorm';
+import { getRepository, Like, In } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
+import { universalAtob } from '../helpers/base64';
 
 import { Berkas } from '../entities/Berkas';
 
@@ -41,9 +42,11 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
 
 // POST `/api/anime/berkas`
 router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const animeId = Array.isArray(req.body.animeId) ? req.body.animeId : [];
+  let animeId = [];
   try {
-    if (animeId.length > 0) {
+    req.body = JSON.parse(universalAtob(req.body.data));
+    if ('animeId' in req.body && Array.isArray(req.body.animeId) && req.body.animeId.length > 0) {
+      animeId = req.body.animeId;
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [
@@ -109,9 +112,11 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
 
 // POST `/api/anime/fansubs`
 router.post('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const animeId = Array.isArray(req.body.animeId) ? req.body.animeId : [];
+  let animeId = [];
   try {
-    if (animeId.length > 0) {
+    req.body = JSON.parse(universalAtob(req.body.data));
+    if ('animeId' in req.body && Array.isArray(req.body.animeId) && req.body.animeId.length > 0) {
+      animeId = req.body.animeId;
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [

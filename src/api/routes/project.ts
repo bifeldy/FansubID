@@ -100,7 +100,7 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       if (req.body.description) {
         project.description = req.body.description;
       }
-      if (req.body.image_url){
+      if (req.body.image_url) {
         project.image_url = req.body.image_url;
       }
       const resProjectSave = await projectRepo.save(project);

@@ -39,8 +39,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
     this.fg = this.fb.group({
-      userNameOrEmail: [null, [Validators.required]],
-      password: [null, [Validators.required]],
+      userNameOrEmail: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      password: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
       rememberMe: [false, []]
     });
   }
@@ -61,9 +61,11 @@ export class LoginComponent implements OnInit {
     if (this.fg.valid) {
       this.submitted = true;
       this.as.login({
-        userNameOrEmail: this.fg.value.userNameOrEmail,
-        password: CryptoJS.SHA512(this.fg.value.password).toString(),
-        rememberMe: this.fg.value.rememberMe
+        data: window.btoa(JSON.stringify({
+          userNameOrEmail: this.fg.value.userNameOrEmail,
+          password: CryptoJS.SHA512(this.fg.value.password).toString(),
+          rememberMe: this.fg.value.rememberMe
+        }))
       }).subscribe(
         (res: any) => {
           this.loginInfo = res.info;

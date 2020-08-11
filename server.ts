@@ -55,10 +55,12 @@ export function app(): express.Express {
 
   const apiLimiter = rateLimit({
     windowMs: 1000, // 1 Second
-    max: 2, // 2 Request
+    max: 5, // 5 Request
     message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 💩'
   });
   const server = express();
+
+  console.log(`Working Directory :: ${process.cwd()}`);
 
   const distFolder = join(process.cwd(), 'dist/hikki/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
@@ -87,6 +89,9 @@ export function app(): express.Express {
       'Content-Disposition'
     ],
   }));
+
+  // Static Image Folder
+  server.use('/img', express.static(join(process.cwd(), 'dist/hikki/uploads/img')));
 
   // Express rest api endpoints
   server.use('/api', apiLimiter, indexRouter);

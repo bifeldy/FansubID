@@ -13,5 +13,4 @@ const morganChalk = morgan((tokens, req, res) => {
   ].join(' ~ ');
 });
 
-const MorganChalk = { morganChalk };
-export default MorganChalk;
+export default { morganChalk };

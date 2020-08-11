@@ -140,7 +140,11 @@ export class AnimeListComponent implements OnInit {
     for (const sA of this.seasonalAnime) {
       seasonalAnimeListId.push(sA.mal_id);
     }
-    this.anime.getFansubAnime(seasonalAnimeListId).subscribe(
+    this.anime.getFansubAnime({
+      data: window.btoa(JSON.stringify({
+        animeId: seasonalAnimeListId
+      }))
+    }).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         let seasonalAnimeWithFansub = [];

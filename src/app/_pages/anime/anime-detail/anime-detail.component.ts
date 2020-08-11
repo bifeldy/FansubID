@@ -110,7 +110,11 @@ export class AnimeDetailComponent implements OnInit {
   }
 
   getBerkasAnime(): void {
-    this.anime.getBerkasAnime([this.animeId], this.q, this.page, this.row).subscribe(
+    this.anime.getBerkasAnime({
+      data: window.btoa(JSON.stringify({
+        animeId: [this.animeId]
+      }))
+    }, this.q, this.page, this.row).subscribe(
       res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
@@ -132,7 +136,11 @@ export class AnimeDetailComponent implements OnInit {
   }
 
   getFansubAnime(): void {
-    this.anime.getFansubAnime([this.animeId]).subscribe(
+    this.anime.getFansubAnime({
+      data: window.btoa(JSON.stringify({
+        animeId: [this.animeId]
+      }))
+    }).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         this.fansubAnime = [];

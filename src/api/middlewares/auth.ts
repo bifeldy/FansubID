@@ -8,6 +8,8 @@ import { UserRequest } from '../models/UserRequest';
 import { User } from '../entities/User';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
+import { universalAtob } from '../helpers/base64';
+
 import * as CryptoJS from 'crypto-js';
 
 // Helper
@@ -16,6 +18,7 @@ import jwt from '../helpers/jwt';
 // tslint:disable-next-line: typedef
 async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
+    req.body = JSON.parse(universalAtob(req.body.data));
     if (
       'username' in req.body &&
       'name' in req.body &&
@@ -78,6 +81,7 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
 // tslint:disable-next-line: typedef
 async function loginModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
+    req.body = JSON.parse(universalAtob(req.body.data));
     if ('userNameOrEmail' in req.body && 'password' in req.body) {
       const reqBodyPassword = CryptoJS.SHA512(req.body.password).toString();
       const userRepo = getRepository(User);

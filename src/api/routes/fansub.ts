@@ -1,4 +1,5 @@
 import createError from 'http-errors';
+import multer from 'multer';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, Equal, In } from 'typeorm';
@@ -8,8 +9,29 @@ import { UserRequest } from '../models/UserRequest';
 import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
 
+import { environment } from '../../environments/environment';
+import { universalAtob } from '../helpers/base64';
+
 // Middleware
 import auth from '../middlewares/auth';
+
+// tslint:disable-next-line: typedef
+function fileImageFilter(req, file, cb) {
+  const typeArray = file.mimetype.split('/');
+  const fileType = typeArray[0];
+  const fileExt = typeArray[1];
+  if (fileType === 'image') {
+    if (fileExt === 'gif' || fileExt === 'jpg' || fileExt === 'jpeg' || fileExt === 'png') {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  } else {
+    cb(null, false);
+  }
+}
+
+const upload = multer({ dest: environment.uploadFolder + '/img/fansub/', fileFilter: fileImageFilter });
 
 const router = Router();
 
@@ -43,39 +65,49 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/fansub`
-router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, next: NextFunction) => {
-  if (
-    'name' in req.body &&
-    'urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0 &&
-    'born' in req.body &&
-    'slug' in req.body
-  ) {
-    const fansubRepo = getRepository(Fansub);
-    const fansub = new Fansub();
-    fansub.name = req.body.name;
-    fansub.born = req.body.born;
-    fansub.slug = req.body.slug;
-    const filteredUrls = [];
-    for (const u of req.body.urls) {
-      if ('url' in u && 'name' in u) {
-        filteredUrls.push(u);
+router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    req.body = JSON.parse(universalAtob(req.body.data));
+    if (
+      'name' in req.body && 'born' in req.body && 'slug' in req.body &&
+      ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
+    ) {
+      const fansubRepo = getRepository(Fansub);
+      const fansub = new Fansub();
+      fansub.name = req.body.name;
+      fansub.born = new Date(req.body.born);
+      fansub.slug = req.body.slug;
+      const filteredUrls = [];
+      for (const u of req.body.urls) {
+        if ('url' in u && 'name' in u) {
+          filteredUrls.push(u);
+        }
       }
+      fansub.urls = JSON.stringify(filteredUrls);
+      if (req.file) {
+        fansub.image_url = '/img/fansub/' + req.file.filename;
+      } else {
+        fansub.image_url = '/favicon.ico';
+      }
+      if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
+        const filteredTagsUnique = [...new Set(req.body.tags)];
+        fansub.tags = JSON.stringify(filteredTagsUnique);
+      }
+      if (req.body.description) {
+        fansub.description = req.body.description;
+      }
+      if (req.body.active) {
+        fansub.active = req.body.active;
+      }
+      const resFansubSave = await fansubRepo.save(fansub);
+      res.status(200).json({
+        info: `😅 Fansub API :: Tambah Baru 🤣`,
+        result: resFansubSave
+      });
+    } else {
+      throw new Error('Data Tidak Lengkap!');
     }
-    fansub.urls = JSON.stringify(filteredUrls);
-    fansub.image_url = req.body.image_url || '/favicon.ico';
-    if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
-      const filteredTagsUnique = [...new Set(req.body.tags)];
-      fansub.tags = JSON.stringify(filteredTagsUnique);
-    }
-    if (req.body.description) {
-      fansub.description = req.body.description;
-    }
-    const resFansubSave = await fansubRepo.save(fansub);
-    res.status(200).json({
-      info: `😅 Fansub API :: Tambah Baru 🤣`,
-      results: resFansubSave
-    });
-  } else {
+  } catch (error) {
     res.status(400).json({
       info: '🙄 400 - Gagal Menambah Fansub Baru! 😪',
       result: {
@@ -87,9 +119,11 @@ router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, nex
 
 // POST `/api/fansub/berkas`
 router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const fansubId = Array.isArray(req.body.fansubId) ? req.body.fansubId : [];
+  let fansubId = [];
   try {
-    if (fansubId.length > 0) {
+    req.body = JSON.parse(universalAtob(req.body.data));
+    if ('fansubId' in req.body && Array.isArray(req.body.fansubId) && req.body.fansubId.length > 0) {
+      fansubId = req.body.fansubId;
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [
@@ -153,11 +187,14 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
   }
 });
 
+// TODO: Butuh DB ADMIN ??
 // POST `/api/fansub/anime`
 router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const fansubId = Array.isArray(req.body.fansubId) ? req.body.fansubId : [];
+  let fansubId = [];
   try {
-    if (fansubId.length > 0) {
+    req.body = JSON.parse(universalAtob(req.body.data));
+    if ('fansubId' in req.body && Array.isArray(req.body.fansubId) && req.body.fansubId.length > 0) {
+      fansubId = req.body.fansubId;
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [
@@ -215,10 +252,12 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 });
 
 // PUT `/api/fansub/:id`
-router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:id',  auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
+    req.body = JSON.parse(universalAtob(req.body.data));
     if (
-      'name' in req.body || 'born' in req.body || 'description' in req.body || 'image_url' in req.body || 'slug' in req.body ||
+      'name' in req.body || 'born' in req.body || 'description' in req.body || 'slug' in req.body || 'active' in req.body ||
+      ('file' in req && req.file.mimetype.includes('image')) ||
       ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) ||
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
@@ -234,16 +273,23 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       if (req.body.born) {
         fansub.born = req.body.born;
       }
-      if (req.body.slug) {
-        fansub.born = req.body.slug;
-      }
       if (req.body.description) {
         fansub.description = req.body.description;
       }
-      if (req.body.image_url){
-        fansub.image_url = req.body.image_url;
+      if (req.body.slug) {
+        fansub.born = req.body.slug;
       }
-      if (req.body.urls){
+      if (req.body.active) {
+        fansub.active = req.body.active;
+      }
+      if (req.file) {
+        fansub.image_url = '/img/fansub/' + req.file.filename;
+      }
+      if (req.body.tags) {
+        const filteredTagsUnique = [...new Set(req.body.tags)];
+        fansub.tags = JSON.stringify(filteredTagsUnique);
+      }
+      if (req.body.urls) {
         const filteredUrls = [];
         for (const u of req.body.urls) {
           if ('url' in u && 'name' in u) {
@@ -251,10 +297,6 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
           }
         }
         fansub.urls = JSON.stringify(filteredUrls);
-      }
-      if (req.body.tags){
-        const filteredTagsUnique = [...new Set(req.body.tags)];
-        fansub.tags = JSON.stringify(filteredTagsUnique);
       }
       const resFansubSave = await fansubRepo.save(fansub);
       res.status(200).json({

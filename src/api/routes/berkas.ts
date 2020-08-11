@@ -186,16 +186,16 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
         if (req.body.description) {
           file.description = req.body.description;
         }
-        if (req.body.image_url){
+        if (req.body.image_url) {
           file.image_url = req.body.image_url;
         }
-        if (req.body.mal_id){
+        if (req.body.mal_id) {
           file.mal_id = req.body.mal_id;
         }
         if (req.body.episode) {
           file.episode = req.body.episode;
         }
-        if (req.body.download_url){
+        if (req.body.download_url) {
           const filteredUrls = [];
           for (const u of req.body.download_url) {
             if ('url' in u && 'name' in u) {
@@ -204,7 +204,7 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
           }
           file.download_url = JSON.stringify(filteredUrls);
         }
-        if (req.body.fansub_id){
+        if (req.body.fansub_id) {
           const fansubRepo = getRepository(Fansub);
           const fansub = await fansubRepo.findOneOrFail({
             where: [
@@ -213,7 +213,7 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
           });
           file.fansub_ = fansub;
         }
-        if (req.body.projectType_id){
+        if (req.body.projectType_id) {
           const projectRepo = getRepository(ProjectType);
           const project = await projectRepo.findOneOrFail({
             where: [

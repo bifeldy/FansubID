@@ -8,16 +8,19 @@ import moment from 'moment';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from 'src/app/_shared/services/fansub.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-fansub-create',
-  templateUrl: './fansub-create.component.html',
-  styleUrls: ['./fansub-create.component.css']
+  selector: 'app-fansub-edit',
+  templateUrl: './fansub-edit.component.html',
+  styleUrls: ['./fansub-edit.component.css']
 })
-export class FansubCreateComponent implements OnInit {
+export class FansubEditComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  fansubId = 0;
+  fansubData = null;
 
   fg: FormGroup;
 
@@ -34,6 +37,7 @@ export class FansubCreateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private pi: PageInfoService,
     private fansub: FansubService
@@ -45,25 +49,48 @@ export class FansubCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.pi.updatePageMetaData(
-      `Fansub - Buat Baru`,
-      `Halaman Menambahkan Fansub Baru`,
-      `Create Fansub`
+      `Fansub - Ubah Data`,
+      `Halaman Pembaharuan Data Fansub`,
+      `Ubah Fansub`
     );
-    this.initForm();
+    this.activatedRoute.params.subscribe(params => {
+      this.fansubId = params.fansubId;
+      this.fansub.getFansub(this.fansubId).subscribe(
+        res => {
+          this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
+          this.initForm(res.result);
+          this.fansubData = res.result;
+        },
+        err => {
+          this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+          this.router.navigate(['/error'], {
+            queryParams: {
+              returnUrl: `/fansub/${this.fansubId}`
+            }
+          });
+        }
+      );
+    });
   }
 
-  initForm(): void {
+  initForm(data): void {
+    this.image_url = data.image_url;
+    const urls = data.urls;
+    const WEB = urls.find(u => u.name === 'web');
+    const FACEBOOK = urls.find(u => u.name === 'facebook');
+    const DISCORD = urls.find(u => u.name === 'discord');
+    const ACTIVE = data.active === true ? '1' : '0';
     this.fg = this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      born: [null, Validators.compose([Validators.required, this.dateValidator, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      active: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      slug: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      tags: [[], Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      name: [data.name, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      born: [data.born, Validators.compose([Validators.required, this.dateValidator, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      tags: [data.tags, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      web: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      facebook: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      discord: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      web: [WEB ? WEB.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      facebook: [FACEBOOK ? FACEBOOK.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      discord: [DISCORD ? DISCORD.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
   }
 
@@ -86,6 +113,7 @@ export class FansubCreateComponent implements OnInit {
       input.value = '';
     }
     this.fg.controls.tags.patchValue(this.fg.value.tags.filter((a, b, c) => c.findIndex(d => (d === a)) === b));
+    this.fg.controls.tags.markAsDirty();
   }
 
   removeTag(tag: any): void {
@@ -107,6 +135,7 @@ export class FansubCreateComponent implements OnInit {
         img.onload = () => {
           this.image_url = reader.result.toString();
           this.fg.controls.image.patchValue(file);
+          this.fg.controls.image.markAsDirty();
         };
         img.src = reader.result.toString();
         this.imageErrorText = null;
@@ -129,31 +158,37 @@ export class FansubCreateComponent implements OnInit {
     if (this.fg.value.discord) {
       urls.push({ name: 'discord', url: this.fg.value.discord });
     }
+    const body = this.gs.getDirtyValues(this.fg);
+    if ('web' in body) {
+      delete body.web;
+    }
+    if ('facebook' in body) {
+      delete body.facebook;
+    }
+    if ('discord' in body) {
+      delete body.discord;
+    }
+    this.gs.log('[FANSUB_EDIT_DIRTY]', body);
     this.submitted = true;
     if (this.fg.invalid) {
       this.submitted = false;
       return;
     }
-    this.fansub.createFansub({
+    this.fansub.updateFansub(this.fansubId, {
       image: this.fg.value.image,
       data: window.btoa(JSON.stringify({
-        name: this.fg.value.name,
-        description: this.fg.value.description,
-        born: this.fg.value.born.getTime(),
-        active: parseInt(this.fg.value.active, 10) === 1,
-        tags: this.fg.value.tags,
-        slug: this.fg.value.slug,
-        urls
+        ...body, urls
       }))
     }).subscribe(
       res => {
-        this.gs.log('[FANSUB_CREATE_SUCCESS]', res);
-        this.router.navigateByUrl('/fansub');
+        this.gs.log('[FANSUB_EDIT_SUCCESS]', res);
+        this.router.navigateByUrl(`/fansub/${this.fansubId}`);
       },
       err => {
-        this.gs.log('[FANSUB_CREATE_ERROR]', err);
+        this.gs.log('[FANSUB_EDIT_ERROR]', err);
         this.submitted = false;
       }
     );
   }
+
 }

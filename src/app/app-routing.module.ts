@@ -20,8 +20,7 @@ const routes: Routes = [
     data: {
       title: 'Masuk',
       description: 'Halaman Login',
-      keywords: 'Login',
-      roles: []
+      keywords: 'Login'
     }
   },
   {
@@ -30,8 +29,7 @@ const routes: Routes = [
     data: {
       title: 'Pendaftaran',
       description: 'Halaman Pembuatan Akun Baru',
-      keywords: 'Register',
-      roles: []
+      keywords: 'Register'
     }
   },
   {
@@ -40,8 +38,7 @@ const routes: Routes = [
     data: {
       title: 'Beranda',
       description: 'Halaman Beranda',
-      keywords: 'Beranda',
-      roles: []
+      keywords: 'Beranda'
     }
   },
   {
@@ -50,8 +47,7 @@ const routes: Routes = [
     data: {
       title: 'List Anime & Garapan Musiman',
       description: 'Daftar Isi Anime Musiman Yang Baru Saja Rilis Subtitle Indonesianya',
-      keywords: 'Anime Subtitle Indonesia',
-      roles: []
+      keywords: 'Anime Subtitle Indonesia'
     }
   },
   {
@@ -60,8 +56,7 @@ const routes: Routes = [
     data: {
       title: 'Katalog Informasi Seluruh Fansub Indonesia',
       description: 'Daftar Isi Seluruh Fansub Indonesia',
-      keywords: 'Fansub Indonesia',
-      roles: []
+      keywords: 'Fansub Indonesia'
     }
   },
   {
@@ -70,8 +65,7 @@ const routes: Routes = [
     data: {
       title: 'About',
       description: 'Halaman Mengenai Website',
-      keywords: 'About',
-      roles: []
+      keywords: 'About'
     }
   },
   {
@@ -80,8 +74,7 @@ const routes: Routes = [
     data: {
       title: 'Error - 404',
       description: 'Whoops! Halaman Tidak Ditemukan',
-      keywords: '404 - Not Found',
-      roles: []
+      keywords: '404 - Not Found'
     }
   },
   {

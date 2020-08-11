@@ -35,5 +35,4 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
   }
 }
 
-const jwt = { JwtEncode, JwtDecode };
-export default jwt;
+export default { JwtEncode, JwtDecode };
