@@ -15,6 +15,7 @@ import { FansubService } from '../../../_shared/services/fansub.service';
 })
 export class FansubListComponent implements OnInit {
 
+  allFansubId = [];
   fansubData = [];
 
   tabData: any = [
@@ -23,7 +24,7 @@ export class FansubListComponent implements OnInit {
       icon: 'closed_caption',
       type: 'table',
       data: {
-        column: ['Status', 'Logo', 'Nama Fansub', 'Total Proyek', 'Tautan Komunitas'],
+        column: ['Status', 'Logo', 'Nama Fansub', 'Garapan', 'Tautan Komunitas'],
         row: []
       }
     }
@@ -62,11 +63,15 @@ export class FansubListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getFansubData();
+  }
+
+  getFansubData(): void {
     this.fansub.getAllFansub().subscribe(
       res => {
         this.gs.log('[FANSUB_LIST_SUCCESS]', res);
-        this.fansubData = [];
         for (const r of res.results) {
+          this.allFansubId.push(r.id);
           const tautanLink = [];
           if (Array.isArray(r.urls)) {
             for (const i of r.urls) {
@@ -84,7 +89,6 @@ export class FansubListComponent implements OnInit {
             Logo: r.image_url,
             Status: r.active ? 'AKTIF' : 'TIDAK AKTIF',
             'Nama Fansub': r.name,
-            'Total Proyek': '// TODO: ? Garapan',
             'Tautan Komunitas': tautanLink
           });
           if (r.active) {
@@ -93,26 +97,37 @@ export class FansubListComponent implements OnInit {
             this.fansubInActive++;
           }
         }
-        this.barChartLabels = [
-          '// TODO: Fansub 01',
-          '// TODO: Fansub 02',
-          '// TODO: Fansub 03',
-          '// TODO: Fansub 04',
-          '// TODO: Fansub 05',
-          '// TODO: Fansub 06',
-          '// TODO: Fansub 07',
-          '// TODO: Fansub 08',
-          '// TODO: Fansub 09',
-          '// TODO: Fansub 10'
-        ];
-        this.barChartData = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
-        this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
-        this.pieChartData = [this.fansubActive, this.fansubInActive];
-        this.tabData[0].data.row = this.fansubData;
+        this.getAnimeFansub();
         this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/create', false);
       },
       err => {
         this.gs.log('[FANSUB_LIST_ERROR]', err);
+      }
+    );
+  }
+
+  getAnimeFansub(): void {
+    this.fansub.getAnimeFansub({
+      data: window.btoa(JSON.stringify({
+        fansubId: this.allFansubId
+      }))
+    }).subscribe(
+      res => {
+        this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
+        for (const f of this.fansubData) {
+          f.Garapan = res.results[f.id].length;
+        }
+        this.tabData[0].data.row = this.fansubData;
+        const fansubRank = [...this.fansubData].sort((a, b) => b.Garapan - a.Garapan).slice(0, 10);
+        for (const f of fansubRank) {
+          this.barChartLabels.push(f['Nama Fansub']);
+          this.barChartData.push(f.Garapan);
+        }
+        this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
+        this.pieChartData = [this.fansubActive, this.fansubInActive];
+      },
+      err => {
+        this.gs.log('[FANSUB_ANIME_ERROR]', err);
       }
     );
   }

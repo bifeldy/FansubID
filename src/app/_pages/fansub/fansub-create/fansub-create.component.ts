@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { Router } from '@angular/router';
 
 import moment from 'moment';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from 'src/app/_shared/services/fansub.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fansub-create',
@@ -102,7 +102,7 @@ export class FansubCreateComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = e => {
-      if (file.size < 128000) {
+      if (file.size < 256000) {
         const img = document.createElement('img');
         img.onload = () => {
           this.image_url = reader.result.toString();
@@ -113,7 +113,7 @@ export class FansubCreateComponent implements OnInit {
       } else {
         this.image_url = '/assets/img/form-image-error.png';
         this.fg.controls.image.patchValue(null);
-        this.imageErrorText = 'Ukuran Upload File Melebihi Batas 128 KB!';
+        this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
       }
     };
   }

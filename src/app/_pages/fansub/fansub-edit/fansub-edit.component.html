@@ -17,7 +17,7 @@
                 <div class="row">
                   <div class="col-12">
                     <img [src]="image_url" class="w-100 border rounded" matTooltip="Klik Gambar Untuk Mengganti Dengan Yang Baru" (click)="gambar.click()" />
-                    <input type="file" class="w-100" accept="image/*" (change)="uploadImage($event)" #gambar />
+                    <input type="file" class="w-100" accept="image/gif, image/jpeg, image/jpg, image/png" (change)="uploadImage($event)" #gambar />
                     <mat-error class="w-100">
                       <small>
                         <strong>{{ imageErrorText }}</strong>

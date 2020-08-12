@@ -31,7 +31,13 @@ function fileImageFilter(req, file, cb) {
   }
 }
 
-const upload = multer({ dest: environment.uploadFolder + '/img/fansub/', fileFilter: fileImageFilter });
+const upload = multer({
+  dest: environment.uploadFolder + '/img/fansub/',
+  fileFilter: fileImageFilter,
+  limits: {
+    fileSize: 256000
+  }
+});
 
 const router = Router();
 
@@ -77,7 +83,7 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
       fansub.slug = req.body.slug;
       const filteredUrls = [];
       for (const u of req.body.urls) {
-        if ('url' in u && 'name' in u) {
+        if ('url' in u && 'name' in u && u.url && u.name) {
           filteredUrls.push(u);
         }
       }
@@ -132,11 +138,10 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
           }
         ],
         order: {
-          updated_at: 'DESC',
           created_at: 'DESC',
           name: 'ASC'
         },
-        relations: ['project_type_', 'fansub_', 'user_'],
+        relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
         skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
         take: req.query.row > 0 ? req.query.row : 10
       });
@@ -161,6 +166,8 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         delete f.fansub_.tags;
         delete f.fansub_.created_at;
         delete f.fansub_.updated_at;
+        delete f.anime_.created_at;
+        delete f.anime_.updated_at;
         delete f.user_.role;
         delete f.user_.password;
         delete f.user_.session_token;
@@ -185,7 +192,6 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
   }
 });
 
-// TODO: Butuh DB ADMIN ??
 // POST `/api/fansub/anime`
 router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
   let fansubId = [];
@@ -197,20 +203,24 @@ router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction
       const [files, count] = await fileRepo.findAndCount({
         where: [
           {
-            fansub_: { id: In([fansubId]) },
+            fansub_: {
+              id: In([fansubId])
+            }
           }
         ],
-        relations: ['fansub_']
+        relations: ['fansub_', 'anime_']
       });
       const results: any = {};
       for (const i of fansubId) {
         results[i] = [];
       }
       for (const f of files) {
-        results[f.fansub_.id].push(f.mal_id);
+        delete f.anime_.created_at;
+        delete f.anime_.updated_at;
+        results[f.fansub_.id].push(f.anime_);
       }
       for (const [key, value] of Object.entries(results)) {
-        results[key] = [...new Set(value as any)];
+        results[key] = (value as any).filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b);
       }
       res.status(200).json({
         info: `😅 Anime Fansub API :: ${fansubId.join(', ')} 🤣`,
@@ -250,7 +260,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 });
 
 // PUT `/api/fansub/:id`
-router.put('/:id',  auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     req.body = JSON.parse(universalAtob(req.body.data));
     if (
@@ -290,7 +300,7 @@ router.put('/:id',  auth.isAuthorized, upload.single('image'), async (req: UserR
       if (req.body.urls) {
         const filteredUrls = [];
         for (const u of req.body.urls) {
-          if ('url' in u && 'name' in u) {
+          if ('url' in u && 'name' in u && u.url && u.name) {
             filteredUrls.push(u);
           }
         }

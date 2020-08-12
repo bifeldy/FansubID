@@ -128,7 +128,7 @@ export class FansubEditComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = e => {
-      if (file.size < 128000) {
+      if (file.size < 256000) {
         const img = document.createElement('img');
         img.onload = () => {
           this.image_url = reader.result.toString();

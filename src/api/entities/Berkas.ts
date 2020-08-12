@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from './User';
 import { Fansub } from './Fansub';
 import { ProjectType } from './ProjectType';
+import { Anime } from './Anime';
 
 @Entity({ name: 'berkas' })
 export class Berkas {
@@ -13,7 +14,7 @@ export class Berkas {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
   description: string;
 
   @Column({ type: 'boolean', default: false })
@@ -27,15 +28,15 @@ export class Berkas {
   // tslint:disable-next-line: variable-name
   image_url: string;
 
-  @Column({ type: 'bigint', nullable: true })
-  // tslint:disable-next-line: variable-name
-  mal_id: number;
+  // @Column({ type: 'int', nullable: true })
+  // // tslint:disable-next-line: variable-name
+  // mal_id: number;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int' })
   // tslint:disable-next-line: variable-name
   episode: number;
 
-  @Column({ type: 'bigint', default: 0, nullable: true })
+  @Column({ type: 'int', default: 0 })
   // tslint:disable-next-line: variable-name
   view_count: number;
 
@@ -50,6 +51,10 @@ export class Berkas {
   @ManyToOne(type => ProjectType)
   // tslint:disable-next-line: variable-name
   project_type_: ProjectType;
+
+  @ManyToOne(type => Anime)
+  // tslint:disable-next-line: variable-name
+  anime_: Anime;
 
   @ManyToOne(type => Fansub)
   // tslint:disable-next-line: variable-name

@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   selectedBackgroundImage = '';
 
   constructor(
-    private router: Router,
+    public router: Router,
     private route: ActivatedRoute,
     private bs: BusyService,
     private pi: PageInfoService,

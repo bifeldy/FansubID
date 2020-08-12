@@ -1,13 +1,16 @@
-import createError from 'http-errors';
 import request from 'request';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, In } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
+
 import { universalAtob } from '../helpers/base64';
 
+import auth from '../middlewares/auth';
+
 import { Berkas } from '../entities/Berkas';
+import { Anime } from '../entities/Anime';
 
 const router = Router();
 
@@ -21,7 +24,57 @@ const seasonal = [
 
 // GET `/api/anime`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
-  return next(createError(404));
+  const searchQuery = req.query.q || '';
+  const searchType = req.query.q || '';
+  return request({
+    method: 'GET',
+    uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`
+  }, async (error, result, body) => {
+    res.status(result.statusCode).json({
+      info: `😅 Anime API :: Search ${searchQuery} 🤣`,
+      results: JSON.parse(body).results
+    });
+  });
+});
+
+// POST `/api/anime`
+router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    req.body = JSON.parse(universalAtob(req.body.data));
+    if ('id' in req.body && 'name' in req.body && 'image_url' in req.body) {
+      const animeRepo = getRepository(Anime);
+      const animes = await animeRepo.find({
+        where: [
+          { id: req.body.id }
+        ]
+      });
+      if (animes.length > 0) {
+        res.status(200).json({
+          info: `😍 200 - Data Anime Duplikat 🥰`,
+          result: animes
+        });
+      } else {
+        const anime = new Anime();
+        anime.id = req.body.id;
+        anime.name = req.body.name;
+        anime.image_url = req.body.image_url;
+        const resultSaveAnime = await animeRepo.save(anime);
+        res.status(200).json({
+          info: `😅 Anime API :: Tambah Baru 🤣`,
+          results: resultSaveAnime
+        });
+      }
+    } else {
+      throw new Error('Data Tidak Lengkap!');
+    }
+  } catch (error) {
+    res.status(400).json({
+      info: `🙄 400 - Gagal Menambah Anime 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
 });
 
 // GET `/api/anime/seasonal`
@@ -51,17 +104,18 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
       const [files, count] = await fileRepo.findAndCount({
         where: [
           {
-            mal_id: In(animeId),
+            name: Like(`%${req.query.q ? req.query.q : ''}%`),
             private: false,
-            name: Like(`%${req.query.q ? req.query.q : ''}%`)
+            anime_: {
+              id: In(animeId)
+            }
           }
         ],
         order: {
-          updated_at: 'DESC',
           created_at: 'DESC',
           name: 'ASC'
         },
-        relations: ['project_type_', 'fansub_', 'user_'],
+        relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
         skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
         take: req.query.row > 0 ? req.query.row : 10
       });
@@ -86,12 +140,14 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         delete f.fansub_.tags;
         delete f.fansub_.created_at;
         delete f.fansub_.updated_at;
+        delete f.anime_.created_at;
+        delete f.anime_.updated_at;
         delete f.user_.role;
         delete f.user_.password;
         delete f.user_.session_token;
         delete f.user_.created_at;
         delete f.user_.updated_at;
-        results[f.mal_id].push(f);
+        results[f.anime_.id].push(f);
       }
       res.status(200).json({
         info: `😅 Berkas Anime API :: ${animeId.join(', ')} 🤣`,
@@ -120,9 +176,13 @@ router.post('/fansub', async (req: UserRequest, res: Response, next: NextFunctio
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [
-          { mal_id: In([animeId]) }
+          {
+            anime_: {
+              id: In([animeId])
+            }
+          }
         ],
-        relations: ['fansub_']
+        relations: ['fansub_', 'anime_']
       });
       const results: any = {};
       for (const i of animeId) {
@@ -134,7 +194,7 @@ router.post('/fansub', async (req: UserRequest, res: Response, next: NextFunctio
         delete f.fansub_.tags;
         delete f.fansub_.created_at;
         delete f.fansub_.updated_at;
-        results[f.mal_id].push(f.fansub_);
+        results[f.anime_.id].push(f.fansub_);
       }
       for (const [key, value] of Object.entries(results)) {
         results[key] = (value as any).filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b);

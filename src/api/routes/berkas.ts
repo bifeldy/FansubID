@@ -1,17 +1,47 @@
 import createError from 'http-errors';
+import multer from 'multer';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
+import { environment } from '../../environments/environment';
+import { universalAtob } from '../helpers/base64';
+
 import { ProjectType } from '../entities/ProjectType';
 import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
+import { Anime } from '../entities/Anime';
 
 // Middleware
 import auth from '../middlewares/auth';
+
+// tslint:disable-next-line: typedef
+function fileImageFilter(req, file, cb) {
+  const typeArray = file.mimetype.split('/');
+  const fileType = typeArray[0];
+  const fileExt = typeArray[1];
+  if (fileType === 'image' && file) {
+    if (fileExt === 'gif' || fileExt === 'jpg' || fileExt === 'jpeg' || fileExt === 'png') {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  } else {
+    cb(null, false);
+  }
+}
+
+const upload = multer({
+  dest: environment.uploadFolder + '/img/berkas/',
+  fileFilter: fileImageFilter,
+  limits: {
+    fileSize: 256000
+  }
+});
+
 
 const router = Router();
 
@@ -23,11 +53,10 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       { private: false, name: Like(`%${req.query.q ? req.query.q : ''}%`) }
     ],
     order: {
-      updated_at: 'DESC',
       created_at: 'DESC',
       name: 'ASC'
     },
-    relations: ['project_type_', 'fansub_', 'user_'],
+    relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
     skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
     take: req.query.row > 0 ? req.query.row : 10
   });
@@ -48,6 +77,8 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     delete f.fansub_.tags;
     delete f.fansub_.created_at;
     delete f.fansub_.updated_at;
+    delete f.anime_.created_at;
+    delete f.anime_.updated_at;
     delete f.user_.role;
     delete f.user_.password;
     delete f.user_.session_token;
@@ -62,32 +93,40 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/berkas`
-router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
+    req.body = JSON.parse(universalAtob(req.body.data));
     if (
-      'name' in req.body &&
+      'name' in req.body && 'description' in req.body && 'episode' in req.body &&
       'download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0
     ) {
       const fileRepo = getRepository(Berkas);
       const file = new Berkas();
-      file.name = req.body.name;
       const filteredUrls = [];
       for (const u of req.body.download_url) {
-        if ('url' in u && 'name' in u) {
+        if ('url' in u && 'name' in u && u.url && u.name) {
           filteredUrls.push(u);
         }
       }
+      file.name = req.body.name;
       file.download_url = JSON.stringify(filteredUrls);
-      file.image_url = req.body.image_url || '/favicon.ico';
-      if (req.body.mal_id) {
-        file.mal_id = req.body.mal_id;
+      file.description = req.body.description;
+      file.episode = req.body.episode;
+      if (req.body.private) {
+        file.private = req.body.private;
       }
-      if (req.body.description) {
-        file.description = req.body.description;
+      if (req.file) {
+        file.image_url = '/img/fansub/' + req.file.filename;
+      } else {
+        file.image_url = '/favicon.ico';
       }
-      if (req.body.episode) {
-        file.episode = req.body.episode;
-      }
+      const animeRepo = getRepository(Anime);
+      const anime = await animeRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.body.anime_id) }
+        ]
+      });
+      file.anime_ = anime;
       const fansubRepo = getRepository(Fansub);
       const fansub = await fansubRepo.findOneOrFail({
         where: [
@@ -109,7 +148,7 @@ router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, nex
         ]
       });
       file.user_ = user;
-      const resFileSave = fileRepo.save(file);
+      const resFileSave = await fileRepo.save(file);
       res.status(200).json({
         info: `😅 Berkas API :: Tambah Baru 🤣`,
         results: resFileSave
@@ -135,7 +174,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       where: [
         { id: Equal(req.params.id) }
       ],
-      relations: ['project_type_', 'fansub_', 'user_'],
+      relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
     });
     file.view_count++;
     const resFileSave = await fileRepo.save(file);
@@ -149,6 +188,8 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     delete resFileSave.fansub_.tags;
     delete resFileSave.fansub_.created_at;
     delete resFileSave.fansub_.updated_at;
+    delete resFileSave.anime_.created_at;
+    delete resFileSave.anime_.updated_at;
     delete resFileSave.user_.role;
     delete resFileSave.user_.password;
     delete resFileSave.user_.session_token;
@@ -165,11 +206,13 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 });
 
 // PUT `/api/berkas/:id`
-router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
+    req.body = JSON.parse(universalAtob(req.body.data));
+    console.log(req.body);
     if (
-      'name' in req.body || 'mal_id' in req.body || 'description' in req.body ||
-      'image_url' in req.body || 'fansub_id' in req.body || 'projectType_id' in req.body ||
+      'name' in req.body || 'description' in req.body || 'private' in req.body ||
+      'anime_id' in req.body || 'fansub_id' in req.body || 'projectType_id' in req.body ||
       ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0)
     ) {
       const fileRepo = getRepository(Berkas);
@@ -186,19 +229,28 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
         if (req.body.description) {
           file.description = req.body.description;
         }
-        if (req.body.image_url) {
-          file.image_url = req.body.image_url;
-        }
-        if (req.body.mal_id) {
-          file.mal_id = req.body.mal_id;
+        if (req.file) {
+          file.image_url = '/img/fansub/' + req.file.filename;
         }
         if (req.body.episode) {
           file.episode = req.body.episode;
         }
+        if (req.body.private) {
+          file.private = req.body.private;
+        }
+        if (req.body.anime_id) {
+          const animeRepo = getRepository(Anime);
+          const anime = await animeRepo.findOneOrFail({
+            where: [
+              { id: Equal(req.body.anime_id) }
+            ]
+          });
+          file.anime_ = anime;
+        }
         if (req.body.download_url) {
           const filteredUrls = [];
           for (const u of req.body.download_url) {
-            if ('url' in u && 'name' in u) {
+            if ('url' in u && 'name' in u && u.url && u.name) {
               filteredUrls.push(u);
             }
           }

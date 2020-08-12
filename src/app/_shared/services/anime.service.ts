@@ -12,12 +12,20 @@ export class AnimeService {
   ) {
   }
 
-  getSeasonalAnime(year: number, season: string): any {
-    return this.api.getData(`/anime/seasonal?year=${year}&season=${season}`);
+  searchAnime(q: string, type = ''): any {
+    return this.api.getData(`/anime/?q=${q}&type=${type}`);
   }
 
   getAnime(animeId: number): any {
     return this.api.getData(`/anime/${animeId}`);
+  }
+
+  addNewAnime(encryptedAnimeData): any {
+    return this.api.postData(`/anime`, encryptedAnimeData);
+  }
+
+  getSeasonalAnime(year: number, season: string): any {
+    return this.api.getData(`/anime/seasonal?year=${year}&season=${season}`);
   }
 
   getBerkasAnime(encryptedAnimeIdArray, q = null, page = 1, row = 10): any {

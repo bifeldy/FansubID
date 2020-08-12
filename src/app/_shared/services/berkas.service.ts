@@ -16,7 +16,15 @@ export class BerkasService {
     return this.api.getData(`/berkas?q=${q}&page=${page}&row=${row}`);
   }
 
-  getBerkas(fansubId: number): any {
-    return this.api.getData(`/berkas/${fansubId}`);
+  getBerkas(berkasId: number): any {
+    return this.api.getData(`/berkas/${berkasId}`);
+  }
+
+  createBerkas(formData): any {
+    return this.api.postData(`/berkas`, formData, true);
+  }
+
+  updateBerkas(berkasId, encryptedBerkasData): any {
+    return this.api.putData(`/berkas/${berkasId}`, encryptedBerkasData, true);
   }
 }

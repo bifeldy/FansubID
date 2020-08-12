@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { BerkasService } from '../../_shared/services/berkas.service';
+import { FabService } from '../../_shared/services/fab.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,7 @@ export class HomeComponent implements OnInit {
       icon: 'file_copy',
       type: 'table',
       data: {
-        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'Pemilik'],
+        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'View', 'Pemilik'],
         row: []
       }
     }
@@ -33,7 +34,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
     private gs: GlobalService,
-    private bs: BerkasService
+    private bs: BerkasService,
+    private fs: FabService
   ) {
     this.gs.bannerImg = '/assets/img/home-banner.png';
     this.gs.sizeContain = false;
@@ -56,11 +58,13 @@ export class HomeComponent implements OnInit {
             Jenis: r.project_type_.name,
             Image: r.image_url,
             Upload: r.created_at,
+            View: `${r.view_count}x`,
             Pemilik: r.user_.username,
             'Nama Berkas': r.name
           });
         }
         this.tabData[0].data.row = this.berkasData;
+        this.fs.initializeFab('add', null, 'Tambah Berkas Baru', `/berkas/create`, false);
       },
       err => {
         this.gs.log('[BERKAS_LIST_ERROR]', err);

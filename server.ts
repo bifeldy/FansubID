@@ -33,6 +33,7 @@ import { KartuTandaPenduduk } from './src/api/entities/KartuTandaPenduduk';
 import { User } from './src/api/entities/User';
 import { ProjectType } from 'src/api/entities/ProjectType';
 import { Fansub } from 'src/api/entities/Fansub';
+import { Anime } from 'src/api/entities/Anime';
 import { Berkas } from 'src/api/entities/Berkas';
 
 const typeOrmConfig: any = {
@@ -44,7 +45,7 @@ const typeOrmConfig: any = {
   database: 'hikki',
   synchronize: true,
   logging: false,
-  entities: [User, KartuTandaPenduduk, ProjectType, Fansub, Berkas]
+  entities: [User, KartuTandaPenduduk, ProjectType, Fansub, Anime, Berkas]
 };
 
 // Express Router

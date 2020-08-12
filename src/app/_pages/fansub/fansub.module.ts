@@ -70,7 +70,7 @@ const routes: Routes = [
     ChartsModule,
     NotificationsModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ]
 })
 export class FansubModule { }

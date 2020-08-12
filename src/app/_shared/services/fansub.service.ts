@@ -20,8 +20,8 @@ export class FansubService {
     return this.api.postData(`/fansub`, formData, true);
   }
 
-  updateFansub(fansubId, formData): any {
-    return this.api.putData(`/fansub/${fansubId}`, formData, true);
+  updateFansub(fansubId, encryptedFansubData): any {
+    return this.api.putData(`/fansub/${fansubId}`, encryptedFansubData, true);
   }
 
   getFansub(fansubId: number): any {
@@ -32,8 +32,8 @@ export class FansubService {
     return this.api.postData(`/fansub/berkas?q=${q}&page=${page}&row=${row}`, encryptedFansubIdArray);
   }
 
-  getAnimeFansub(fansubId = []): any {
-    return this.api.postData(`/fansub/anime`, { fansubId });
+  getAnimeFansub(encryptedFansubIdArray): any {
+    return this.api.postData(`/fansub/anime`, encryptedFansubIdArray);
   }
 
 }

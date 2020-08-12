@@ -22,6 +22,8 @@ export class FansubDetailComponent implements OnInit {
   page = 1;
   row = 10;
   q = '';
+
+  animeFansub = [];
   berkasFansub = [];
 
   chipData = [];
@@ -34,23 +36,23 @@ export class FansubDetailComponent implements OnInit {
       icon: 'live_tv',
       type: 'list',
       data: [
-        { title: '// TODO: Judul Panjang Garapan Anime 01', description: '// TODO: Berkas Terkini :: 01/24 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 02', description: '// TODO: Berkas Terkini :: 03/24 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 03', description: '// TODO: Berkas Terkini :: 06/12 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 04', description: '// TODO: Berkas Terkini :: 12/12 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 05', description: '// TODO: Berkas Terkini :: 00/24 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 06', description: '// TODO: Berkas Terkini :: 01/24 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 07', description: '// TODO: Berkas Terkini :: 03/24 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 08', description: '// TODO: Berkas Terkini :: 06/24 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 09', description: '// TODO: Berkas Terkini :: 12/24 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 10', description: '// TODO: Berkas Terkini :: 24/24 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 11', description: '// TODO: Berkas Terkini :: 01/64 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 12', description: '// TODO: Berkas Terkini :: 02/64 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 13', description: '// TODO: Berkas Terkini :: 04/64 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 14', description: '// TODO: Berkas Terkini :: 08/64 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 15', description: '// TODO: Berkas Terkini :: 16/64 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 16', description: '// TODO: Berkas Terkini :: 32/64 Episodes' },
-        { title: '// TODO: Judul Panjang Garapan Anime 17', description: '// TODO: Berkas Terkini :: 64/64 Episodes' }
+        // { title: '// TODO: Judul Panjang Garapan Anime 01', description: '// TODO: Berkas Terkini :: 01/24 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 02', description: '// TODO: Berkas Terkini :: 03/24 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 03', description: '// TODO: Berkas Terkini :: 06/12 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 04', description: '// TODO: Berkas Terkini :: 12/12 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 05', description: '// TODO: Berkas Terkini :: 00/24 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 06', description: '// TODO: Berkas Terkini :: 01/24 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 07', description: '// TODO: Berkas Terkini :: 03/24 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 08', description: '// TODO: Berkas Terkini :: 06/24 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 09', description: '// TODO: Berkas Terkini :: 12/24 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 10', description: '// TODO: Berkas Terkini :: 24/24 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 11', description: '// TODO: Berkas Terkini :: 01/64 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 12', description: '// TODO: Berkas Terkini :: 02/64 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 13', description: '// TODO: Berkas Terkini :: 04/64 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 14', description: '// TODO: Berkas Terkini :: 08/64 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 15', description: '// TODO: Berkas Terkini :: 16/64 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 16', description: '// TODO: Berkas Terkini :: 32/64 Episodes' },
+        // { title: '// TODO: Judul Panjang Garapan Anime 17', description: '// TODO: Berkas Terkini :: 64/64 Episodes' }
       ]
     },
     {
@@ -93,6 +95,7 @@ export class FansubDetailComponent implements OnInit {
           );
           this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
           this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
+          this.getAnimeFansub();
           this.getBerkasFansub();
         },
         err => {
@@ -142,6 +145,30 @@ export class FansubDetailComponent implements OnInit {
     );
   }
 
+  getAnimeFansub(): void {
+    this.fansub.getAnimeFansub({
+      data: window.btoa(JSON.stringify({
+        fansubId: [this.fansubId]
+      }))
+    }).subscribe(
+      res => {
+        this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
+        this.animeFansub = [];
+        for (const r of res.results[this.fansubId]) {
+          this.animeFansub.push({
+            id: r.id,
+            image: r.image_url,
+            title: r.name
+          });
+        }
+        this.tabData[0].data = this.animeFansub;
+      },
+      err => {
+        this.gs.log('[FANSUB_ANIME_ERROR]', err);
+      }
+    );
+  }
+
   editFansubData(): void {
     this.router.navigateByUrl(`/fansub/${this.fansubId}/edit`);
   }
@@ -166,6 +193,7 @@ export class FansubDetailComponent implements OnInit {
 
   openAnime(data): void {
     this.gs.log('[FANSUB_DETAIL_OPEN_ANIME]', data);
+    this.router.navigateByUrl(`/anime/${data.id}`);
   }
 
   openTag(data): void {
