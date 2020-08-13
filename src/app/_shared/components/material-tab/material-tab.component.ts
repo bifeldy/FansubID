@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-material-tab',
@@ -21,6 +22,8 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
   totalTabsCount = 2;
 
   gridListBreakpoint = 1;
+
+  urlPath = null;
 
   @Input() tabData: any = [
     // {
@@ -73,9 +76,12 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
   @Output() tableRowClicked = new EventEmitter();
   @Output() paginatorClicked = new EventEmitter();
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.urlPath = this.router.url;
     this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 

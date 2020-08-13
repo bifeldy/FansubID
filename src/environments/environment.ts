@@ -7,7 +7,7 @@ export const environment = {
   siteName: 'Hikki',
   tokenName: 'bifeldy_token',
   sessionName: 'bifeldy_session',
-  apiUrl: 'http://localhost:4000/api',
+  apiUrl: 'https://hikki.id/api',
   uploadFolder: 'dist/hikki/uploads'
 };
 

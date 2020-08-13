@@ -74,7 +74,7 @@
       <h3 class="m-0">Komentar</h3>
     </ng-template>
     <div class="p-3">
-      // TODO: Discuss Comment
+      <disqus [identifier]="urlPath" *ngIf="urlPath"></disqus>
     </div>
   </mat-tab>
 </mat-tab-group>

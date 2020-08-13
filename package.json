@@ -52,6 +52,7 @@
     "mysql": "^2.18.1",
     "ng2-charts": "^2.3.2",
     "ngx-cookie-service": "^10.0.1",
+    "ngx-disqus": "^2.4.3",
     "ngx-spinner": "^10.0.1",
     "ngx-swiper-wrapper": "^9.0.1",
     "ngx-toastr": "^13.0.0",
