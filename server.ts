@@ -36,13 +36,17 @@ import { Fansub } from 'src/api/entities/Fansub';
 import { Anime } from 'src/api/entities/Anime';
 import { Berkas } from 'src/api/entities/Berkas';
 
+const dbName = process.env.DB_NAME || 'hikkiid_main-site';
+const dbUsername = process.env.DB_USERNAME || 'bifeldy';
+const dbPassword = process.env.DB_PASSWORD || '123qweasdzxc';
+
 const typeOrmConfig: any = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
-  username: 'root',
-  password: '',
-  database: 'hikki',
+  username: dbUsername,
+  password: dbPassword,
+  database: dbName,
   synchronize: true,
   logging: false,
   entities: [User, KartuTandaPenduduk, ProjectType, Fansub, Anime, Berkas]
@@ -110,27 +114,41 @@ export function app(): express.Express {
   return server;
 }
 
-function run(): void {
-  createConnection({
-    ...typeOrmConfig
-  }).then(async connection => {
-    console.log(`📚 MySQL Database ~ ${typeOrmConfig.username}@${typeOrmConfig.host}:${typeOrmConfig.port}/${typeOrmConfig.database} 🎀`);
-    const port = process.env.PORT || 4000;
-    const server = app();
-    server.listen(port, () => {
-      console.log(`✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`);
-    });
-  }).catch(error => console.log(error));
-}
+// function run(): void {
+//   createConnection({
+//     ...typeOrmConfig
+//   }).then(async connection => {
+//     console.log(`📚 MySQL Database ~ ${typeOrmConfig.username}@${typeOrmConfig.host}:${typeOrmConfig.port}/${typeOrmConfig.database} 🎀`);
+//     const port = process.env.PORT || 4000;
+//     const server = app();
+//     server.listen(port, () => {
+//       console.log(`✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`);
+//     });
+//   }).catch(error => console.log(error));
+// }
 
-// Webpack will replace 'require' with '__webpack_require__'
-// '__non_webpack_require__' is a proxy to Node 'require'
-// The below code is to ensure that the server is run only when not requiring the bundle.
-declare const __non_webpack_require__: NodeRequire;
-const mainModule = __non_webpack_require__.main;
-const moduleFilename = mainModule && mainModule.filename || '';
-if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
-  run();
-}
+// // Webpack will replace 'require' with '__webpack_require__'
+// // '__non_webpack_require__' is a proxy to Node 'require'
+// // The below code is to ensure that the server is run only when not requiring the bundle.
+// declare const __non_webpack_require__: NodeRequire;
+// const mainModule = __non_webpack_require__.main;
+// const moduleFilename = mainModule && mainModule.filename || '';
+// if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
+//   run();
+// }
+
+// tslint:disable-next-line: variable-name
+const Hikki_ExpressAngularSSR = createConnection({
+  ...typeOrmConfig
+}).then(async connection => {
+  console.log(`📚 MySQL Database ~ ${typeOrmConfig.username}@${typeOrmConfig.host}:${typeOrmConfig.port}/${typeOrmConfig.database} 🎀`);
+  const port = process.env.PORT || 3000;
+  const server = app();
+  server.listen(port, () => {
+    console.log(`✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`);
+  });
+}).catch(
+  error => console.log(error)
+);
 
 export * from './src/main.server';

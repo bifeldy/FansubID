@@ -22,7 +22,39 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(catchError(e => {
       this.gs.log(`[INTERCEPT_ERROR-${e.status}]`, e.statusText);
-      this.toast.warning(e.error.result.message || 'Error', e.error.info || 'Whoops!');
+      let errorMessage = null;
+      if (e) {
+        if (e.error) {
+          if (e.error.result) {
+            if (e.error.result.message) {
+              errorMessage = e.error.result.message;
+            } else {
+              errorMessage = e.error.result;
+            }
+          } else {
+            errorMessage = e.error;
+          }
+        } else {
+          errorMessage = e;
+        }
+      } else {
+        errorMessage = 'Terjadi Kesalahan';
+      }
+      let errorTitle = null;
+      if (e) {
+        if (e.error) {
+          if (e.error.info) {
+            errorTitle = e.error.info;
+          } else {
+            errorTitle = e.error;
+          }
+        } else {
+          errorTitle = e;
+        }
+      } else {
+        errorMessage = 'Whoops! Error~';
+      }
+      this.toast.warning(errorMessage, errorTitle);
       if (e.status === 401) {
         this.as.logout();
         this.router.navigate(['/login'], { queryParams: { err: true } });

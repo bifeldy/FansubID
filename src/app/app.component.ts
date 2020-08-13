@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: 'Development' With Logging Enabled 📌`);
+    this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: ${environment.production ? 'Production' : 'Development'} With Logging Enabled 📌`);
     this.router.events.subscribe(e1 => {
       if (e1 instanceof RouteConfigLoadStart) {
         this.bs.busy();

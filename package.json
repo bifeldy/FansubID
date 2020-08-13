@@ -14,9 +14,10 @@
     "prerender": "ng run hikki:prerender",
     "bifeldy:angular-dev": "ng build",
     "bifeldy:angular-prod": "ng build --prod",
-    "bifeldy:express": "ng run hikki:server:production && node dist/hikki/server/main.js",
-    "bifeldy:dev": "ng build && ng run hikki:server:production && node dist/hikki/server/main.js",
-    "bifeldy:prod": "ng build --prod && ng run hikki:server:production && node dist/hikki/server/main.js"
+    "bifeldy:express": "ng run hikki:server:production",
+    "bifeldy:dev": "ng build && ng run hikki:server:production",
+    "bifeldy:prod": "ng build --prod && ng run hikki:server:production",
+    "bifeldy:start": "node dist/hikki/server/main.js"
   },
   "private": true,
   "dependencies": {
@@ -34,7 +35,6 @@
     "@angular/platform-server": "~10.0.5",
     "@angular/router": "~10.0.5",
     "@nguniversal/express-engine": "^10.0.1",
-    "@prisma/client": "^2.4.1",
     "chalk": "^4.1.0",
     "chart.js": "^2.9.3",
     "cors": "^2.8.5",
