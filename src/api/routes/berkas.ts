@@ -1,5 +1,6 @@
 import createError from 'http-errors';
 import multer from 'multer';
+import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, Equal } from 'typeorm';
@@ -212,6 +213,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
     if (
       'name' in req.body || 'description' in req.body || 'private' in req.body ||
       'anime_id' in req.body || 'fansub_id' in req.body || 'projectType_id' in req.body ||
+      ('file' in req && req.file.mimetype.includes('image')) ||
       ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0)
     ) {
       const fileRepo = getRepository(Berkas);
@@ -229,6 +231,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
           file.description = req.body.description;
         }
         if (req.file) {
+          fs.unlink(environment.uploadFolder + file.image_url, (err) => { if (err) {}});
           file.image_url = '/img/berkas/' + req.file.filename;
         }
         if (req.body.episode) {

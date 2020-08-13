@@ -1,5 +1,6 @@
 import createError from 'http-errors';
 import multer from 'multer';
+import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, Equal, In } from 'typeorm';
@@ -291,6 +292,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
         fansub.active = req.body.active;
       }
       if (req.file) {
+        fs.unlink(environment.uploadFolder + fansub.image_url, (err) => { if (err) {}});
         fansub.image_url = '/img/fansub/' + req.file.filename;
       }
       if (req.body.tags) {

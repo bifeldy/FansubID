@@ -59,9 +59,9 @@ export class BerkasEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.pi.updatePageMetaData(
-      `Fansub - Buat Baru`,
-      `Halaman Menambahkan Fansub Baru`,
-      `Create Fansub`
+      `Fansub - Ubah Berkas`,
+      `Halaman Pembaharuan Data Berkas`,
+      `Ubah Berkas`
     );
     this.activatedRoute.params.subscribe(params => {
       this.berkasId = params.berkasId;
@@ -236,6 +236,7 @@ export class BerkasEditComponent implements OnInit {
         img.onload = () => {
           this.image_url = reader.result.toString();
           this.fg.controls.image.patchValue(file);
+          this.fg.controls.image.markAsDirty();
         };
         img.src = reader.result.toString();
         this.imageErrorText = null;

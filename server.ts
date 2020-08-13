@@ -60,7 +60,7 @@ export function app(): express.Express {
 
   const apiLimiter = rateLimit({
     windowMs: 1000, // 1 Second
-    max: 5, // 5 Request
+    max: 10, // 10 Request
     message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 💩'
   });
   const server = express();

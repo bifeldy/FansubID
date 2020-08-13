@@ -20,8 +20,8 @@
               tdc == 'Jenis' ? '#7289da' :
                 tdc == 'Status' ? '#f44336' :
         '#343a40'">
-          <img matListAvatar src="/favicon.ico" style="width: 32px;" *ngIf="tdc == 'Pemilik'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px;" *ngIf="tdc == 'Poster' || tdc == 'Logo' || tdc == 'Image'" />
+          <img matListAvatar src="/favicon.ico" style="width: 32px; height: 32px; object-fit: cover;" *ngIf="tdc == 'Pemilik'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc == 'Poster' || tdc == 'Logo' || tdc == 'Image'" />
           {{ tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' ? row[tdc] : '' }}
         </h3>
       </div>
