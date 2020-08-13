@@ -57,7 +57,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
     );
     delete f.description;
-    delete f.updated_at;
+    // delete f.updated_at;
     f.urls = JSON.parse(f.urls) || null;
     f.tags = JSON.parse(f.tags) || null;
   }
@@ -158,21 +158,21 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         delete f.private;
         delete f.download_url;
         delete f.description;
-        delete f.updated_at;
+        // delete f.updated_at;
         delete f.project_type_.created_at;
-        delete f.project_type_.updated_at;
+        // delete f.project_type_.updated_at;
         delete f.fansub_.description;
         delete f.fansub_.urls;
         delete f.fansub_.tags;
         delete f.fansub_.created_at;
-        delete f.fansub_.updated_at;
+        // delete f.fansub_.updated_at;
         delete f.anime_.created_at;
-        delete f.anime_.updated_at;
+        // delete f.anime_.updated_at;
         delete f.user_.role;
         delete f.user_.password;
         delete f.user_.session_token;
         delete f.user_.created_at;
-        delete f.user_.updated_at;
+        // delete f.user_.updated_at;
         results[f.fansub_.id].push(f);
       }
       res.status(200).json({
@@ -216,7 +216,7 @@ router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction
       }
       for (const f of files) {
         delete f.anime_.created_at;
-        delete f.anime_.updated_at;
+        // delete f.anime_.updated_at;
         results[f.fansub_.id].push(f.anime_);
       }
       for (const [key, value] of Object.entries(results)) {

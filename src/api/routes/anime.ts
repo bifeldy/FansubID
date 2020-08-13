@@ -132,21 +132,21 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         delete f.private;
         delete f.download_url;
         delete f.description;
-        delete f.updated_at;
+        // delete f.updated_at;
         delete f.project_type_.created_at;
-        delete f.project_type_.updated_at;
+        // delete f.project_type_.updated_at;
         delete f.fansub_.description;
         delete f.fansub_.urls;
         delete f.fansub_.tags;
         delete f.fansub_.created_at;
-        delete f.fansub_.updated_at;
+        // delete f.fansub_.updated_at;
         delete f.anime_.created_at;
-        delete f.anime_.updated_at;
+        // delete f.anime_.updated_at;
         delete f.user_.role;
         delete f.user_.password;
         delete f.user_.session_token;
         delete f.user_.created_at;
-        delete f.user_.updated_at;
+        // delete f.user_.updated_at;
         results[f.anime_.id].push(f);
       }
       res.status(200).json({
@@ -193,7 +193,7 @@ router.post('/fansub', async (req: UserRequest, res: Response, next: NextFunctio
         delete f.fansub_.urls;
         delete f.fansub_.tags;
         delete f.fansub_.created_at;
-        delete f.fansub_.updated_at;
+        // delete f.fansub_.updated_at;
         results[f.anime_.id].push(f.fansub_);
       }
       for (const [key, value] of Object.entries(results)) {

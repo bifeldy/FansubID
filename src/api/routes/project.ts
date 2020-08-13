@@ -26,7 +26,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
     );
     delete p.description;
-    delete p.updated_at;
+    // delete p.updated_at;
   }
   res.status(200).json({
     info: `😅 Project Type API :: List All 🤣`,

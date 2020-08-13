@@ -17,7 +17,7 @@ export class Anime {
   // tslint:disable-next-line: variable-name
   created_at: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  // tslint:disable-next-line: variable-name
-  updated_at: number;
+  // @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  // // tslint:disable-next-line: variable-name
+  // updated_at: number;
 }

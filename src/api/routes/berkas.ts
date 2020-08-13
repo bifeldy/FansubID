@@ -69,21 +69,21 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     delete f.private;
     delete f.download_url;
     delete f.description;
-    delete f.updated_at;
+    // delete f.updated_at;
     delete f.project_type_.created_at;
-    delete f.project_type_.updated_at;
+    // delete f.project_type_.updated_at;
     delete f.fansub_.description;
     delete f.fansub_.urls;
     delete f.fansub_.tags;
     delete f.fansub_.created_at;
-    delete f.fansub_.updated_at;
+    // delete f.fansub_.updated_at;
     delete f.anime_.created_at;
-    delete f.anime_.updated_at;
+    // delete f.anime_.updated_at;
     delete f.user_.role;
     delete f.user_.password;
     delete f.user_.session_token;
     delete f.user_.created_at;
-    delete f.user_.updated_at;
+    // delete f.user_.updated_at;
   }
   res.status(200).json({
     info: `😅 Berkas API :: List All 🤣`,
@@ -116,7 +116,7 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
         file.private = req.body.private;
       }
       if (req.file) {
-        file.image_url = '/img/fansub/' + req.file.filename;
+        file.image_url = '/img/berkas/' + req.file.filename;
       } else {
         file.image_url = '/favicon.ico';
       }
@@ -182,19 +182,19 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     resFileSave.fansub_ = file.fansub_;
     resFileSave.user_ = file.user_;
     delete resFileSave.project_type_.created_at;
-    delete resFileSave.project_type_.updated_at;
+    // delete resFileSave.project_type_.updated_at;
     delete resFileSave.fansub_.description;
     delete resFileSave.fansub_.urls;
     delete resFileSave.fansub_.tags;
     delete resFileSave.fansub_.created_at;
-    delete resFileSave.fansub_.updated_at;
+    // delete resFileSave.fansub_.updated_at;
     delete resFileSave.anime_.created_at;
-    delete resFileSave.anime_.updated_at;
+    // delete resFileSave.anime_.updated_at;
     delete resFileSave.user_.role;
     delete resFileSave.user_.password;
     delete resFileSave.user_.session_token;
     delete resFileSave.user_.created_at;
-    delete resFileSave.user_.updated_at;
+    // delete resFileSave.user_.updated_at;
     resFileSave.download_url = JSON.parse(resFileSave.download_url) || null;
     res.status(200).json({
       info: `😅 Berkas API :: Detail ${req.params.id} 🤣`,
@@ -209,7 +209,6 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     req.body = JSON.parse(universalAtob(req.body.data));
-    console.log(req.body);
     if (
       'name' in req.body || 'description' in req.body || 'private' in req.body ||
       'anime_id' in req.body || 'fansub_id' in req.body || 'projectType_id' in req.body ||
@@ -230,7 +229,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
           file.description = req.body.description;
         }
         if (req.file) {
-          file.image_url = '/img/fansub/' + req.file.filename;
+          file.image_url = '/img/berkas/' + req.file.filename;
         }
         if (req.body.episode) {
           file.episode = req.body.episode;
