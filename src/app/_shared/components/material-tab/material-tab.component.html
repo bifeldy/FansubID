@@ -73,8 +73,10 @@
       <mat-icon class="mr-3">comment</mat-icon>
       <h3 class="m-0">Komentar</h3>
     </ng-template>
-    <div class="p-3">
-      <disqus [identifier]="urlPath" *ngIf="urlPath"></disqus>
-    </div>
+    <ng-template matTabContent>
+      <div class="p-3">
+        <disqus [identifier]="urlPath" *ngIf="urlPath"></disqus>
+      </div>
+    </ng-template>
   </mat-tab>
 </mat-tab-group>

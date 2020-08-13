@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: './material-tab.component.html',
   styleUrls: ['./material-tab.component.css']
 })
-export class MaterialTabComponent implements OnInit, AfterViewInit {
+export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() count = 0;
   @Input() serverSide = false;
@@ -81,7 +81,6 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    this.urlPath = this.router.url;
     this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
@@ -91,6 +90,11 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.totalTabsCount = this.tab.length;
+    this.urlPath = this.router.url;
+  }
+
+  ngOnDestroy(): void {
+    this.urlPath = null;
   }
 
   swipe(eType): void {

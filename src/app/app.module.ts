@@ -7,7 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
-import { DisqusModule } from 'ngx-disqus';
+import { DISQUS_SHORTNAME } from 'ngx-disqus';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
@@ -59,8 +59,7 @@ import { NotificationsModule } from './_shared/components/notifications/notifica
       closeButton: true,
       progressBar: true,
       progressAnimation: 'increasing'
-    }),
-    DisqusModule.forRoot('bifeldy')
+    })
   ],
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
@@ -68,6 +67,7 @@ import { NotificationsModule } from './_shared/components/notifications/notifica
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: BrowserStateInterceptor, multi: true },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'always' } },
+    { provide: DISQUS_SHORTNAME, useValue: 'bifeldy' },
     FakeBackendProvider, Title, CookieService, NgxSpinnerService, LeftMenuService
   ],
   bootstrap: [AppComponent]
