@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -6,9 +6,11 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './not-found.component.html',
   styleUrls: ['./not-found.component.css']
 })
-export class NotFoundComponent implements OnInit {
+export class NotFoundComponent implements OnInit, OnDestroy {
 
   returnUrl = '/';
+
+  timedOut = null;
 
   constructor(
     private router: Router,
@@ -18,10 +20,14 @@ export class NotFoundComponent implements OnInit {
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
     if (this.returnUrl) {
-      setTimeout(() => {
+      this.timedOut = setTimeout(() => {
         this.router.navigateByUrl(this.returnUrl);
       }, 3000);
     }
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.timedOut);
   }
 
 }
