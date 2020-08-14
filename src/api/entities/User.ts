@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 
 import { KartuTandaPenduduk } from './KartuTandaPenduduk';
+import { Profile } from './Profile';
 
 enum Role {
   ADMIN = 'ADMIN',
@@ -15,10 +16,10 @@ export class User {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, unique: true })
   username: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
   @Column({ type: 'text', nullable: true })
@@ -50,4 +51,9 @@ export class User {
   @JoinColumn()
   // tslint:disable-next-line: variable-name
   kartu_tanda_penduduk_: KartuTandaPenduduk;
+
+  @OneToOne(type => Profile)
+  @JoinColumn()
+  // tslint:disable-next-line: variable-name
+  profile_: Profile;
 }

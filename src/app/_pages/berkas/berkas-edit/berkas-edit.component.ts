@@ -12,8 +12,8 @@ import { AnimeService } from '../../../_shared/services/anime.service';
 import { ProjectService } from '../../../_shared/services/project.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
-import { AuthService } from 'src/app/_shared/services/auth.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { AuthService } from '../../../_shared/services/auth.service';
+import { BusyService } from '../../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-berkas-edit',

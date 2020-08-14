@@ -8,8 +8,8 @@ import moment from 'moment';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
-import { FansubService } from 'src/app/_shared/services/fansub.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { FansubService } from '../../../_shared/services/fansub.service';
+import { BusyService } from '../../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-fansub-create',

@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AuthGuard } from 'src/app/_shared/helpers/auth-guard';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
-
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 
-import { Role } from 'src/app/_shared/models/Role';
+import { AuthGuard } from '../../_shared/helpers/auth-guard';
+import { Role } from '../../_shared/models/Role';
 
 import { BerkasCreateComponent } from './berkas-create/berkas-create.component';
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';

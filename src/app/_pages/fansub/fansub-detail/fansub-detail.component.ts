@@ -7,7 +7,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { BusyService } from '../../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -79,6 +79,7 @@ export class FansubDetailComponent implements OnInit {
             `${this.fansubData.tags.join(', ')}`,
             this.getUrlByName('web')
           );
+          this.panelData = [];
           this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
           this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
           this.bs.idle();

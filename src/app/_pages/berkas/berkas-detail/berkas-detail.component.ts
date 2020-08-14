@@ -5,7 +5,7 @@ import { BerkasService } from '../../../_shared/services/berkas.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { BusyService } from '../../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-berkas-detail',

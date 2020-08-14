@@ -20,11 +20,15 @@ export class UserService {
     return this.api.getData(`/user/${username}`);
   }
 
-  cekNik(data): any {
-    return this.api.postData('/cek-nik', data);
+  getUserBerkas(username, q = null, page = 1, row = 10): any {
+    return this.api.getData(`/user/${username}/berkas?q=${q}&page=${page}&row=${row}`);
   }
 
   registerAccount(data): any {
     return this.api.postData('/register', data);
+  }
+
+  cekNik(data): any {
+    return this.api.postData('/cek-nik', data);
   }
 }

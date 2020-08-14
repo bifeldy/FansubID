@@ -82,6 +82,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'user',
+    loadChildren: () => import('./_pages/user/user.module').then(m => m.UserModule),
+    data: {
+      title: 'User Profile',
+      description: 'Halaman Informasi Pengguna',
+      keywords: 'User'
+    }
+  },
+  {
     path: 'error',
     loadChildren: () => import('./_pages/not-found/not-found.module').then(m => m.NotFoundModule),
     data: {

@@ -43,7 +43,6 @@ const upload = multer({
   }
 });
 
-
 const router = Router();
 
 // GET `/api/berkas`

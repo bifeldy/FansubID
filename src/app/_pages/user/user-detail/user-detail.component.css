@@ -1,0 +1,32 @@
+.profile-banner {
+  height: 128px;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.75;
+}
+
+.profile-banner-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.profile-banner-2 {
+  position: absolute;
+  top: 128px;
+  left: 0;
+}
+
+.profile-info {
+  position: relative;
+  height: 256px;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .profile-height-large {
+    height: 100px;
+  }
+}

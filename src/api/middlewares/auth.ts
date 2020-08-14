@@ -7,6 +7,7 @@ import { UserRequest } from '../models/UserRequest';
 
 import { User } from '../entities/User';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
+import { Profile } from '../entities/Profile';
 
 import { universalAtob } from '../helpers/base64';
 
@@ -38,12 +39,18 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
         const newUserKtp = new KartuTandaPenduduk();
         newUserKtp.nama = req.body.name;
         const resKtpSave = await ktpRepo.save(newUserKtp);
+        const profileRepo = getRepository(Profile);
+        const newUserProfile = new Profile();
+        newUserProfile.description = '// No Description';
+        newUserProfile.cover_url = '/favicon.ico';
+        const resProfileSave = await profileRepo.save(newUserProfile);
         const newUser = new User();
         newUser.username = req.body.username;
         newUser.email = req.body.email;
         newUser.image_url = '/favicon.ico';
         newUser.password = CryptoJS.SHA512(req.body.password).toString();
         newUser.kartu_tanda_penduduk_ = resKtpSave;
+        newUser.profile_ = resProfileSave;
         let resUserSave = await userRepo.save(newUser);
         const { password, session_token, ...noPwdSsToken } = resUserSave;
         newUser.session_token = jwt.JwtEncode(noPwdSsToken, false);
@@ -118,7 +125,7 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       where: [
         { id: Equal(decoded.user.id), session_token: Equal(decoded.token) }
       ],
-      relations: ['kartu_tanda_penduduk_'],
+      relations: ['kartu_tanda_penduduk_', 'profile_'],
     });
     if (selectedUser.length === 1) {
       delete selectedUser[0].password;
@@ -126,6 +133,9 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       delete selectedUser[0].kartu_tanda_penduduk_.id;
       delete selectedUser[0].kartu_tanda_penduduk_.created_at;
       // delete selectedUser[0].kartu_tanda_penduduk_.updated_at;
+      delete selectedUser[0].profile_.id;
+      delete selectedUser[0].profile_.created_at;
+      // delete selectedUser[0].profile_.updated_at;
       req.user = (selectedUser[0] as any);
       return next();
     } else {

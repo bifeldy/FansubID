@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { BusyService } from '../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-register',

@@ -1,0 +1,35 @@
+<div class="container" *ngIf="userData">
+  <div class="profile-info align-items-center">
+    <div class="media row py-3 px-2">
+
+      <!-- Information -->
+      <div class="col-md-4 col-xl-3 px-3">
+        <div class="row sticky-top pt-3">
+          <div class="col-12">
+            <img class="w-100 rounded-circle" src="{{ userData.image_url }}" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="col-md-8 col-xl-9 pt-3">
+        <div class="row py-3 px-0 profile-height-large">
+          <h1 class="m-0 mt-auto">
+            <b>{{ userData.kartu_tanda_penduduk_.nama }}</b>
+          </h1>
+        </div>
+        <div class="row py-3" *ngIf="panelData.length > 0">
+          <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-material-tab (tableRowClicked)="openBerkas($event)" (paginatorClicked)="onPaginatorClicked($event)"
+          [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"></app-material-tab>
+      </div>
+    </div>
+  </div>
+  <div class="profile-banner profile-banner-1 align-items-center" [style.background-image]="'url(' + userData.image_url + ')'"></div>
+  <div class="profile-banner profile-banner-2 align-items-center"></div>
+</div>

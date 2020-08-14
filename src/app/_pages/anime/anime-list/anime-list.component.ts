@@ -11,7 +11,7 @@ import { default as _rollupMoment, Moment } from 'moment';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
 import { FabService } from '../../../_shared/services/fab.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { BusyService } from '../../../_shared/services/busy.service';
 
 const moment = _rollupMoment || _moment;
 

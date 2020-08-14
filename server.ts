@@ -29,6 +29,7 @@ import { existsSync } from 'fs';
 import MorganChalk from './src/api/helpers/morganChalk';
 
 // Model
+import { Profile } from 'src/api/entities/Profile';
 import { KartuTandaPenduduk } from './src/api/entities/KartuTandaPenduduk';
 import { User } from './src/api/entities/User';
 import { ProjectType } from 'src/api/entities/ProjectType';
@@ -49,7 +50,15 @@ const typeOrmConfig: any = {
   database: dbName,
   synchronize: true,
   logging: false,
-  entities: [User, KartuTandaPenduduk, ProjectType, Fansub, Anime, Berkas]
+  entities: [
+    User,
+    KartuTandaPenduduk,
+    Profile,
+    ProjectType,
+    Fansub,
+    Anime,
+    Berkas
+  ]
 };
 
 // Express Router

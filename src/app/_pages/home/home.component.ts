@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { GlobalService } from '../../_shared/services/global.service';
 import { BerkasService } from '../../_shared/services/berkas.service';
 import { FabService } from '../../_shared/services/fab.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { BusyService } from '../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
       icon: 'file_copy',
       type: 'table',
       data: {
-        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'View', 'Pemilik'],
+        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'Pemilik'],
         row: []
       }
     }
@@ -61,7 +61,6 @@ export class HomeComponent implements OnInit {
             Jenis: r.project_type_.name,
             Image: r.image_url,
             Upload: r.created_at,
-            View: `${r.view_count}x`,
             Pemilik: r.user_.username,
             'Nama Berkas': r.name
           });

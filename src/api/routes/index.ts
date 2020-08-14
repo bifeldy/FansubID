@@ -9,6 +9,7 @@ import seasonalRouter from './anime';
 import projectRouter from './project';
 import fansubRouter from './fansub';
 import berkasRouter from './berkas';
+import userRouter from './user';
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.use('/anime', seasonalRouter);
 router.use('/project', projectRouter);
 router.use('/fansub', fansubRouter);
 router.use('/berkas', berkasRouter);
+router.use('/user', userRouter);
 
 // GET `/api`
 router.get('/', (req, res) => {

@@ -7,7 +7,7 @@ import { AnimeService } from '../../../_shared/services/anime.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { BusyService } from '../../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-anime-detail',
@@ -76,6 +76,7 @@ export class AnimeDetailComponent implements OnInit {
             `${this.animeData.title_synonyms.join(', ')}`,
             this.animeData.images.jpg.image_url
           );
+          this.panelData = [];
           this.panelData.push({ title: 'Synopsis', icon: 'history_edu', text: this.animeData.synopsis });
           this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
           this.bs.idle();

@@ -7,7 +7,7 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
-import { BusyService } from 'src/app/_shared/services/busy.service';
+import { BusyService } from '../../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-fansub-list',
