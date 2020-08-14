@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-register',
@@ -31,6 +32,7 @@ export class RegisterComponent implements OnInit {
     private gs: GlobalService,
     private route: ActivatedRoute,
     private router: Router,
+    private bs: BusyService,
     public as: AuthService
   ) {
     if (this.as.currentUserValue) {
@@ -54,6 +56,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onClickedSubmit(): void {
+    this.bs.busy();
     this.submitted = true;
     this.registerInfo = 'Harap Menunggu ...';
     this.usernameUsed = null;
@@ -62,6 +65,7 @@ export class RegisterComponent implements OnInit {
     if (this.fg.invalid) {
       this.registerInfo = 'Periksa Dan Isi Kembali Data Anda!';
       this.submitted = false;
+      this.bs.idle();
       return;
     }
     if (this.fg.valid) {
@@ -76,16 +80,20 @@ export class RegisterComponent implements OnInit {
         }))
       }).subscribe(
         (res: any) => {
+          this.bs.idle();
           this.registerInfo = res.info;
+          this.bs.busy();
           this.as.verify(localStorage.getItem(environment.tokenName)).subscribe(
             success => {
               this.registerInfo = success.info;
               this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);
+              this.bs.idle();
               this.router.navigateByUrl('/');
             },
             error => {
               this.gs.log('[VERIFY_REGISTER_ERROR]', error);
-              this.as.logout();
+              this.bs.idle();
+              this.router.navigateByUrl('/login');
             }
           );
         },
@@ -95,6 +103,7 @@ export class RegisterComponent implements OnInit {
           this.submitted = false;
           this.usernameUsed = err.error.result.username || null;
           this.emailUsed = err.error.result.email || null;
+          this.bs.idle();
         }
       );
     }

@@ -63,7 +63,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     f.tags = JSON.parse(f.tags) || null;
   }
   res.status(200).json({
-    info: `😅 Fansub API :: List All 🤣`,
+    info: `😅 200 - Fansub API :: List All 🤣`,
     count,
     results: fansubs
   });
@@ -106,7 +106,7 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
       }
       const resFansubSave = await fansubRepo.save(fansub);
       res.status(200).json({
-        info: `😅 Fansub API :: Tambah Baru 🤣`,
+        info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
         result: resFansubSave
       });
     } else {
@@ -177,7 +177,7 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         results[f.fansub_.id].push(f);
       }
       res.status(200).json({
-        info: `😅 Berkas Fansub API :: ${fansubId.join(', ')} 🤣`,
+        info: `😅 200 - Berkas Fansub API :: ${fansubId.join(', ')} 🤣`,
         count, results
       });
     } else {
@@ -224,7 +224,7 @@ router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction
         results[key] = (value as any).filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b);
       }
       res.status(200).json({
-        info: `😅 Anime Fansub API :: ${fansubId.join(', ')} 🤣`,
+        info: `😅 200 - Anime Fansub API :: ${fansubId.join(', ')} 🤣`,
         count, results
       });
     } else {
@@ -252,7 +252,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     fansub.urls = JSON.parse(fansub.urls) || null;
     fansub.tags = JSON.parse(fansub.tags) || null;
     res.status(200).json({
-      info: `😅 Fansub API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - Fansub API :: Detail ${req.params.id} 🤣`,
       result: fansub
     });
   } catch (error) {
@@ -310,7 +310,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
       }
       const resFansubSave = await fansubRepo.save(fansub);
       res.status(200).json({
-        info: `😅 Fansub API :: Ubah ${req.params.id} 🤣`,
+        info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
         results: resFansubSave
       });
     } else {

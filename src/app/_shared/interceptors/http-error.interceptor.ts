@@ -74,9 +74,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
         this.toast.error(errorMessage, errorTitle);
         if (e.status === 401) {
-          this.as.logout();
+          this.as.removeUser();
           this.router.navigate(['/login'], { queryParams: { err: true } });
-          window.location.reload();
         }
         return throwError(e);
       }

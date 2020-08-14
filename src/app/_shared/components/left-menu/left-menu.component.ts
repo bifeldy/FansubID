@@ -7,6 +7,8 @@ import { Menu } from '../../models/Menu';
 
 import { LeftMenuService } from '../../services/left-menu.service';
 import { AuthService } from '../../services/auth.service';
+import { GlobalService } from '../../services/global.service';
+import { BusyService } from '../../services/busy.service';
 
 import User from '../../models/User';
 
@@ -54,7 +56,9 @@ export class LeftMenuComponent implements OnInit {
   constructor(
     private router: Router,
     private lms: LeftMenuService,
-    private as: AuthService
+    private as: AuthService,
+    private gs: GlobalService,
+    private bs: BusyService
   ) {
   }
 
@@ -89,7 +93,21 @@ export class LeftMenuComponent implements OnInit {
   }
 
   logout(): void {
-    this.as.logout();
+    this.bs.busy();
+    this.as.logout().subscribe(
+      (res: any) => {
+        this.gs.log('[LOGOUT_SUCCESS]', res);
+        this.as.removeUser();
+        this.bs.idle();
+        this.router.navigateByUrl('/');
+      },
+      err => {
+        this.gs.log('[LOGOUT_ERROR]', err);
+        this.as.removeUser();
+        this.bs.idle();
+        this.router.navigateByUrl('/');
+      }
+    );
   }
 
 }

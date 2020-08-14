@@ -29,7 +29,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     // delete p.updated_at;
   }
   res.status(200).json({
-    info: `😅 Project Type API :: List All 🤣`,
+    info: `😅 200 - Project Type API :: List All 🤣`,
     count,
     results: projects
   });
@@ -49,7 +49,7 @@ router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, nex
     }
     const resProjectSave = await projectRepo.save(project);
     res.status(200).json({
-      info: `😅 Project Type API :: Tambah Baru 🤣`,
+      info: `😅 200 - Project Type API :: Tambah Baru 🤣`,
       results: resProjectSave
     });
   } else {
@@ -72,7 +72,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       ]
     });
     res.status(200).json({
-      info: `😅 Project Type API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - Project Type API :: Detail ${req.params.id} 🤣`,
       result: project
     });
   } catch (error) {
@@ -105,7 +105,7 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       }
       const resProjectSave = await projectRepo.save(project);
       res.status(200).json({
-        info: `😅 Project Type API :: Ubah ${req.params.id} 🤣`,
+        info: `😅 200 - Project Type API :: Ubah ${req.params.id} 🤣`,
         results: resProjectSave
       });
     } else {

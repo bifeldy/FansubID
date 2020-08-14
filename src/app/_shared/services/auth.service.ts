@@ -19,7 +19,6 @@ export class AuthService {
   public currentUser: Observable<User>;
 
   constructor(
-    private http: HttpClient,
     private gs: GlobalService,
     private crypt: CryptoService,
     private api: ApiService
@@ -69,22 +68,17 @@ export class AuthService {
     }));
   }
 
-  logout(): void {
+  logout(): any {
     this.gs.log('[AUTH_LOGOUT]', localStorage.getItem(environment.tokenName));
-    this.api.deleteData(`/logout`).subscribe(
-      (res: any) => {
-        this.gs.log('[LOGOUT_SUCCESS]', res);
-        this.currentUserSubject.next(null);
-        localStorage.clear();
-        window.location.reload();
-      },
-      err => {
-        this.gs.log('[LOGOUT_ERROR]', err);
-        this.currentUserSubject.next(null);
-        localStorage.clear();
-        window.location.reload();
-      }
-    );
+    return this.api.deleteData(`/logout`).pipe(map(respLogout => {
+      this.removeUser();
+      return respLogout;
+    }));
+  }
+
+  removeUser(): void {
+    this.currentUserSubject.next(null);
+    localStorage.clear();
   }
 
 }

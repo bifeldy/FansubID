@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit {
     private gs: GlobalService,
     private route: ActivatedRoute,
     private router: Router,
+    private bs: BusyService,
     public as: AuthService
   ) {
     if (this.as.currentUserValue) {
@@ -50,12 +52,14 @@ export class LoginComponent implements OnInit {
   }
 
   onClickedSubmit(): void {
+    this.bs.busy();
     this.submitted = true;
     this.loginInfo = 'Harap Menunggu ...';
     this.gs.log('[LOGIN_FORM_REQUEST]', this.fg.value);
     if (this.fg.invalid) {
       this.loginInfo = 'Periksa Dan Isi Kembali Data Anda!';
       this.submitted = false;
+      this.bs.idle();
       return;
     }
     if (this.fg.valid) {
@@ -68,16 +72,20 @@ export class LoginComponent implements OnInit {
         }))
       }).subscribe(
         (res: any) => {
+          this.bs.idle();
           this.loginInfo = res.info;
+          this.bs.busy();
           this.as.verify(localStorage.getItem(environment.tokenName)).subscribe(
             success => {
               this.loginInfo = success.info;
               this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
+              this.bs.idle();
               this.router.navigate([this.returnUrl]);
             },
             error => {
               this.gs.log('[VERIFY_LOGIN_ERROR]', error);
-              this.as.logout();
+              this.bs.idle();
+              this.as.removeUser();
             }
           );
         },
@@ -85,6 +93,7 @@ export class LoginComponent implements OnInit {
           this.gs.log('[LOGIN_FORM_ERROR]', err);
           this.loginInfo = err.error.result.message || err.error.info;
           this.submitted = false;
+          this.bs.idle();
         }
       );
     }

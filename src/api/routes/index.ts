@@ -26,7 +26,7 @@ router.get('/', (req, res) => {
 // POST `/api/register`
 router.post('/register', auth.registerModule, (req: any, res: Response, next) => {
   res.status(200).json({
-    info: '😚 Berhasil Registrasi. Yeay! 🤩',
+    info: '😚 200 - Berhasil Registrasi. Yeay! 🤩',
     result: {
       token: req.user.session_token
     }
@@ -36,7 +36,7 @@ router.post('/register', auth.registerModule, (req: any, res: Response, next) =>
 // POST `/api/login`
 router.post('/login', auth.loginModule, (req: any, res: Response, next) => {
   res.status(200).json({
-    info: '😚 Berhasil Login. Yeay! 🤩',
+    info: '😚 200 - Berhasil Login. Yeay! 🤩',
     result: {
       token: req.user.session_token
     }

@@ -56,14 +56,16 @@ export class AppComponent implements OnInit {
     });
     const token = localStorage.getItem(environment.tokenName);
     if (token) {
+      this.bs.busy();
       this.as.verify(token).subscribe(
         success => {
           this.gs.log('[VERIFY_SUCCESS]', success);
+          this.bs.idle();
         },
         error => {
           this.gs.log('[VERIFY_ERROR]', error);
-          this.as.logout();
-          localStorage.clear();
+          this.bs.idle();
+          this.as.removeUser();
         }
       );
     }

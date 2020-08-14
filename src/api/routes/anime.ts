@@ -31,7 +31,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`
   }, async (error, result, body) => {
     res.status(result.statusCode).json({
-      info: `😅 Anime API :: Search ${searchQuery} 🤣`,
+      info: `😅 ${result.statusCode} - Anime API :: Search ${searchQuery} 🤣`,
       results: JSON.parse(body).results
     });
   });
@@ -60,7 +60,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         anime.image_url = req.body.image_url;
         const resultSaveAnime = await animeRepo.save(anime);
         res.status(200).json({
-          info: `😅 Anime API :: Tambah Baru 🤣`,
+          info: `😅 200 - Anime API :: Tambah Baru 🤣`,
           results: resultSaveAnime
         });
       }
@@ -87,7 +87,7 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
     uri: `${jikanV3}/season/${year}/${season}`
   }, async (error, result, body) => {
     res.status(result.statusCode).json({
-      info: `😅 Anime API :: Seasonal ${season} ${year} 🤣`,
+      info: `😅 ${result.statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
       results: JSON.parse(body).anime
     });
   });
@@ -150,7 +150,7 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         results[f.anime_.id].push(f);
       }
       res.status(200).json({
-        info: `😅 Berkas Anime API :: ${animeId.join(', ')} 🤣`,
+        info: `😅 200 - Berkas Anime API :: ${animeId.join(', ')} 🤣`,
         count, results
       });
     } else {
@@ -200,7 +200,7 @@ router.post('/fansub', async (req: UserRequest, res: Response, next: NextFunctio
         results[key] = (value as any).filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b);
       }
       res.status(200).json({
-        info: `😅 Fansub Anime API :: ${animeId.join(', ')} 🤣`,
+        info: `😅 200 - Fansub Anime API :: ${animeId.join(', ')} 🤣`,
         count, results
       });
     } else {
@@ -223,7 +223,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     uri: `${jikanV4}/anime/${req.params.id}`
   }, async (error, result, body) => {
     res.status(result.statusCode).json({
-      info: `😅 Anime API :: Detail ${req.params.id} 🤣`,
+      info: `😅 ${result.statusCode} - Anime API :: Detail ${req.params.id} 🤣`,
       result: JSON.parse(body).data
     });
   });

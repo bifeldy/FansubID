@@ -87,7 +87,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     // delete f.user_.updated_at;
   }
   res.status(200).json({
-    info: `😅 Berkas API :: List All 🤣`,
+    info: `😅 200 - Berkas API :: List All 🤣`,
     count,
     results: files
   });
@@ -151,7 +151,7 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
       file.user_ = user;
       const resFileSave = await fileRepo.save(file);
       res.status(200).json({
-        info: `😅 Berkas API :: Tambah Baru 🤣`,
+        info: `😅 200 - Berkas API :: Tambah Baru 🤣`,
         results: resFileSave
       });
     } else {
@@ -198,7 +198,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     // delete resFileSave.user_.updated_at;
     resFileSave.download_url = JSON.parse(resFileSave.download_url) || null;
     res.status(200).json({
-      info: `😅 Berkas API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - Berkas API :: Detail ${req.params.id} 🤣`,
       result: resFileSave
     });
   } catch (error) {
@@ -278,7 +278,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
         }
         const resFileSave = await fileRepo.save(file);
         res.status(200).json({
-          info: `😅 Berkas API :: Ubah ${req.params.id} 🤣`,
+          info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
           results: resFileSave
         });
       } else {
