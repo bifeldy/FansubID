@@ -23,7 +23,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       tap((res) => {
         if (res instanceof HttpResponse) {
-          if ((res as any).headers.status === 200) {
+          if ((res as any).status === 200) {
             let successTitle = null;
             if (res) {
               if ((res as any).body) {
