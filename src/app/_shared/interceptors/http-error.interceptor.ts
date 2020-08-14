@@ -17,12 +17,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private router: Router,
     private as: AuthService,
     private toast: ToastrService
-  ) {}
+  ) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       tap((res) => {
-        if (res instanceof HttpResponse) {
+        if (res instanceof HttpResponse && this.gs.isBrowser) {
           if ((res as any).status === 200) {
             let successTitle = null;
             if (res) {

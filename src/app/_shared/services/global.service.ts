@@ -1,5 +1,6 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable, isDevMode, Inject, PLATFORM_ID } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,12 @@ export class GlobalService {
   public sizeContain = false;
   public bgRepeat = false;
 
-  constructor() {
+  public isBrowser = null;
+
+  constructor(
+    @Inject(PLATFORM_ID) platformId: string
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
   }
 
   log(message: string, data: any = null, type: string = 'log'): void {
