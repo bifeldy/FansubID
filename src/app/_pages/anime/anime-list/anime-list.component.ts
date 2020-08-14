@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -8,11 +8,10 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 
-import { Warna } from '../../../_shared/models/Warna';
-
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
 import { FabService } from '../../../_shared/services/fab.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 const moment = _rollupMoment || _moment;
 
@@ -74,7 +73,7 @@ export class AnimeListComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder,
+    private bs: BusyService,
     private gs: GlobalService,
     private fs: FabService,
     private anime: AnimeService
@@ -119,6 +118,7 @@ export class AnimeListComponent implements OnInit {
   }
 
   getSeasonalAnime(showFab = false): void {
+    this.bs.busy();
     this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
       res => {
         this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
@@ -126,15 +126,18 @@ export class AnimeListComponent implements OnInit {
         if (showFab) {
           this.fs.initializeFab('settings_backup_restore', null, 'Kembali Ke Musim Sekarang', '/anime', false);
         }
+        this.bs.idle();
         this.getFansubAnime();
       },
       err => {
         this.gs.log('[ANIME_SEASONAL_ERROR]', err);
+        this.bs.idle();
       }
     );
   }
 
   getFansubAnime(): void {
+    this.bs.busy();
     this.tabData[0].data.row = [];
     const seasonalAnimeListId = [];
     for (const sA of this.seasonalAnime) {
@@ -169,9 +172,11 @@ export class AnimeListComponent implements OnInit {
         this.seasonalAnimeCard = this.seasonalAnime.filter(a =>
           a.continuing === false && a.type === 'TV' && a.r18 === false && a.kids === false
         ).sort((a, b) => b.score - a.score);
+        this.bs.idle();
       },
       err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.bs.idle();
       }
     );
   }

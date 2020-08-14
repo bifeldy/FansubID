@@ -11,6 +11,7 @@ import { AnimeService } from '../../../_shared/services/anime.service';
 import { ProjectService } from '../../../_shared/services/project.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-berkas-create',
@@ -44,6 +45,7 @@ export class BerkasCreateComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private gs: GlobalService,
+    private bs: BusyService,
     private pi: PageInfoService,
     private anime: AnimeService,
     private project: ProjectService,
@@ -63,25 +65,31 @@ export class BerkasCreateComponent implements OnInit {
   }
 
   loadProjectList(): void {
+    this.bs.busy();
     this.project.getProject().subscribe(
       res => {
         this.gs.log('[PROJECT_LOAD_SUCCESS]', res);
         this.projectList = res.results;
+        this.bs.idle();
       },
       err => {
         this.gs.log('[PROJECT_LOAD_ERROR]', err);
+        this.bs.idle();
       }
     );
   }
 
   loadFansubList(): void {
+    this.bs.busy();
     this.fansub.getAllFansub().subscribe(
       res => {
         this.gs.log('[FANSUB_LOAD_SUCCESS]', res);
         this.fansubs = res.results;
+        this.bs.idle();
       },
       err => {
         this.gs.log('[FANSUB_LOAD_ERROR]', err);
+        this.bs.idle();
       }
     );
   }
@@ -211,9 +219,11 @@ export class BerkasCreateComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.bs.busy();
     this.submitted = true;
     if (this.fg.invalid) {
       this.submitted = false;
+      this.bs.idle();
       return;
     }
     this.berkas.createBerkas({
@@ -231,11 +241,13 @@ export class BerkasCreateComponent implements OnInit {
     }).subscribe(
       res => {
         this.gs.log('[BERKAS_CREATE_SUCCESS]', res);
+        this.bs.idle();
         this.router.navigateByUrl('/home');
       },
       err => {
         this.gs.log('[BERKAS_CREATE_ERROR]', err);
         this.submitted = false;
+        this.bs.idle();
       }
     );
   }

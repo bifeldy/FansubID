@@ -7,6 +7,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -35,25 +36,7 @@ export class FansubDetailComponent implements OnInit {
       name: 'Proyek',
       icon: 'live_tv',
       type: 'list',
-      data: [
-        // { title: '// TODO: Judul Panjang Garapan Anime 01', description: '// TODO: Berkas Terkini :: 01/24 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 02', description: '// TODO: Berkas Terkini :: 03/24 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 03', description: '// TODO: Berkas Terkini :: 06/12 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 04', description: '// TODO: Berkas Terkini :: 12/12 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 05', description: '// TODO: Berkas Terkini :: 00/24 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 06', description: '// TODO: Berkas Terkini :: 01/24 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 07', description: '// TODO: Berkas Terkini :: 03/24 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 08', description: '// TODO: Berkas Terkini :: 06/24 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 09', description: '// TODO: Berkas Terkini :: 12/24 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 10', description: '// TODO: Berkas Terkini :: 24/24 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 11', description: '// TODO: Berkas Terkini :: 01/64 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 12', description: '// TODO: Berkas Terkini :: 02/64 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 13', description: '// TODO: Berkas Terkini :: 04/64 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 14', description: '// TODO: Berkas Terkini :: 08/64 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 15', description: '// TODO: Berkas Terkini :: 16/64 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 16', description: '// TODO: Berkas Terkini :: 32/64 Episodes' },
-        // { title: '// TODO: Judul Panjang Garapan Anime 17', description: '// TODO: Berkas Terkini :: 64/64 Episodes' }
-      ]
+      data: []
     },
     {
       name: 'Berkas Terkait',
@@ -69,15 +52,18 @@ export class FansubDetailComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private bs: BusyService,
     private gs: GlobalService,
     private fs: FabService,
     private pi: PageInfoService,
     private fansub: FansubService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.fansubId = params.fansubId;
+      this.bs.busy();
       this.fansub.getFansub(this.fansubId).subscribe(
         res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
@@ -95,11 +81,13 @@ export class FansubDetailComponent implements OnInit {
           );
           this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
           this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
+          this.bs.idle();
           this.getAnimeFansub();
           this.getBerkasFansub();
         },
         err => {
           this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+          this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
               returnUrl: '/fansub'
@@ -120,6 +108,7 @@ export class FansubDetailComponent implements OnInit {
   }
 
   getBerkasFansub(): void {
+    this.bs.busy();
     this.fansub.getBerkasFansub({
       data: window.btoa(JSON.stringify({
         fansubId: [this.fansubId]
@@ -138,14 +127,17 @@ export class FansubDetailComponent implements OnInit {
           });
         }
         this.tabData[1].data.row = this.berkasFansub;
+        this.bs.idle();
       },
       err => {
         this.gs.log('[BERKAS_FANSUB_ERROR]', err);
+        this.bs.idle();
       }
     );
   }
 
   getAnimeFansub(): void {
+    this.bs.busy();
     this.fansub.getAnimeFansub({
       data: window.btoa(JSON.stringify({
         fansubId: [this.fansubId]
@@ -162,9 +154,11 @@ export class FansubDetailComponent implements OnInit {
           });
         }
         this.tabData[0].data = this.animeFansub;
+        this.bs.idle();
       },
       err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.bs.idle();
       }
     );
   }

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { GlobalService } from '../../_shared/services/global.service';
 import { BerkasService } from '../../_shared/services/berkas.service';
 import { FabService } from '../../_shared/services/fab.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-home',
@@ -34,7 +35,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
     private gs: GlobalService,
-    private bs: BerkasService,
+    private bs: BusyService,
+    private berkas: BerkasService,
     private fs: FabService
   ) {
     this.gs.bannerImg = '/assets/img/home-banner.png';
@@ -47,7 +49,8 @@ export class HomeComponent implements OnInit {
   }
 
   getBerkas(): void {
-    this.bs.getAllBerkas(this.q, this.page, this.row).subscribe(
+    this.bs.busy();
+    this.berkas.getAllBerkas(this.q, this.page, this.row).subscribe(
       res => {
         this.gs.log('[BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
@@ -65,9 +68,11 @@ export class HomeComponent implements OnInit {
         }
         this.tabData[0].data.row = this.berkasData;
         this.fs.initializeFab('add', null, 'Tambah Berkas Baru', `/berkas/create`, false);
+        this.bs.idle();
       },
       err => {
         this.gs.log('[BERKAS_LIST_ERROR]', err);
+        this.bs.idle();
       }
     );
   }

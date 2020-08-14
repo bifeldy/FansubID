@@ -5,6 +5,7 @@ import { BerkasService } from '../../../_shared/services/berkas.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-berkas-detail',
@@ -20,6 +21,7 @@ export class BerkasDetailComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
+    private bs: BusyService,
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService
@@ -28,6 +30,7 @@ export class BerkasDetailComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.berkasId = params.berkasId;
+      this.bs.busy();
       this.berkas.getBerkas(this.berkasId).subscribe(
         res => {
           this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
@@ -38,10 +41,12 @@ export class BerkasDetailComponent implements OnInit {
             `${this.berkasData.name}`,
             this.berkasData.image_url
           );
+          this.bs.idle();
           this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
         },
         err => {
           this.gs.log('[BERKAS_DETAIL_ERROR]', err);
+          this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
               returnUrl: '/'

@@ -1,6 +1,9 @@
 <!-- Header -->
 <app-header></app-header>
 
+<!-- HTTP Progress -->
+<ng-progress [color]="'#ff4081'" [fixed]="false" [meteor]="false" [thick]="true"></ng-progress>
+
 <!-- Side Menu Drawer & Content -->
 <mat-sidenav-container class="sidenav-container">
 
@@ -17,7 +20,11 @@
 
     <!-- Routing Content -->
     <div class="main_content" #leftSideNavContent>
+
+      <!-- Notification -->
       <app-notifications></app-notifications>
+
+      <!-- Data Content -->
       <router-outlet></router-outlet>
     </div>
 
@@ -31,7 +38,7 @@
 <app-footer></app-footer>
 
 <!-- Loading Animation -->
-<ngx-spinner [bdColor]="'#0000007f'" [type]="'square-jelly-box'" [size]="'medium'" [color]="'#e84360'" *ngIf="router.url != '/berkas/create'">
+<ngx-spinner [bdColor]="'#0000007f'" [type]="'square-jelly-box'" [size]="'medium'" [color]="'#e84360'">
   <p class="text-white text-center">
     Sedang Memuat Data <br /> Mohon Menunggu ^_^
   </p>

@@ -16,14 +16,12 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   constructor(
     private gs: GlobalService,
-    private as: AuthService,
-    private bs: BusyService
+    private as: AuthService
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.as.currentUser.subscribe(user => this.currentUser = user);
     const userToken = localStorage.getItem(environment.tokenName);
-    this.bs.busy();
     if (this.currentUser && userToken && request.url.startsWith(environment.apiUrl)) {
       this.gs.log('[INTERCEPT_REQUEST]', userToken.slice(0, 5) + '..........' + userToken.slice(userToken.length - 5, userToken.length));
       request = request.clone({
@@ -48,10 +46,6 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     request = request.clone({
       headers: request.headers.set('Accept', 'application/json')
     });
-    return next.handle(request).pipe(
-      finalize(() => {
-        this.bs.idle();
-      })
-    );
+    return next.handle(request);
   }
 }

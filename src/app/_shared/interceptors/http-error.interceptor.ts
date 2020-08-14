@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
@@ -20,47 +20,66 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(catchError(e => {
-      this.gs.log(`[INTERCEPT_ERROR-${e.status}]`, e.statusText);
-      let errorMessage = null;
-      if (e) {
-        if (e.error) {
-          if (e.error.result) {
-            if (e.error.result.message) {
-              errorMessage = e.error.result.message;
-            } else {
-              errorMessage = e.error.result;
+    return next.handle(request).pipe(
+      tap((res) => {
+        if (res instanceof HttpResponse) {
+          if ((res as any).headers.status === 200) {
+            let successTitle = null;
+            if (res) {
+              if ((res as any).body) {
+                if ((res as any).body.info) {
+                  successTitle = (res as any).body.info;
+                }
+              }
             }
-          } else {
-            errorMessage = e.error;
+            let successMessage = null;
+            if (res) {
+              if ((res as any).body) {
+                if ((res as any).body.result) {
+                  if ((res as any).body.result.message) {
+                    successMessage = (res as any).body.result.message;
+                  }
+                }
+              }
+            }
+            this.toast.success(successMessage, successTitle);
           }
-        } else {
-          errorMessage = e;
         }
-      } else {
-        errorMessage = 'Terjadi Kesalahan';
-      }
-      let errorTitle = null;
-      if (e) {
-        if (e.error) {
-          if (e.error.info) {
-            errorTitle = e.error.info;
-          } else {
-            errorTitle = e.error;
+      }),
+      catchError(e => {
+        this.gs.log(`[INTERCEPT_ERROR-${e.status}]`, e.statusText);
+        let errorMessage = null;
+        if (e) {
+          if (e.error) {
+            if (e.error.result) {
+              if (e.error.result.message) {
+                errorMessage = e.error.result.message;
+              }
+            }
           }
-        } else {
-          errorTitle = e;
         }
-      } else {
-        errorMessage = 'Whoops! Error~';
+        if (!errorMessage) {
+          errorMessage = 'Terjadi Kesalahan Pada Jaringan~';
+        }
+        let errorTitle = null;
+        if (e) {
+          if (e.error) {
+            if (e.error.info) {
+              errorTitle = e.error.info;
+            }
+          }
+        }
+        if (!errorTitle) {
+          errorTitle = 'Whoops, Error!';
+        }
+        this.toast.error(errorMessage, errorTitle);
+        if (e.status === 401) {
+          this.as.logout();
+          this.router.navigate(['/login'], { queryParams: { err: true } });
+          window.location.reload();
+        }
+        return throwError(e);
       }
-      this.toast.warning(errorMessage, errorTitle);
-      if (e.status === 401) {
-        this.as.logout();
-        this.router.navigate(['/login'], { queryParams: { err: true } });
-        window.location.reload();
-      }
-      return throwError(e);
-    }));
+    ));
   }
 }

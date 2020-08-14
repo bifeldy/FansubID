@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize,  map, startWith } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -12,6 +13,7 @@ import { ProjectService } from '../../../_shared/services/project.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { AuthService } from 'src/app/_shared/services/auth.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-berkas-edit',
@@ -48,12 +50,14 @@ export class BerkasEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private as: AuthService,
+    private bs: BusyService,
     private gs: GlobalService,
     private pi: PageInfoService,
     private anime: AnimeService,
     private project: ProjectService,
     private fansub: FansubService,
-    private berkas: BerkasService
+    private berkas: BerkasService,
+    private toast: ToastrService
   ) {
   }
 
@@ -62,15 +66,18 @@ export class BerkasEditComponent implements OnInit {
       `Fansub - Ubah Berkas`,
       `Halaman Pembaharuan Data Berkas`,
       `Ubah Berkas`
-    );
+      );
     this.activatedRoute.params.subscribe(params => {
       this.berkasId = params.berkasId;
+      this.bs.busy();
       this.berkas.getBerkas(this.berkasId).subscribe(
         res => {
           this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
           if (this.as.currentUserValue.id !== res.result.user_.id) {
-            this.router.navigateByUrl('/home');
+            this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
+            this.router.navigateByUrl(`/berkas/${res.result.id}`);
           } else {
+            this.bs.idle();
             this.loadProjectList();
             this.loadFansubList();
             this.initForm(res.result);
@@ -78,6 +85,7 @@ export class BerkasEditComponent implements OnInit {
         },
         err => {
           this.gs.log('[BERKAS_DETAIL_ERROR]', err);
+          this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
               returnUrl: `/berkas/${this.berkasId}`
@@ -89,25 +97,31 @@ export class BerkasEditComponent implements OnInit {
   }
 
   loadProjectList(): void {
+    this.bs.busy();
     this.project.getProject().subscribe(
       res => {
         this.gs.log('[PROJECT_LOAD_SUCCESS]', res);
         this.projectList = res.results;
+        this.bs.idle();
       },
       err => {
         this.gs.log('[PROJECT_LOAD_ERROR]', err);
+        this.bs.idle();
       }
     );
   }
 
   loadFansubList(): void {
+    this.bs.busy();
     this.fansub.getAllFansub().subscribe(
       res => {
         this.gs.log('[FANSUB_LOAD_SUCCESS]', res);
         this.fansubs = res.results;
+        this.bs.idle();
       },
       err => {
         this.gs.log('[FANSUB_LOAD_ERROR]', err);
+        this.bs.idle();
       }
     );
   }
@@ -249,11 +263,13 @@ export class BerkasEditComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.bs.busy();
     const body = this.gs.getDirtyValues(this.fg);
     this.gs.log('[FANSUB_EDIT_DIRTY]', body);
     this.submitted = true;
     if (this.fg.invalid) {
       this.submitted = false;
+      this.bs.idle();
       return;
     }
     this.berkas.updateBerkas(this.berkasId, {
@@ -264,11 +280,13 @@ export class BerkasEditComponent implements OnInit {
     }).subscribe(
       res => {
         this.gs.log('[BERKAS_EDIT_SUCCESS]', res);
+        this.bs.idle();
         this.router.navigateByUrl(`/berkas/${this.berkasId}`);
       },
       err => {
         this.gs.log('[BERKAS_EDIT_ERROR]', err);
         this.submitted = false;
+        this.bs.idle();
       }
     );
   }

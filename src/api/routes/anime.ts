@@ -49,8 +49,8 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         ]
       });
       if (animes.length > 0) {
-        res.status(200).json({
-          info: `😍 200 - Data Anime Duplikat 🥰`,
+        res.status(202).json({
+          info: `😍 202 - Data Anime Duplikat 🥰`,
           result: animes
         });
       } else {

@@ -7,6 +7,7 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-fansub-list',
@@ -52,6 +53,7 @@ export class FansubListComponent implements OnInit {
   constructor(
     private router: Router,
     private gs: GlobalService,
+    private bs: BusyService,
     private fs: FabService,
     private fansub: FansubService
   ) {
@@ -67,6 +69,7 @@ export class FansubListComponent implements OnInit {
   }
 
   getFansubData(): void {
+    this.bs.busy();
     this.fansub.getAllFansub().subscribe(
       res => {
         this.gs.log('[FANSUB_LIST_SUCCESS]', res);
@@ -99,14 +102,17 @@ export class FansubListComponent implements OnInit {
         }
         this.getAnimeFansub();
         this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/create', false);
+        this.bs.idle();
       },
       err => {
         this.gs.log('[FANSUB_LIST_ERROR]', err);
+        this.bs.idle();
       }
     );
   }
 
   getAnimeFansub(): void {
+    this.bs.busy();
     this.fansub.getAnimeFansub({
       data: window.btoa(JSON.stringify({
         fansubId: this.allFansubId
@@ -125,9 +131,11 @@ export class FansubListComponent implements OnInit {
         }
         this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
         this.pieChartData = [this.fansubActive, this.fansubInActive];
+        this.bs.idle();
       },
       err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.bs.idle();
       }
     );
   }

@@ -11,6 +11,8 @@ import { DISQUS_SHORTNAME } from 'ngx-disqus';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
+import { NgProgressModule } from 'ngx-progressbar';
+import { NgProgressHttpModule } from 'ngx-progressbar/http';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -59,7 +61,9 @@ import { NotificationsModule } from './_shared/components/notifications/notifica
       closeButton: true,
       progressBar: true,
       progressAnimation: 'increasing'
-    })
+    }),
+    NgProgressModule,
+    NgProgressHttpModule
   ],
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },

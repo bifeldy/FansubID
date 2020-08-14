@@ -9,6 +9,7 @@ import moment from 'moment';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from 'src/app/_shared/services/fansub.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-fansub-create',
@@ -35,6 +36,7 @@ export class FansubCreateComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private gs: GlobalService,
+    private bs: BusyService,
     private pi: PageInfoService,
     private fansub: FansubService
   ) {
@@ -119,6 +121,7 @@ export class FansubCreateComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.bs.busy();
     const urls = [];
     if (this.fg.value.web) {
       urls.push({ name: 'web', url: this.fg.value.web });
@@ -132,6 +135,7 @@ export class FansubCreateComponent implements OnInit {
     this.submitted = true;
     if (this.fg.invalid) {
       this.submitted = false;
+      this.bs.idle();
       return;
     }
     this.fansub.createFansub({
@@ -148,11 +152,13 @@ export class FansubCreateComponent implements OnInit {
     }).subscribe(
       res => {
         this.gs.log('[FANSUB_CREATE_SUCCESS]', res);
+        this.bs.idle();
         this.router.navigateByUrl('/fansub');
       },
       err => {
         this.gs.log('[FANSUB_CREATE_ERROR]', err);
         this.submitted = false;
+        this.bs.idle();
       }
     );
   }

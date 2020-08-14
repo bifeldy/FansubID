@@ -7,6 +7,7 @@ import { AnimeService } from '../../../_shared/services/anime.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-anime-detail',
@@ -52,6 +53,7 @@ export class AnimeDetailComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
+    private bs: BusyService,
     private pi: PageInfoService,
     private anime: AnimeService,
     private fs: FabService
@@ -61,6 +63,7 @@ export class AnimeDetailComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.animeId = params.animeId;
+      this.bs.busy();
       this.anime.getAnime(this.animeId).subscribe(
         res => {
           this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
@@ -75,11 +78,13 @@ export class AnimeDetailComponent implements OnInit {
           );
           this.panelData.push({ title: 'Synopsis', icon: 'history_edu', text: this.animeData.synopsis });
           this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
+          this.bs.idle();
           this.getFansubAnime();
           this.getBerkasAnime();
         },
         err => {
           this.gs.log('[ANIME_DETAIL_ERROR]', err);
+          this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
               returnUrl: '/anime'
@@ -110,6 +115,7 @@ export class AnimeDetailComponent implements OnInit {
   }
 
   getBerkasAnime(): void {
+    this.bs.busy();
     this.anime.getBerkasAnime({
       data: window.btoa(JSON.stringify({
         animeId: [this.animeId]
@@ -128,14 +134,17 @@ export class AnimeDetailComponent implements OnInit {
           });
         }
         this.tabData[1].data.row = this.berkasAnime;
+        this.bs.idle();
       },
       err => {
         this.gs.log('[BERKAS_ANIME_ERROR]', err);
+        this.bs.idle();
       }
     );
   }
 
   getFansubAnime(): void {
+    this.bs.busy();
     this.anime.getFansubAnime({
       data: window.btoa(JSON.stringify({
         animeId: [this.animeId]
@@ -153,9 +162,11 @@ export class AnimeDetailComponent implements OnInit {
           });
         }
         this.tabData[0].data = this.fansubAnime;
+        this.bs.idle();
       },
       err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.bs.idle();
       }
     );
   }

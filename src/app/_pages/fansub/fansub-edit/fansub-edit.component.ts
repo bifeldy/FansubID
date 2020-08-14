@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -8,7 +9,7 @@ import moment from 'moment';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from 'src/app/_shared/services/fansub.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { BusyService } from 'src/app/_shared/services/busy.service';
 
 @Component({
   selector: 'app-fansub-edit',
@@ -36,6 +37,7 @@ export class FansubEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private bs: BusyService,
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private pi: PageInfoService,
@@ -51,16 +53,19 @@ export class FansubEditComponent implements OnInit {
       `Fansub - Ubah Data`,
       `Halaman Pembaharuan Data Fansub`,
       `Ubah Fansub`
-    );
+      );
+    this.bs.busy();
     this.activatedRoute.params.subscribe(params => {
       this.fansubId = params.fansubId;
       this.fansub.getFansub(this.fansubId).subscribe(
         res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
           this.initForm(res.result);
+          this.bs.idle();
         },
         err => {
           this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+          this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
               returnUrl: `/fansub/${this.fansubId}`
