@@ -221,7 +221,13 @@ export class BerkasCreateComponent implements OnInit {
   onSubmit(): void {
     this.bs.busy();
     this.submitted = true;
-    if (this.fg.invalid) {
+    if (this.fg.invalid || !this.selectedFilterAnime || !this.selectedFilterFansub) {
+      if (!this.selectedFilterAnime) {
+        this.fg.controls.anime_id.patchValue(null);
+      }
+      if (!this.selectedFilterFansub) {
+        this.fg.controls.fansub_id.patchValue(null);
+      }
       this.submitted = false;
       this.bs.idle();
       return;

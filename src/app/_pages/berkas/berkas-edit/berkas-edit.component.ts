@@ -267,7 +267,16 @@ export class BerkasEditComponent implements OnInit {
     const body = this.gs.getDirtyValues(this.fg);
     this.gs.log('[FANSUB_EDIT_DIRTY]', body);
     this.submitted = true;
-    if (this.fg.invalid) {
+    if (this.fg.invalid ||
+      (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) ||
+      (!this.selectedFilterFansub && this.fg.controls.fansub_id.dirty === true)
+      ) {
+      if (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) {
+        this.fg.controls.anime_id.patchValue(null);
+      }
+      if (!this.selectedFilterFansub && this.fg.controls.fansub_id.dirty === true) {
+        this.fg.controls.fansub_id.patchValue(null);
+      }
       this.submitted = false;
       this.bs.idle();
       return;
