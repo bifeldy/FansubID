@@ -122,6 +122,7 @@ export class FansubDetailComponent implements OnInit {
         for (const r of res.results[this.fansubId]) {
           this.berkasFansub.push({
             id: r.id,
+            foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Upload: r.created_at,
             'Nama File': r.name

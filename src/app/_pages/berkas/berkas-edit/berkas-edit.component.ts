@@ -73,11 +73,11 @@ export class BerkasEditComponent implements OnInit {
       this.berkas.getBerkas(this.berkasId).subscribe(
         res => {
           this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
+          this.bs.idle();
           if (this.as.currentUserValue.id !== res.result.user_.id) {
             this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
             this.router.navigateByUrl(`/berkas/${res.result.id}`);
           } else {
-            this.bs.idle();
             this.loadProjectList();
             this.loadFansubList();
             this.initForm(res.result);

@@ -16,9 +16,14 @@
               <div class="col-12 col-md-5 col-xl-4 p-3">
                 <div class="row">
                   <div class="col-12">
-                    <img [src]="image_url" class="w-100 border rounded" matTooltip="Klik Gambar Untuk Mengganti Dengan Yang Baru" (click)="gambar.click()" />
-                    <input type="file" class="w-100" accept="image/gif, image/jpeg, image/jpg, image/png" (change)="uploadImage($event)" #gambar />
-                    <mat-error class="w-100">
+                    <img class="w-100 border" src="{{ image_url }}" />
+                    <mat-form-field appearance="outline" class="pt-3 w-100">
+                      <mat-label>Gambar</mat-label>
+                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event)" #gambar
+                        [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+                      <mat-icon matSuffix>image</mat-icon>
+                    </mat-form-field>
+                    <mat-error class="px-3 w-100">
                       <small>
                         <strong>{{ imageErrorText }}</strong>
                       </small>

@@ -1,11 +1,85 @@
-<!-- Content -->
-<div class="container">
-  
-  <!-- Detail -->
-  <div class="row px-3">
-    <div class="col-12">
-      <p>user-edit works!</p>
-    </div>
-  </div>
+<form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
+  <div class="container">
+    <div class="profile-info align-items-center">
+      <div class="media row py-3 px-2">
 
-</div>
+        <!-- Information -->
+        <div class="col-md-4 col-xl-3 px-3">
+          <div class="row sticky-top pt-3">
+            <div class="col-12">
+              <img class="w-100 border rounded-circle" src="{{ image_photo }}" />
+              <mat-form-field appearance="outline" class="pt-3 w-100">
+                <mat-label>Profile Image</mat-label>
+                <ngx-mat-file-input class="w-100" (change)="uploadPhotoImage($event)" #photoImage
+                  [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+                <mat-icon matSuffix>image</mat-icon>
+              </mat-form-field>
+              <mat-error class="px-3 w-100">
+                <small>
+                  <strong>{{ imagePhotoErrorText }}</strong>
+                </small>
+              </mat-error>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-md-8 col-xl-9 pt-3">
+          <div class="row py-3 px-0 profile-height-large">
+            <h1 class="m-0 mt-auto">
+              <b>{{ userData.kartu_tanda_penduduk_.nama }}</b>
+            </h1>
+          </div>
+          <div class="row py-3">
+            <mat-form-field appearance="outline" class="pt-3 w-100">
+              <mat-label>Cover Image</mat-label>
+              <ngx-mat-file-input class="w-100" placeholder="Basic Input" (change)="uploadCoverImage($event)" #coverImage
+                [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+              <mat-icon matSuffix>image</mat-icon>
+            </mat-form-field>
+            <mat-error class="px-3 w-100">
+              <small>
+                <strong>{{ imageCoverErrorText }}</strong>
+              </small>
+            </mat-error>
+          </div>
+          <div class="row py-3">
+            <mat-form-field appearance="outline" class="p-3 w-100">
+              <mat-label>Deskripsi & Informasi</mat-label>
+              <textarea matInput #deskripsi formControlName="description" rows="6"
+                placeholder="Cerita Singkat Atau Informasi Mengenai Garapannya Mungkin ?"></textarea>
+              <mat-icon matSuffix>receipt_long</mat-icon>
+              <mat-hint align="end">{{ deskripsi.value?.length || 0 }} Huruf</mat-hint>
+              <mat-error>
+                <strong *ngIf="fg.get('description').hasError('required')">Deskripsi Tidak Boleh Kosong</strong>
+                <strong *ngIf="fg.get('description').hasError('pattern')">Deskripsi Hanya Boleh Huruf Standar Papan Ketik</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col"></div>
+                <div class="col-12 col-md-3 pb-3">
+                  <a mat-stroked-button routerLink="../" class="w-100" [disabled]="submitted">
+                    <mat-icon class="mr-1">undo</mat-icon>
+                    Batal
+                  </a>
+                </div>
+                <div class="col-12 col-md-3 pb-3">
+                  <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty">
+                    Simpan
+                    <mat-icon class="ml-1">save</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="profile-banner profile-banner-1 align-items-center" [style.background-image]="'url(' + image_cover + ')'"></div>
+    <div class="profile-banner profile-banner-2 align-items-center"></div>
+  </div>
+</form>

@@ -215,78 +215,82 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
       ('file' in req && req.file.mimetype.includes('image')) ||
       ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0)
     ) {
-      const fileRepo = getRepository(Berkas);
-      const file = await fileRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.params.id) }
-        ],
-        relations: ['user_'],
-      });
-      if (req.user.id === file.user_.id) {
-        if (req.body.name) {
-          file.name = req.body.name;
-        }
-        if (req.body.description) {
-          file.description = req.body.description;
-        }
-        if (req.file) {
-          fs.unlink(environment.uploadFolder + file.image_url, (err) => { if (err) {}});
-          file.image_url = '/img/berkas/' + req.file.filename;
-        }
-        if (req.body.episode) {
-          file.episode = req.body.episode;
-        }
-        if (req.body.private) {
-          file.private = req.body.private;
-        }
-        if (req.body.anime_id) {
-          const animeRepo = getRepository(Anime);
-          const anime = await animeRepo.findOneOrFail({
-            where: [
-              { id: Equal(req.body.anime_id) }
-            ]
-          });
-          file.anime_ = anime;
-        }
-        if (req.body.download_url) {
-          const filteredUrls = [];
-          for (const u of req.body.download_url) {
-            if ('url' in u && 'name' in u && u.url && u.name) {
-              filteredUrls.push(u);
+      try {
+        const fileRepo = getRepository(Berkas);
+        const file = await fileRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.params.id) }
+          ],
+          relations: ['user_'],
+        });
+        if (req.user.id === file.user_.id) {
+          if (req.body.name) {
+            file.name = req.body.name;
+          }
+          if (req.body.description) {
+            file.description = req.body.description;
+          }
+          if (req.file) {
+            fs.unlink(environment.uploadFolder + file.image_url, (err) => { if (err) {}});
+            file.image_url = '/img/berkas/' + req.file.filename;
+          }
+          if (req.body.episode) {
+            file.episode = req.body.episode;
+          }
+          if (req.body.private) {
+            file.private = req.body.private;
+          }
+          if (req.body.anime_id) {
+            const animeRepo = getRepository(Anime);
+            const anime = await animeRepo.findOneOrFail({
+              where: [
+                { id: Equal(req.body.anime_id) }
+              ]
+            });
+            file.anime_ = anime;
+          }
+          if (req.body.download_url) {
+            const filteredUrls = [];
+            for (const u of req.body.download_url) {
+              if ('url' in u && 'name' in u && u.url && u.name) {
+                filteredUrls.push(u);
+              }
             }
+            file.download_url = JSON.stringify(filteredUrls);
           }
-          file.download_url = JSON.stringify(filteredUrls);
-        }
-        if (req.body.fansub_id) {
-          const fansubRepo = getRepository(Fansub);
-          const fansub = await fansubRepo.findOneOrFail({
-            where: [
-              { id: Equal(req.body.fansub_id) }
-            ]
-          });
-          file.fansub_ = fansub;
-        }
-        if (req.body.projectType_id) {
-          const projectRepo = getRepository(ProjectType);
-          const project = await projectRepo.findOneOrFail({
-            where: [
-              { id: Equal(req.body.projectType_id) }
-            ]
-          });
-          file.project_type_ = project;
-        }
-        const resFileSave = await fileRepo.save(file);
-        res.status(200).json({
-          info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
-          results: resFileSave
-        });
-      } else {
-        res.status(401).json({
-          info: '🙄 401 - Authorisasi Kepemilikan Gagal! 😪',
-          result: {
-            message: 'Berkas Milik Orang Lain!'
+          if (req.body.fansub_id) {
+            const fansubRepo = getRepository(Fansub);
+            const fansub = await fansubRepo.findOneOrFail({
+              where: [
+                { id: Equal(req.body.fansub_id) }
+              ]
+            });
+            file.fansub_ = fansub;
           }
-        });
+          if (req.body.projectType_id) {
+            const projectRepo = getRepository(ProjectType);
+            const project = await projectRepo.findOneOrFail({
+              where: [
+                { id: Equal(req.body.projectType_id) }
+              ]
+            });
+            file.project_type_ = project;
+          }
+          const resFileSave = await fileRepo.save(file);
+          res.status(200).json({
+            info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
+            results: resFileSave
+          });
+        } else {
+          res.status(401).json({
+            info: '🙄 401 - Authorisasi Kepemilikan Gagal! 😪',
+            result: {
+              message: 'Berkas Milik Orang Lain!'
+            }
+          });
+        }
+      } catch (err) {
+        return next(createError(404));
       }
     } else {
       throw new Error('Data Tidak Lengkap!');

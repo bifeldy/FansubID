@@ -129,6 +129,7 @@ export class AnimeDetailComponent implements OnInit {
         for (const r of res.results[this.animeId]) {
           this.berkasAnime.push({
             id: r.id,
+            foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Upload: r.created_at,
             'Nama File': r.name

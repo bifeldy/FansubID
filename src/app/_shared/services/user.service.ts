@@ -20,6 +20,10 @@ export class UserService {
     return this.api.getData(`/user/${username}`);
   }
 
+  updateUser(username, encryptedUserData): any {
+    return this.api.putData(`/user/${username}`, encryptedUserData, true);
+  }
+
   getUserBerkas(username, q = null, page = 1, row = 10): any {
     return this.api.getData(`/user/${username}/berkas?q=${q}&page=${page}&row=${row}`);
   }

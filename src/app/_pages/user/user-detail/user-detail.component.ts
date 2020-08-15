@@ -92,6 +92,7 @@ export class UserDetailComponent implements OnInit {
         for (const r of res.results) {
           this.berkasData.push({
             id: r.id,
+            foto: r.user_.image_url,
             Jenis: r.project_type_.name,
             Image: r.image_url,
             Upload: r.created_at,

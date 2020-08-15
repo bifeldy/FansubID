@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { Role } from '../../_shared/models/Role';
@@ -11,6 +14,7 @@ import { UserEditComponent } from './user-edit/user-edit.component';
 
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
+import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 
 const routes: Routes = [
   {
@@ -43,8 +47,12 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    SharedMaterialModule,
     MaterialExpansionPanelModule,
-    MaterialTabModule
+    MaterialTabModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialFileInputModule
   ]
 })
 export class UserModule { }

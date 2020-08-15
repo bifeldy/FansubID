@@ -53,6 +53,7 @@
     "ng2-charts": "^2.3.2",
     "ngx-cookie-service": "^10.0.1",
     "ngx-disqus": "^2.4.3",
+    "ngx-material-file-input": "^2.1.1",
     "ngx-progressbar": "^6.0.3",
     "ngx-spinner": "^10.0.1",
     "ngx-swiper-wrapper": "^9.0.1",

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { MaterialFileInputModule } from 'ngx-material-file-input';
+
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 
@@ -60,7 +62,8 @@ const routes: Routes = [
     SharedMaterialModule,
     MaterialTabModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MaterialFileInputModule
   ]
 })
 export class BerkasModule { }

@@ -10,14 +10,15 @@ import { UserRequest } from '../models/UserRequest';
 import { environment } from '../../environments/environment';
 import { universalAtob } from '../helpers/base64';
 
-import { ProjectType } from '../entities/ProjectType';
 import { User } from '../entities/User';
-import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
-import { Anime } from '../entities/Anime';
+import { Profile } from '../entities/Profile';
 
 // Middleware
 import auth from '../middlewares/auth';
+
+// Helper
+import jwt from '../helpers/jwt';
 
 // tslint:disable-next-line: typedef
 function fileImageFilter(req, file, cb) {
@@ -84,36 +85,96 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
 });
 
 // PUT `/api/user/:username`
-// router.put('/:username', auth.isAuthorized, upload.fields([
-//   { name: 'image', maxCount: 1 }, { name: 'cover', maxCount: 1 }
-// ]), async (req: UserRequest, res: Response, next: NextFunction) => {
-//   try {
-//     const userRepo = getRepository(User);
-//     const selectedUser = await userRepo.findOneOrFail({
-//       where: [
-//         { username: Equal(req.params.username)}
-//       ],
-//       relations: ['profile_']
-//     });
-//     console.log(req.files);
-//     return next(createError(404));
-//     // TODO ::
-//     if (req.user.id === selectedUser.id) {
-//       if (req.files) {
-//         selectedUser.image_url = req.files[0];
-//       }
-//     } else {
-//       res.status(401).json({
-//         info: '🙄 401 - Authorisasi Kepemilikan Gagal! 😪',
-//         result: {
-//           message: 'Profil Milik Orang Lain!'
-//         }
-//       });
-//     }
-//   } catch (error) {
-//     return next(createError(404));
-//   }
-// });
+router.put('/:username', auth.isAuthorized, upload.fields([
+  { name: 'image_photo', maxCount: 1 }, { name: 'image_cover', maxCount: 1 }
+]), async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    req.body = JSON.parse(universalAtob(req.body.data));
+    if (
+      'description' in req.body ||
+      (
+        'files' in req && (
+          (req as any).files.image_photo[0].mimetype.includes('image') ||
+          (req as any).files.image_cover[0].mimetype.includes('image')
+        )
+      )
+    ) {
+      try {
+        const userRepo = getRepository(User);
+        const selectedUser = await userRepo.findOneOrFail({
+          where: [
+            { username: Equal(req.params.username)}
+          ],
+          relations: ['kartu_tanda_penduduk_', 'profile_']
+        });
+        if (req.user.id === selectedUser.id) {
+          if (req.files) {
+            if (Array.isArray((req as any).files.image_photo) && (req as any).files.image_photo.length === 1) {
+              if ((req as any).files.image_photo[0]) {
+                fs.unlink(environment.uploadFolder + selectedUser.image_url, (err) => { if (err) {}});
+                selectedUser.image_url = '/img/profile/' + (req as any).files.image_photo[0].filename;
+              }
+            }
+          }
+          try {
+            const profileRepo = getRepository(Profile);
+            const selectedProfile = await profileRepo.findOneOrFail({
+              where: [
+                { id: selectedUser.id }
+              ]
+            });
+            if (req.files) {
+              if (Array.isArray((req as any).files.image_cover) && (req as any).files.image_cover.length === 1) {
+                if ((req as any).files.image_cover[0]) {
+                  fs.unlink(environment.uploadFolder + selectedProfile.cover_url, (err) => { if (err) {}});
+                  selectedProfile.cover_url = '/img/profile/' + (req as any).files.image_cover[0].filename;
+                }
+              }
+            }
+            if (req.body.description) {
+              selectedProfile.description = req.body.description;
+            }
+            const resProfileSave = await profileRepo.save(selectedProfile);
+            selectedUser.profile_ = resProfileSave;
+            let resUserSave = await userRepo.save(selectedUser);
+            delete resUserSave.password;
+            delete resUserSave.session_token;
+            delete resUserSave.kartu_tanda_penduduk_;
+            delete resUserSave.profile_;
+            selectedUser.session_token = jwt.JwtEncode(resUserSave, false);
+            resUserSave = await userRepo.save(selectedUser);
+            res.status(200).json({
+              info: `😅 200 - User API :: Ubah ${req.params.username} 🤣`,
+              result: {
+                token: resUserSave.session_token
+              }
+            });
+          } catch (e) {
+            return next(createError(404));
+          }
+        } else {
+          res.status(401).json({
+            info: '🙄 401 - Authorisasi Kepemilikan Gagal! 😪',
+            result: {
+              message: 'Profil Milik Orang Lain!'
+            }
+          });
+        }
+      } catch (err) {
+        return next(createError(404));
+      }
+    } else {
+      throw new Error('Data Tidak Lengkap');
+    }
+  } catch (error) {
+    res.status(400).json({
+      info: `🙄 400 - Gagal Mengubah Profile :: ${req.params.id} 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
 
 // GET `/api/user/:username/berkas`
 router.get('/:username/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {

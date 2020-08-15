@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ChartsModule } from 'ng2-charts';
+import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 
@@ -70,7 +71,8 @@ const routes: Routes = [
     ChartsModule,
     NotificationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MaterialFileInputModule
   ]
 })
 export class FansubModule { }
