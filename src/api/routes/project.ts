@@ -20,11 +20,6 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     take: req.query.row > 0 ? req.query.row : 10
   });
   for (const p of projects) {
-    const date = new Date(p.created_at);
-    p.created_at = (
-      ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + '@' + ' ' +
-      ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
-    );
     delete p.description;
     // delete p.updated_at;
   }

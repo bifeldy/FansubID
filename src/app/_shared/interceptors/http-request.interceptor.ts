@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../environments/environment';
 import { GlobalService } from '../services/global.service';
 import { BusyService } from '../services/busy.service';
 

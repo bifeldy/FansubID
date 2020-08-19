@@ -204,11 +204,6 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
       take: req.query.row > 0 ? req.query.row : 10
     });
     for (const f of files) {
-      const date = new Date(f.created_at);
-      f.created_at = (
-        ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + '@' + ' ' +
-        ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
-      );
       delete f.private;
       delete f.download_url;
       delete f.description;

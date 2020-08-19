@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { BusyService } from 'src/app/_shared/services/busy.service';
-import { UserService } from 'src/app/_shared/services/user.service';
-import { GlobalService } from 'src/app/_shared/services/global.service';
-import { AuthService } from 'src/app/_shared/services/auth.service';
+import { BusyService } from '../../../_shared/services/busy.service';
+import { UserService } from '../../../_shared/services/user.service';
+import { GlobalService } from '../../../_shared/services/global.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { PageInfoService } from 'src/app/_shared/services/page-info.service';
+import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-user-edit',

@@ -52,11 +52,6 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     }
   });
   for (const f of fansubs) {
-    const date = new Date(f.created_at);
-    f.created_at = (
-      ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + '@' + ' ' +
-      ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
-    );
     delete f.description;
     // delete f.updated_at;
     f.urls = JSON.parse(f.urls) || null;
@@ -151,11 +146,6 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         results[i] = [];
       }
       for (const f of files) {
-        const date = new Date(f.created_at);
-        f.created_at = (
-          ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + '@' + ' ' +
-          ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) as any
-        );
         delete f.private;
         delete f.download_url;
         delete f.description;

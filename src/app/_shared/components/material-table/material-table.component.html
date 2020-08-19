@@ -20,9 +20,10 @@
               tdc == 'Jenis' ? '#7289da' :
                 tdc == 'Status' ? '#f44336' :
         '#343a40'">
-          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" *ngIf="tdc == 'Pemilik'" />
+          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pemilik'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc == 'Poster' || tdc == 'Logo' || tdc == 'Image'" />
-          {{ tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' ? row[tdc] : '' }}
+          <span *ngIf="tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' && tdc != 'Upload'">{{ row[tdc] }}</span>
+          <span *ngIf="tdc == 'Upload'">{{ row[tdc] | dateAgo }}</span>
         </h3>
       </div>
       <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc].length > 0 && row[tdc][0].type == 'chip'">
@@ -53,4 +54,4 @@
     </td>
   </tr>
 </table>
-<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="onPaginatorClicked($event)" [length]="count"></mat-paginator>
+<mat-paginator [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="rippleDisabled" (page)="onPaginatorClicked($event)" [length]="count"></mat-paginator>

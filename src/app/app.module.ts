@@ -35,9 +35,7 @@ import { MaterialFabModule } from './_shared/components/material-fab/material-fa
 import { NotificationsModule } from './_shared/components/notifications/notifications.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
