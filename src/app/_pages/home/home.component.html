@@ -1,8 +1,8 @@
 <!-- Content -->
-<div class="container">
+<div class="container" *ngIf="berkasData">
 
   <!-- Detail -->
-  <div class="row" *ngIf="berkasData.length > 0">
+  <div class="row">
     <app-material-tab (tableRowClicked)="openBerkas($event)" (paginatorClicked)="onPaginatorClicked($event)"
       [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"></app-material-tab>
   </div>

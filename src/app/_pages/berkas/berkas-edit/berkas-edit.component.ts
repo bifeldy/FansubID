@@ -63,7 +63,7 @@ export class BerkasEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.pi.updatePageMetaData(
-      `Fansub - Ubah Berkas`,
+      `Berkas - Ubah Berkas`,
       `Halaman Pembaharuan Data Berkas`,
       `Ubah Berkas`
       );

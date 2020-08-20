@@ -55,9 +55,9 @@ export class BerkasCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.pi.updatePageMetaData(
-      `Fansub - Buat Baru`,
-      `Halaman Menambahkan Fansub Baru`,
-      `Create Fansub`
+      `Berkas - Buat Baru`,
+      `Halaman Membuat Berkas Baru`,
+      `Create Berkas`
     );
     this.loadProjectList();
     this.loadFansubList();
@@ -134,7 +134,7 @@ export class BerkasCreateComponent implements OnInit {
     );
     this.filteredFansub = this.fg.get('fansub_id').valueChanges.pipe(
       startWith(''),
-      map(fansub => this.fansubs.filter(f => f.name.includes(fansub)))
+      map(fansub => this.fansubs.filter(f => f.name.toLowerCase().includes(fansub.toLowerCase())))
     );
   }
 
