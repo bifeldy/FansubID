@@ -41,7 +41,6 @@ export class BerkasEditComponent implements OnInit {
 
   fansubs = [];
   filteredFansub: Observable<any[]>;
-  selectedFilterFansub = null;
 
   animeCheckOrAddResponse = null;
 
@@ -136,16 +135,18 @@ export class BerkasEditComponent implements OnInit {
       description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       projectType_id: [data.project_type_.id, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       anime_id: [data.anime_.id, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
-      fansub_id: [data.fansub_.id, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
+      fansub_list: this.fb.array([]),
       image: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       download_url: this.fb.array([])
     });
     this.image_url = data.image_url;
     this.selectedFilterAnime = data.anime_;
     this.selectedFilterAnime.title = data.anime_.name;
-    this.selectedFilterFansub = data.fansub_;
     for (const dl of data.download_url) {
       this.addDownloadLink(dl);
+    }
+    for (const fs of data.fansub_) {
+      this.addFansub(fs);
     }
     this.fg.get('anime_id').valueChanges.pipe(
       debounceTime(500),
@@ -171,10 +172,6 @@ export class BerkasEditComponent implements OnInit {
         this.gs.log('[BERKAS_EDIT_SEARCH_ERROR]', err);
       }
     );
-    this.filteredFansub = this.fg.get('fansub_id').valueChanges.pipe(
-      startWith(''),
-      map(fansub => this.fansubs.filter(f => f.name.includes(fansub)))
-    );
   }
 
   get getDownloadUrlControl(): FormArray {
@@ -183,8 +180,8 @@ export class BerkasEditComponent implements OnInit {
 
   createDownloadLink(dataName = null, dataUrl = null): any {
     return this.fb.group({
-      name: [dataName, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      url: [dataUrl, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      name: [dataName, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      url: [dataUrl, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
   }
 
@@ -200,12 +197,46 @@ export class BerkasEditComponent implements OnInit {
     this.getDownloadUrlControl.removeAt(i);
   }
 
+  get getFansubControl(): FormArray {
+    return (this.fg.get('fansub_list') as FormArray);
+  }
+
+  createFansub(dataId = null, dataName = null): any {
+    return this.fb.group({
+      fansub_id: [dataId, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
+      fansub_name: [dataName, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+    });
+  }
+
+  removeFansub(i: number): void {
+    this.getFansubControl.removeAt(i);
+  }
+
+  addFansub(data = null): any {
+    if (data) {
+      this.getFansubControl.push(this.createFansub(data.id, data.name));
+    } else {
+      this.getFansubControl.push(this.createFansub());
+    }
+  }
+
+  changeFilterFansub(i: number): void {
+    this.filteredFansub = this.getFansubControl.controls[i].get('fansub_id').valueChanges.pipe(
+      startWith(''),
+      map(fansub => this.fansubs.filter(f => (
+        f.name as string).toString().toLowerCase().includes(
+          (fansub as string).toString().toLowerCase()
+        )
+      ))
+    );
+  }
+
   resetSelectedAnime(): void {
     this.selectedFilterAnime = null;
   }
 
-  resetSelectedFansub(): any {
-    this.selectedFilterFansub = null;
+  resetSelectedFansub(i: number): any {
+    this.getFansubControl.controls[i].get('fansub_name').patchValue(null);
   }
 
   filterAnimeSelected(data): void {
@@ -233,9 +264,10 @@ export class BerkasEditComponent implements OnInit {
     );
   }
 
-  filterFansubSelected(data): void {
+  filterFansubSelected(data, i: number): void {
     this.gs.log('[FANSUB_FILTER_CLICK]', data);
-    this.selectedFilterFansub = data;
+    this.getFansubControl.controls[i].get('fansub_id').patchValue(data.id);
+    this.getFansubControl.controls[i].get('fansub_name').patchValue(data.name);
   }
 
   uploadImage(event): void {
@@ -266,16 +298,18 @@ export class BerkasEditComponent implements OnInit {
     this.bs.busy();
     const body = this.gs.getDirtyValues(this.fg);
     this.gs.log('[FANSUB_EDIT_DIRTY]', body);
+    if ('fansub_list' in body) {
+      const fansubId = [];
+      for (const fs of this.fg.value.fansub_list) {
+        fansubId.push(fs.fansub_id);
+      }
+      body.fansub_id = fansubId;
+      delete body.fansub_list;
+    }
     this.submitted = true;
-    if (this.fg.invalid ||
-      (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) ||
-      (!this.selectedFilterFansub && this.fg.controls.fansub_id.dirty === true)
-      ) {
+    if (this.fg.invalid || (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true)) {
       if (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) {
         this.fg.controls.anime_id.patchValue(null);
-      }
-      if (!this.selectedFilterFansub && this.fg.controls.fansub_id.dirty === true) {
-        this.fg.controls.fansub_id.patchValue(null);
       }
       this.submitted = false;
       this.bs.idle();

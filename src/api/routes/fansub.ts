@@ -3,7 +3,7 @@ import multer from 'multer';
 import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, Equal, In } from 'typeorm';
+import { getRepository, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -125,26 +125,21 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
     if ('fansubId' in req.body && Array.isArray(req.body.fansubId) && req.body.fansubId.length > 0) {
       fansubId = req.body.fansubId;
       const fileRepo = getRepository(Berkas);
-      const [files, count] = await fileRepo.findAndCount({
-        where: [
-          {
-            fansub_: { id: In([fansubId]) },
-            private: false,
-            name: Like(`%${req.query.q ? req.query.q : ''}%`)
-          }
-        ],
-        order: {
-          created_at: 'DESC',
-          name: 'ASC'
-        },
-        relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
-        skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-        take: req.query.row > 0 ? req.query.row : 10
-      });
+      const [files, count] = await fileRepo
+        .createQueryBuilder('berkas')
+        .leftJoinAndSelect('berkas.project_type_', 'project_type_')
+        .leftJoinAndSelect('berkas.anime_', 'anime_')
+        .leftJoinAndSelect('berkas.user_', 'user_')
+        .leftJoinAndSelect('berkas.fansub_', 'fansub_')
+        .where('fansub_.id IN (:...id)', { id: fansubId })
+        .andWhere('berkas.private = :isPrivate', { isPrivate: false })
+        .andWhere('berkas.name LIKE :query', { query: `%${req.query.q ? req.query.q : ''}%` })
+        .orderBy('berkas.created_at', 'DESC')
+        .addOrderBy('berkas.name', 'ASC')
+        .skip(req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0)
+        .take(req.query.row > 0 ? req.query.row : 10)
+        .getManyAndCount();
       const results: any = {};
-      for (const i of fansubId) {
-        results[i] = [];
-      }
       for (const f of files) {
         delete f.private;
         delete f.download_url;
@@ -152,11 +147,6 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         // delete f.updated_at;
         delete f.project_type_.created_at;
         // delete f.project_type_.updated_at;
-        delete f.fansub_.description;
-        delete f.fansub_.urls;
-        delete f.fansub_.tags;
-        delete f.fansub_.created_at;
-        // delete f.fansub_.updated_at;
         delete f.anime_.created_at;
         // delete f.anime_.updated_at;
         delete f.user_.role;
@@ -164,7 +154,19 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         delete f.user_.session_token;
         delete f.user_.created_at;
         // delete f.user_.updated_at;
-        results[f.fansub_.id].push(f);
+        for (const fansub of f.fansub_) {
+          delete fansub.description;
+          delete fansub.urls;
+          delete fansub.tags;
+          delete fansub.created_at;
+          // delete fansub.updated_at;
+          if (fansubId.includes(fansub.id)) {
+            if (fansub.id in results === false) {
+              results[fansub.id] = [];
+            }
+            results[fansub.id].push(f);
+          }
+        }
       }
       res.status(200).json({
         info: `😅 200 - Berkas Fansub API :: ${fansubId.join(', ')} 🤣`,
@@ -191,24 +193,24 @@ router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction
     if ('fansubId' in req.body && Array.isArray(req.body.fansubId) && req.body.fansubId.length > 0) {
       fansubId = req.body.fansubId;
       const fileRepo = getRepository(Berkas);
-      const [files, count] = await fileRepo.findAndCount({
-        where: [
-          {
-            fansub_: {
-              id: In([fansubId])
-            }
-          }
-        ],
-        relations: ['fansub_', 'anime_']
-      });
+      const [files, count] = await fileRepo
+        .createQueryBuilder('berkas')
+        .leftJoinAndSelect('berkas.anime_', 'anime_')
+        .leftJoinAndSelect('berkas.fansub_', 'fansub_')
+        .where('fansub_.id IN (:...id)', { id: fansubId })
+        .getManyAndCount();
       const results: any = {};
-      for (const i of fansubId) {
-        results[i] = [];
-      }
       for (const f of files) {
         delete f.anime_.created_at;
         // delete f.anime_.updated_at;
-        results[f.fansub_.id].push(f.anime_);
+        for (const fansub of f.fansub_) {
+          if (fansubId.includes(fansub.id)) {
+            if (fansub.id in results === false) {
+              results[fansub.id] = [];
+            }
+            results[fansub.id].push(f.anime_);
+          }
+        }
       }
       for (const [key, value] of Object.entries(results)) {
         results[key] = (value as any).filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b);

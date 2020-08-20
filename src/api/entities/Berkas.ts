@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 
 import { User } from './User';
 import { Fansub } from './Fansub';
@@ -56,9 +56,10 @@ export class Berkas {
   // tslint:disable-next-line: variable-name
   anime_: Anime;
 
-  @ManyToOne(type => Fansub)
+  @ManyToMany(type => Fansub)
+  @JoinTable()
   // tslint:disable-next-line: variable-name
-  fansub_: Fansub;
+  fansub_: Fansub[];
 
   @ManyToOne(type => User)
   // tslint:disable-next-line: variable-name

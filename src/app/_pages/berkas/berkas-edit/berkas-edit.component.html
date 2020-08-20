@@ -60,22 +60,45 @@
                       <strong *ngIf="fg.get('anime_id').hasError('pattern')">ID Anime Hanya Boleh Angka</strong>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 w-100">
-                    <mat-label>Fansub Terkait</mat-label>
-                    <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub()" />
-                    <mat-icon matSuffix>short_text</mat-icon>
-                    <mat-autocomplete #autoCompleteFansub="matAutocomplete">
-                      <mat-option *ngFor="let f of filteredFansub | async" [value]="f.id" class="px-1" (click)="filterFansubSelected(f)">
-                        <img src="{{ f.image_url }}" style="border-radius: 0; height: 40px; width: 40px; object-fit: cover;" class="mr-1" />
-                        <span>{{ f.name }}</span>
-                      </mat-option>
-                    </mat-autocomplete>
-                    <strong *ngIf="selectedFilterFansub" class="text-primary">{{ selectedFilterFansub.name }}</strong>
-                    <mat-error>
-                      <strong *ngIf="fg.get('fansub_id').hasError('required')">ID Fansub Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('fansub_id').hasError('pattern')">ID Fansub Hanya Boleh Angka</strong>
-                    </mat-error>
-                  </mat-form-field>
+                  <div class="col-12 p-3">
+                    <mat-divider></mat-divider>
+                  </div>
+                  <div formArrayName="fansub_list">
+                    <div *ngFor="let fs of getFansubControl.controls; let i = index">
+                      <div class="row" [formGroupName]="i">
+                        <mat-form-field appearance="outline" class="p-3 w-100">
+                          <mat-label>Fansub Terkait</mat-label>
+                          <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" (focus)="changeFilterFansub(i)" />
+                          <mat-icon matSuffix *ngIf="fs.get('fansub_id').value">short_text</mat-icon>
+                          <button mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <mat-autocomplete #autoCompleteFansub="matAutocomplete">
+                            <mat-option *ngFor="let f of filteredFansub | async" [value]="f.id" class="px-1" (click)="filterFansubSelected(f, i)">
+                              <img src="{{ f.image_url }}" style="border-radius: 0; height: 40px; width: 40px; object-fit: cover;" class="mr-1" />
+                              <span>{{ f.name }}</span>
+                            </mat-option>
+                          </mat-autocomplete>
+                          <strong class="text-primary">{{ fs.get('fansub_name').value }}</strong>
+                          <mat-error>
+                            <strong *ngIf="fs.get('fansub_id').hasError('required')">ID Fansub Tidak Boleh Kosong</strong>
+                            <strong *ngIf="fs.get('fansub_id').hasError('pattern')">ID Fansub Hanya Boleh Angka</strong>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="row">
+                      <div class="col"></div>
+                      <div class="col pb-3">
+                        <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="addFansub()">
+                          <mat-icon class="mr-1">add</mat-icon>
+                          Tambah Fansub
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="col-12 col-md-7 col-xl-8 pt-3">
@@ -123,7 +146,10 @@
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-5">
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="name" placeholder="Google Drive" />
-                        <mat-icon matSuffix>web</mat-icon>
+                        <mat-icon matSuffix *ngIf="dl.get('name').value">web</mat-icon>
+                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value">
+                          <mat-icon>close</mat-icon>
+                        </button>
                         <mat-error>
                           <strong *ngIf="dl.get('name').hasError('pattern')">Web Hanya Boleh Huruf Standar Papan Ketik</strong>
                         </mat-error>
@@ -131,7 +157,10 @@
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-7">
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="url" placeholder="https://drive.google.com/drive/u/2/folders/1KYTJZsmH9dyyHBXnQD4N0SjSBXcs8qD-" />
-                        <mat-icon matSuffix>link</mat-icon>
+                        <mat-icon matSuffix *ngIf="dl.get('url').value">link</mat-icon>
+                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value">
+                          <mat-icon>close</mat-icon>
+                        </button>
                         <mat-error>
                           <strong *ngIf="dl.get('url').hasError('pattern')">Tautan Hanya Boleh Huruf Standar Papan Ketik</strong>
                         </mat-error>

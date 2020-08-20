@@ -94,8 +94,17 @@ router.put('/:username', auth.isAuthorized, upload.fields([
       'description' in req.body ||
       (
         'files' in req && (
-          (req as any).files.image_photo[0].mimetype.includes('image') ||
-          (req as any).files.image_cover[0].mimetype.includes('image')
+          (
+            'image_photo' in req.files &&
+            Array.isArray((req as any).files.image_photo) &&
+            (req as any).files.image_photo.length > 0 &&
+            (req as any).files.image_photo[0].mimetype.includes('image')
+          ) || (
+            'image_cover' in req.files &&
+            Array.isArray((req as any).files.image_cover) &&
+            (req as any).files.image_cover.length > 0 &&
+            (req as any).files.image_cover[0].mimetype.includes('image')
+          )
         )
       )
     ) {
@@ -120,7 +129,7 @@ router.put('/:username', auth.isAuthorized, upload.fields([
             const profileRepo = getRepository(Profile);
             const selectedProfile = await profileRepo.findOneOrFail({
               where: [
-                { id: selectedUser.id }
+                { id: selectedUser.profile_.id }
               ]
             });
             if (req.files) {
@@ -210,11 +219,13 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
       // delete f.updated_at;
       delete f.project_type_.created_at;
       // delete f.project_type_.updated_at;
-      delete f.fansub_.description;
-      delete f.fansub_.urls;
-      delete f.fansub_.tags;
-      delete f.fansub_.created_at;
-      // delete f.fansub_.updated_at;
+      for (const fansub of f.fansub_) {
+        delete fansub.description;
+        delete fansub.urls;
+        delete fansub.tags;
+        delete fansub.created_at;
+        // delete fansub.updated_at;
+      }
       delete f.anime_.created_at;
       // delete f.anime_.updated_at;
       delete f.user_.role;

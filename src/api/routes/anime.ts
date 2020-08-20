@@ -130,11 +130,13 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         // delete f.updated_at;
         delete f.project_type_.created_at;
         // delete f.project_type_.updated_at;
-        delete f.fansub_.description;
-        delete f.fansub_.urls;
-        delete f.fansub_.tags;
-        delete f.fansub_.created_at;
-        // delete f.fansub_.updated_at;
+        for (const fansub of f.fansub_) {
+          delete fansub.description;
+          delete fansub.urls;
+          delete fansub.tags;
+          delete fansub.created_at;
+          // delete fansub.updated_at;
+        }
         delete f.anime_.created_at;
         // delete f.anime_.updated_at;
         delete f.user_.role;
@@ -184,12 +186,14 @@ router.post('/fansub', async (req: UserRequest, res: Response, next: NextFunctio
         results[i] = [];
       }
       for (const f of files) {
-        delete f.fansub_.description;
-        delete f.fansub_.urls;
-        delete f.fansub_.tags;
-        delete f.fansub_.created_at;
-        // delete f.fansub_.updated_at;
-        results[f.anime_.id].push(f.fansub_);
+        for (const fansub of f.fansub_) {
+          delete fansub.description;
+          delete fansub.urls;
+          delete fansub.tags;
+          delete fansub.created_at;
+          // delete fansub.updated_at;
+          results[f.anime_.id].push(fansub);
+        }
       }
       for (const [key, value] of Object.entries(results)) {
         results[key] = (value as any).filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b);

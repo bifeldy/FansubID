@@ -62,7 +62,7 @@ export class FansubDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      this.fansubId = params.fansubId;
+      this.fansubId = parseInt(params.fansubId, 10);
       this.bs.busy();
       this.fansub.getFansub(this.fansubId).subscribe(
         res => {

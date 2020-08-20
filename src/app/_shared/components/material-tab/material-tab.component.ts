@@ -81,6 +81,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.urlPath = this.router.url;
     this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
@@ -90,7 +91,6 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.totalTabsCount = this.tab.length;
-    this.urlPath = this.router.url;
   }
 
   ngOnDestroy(): void {

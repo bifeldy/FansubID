@@ -3,7 +3,7 @@ import multer from 'multer';
 import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, Equal } from 'typeorm';
+import { getRepository, Like, Equal, In } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -67,11 +67,13 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     // delete f.updated_at;
     delete f.project_type_.created_at;
     // delete f.project_type_.updated_at;
-    delete f.fansub_.description;
-    delete f.fansub_.urls;
-    delete f.fansub_.tags;
-    delete f.fansub_.created_at;
-    // delete f.fansub_.updated_at;
+    for (const fansub of f.fansub_) {
+      delete fansub.description;
+      delete fansub.urls;
+      delete fansub.tags;
+      delete fansub.created_at;
+      // delete fansub.updated_at;
+    }
     delete f.anime_.created_at;
     // delete f.anime_.updated_at;
     delete f.user_.role;
@@ -92,8 +94,9 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
   try {
     req.body = JSON.parse(universalAtob(req.body.data));
     if (
-      'name' in req.body && 'description' in req.body && 'episode' in req.body &&
-      'download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0
+      'name' in req.body && 'description' in req.body && 'episode' in req.body && 'projectType_id' in req.body &&
+      'download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0 &&
+      'fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0
     ) {
       const fileRepo = getRepository(Berkas);
       const file = new Berkas();
@@ -123,9 +126,9 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
       });
       file.anime_ = anime;
       const fansubRepo = getRepository(Fansub);
-      const fansub = await fansubRepo.findOneOrFail({
+      const fansub = await fansubRepo.find({
         where: [
-          { id: Equal(req.body.fansub_id) }
+          { id: In([req.body.fansub_id]) }
         ]
       });
       file.fansub_ = fansub;
@@ -178,11 +181,13 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     resFileSave.user_ = file.user_;
     delete resFileSave.project_type_.created_at;
     // delete resFileSave.project_type_.updated_at;
-    delete resFileSave.fansub_.description;
-    delete resFileSave.fansub_.urls;
-    delete resFileSave.fansub_.tags;
-    delete resFileSave.fansub_.created_at;
-    // delete resFileSave.fansub_.updated_at;
+    for (const fansub of resFileSave.fansub_) {
+      delete fansub.description;
+      delete fansub.urls;
+      delete fansub.tags;
+      delete fansub.created_at;
+      // delete fansub.updated_at;
+    }
     delete resFileSave.anime_.created_at;
     // delete resFileSave.anime_.updated_at;
     delete resFileSave.user_.role;
@@ -206,9 +211,10 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
     req.body = JSON.parse(universalAtob(req.body.data));
     if (
       'name' in req.body || 'description' in req.body || 'private' in req.body ||
-      'anime_id' in req.body || 'fansub_id' in req.body || 'projectType_id' in req.body ||
+      'anime_id' in req.body || 'projectType_id' in req.body ||
       ('file' in req && req.file.mimetype.includes('image')) ||
-      ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0)
+      ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) ||
+      ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
     ) {
       try {
         const fileRepo = getRepository(Berkas);
@@ -255,9 +261,9 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
           }
           if (req.body.fansub_id) {
             const fansubRepo = getRepository(Fansub);
-            const fansub = await fansubRepo.findOneOrFail({
+            const fansub = await fansubRepo.find({
               where: [
-                { id: Equal(req.body.fansub_id) }
+                { id: In(req.body.fansub_id) }
               ]
             });
             file.fansub_ = fansub;

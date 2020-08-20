@@ -121,7 +121,11 @@ export class FansubListComponent implements OnInit {
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         for (const f of this.fansubData) {
-          f.Garapan = res.results[f.id].length;
+          if (res.results[f.id]) {
+            f.Garapan = res.results[f.id].length;
+          } else {
+            f.Garapan = 0;
+          }
         }
         this.tabData[0].data.row = this.fansubData;
         const fansubRank = [...this.fansubData].sort((a, b) => b.Garapan - a.Garapan).slice(0, 10);

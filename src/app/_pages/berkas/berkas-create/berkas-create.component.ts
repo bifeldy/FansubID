@@ -37,7 +37,6 @@ export class BerkasCreateComponent implements OnInit {
 
   fansubs = [];
   filteredFansub: Observable<any[]>;
-  selectedFilterFansub = null;
 
   animeCheckOrAddResponse = null;
 
@@ -104,7 +103,7 @@ export class BerkasCreateComponent implements OnInit {
       description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       anime_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
-      fansub_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
+      fansub_list: this.fb.array([this.createFansub()]),
       image: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       download_url: this.fb.array([this.createDownloadLink()])
     });
@@ -132,10 +131,6 @@ export class BerkasCreateComponent implements OnInit {
         this.gs.log('[BERKAS_CREATE_SEARCH_ERROR]', err);
       }
     );
-    this.filteredFansub = this.fg.get('fansub_id').valueChanges.pipe(
-      startWith(''),
-      map(fansub => this.fansubs.filter(f => f.name.toLowerCase().includes(fansub.toLowerCase())))
-    );
   }
 
   get getDownloadUrlControl(): FormArray {
@@ -144,25 +139,55 @@ export class BerkasCreateComponent implements OnInit {
 
   createDownloadLink(): any {
     return this.fb.group({
-      name: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      url: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      url: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
-  }
-
-  addDownloadLink(): any {
-    this.getDownloadUrlControl.push(this.createDownloadLink());
   }
 
   removeDownloadLink(i: number): void {
     this.getDownloadUrlControl.removeAt(i);
   }
 
+  addDownloadLink(): any {
+    this.getDownloadUrlControl.push(this.createDownloadLink());
+  }
+
+  get getFansubControl(): FormArray {
+    return (this.fg.get('fansub_list') as FormArray);
+  }
+
+  createFansub(): any {
+    return this.fb.group({
+      fansub_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
+      fansub_name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+    });
+  }
+
+  removeFansub(i: number): void {
+    this.getFansubControl.removeAt(i);
+  }
+
+  addFansub(): any {
+    this.getFansubControl.push(this.createFansub());
+  }
+
+  changeFilterFansub(i: number): void {
+    this.filteredFansub = this.getFansubControl.controls[i].get('fansub_id').valueChanges.pipe(
+      startWith(''),
+      map(fansub => this.fansubs.filter(f => (
+        f.name as string).toString().toLowerCase().includes(
+          (fansub as string).toString().toLowerCase()
+        )
+      ))
+    );
+  }
+
   resetSelectedAnime(): void {
     this.selectedFilterAnime = null;
   }
 
-  resetSelectedFansub(): any {
-    this.selectedFilterFansub = null;
+  resetSelectedFansub(i: number): any {
+    this.getFansubControl.controls[i].get('fansub_name').patchValue(null);
   }
 
   filterAnimeSelected(data): void {
@@ -190,9 +215,10 @@ export class BerkasCreateComponent implements OnInit {
     );
   }
 
-  filterFansubSelected(data): void {
+  filterFansubSelected(data, i: number): void {
     this.gs.log('[FANSUB_FILTER_CLICK]', data);
-    this.selectedFilterFansub = data;
+    this.getFansubControl.controls[i].get('fansub_id').patchValue(data.id);
+    this.getFansubControl.controls[i].get('fansub_name').patchValue(data.name);
   }
 
   uploadImage(event): void {
@@ -221,16 +247,17 @@ export class BerkasCreateComponent implements OnInit {
   onSubmit(): void {
     this.bs.busy();
     this.submitted = true;
-    if (this.fg.invalid || !this.selectedFilterAnime || !this.selectedFilterFansub) {
+    if (this.fg.invalid || !this.selectedFilterAnime) {
       if (!this.selectedFilterAnime) {
         this.fg.controls.anime_id.patchValue(null);
-      }
-      if (!this.selectedFilterFansub) {
-        this.fg.controls.fansub_id.patchValue(null);
       }
       this.submitted = false;
       this.bs.idle();
       return;
+    }
+    const fansubId = [];
+    for (const fs of this.fg.value.fansub_list) {
+      fansubId.push(fs.fansub_id);
     }
     this.berkas.createBerkas({
       image: this.fg.value.image,
@@ -241,7 +268,7 @@ export class BerkasCreateComponent implements OnInit {
         private: false,
         projectType_id: this.fg.value.projectType_id,
         anime_id: this.fg.value.anime_id,
-        fansub_id: this.fg.value.fansub_id,
+        fansub_id: fansubId,
         download_url: this.fg.value.download_url,
       }))
     }).subscribe(
