@@ -11,7 +11,8 @@ export class MaterialFabComponent implements OnInit {
 
   constructor(
     private fs: FabService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }

@@ -27,4 +27,5 @@ export class BerkasService {
   updateBerkas(berkasId, encryptedBerkasData): any {
     return this.api.putData(`/berkas/${berkasId}`, encryptedBerkasData, true);
   }
+
 }

@@ -1,5 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
+import { Component, OnInit } from '@angular/core';
 
 import { PageInfoService } from '../../services/page-info.service';
 import { LeftMenuService } from '../../services/left-menu.service';
@@ -16,7 +15,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private lms: LeftMenuService,
     public pi: PageInfoService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }

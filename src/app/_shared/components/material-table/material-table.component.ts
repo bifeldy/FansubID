@@ -3,6 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
+import { GlobalService } from '../../services/global.service';
+
 @Component({
   selector: 'app-material-table',
   templateUrl: './material-table.component.html',
@@ -29,7 +31,9 @@ export class MaterialTableComponent implements OnInit, OnChanges {
 
   pageSizeOptions = [10, 25, 50, 100];
 
-  constructor() {
+  constructor(
+    private gs: GlobalService
+  ) {
   }
 
   checkIsArray(data): boolean {
@@ -68,6 +72,7 @@ export class MaterialTableComponent implements OnInit, OnChanges {
   }
 
   onResize(event): void {
+    this.gs.log('[ReSize]', event);
     this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
   }
 

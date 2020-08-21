@@ -11,7 +11,8 @@ export class AuthGuard implements CanActivate {
   constructor(
     private router: Router,
     private as: AuthService
-  ) { }
+  ) {
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const currentUser = this.as.currentUserValue;
@@ -25,4 +26,5 @@ export class AuthGuard implements CanActivate {
     this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
     return false;
   }
+
 }

@@ -38,4 +38,5 @@ export class LeftMenuService {
       this.changeSideNavState();
     }
   }
+
 }

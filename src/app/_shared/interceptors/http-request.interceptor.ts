@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../../environments/environment';
 import { GlobalService } from '../services/global.service';
-import { BusyService } from '../services/busy.service';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
@@ -17,7 +15,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   constructor(
     private gs: GlobalService,
     private as: AuthService
-  ) { }
+  ) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.as.currentUser.subscribe(user => this.currentUser = user);
@@ -48,4 +47,5 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     });
     return next.handle(request);
   }
+
 }

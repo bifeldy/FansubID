@@ -277,6 +277,7 @@ export class BerkasEditComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = e => {
+      this.gs.log('[ImgLoad]', e);
       if (file.size < 256000) {
         const img = document.createElement('img');
         img.onload = () => {

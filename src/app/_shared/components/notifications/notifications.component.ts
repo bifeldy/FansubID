@@ -13,7 +13,8 @@ export class NotificationsComponent implements OnInit {
   constructor(
     public router: Router,
     public gs: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }

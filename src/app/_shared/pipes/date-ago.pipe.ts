@@ -21,7 +21,7 @@ export class DateAgoPipe implements PipeTransform {
       for (const i of Object.keys(intervals)) {
         counter = Math.floor(detik / intervals[i]);
         if (counter > 0) {
-          return counter + ' ' + i + ' yang lalu';
+          return counter + ' ' + i + ' lalu';
         }
       }
     }

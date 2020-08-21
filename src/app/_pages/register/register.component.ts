@@ -30,9 +30,9 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private gs: GlobalService,
-    private route: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
+    public route: ActivatedRoute,
     public as: AuthService
   ) {
     if (this.as.currentUserValue) {

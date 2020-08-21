@@ -25,7 +25,8 @@ export class BerkasDetailComponent implements OnInit {
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {

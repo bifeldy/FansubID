@@ -50,7 +50,8 @@ export class CardAnimeComponent implements OnInit {
 
   @Output() cardClicked = new EventEmitter();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

@@ -15,7 +15,8 @@ export class NotFoundComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';

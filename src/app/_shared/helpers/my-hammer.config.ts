@@ -5,8 +5,14 @@ import { HammerGestureConfig } from '@angular/platform-browser';
   providedIn: 'root'
 })
 export class MyHammerConfig extends HammerGestureConfig {
+
   overrides = {
-    pinch: { enable: false },
-    rotate: { enable: false }
+    pinch: {
+      enable: false
+    },
+    rotate: {
+      enable: false
+    }
   };
+
 }

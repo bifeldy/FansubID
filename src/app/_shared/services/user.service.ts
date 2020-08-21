@@ -35,4 +35,5 @@ export class UserService {
   cekNik(data): any {
     return this.api.postData('/cek-nik', data);
   }
+
 }

@@ -124,11 +124,11 @@ export function app(): express.Express {
   return server;
 }
 
-// tslint:disable-next-line: variable-name
-const Hikki_ExpressAngularSSR = createConnection({
+createConnection({
   ...typeOrmConfig
 }).then(async connection => {
-  console.log(`📚 MySQL Database ~ ${typeOrmConfig.username}@${typeOrmConfig.host}:${typeOrmConfig.port}/${typeOrmConfig.database} 🎀`);
+  const c: any = connection;
+  console.log(`📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`);
   const port = process.env.PORT || 3000;
   const server = app();
   server.listen(port, () => {

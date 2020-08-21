@@ -25,4 +25,5 @@ export class BrowserStateInterceptor implements HttpInterceptor {
     }
     return next.handle(req);
   }
+
 }

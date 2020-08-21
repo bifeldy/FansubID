@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, Input, Outpu
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 
+import { GlobalService } from '../../services/global.service';
+
 @Component({
   selector: 'app-material-tab',
   templateUrl: './material-tab.component.html',
@@ -77,8 +79,10 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() paginatorClicked = new EventEmitter();
 
   constructor(
-    private router: Router
-  ) { }
+    private router: Router,
+    private gs: GlobalService
+  ) {
+  }
 
   ngOnInit(): void {
     this.urlPath = this.router.url;
@@ -86,6 +90,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onResize(event): void {
+    this.gs.log('[ReSize]', event);
     this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
@@ -129,4 +134,5 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   onServerSideFilter(data: any): void {
     this.serverSideFilter.emit(data);
   }
+
 }

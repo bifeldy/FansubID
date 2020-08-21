@@ -46,4 +46,5 @@ export class PageInfoService {
     this.m.updateTag({ property: 'og:description', content: this.description });
     this.m.updateTag({ property: 'og:image', content: this.image });
   }
+
 }

@@ -17,7 +17,8 @@ export class FabService {
 
   constructor(
     private router: Router
-  ) { }
+  ) {
+  }
 
   toggleFab(): void {
     this.isHidden = !this.isHidden;
@@ -75,4 +76,5 @@ export class FabService {
       this.router.navigateByUrl(this.targetUrl);
     }
   }
+
 }

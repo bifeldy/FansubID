@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
 
+import { GlobalService } from '../../services/global.service';
+
 @Component({
   selector: 'app-material-expansion-panel',
   templateUrl: './material-expansion-panel.component.html',
@@ -16,13 +18,17 @@ export class MaterialExpansionPanelComponent implements OnInit {
     { title: 'Title', icon: 'warning', text: 'Lorem ipsum ...' }
   ];
 
-  constructor() { }
+  constructor(
+    private gs: GlobalService
+  ) {
+  }
 
   ngOnInit(): void {
     this.defaultFirstOpened = (window.innerWidth >= 1200) ? true : false;
   }
 
   onResize(event): void {
+    this.gs.log('[ReSize]', event);
     if (window.innerWidth >= 1200) {
       this.accordion.openAll();
     }
