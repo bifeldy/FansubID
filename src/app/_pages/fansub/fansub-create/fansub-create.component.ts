@@ -145,7 +145,7 @@ export class FansubCreateComponent implements OnInit {
         name: this.fg.value.name,
         description: this.fg.value.description,
         born: this.fg.value.born.getTime(),
-        active: parseInt(this.fg.value.active, 10) === 1,
+        active: this.fg.value.active,
         tags: this.fg.value.tags,
         slug: this.fg.value.slug,
         urls
