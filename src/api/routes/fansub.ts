@@ -140,6 +140,9 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
         .take(req.query.row > 0 ? req.query.row : 10)
         .getManyAndCount();
       const results: any = {};
+      for (const i of fansubId) {
+        results[i] = [];
+      }
       for (const f of files) {
         delete f.private;
         delete f.download_url;
@@ -161,9 +164,6 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
           delete fansub.created_at;
           // delete fansub.updated_at;
           if (fansubId.includes(fansub.id)) {
-            if (fansub.id in results === false) {
-              results[fansub.id] = [];
-            }
             results[fansub.id].push(f);
           }
         }
@@ -200,14 +200,14 @@ router.post('/anime', async (req: UserRequest, res: Response, next: NextFunction
         .where('fansub_.id IN (:...id)', { id: fansubId })
         .getManyAndCount();
       const results: any = {};
+      for (const i of fansubId) {
+        results[i] = [];
+      }
       for (const f of files) {
         delete f.anime_.created_at;
         // delete f.anime_.updated_at;
         for (const fansub of f.fansub_) {
           if (fansubId.includes(fansub.id)) {
-            if (fansub.id in results === false) {
-              results[fansub.id] = [];
-            }
             results[fansub.id].push(f.anime_);
           }
         }
