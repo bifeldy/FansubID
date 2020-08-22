@@ -16,6 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
+    "resolveJsonModule": true,
     "lib": [
       "es2018",
       "dom"

@@ -2,9 +2,61 @@
 <div class="container">
   
   <!-- Detail -->
-  <div class="row px-3">
+  <div class="row">
     <div class="col-12">
-      <p>about works!</p>
+      <div class="alert alert-warning fade show">
+        <h2 class="alert-heading">Tentang & Informasi!</h2>
+        <p class="pl-3">
+          Website ini sebenarnya dibuat hanya dengan tujuan untuk
+          <i>listing</i>
+          daftar berkas secara pribadi yang saya backup di tempat penyimpanan secara
+          <i>online</i>
+          .
+        </p>
+        <p class="pl-3">
+          <s>Sebenernya gw gabut a.k.a pengangguran~ wkwkwkwkwk~</s>
+        </p>
+        <p class="pl-3">Namun apabila ada orang lain yang ikut nimbrung juga silahkan saja.</p>
+        <p class="pl-3">Terima Kasih Atas Kontribusinya ^_^</p>
+        <hr />
+        <p class="mb-0 text-right pr-3">
+          <a routerLink="/user/bifeldy" style="text-decoration: none;">@Bifeldy</a>
+          --
+        </p>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3 p-3" *ngFor="let p of aboutProject">
+          <mat-card>
+            <mat-card-header>
+              <div mat-card-avatar style="background-size: cover;"
+              [style.background-image]="'url(' + p.logo + ')'"></div>
+              <mat-card-title>{{ p.name }}</mat-card-title>
+              <mat-card-subtitle>{{ p.version }}</mat-card-subtitle>
+            </mat-card-header>
+            <img mat-card-image [src]="p.pict" style="height: 192px; object-fit: cover;" />
+            <mat-card-content>
+              <p>{{ p.description }}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <a mat-button href="{{ p.site_url }}" target="_blank">
+                <mat-icon class="mr-2">web</mat-icon>
+                Website
+              </a>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="row">
+        <div class="col-12 text-center p-3">
+          <button mat-stroked-button color="accent" class="m-1" matTooltip="{{ l.value }}" *ngFor="let l of library | keyvalue">
+            {{ l.key }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 

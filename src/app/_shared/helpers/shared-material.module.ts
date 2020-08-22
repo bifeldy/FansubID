@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
@@ -32,7 +33,6 @@ import { MatSortModule } from '@angular/material/sort';
 // import { MatBadgeModule } from '@angular/material/badge';
 // import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 // import { MatButtonToggleModule } from '@angular/material/button-toggle';
-// import { MatCardModule } from '@angular/material/card';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { MatStepperModule } from '@angular/material/stepper';
 // import { MatDialogModule } from '@angular/material/dialog';
@@ -48,6 +48,7 @@ import { MatSortModule } from '@angular/material/sort';
   exports: [
     MatAutocompleteModule,
     MatButtonModule,
+    MatCardModule,
     MatChipsModule,
     MatDatepickerModule,
     MatDividerModule,

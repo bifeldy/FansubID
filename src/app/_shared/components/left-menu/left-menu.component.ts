@@ -42,6 +42,16 @@ export class LeftMenuComponent implements OnInit {
       name: 'Film & Drama',
       link: '/drama',
       icon: 'movie_filter'
+    },
+    {
+      name: 'Manga/Komik & Novel',
+      link: '/book',
+      icon: 'book'
+    },
+    {
+      name: 'Gim & VN',
+      link: '/game',
+      icon: 'videogame_asset'
     }
   ];
 
