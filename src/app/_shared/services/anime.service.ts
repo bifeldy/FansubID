@@ -28,12 +28,12 @@ export class AnimeService {
     return this.api.getData(`/anime/seasonal?year=${year}&season=${season}`);
   }
 
-  getBerkasAnime(encryptedAnimeIdArray, q = null, page = 1, row = 10): any {
-    return this.api.postData(`/anime/berkas?q=${q}&page=${page}&row=${row}`, encryptedAnimeIdArray);
+  getBerkasAnime(id = [], q = null, page = 1, row = 10): any {
+    return this.api.getData(`/anime/berkas?id=${id}&q=${q}&page=${page}&row=${row}`);
   }
 
-  getFansubAnime(encryptedAnimeIdArray): any {
-    return this.api.postData(`/anime/fansub`, encryptedAnimeIdArray);
+  getFansubAnime(id = []): any {
+    return this.api.getData(`/anime/fansub?id=${id}`);
   }
 
 }

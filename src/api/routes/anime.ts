@@ -93,13 +93,11 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
   });
 });
 
-// POST `/api/anime/berkas`
-router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
-  let animeId = [];
+// GET `/api/anime/berkas`
+router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
-    if ('animeId' in req.body && Array.isArray(req.body.animeId) && req.body.animeId.length > 0) {
-      animeId = req.body.animeId;
+    const animeId = req.query.id.split(',').map(Number) || [];
+    if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [
@@ -155,7 +153,7 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
     }
   } catch (error) {
     res.status(400).json({
-      info: `🙄 400 - Gagal Mencari Berkas :: ${animeId.join(', ')} 😪`,
+      info: `🙄 400 - Gagal Mencari Berkas :: ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -163,13 +161,11 @@ router.post('/berkas', async (req: UserRequest, res: Response, next: NextFunctio
   }
 });
 
-// POST `/api/anime/fansubs`
-router.post('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
-  let animeId = [];
+// GET `/api/anime/fansubs`
+router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
-    if ('animeId' in req.body && Array.isArray(req.body.animeId) && req.body.animeId.length > 0) {
-      animeId = req.body.animeId;
+    const animeId = req.query.id.split(',').map(Number) || [];
+    if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [
@@ -207,7 +203,7 @@ router.post('/fansub', async (req: UserRequest, res: Response, next: NextFunctio
     }
   } catch (error) {
     res.status(400).json({
-      info: `🙄 400 - Gagal Mencari Fansub :: ${animeId.join(', ')} 😪`,
+      info: `🙄 400 - Gagal Mencari Fansub :: ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }

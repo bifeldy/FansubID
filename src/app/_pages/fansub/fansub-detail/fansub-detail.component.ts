@@ -110,11 +110,7 @@ export class FansubDetailComponent implements OnInit {
 
   getBerkasFansub(): void {
     this.bs.busy();
-    this.fansub.getBerkasFansub({
-      data: window.btoa(JSON.stringify({
-        fansubId: [this.fansubId]
-      }))
-    }, this.q, this.page, this.row).subscribe(
+    this.fansub.getBerkasFansub([this.fansubId], this.q, this.page, this.row).subscribe(
       res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
@@ -140,11 +136,7 @@ export class FansubDetailComponent implements OnInit {
 
   getAnimeFansub(): void {
     this.bs.busy();
-    this.fansub.getAnimeFansub({
-      data: window.btoa(JSON.stringify({
-        fansubId: [this.fansubId]
-      }))
-    }).subscribe(
+    this.fansub.getAnimeFansub([this.fansubId]).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         this.animeFansub = [];

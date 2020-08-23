@@ -113,11 +113,7 @@ export class FansubListComponent implements OnInit {
 
   getAnimeFansub(): void {
     this.bs.busy();
-    this.fansub.getAnimeFansub({
-      data: window.btoa(JSON.stringify({
-        fansubId: this.allFansubId
-      }))
-    }).subscribe(
+    this.fansub.getAnimeFansub(this.allFansubId).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         for (const f of this.fansubData) {

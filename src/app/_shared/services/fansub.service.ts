@@ -28,12 +28,12 @@ export class FansubService {
     return this.api.getData(`/fansub/${fansubId}`);
   }
 
-  getBerkasFansub(encryptedFansubIdArray, q = null, page = 1, row = 10): any {
-    return this.api.postData(`/fansub/berkas?q=${q}&page=${page}&row=${row}`, encryptedFansubIdArray);
+  getBerkasFansub(id = [], q = null, page = 1, row = 10): any {
+    return this.api.getData(`/fansub/berkas?id=${id}&q=${q}&page=${page}&row=${row}`);
   }
 
-  getAnimeFansub(encryptedFansubIdArray): any {
-    return this.api.postData(`/fansub/anime`, encryptedFansubIdArray);
+  getAnimeFansub(id = []): any {
+    return this.api.getData(`/fansub/anime?id=${id}`);
   }
 
 }
