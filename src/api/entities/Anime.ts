@@ -9,6 +9,9 @@ export class Anime {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
+  @Column({ type: 'varchar', length: 255 })
+  type: string;
+
   @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name
   image_url: string;

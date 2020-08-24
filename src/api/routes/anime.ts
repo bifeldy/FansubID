@@ -48,20 +48,44 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           { id: req.body.id }
         ]
       });
-      if (animes.length > 0) {
-        res.status(202).json({
-          info: `😍 202 - Data Anime Duplikat 🥰`,
-          result: animes
-        });
-      } else {
+      if (animes.length === 0) {
         const anime = new Anime();
         anime.id = req.body.id;
         anime.name = req.body.name;
         anime.image_url = req.body.image_url;
+        anime.type = req.body.type;
         const resultSaveAnime = await animeRepo.save(anime);
         res.status(200).json({
           info: `😅 200 - Anime API :: Tambah Baru 🤣`,
           results: resultSaveAnime
+        });
+      } else if (animes.length === 1) {
+        const anime = await animeRepo.findOneOrFail({
+          where: [
+            { id: animes[0].id }
+          ]
+        });
+        if (req.body.id) {
+          anime.id = req.body.id;
+        }
+        if (req.body.name) {
+          anime.name = req.body.name;
+        }
+        if (req.body.image_url) {
+          anime.image_url = req.body.image_url;
+        }
+        if (req.body.type) {
+          anime.type = req.body.type;
+        }
+        const resultSaveAnime = await animeRepo.save(anime);
+        res.status(202).json({
+          info: `😅 202 - Data Anime Diperbaharui 🤣`,
+          results: resultSaveAnime
+        });
+      } else {
+        res.status(202).json({
+          info: `😍 202 - Data Anime Multi Duplikat 🥰`,
+          result: animes
         });
       }
     } else {

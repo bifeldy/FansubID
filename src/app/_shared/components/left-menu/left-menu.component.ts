@@ -44,13 +44,13 @@ export class LeftMenuComponent implements OnInit {
       icon: 'movie_filter'
     },
     {
-      name: 'Manga/Komik & Novel',
+      name: 'Komik & Novel',
       link: '/book',
       icon: 'book'
     },
     {
-      name: 'Gim & VN',
-      link: '/game',
+      name: 'Gim & Piranti',
+      link: '/software',
       icon: 'videogame_asset'
     }
   ];

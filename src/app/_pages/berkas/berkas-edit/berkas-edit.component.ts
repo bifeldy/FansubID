@@ -251,7 +251,8 @@ export class BerkasEditComponent implements OnInit {
       data: window.btoa(JSON.stringify({
         id: this.selectedFilterAnime.mal_id,
         name: this.selectedFilterAnime.title,
-        image_url: this.selectedFilterAnime.image_url
+        image_url: this.selectedFilterAnime.image_url,
+        type: this.selectedFilterAnime.type
       }))
     }).subscribe(
       res => {
