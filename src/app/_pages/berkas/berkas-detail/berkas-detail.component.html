@@ -55,11 +55,36 @@
               <b class="text-secondary">Tautan Unduhan Berkas</b>
             </h2>
           </div>
-          <div class="col-12 text-center">
+          <div class="col-12 text-center" *ngIf="currentUser">
             <a href="{{ i.url }}" class="m-1" target="_blank" mat-stroked-button color="primary" *ngFor="let i of berkasData.download_url">
               <mat-icon class="mr-2">cloud_download</mat-icon>
               {{ i.name }}
             </a>
+          </div>
+          <div class="col-12 text-center" *ngIf="!currentUser">
+            <button class="m-1" mat-stroked-button color="primary" (click)="login()">
+              <mat-icon class="mr-2">vpn_key</mat-icon>
+              Klik Untuk Login
+            </button>
+          </div>
+        </div>
+        <div class="row py-3" *ngIf="currentUser && berkasData.ddl_file">
+          <div class="col-12 sticky-top bg-light">
+            <h2 class="border-bottom-dotted">
+              <b class="text-secondary">Tautan DDL Berkas</b>
+            </h2>
+          </div>
+          <div class="col-12 text-center" *ngIf="currentUser.verified">
+            <button class="m-1" mat-stroked-button color="primary" (click)="ddl()">
+              <mat-icon class="mr-2">cloud_done</mat-icon>
+              Direct Download Link
+            </button>
+          </div>
+          <div class="col-12 text-center" *ngIf="!currentUser.verified">
+            <button class="m-1" mat-stroked-button color="primary" (click)="verify()">
+              <mat-icon class="mr-2">domain_verification</mat-icon>
+              Klik Untuk Verifikasi
+            </button>
           </div>
         </div>
       </div>

@@ -28,6 +28,10 @@ export class Berkas {
   // tslint:disable-next-line: variable-name
   image_url: string;
 
+  @Column({ type: 'text', nullable: true })
+  // tslint:disable-next-line: variable-name
+  ddl_file: string;
+
   // @Column({ type: 'int', nullable: true })
   // // tslint:disable-next-line: variable-name
   // mal_id: number;

@@ -165,7 +165,7 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
 });
 
 // GET `/api/berkas/:id`
-router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fileRepo = getRepository(Berkas);
     const file = await fileRepo.findOneOrFail({
@@ -195,7 +195,15 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     delete resFileSave.user_.session_token;
     delete resFileSave.user_.created_at;
     // delete resFileSave.user_.updated_at;
-    resFileSave.download_url = JSON.parse(resFileSave.download_url) || null;
+    if (req.user) {
+      resFileSave.download_url = JSON.parse(resFileSave.download_url) || null;
+      if (!req.user.verified) {
+        delete resFileSave.ddl_file;
+      }
+    } else {
+      delete resFileSave.download_url;
+      delete resFileSave.ddl_file;
+    }
     res.status(200).json({
       info: `😅 200 - Berkas API :: Detail ${req.params.id} 🤣`,
       result: resFileSave

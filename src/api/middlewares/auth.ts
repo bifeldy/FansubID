@@ -150,6 +150,21 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
 }
 
 // tslint:disable-next-line: typedef
+async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
+  try {
+    const token = req.headers.authorization || req.headers['x-access-token'] || req.body.token || '';
+    if (token) {
+      isAuthorized(req, res, next);
+    } else {
+      throw new Error('User Is Not Login');
+    }
+  } catch (err) {
+    req.user = null;
+    return next();
+  }
+}
+
+// tslint:disable-next-line: typedef
 async function logoutModule(req: UserRequest, res: Response, next: NextFunction) {
   const decoded = jwt.JwtDecode(req, res, next);
   if (decoded && 'token' in decoded && 'id' in decoded.user) {
@@ -176,5 +191,5 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
   }
 }
 
-const auth = { loginModule, isAuthorized, logoutModule, registerModule };
+const auth = { loginModule, isAuthorized, isLogin, logoutModule, registerModule };
 export default auth;

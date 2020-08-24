@@ -6,6 +6,9 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { AuthService } from '../../../_shared/services/auth.service';
+
+import User from '../../../_shared/models/User';
 
 @Component({
   selector: 'app-berkas-detail',
@@ -24,8 +27,13 @@ export class BerkasDetailComponent implements OnInit {
     private bs: BusyService,
     private pi: PageInfoService,
     private berkas: BerkasService,
-    private fs: FabService
+    private fs: FabService,
+    public as: AuthService
   ) {
+  }
+
+  get currentUser(): User {
+    return this.as.currentUserValue;
   }
 
   ngOnInit(): void {
@@ -56,6 +64,26 @@ export class BerkasDetailComponent implements OnInit {
         }
       );
     });
+  }
+
+  login(): void {
+    this.router.navigate(['/login'], {
+      queryParams: {
+        returnUrl: `/berkas/${this.berkasId}`
+      }
+    });
+  }
+
+  verify(): void {
+    this.router.navigate(['/verify'], {
+      queryParams: {
+        returnUrl: `/berkas/${this.berkasId}`
+      }
+    });
+  }
+
+  ddl(): void {
+    this.gs.log('[DDL]', this.berkasData.ddl_file);
   }
 
 }

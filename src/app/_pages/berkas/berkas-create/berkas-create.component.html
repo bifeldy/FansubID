@@ -151,6 +151,7 @@
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
+                          <strong *ngIf="dl.get('name').hasError('required')">Web Tidak Boleh Kosong</strong>
                           <strong *ngIf="dl.get('name').hasError('pattern')">Web Hanya Boleh Huruf Standar Papan Ketik</strong>
                         </mat-error>
                       </mat-form-field>
@@ -162,6 +163,7 @@
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
+                          <strong *ngIf="dl.get('url').hasError('required')">Tautan Tidak Boleh Kosong</strong>
                           <strong *ngIf="dl.get('url').hasError('pattern')">Tautan Hanya Boleh Huruf Standar Papan Ketik</strong>
                         </mat-error>
                       </mat-form-field>
