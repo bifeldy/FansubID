@@ -21,7 +21,9 @@
                 tdc == 'Status' ? '#f44336' :
         '#343a40'">
           <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pemilik'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; object-fit: cover;" *ngIf="tdc == 'Poster' || tdc == 'Logo' || tdc == 'Image'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc == 'Logo'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc == 'Image'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc == 'Poster'" />
           <span *ngIf="tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' && tdc != 'Upload'">{{ row[tdc] }}</span>
           <span *ngIf="tdc == 'Upload'">{{ row[tdc] | dateAgo }}</span>
         </h3>
