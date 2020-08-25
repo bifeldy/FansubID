@@ -35,29 +35,10 @@ export class ApiService {
   downloadFile(path: string): Observable<any> {
     this.gs.log('[API_DOWNLOAD]', path);
     return this.http.get(environment.apiUrl + path, {
-      observe: 'events',
       responseType: 'blob',
+      observe: 'events',
       reportProgress: true
     });
-    // .subscribe(
-    //   event => {
-    //     this.gs.log('[UPLOAD_EVENTS]', event);
-    //     if ((event as any).headers) {
-    //       const e = (event as any);
-    //       const contentType = e.headers.get('content-type');
-    //       const contentDisposition = e.headers.get('content-disposition');
-    //       const fileName = contentDisposition.substr(contentDisposition.indexOf('filename=') + 9).replace(/\"/g, '');
-    //     }
-    //     if ((event as any).loaded && (event as any).total) {
-    //       const e = (event as any);
-    //       const currentPercentValue = Math.round(e.loaded / e.total * 100);
-    //     }
-    //     if ((event as any).body) {
-    //       const e = (event as any);
-    //       const fileData = new Blob([e.body], { type: contentType });
-    //     }
-    //   }
-    // );
   }
 
   getData(path: string, timedOut = 10000): Observable<any> {

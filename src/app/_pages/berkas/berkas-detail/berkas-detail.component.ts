@@ -10,6 +10,8 @@ import { AuthService } from '../../../_shared/services/auth.service';
 
 import User from '../../../_shared/models/User';
 
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-berkas-detail',
   templateUrl: './berkas-detail.component.html',
@@ -19,6 +21,10 @@ export class BerkasDetailComponent implements OnInit {
 
   berkasId = 0;
   berkasData = null;
+
+  attachmentPercentage = 0;
+  attachmentIsDownloading = false;
+  attachmentIsCompleted = false;
 
   constructor(
     private router: Router,
@@ -83,7 +89,24 @@ export class BerkasDetailComponent implements OnInit {
   }
 
   ddl(): void {
-    this.gs.log('[DDL]', this.berkasData.attachment_);
+    this.attachmentIsDownloading = true;
+    this.berkas.downloadLampiran(this.berkasData.attachment_.name).subscribe(
+      event => {
+        this.gs.log('[DOWNLOAD_EVENTS]', event);
+        if ((event as any).loaded && (event as any).total) {
+          const e = (event as any);
+          this.gs.log('[DOWNLOAD_PROGRESS]', e);
+          this.attachmentPercentage = Math.round(e.loaded / e.total * 100);
+        }
+        if ((event as any).body) {
+          const e = (event as any);
+          this.gs.log('[DOWNLOAD_COMPLETED]', e);
+          this.attachmentIsDownloading = false;
+          this.attachmentIsCompleted = true;
+          saveAs(e.body, `${this.berkasData.attachment_.name}.${this.berkasData.attachment_.ext}`);
+        }
+      }
+    );
   }
 
 }

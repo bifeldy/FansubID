@@ -75,10 +75,16 @@
             </h2>
           </div>
           <div class="col-12 text-center" *ngIf="currentUser.verified">
-            <button class="m-1" mat-stroked-button color="primary" (click)="ddl()">
+            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="ddl()" [disabled]="attachmentIsDownloading || attachmentIsCompleted">
               <mat-icon class="mr-2">cloud_done</mat-icon>
               {{ berkasData.attachment_.ext }} ({{ berkasData.attachment_.size }} Bytes)
             </button>
+            <div class="col">
+              <div class="px-3" *ngIf="attachmentIsDownloading || attachmentIsCompleted">
+                {{ attachmentPercentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }} {{ attachmentPercentage }}% <br />
+                <mat-progress-bar mode="determinate" [value]="attachmentPercentage"></mat-progress-bar>
+              </div>
+            </div>
           </div>
           <div class="col-12 text-center" *ngIf="!currentUser.verified">
             <button class="m-1" mat-stroked-button color="primary" (click)="verify()">

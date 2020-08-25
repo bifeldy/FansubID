@@ -42,15 +42,15 @@ const upload = multer({
 
 const router = Router();
 
-// GET `/api/attachment?id=`
+// GET `/api/attachment?name=`
 router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
-  const lampiran = req.query.id || '';
+  const lampiran = req.query.name || '';
   if (lampiran) {
     if (req.user.verified) {
       find.file(/$/, `${environment.uploadFolder}/lampiran`, (files) => {
         const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(lampiran.toString().toLowerCase()));
         if (fIdx >= 0) {
-          res.download(files[fIdx]);
+          res.download(files[fIdx], (err) => {});
         } else {
           return next(createError(404));
         }

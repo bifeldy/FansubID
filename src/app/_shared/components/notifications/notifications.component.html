@@ -20,7 +20,7 @@
   <!-- Notification -->
   <div class="container">
     <div class="row pt-3">
-      <div class="col-12" *ngFor="let n of notifications; let i = index">
+      <div class="col-12" *ngFor="let n of notif.notifications; let i = index">
         <div class="alert alert-info alert-dismissible fade show">
           <strong class="mr-1">{{ n.title }}</strong>
           <span [innerHTML]="n.content"></span>
