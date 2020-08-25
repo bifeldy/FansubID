@@ -25,7 +25,7 @@
                       }}" placeholder="Username / E-Mail" required autofocus formControlName="userNameOrEmail" autocomplete="email, username" />
                     <span class="invalid-feedback" role="alert">
                       <strong *ngIf="fg.get('userNameOrEmail').hasError('required')">
-                        Username / Email Tidak Boleh Kosong!<br />
+                        Username / Email Tidak Boleh Kosong! <br />
                       </strong>
                       <strong *ngIf="fg.get('userNameOrEmail').hasError('pattern')">
                         Username / Email Hanya Boleh Huruf Standar Papan Ketik <br />
@@ -41,7 +41,7 @@
                       }}" placeholder="Password" required formControlName="password" autocomplete="current-password, new-password" />
                     <span class="invalid-feedback" role="alert">
                       <strong *ngIf="fg.get('password').hasError('required')">
-                        Password Tidak Boleh Kosong!<br />
+                        Password Tidak Boleh Kosong! <br />
                       </strong>
                       <strong *ngIf="fg.get('password').hasError('pattern')">
                         Password Hanya Boleh Huruf Standar Papan Ketik <br />

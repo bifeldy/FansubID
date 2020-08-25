@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { CdkStepperModule } from '@angular/cdk/stepper';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -16,6 +17,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -27,14 +29,12 @@ import { MatSortModule } from '@angular/material/sort';
 // import { DragDropModule } from '@angular/cdk/drag-drop';
 // import { PortalModule } from '@angular/cdk/portal';
 // import { ScrollingModule } from '@angular/cdk/scrolling';
-// import { CdkStepperModule } from '@angular/cdk/stepper';
 // import { CdkTableModule } from '@angular/cdk/table';
 // import { CdkTreeModule } from '@angular/cdk/tree';
 // import { MatBadgeModule } from '@angular/material/badge';
 // import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 // import { MatButtonToggleModule } from '@angular/material/button-toggle';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
-// import { MatStepperModule } from '@angular/material/stepper';
 // import { MatDialogModule } from '@angular/material/dialog';
 // import { MatMenuModule } from '@angular/material/menu';
 // import { MatRadioModule } from '@angular/material/radio';
@@ -46,6 +46,7 @@ import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   exports: [
+    CdkStepperModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
@@ -63,6 +64,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatRippleModule,
     MatSelectModule,
     MatSidenavModule,
+    MatStepperModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,

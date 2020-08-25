@@ -28,12 +28,12 @@ export class UserService {
     return this.api.getData(`/user/${username}/berkas?q=${q}&page=${page}&row=${row}`);
   }
 
-  registerAccount(data): any {
-    return this.api.postData('/register', data);
+  cekNik(encryptedUserData): any {
+    return this.api.postData('/cek-nik', encryptedUserData);
   }
 
-  cekNik(data): any {
-    return this.api.postData('/cek-nik', data);
+  verifikasi(encryptedUserData): any {
+    return this.api.putData('/verify', encryptedUserData);
   }
 
 }

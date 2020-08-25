@@ -52,6 +52,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "mysql": "^2.18.1",
+    "ng-recaptcha": "^5.0.0",
     "ng2-charts": "^2.3.2",
     "ngx-cookie-service": "^10.0.1",
     "ngx-disqus": "^2.4.3",

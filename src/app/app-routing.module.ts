@@ -37,6 +37,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'verify',
+    loadChildren: () => import('./_pages/verify/verify.module').then(m => m.VerifyModule),
+    data: {
+      title: 'Verifikasi',
+      description: 'Halaman Verifikasi Akun',
+      keywords: 'Verify'
+    }
+  },
+  {
     path: 'home',
     loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule),
     data: {

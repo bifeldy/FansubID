@@ -69,3 +69,8 @@ body {
   border-style: dotted;
   border-color: #ff4081;
 }
+
+re-captcha > div {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

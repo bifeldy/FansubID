@@ -68,7 +68,7 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: Equal(req.params.username)}
+        { username: Equal(req.params.username) }
       ],
       relations: ['kartu_tanda_penduduk_', 'profile_']
     });
@@ -128,7 +128,7 @@ router.put('/:username', auth.isAuthorized, upload.fields([
         const userRepo = getRepository(User);
         const selectedUser = await userRepo.findOneOrFail({
           where: [
-            { username: Equal(req.params.username)}
+            { username: Equal(req.params.username) }
           ],
           relations: ['kartu_tanda_penduduk_', 'profile_']
         });
@@ -210,7 +210,7 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: Equal(req.params.username)}
+        { username: Equal(req.params.username) }
       ]
     });
     const fileRepo = getRepository(Berkas);

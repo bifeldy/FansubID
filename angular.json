@@ -59,7 +59,8 @@
               "hammerjs",
               "crypto-js",
               "chart.js",
-              "lodash"
+              "lodash",
+              "file-saver"
             ]
           },
           "configurations": {
