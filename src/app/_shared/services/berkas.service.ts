@@ -28,4 +28,8 @@ export class BerkasService {
     return this.api.putData(`/berkas/${berkasId}`, encryptedBerkasData, true);
   }
 
+  uploadLampiran(lampiran): any {
+    return this.api.uploadFile(`/attachment`, lampiran);
+  }
+
 }

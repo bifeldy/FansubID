@@ -15,6 +15,8 @@ import { BerkasService } from '../../../_shared/services/berkas.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 
+import User from '../../../_shared/models/User';
+
 @Component({
   selector: 'app-berkas-edit',
   templateUrl: './berkas-edit.component.html',
@@ -44,11 +46,16 @@ export class BerkasEditComponent implements OnInit {
 
   animeCheckOrAddResponse = null;
 
+  attachment = null;
+  attachmentPercentage = 0;
+  attachmentIsUploading = false;
+  attachmentIsCompleted = false;
+  attachmentErrorText = '';
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
-    private as: AuthService,
     private bs: BusyService,
     private gs: GlobalService,
     private pi: PageInfoService,
@@ -56,8 +63,13 @@ export class BerkasEditComponent implements OnInit {
     private project: ProjectService,
     private fansub: FansubService,
     private berkas: BerkasService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    public as: AuthService
   ) {
+  }
+
+  get currentUser(): User {
+    return this.as.currentUserValue;
   }
 
   ngOnInit(): void {
@@ -137,6 +149,7 @@ export class BerkasEditComponent implements OnInit {
       anime_id: [data.anime_.id, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
       fansub_list: this.fb.array([]),
       image: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      attachment_id: ['', Validators.compose([Validators.pattern(/^\d+$/)])],
       download_url: this.fb.array([])
     });
     this.image_url = data.image_url;
@@ -279,7 +292,7 @@ export class BerkasEditComponent implements OnInit {
     reader.readAsDataURL(file);
     reader.onload = e => {
       this.gs.log('[ImgLoad]', e);
-      if (file.size < 256000) {
+      if (file.size < 256 * 1000) {
         const img = document.createElement('img');
         img.onload = () => {
           this.image_url = reader.result.toString();
@@ -309,7 +322,7 @@ export class BerkasEditComponent implements OnInit {
       delete body.fansub_list;
     }
     this.submitted = true;
-    if (this.fg.invalid || (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true)) {
+    if (this.fg.invalid || this.attachmentIsUploading || (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true)) {
       if (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) {
         this.fg.controls.anime_id.patchValue(null);
       }
@@ -332,6 +345,42 @@ export class BerkasEditComponent implements OnInit {
         this.gs.log('[BERKAS_EDIT_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
+      }
+    );
+  }
+
+  uploadAttachment(event): void {
+    const file = event.target.files[0];
+    this.gs.log('[AttachmentLoad]', file);
+    if (file.size <= 3 * 1000 * 1000 * 1000) {
+      this.attachment = file;
+      this.attachmentErrorText = '';
+    } else {
+      this.attachment = null;
+      this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 3 GB!';
+    }
+  }
+
+  submitAttachment(): void {
+    this.attachmentIsUploading = true;
+    this.berkas.uploadLampiran({
+      lampiran: this.attachment
+    }).subscribe(
+      event => {
+        this.gs.log('[UPLOAD_EVENTS]', event);
+        if ((event as any).loaded && (event as any).total) {
+          const e = (event as any);
+          this.gs.log('[UPLOAD_PROGRESS]', e);
+          this.attachmentPercentage = Math.round(e.loaded / e.total * 100);
+        }
+        if ((event as any).body) {
+          const e = (event as any).body;
+          this.gs.log('[UPLOAD_COMPLETED]', e);
+          this.attachmentIsUploading = false;
+          this.attachmentIsCompleted = true;
+          this.fg.controls.attachment_id.patchValue(e.result.id);
+          this.fg.controls.attachment_id.markAsDirty();
+        }
       }
     );
   }

@@ -10,6 +10,7 @@ import projectRouter from './project';
 import fansubRouter from './fansub';
 import berkasRouter from './berkas';
 import userRouter from './user';
+import attachmentRouter from './attachment';
 
 const router = Router();
 
@@ -19,6 +20,7 @@ router.use('/project', projectRouter);
 router.use('/fansub', fansubRouter);
 router.use('/berkas', berkasRouter);
 router.use('/user', userRouter);
+router.use('/attachment', attachmentRouter);
 
 // GET `/api`
 router.get('/', (req, res) => {

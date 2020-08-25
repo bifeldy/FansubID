@@ -18,6 +18,8 @@ import { Anime } from '../entities/Anime';
 
 // Middleware
 import auth from '../middlewares/auth';
+import { Attachment } from '../entities/Attachment';
+import { TempAttachment } from '../entities/TempAttachment';
 
 // tslint:disable-next-line: typedef
 function fileImageFilter(req, file, cb) {
@@ -39,11 +41,18 @@ const upload = multer({
   dest: environment.uploadFolder + '/img/berkas/',
   fileFilter: fileImageFilter,
   limits: {
-    fileSize: 256000
+    fileSize: 256 * 1000
   }
 });
 
 const router = Router();
+
+// tslint:disable-next-line: typedef
+async function removeUploaded(req: any) {
+  if (req.file) {
+    fs.unlink(environment.uploadFolder + '/img/berkas/' + req.file.filename, (err) => { if (err) {}});
+  }
+}
 
 // GET `/api/berkas`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -118,6 +127,24 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
       } else {
         file.image_url = '/favicon.ico';
       }
+      if (req.body.attachment_id) {
+        const tempAttachmentRepo = getRepository(TempAttachment);
+        const tempAttachment = await tempAttachmentRepo.findOneOrFail({
+          relations: ['user_'],
+          where: [
+            { id: Equal(req.body.attachment_id) }
+          ]
+        });
+        const attachmentRepo = getRepository(Attachment);
+        const attachment = new Attachment();
+        attachment.name = tempAttachment.name;
+        attachment.size = tempAttachment.size;
+        attachment.ext = tempAttachment.ext;
+        attachment.user_ = tempAttachment.user_;
+        const resAttachmentSave = await attachmentRepo.save(attachment);
+        file.attachment_ = resAttachmentSave;
+        await tempAttachmentRepo.remove(tempAttachment);
+      }
       const animeRepo = getRepository(Anime);
       const anime = await animeRepo.findOneOrFail({
         where: [
@@ -147,14 +174,32 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
       });
       file.user_ = user;
       const resFileSave = await fileRepo.save(file);
+      resFileSave.download_url = JSON.parse(resFileSave.download_url) || null;
+      for (const f of resFileSave.fansub_) {
+        delete f.created_at;
+        // delete f.updated_at;
+      }
+      delete resFileSave.attachment_.user_;
+      delete resFileSave.attachment_.created_at;
+      // delete resFileSave.attachment_.updated_at;
+      delete resFileSave.anime_.created_at;
+      // delete resFileSave.anime_.updated_at;
+      delete resFileSave.project_type_.created_at;
+      // delete resFileSave.project_type_.updated_at;
+      delete resFileSave.user_.role;
+      delete resFileSave.user_.password;
+      delete resFileSave.user_.session_token;
+      delete resFileSave.user_.created_at;
+      // delete resFileSave.user_.updated_at;
       res.status(200).json({
         info: `😅 200 - Berkas API :: Tambah Baru 🤣`,
-        results: resFileSave
+        result: resFileSave
       });
     } else {
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    removeUploaded(req);
     res.status(400).json({
       info: '🙄 400 - Gagal Menambah Berkas Baru! 😪',
       result: {
@@ -172,7 +217,7 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
       where: [
         { id: Equal(req.params.id) }
       ],
-      relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
+      relations: ['project_type_', 'fansub_', 'user_', 'anime_', 'attachment_'],
     });
     file.view_count++;
     const resFileSave = await fileRepo.save(file);
@@ -198,11 +243,11 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
     if (req.user) {
       resFileSave.download_url = JSON.parse(resFileSave.download_url) || null;
       if (!req.user.verified) {
-        delete resFileSave.ddl_file;
+        delete resFileSave.attachment_;
       }
     } else {
       delete resFileSave.download_url;
-      delete resFileSave.ddl_file;
+      delete resFileSave.attachment_;
     }
     res.status(200).json({
       info: `😅 200 - Berkas API :: Detail ${req.params.id} 🤣`,
@@ -219,7 +264,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
     req.body = JSON.parse(universalAtob(req.body.data));
     if (
       'name' in req.body || 'description' in req.body || 'private' in req.body ||
-      'anime_id' in req.body || 'projectType_id' in req.body ||
+      'anime_id' in req.body || 'projectType_id' in req.body || 'attachment_id' in req.body ||
       ('file' in req && req.file.mimetype.includes('image')) ||
       ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) ||
       ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
@@ -230,7 +275,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
           where: [
             { id: Equal(req.params.id) }
           ],
-          relations: ['user_'],
+          relations: ['user_', 'attachment_', 'anime_', 'project_type_', 'fansub_']
         });
         if (req.user.id === file.user_.id) {
           if (req.body.name) {
@@ -267,6 +312,24 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
             }
             file.download_url = JSON.stringify(filteredUrls);
           }
+          if (req.body.attachment_id) {
+            const tempAttachmentRepo = getRepository(TempAttachment);
+            const tempAttachment = await tempAttachmentRepo.findOneOrFail({
+              relations: ['user_'],
+              where: [
+                { id: Equal(req.body.attachment_id) }
+              ]
+            });
+            const attachmentRepo = getRepository(Attachment);
+            const attachment = new Attachment();
+            attachment.name = tempAttachment.name;
+            attachment.size = tempAttachment.size;
+            attachment.ext = tempAttachment.ext;
+            attachment.user_ = tempAttachment.user_;
+            const resAttachmentSave = await attachmentRepo.save(attachment);
+            file.attachment_ = resAttachmentSave;
+            await tempAttachmentRepo.remove(tempAttachment);
+          }
           if (req.body.fansub_id) {
             const fansubRepo = getRepository(Fansub);
             const fansub = await fansubRepo.find({
@@ -286,9 +349,29 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
             file.project_type_ = project;
           }
           const resFileSave = await fileRepo.save(file);
+          resFileSave.download_url = JSON.parse(resFileSave.download_url) || null;
+          console.log(resFileSave);
+          for (const f of resFileSave.fansub_) {
+            f.tags = JSON.parse(f.tags) || null;
+            f.urls = JSON.parse(f.urls) || null;
+            delete f.created_at;
+            // delete f.updated_at;
+          }
+          delete resFileSave.attachment_.user_;
+          delete resFileSave.attachment_.created_at;
+          // delete resFileSave.attachment_.updated_at;
+          delete resFileSave.anime_.created_at;
+          // delete resFileSave.anime_.updated_at;
+          delete resFileSave.project_type_.created_at;
+          // delete resFileSave.project_type_.updated_at;
+          delete resFileSave.user_.role;
+          delete resFileSave.user_.password;
+          delete resFileSave.user_.session_token;
+          delete resFileSave.user_.created_at;
+          // delete resFileSave.user_.updated_at;
           res.status(200).json({
             info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
-            results: resFileSave
+            result: resFileSave
           });
         } else {
           res.status(401).json({
@@ -305,6 +388,7 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    removeUploaded(req);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Berkas :: ${req.params.id} 😪`,
       result: {

@@ -1,6 +1,23 @@
+<!-- Notification -->
+<div class="container" *ngIf="currentUser && !currentUser.verified">
+  <div class="row pt-3">
+    <div class="col-12">
+      <div class="alert alert-warning alert-dismissible fade show">
+        <strong>Verifikasi! </strong>
+        Fitur lampiran DDL tidak dapat digunakan, silahkan
+        <a routerLink="/verify" class="text-decoration-none">
+          verifikasi akun
+        </a>
+        terlebih dahulu. Terima kasih. ^_^
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Content -->
 <div class="container">
-  
+
   <!-- Detail -->
   <div class="row px-3">
     <div class="col-12">
@@ -135,6 +152,38 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
+                <div class="row" *ngIf="currentUser && currentUser.verified">
+                  <div class="col-12 p-3">
+                    <mat-divider></mat-divider>
+                  </div>
+                </div>
+                <div class="row" *ngIf="currentUser && currentUser.verified">
+                  <mat-form-field appearance="outline" class="px-3 pt-3 col">
+                    <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
+                    <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event)" #ddl [disabled]="attachmentIsUploading || attachmentIsCompleted"
+                      [accept]="'video/x-matroska, video/mp4'"></ngx-mat-file-input>
+                    <mat-icon matSuffix>attach_file</mat-icon>
+                  </mat-form-field>
+                  <mat-error class="px-4 w-100">
+                    <small>
+                      <strong>{{ attachmentErrorText }}</strong>
+                    </small>
+                  </mat-error>
+                </div>
+                <div class="row" *ngIf="attachment">
+                  <div class="col">
+                    <div class="px-3" *ngIf="attachmentIsUploading || attachmentIsCompleted">
+                      {{ attachmentPercentage >= 100 ? 'Uploaded ... '  : 'Uploading ... ' }} {{ attachmentPercentage }}% <br />
+                      <mat-progress-bar mode="determinate" [value]="attachmentPercentage"></mat-progress-bar>
+                    </div>
+                  </div>
+                  <div class="col-3" *ngIf="!attachmentIsUploading && !attachmentIsCompleted">
+                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitAttachment()">
+                      <mat-icon class="mr-1">attachment</mat-icon>
+                      Unggah
+                    </button>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-12 p-3">
                     <mat-divider></mat-divider>
@@ -194,7 +243,7 @@
                     </a>
                   </div>
                   <div class="col-12 col-md-3 pb-3">
-                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty">
+                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty || attachmentIsUploading">
                       Simpan
                       <mat-icon class="ml-1">save</mat-icon>
                     </button>

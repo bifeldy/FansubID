@@ -12,6 +12,9 @@ import { ProjectService } from '../../../_shared/services/project.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { AuthService } from '../../../_shared/services/auth.service';
+
+import User from '../../../_shared/models/User';
 
 @Component({
   selector: 'app-berkas-create',
@@ -40,6 +43,12 @@ export class BerkasCreateComponent implements OnInit {
 
   animeCheckOrAddResponse = null;
 
+  attachment = null;
+  attachmentPercentage = 0;
+  attachmentIsUploading = false;
+  attachmentIsCompleted = false;
+  attachmentErrorText = '';
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -49,8 +58,13 @@ export class BerkasCreateComponent implements OnInit {
     private anime: AnimeService,
     private project: ProjectService,
     private fansub: FansubService,
-    private berkas: BerkasService
+    private berkas: BerkasService,
+    public as: AuthService
   ) {
+  }
+
+  get currentUser(): User {
+    return this.as.currentUserValue;
   }
 
   ngOnInit(): void {
@@ -106,6 +120,7 @@ export class BerkasCreateComponent implements OnInit {
       anime_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
       fansub_list: this.fb.array([this.createFansub()]),
       image: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      attachment_id: ['', Validators.compose([Validators.pattern(/^\d+$/)])],
       download_url: this.fb.array([this.createDownloadLink()])
     });
     this.fg.get('anime_id').valueChanges.pipe(
@@ -231,7 +246,7 @@ export class BerkasCreateComponent implements OnInit {
     reader.readAsDataURL(file);
     reader.onload = e => {
       this.gs.log('[ImgLoad]', e);
-      if (file.size < 256000) {
+      if (file.size < 256 * 1000) {
         const img = document.createElement('img');
         img.onload = () => {
           this.image_url = reader.result.toString();
@@ -250,7 +265,7 @@ export class BerkasCreateComponent implements OnInit {
   onSubmit(): void {
     this.bs.busy();
     this.submitted = true;
-    if (this.fg.invalid || !this.selectedFilterAnime) {
+    if (this.fg.invalid || !this.selectedFilterAnime || this.attachmentIsUploading) {
       if (!this.selectedFilterAnime) {
         this.fg.controls.anime_id.patchValue(null);
       }
@@ -273,6 +288,7 @@ export class BerkasCreateComponent implements OnInit {
         anime_id: this.fg.value.anime_id,
         fansub_id: fansubId,
         download_url: this.fg.value.download_url,
+        attachment_id: this.fg.value.attachment_id
       }))
     }).subscribe(
       res => {
@@ -284,6 +300,41 @@ export class BerkasCreateComponent implements OnInit {
         this.gs.log('[BERKAS_CREATE_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
+      }
+    );
+  }
+
+  uploadAttachment(event): void {
+    const file = event.target.files[0];
+    this.gs.log('[AttachmentLoad]', file);
+    if (file.size <= 3 * 1000 * 1000 * 1000) {
+      this.attachment = file;
+      this.attachmentErrorText = '';
+    } else {
+      this.attachment = null;
+      this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 3 GB!';
+    }
+  }
+
+  submitAttachment(): void {
+    this.attachmentIsUploading = true;
+    this.berkas.uploadLampiran({
+      lampiran: this.attachment
+    }).subscribe(
+      event => {
+        this.gs.log('[UPLOAD_EVENTS]', event);
+        if ((event as any).loaded && (event as any).total) {
+          const e = (event as any);
+          this.gs.log('[UPLOAD_PROGRESS]', e);
+          this.attachmentPercentage = Math.round(e.loaded / e.total * 100);
+        }
+        if ((event as any).body) {
+          const e = (event as any).body;
+          this.gs.log('[UPLOAD_COMPLETED]', e);
+          this.attachmentIsUploading = false;
+          this.attachmentIsCompleted = true;
+          this.fg.controls.attachment_id.patchValue(e.result.id);
+        }
       }
     );
   }

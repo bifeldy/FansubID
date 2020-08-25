@@ -31,7 +31,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/project`
-router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   if (
     'name' in req.body
   ) {
@@ -45,7 +45,7 @@ router.post('/', auth.isAuthorized , async (req: UserRequest, res: Response, nex
     const resProjectSave = await projectRepo.save(project);
     res.status(200).json({
       info: `😅 200 - Project Type API :: Tambah Baru 🤣`,
-      results: resProjectSave
+      result: resProjectSave
     });
   } else {
     res.status(400).json({
@@ -101,7 +101,7 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       const resProjectSave = await projectRepo.save(project);
       res.status(200).json({
         info: `😅 200 - Project Type API :: Ubah ${req.params.id} 🤣`,
-        results: resProjectSave
+        result: resProjectSave
       });
     } else {
       throw new Error('Data Tidak Lengkap!');

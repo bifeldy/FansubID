@@ -57,7 +57,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         const resultSaveAnime = await animeRepo.save(anime);
         res.status(200).json({
           info: `😅 200 - Anime API :: Tambah Baru 🤣`,
-          results: resultSaveAnime
+          result: resultSaveAnime
         });
       } else if (animes.length === 1) {
         const anime = await animeRepo.findOneOrFail({
@@ -80,7 +80,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         const resultSaveAnime = await animeRepo.save(anime);
         res.status(202).json({
           info: `😅 202 - Data Anime Diperbaharui 🤣`,
-          results: resultSaveAnime
+          result: resultSaveAnime
         });
       } else {
         res.status(202).json({
@@ -117,7 +117,7 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
   });
 });
 
-// GET `/api/anime/berkas`
+// GET `/api/anime/berkas?id=`
 router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const animeId = req.query.id.split(',').map(Number) || [];
@@ -185,7 +185,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
   }
 });
 
-// GET `/api/anime/fansubs`
+// GET `/api/anime/fansubs?id=`
 router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const animeId = req.query.id.split(',').map(Number) || [];

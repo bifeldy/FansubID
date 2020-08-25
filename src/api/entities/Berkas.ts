@@ -1,9 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
 
 import { User } from './User';
 import { Fansub } from './Fansub';
 import { ProjectType } from './ProjectType';
 import { Anime } from './Anime';
+import { Attachment } from './Attachment';
 
 @Entity({ name: 'berkas' })
 export class Berkas {
@@ -28,10 +29,6 @@ export class Berkas {
   // tslint:disable-next-line: variable-name
   image_url: string;
 
-  @Column({ type: 'text', nullable: true })
-  // tslint:disable-next-line: variable-name
-  ddl_file: string;
-
   // @Column({ type: 'int', nullable: true })
   // // tslint:disable-next-line: variable-name
   // mal_id: number;
@@ -51,6 +48,11 @@ export class Berkas {
   // @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   // // tslint:disable-next-line: variable-name
   // updated_at: number;
+
+  @OneToOne(type => Attachment)
+  @JoinColumn()
+  // tslint:disable-next-line: variable-name
+  attachment_: Attachment;
 
   @ManyToOne(type => ProjectType)
   // tslint:disable-next-line: variable-name

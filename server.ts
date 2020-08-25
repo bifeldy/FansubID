@@ -29,13 +29,15 @@ import { existsSync } from 'fs';
 import MorganChalk from './src/api/helpers/morganChalk';
 
 // Model
-import { Profile } from 'src/api/entities/Profile';
+import { Profile } from './src/api/entities/Profile';
 import { KartuTandaPenduduk } from './src/api/entities/KartuTandaPenduduk';
 import { User } from './src/api/entities/User';
-import { ProjectType } from 'src/api/entities/ProjectType';
-import { Fansub } from 'src/api/entities/Fansub';
-import { Anime } from 'src/api/entities/Anime';
-import { Berkas } from 'src/api/entities/Berkas';
+import { ProjectType } from './src/api/entities/ProjectType';
+import { Fansub } from './src/api/entities/Fansub';
+import { Anime } from './src/api/entities/Anime';
+import { Berkas } from './src/api/entities/Berkas';
+import { Attachment } from './src/api/entities/Attachment';
+import { TempAttachment } from './src/api/entities/TempAttachment';
 
 const dbName = process.env.DB_NAME || 'hikkiid_main-site';
 const dbUsername = process.env.DB_USERNAME || 'bifeldy';
@@ -57,7 +59,9 @@ const typeOrmConfig: any = {
     ProjectType,
     Fansub,
     Anime,
-    Berkas
+    Berkas,
+    Attachment,
+    TempAttachment
   ]
 };
 
@@ -87,10 +91,10 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', distFolder);
 
-  // middleware
+  // Middleware
   server.use(MorganChalk.morganChalk);
-  server.use(express.json());
-  server.use(express.urlencoded({ extended: false }));
+  server.use(express.json({ limit: '3gb' }));
+  server.use(express.urlencoded({ extended: false, limit: '3gb' }));
 
   server.use(cors({
     origin: '*',

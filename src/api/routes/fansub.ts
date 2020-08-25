@@ -36,11 +36,18 @@ const upload = multer({
   dest: environment.uploadFolder + '/img/fansub/',
   fileFilter: fileImageFilter,
   limits: {
-    fileSize: 256000
+    fileSize: 256 * 1000
   }
 });
 
 const router = Router();
+
+// tslint:disable-next-line: typedef
+async function removeUploaded(req: any) {
+  if (req.file) {
+    fs.unlink(environment.uploadFolder + '/img/fansub/' + req.file.filename, (err) => { if (err) {}});
+  }
+}
 
 // GET `/api/fansub`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -108,6 +115,7 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    removeUploaded(req);
     res.status(400).json({
       info: '🙄 400 - Gagal Menambah Fansub Baru! 😪',
       result: {
@@ -117,7 +125,7 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
   }
 });
 
-// GET `/api/fansub/berkas`
+// GET `/api/fansub/berkas?id=`
 router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id.split(',').map(Number) || [];
@@ -183,7 +191,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
   }
 });
 
-// GET `/api/fansub/anime`
+// GET `/api/fansub/anime?id=`
 router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id.split(',').map(Number) || [];
@@ -299,12 +307,13 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
       const resFansubSave = await fansubRepo.save(fansub);
       res.status(200).json({
         info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
-        results: resFansubSave
+        result: resFansubSave
       });
     } else {
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    removeUploaded(req);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Fansub :: ${req.params.id} 😪`,
       result: {

@@ -20,16 +20,11 @@
   <!-- Notification -->
   <div class="container">
     <div class="row pt-3">
-      <div class="col-12">
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-          <strong>// TODO: Pemberitahuan! </strong>
-          Website masih dalam tahap pengembangan sehingga belum semua fitur tersedia.
-          Jika Ingin Request Fitur Dapat Menghubungi
-          '<a href="https://discordapp.com/users/306076547616473089" target="_blank" class="text-decoration-none">Bifeldy#4945</a>'.
-          Terima kasih. ^_^
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+      <div class="col-12" *ngFor="let n of notifications; let i = index">
+        <div class="alert alert-info alert-dismissible fade show">
+          <strong class="mr-1">{{ n.title }}</strong>
+          <span [innerHTML]="n.content"></span>
+          <button type="button" class="close" data-dismiss="alert" (click)="removeNotif(i)">&times;</button>
         </div>
       </div>
     </div>

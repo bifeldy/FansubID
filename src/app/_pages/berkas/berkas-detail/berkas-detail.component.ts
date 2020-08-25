@@ -83,7 +83,7 @@ export class BerkasDetailComponent implements OnInit {
   }
 
   ddl(): void {
-    this.gs.log('[DDL]', this.berkasData.ddl_file);
+    this.gs.log('[DDL]', this.berkasData.attachment_);
   }
 
 }

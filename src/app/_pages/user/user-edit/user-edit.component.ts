@@ -97,7 +97,7 @@ export class UserEditComponent implements OnInit {
     reader.readAsDataURL(file);
     reader.onload = e => {
       this.gs.log('[ImgLoad]', e);
-      if (file.size < 256000) {
+      if (file.size < 256 * 1000) {
         const img = document.createElement('img');
         img.onload = () => {
           this.image_photo = reader.result.toString();
@@ -122,7 +122,7 @@ export class UserEditComponent implements OnInit {
     reader.readAsDataURL(file);
     reader.onload = e => {
       this.gs.log('[ImgLoad]', e);
-      if (file.size < 256000) {
+      if (file.size < 256 * 1000) {
         const img = document.createElement('img');
         img.onload = () => {
           this.image_cover = reader.result.toString();

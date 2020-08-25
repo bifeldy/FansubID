@@ -40,11 +40,27 @@ const upload = multer({
   dest: environment.uploadFolder + '/img/profile/',
   fileFilter: fileImageFilter,
   limits: {
-    fileSize: 256000
+    fileSize: 256 * 1000
   }
 });
 
 const router = Router();
+
+// tslint:disable-next-line: typedef
+async function removeUploaded(req: any) {
+  if (req.files) {
+    if (Array.isArray((req as any).files.image_photo) && (req as any).files.image_photo.length === 1) {
+      if ((req as any).files.image_photo[0]) {
+        fs.unlink(environment.uploadFolder + '/img/profile/' + (req as any).files.image_photo[0], (err) => { if (err) {}});
+      }
+    }
+    if (Array.isArray((req as any).files.image_cover) && (req as any).files.image_cover.length === 1) {
+      if ((req as any).files.image_cover[0]) {
+        fs.unlink(environment.uploadFolder + '/img/profile/' + (req as any).files.image_cover[0], (err) => { if (err) {}});
+      }
+    }
+  }
+}
 
 // GET `/api/user/:username`
 router.get('/:username', async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -159,6 +175,7 @@ router.put('/:username', auth.isAuthorized, upload.fields([
               }
             });
           } catch (e) {
+            removeUploaded(req);
             return next(createError(404));
           }
         } else {
@@ -170,12 +187,14 @@ router.put('/:username', auth.isAuthorized, upload.fields([
           });
         }
       } catch (err) {
+        removeUploaded(req);
         return next(createError(404));
       }
     } else {
       throw new Error('Data Tidak Lengkap');
     }
   } catch (error) {
+    removeUploaded(req);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Profile :: ${req.params.id} 😪`,
       result: {
