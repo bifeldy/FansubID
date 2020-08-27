@@ -13,7 +13,7 @@ export class AnimeService {
   }
 
   searchAnime(q: string, type = ''): any {
-    return this.api.getData(`/anime/?q=${q}&type=${type}`);
+    return this.api.getData(`/anime?q=${q}&type=${type}`);
   }
 
   getAnime(animeId: number): any {

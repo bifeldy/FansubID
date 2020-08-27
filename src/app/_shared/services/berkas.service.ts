@@ -20,20 +20,20 @@ export class BerkasService {
     return this.api.getData(`/berkas/${berkasId}`);
   }
 
-  createBerkas(formData): any {
-    return this.api.postData(`/berkas`, formData, true);
+  createBerkas(encryptedBerkasData): any {
+    return this.api.postData(`/berkas`, encryptedBerkasData);
   }
 
   updateBerkas(berkasId, encryptedBerkasData): any {
-    return this.api.putData(`/berkas/${berkasId}`, encryptedBerkasData, true);
+    return this.api.putData(`/berkas/${berkasId}`, encryptedBerkasData);
   }
 
   uploadLampiran(lampiran): any {
     return this.api.uploadFile(`/attachment`, lampiran);
   }
 
-  downloadLampiran(filename): any {
-    return this.api.downloadFile(`/attachment?name=${filename}`);
+  downloadLampiran(lampiranId): any {
+    return this.api.downloadFile(`/attachment?id=${lampiranId}`);
   }
 
 }

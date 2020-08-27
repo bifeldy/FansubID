@@ -1,6 +1,4 @@
 import createError from 'http-errors';
-import multer from 'multer';
-import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal } from 'typeorm';
@@ -10,44 +8,12 @@ import { UserRequest } from '../models/UserRequest';
 import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
 
-import { environment } from '../../environments/environment';
 import { universalAtob } from '../helpers/base64';
 
 // Middleware
 import auth from '../middlewares/auth';
 
-// tslint:disable-next-line: typedef
-function fileImageFilter(req, file, cb) {
-  const typeArray = file.mimetype.split('/');
-  const fileType = typeArray[0];
-  const fileExt = typeArray[1];
-  if (fileType === 'image') {
-    if (fileExt === 'gif' || fileExt === 'jpg' || fileExt === 'jpeg' || fileExt === 'png') {
-      cb(null, true);
-    } else {
-      cb(null, false);
-    }
-  } else {
-    cb(null, false);
-  }
-}
-
-const upload = multer({
-  dest: environment.uploadFolder + '/img/fansub/',
-  fileFilter: fileImageFilter,
-  limits: {
-    fileSize: 256 * 1000
-  }
-});
-
 const router = Router();
-
-// tslint:disable-next-line: typedef
-async function removeUploaded(req: any) {
-  if (req.file) {
-    fs.unlink(environment.uploadFolder + '/img/fansub/' + req.file.filename, (err) => { if (err) {}});
-  }
-}
 
 // GET `/api/fansub`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -61,8 +27,8 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   for (const f of fansubs) {
     delete f.description;
     // delete f.updated_at;
-    f.urls = JSON.parse(f.urls) || null;
-    f.tags = JSON.parse(f.tags) || null;
+    f.urls = JSON.parse(f.urls);
+    f.tags = JSON.parse(f.tags);
   }
   res.status(200).json({
     info: `😅 200 - Fansub API :: List All 🤣`,
@@ -72,7 +38,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/fansub`
-router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     req.body = JSON.parse(universalAtob(req.body.data));
     if (
@@ -91,8 +57,8 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
         }
       }
       fansub.urls = JSON.stringify(filteredUrls);
-      if (req.file) {
-        fansub.image_url = '/img/fansub/' + req.file.filename;
+      if (req.body.image) {
+        fansub.image_url = req.body.image;
       } else {
         fansub.image_url = '/favicon.ico';
       }
@@ -115,7 +81,6 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
-    removeUploaded(req);
     res.status(400).json({
       info: '🙄 400 - Gagal Menambah Fansub Baru! 😪',
       result: {
@@ -128,7 +93,7 @@ router.post('/', auth.isAuthorized, upload.single('image'), async (req: UserRequ
 // GET `/api/fansub/berkas?id=`
 router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const fansubId = req.query.id.split(',').map(Number) || [];
+    const fansubId = req.query.id.split(',').map(Number);
     if (Array.isArray(fansubId) && fansubId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo
@@ -154,23 +119,31 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         delete f.download_url;
         delete f.description;
         // delete f.updated_at;
-        delete f.project_type_.created_at;
-        // delete f.project_type_.updated_at;
-        delete f.anime_.created_at;
-        // delete f.anime_.updated_at;
-        delete f.user_.role;
-        delete f.user_.password;
-        delete f.user_.session_token;
-        delete f.user_.created_at;
-        // delete f.user_.updated_at;
-        for (const fansub of f.fansub_) {
-          delete fansub.description;
-          delete fansub.urls;
-          delete fansub.tags;
-          delete fansub.created_at;
-          // delete fansub.updated_at;
-          if (fansubId.includes(fansub.id)) {
-            results[fansub.id].push(f);
+        if ('project_type_' in f && f.project_type_) {
+          delete f.project_type_.created_at;
+          // delete f.project_type_.updated_at;
+        }
+        if ('anime_' in f && f.anime_) {
+          delete f.anime_.created_at;
+          // delete f.anime_.updated_at;
+        }
+        if ('user_' in f && f.user_) {
+          delete f.user_.role;
+          delete f.user_.password;
+          delete f.user_.session_token;
+          delete f.user_.created_at;
+          // delete f.user_.updated_at;
+        }
+        if ('fansub_' in f && f.fansub_) {
+          for (const fansub of f.fansub_) {
+            delete fansub.description;
+            delete fansub.urls;
+            delete fansub.tags;
+            delete fansub.created_at;
+            // delete fansub.updated_at;
+            if (fansubId.includes(fansub.id)) {
+              results[fansub.id].push(f);
+            }
           }
         }
       }
@@ -194,7 +167,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
 // GET `/api/fansub/anime?id=`
 router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const fansubId = req.query.id.split(',').map(Number) || [];
+    const fansubId = req.query.id.split(',').map(Number);
     if (Array.isArray(fansubId) && fansubId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo
@@ -208,11 +181,15 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
         results[i] = [];
       }
       for (const f of files) {
-        delete f.anime_.created_at;
-        // delete f.anime_.updated_at;
-        for (const fansub of f.fansub_) {
-          if (fansubId.includes(fansub.id)) {
-            results[fansub.id].push(f.anime_);
+        if ('anime_' in f && f.anime_) {
+          delete f.anime_.created_at;
+          // delete f.anime_.updated_at;
+        }
+        if ('fansub_' in f && f.fansub_) {
+          for (const fansub of f.fansub_) {
+            if (fansubId.includes(fansub.id)) {
+              results[fansub.id].push(f.anime_);
+            }
           }
         }
       }
@@ -245,8 +222,8 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
         { id: Equal(req.params.id) }
       ]
     });
-    fansub.urls = JSON.parse(fansub.urls) || null;
-    fansub.tags = JSON.parse(fansub.tags) || null;
+    fansub.urls = JSON.parse(fansub.urls);
+    fansub.tags = JSON.parse(fansub.tags);
     res.status(200).json({
       info: `😅 200 - Fansub API :: Detail ${req.params.id} 🤣`,
       result: fansub
@@ -257,12 +234,12 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 });
 
 // PUT `/api/fansub/:id`
-router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     req.body = JSON.parse(universalAtob(req.body.data));
     if (
-      'name' in req.body || 'born' in req.body || 'description' in req.body || 'slug' in req.body || 'active' in req.body ||
-      ('file' in req && req.file.mimetype.includes('image')) ||
+      'name' in req.body || 'born' in req.body || 'description' in req.body ||
+      'slug' in req.body || 'active' in req.body || 'image' in req.body ||
       ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) ||
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
@@ -287,9 +264,8 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
       if (req.body.active) {
         fansub.active = req.body.active;
       }
-      if (req.file) {
-        fs.unlink(environment.uploadFolder + fansub.image_url, (err) => { if (err) {}});
-        fansub.image_url = '/img/fansub/' + req.file.filename;
+      if (req.body.image) {
+        fansub.image_url = req.body.image;
       }
       if (req.body.tags) {
         const filteredTagsUnique = [...new Set(req.body.tags)];
@@ -313,7 +289,6 @@ router.put('/:id', auth.isAuthorized, upload.single('image'), async (req: UserRe
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
-    removeUploaded(req);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Fansub :: ${req.params.id} 😪`,
       result: {

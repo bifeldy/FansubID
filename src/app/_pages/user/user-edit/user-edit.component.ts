@@ -4,11 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
+import * as CryptoJS from 'crypto-js';
+
 import { BusyService } from '../../../_shared/services/busy.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
+import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
 import { environment } from '../../../../environments/environment';
 
@@ -26,13 +29,21 @@ export class UserEditComponent implements OnInit {
   username = null;
   userData = null;
 
+  imagePhoto = null;
+  imagePhotoErrorText = null;
   // tslint:disable-next-line: variable-name
   image_photo = null;
-  imagePhotoErrorText = null;
+  // tslint:disable-next-line: variable-name
+  image_photo_original = null;
 
+  imageCover = null;
+  imageCoverErrorText = null;
   // tslint:disable-next-line: variable-name
   image_cover = null;
-  imageCoverErrorText = null;
+  // tslint:disable-next-line: variable-name
+  image_cover_original = null;
+
+  passwordHide = true;
 
   constructor(
     private router: Router,
@@ -43,8 +54,13 @@ export class UserEditComponent implements OnInit {
     private us: UserService,
     private pi: PageInfoService,
     private fb: FormBuilder,
+    private imgbb: ImgbbService,
     public as: AuthService
   ) {
+  }
+
+  togglePassword(): void {
+    this.passwordHide = !this.passwordHide;
   }
 
   ngOnInit(): void {
@@ -61,7 +77,9 @@ export class UserEditComponent implements OnInit {
           this.gs.log('[USER_DETAIL_SUCCESS]', res);
           this.bs.idle();
           if (this.as.currentUserValue.id !== res.result.id) {
-            this.toast.warning('Profile Ini Milik Orang Lain', 'Whoops!');
+            if (this.gs.isBrowser) {
+              this.toast.warning('Profile Ini Milik Orang Lain', 'Whoops!');
+            }
             this.router.navigateByUrl(`/user/${this.username}`);
           } else {
             this.initForm(res.result);
@@ -83,68 +101,127 @@ export class UserEditComponent implements OnInit {
   initForm(data): void {
     this.fg = this.fb.group({
       description: [data.profile_.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      image_photo: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      image_cover: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      new_password: [
+        null,
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(5),
+          Validators.pattern(this.gs.allKeyboardKeysRegex)
+        ])
+      ],
+      image_photo: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      image_cover: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
     this.image_photo = data.image_url;
+    this.image_photo_original = this.image_photo;
     this.image_cover = data.profile_.cover_url;
+    this.image_cover_original = this.image_cover;
     this.userData = data;
   }
 
   uploadPhotoImage(event): void {
+    this.imagePhoto = null;
     this.fg.controls.image_photo.patchValue(null);
     const file = event.target.files[0];
-    this.image_photo = file.name;
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = e => {
-      this.gs.log('[ImgLoad]', e);
-      if (file.size < 256 * 1000) {
-        const img = document.createElement('img');
-        img.onload = () => {
-          this.image_photo = reader.result.toString();
-          this.fg.controls.image_photo.patchValue(file);
-          this.fg.controls.image_photo.markAsDirty();
-        };
-        img.src = reader.result.toString();
-        this.imagePhotoErrorText = null;
-      } else {
-        this.image_photo = '/assets/img/form-image-error.png';
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = e => {
+        this.gs.log('[ImgCoverLoad]', e);
+        if (file.size < 256 * 1000) {
+          const img = document.createElement('img');
+          img.onload = () => {
+            this.imagePhoto = file;
+            this.image_photo = reader.result.toString();
+          };
+          img.src = reader.result.toString();
+          this.imagePhotoErrorText = null;
+        } else {
+          this.imagePhoto = null;
+          this.image_photo = '/assets/img/form-image-error.png';
+          this.imagePhotoErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        }
+      };
+    } catch (error) {
+      this.imagePhoto = null;
+      this.imagePhotoErrorText = null;
+      this.image_photo = this.image_photo_original;
+      this.fg.controls.image_photo.markAsPristine();
+    }
+  }
+
+  submitPhotoImage(): void {
+    this.submitted = true;
+    this.imgbb.uploadImage(this.imagePhoto).subscribe(
+      res => {
+        this.gs.log('[IMAGE_PHOTO_SUCCESS]', res);
+        this.fg.controls.image_photo.patchValue(res.data.image.url);
+        this.fg.controls.image_photo.markAsDirty();
+        this.submitted = false;
+      },
+      err => {
+        this.gs.log('[IMAGE_PHOTO_ERROR]', err);
         this.fg.controls.image_photo.patchValue(null);
-        this.imagePhotoErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        this.submitted = false;
       }
-    };
+    );
   }
 
   uploadCoverImage(event): void {
+    this.imageCover = null;
     this.fg.controls.image_cover.patchValue(null);
     const file = event.target.files[0];
-    this.image_cover = file.name;
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = e => {
-      this.gs.log('[ImgLoad]', e);
-      if (file.size < 256 * 1000) {
-        const img = document.createElement('img');
-        img.onload = () => {
-          this.image_cover = reader.result.toString();
-          this.fg.controls.image_cover.patchValue(file);
-          this.fg.controls.image_cover.markAsDirty();
-        };
-        img.src = reader.result.toString();
-        this.imageCoverErrorText = null;
-      } else {
-        this.image_cover = '/assets/img/form-image-error.png';
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = e => {
+        this.gs.log('[ImgCoverLoad]', e);
+        if (file.size < 256 * 1000) {
+          const img = document.createElement('img');
+          img.onload = () => {
+            this.imageCover = file;
+            this.image_cover = reader.result.toString();
+          };
+          img.src = reader.result.toString();
+          this.imageCoverErrorText = null;
+        } else {
+          this.imageCover = null;
+          this.image_cover = '/assets/img/form-image-error.png';
+          this.imageCoverErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        }
+      };
+    } catch (error) {
+      this.imageCover = null;
+      this.imageCoverErrorText = null;
+      this.image_cover = this.image_cover_original;
+      this.fg.controls.image_cover.markAsPristine();
+    }
+  }
+
+  submitCoverImage(): void {
+    this.submitted = true;
+    this.imgbb.uploadImage(this.imageCover).subscribe(
+      res => {
+        this.gs.log('[IMAGE_COVER_SUCCESS]', res);
+        this.fg.controls.image_cover.patchValue(res.data.image.url);
+        this.fg.controls.image_cover.markAsDirty();
+        this.submitted = false;
+      },
+      err => {
+        this.gs.log('[IMAGE_COVER_ERROR]', err);
         this.fg.controls.image_cover.patchValue(null);
-        this.imageCoverErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        this.submitted = false;
       }
-    };
+    );
   }
 
   onSubmit(): void {
     this.bs.busy();
     const body = this.gs.getDirtyValues(this.fg);
-    this.gs.log('[FANSUB_EDIT_DIRTY]', body);
+    this.gs.log('[USER_EDIT_DIRTY]', body);
+    if ('new_password' in body) {
+      body.new_password = CryptoJS.SHA512(this.fg.value.new_password).toString();
+    }
     this.submitted = true;
     if (this.fg.invalid) {
       this.submitted = false;
@@ -152,14 +229,13 @@ export class UserEditComponent implements OnInit {
       return;
     }
     this.us.updateUser(this.username, {
-      image_photo: this.fg.value.image_photo,
-      image_cover: this.fg.value.image_cover,
       data: window.btoa(JSON.stringify({
-        ...body,
+        ...body
       }))
     }).subscribe(
       res => {
         this.gs.log('[USER_EDIT_SUCCESS]', res);
+        this.submitted = false;
         this.bs.idle();
         this.as.removeUser();
         localStorage.setItem(environment.tokenName, res.result.token);
@@ -180,8 +256,8 @@ export class UserEditComponent implements OnInit {
       },
       err => {
         this.gs.log('[USER_EDIT_ERROR]', err);
-        this.bs.idle();
         this.submitted = false;
+        this.bs.idle();
       }
     );
   }

@@ -21,7 +21,7 @@ export class UserService {
   }
 
   updateUser(username, encryptedUserData): any {
-    return this.api.putData(`/user/${username}`, encryptedUserData, true);
+    return this.api.putData(`/user/${username}`, encryptedUserData);
   }
 
   getUserBerkas(username, q = null, page = 1, row = 10): any {

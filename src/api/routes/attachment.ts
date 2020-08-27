@@ -11,6 +11,7 @@ import { UserRequest } from '../models/UserRequest';
 import { environment } from '../../environments/environment';
 
 import { User } from '../entities/User';
+import { Attachment } from '../entities/Attachment';
 import { TempAttachment } from '../entities/TempAttachment';
 
 // Middleware
@@ -33,23 +34,31 @@ function fileLampiranFilter(req, file, cb) {
 }
 
 const upload = multer({
-  dest: environment.uploadFolder + '/lampiran/',
+  dest: environment.uploadFolder,
   fileFilter: fileLampiranFilter,
   limits: {
-    fileSize: 3 * 1000 * 1000 * 1000
+    fileSize: 992 * 1000 * 1000
   }
 });
 
 const router = Router();
 
-// GET `/api/attachment?name=`
+// GET `/api/attachment?id=`
 router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
-  const lampiran = req.query.name || '';
-  if (lampiran) {
+  const lampiranId = req.query.id || '';
+  if (lampiranId) {
     if (req.user.verified) {
-      find.file(/$/, `${environment.uploadFolder}/lampiran`, (files) => {
-        const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(lampiran.toString().toLowerCase()));
+      const attachmentRepo = getRepository(Attachment);
+      const attachment =  await attachmentRepo.findOneOrFail({
+        where: [
+          { id: Equal(lampiranId) }
+        ]
+      });
+      find.file(/$/, `${environment.uploadFolder}`, async (files) => {
+        const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
         if (fIdx >= 0) {
+          attachment.download_count++;
+          await attachmentRepo.save(attachment);
           res.download(files[fIdx], (err) => {});
         } else {
           return next(createError(404));
@@ -91,11 +100,13 @@ router.post('/', auth.isAuthorized, upload.single('lampiran'), async (req: UserR
       });
       tempAttachment.user_ = user;
       const resAttachmentSave = await tempAttachmentRepo.save(tempAttachment);
-      delete resAttachmentSave.user_.role;
-      delete resAttachmentSave.user_.password;
-      delete resAttachmentSave.user_.session_token;
-      delete resAttachmentSave.user_.created_at;
-      // delete resAttachmentSave.user_.updated_at;
+      if ('user_' in resAttachmentSave && resAttachmentSave.user_) {
+        delete resAttachmentSave.user_.role;
+        delete resAttachmentSave.user_.password;
+        delete resAttachmentSave.user_.session_token;
+        delete resAttachmentSave.user_.created_at;
+        // delete resAttachmentSave.user_.updated_at;
+      }
       setTimeout(async () => {
         try {
           const attachmentToBeDeleted = await tempAttachmentRepo.findOneOrFail({
@@ -103,7 +114,7 @@ router.post('/', auth.isAuthorized, upload.single('lampiran'), async (req: UserR
               { id: Equal(resAttachmentSave.id), name: Equal(resAttachmentSave.name) }
             ]
           });
-          fs.unlink(environment.uploadFolder + '/lampiran/' + attachmentToBeDeleted.name, (err) => { if (err) {}});
+          fs.unlink(`${environment.uploadFolder}/${attachmentToBeDeleted.name}`, (err) => { if (err) {}});
           await tempAttachmentRepo.remove(attachmentToBeDeleted);
         } catch (error) {}
       }, 3 * 60 * 1000);
@@ -112,7 +123,7 @@ router.post('/', auth.isAuthorized, upload.single('lampiran'), async (req: UserR
         result: resAttachmentSave
       });
     } else {
-      fs.unlink(environment.uploadFolder + '/lampiran/' + req.file.filename, (err) => { if (err) {}});
+      fs.unlink(`${environment.uploadFolder}/${req.file.filename}`, (err) => { if (err) {}});
       res.status(400).json({
         info: '🙄 400 - Gagal Mengunggah Lampiran! 😪',
         result: {

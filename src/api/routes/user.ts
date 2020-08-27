@@ -1,13 +1,10 @@
 import createError from 'http-errors';
-import multer from 'multer';
-import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { environment } from '../../environments/environment';
 import { universalAtob } from '../helpers/base64';
 
 import { User } from '../entities/User';
@@ -20,47 +17,9 @@ import auth from '../middlewares/auth';
 // Helper
 import jwt from '../helpers/jwt';
 
-// tslint:disable-next-line: typedef
-function fileImageFilter(req, file, cb) {
-  const typeArray = file.mimetype.split('/');
-  const fileType = typeArray[0];
-  const fileExt = typeArray[1];
-  if (fileType === 'image' && file) {
-    if (fileExt === 'gif' || fileExt === 'jpg' || fileExt === 'jpeg' || fileExt === 'png') {
-      cb(null, true);
-    } else {
-      cb(null, false);
-    }
-  } else {
-    cb(null, false);
-  }
-}
-
-const upload = multer({
-  dest: environment.uploadFolder + '/img/profile/',
-  fileFilter: fileImageFilter,
-  limits: {
-    fileSize: 256 * 1000
-  }
-});
+import * as CryptoJS from 'crypto-js';
 
 const router = Router();
-
-// tslint:disable-next-line: typedef
-async function removeUploaded(req: any) {
-  if (req.files) {
-    if (Array.isArray((req as any).files.image_photo) && (req as any).files.image_photo.length === 1) {
-      if ((req as any).files.image_photo[0]) {
-        fs.unlink(environment.uploadFolder + '/img/profile/' + (req as any).files.image_photo[0], (err) => { if (err) {}});
-      }
-    }
-    if (Array.isArray((req as any).files.image_cover) && (req as any).files.image_cover.length === 1) {
-      if ((req as any).files.image_cover[0]) {
-        fs.unlink(environment.uploadFolder + '/img/profile/' + (req as any).files.image_cover[0], (err) => { if (err) {}});
-      }
-    }
-  }
-}
 
 // GET `/api/user/:username`
 router.get('/:username', async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -74,23 +33,27 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
     });
     delete selectedUser.password;
     delete selectedUser.session_token;
-    delete selectedUser.kartu_tanda_penduduk_.id;
-    delete selectedUser.kartu_tanda_penduduk_.agama;
-    delete selectedUser.kartu_tanda_penduduk_.alamat;
-    delete selectedUser.kartu_tanda_penduduk_.golongan_darah;
-    delete selectedUser.kartu_tanda_penduduk_.kecamatan;
-    delete selectedUser.kartu_tanda_penduduk_.kelurahan_desa;
-    delete selectedUser.kartu_tanda_penduduk_.kewarganegaraan;
-    delete selectedUser.kartu_tanda_penduduk_.nik;
-    delete selectedUser.kartu_tanda_penduduk_.pekerjaan;
-    delete selectedUser.kartu_tanda_penduduk_.rt;
-    delete selectedUser.kartu_tanda_penduduk_.rw;
-    delete selectedUser.kartu_tanda_penduduk_.status_perkawinan;
-    delete selectedUser.kartu_tanda_penduduk_.created_at;
-    // delete selectedUser.kartu_tanda_penduduk_.updated_at;
-    delete selectedUser.profile_.id;
-    delete selectedUser.profile_.created_at;
-    // delete selectedUser.profile_.updated_at;
+    if ('kartu_tanda_penduduk_' in selectedUser && selectedUser.kartu_tanda_penduduk_) {
+      delete selectedUser.kartu_tanda_penduduk_.id;
+      delete selectedUser.kartu_tanda_penduduk_.agama;
+      delete selectedUser.kartu_tanda_penduduk_.alamat;
+      delete selectedUser.kartu_tanda_penduduk_.golongan_darah;
+      delete selectedUser.kartu_tanda_penduduk_.kecamatan;
+      delete selectedUser.kartu_tanda_penduduk_.kelurahan_desa;
+      delete selectedUser.kartu_tanda_penduduk_.kewarganegaraan;
+      delete selectedUser.kartu_tanda_penduduk_.nik;
+      delete selectedUser.kartu_tanda_penduduk_.pekerjaan;
+      delete selectedUser.kartu_tanda_penduduk_.rt;
+      delete selectedUser.kartu_tanda_penduduk_.rw;
+      delete selectedUser.kartu_tanda_penduduk_.status_perkawinan;
+      delete selectedUser.kartu_tanda_penduduk_.created_at;
+      // delete selectedUser.kartu_tanda_penduduk_.updated_at;
+    }
+    if ('profile_' in selectedUser && selectedUser.profile_) {
+      delete selectedUser.profile_.id;
+      delete selectedUser.profile_.created_at;
+      // delete selectedUser.profile_.updated_at;
+    }
     res.status(200).json({
       info: `😅 200 - Profile API :: Detail ${req.params.username} 🤣`,
       result: selectedUser
@@ -101,29 +64,10 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
 });
 
 // PUT `/api/user/:username`
-router.put('/:username', auth.isAuthorized, upload.fields([
-  { name: 'image_photo', maxCount: 1 }, { name: 'image_cover', maxCount: 1 }
-]), async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     req.body = JSON.parse(universalAtob(req.body.data));
-    if (
-      'description' in req.body ||
-      (
-        'files' in req && (
-          (
-            'image_photo' in req.files &&
-            Array.isArray((req as any).files.image_photo) &&
-            (req as any).files.image_photo.length > 0 &&
-            (req as any).files.image_photo[0].mimetype.includes('image')
-          ) || (
-            'image_cover' in req.files &&
-            Array.isArray((req as any).files.image_cover) &&
-            (req as any).files.image_cover.length > 0 &&
-            (req as any).files.image_cover[0].mimetype.includes('image')
-          )
-        )
-      )
-    ) {
+    if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body) {
       try {
         const userRepo = getRepository(User);
         const selectedUser = await userRepo.findOneOrFail({
@@ -133,13 +77,11 @@ router.put('/:username', auth.isAuthorized, upload.fields([
           relations: ['kartu_tanda_penduduk_', 'profile_']
         });
         if (req.user.id === selectedUser.id) {
-          if (req.files) {
-            if (Array.isArray((req as any).files.image_photo) && (req as any).files.image_photo.length === 1) {
-              if ((req as any).files.image_photo[0]) {
-                fs.unlink(environment.uploadFolder + selectedUser.image_url, (err) => { if (err) {}});
-                selectedUser.image_url = '/img/profile/' + (req as any).files.image_photo[0].filename;
-              }
-            }
+          if (req.body.image_photo) {
+            selectedUser.image_url = req.body.image_photo;
+          }
+          if (req.body.new_password) {
+            selectedUser.password = CryptoJS.SHA512(req.body.new_password).toString();
           }
           try {
             const profileRepo = getRepository(Profile);
@@ -148,13 +90,8 @@ router.put('/:username', auth.isAuthorized, upload.fields([
                 { id: selectedUser.profile_.id }
               ]
             });
-            if (req.files) {
-              if (Array.isArray((req as any).files.image_cover) && (req as any).files.image_cover.length === 1) {
-                if ((req as any).files.image_cover[0]) {
-                  fs.unlink(environment.uploadFolder + selectedProfile.cover_url, (err) => { if (err) {}});
-                  selectedProfile.cover_url = '/img/profile/' + (req as any).files.image_cover[0].filename;
-                }
-              }
+            if (req.body.image_cover) {
+              selectedProfile.cover_url = req.body.image_cover;
             }
             if (req.body.description) {
               selectedProfile.description = req.body.description;
@@ -175,7 +112,6 @@ router.put('/:username', auth.isAuthorized, upload.fields([
               }
             });
           } catch (e) {
-            removeUploaded(req);
             return next(createError(404));
           }
         } else {
@@ -187,14 +123,12 @@ router.put('/:username', auth.isAuthorized, upload.fields([
           });
         }
       } catch (err) {
-        removeUploaded(req);
         return next(createError(404));
       }
     } else {
       throw new Error('Data Tidak Lengkap');
     }
   } catch (error) {
-    removeUploaded(req);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Profile :: ${req.params.id} 😪`,
       result: {
@@ -236,22 +170,30 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
       delete f.download_url;
       delete f.description;
       // delete f.updated_at;
-      delete f.project_type_.created_at;
-      // delete f.project_type_.updated_at;
-      for (const fansub of f.fansub_) {
-        delete fansub.description;
-        delete fansub.urls;
-        delete fansub.tags;
-        delete fansub.created_at;
-        // delete fansub.updated_at;
+      if ('project_type_' in f && f.project_type_) {
+        delete f.project_type_.created_at;
+        // delete f.project_type_.updated_at;
       }
-      delete f.anime_.created_at;
-      // delete f.anime_.updated_at;
-      delete f.user_.role;
-      delete f.user_.password;
-      delete f.user_.session_token;
-      delete f.user_.created_at;
-      // delete f.user_.updated_at;
+      if ('fansub_' in f && f.fansub_) {
+        for (const fansub of f.fansub_) {
+          delete fansub.description;
+          delete fansub.urls;
+          delete fansub.tags;
+          delete fansub.created_at;
+          // delete fansub.updated_at;
+        }
+      }
+      if ('anime_' in f && f.anime_) {
+        delete f.anime_.created_at;
+        // delete f.anime_.updated_at;
+      }
+      if ('user_' in f && f.user_) {
+        delete f.user_.role;
+        delete f.user_.password;
+        delete f.user_.session_token;
+        delete f.user_.created_at;
+        // delete f.user_.updated_at;
+      }
     }
     res.status(200).json({
       info: `😅 200 - Profile API :: Berkas ${req.params.username} 🤣`,

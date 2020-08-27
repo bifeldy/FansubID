@@ -49,11 +49,6 @@ export class Berkas {
   // // tslint:disable-next-line: variable-name
   // updated_at: number;
 
-  @OneToOne(type => Attachment)
-  @JoinColumn()
-  // tslint:disable-next-line: variable-name
-  attachment_: Attachment;
-
   @ManyToOne(type => ProjectType)
   // tslint:disable-next-line: variable-name
   project_type_: ProjectType;
@@ -70,4 +65,9 @@ export class Berkas {
   @ManyToOne(type => User)
   // tslint:disable-next-line: variable-name
   user_: User;
+
+  @OneToOne(type => Attachment)
+  @JoinColumn()
+  // tslint:disable-next-line: variable-name
+  attachment_: Attachment;
 }

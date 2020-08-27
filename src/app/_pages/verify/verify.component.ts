@@ -21,9 +21,9 @@ export class VerifyComponent implements OnInit {
 
   submitted = false;
 
-  verifyImg = '/assets/img/loginregister.png';
-  bgVerifyImg = '/assets/img/bg-loginregister.svg';
-  verifyInfo = 'Verifikasi akunmu dan dapatkan fitur lainnya~';
+  verifyImg = '/assets/img/verify.png';
+  bgVerifyImg = '/assets/img/bg-verify.svg';
+  verifyInfo = 'Verifikasi akunmu dan dapatkan fitur menarik lainnya~';
 
   kpuRiUserData = null;
 

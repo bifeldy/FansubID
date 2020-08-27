@@ -10,6 +10,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
 @Component({
   selector: 'app-fansub-edit',
@@ -26,10 +27,13 @@ export class FansubEditComponent implements OnInit {
 
   submitted = false;
 
+  image = null;
   imageErrorText = null;
-  selectedImageFileName = null;
   // tslint:disable-next-line: variable-name
   image_url = '/assets/img/form-no-image.png';
+  // tslint:disable-next-line: variable-name
+  image_url_original = null;
+
   urls = [];
 
   currentDate = new Date();
@@ -41,6 +45,7 @@ export class FansubEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private pi: PageInfoService,
+    private imgbb: ImgbbService,
     private fansub: FansubService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
@@ -78,6 +83,7 @@ export class FansubEditComponent implements OnInit {
 
   initForm(data): void {
     this.image_url = data.image_url;
+    this.image_url_original = this.image_url;
     const urls = data.urls;
     const WEB = urls.find(u => u.name === 'web');
     const FACEBOOK = urls.find(u => u.name === 'facebook');
@@ -127,31 +133,55 @@ export class FansubEditComponent implements OnInit {
   }
 
   uploadImage(event): void {
+    this.image = null;
     this.fg.controls.image.patchValue(null);
     const file = event.target.files[0];
-    this.selectedImageFileName = file.name;
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = e => {
-      this.gs.log('[ImgLoad]', e);
-      if (file.size < 256 * 1000) {
-        const img = document.createElement('img');
-        img.onload = () => {
-          this.image_url = reader.result.toString();
-          this.fg.controls.image.patchValue(file);
-          this.fg.controls.image.markAsDirty();
-        };
-        img.src = reader.result.toString();
-        this.imageErrorText = null;
-      } else {
-        this.image_url = '/assets/img/form-image-error.png';
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = e => {
+        this.gs.log('[ImgLoad]', e);
+        if (file.size < 256 * 1000) {
+          const img = document.createElement('img');
+          img.onload = () => {
+            this.image = file;
+            this.image_url = reader.result.toString();
+          };
+          img.src = reader.result.toString();
+          this.imageErrorText = null;
+        } else {
+          this.image = null;
+          this.image_url = '/assets/img/form-image-error.png';
+          this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        }
+      };
+    } catch (error) {
+      this.image = null;
+      this.imageErrorText = null;
+      this.image_url = this.image_url_original;
+      this.fg.controls.image.markAsPristine();
+    }
+  }
+
+  submitImage(): void {
+    this.submitted = true;
+    this.imgbb.uploadImage(this.image).subscribe(
+      res => {
+        this.gs.log('[IMAGE_SUCCESS]', res);
+        this.fg.controls.image.patchValue(res.data.image.url);
+        this.fg.controls.image.markAsDirty();
+        this.submitted = false;
+      },
+      err => {
+        this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
-        this.imageErrorText = 'Ukuran Upload File Melebihi Batas 128 KB!';
+        this.submitted = false;
       }
-    };
+    );
   }
 
   onSubmit(): void {
+    this.bs.busy();
     const urls = [];
     if (this.fg.value.web) {
       urls.push({ name: 'web', url: this.fg.value.web });
@@ -176,21 +206,24 @@ export class FansubEditComponent implements OnInit {
     this.submitted = true;
     if (this.fg.invalid) {
       this.submitted = false;
+      this.bs.idle();
       return;
     }
     this.fansub.updateFansub(this.fansubId, {
-      image: this.fg.value.image,
       data: window.btoa(JSON.stringify({
         ...body, urls
       }))
     }).subscribe(
       res => {
         this.gs.log('[FANSUB_EDIT_SUCCESS]', res);
+        this.submitted = false;
+        this.bs.idle();
         this.router.navigateByUrl(`/fansub/${this.fansubId}`);
       },
       err => {
         this.gs.log('[FANSUB_EDIT_ERROR]', err);
         this.submitted = false;
+        this.bs.idle();
       }
     );
   }

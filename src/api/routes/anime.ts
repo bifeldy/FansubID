@@ -120,7 +120,7 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
 // GET `/api/anime/berkas?id=`
 router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const animeId = req.query.id.split(',').map(Number) || [];
+    const animeId = req.query.id.split(',').map(Number);
     if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
@@ -150,22 +150,30 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         delete f.download_url;
         delete f.description;
         // delete f.updated_at;
-        delete f.project_type_.created_at;
-        // delete f.project_type_.updated_at;
-        for (const fansub of f.fansub_) {
-          delete fansub.description;
-          delete fansub.urls;
-          delete fansub.tags;
-          delete fansub.created_at;
-          // delete fansub.updated_at;
+        if ('project_type_' in f && f.project_type_) {
+          delete f.project_type_.created_at;
+          // delete f.project_type_.updated_at;
         }
-        delete f.anime_.created_at;
-        // delete f.anime_.updated_at;
-        delete f.user_.role;
-        delete f.user_.password;
-        delete f.user_.session_token;
-        delete f.user_.created_at;
-        // delete f.user_.updated_at;
+        if ('fansub_' in f && f.fansub_) {
+          for (const fansub of f.fansub_) {
+            delete fansub.description;
+            delete fansub.urls;
+            delete fansub.tags;
+            delete fansub.created_at;
+            // delete fansub.updated_at;
+          }
+        }
+        if ('anime_' in f && f.anime_) {
+          delete f.anime_.created_at;
+          // delete f.anime_.updated_at;
+        }
+        if ('user_' in f && f.user_) {
+          delete f.user_.role;
+          delete f.user_.password;
+          delete f.user_.session_token;
+          delete f.user_.created_at;
+          // delete f.user_.updated_at;
+        }
         results[f.anime_.id].push(f);
       }
       res.status(200).json({
@@ -188,7 +196,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
 // GET `/api/anime/fansubs?id=`
 router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const animeId = req.query.id.split(',').map(Number) || [];
+    const animeId = req.query.id.split(',').map(Number);
     if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
@@ -206,13 +214,15 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
         results[i] = [];
       }
       for (const f of files) {
-        for (const fansub of f.fansub_) {
-          delete fansub.description;
-          delete fansub.urls;
-          delete fansub.tags;
-          delete fansub.created_at;
-          // delete fansub.updated_at;
-          results[f.anime_.id].push(fansub);
+        if ('fansub_' in f && f.fansub_) {
+          for (const fansub of f.fansub_) {
+            delete fansub.description;
+            delete fansub.urls;
+            delete fansub.tags;
+            delete fansub.created_at;
+            // delete fansub.updated_at;
+            results[f.anime_.id].push(fansub);
+          }
         }
       }
       for (const [key, value] of Object.entries(results)) {

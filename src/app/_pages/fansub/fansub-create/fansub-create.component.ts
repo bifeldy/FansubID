@@ -10,6 +10,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
 @Component({
   selector: 'app-fansub-create',
@@ -24,8 +25,8 @@ export class FansubCreateComponent implements OnInit {
 
   submitted = false;
 
+  image = null;
   imageErrorText = null;
-  selectedImageFileName = null;
   // tslint:disable-next-line: variable-name
   image_url = '/assets/img/form-no-image.png';
   urls = [];
@@ -38,6 +39,7 @@ export class FansubCreateComponent implements OnInit {
     private gs: GlobalService,
     private bs: BusyService,
     private pi: PageInfoService,
+    private imgbb: ImgbbService,
     private fansub: FansubService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
@@ -56,16 +58,16 @@ export class FansubCreateComponent implements OnInit {
 
   initForm(): void {
     this.fg = this.fb.group({
-      name: ['', Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      description: ['', Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      born: ['', Validators.compose([Validators.required, this.dateValidator, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      active: ['', Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      slug: ['', Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      born: [null, Validators.compose([Validators.required, this.dateValidator, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      active: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      slug: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       tags: [[], Validators.compose([])],
-      image: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      web: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      facebook: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      discord: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      web: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      facebook: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      discord: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
   }
 
@@ -98,27 +100,49 @@ export class FansubCreateComponent implements OnInit {
   }
 
   uploadImage(event): void {
+    this.image = null;
     this.fg.controls.image.patchValue(null);
     const file = event.target.files[0];
-    this.selectedImageFileName = file.name;
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = e => {
-      this.gs.log('[ImgLoad]', e);
-      if (file.size < 256 * 1000) {
-        const img = document.createElement('img');
-        img.onload = () => {
-          this.image_url = reader.result.toString();
-          this.fg.controls.image.patchValue(file);
-        };
-        img.src = reader.result.toString();
-        this.imageErrorText = null;
-      } else {
-        this.image_url = '/assets/img/form-image-error.png';
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = e => {
+        this.gs.log('[ImgLoad]', e);
+        if (file.size < 256 * 1000) {
+          const img = document.createElement('img');
+          img.onload = () => {
+            this.image = file;
+            this.image_url = reader.result.toString();
+          };
+          img.src = reader.result.toString();
+          this.imageErrorText = null;
+        } else {
+          this.image = null;
+          this.image_url = '/assets/img/form-image-error.png';
+          this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        }
+      };
+    } catch (error) {
+      this.image = null;
+      this.imageErrorText = null;
+      this.image_url = '/assets/img/form-no-image.png';
+    }
+  }
+
+  submitImage(): void {
+    this.submitted = true;
+    this.imgbb.uploadImage(this.image).subscribe(
+      res => {
+        this.gs.log('[IMAGE_SUCCESS]', res);
+        this.fg.controls.image.patchValue(res.data.image.url);
+        this.submitted = false;
+      },
+      err => {
+        this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
-        this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        this.submitted = false;
       }
-    };
+    );
   }
 
   onSubmit(): void {
@@ -140,8 +164,8 @@ export class FansubCreateComponent implements OnInit {
       return;
     }
     this.fansub.createFansub({
-      image: this.fg.value.image,
       data: window.btoa(JSON.stringify({
+        image: this.fg.value.image,
         name: this.fg.value.name,
         description: this.fg.value.description,
         born: this.fg.value.born.getTime(),
@@ -153,6 +177,7 @@ export class FansubCreateComponent implements OnInit {
     }).subscribe(
       res => {
         this.gs.log('[FANSUB_CREATE_SUCCESS]', res);
+        this.submitted = false;
         this.bs.idle();
         this.router.navigateByUrl('/fansub');
       },

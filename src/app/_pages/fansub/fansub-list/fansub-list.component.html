@@ -8,12 +8,12 @@
   <div class="row p-3">
     <div class="col-12 col-md-6 py-1 bg-light" *ngIf="barChartData.length > 0 && barChartLabels.length > 0 && barChartData.length == barChartLabels.length">
       <canvas baseChart [data]="barChartData" [labels]="barChartLabels" [chartType]="barChartType"
-        [options]="chartOptions" [plugins]="chartPlugins" [legend]="false">
+        [options]="barChartOptions" [plugins]="chartPlugins" [legend]="false">
       </canvas>
     </div>
     <div class="col-12 col-md-6 py-1 bg-light" *ngIf="pieChartData.length > 0 && pieChartLabels.length > 0 && pieChartData.length == pieChartLabels.length">
       <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
-        [options]="chartOptions" [plugins]="chartPlugins" [legend]="true">
+        [options]="pieChartOptions" [plugins]="chartPlugins" [legend]="true">
       </canvas>
     </div>
   </div>

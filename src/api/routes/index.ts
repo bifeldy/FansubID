@@ -5,7 +5,11 @@ import { getRepository, Equal, In } from 'typeorm';
 import createError from 'http-errors';
 import request from 'request';
 
+import { UserRequest } from '../models/UserRequest';
+
 import { universalAtob } from '../helpers/base64';
+
+import { environment } from '../../environments/environment';
 
 import { User } from '../entities/User';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
@@ -23,8 +27,6 @@ import fansubRouter from './fansub';
 import berkasRouter from './berkas';
 import userRouter from './user';
 import attachmentRouter from './attachment';
-import { environment } from 'src/environments/environment';
-import { UserRequest } from '../models/UserRequest';
 
 const router = Router();
 
@@ -85,7 +87,7 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
       return request(`
         ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${req.connection.remoteAddress}
       `.trim(), (e1, r1, b1) => {
-        b1 = JSON.parse(b1) || null;
+        b1 = JSON.parse(b1);
         if (b1.success !== undefined && !b1.success) {
           return res.status(r1.statusCode).json({
             info: `🙄 ${r1.statusCode} - Wrong Captcha! 😪`,
@@ -103,7 +105,7 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
             ck_kpu: environment.kpuAndroidSecretKey
           })
         }, (e2, r2, b2) => {
-          const resKPU = JSON.parse(b2) || null;
+          const resKPU = JSON.parse(b2);
           delete resKPU.data.tps;
           res.status(r2.statusCode).json({
             info: `😍 ${r2.statusCode} - Data Kartu Tanda Penduduk~ 🥰`,
@@ -177,8 +179,12 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => 
         let resUserSave = await userRepo.save(user);
         delete resUserSave.password;
         delete resUserSave.session_token;
-        delete resUserSave.kartu_tanda_penduduk_;
-        delete resUserSave.profile_;
+        if ('kartu_tanda_penduduk_' in resUserSave) {
+          delete resUserSave.kartu_tanda_penduduk_;
+        }
+        if ('profile_' in resUserSave) {
+          delete resUserSave.profile_;
+        }
         user.session_token = jwt.JwtEncode(resUserSave, false);
         resUserSave = await userRepo.save(user);
         res.status(200).json({

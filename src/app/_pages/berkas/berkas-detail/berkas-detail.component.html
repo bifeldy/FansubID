@@ -75,7 +75,8 @@
             </h2>
           </div>
           <div class="col-12 text-center" *ngIf="currentUser.verified">
-            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="ddl()" [disabled]="attachmentIsDownloading || attachmentIsCompleted">
+            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="ddl()" [disabled]="attachmentIsDownloading || attachmentIsCompleted"
+              matTooltip="Total Unduhan :: {{ berkasData.attachment_.download_count }}x">
               <mat-icon class="mr-2">cloud_done</mat-icon>
               {{ berkasData.attachment_.ext }} ({{ berkasData.attachment_.size }} Bytes)
             </button>

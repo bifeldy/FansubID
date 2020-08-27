@@ -13,6 +13,7 @@ import { FansubService } from '../../../_shared/services/fansub.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
 import User from '../../../_shared/models/User';
 
@@ -29,8 +30,8 @@ export class BerkasCreateComponent implements OnInit {
 
   projectList = [];
 
+  image = null;
   imageErrorText = null;
-  selectedImageFileName = null;
   // tslint:disable-next-line: variable-name
   image_url = '/assets/img/form-no-image.png';
 
@@ -59,6 +60,7 @@ export class BerkasCreateComponent implements OnInit {
     private project: ProjectService,
     private fansub: FansubService,
     private berkas: BerkasService,
+    private imgbb: ImgbbService,
     public as: AuthService
   ) {
   }
@@ -119,8 +121,8 @@ export class BerkasCreateComponent implements OnInit {
       projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       anime_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
       fansub_list: this.fb.array([this.createFansub()]),
-      image: ['', Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      attachment_id: ['', Validators.compose([Validators.pattern(/^\d+$/)])],
+      image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      attachment_id: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       download_url: this.fb.array([this.createDownloadLink()])
     });
     this.fg.get('anime_id').valueChanges.pipe(
@@ -239,27 +241,49 @@ export class BerkasCreateComponent implements OnInit {
   }
 
   uploadImage(event): void {
+    this.image = null;
     this.fg.controls.image.patchValue(null);
     const file = event.target.files[0];
-    this.selectedImageFileName = file.name;
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = e => {
-      this.gs.log('[ImgLoad]', e);
-      if (file.size < 256 * 1000) {
-        const img = document.createElement('img');
-        img.onload = () => {
-          this.image_url = reader.result.toString();
-          this.fg.controls.image.patchValue(file);
-        };
-        img.src = reader.result.toString();
-        this.imageErrorText = null;
-      } else {
-        this.image_url = '/assets/img/form-image-error.png';
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = e => {
+        this.gs.log('[ImgLoad]', e);
+        if (file.size < 256 * 1000) {
+          const img = document.createElement('img');
+          img.onload = () => {
+            this.image = file;
+            this.image_url = reader.result.toString();
+          };
+          img.src = reader.result.toString();
+          this.imageErrorText = null;
+        } else {
+          this.image = null;
+          this.image_url = '/assets/img/form-image-error.png';
+          this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        }
+      };
+    } catch (error) {
+      this.image = null;
+      this.imageErrorText = null;
+      this.image_url = '/assets/img/form-no-image.png';
+    }
+  }
+
+  submitImage(): void {
+    this.submitted = true;
+    this.imgbb.uploadImage(this.image).subscribe(
+      res => {
+        this.gs.log('[IMAGE_SUCCESS]', res);
+        this.fg.controls.image.patchValue(res.data.image.url);
+        this.submitted = false;
+      },
+      err => {
+        this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
-        this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+        this.submitted = false;
       }
-    };
+    );
   }
 
   onSubmit(): void {
@@ -278,8 +302,8 @@ export class BerkasCreateComponent implements OnInit {
       fansubId.push(fs.fansub_id);
     }
     this.berkas.createBerkas({
-      image: this.fg.value.image,
       data: window.btoa(JSON.stringify({
+        image: this.fg.value.image,
         name: this.fg.value.name,
         description: this.fg.value.description,
         episode: parseInt(this.fg.value.episode, 10),
@@ -293,6 +317,7 @@ export class BerkasCreateComponent implements OnInit {
     }).subscribe(
       res => {
         this.gs.log('[BERKAS_CREATE_SUCCESS]', res);
+        this.submitted = false;
         this.bs.idle();
         this.router.navigateByUrl('/home');
       },
@@ -307,12 +332,17 @@ export class BerkasCreateComponent implements OnInit {
   uploadAttachment(event): void {
     const file = event.target.files[0];
     this.gs.log('[AttachmentLoad]', file);
-    if (file.size <= 3 * 1000 * 1000 * 1000) {
-      this.attachment = file;
-      this.attachmentErrorText = '';
-    } else {
+    try {
+      if (file.size <= 992 * 1000 * 1000) {
+        this.attachment = file;
+        this.attachmentErrorText = '';
+      } else {
+        this.attachment = null;
+        this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 992 MB!';
+      }
+    } catch (error) {
       this.attachment = null;
-      this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 3 GB!';
+      this.attachmentErrorText = '';
     }
   }
 

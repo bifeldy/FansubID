@@ -90,7 +90,7 @@ export class BerkasDetailComponent implements OnInit {
 
   ddl(): void {
     this.attachmentIsDownloading = true;
-    this.berkas.downloadLampiran(this.berkasData.attachment_.name).subscribe(
+    this.berkas.downloadLampiran(this.berkasData.attachment_.id).subscribe(
       event => {
         this.gs.log('[DOWNLOAD_EVENTS]', event);
         if ((event as any).loaded && (event as any).total) {

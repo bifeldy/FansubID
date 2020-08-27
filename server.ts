@@ -39,9 +39,9 @@ import { Berkas } from './src/api/entities/Berkas';
 import { Attachment } from './src/api/entities/Attachment';
 import { TempAttachment } from './src/api/entities/TempAttachment';
 
-const dbName = process.env.DB_NAME || 'hikkiid_main-site';
-const dbUsername = process.env.DB_USERNAME || 'bifeldy';
-const dbPassword = process.env.DB_PASSWORD || '123qweasdzxc';
+const dbName = process.env.DB_NAME || 'hikki';
+const dbUsername = process.env.DB_USERNAME || 'root';
+const dbPassword = process.env.DB_PASSWORD || '';
 
 const typeOrmConfig: any = {
   type: 'mysql',
@@ -93,8 +93,8 @@ export function app(): express.Express {
 
   // Middleware
   server.use(MorganChalk.morganChalk);
-  server.use(express.json({ limit: '3gb' }));
-  server.use(express.urlencoded({ extended: false, limit: '3gb' }));
+  server.use(express.json({ limit: '992mb' }));
+  server.use(express.urlencoded({ extended: false, limit: '992mb' }));
 
   server.use(cors({
     origin: '*',
@@ -108,9 +108,6 @@ export function app(): express.Express {
       'Expires'
     ],
   }));
-
-  // Static Image Folder
-  server.use('/img', express.static(join(process.cwd(), 'dist/hikki/uploads/img')));
 
   // Express rest api endpoints
   server.use('/api', apiLimiter, indexRouter);
@@ -133,7 +130,7 @@ createConnection({
 }).then(async connection => {
   const c: any = connection;
   console.log(`📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`);
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 4000;
   const server = app();
   server.listen(port, () => {
     console.log(`✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`);

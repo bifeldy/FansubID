@@ -5,8 +5,8 @@ import { User } from './User';
 @Entity({ name: 'attachment' })
 export class Attachment {
 
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name
@@ -17,6 +17,10 @@ export class Attachment {
 
   @Column({ type: 'int' })
   size: number;
+
+  @Column({ type: 'int', default: 0 })
+  // tslint:disable-next-line: variable-name
+  download_count: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   // tslint:disable-next-line: variable-name

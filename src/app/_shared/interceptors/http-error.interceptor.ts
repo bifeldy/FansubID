@@ -25,14 +25,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       tap((res) => {
         if (res instanceof HttpResponse && this.gs.isBrowser) {
           if ((res as any).status === 200) {
-            let successTitle = null;
-            if (res) {
-              if ((res as any).body) {
-                if ((res as any).body.info) {
-                  successTitle = (res as any).body.info;
-                }
-              }
-            }
             let successMessage = null;
             if (res) {
               if ((res as any).body) {
@@ -43,37 +35,53 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 }
               }
             }
+            if (!successMessage) {
+              successMessage = 'UwUu~ Berhasil~';
+            }
+            let successTitle = null;
+            if (res) {
+              if ((res as any).body) {
+                if ((res as any).body.info) {
+                  successTitle = (res as any).body.info;
+                }
+              }
+            }
+            if (!successTitle) {
+              successTitle = 'Yeay, Selesai!';
+            }
             this.toast.success(successMessage, successTitle);
           }
         }
       }),
       catchError(e => {
         this.gs.log(`[INTERCEPT_ERROR-${e.status}]`, e.statusText);
-        let errorMessage = null;
-        if (e) {
-          if (e.error) {
-            if (e.error.result) {
-              if (e.error.result.message) {
-                errorMessage = e.error.result.message;
+        if (this.gs.isBrowser) {
+          let errorMessage = null;
+          if (e) {
+            if (e.error) {
+              if (e.error.result) {
+                if (e.error.result.message) {
+                  errorMessage = e.error.result.message;
+                }
               }
             }
           }
-        }
-        if (!errorMessage) {
-          errorMessage = 'Terjadi Kesalahan Pada Jaringan~';
-        }
-        let errorTitle = null;
-        if (e) {
-          if (e.error) {
-            if (e.error.info) {
-              errorTitle = e.error.info;
+          if (!errorMessage) {
+            errorMessage = 'Terjadi Kesalahan Pada Jaringan~';
+          }
+          let errorTitle = null;
+          if (e) {
+            if (e.error) {
+              if (e.error.info) {
+                errorTitle = e.error.info;
+              }
             }
           }
+          if (!errorTitle) {
+            errorTitle = 'Whoops, Error!';
+          }
+          this.toast.error(errorMessage, errorTitle);
         }
-        if (!errorTitle) {
-          errorTitle = 'Whoops, Error!';
-        }
-        this.toast.error(errorMessage, errorTitle);
         if (e.status === 401) {
           this.as.removeUser();
           this.router.navigate(['/login'], { queryParams: { err: true } });

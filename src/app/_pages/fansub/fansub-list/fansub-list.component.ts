@@ -31,10 +31,25 @@ export class FansubListComponent implements OnInit {
     }
   ];
 
-  chartOptions: ChartOptions = {
+  pieChartOptions: ChartOptions = {
     responsive: true,
     legend: {
       position: 'right'
+    },
+  };
+  barChartOptions: ChartOptions = {
+    responsive: true,
+    legend: {
+      position: 'right'
+    },
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          }
+        }
+      ]
     }
   };
   chartPlugins = [];

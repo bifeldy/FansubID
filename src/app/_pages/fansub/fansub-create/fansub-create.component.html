@@ -19,7 +19,7 @@
                     <img class="w-100 border" [src]="image_url" />
                     <mat-form-field appearance="outline" class="pt-3 w-100">
                       <mat-label>Gambar</mat-label>
-                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event)" #gambar
+                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event)" #gambar [disabled]="fg.value.image"
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
                       <mat-icon matSuffix>image</mat-icon>
                     </mat-form-field>
@@ -28,6 +28,12 @@
                         <strong>{{ imageErrorText }}</strong>
                       </small>
                     </mat-error>
+                  </div>
+                  <div class="col-12" *ngIf="image && !fg.value.image">
+                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+                      <mat-icon class="mr-1">add_photo_alternate</mat-icon>
+                      Unggah
+                    </button>
                   </div>
                 </div>
               </div>
