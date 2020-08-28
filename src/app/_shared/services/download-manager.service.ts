@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { ApiService } from './api.service';
-import { GlobalService } from './global.service';
-
 import { saveAs } from 'file-saver';
+import { ToastrService } from 'ngx-toastr';
+
+import { GlobalService } from './global.service';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class DownloadManagerService {
 
   constructor(
     private gs: GlobalService,
+    private toast: ToastrService,
     private api: ApiService
   ) {
   }
@@ -30,35 +32,74 @@ export class DownloadManagerService {
       this.attachmentsDownload[attachment.id].isDownloading = false;
       this.attachmentsDownload[attachment.id].isCompleted = false;
       this.attachmentsDownload[attachment.id].data = null;
+      this.attachmentsDownload[attachment.id].handler = null;
+      this.attachmentsDownload[attachment.id].speed = 0;
+      this.attachmentsDownload[attachment.id].previousLoaded = 0;
+      this.attachmentsDownload[attachment.id].toast = null;
     }
     return this.attachmentsDownload[attachment.id];
   }
 
   startDownload(attachmentId): void {
-    if (!this.attachmentsDownload[attachmentId].isCompleted) {
-      this.attachmentsDownload[attachmentId].isDownloading = false;
-      this.api.downloadFile(`/attachment?id=${attachmentId}`).subscribe(
+    const attachment = this.attachmentsDownload[attachmentId];
+    attachment.toast = this.toast.warning(
+      `${attachment.percentage}% @ ${attachment.speed} KB/s`,
+      `Mengunduh ...`,
+      {
+        closeButton: false,
+        timeOut: 0,
+        disableTimeOut: 'extendedTimeOut',
+        tapToDismiss: false
+      }
+    );
+    if (!attachment.isCompleted) {
+      attachment.isDownloading = true;
+      attachment.handler = this.api.downloadFile(`/attachment?id=${attachmentId}`).subscribe(
         event => {
           this.gs.log('[DOWNLOAD_EVENTS]', event);
           if ((event as any).loaded && (event as any).total) {
             const e = (event as any);
             this.gs.log('[DOWNLOAD_PROGRESS]', e);
-            this.attachmentsDownload[attachmentId].mode = 'determinate';
-            this.attachmentsDownload[attachmentId].percentage = Math.round(e.loaded / e.total * 100);
+            attachment.mode = 'determinate';
+            attachment.percentage = Math.round(e.loaded / e.total * 100);
+            if (attachment.percentage < 100) {
+              attachment.speed = (e.loaded - attachment.previousLoaded) / 1000;
+              attachment.previousLoaded = e.loaded;
+              if (attachment.speed <= 0) {
+                attachment.speed = 0;
+              }
+            }
+            attachment.toast.toastRef.componentInstance.message = `${attachment.percentage}% @ ${attachment.speed} KB/s`;
           }
           if ((event as any).body) {
             const e = (event as any);
             this.gs.log('[DOWNLOAD_COMPLETED]', e);
-            this.attachmentsDownload[attachmentId].mode = 'determinate';
-            this.attachmentsDownload[attachmentId].isDownloading = false;
-            this.attachmentsDownload[attachmentId].isCompleted = true;
-            this.attachmentsDownload[attachmentId].data = e.body;
+            attachment.mode = 'determinate';
+            attachment.isDownloading = false;
+            attachment.isCompleted = true;
+            attachment.data = e.body;
+            this.toast.remove(attachment.toast.toastId);
             this.saveFileAs(attachmentId);
           }
         }
       );
     } else {
       this.saveFileAs(attachmentId);
+    }
+  }
+
+  cancelDownload(attachmentId): void {
+    const attachment = this.attachmentsDownload[attachmentId];
+    attachment.mode = 'indeterminate';
+    attachment.percentage = 0;
+    attachment.speed = 0;
+    attachment.isDownloading = false;
+    attachment.isCompleted = false;
+    if (attachment.handler) {
+      attachment.handler.unsubscribe();
+    }
+    if (attachment.toast) {
+      this.toast.remove(attachment.toast.toastId);
     }
   }
 

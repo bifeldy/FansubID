@@ -119,7 +119,7 @@ router.post('/', auth.isAuthorized, upload.single('lampiran'), async (req: UserR
         } catch (error) {}
       }, 3 * 60 * 1000);
       res.status(200).json({
-        info: `😅 200 - Attachment API :: Harap Selesaikan Pembuatan Berkas Dalam 3 Menit 🤣`,
+        info: `😅 200 - Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
         result: resAttachmentSave
       });
     } else {

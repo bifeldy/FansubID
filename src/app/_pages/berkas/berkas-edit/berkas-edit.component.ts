@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -23,7 +23,7 @@ import User from '../../../_shared/models/User';
   templateUrl: './berkas-edit.component.html',
   styleUrls: ['./berkas-edit.component.css']
 })
-export class BerkasEditComponent implements OnInit {
+export class BerkasEditComponent implements OnInit, OnDestroy {
 
   berkasId = null;
 
@@ -54,6 +54,13 @@ export class BerkasEditComponent implements OnInit {
   attachmentIsUploading = false;
   attachmentIsCompleted = false;
   attachmentErrorText = '';
+
+  uploadHandler = null;
+  uploadToast = null;
+
+  attachmentPreviousLoaded = null;
+  attachmentSpeed = 0;
+  attachmentMode = 'indeterminate';
 
   constructor(
     private router: Router,
@@ -111,6 +118,20 @@ export class BerkasEditComponent implements OnInit {
         }
       );
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.uploadHandler) {
+      this.uploadHandler.unsubscribe();
+      this.attachmentMode = 'indeterminate';
+      this.attachmentPercentage = 0;
+      this.attachmentSpeed = 0;
+      this.attachmentIsUploading = false;
+      this.attachmentIsCompleted = false;
+    }
+    if (this.uploadToast) {
+      this.toast.remove(this.uploadToast.toastId);
+    }
   }
 
   loadProjectList(): void {
@@ -398,7 +419,17 @@ export class BerkasEditComponent implements OnInit {
 
   submitAttachment(): void {
     this.attachmentIsUploading = true;
-    this.berkas.uploadLampiran({
+    this.uploadToast = this.toast.warning(
+      `${this.attachmentPercentage}% @ ${this.attachmentSpeed} KB/s`,
+      `Mengunggah ...`,
+      {
+        closeButton: false,
+        timeOut: 0,
+        disableTimeOut: 'extendedTimeOut',
+        tapToDismiss: false
+      }
+    );
+    this.uploadHandler = this.berkas.uploadLampiran({
       lampiran: this.attachment
     }).subscribe(
       event => {
@@ -406,15 +437,25 @@ export class BerkasEditComponent implements OnInit {
         if ((event as any).loaded && (event as any).total) {
           const e = (event as any);
           this.gs.log('[UPLOAD_PROGRESS]', e);
+          this.attachmentMode = 'determinate';
           this.attachmentPercentage = Math.round(e.loaded / e.total * 100);
+          if (this.attachmentPercentage < 100) {
+            this.attachmentSpeed = (e.loaded - this.attachmentPreviousLoaded) / 1000;
+            this.attachmentPreviousLoaded = e.loaded;
+            if (this.attachmentSpeed <= 0) {
+              this.attachmentSpeed = 0;
+            }
+          }
+          this.uploadToast.toastRef.componentInstance.message = `${this.attachmentPercentage}% @ ${this.attachmentSpeed} KB/s`;
         }
         if ((event as any).body) {
           const e = (event as any).body;
           this.gs.log('[UPLOAD_COMPLETED]', e);
+          this.attachmentMode = 'determinate';
           this.attachmentIsUploading = false;
           this.attachmentIsCompleted = true;
           this.fg.controls.attachment_id.patchValue(e.result.id);
-          this.fg.controls.attachment_id.markAsDirty();
+          this.toast.remove(this.uploadToast.toastId);
         }
       }
     );

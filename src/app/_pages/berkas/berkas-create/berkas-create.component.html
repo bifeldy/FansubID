@@ -179,8 +179,10 @@
                 <div class="row" *ngIf="attachment">
                   <div class="col">
                     <div class="px-3" *ngIf="attachmentIsUploading || attachmentIsCompleted">
-                      {{ attachmentPercentage >= 100 ? 'Selesai Mengunggah ... '  : 'Sedang Mengunggah ... ' }} {{ attachmentPercentage }}% <br />
-                      <mat-progress-bar mode="determinate" [value]="attachmentPercentage"></mat-progress-bar>
+                      {{ attachmentPercentage >= 100 ? 'Selesai Mengunggah ... '  : 'Sedang Mengunggah ... ' }}
+                      {{ attachmentPercentage }}% @ {{ attachmentSpeed }} KB/s
+                      <br />
+                      <mat-progress-bar [mode]="attachmentMode" [value]="attachmentPercentage"></mat-progress-bar>
                     </div>
                   </div>
                   <div class="col-3" *ngIf="!attachmentIsUploading && !attachmentIsCompleted">

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize,  map, startWith } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -22,7 +23,7 @@ import User from '../../../_shared/models/User';
   templateUrl: './berkas-create.component.html',
   styleUrls: ['./berkas-create.component.css']
 })
-export class BerkasCreateComponent implements OnInit {
+export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   fg: FormGroup;
 
@@ -50,6 +51,13 @@ export class BerkasCreateComponent implements OnInit {
   attachmentIsCompleted = false;
   attachmentErrorText = '';
 
+  uploadHandler = null;
+  uploadToast = null;
+
+  attachmentPreviousLoaded = null;
+  attachmentSpeed = 0;
+  attachmentMode = 'indeterminate';
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -61,6 +69,7 @@ export class BerkasCreateComponent implements OnInit {
     private fansub: FansubService,
     private berkas: BerkasService,
     private imgbb: ImgbbService,
+    private toast: ToastrService,
     public as: AuthService
   ) {
   }
@@ -78,6 +87,20 @@ export class BerkasCreateComponent implements OnInit {
     this.loadProjectList();
     this.loadFansubList();
     this.initForm();
+  }
+
+  ngOnDestroy(): void {
+    if (this.uploadHandler) {
+      this.uploadHandler.unsubscribe();
+      this.attachmentMode = 'indeterminate';
+      this.attachmentPercentage = 0;
+      this.attachmentSpeed = 0;
+      this.attachmentIsUploading = false;
+      this.attachmentIsCompleted = false;
+    }
+    if (this.uploadToast) {
+      this.toast.remove(this.uploadToast.toastId);
+    }
   }
 
   loadProjectList(): void {
@@ -348,7 +371,17 @@ export class BerkasCreateComponent implements OnInit {
 
   submitAttachment(): void {
     this.attachmentIsUploading = true;
-    this.berkas.uploadLampiran({
+    this.uploadToast = this.toast.warning(
+      `${this.attachmentPercentage}% @ ${this.attachmentSpeed} KB/s`,
+      `Mengunggah ...`,
+      {
+        closeButton: false,
+        timeOut: 0,
+        disableTimeOut: 'extendedTimeOut',
+        tapToDismiss: false
+      }
+    );
+    this.uploadHandler = this.berkas.uploadLampiran({
       lampiran: this.attachment
     }).subscribe(
       event => {
@@ -356,14 +389,25 @@ export class BerkasCreateComponent implements OnInit {
         if ((event as any).loaded && (event as any).total) {
           const e = (event as any);
           this.gs.log('[UPLOAD_PROGRESS]', e);
+          this.attachmentMode = 'determinate';
           this.attachmentPercentage = Math.round(e.loaded / e.total * 100);
+          if (this.attachmentPercentage < 100) {
+            this.attachmentSpeed = (e.loaded - this.attachmentPreviousLoaded) / 1000;
+            this.attachmentPreviousLoaded = e.loaded;
+            if (this.attachmentSpeed <= 0) {
+              this.attachmentSpeed = 0;
+            }
+          }
+          this.uploadToast.toastRef.componentInstance.message = `${this.attachmentPercentage}% @ ${this.attachmentSpeed} KB/s`;
         }
         if ((event as any).body) {
           const e = (event as any).body;
           this.gs.log('[UPLOAD_COMPLETED]', e);
+          this.attachmentMode = 'determinate';
           this.attachmentIsUploading = false;
           this.attachmentIsCompleted = true;
           this.fg.controls.attachment_id.patchValue(e.result.id);
+          this.toast.remove(this.uploadToast.toastId);
         }
       }
     );

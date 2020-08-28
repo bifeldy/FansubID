@@ -92,6 +92,10 @@ export class BerkasDetailComponent implements OnInit {
     this.dm.startDownload(this.berkasData.attachment_.id);
   }
 
+  cancel_dl(): void {
+    this.dm.cancelDownload(this.berkasData.attachment_.id);
+  }
+
   saveFileAs(): void {
     this.dm.saveFileAs(this.berkasData.attachment_.id);
   }

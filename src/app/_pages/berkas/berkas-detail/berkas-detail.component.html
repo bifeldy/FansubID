@@ -75,10 +75,15 @@
             </h2>
           </div>
           <div class="col-12 text-center" *ngIf="currentUser.verified">
-            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="ddl()" [disabled]="lampiran.isDownloading || lampiran.isCompleted"
-              matTooltip="Total Unduhan :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data">
+            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="ddl()"
+              matTooltip="Total Unduhan :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
               <mat-icon class="mr-2">save_alt</mat-icon>
               {{ lampiran.ext }} ({{ lampiran.size }} Bytes)
+            </button>
+            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="cancel_dl()"
+              matTooltip="Total Unduhan :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
+              <mat-icon class="mr-2">close</mat-icon>
+              Batal Unduh
             </button>
             <button class="m-1 w-100" mat-stroked-button color="primary" (click)="saveFileAs()" *ngIf="lampiran.data"
               matTooltip="Total Unduhan :: {{ lampiran.download_count }}x">
@@ -86,8 +91,10 @@
               {{ lampiran.name + '.' + lampiran.ext }}
             </button>
             <div class="col">
-              <div class="px-3" *ngIf="lampiran && (lampiran.isDownloading || lampiran.isCompleted)">
-                {{ lampiran.percentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }} {{ lampiran.percentage }}% <br />
+              <div class="px-3" *ngIf="lampiran.isDownloading || lampiran.isCompleted">
+                {{ lampiran.percentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }}
+                {{ lampiran.percentage }}% @ {{ lampiran.speed }} KB/s
+                <br />
                 <mat-progress-bar [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
               </div>
             </div>
