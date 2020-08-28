@@ -7,6 +7,7 @@ import { UserRequest } from '../models/UserRequest';
 
 import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
+import { User } from '../entities/User';
 
 import { universalAtob } from '../helpers/base64';
 
@@ -26,7 +27,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   });
   for (const f of fansubs) {
     delete f.description;
-    // delete f.updated_at;
+    delete f.updated_at;
     f.urls = JSON.parse(f.urls);
     f.tags = JSON.parse(f.tags);
   }
@@ -45,8 +46,15 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       'name' in req.body && 'born' in req.body && 'slug' in req.body &&
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
+      const userRepo = getRepository(User);
+      const user = await userRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.user.id) }
+        ]
+      });
       const fansubRepo = getRepository(Fansub);
       const fansub = new Fansub();
+      fansub.user_ = user;
       fansub.name = req.body.name;
       fansub.born = new Date(req.body.born);
       fansub.slug = req.body.slug;
@@ -73,6 +81,13 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         fansub.active = req.body.active;
       }
       const resFansubSave = await fansubRepo.save(fansub);
+      if ('user_' in resFansubSave && resFansubSave.user_) {
+        delete resFansubSave.user_.role;
+        delete resFansubSave.user_.password;
+        delete resFansubSave.user_.session_token;
+        delete resFansubSave.user_.created_at;
+        delete resFansubSave.user_.updated_at;
+      }
       res.status(200).json({
         info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
         result: resFansubSave
@@ -118,21 +133,21 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         delete f.private;
         delete f.download_url;
         delete f.description;
-        // delete f.updated_at;
+        delete f.updated_at;
         if ('project_type_' in f && f.project_type_) {
           delete f.project_type_.created_at;
-          // delete f.project_type_.updated_at;
+          delete f.project_type_.updated_at;
         }
         if ('anime_' in f && f.anime_) {
           delete f.anime_.created_at;
-          // delete f.anime_.updated_at;
+          delete f.anime_.updated_at;
         }
         if ('user_' in f && f.user_) {
           delete f.user_.role;
           delete f.user_.password;
           delete f.user_.session_token;
           delete f.user_.created_at;
-          // delete f.user_.updated_at;
+          delete f.user_.updated_at;
         }
         if ('fansub_' in f && f.fansub_) {
           for (const fansub of f.fansub_) {
@@ -140,7 +155,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
             delete fansub.urls;
             delete fansub.tags;
             delete fansub.created_at;
-            // delete fansub.updated_at;
+            delete fansub.updated_at;
             if (fansubId.includes(fansub.id)) {
               results[fansub.id].push(f);
             }
@@ -183,7 +198,7 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
       for (const f of files) {
         if ('anime_' in f && f.anime_) {
           delete f.anime_.created_at;
-          // delete f.anime_.updated_at;
+          delete f.anime_.updated_at;
         }
         if ('fansub_' in f && f.fansub_) {
           for (const fansub of f.fansub_) {
@@ -220,10 +235,18 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     const fansub = await fansubRepo.findOneOrFail({
       where: [
         { id: Equal(req.params.id) }
-      ]
+      ],
+      relations: ['user_']
     });
     fansub.urls = JSON.parse(fansub.urls);
     fansub.tags = JSON.parse(fansub.tags);
+    if ('user_' in fansub && fansub.user_) {
+      delete fansub.user_.role;
+      delete fansub.user_.password;
+      delete fansub.user_.session_token;
+      delete fansub.user_.created_at;
+      delete fansub.user_.updated_at;
+    }
     res.status(200).json({
       info: `😅 200 - Fansub API :: Detail ${req.params.id} 🤣`,
       result: fansub
@@ -247,8 +270,16 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
       const fansub = await fansubRepo.findOneOrFail({
         where: [
           { id: Equal(req.params.id) }
+        ],
+        relations: ['user_']
+      });
+      const userRepo = getRepository(User);
+      const user = await userRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.user.id) }
         ]
       });
+      fansub.user_ = user;
       if (req.body.name) {
         fansub.name = req.body.name;
       }
@@ -281,6 +312,13 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
         fansub.urls = JSON.stringify(filteredUrls);
       }
       const resFansubSave = await fansubRepo.save(fansub);
+      if ('user_' in resFansubSave && resFansubSave.user_) {
+        delete resFansubSave.user_.role;
+        delete resFansubSave.user_.password;
+        delete resFansubSave.user_.session_token;
+        delete resFansubSave.user_.created_at;
+        delete resFansubSave.user_.updated_at;
+      }
       res.status(200).json({
         info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
         result: resFansubSave

@@ -76,7 +76,7 @@ export class FansubDetailComponent implements OnInit {
           this.pi.updatePageMetaData(
             `${this.fansubData.name}`,
             `${this.fansubData.description}`,
-            `${this.fansubData.tags.join(', ')}`,
+            `${Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name}`,
             this.getUrlByName('web')
           );
           this.panelData = [];

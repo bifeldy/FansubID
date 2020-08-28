@@ -21,7 +21,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   });
   for (const p of projects) {
     delete p.description;
-    // delete p.updated_at;
+    delete p.updated_at;
   }
   res.status(200).json({
     info: `😅 200 - Project Type API :: List All 🤣`,

@@ -132,10 +132,10 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       delete selectedUser[0].session_token;
       delete selectedUser[0].kartu_tanda_penduduk_.id;
       delete selectedUser[0].kartu_tanda_penduduk_.created_at;
-      // delete selectedUser[0].kartu_tanda_penduduk_.updated_at;
+      delete selectedUser[0].kartu_tanda_penduduk_.updated_at;
       delete selectedUser[0].profile_.id;
       delete selectedUser[0].profile_.created_at;
-      // delete selectedUser[0].profile_.updated_at;
+      delete selectedUser[0].profile_.updated_at;
       req.user = (selectedUser[0] as any);
       return next();
     } else {

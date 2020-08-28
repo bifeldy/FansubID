@@ -47,12 +47,12 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
       delete selectedUser.kartu_tanda_penduduk_.rw;
       delete selectedUser.kartu_tanda_penduduk_.status_perkawinan;
       delete selectedUser.kartu_tanda_penduduk_.created_at;
-      // delete selectedUser.kartu_tanda_penduduk_.updated_at;
+      delete selectedUser.kartu_tanda_penduduk_.updated_at;
     }
     if ('profile_' in selectedUser && selectedUser.profile_) {
       delete selectedUser.profile_.id;
       delete selectedUser.profile_.created_at;
-      // delete selectedUser.profile_.updated_at;
+      delete selectedUser.profile_.updated_at;
     }
     res.status(200).json({
       info: `😅 200 - Profile API :: Detail ${req.params.username} 🤣`,
@@ -169,10 +169,10 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
       delete f.private;
       delete f.download_url;
       delete f.description;
-      // delete f.updated_at;
+      delete f.updated_at;
       if ('project_type_' in f && f.project_type_) {
         delete f.project_type_.created_at;
-        // delete f.project_type_.updated_at;
+        delete f.project_type_.updated_at;
       }
       if ('fansub_' in f && f.fansub_) {
         for (const fansub of f.fansub_) {
@@ -180,19 +180,19 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
           delete fansub.urls;
           delete fansub.tags;
           delete fansub.created_at;
-          // delete fansub.updated_at;
+          delete fansub.updated_at;
         }
       }
       if ('anime_' in f && f.anime_) {
         delete f.anime_.created_at;
-        // delete f.anime_.updated_at;
+        delete f.anime_.updated_at;
       }
       if ('user_' in f && f.user_) {
         delete f.user_.role;
         delete f.user_.password;
         delete f.user_.session_token;
         delete f.user_.created_at;
-        // delete f.user_.updated_at;
+        delete f.user_.updated_at;
       }
     }
     res.status(200).json({

@@ -9,8 +9,10 @@
             <img class="w-100" [src]="fansubData.image_url" />
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="accent" matTooltip="Status Fansub :: {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}">
-              <mat-icon>calendar_today</mat-icon> {{ fansubData.born | date:'longDate' }} &nbsp;
+            <button mat-button class="w-100" color="warn" matTooltip="Berdiri Sejak">
+              <mat-icon>calendar_today</mat-icon> {{ fansubData.born | date:'longDate' }}
+            </button>
+            <button mat-button class="w-100" color="accent" matTooltip="Status Fansub">
               <mat-icon>history</mat-icon> {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}
             </button>
           </div>
@@ -20,8 +22,14 @@
               Facebook Fanpage
             </a>
           </div>
+          <div class="col-12 text-center pt-3" *ngIf="getUrlByName('discord')">
+            <a [href]="getUrlByName('discord')" mat-stroked-button class="w-100" color="primary" matTooltip="Kunjungi Ruang Obrolan">
+              <img src="https://hikki.bifeldy.id/assets/img/discord-blue.png" width="24px" />
+              Ruang Obrolan Discord
+            </a>
+          </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100 text-success" matTooltip="Perbaharui Data Fansub" (click)="editFansubData()">
+            <button mat-button class="w-100 text-success" matTooltip="{{ fansubData.user_ ? 'Terakhir Di Ubah Oleh :: ' + fansubData.user_.username : 'Perbaharui Data Fansub' }}" (click)="editFansubData()">
               <mat-icon>edit</mat-icon>
               Perbaharui Informasi
             </button>

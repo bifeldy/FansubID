@@ -41,7 +41,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     delete f.description;
     if ('project_type_' in f && f.project_type_) {
       delete f.project_type_.created_at;
-      // delete f.project_type_.updated_at;
+      delete f.project_type_.updated_at;
     }
     if ('fansub_' in f && f.fansub_) {
       for (const fansub of f.fansub_) {
@@ -49,19 +49,19 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         delete fansub.urls;
         delete fansub.tags;
         delete fansub.created_at;
-        // delete fansub.updated_at;
+        delete fansub.updated_at;
       }
     }
     if ('anime_' in f && f.anime_) {
       delete f.anime_.created_at;
-      // delete f.anime_.updated_at;
+      delete f.anime_.updated_at;
     }
     if ('user_' in f && f.user_) {
       delete f.user_.role;
       delete f.user_.password;
       delete f.user_.session_token;
       delete f.user_.created_at;
-      // delete f.user_.updated_at;
+      delete f.user_.updated_at;
     }
   }
   res.status(200).json({
@@ -153,28 +153,28 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           f.tags = JSON.parse(f.tags);
           f.urls = JSON.parse(f.urls);
           delete f.created_at;
-          // delete f.updated_at;
+          delete f.updated_at;
         }
       }
       if ('attachment_' in resFileSave && resFileSave.attachment_) {
         delete resFileSave.attachment_.user_;
         delete resFileSave.attachment_.created_at;
-        // delete resFileSave.attachment_.updated_at;
+        delete resFileSave.attachment_.updated_at;
       }
       if ('anime_' in resFileSave && resFileSave.anime_) {
         delete resFileSave.anime_.created_at;
-        // delete resFileSave.anime_.updated_at;
+        delete resFileSave.anime_.updated_at;
       }
       if ('project_type_' in resFileSave && resFileSave.project_type_) {
         delete resFileSave.project_type_.created_at;
-        // delete resFileSave.project_type_.updated_at;
+        delete resFileSave.project_type_.updated_at;
       }
       if ('user_' in resFileSave && resFileSave.user_) {
         delete resFileSave.user_.role;
         delete resFileSave.user_.password;
         delete resFileSave.user_.session_token;
         delete resFileSave.user_.created_at;
-        // delete resFileSave.user_.updated_at;
+        delete resFileSave.user_.updated_at;
       }
       res.status(200).json({
         info: `😅 200 - Berkas API :: Tambah Baru 🤣`,
@@ -207,7 +207,7 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
     const resFileSave = await fileRepo.save(file);
     if ('project_type_' in resFileSave && resFileSave.project_type_) {
       delete resFileSave.project_type_.created_at;
-      // delete resFileSave.project_type_.updated_at;
+      delete resFileSave.project_type_.updated_at;
     }
     if ('fansub_' in resFileSave && resFileSave.fansub_) {
       for (const f of resFileSave.fansub_) {
@@ -215,19 +215,19 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
         delete f.urls;
         delete f.tags;
         delete f.created_at;
-        // delete f.updated_at;
+        delete f.updated_at;
       }
     }
     if ('anime_' in resFileSave && resFileSave.anime_) {
       delete resFileSave.anime_.created_at;
-      // delete resFileSave.anime_.updated_at;
+      delete resFileSave.anime_.updated_at;
     }
     if ('user_' in resFileSave && resFileSave.user_) {
       delete resFileSave.user_.role;
       delete resFileSave.user_.password;
       delete resFileSave.user_.session_token;
       delete resFileSave.user_.created_at;
-      // delete resFileSave.user_.updated_at;
+      delete resFileSave.user_.updated_at;
     }
     if (req.user) {
       resFileSave.download_url = JSON.parse(resFileSave.download_url);
@@ -342,28 +342,28 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               f.tags = JSON.parse(f.tags);
               f.urls = JSON.parse(f.urls);
               delete f.created_at;
-              // delete f.updated_at;
+              delete f.updated_at;
             }
           }
           if ('attachment_' in resFileSave && resFileSave.attachment_) {
             delete resFileSave.attachment_.user_;
             delete resFileSave.attachment_.created_at;
-            // delete resFileSave.attachment_.updated_at;
+            delete resFileSave.attachment_.updated_at;
           }
           if ('anime_' in resFileSave && resFileSave.anime_) {
             delete resFileSave.anime_.created_at;
-            // delete resFileSave.anime_.updated_at;
+            delete resFileSave.anime_.updated_at;
           }
           if ('project_type_' in resFileSave && resFileSave.project_type_) {
             delete resFileSave.project_type_.created_at;
-            // delete resFileSave.project_type_.updated_at;
+            delete resFileSave.project_type_.updated_at;
           }
           if ('user_' in resFileSave && resFileSave.user_) {
             delete resFileSave.user_.role;
             delete resFileSave.user_.password;
             delete resFileSave.user_.session_token;
             delete resFileSave.user_.created_at;
-            // delete resFileSave.user_.updated_at;
+            delete resFileSave.user_.updated_at;
           }
           res.status(200).json({
             info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,

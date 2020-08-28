@@ -7,10 +7,9 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
 
 import User from '../../../_shared/models/User';
-
-import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-berkas-detail',
@@ -22,10 +21,6 @@ export class BerkasDetailComponent implements OnInit {
   berkasId = 0;
   berkasData = null;
 
-  attachmentPercentage = 0;
-  attachmentIsDownloading = false;
-  attachmentIsCompleted = false;
-
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -34,7 +29,8 @@ export class BerkasDetailComponent implements OnInit {
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService,
-    public as: AuthService
+    public as: AuthService,
+    public dm: DownloadManagerService
   ) {
   }
 
@@ -88,25 +84,16 @@ export class BerkasDetailComponent implements OnInit {
     });
   }
 
+  get lampiran(): any {
+    return this.dm.getAttachmentDownloadFile(this.berkasData.attachment_);
+  }
+
   ddl(): void {
-    this.attachmentIsDownloading = true;
-    this.berkas.downloadLampiran(this.berkasData.attachment_.id).subscribe(
-      event => {
-        this.gs.log('[DOWNLOAD_EVENTS]', event);
-        if ((event as any).loaded && (event as any).total) {
-          const e = (event as any);
-          this.gs.log('[DOWNLOAD_PROGRESS]', e);
-          this.attachmentPercentage = Math.round(e.loaded / e.total * 100);
-        }
-        if ((event as any).body) {
-          const e = (event as any);
-          this.gs.log('[DOWNLOAD_COMPLETED]', e);
-          this.attachmentIsDownloading = false;
-          this.attachmentIsCompleted = true;
-          saveAs(e.body, `${this.berkasData.attachment_.name}.${this.berkasData.attachment_.ext}`);
-        }
-      }
-    );
+    this.dm.startDownload(this.berkasData.attachment_.id);
+  }
+
+  saveFileAs(): void {
+    this.dm.saveFileAs(this.berkasData.attachment_.id);
   }
 
 }

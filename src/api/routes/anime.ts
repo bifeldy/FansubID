@@ -149,10 +149,10 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         delete f.private;
         delete f.download_url;
         delete f.description;
-        // delete f.updated_at;
+        delete f.updated_at;
         if ('project_type_' in f && f.project_type_) {
           delete f.project_type_.created_at;
-          // delete f.project_type_.updated_at;
+          delete f.project_type_.updated_at;
         }
         if ('fansub_' in f && f.fansub_) {
           for (const fansub of f.fansub_) {
@@ -160,19 +160,19 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
             delete fansub.urls;
             delete fansub.tags;
             delete fansub.created_at;
-            // delete fansub.updated_at;
+            delete fansub.updated_at;
           }
         }
         if ('anime_' in f && f.anime_) {
           delete f.anime_.created_at;
-          // delete f.anime_.updated_at;
+          delete f.anime_.updated_at;
         }
         if ('user_' in f && f.user_) {
           delete f.user_.role;
           delete f.user_.password;
           delete f.user_.session_token;
           delete f.user_.created_at;
-          // delete f.user_.updated_at;
+          delete f.user_.updated_at;
         }
         results[f.anime_.id].push(f);
       }
@@ -220,7 +220,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
             delete fansub.urls;
             delete fansub.tags;
             delete fansub.created_at;
-            // delete fansub.updated_at;
+            delete fansub.updated_at;
             results[f.anime_.id].push(fansub);
           }
         }

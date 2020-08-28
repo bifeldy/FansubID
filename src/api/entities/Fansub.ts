@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+
+import { User } from './User';
 
 @Entity({ name: 'fansub' })
 export class Fansub {
@@ -36,7 +38,11 @@ export class Fansub {
   // tslint:disable-next-line: variable-name
   created_at: number;
 
-  // @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  // // tslint:disable-next-line: variable-name
-  // updated_at: number;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  // tslint:disable-next-line: variable-name
+  updated_at: number;
+
+  @ManyToOne(type => User)
+  // tslint:disable-next-line: variable-name
+  user_: User;
 }

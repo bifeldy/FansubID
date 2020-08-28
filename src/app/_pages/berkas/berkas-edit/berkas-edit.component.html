@@ -92,8 +92,8 @@
                         <mat-form-field appearance="outline" class="p-3 w-100">
                           <mat-label>Fansub Terkait</mat-label>
                           <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" (focus)="changeFilterFansub(i)" />
-                          <mat-icon matSuffix *ngIf="fs.get('fansub_id').value">short_text</mat-icon>
-                          <button mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value">
+                          <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i == 0">short_text</mat-icon>
+                          <button mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value && i > 0">
                             <mat-icon>close</mat-icon>
                           </button>
                           <mat-autocomplete #autoCompleteFansub="matAutocomplete">
@@ -201,8 +201,8 @@
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-5">
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="name" placeholder="Google Drive" />
-                        <mat-icon matSuffix *ngIf="dl.get('name').value">web</mat-icon>
-                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value">
+                        <mat-icon matSuffix *ngIf="dl.get('name').value || i == 0">web</mat-icon>
+                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && i > 0">
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
@@ -213,8 +213,8 @@
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-7">
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="url" placeholder="https://drive.google.com/drive/u/2/folders/1KYTJZsmH9dyyHBXnQD4N0SjSBXcs8qD-" />
-                        <mat-icon matSuffix *ngIf="dl.get('url').value">link</mat-icon>
-                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value">
+                        <mat-icon matSuffix *ngIf="dl.get('url').value || i == 0">link</mat-icon>
+                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && i > 0">
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>

@@ -6,6 +6,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 
 import moment from 'moment';
 
+import { ToastrService } from 'ngx-toastr';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
@@ -46,7 +48,8 @@ export class FansubEditComponent implements OnInit {
     private gs: GlobalService,
     private pi: PageInfoService,
     private imgbb: ImgbbService,
-    private fansub: FansubService
+    private fansub: FansubService,
+    private toast: ToastrService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;
@@ -202,16 +205,20 @@ export class FansubEditComponent implements OnInit {
     if ('discord' in body) {
       delete body.discord;
     }
+    body.urls = urls;
     this.gs.log('[FANSUB_EDIT_DIRTY]', body);
     this.submitted = true;
-    if (this.fg.invalid) {
+    if (this.fg.invalid || urls.length === 0) {
+      if (urls.length === 0) {
+        this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)');
+      }
       this.submitted = false;
       this.bs.idle();
       return;
     }
     this.fansub.updateFansub(this.fansubId, {
       data: window.btoa(JSON.stringify({
-        ...body, urls
+        ...body
       }))
     }).subscribe(
       res => {

@@ -32,8 +32,4 @@ export class BerkasService {
     return this.api.uploadFile(`/attachment`, lampiran);
   }
 
-  downloadLampiran(lampiranId): any {
-    return this.api.downloadFile(`/attachment?id=${lampiranId}`);
-  }
-
 }

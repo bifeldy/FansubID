@@ -105,7 +105,7 @@ router.post('/', auth.isAuthorized, upload.single('lampiran'), async (req: UserR
         delete resAttachmentSave.user_.password;
         delete resAttachmentSave.user_.session_token;
         delete resAttachmentSave.user_.created_at;
-        // delete resAttachmentSave.user_.updated_at;
+        delete resAttachmentSave.user_.updated_at;
       }
       setTimeout(async () => {
         try {

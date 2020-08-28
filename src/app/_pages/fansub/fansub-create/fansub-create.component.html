@@ -120,6 +120,7 @@
                     <input matInput formControlName="web" placeholder="http://www.domain.id" />
                     <mat-icon matSuffix>web</mat-icon>
                     <mat-error>
+                      <strong *ngIf="fg.get('web').hasError('required')">Website Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('web').hasError('pattern')">Website Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>

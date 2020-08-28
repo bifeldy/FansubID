@@ -73,7 +73,7 @@ export class AnimeDetailComponent implements OnInit {
           this.pi.updatePageMetaData(
             `${this.animeData.title}`,
             `${this.animeData.synopsis}`,
-            `${this.animeData.title_synonyms.join(', ')}`,
+            `${Array.isArray(this.animeData.title_synonyms) ? this.animeData.title_synonyms.join(', ') : this.animeData.title}`,
             this.animeData.images.jpg.image_url
           );
           this.panelData = [];
