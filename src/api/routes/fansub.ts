@@ -96,6 +96,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: '🙄 400 - Gagal Menambah Fansub Baru! 😪',
       result: {
@@ -170,6 +171,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Mencari Berkas :: ${req.query.id} 😪`,
       result: {
@@ -219,6 +221,7 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Mencari Anime :: ${req.query.id} 😪`,
       result: {
@@ -252,6 +255,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       result: fansub
     });
   } catch (error) {
+    console.error(error);
     return next(createError(404));
   }
 });
@@ -327,6 +331,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Fansub :: ${req.params.id} 😪`,
       result: {

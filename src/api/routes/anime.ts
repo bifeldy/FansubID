@@ -92,6 +92,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Menambah Anime 😪`,
       result: {
@@ -184,6 +185,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Mencari Berkas :: ${req.query.id} 😪`,
       result: {
@@ -236,6 +238,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Mencari Fansub :: ${req.query.id} 😪`,
       result: {

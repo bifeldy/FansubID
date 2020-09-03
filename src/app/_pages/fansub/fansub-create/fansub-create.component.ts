@@ -35,6 +35,8 @@ export class FansubCreateComponent implements OnInit {
 
   currentDate = new Date();
 
+  gambar = null;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -102,7 +104,8 @@ export class FansubCreateComponent implements OnInit {
     }
   }
 
-  uploadImage(event): void {
+  uploadImage(event, gambar): void {
+    this.gambar = gambar;
     this.image = null;
     this.fg.controls.image.patchValue(null);
     const file = event.target.files[0];
@@ -123,12 +126,14 @@ export class FansubCreateComponent implements OnInit {
           this.image = null;
           this.image_url = '/assets/img/form-image-error.png';
           this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.gambar.clear(event);
         }
       };
     } catch (error) {
       this.image = null;
       this.imageErrorText = null;
       this.image_url = '/assets/img/form-no-image.png';
+      this.gambar.clear(event);
     }
   }
 

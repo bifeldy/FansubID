@@ -10,6 +10,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
 
 import User from '../../../_shared/models/User';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-berkas-detail',
@@ -98,6 +99,15 @@ export class BerkasDetailComponent implements OnInit {
 
   saveFileAs(): void {
     this.dm.saveFileAs(this.berkasData.attachment_.id);
+  }
+
+  standardDdl(): void {
+    const ddlApi = 'https://hikki.bifeldy.id/api/attachment';
+    const lampiranId = `?id=${this.berkasData.attachment_.id}`;
+    const token = `&token=${localStorage.getItem(environment.tokenName)}`;
+    const ddlUrl = ddlApi + lampiranId + token;
+    this.cancel_dl();
+    window.open(ddlUrl, '_blank');
   }
 
 }

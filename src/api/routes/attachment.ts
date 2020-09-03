@@ -54,12 +54,17 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
           { id: Equal(lampiranId) }
         ]
       });
-      find.file(/$/, `${environment.uploadFolder}`, async (files) => {
+      return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
         const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
         if (fIdx >= 0) {
-          attachment.download_count++;
-          await attachmentRepo.save(attachment);
-          res.download(files[fIdx], (err) => {});
+          res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
+            if (err) {
+              console.error(err);
+            } else {
+              attachment.download_count++;
+              await attachmentRepo.save(attachment);
+            }
+          });
         } else {
           return next(createError(404));
         }
@@ -114,16 +119,26 @@ router.post('/', auth.isAuthorized, upload.single('lampiran'), async (req: UserR
               { id: Equal(resAttachmentSave.id), name: Equal(resAttachmentSave.name) }
             ]
           });
-          fs.unlink(`${environment.uploadFolder}/${attachmentToBeDeleted.name}`, (err) => { if (err) {}});
+          fs.unlink(`${environment.uploadFolder}/${attachmentToBeDeleted.name}`, (err) => {
+            if (err) {
+              console.error(err);
+            }
+          });
           await tempAttachmentRepo.remove(attachmentToBeDeleted);
-        } catch (error) {}
+        } catch (error) {
+          console.error(error);
+        }
       }, 3 * 60 * 1000);
       res.status(200).json({
         info: `😅 200 - Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
         result: resAttachmentSave
       });
     } else {
-      fs.unlink(`${environment.uploadFolder}/${req.file.filename}`, (err) => { if (err) {}});
+      fs.unlink(`${environment.uploadFolder}/${req.file.filename}`, (err) => {
+        if (err) {
+          console.error(err);
+        }
+      });
       res.status(400).json({
         info: '🙄 400 - Gagal Mengunggah Lampiran! 😪',
         result: {

@@ -78,7 +78,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             }
           }
           if (!errorTitle) {
-            errorTitle = 'Whoops, Error!';
+            errorTitle = 'Whoops, Server Down/Sibuk T.T';
           }
           this.toast.error(errorMessage, errorTitle);
         }

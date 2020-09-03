@@ -34,11 +34,12 @@ export class ApiService {
 
   downloadFile(path: string): Observable<any> {
     this.gs.log('[API_DOWNLOAD]', path);
-    return this.http.get(environment.apiUrl + path, {
+    const options: any = {
       responseType: 'blob',
       observe: 'events',
       reportProgress: true
-    });
+    };
+    return this.http.get(path.startsWith('http') ? path : environment.apiUrl + path, options);
   }
 
   getData(path: string, timedOut = 10000): Observable<any> {

@@ -40,6 +40,8 @@ export class FansubEditComponent implements OnInit {
 
   currentDate = new Date();
 
+  gambar = null;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -135,9 +137,11 @@ export class FansubEditComponent implements OnInit {
     }
   }
 
-  uploadImage(event): void {
+  uploadImage(event, gambar): void {
+    this.gambar = gambar;
     this.image = null;
     this.fg.controls.image.patchValue(null);
+    this.fg.controls.image.markAsPristine();
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -156,13 +160,14 @@ export class FansubEditComponent implements OnInit {
           this.image = null;
           this.image_url = '/assets/img/form-image-error.png';
           this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.gambar.clear(event);
         }
       };
     } catch (error) {
       this.image = null;
       this.imageErrorText = null;
       this.image_url = this.image_url_original;
-      this.fg.controls.image.markAsPristine();
+      this.gambar.clear(event);
     }
   }
 
@@ -178,6 +183,7 @@ export class FansubEditComponent implements OnInit {
       err => {
         this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
+        this.fg.controls.image.markAsPristine();
         this.submitted = false;
       }
     );

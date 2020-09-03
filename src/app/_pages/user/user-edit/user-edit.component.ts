@@ -45,6 +45,9 @@ export class UserEditComponent implements OnInit {
 
   passwordHide = true;
 
+  photoImage = null;
+  coverImage = null;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -119,9 +122,11 @@ export class UserEditComponent implements OnInit {
     this.userData = data;
   }
 
-  uploadPhotoImage(event): void {
+  uploadPhotoImage(event, photoImage): void {
+    this.photoImage = photoImage;
     this.imagePhoto = null;
     this.fg.controls.image_photo.patchValue(null);
+    this.fg.controls.image_photo.markAsPristine();
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -140,13 +145,14 @@ export class UserEditComponent implements OnInit {
           this.imagePhoto = null;
           this.image_photo = '/assets/img/form-image-error.png';
           this.imagePhotoErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.photoImage.clear(event);
         }
       };
     } catch (error) {
       this.imagePhoto = null;
       this.imagePhotoErrorText = null;
       this.image_photo = this.image_photo_original;
-      this.fg.controls.image_photo.markAsPristine();
+      this.photoImage.clear(event);
     }
   }
 
@@ -162,14 +168,17 @@ export class UserEditComponent implements OnInit {
       err => {
         this.gs.log('[IMAGE_PHOTO_ERROR]', err);
         this.fg.controls.image_photo.patchValue(null);
+        this.fg.controls.image_photo.markAsPristine();
         this.submitted = false;
       }
     );
   }
 
-  uploadCoverImage(event): void {
+  uploadCoverImage(event, coverImage): void {
+    this.coverImage = coverImage;
     this.imageCover = null;
     this.fg.controls.image_cover.patchValue(null);
+    this.fg.controls.image_cover.markAsPristine();
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -188,13 +197,14 @@ export class UserEditComponent implements OnInit {
           this.imageCover = null;
           this.image_cover = '/assets/img/form-image-error.png';
           this.imageCoverErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.coverImage.clear(event);
         }
       };
     } catch (error) {
       this.imageCover = null;
       this.imageCoverErrorText = null;
       this.image_cover = this.image_cover_original;
-      this.fg.controls.image_cover.markAsPristine();
+      this.coverImage.clear(event);
     }
   }
 
@@ -210,6 +220,7 @@ export class UserEditComponent implements OnInit {
       err => {
         this.gs.log('[IMAGE_COVER_ERROR]', err);
         this.fg.controls.image_cover.patchValue(null);
+        this.fg.controls.image_cover.markAsPristine();
         this.submitted = false;
       }
     );

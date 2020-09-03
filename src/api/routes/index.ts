@@ -117,6 +117,7 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: '🙄 400 - Cek NIK Gagal! 😪',
       result: {
@@ -198,6 +199,7 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => 
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: '🙄 400 - Verifikasi Gagal! 😪',
       result: {

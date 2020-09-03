@@ -76,17 +76,17 @@
           </div>
           <div class="col-12 text-center" *ngIf="currentUser.verified">
             <button class="m-1 w-100" mat-stroked-button color="primary" (click)="ddl()"
-              matTooltip="Total Unduhan :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
+              matTooltip="Diunduh Sebanyak :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
               <mat-icon class="mr-2">save_alt</mat-icon>
               {{ lampiran.ext }} ({{ lampiran.size }} Bytes)
             </button>
             <button class="m-1 w-100" mat-stroked-button color="primary" (click)="cancel_dl()"
-              matTooltip="Total Unduhan :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
+              matTooltip="Diunduh Sebanyak :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
               <mat-icon class="mr-2">close</mat-icon>
               Batal Unduh
             </button>
             <button class="m-1 w-100" mat-stroked-button color="primary" (click)="saveFileAs()" *ngIf="lampiran.data"
-              matTooltip="Total Unduhan :: {{ lampiran.download_count }}x">
+              matTooltip="Diunduh Sebanyak :: {{ lampiran.download_count }}x">
               <mat-icon class="mr-2">save</mat-icon>
               {{ lampiran.name + '.' + lampiran.ext }}
             </button>
@@ -96,6 +96,11 @@
                 {{ lampiran.percentage }}% @ {{ lampiran.speed }} KB/s
                 <br />
                 <mat-progress-bar [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
+              </div>
+            </div>
+            <div class="col">
+              <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdl()" style="cursor: pointer;">
+                Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
               </div>
             </div>
           </div>

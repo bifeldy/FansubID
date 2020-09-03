@@ -20,14 +20,14 @@ function JwtEncode(user: any, rememberMe = false): any {
 
 function JwtDecode(req: Request, res: Response, next: NextFunction): any {
   try {
-    let token = req.headers.authorization || req.headers['x-access-token'] || req.body.token || '';
+    let token = req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length);
     }
     const decoded = JWT.verify(token, jwtSecretKey);
     return { ...decoded, token };
-  }
-  catch (err) {
+  } catch (err) {
+    console.error(err);
     res.status(401).json({
       info: '🤧 401 - Whoops, Akses Ditolak! 😷',
       result: err

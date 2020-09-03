@@ -5,18 +5,22 @@ import 'reflect-metadata';
 import fs from 'fs';
 import path from 'path';
 
-import cors from 'cors';
 import rateLimit from 'express-rate-limit';
+import cors from 'cors';
+
+const currentWorkingDir = process.cwd();
+
+import logger from './src/api/helpers/logger';
 
 const domino = require('domino');
-const ssrPage = fs.readFileSync(path.join(process.cwd(), 'dist/hikki/browser', 'index.html')).toString();
+const ssrPage = fs.readFileSync(path.join(currentWorkingDir, 'dist/hikki/browser', 'index.html')).toString();
 const win = domino.createWindow(ssrPage);
 
 global.window = win;
 global.document = win.document;
 global.localStorage = localStorage;
 
-import { createConnection } from 'typeorm';
+import { createConnection, Equal, getRepository } from 'typeorm';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
@@ -38,6 +42,7 @@ import { Anime } from './src/api/entities/Anime';
 import { Berkas } from './src/api/entities/Berkas';
 import { Attachment } from './src/api/entities/Attachment';
 import { TempAttachment } from './src/api/entities/TempAttachment';
+import { CorsApiKey } from './src/api/entities/CorsApiKey';
 
 const dbName = process.env.DB_NAME || 'hikki';
 const dbUsername = process.env.DB_USERNAME || 'root';
@@ -61,7 +66,8 @@ const typeOrmConfig: any = {
     Anime,
     Berkas,
     Attachment,
-    TempAttachment
+    TempAttachment,
+    CorsApiKey
   ]
 };
 
@@ -71,16 +77,64 @@ import indexRouter from './src/api/routes';
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
 
+  const server = express();
+
+  // Express rest api endpoints
   const apiLimiter = rateLimit({
     windowMs: 1000, // 1 Second
     max: 10, // 10 Request
     message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 💩'
   });
-  const server = express();
 
-  console.log(`Working Directory :: ${process.cwd()}`);
+  // CORS Options
+  const corsOptions = {
+    origin: async (origin, callback) => {
+      try {
+        let orig = origin;
+        if (!orig) {
+          callback(null, true);
+        } else {
+          if (orig.startsWith('http://')) {
+            orig = orig.slice(7, orig.length);
+          } else if (orig.startsWith('https://')) {
+            orig = orig.slice(8, orig.length);
+          }
+          if (orig.startsWith('www.')) {
+            orig = orig.slice(4, orig.length);
+          }
+          orig = orig.split(':')[0];
+          const originApiKeyRepo = getRepository(CorsApiKey);
+          const originApiKey = await originApiKeyRepo.findOneOrFail({
+            where: [
+              { domain: Equal(orig) }
+            ]
+          });
+          if (originApiKey) {
+            callback(null, true);
+          } else {
+            throw new Error('CORS Wheiy~ Siapa Nih ?');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        callback(new Error('CORS Wheiy~ Siapa Nih ?'), false);
+      }
+    }
+  };
 
-  const distFolder = join(process.cwd(), 'dist/hikki/browser');
+  // Config
+  server.set('trust proxy', true);
+
+  // Middleware
+  server.use(MorganChalk.morganChalk);
+  server.use(express.json({ limit: '992mb' }));
+  server.use(express.urlencoded({ extended: false, limit: '992mb' }));
+  server.use(cors(corsOptions));
+  server.use('/api', apiLimiter, indexRouter);
+
+  logger.log(`Working Directory :: ${currentWorkingDir}`);
+
+  const distFolder = join(currentWorkingDir, 'dist/hikki/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
@@ -90,27 +144,6 @@ export function app(): express.Express {
 
   server.set('view engine', 'html');
   server.set('views', distFolder);
-
-  // Middleware
-  server.use(MorganChalk.morganChalk);
-  server.use(express.json({ limit: '992mb' }));
-  server.use(express.urlencoded({ extended: false, limit: '992mb' }));
-
-  server.use(cors({
-    origin: '*',
-    optionsSuccessStatus: 200,
-    exposedHeaders: [
-      'Content-Language',
-      'Content-Type',
-      'Content-Length',
-      'Content-Disposition',
-      'Last-Modified',
-      'Expires'
-    ],
-  }));
-
-  // Express rest api endpoints
-  server.use('/api', apiLimiter, indexRouter);
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, {
@@ -129,14 +162,14 @@ createConnection({
   ...typeOrmConfig
 }).then(async connection => {
   const c: any = connection;
-  console.log(`📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`);
+  logger.log(`📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`);
   const port = process.env.PORT || 4000;
   const server = app();
   server.listen(port, () => {
-    console.log(`✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`);
+    logger.log(`✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`);
   });
 }).catch(
-  error => console.log(error)
+  error => console.error(error)
 );
 
 export * from './src/main.server';

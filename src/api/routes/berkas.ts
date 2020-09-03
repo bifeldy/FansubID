@@ -184,6 +184,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: '🙄 400 - Gagal Menambah Berkas Baru! 😪',
       result: {
@@ -243,6 +244,7 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
       result: resFileSave
     });
   } catch (error) {
+    console.error(error);
     return next(createError(404));
   }
 });
@@ -265,7 +267,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
           ],
           relations: ['user_', 'attachment_', 'anime_', 'project_type_', 'fansub_']
         });
-        if (req.user.id === file.user_.id) {
+        if (req.user.id === file.user_.id || req.user.role === 'MODERATOR' || req.user.role === 'ADMIN') {
           if (req.body.name) {
             file.name = req.body.name;
           }
@@ -378,12 +380,14 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
           });
         }
       } catch (err) {
+        console.error(err);
         return next(createError(404));
       }
     } else {
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Berkas :: ${req.params.id} 😪`,
       result: {

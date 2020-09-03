@@ -10,7 +10,7 @@
               <img class="w-100 border rounded-circle" src="{{ image_photo }}" />
               <mat-form-field appearance="outline" class="pt-3 w-100">
                 <mat-label>Profile Image</mat-label>
-                <ngx-mat-file-input class="w-100" (change)="uploadPhotoImage($event)" #photoImage
+                <ngx-mat-file-input class="w-100" (change)="uploadPhotoImage($event, photoImage)" #photoImage
                   [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
                 <mat-icon matSuffix>image</mat-icon>
               </mat-form-field>
@@ -39,7 +39,7 @@
           <div class="row py-3">
             <mat-form-field appearance="outline" class="pt-3 w-100">
               <mat-label>Cover Image</mat-label>
-              <ngx-mat-file-input class="w-100" placeholder="Basic Input" (change)="uploadCoverImage($event)" #coverImage
+              <ngx-mat-file-input class="w-100" placeholder="Basic Input" (change)="uploadCoverImage($event, coverImage)" #coverImage
                 [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
               <mat-icon matSuffix>image</mat-icon>
             </mat-form-field>

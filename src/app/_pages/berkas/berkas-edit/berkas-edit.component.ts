@@ -62,6 +62,11 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   attachmentSpeed = 0;
   attachmentMode = 'indeterminate';
 
+  timerTimeout = null;
+
+  gambar = null;
+  ddl = null;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -131,6 +136,9 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     }
     if (this.uploadToast) {
       this.toast.remove(this.uploadToast.toastId);
+    }
+    if (this.timerTimeout) {
+      clearTimeout(this.timerTimeout);
     }
   }
 
@@ -312,9 +320,11 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.getFansubControl.controls[i].get('fansub_name').patchValue(data.name);
   }
 
-  uploadImage(event): void {
+  uploadImage(event, gambar): void {
+    this.gambar = gambar;
     this.image = null;
     this.fg.controls.image.patchValue(null);
+    this.fg.controls.image.markAsPristine();
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -333,13 +343,14 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
           this.image = null;
           this.image_url = '/assets/img/form-image-error.png';
           this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.gambar.clear(event);
         }
       };
     } catch (error) {
       this.image = null;
       this.imageErrorText = null;
       this.image_url = this.image_url_original;
-      this.fg.controls.image.markAsPristine();
+      this.gambar.clear(event);
     }
   }
 
@@ -355,6 +366,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       err => {
         this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
+        this.fg.controls.image.markAsPristine();
         this.submitted = false;
       }
     );
@@ -400,9 +412,12 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  uploadAttachment(event): void {
+  uploadAttachment(event, ddl): void {
+    this.ddl = ddl;
     const file = event.target.files[0];
     this.gs.log('[AttachmentLoad]', file);
+    this.fg.controls.attachment_id.patchValue(null);
+    this.fg.controls.attachment_id.markAsPristine();
     try {
       if (file.size <= 992 * 1000 * 1000) {
         this.attachment = file;
@@ -410,10 +425,12 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       } else {
         this.attachment = null;
         this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 992 MB!';
+        this.ddl.clear(event);
       }
     } catch (error) {
       this.attachment = null;
       this.attachmentErrorText = '';
+      this.ddl.clear();
     }
   }
 
@@ -455,7 +472,31 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
           this.attachmentIsUploading = false;
           this.attachmentIsCompleted = true;
           this.fg.controls.attachment_id.patchValue(e.result.id);
+          this.fg.controls.attachment_id.markAsDirty();
           this.toast.remove(this.uploadToast.toastId);
+          const timer = (2 * 60 * 1000) + (30 * 1000);
+          this.uploadToast = this.toast.warning(
+            `Segera Kirim Data Berkas Anda!`,
+            `Lampiran Akan Dihapus ...`,
+            {
+              closeButton: false,
+              timeOut: timer,
+              disableTimeOut: 'extendedTimeOut',
+              tapToDismiss: false,
+              progressAnimation: 'decreasing'
+            }
+          );
+          this.timerTimeout = setTimeout(() => {
+            this.attachmentMode = 'determinate';
+            this.attachmentIsUploading = false;
+            this.attachmentIsCompleted = false;
+            this.attachment = null;
+            this.attachmentErrorText = '';
+            this.fg.controls.attachment_id.patchValue(null);
+            this.fg.controls.attachment_id.markAsPristine();
+            this.toast.remove(this.uploadToast.toastId);
+            this.ddl.clear();
+          }, timer);
         }
       }
     );

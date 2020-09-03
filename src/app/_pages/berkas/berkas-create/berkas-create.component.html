@@ -36,7 +36,7 @@
                     <img class="w-100 border" [src]="image_url" />
                     <mat-form-field appearance="outline" class="pt-3 w-100">
                       <mat-label>Gambar</mat-label>
-                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event)" #gambar [disabled]="fg.value.image"
+                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
                       <mat-icon matSuffix>image</mat-icon>
                     </mat-form-field>
@@ -166,7 +166,7 @@
                 <div class="row" *ngIf="currentUser && currentUser.verified">
                   <mat-form-field appearance="outline" class="px-3 pt-3 col">
                     <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
-                    <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event)" #ddl [disabled]="attachmentIsUploading || attachmentIsCompleted"
+                    <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event, ddl)" #ddl [disabled]="attachmentIsUploading || attachmentIsCompleted"
                       [accept]="'video/x-matroska, video/mp4'"></ngx-mat-file-input>
                     <mat-icon matSuffix>attach_file</mat-icon>
                   </mat-form-field>

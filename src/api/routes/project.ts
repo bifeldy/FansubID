@@ -71,6 +71,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       result: project
     });
   } catch (error) {
+    console.error(error);
     return next(createError(404));
   }
 });
@@ -107,6 +108,7 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Jenis Project :: ${req.params.id} 😪`,
       result: {

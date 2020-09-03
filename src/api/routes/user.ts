@@ -59,6 +59,7 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
       result: selectedUser
     });
   } catch (error) {
+    console.error(error);
     return next(createError(404));
   }
 });
@@ -112,6 +113,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
               }
             });
           } catch (e) {
+            console.error(e);
             return next(createError(404));
           }
         } else {
@@ -123,12 +125,14 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
           });
         }
       } catch (err) {
+        console.error(err);
         return next(createError(404));
       }
     } else {
       throw new Error('Data Tidak Lengkap');
     }
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       info: `🙄 400 - Gagal Mengubah Profile :: ${req.params.id} 😪`,
       result: {
@@ -201,6 +205,7 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
       results: files
     });
   } catch (error) {
+    console.error(error);
     return next(createError(404));
   }
 });

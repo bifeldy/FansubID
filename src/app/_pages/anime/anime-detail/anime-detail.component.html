@@ -31,7 +31,7 @@
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="primary" (click)="openSeasonalAnime()"
-              matTooltip="Lihat Semua Anime Pada Musim '{{ animeData.premiered ? animeData.premiered : '?' }}'">
+              matTooltip="Lihat Semua Anime Pada Musim '{{ animeData.season && animeData.year ? animeData.season + ' ' + animeData.year : '?' }}'">
               <mat-icon>dynamic_feed</mat-icon> {{ animeData.episodes ? animeData.episodes : '?' }} Eps &nbsp;
               <mat-icon>star_half</mat-icon> {{ animeData.score ? animeData.score : '?' }} <br />
               <mat-icon>date_range</mat-icon> {{ animeData.aired.string ? animeData.aired.string : '?' }}
