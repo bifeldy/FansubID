@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { dependencies } from '../../../../package.json';
 
+import { GlobalService } from 'src/app/_shared/services/global.service';
+
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
@@ -46,7 +48,12 @@ export class AboutComponent implements OnInit {
 
   library = dependencies;
 
-  constructor() {
+  constructor(
+    private gs: GlobalService,
+  ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {

@@ -15,8 +15,11 @@
   </mat-sidenav>
 
   <!-- Main Content -->
-  <mat-sidenav-content style="background-position: bottom right; background-size: 128px; background-repeat: no-repeat;"
-    [style.background-image]="'url(' + selectedBackgroundImage + ')'" (click)="closeSideNav()">
+  <mat-sidenav-content (click)="closeSideNav()"
+    [style.background-repeat]="router.url == '/verify' || router.url == '/about' ? 'repeat' : 'no-repeat'"
+    [style.background-size]="router.url == '/verify' || router.url == '/about' ? '' : '128px'"
+    [style.background-position]="router.url == '/verify' || router.url == '/about' ? '' : 'bottom right'"
+    [style.background-image]="'url(' + selectedBackgroundImage + ')'">
 
     <!-- Routing Content -->
     <div class="main_content" #leftSideNavContent>

@@ -80,7 +80,11 @@ export class AppComponent implements OnInit {
   updateBackgroundImage(): void {
     switch (this.router.url.substr(1).split('/').length) {
       case 1:
-        this.selectedBackgroundImage = `/assets/img/router/bg-${this.router.url.substr(1).split('/')[0].split('?')[0]}.png`;
+        if (this.router.url === '/verify' || this.router.url === '/about') {
+          this.selectedBackgroundImage = `/assets/img/bg-aboutverify.svg`;
+        } else {
+          this.selectedBackgroundImage = `/assets/img/router/bg-${this.router.url.substr(1).split('/')[0].split('?')[0]}.png`;
+        }
         break;
       default:
         this.selectedBackgroundImage = ``;

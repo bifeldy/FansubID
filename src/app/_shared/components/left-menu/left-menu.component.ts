@@ -34,25 +34,25 @@ export class LeftMenuComponent implements OnInit {
       icon: 'closed_caption'
     },
     {
-      name: 'Anime List',
+      name: 'Anime Musiman',
       link: '/anime',
       icon: 'live_tv'
     },
-    {
-      name: 'Film & Drama',
-      link: '/drama',
-      icon: 'movie_filter'
-    },
-    {
-      name: 'Komik & Novel',
-      link: '/book',
-      icon: 'book'
-    },
-    {
-      name: 'Gim & Piranti',
-      link: '/software',
-      icon: 'videogame_asset'
-    }
+    // {
+    //   name: 'Film & Drama',
+    //   link: '/drama',
+    //   icon: 'movie_filter'
+    // },
+    // {
+    //   name: 'Komik & Novel',
+    //   link: '/book',
+    //   icon: 'book'
+    // },
+    // {
+    //   name: 'Gim & Piranti',
+    //   link: '/software',
+    //   icon: 'videogame_asset'
+    // }
   ];
 
   public miscMenus: Menu[] = [
