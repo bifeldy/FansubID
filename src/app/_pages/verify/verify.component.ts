@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -14,7 +14,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './verify.component.html',
   styleUrls: ['./verify.component.css']
 })
-export class VerifyComponent implements OnInit {
+export class VerifyComponent implements OnInit, OnDestroy {
 
   fg1: FormGroup;
   fg2: FormGroup;
@@ -25,6 +25,10 @@ export class VerifyComponent implements OnInit {
   verifyInfo = 'Verifikasi akunmu dan dapatkan fitur menarik lainnya~';
 
   kpuRiUserData = null;
+
+  subsCekNik = null;
+  subsVerify1 = null;
+  subsVerify2 = null;
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +41,18 @@ export class VerifyComponent implements OnInit {
   ) {
     if (this.as.currentUserValue && this.as.currentUserValue.verified) {
       this.router.navigate(['/home']);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsCekNik) {
+      this.subsCekNik.unsubscribe();
+    }
+    if (this.subsVerify1) {
+      this.subsVerify1.unsubscribe();
+    }
+    if (this.subsVerify2) {
+      this.subsVerify2.unsubscribe();
     }
   }
 
@@ -70,7 +86,7 @@ export class VerifyComponent implements OnInit {
     this.gs.log(`[GOOGLE_CAPTCHA] ${captchaResponse}`);
     if (captchaResponse) {
       this.fg1.controls['g-recaptcha-response'].patchValue(captchaResponse);
-      this.us.cekNik({
+      this.subsCekNik = this.us.cekNik({
         data: window.btoa(JSON.stringify({
           nik: this.fg1.value.nik,
           nama: this.fg1.value.nama,
@@ -116,7 +132,7 @@ export class VerifyComponent implements OnInit {
         delete body[propName];
       }
     }
-    this.us.verifikasi({
+    this.subsVerify1 = this.us.verifikasi({
       data: window.btoa(JSON.stringify({
         ...body
       }))
@@ -128,7 +144,7 @@ export class VerifyComponent implements OnInit {
         this.as.removeUser();
         localStorage.setItem(environment.tokenName, res.result.token);
         this.bs.busy();
-        this.as.verify(res.result.token).subscribe(
+        this.subsVerify2 = this.as.verify(res.result.token).subscribe(
           success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();

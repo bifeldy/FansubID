@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -20,7 +20,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.css']
 })
-export class UserEditComponent implements OnInit {
+export class UserEditComponent implements OnInit, OnDestroy {
 
   fg: FormGroup;
 
@@ -48,6 +48,13 @@ export class UserEditComponent implements OnInit {
   photoImage = null;
   coverImage = null;
 
+  subsParam = null;
+  subsUserDetail = null;
+  subsImgbb1 = null;
+  subsImgbb2 = null;
+  subsUserUpdate = null;
+  subsVerify = null;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -66,16 +73,37 @@ export class UserEditComponent implements OnInit {
     this.passwordHide = !this.passwordHide;
   }
 
+  ngOnDestroy(): void {
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
+    if (this.subsUserDetail) {
+      this.subsUserDetail.unsubscribe();
+    }
+    if (this.subsImgbb1) {
+      this.subsImgbb1.unsubscribe();
+    }
+    if (this.subsImgbb2) {
+      this.subsImgbb2.unsubscribe();
+    }
+    if (this.subsUserUpdate) {
+      this.subsUserUpdate.unsubscribe();
+    }
+    if (this.subsVerify) {
+      this.subsVerify.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
     this.pi.updatePageMetaData(
       `User - Ubah Profile`,
       `Halaman Pembaharuan Profile`,
       `Ubah Profile`
       );
-    this.activatedRoute.params.subscribe(params => {
+    this.subsParam = this.activatedRoute.params.subscribe(params => {
       this.username = params.username;
       this.bs.busy();
-      this.us.getUserData(this.username).subscribe(
+      this.subsUserDetail = this.us.getUserData(this.username).subscribe(
         res => {
           this.gs.log('[USER_DETAIL_SUCCESS]', res);
           this.bs.idle();
@@ -158,7 +186,7 @@ export class UserEditComponent implements OnInit {
 
   submitPhotoImage(): void {
     this.submitted = true;
-    this.imgbb.uploadImage(this.imagePhoto).subscribe(
+    this.subsImgbb1 = this.imgbb.uploadImage(this.imagePhoto).subscribe(
       res => {
         this.gs.log('[IMAGE_PHOTO_SUCCESS]', res);
         this.fg.controls.image_photo.patchValue(res.data.image.url);
@@ -210,7 +238,7 @@ export class UserEditComponent implements OnInit {
 
   submitCoverImage(): void {
     this.submitted = true;
-    this.imgbb.uploadImage(this.imageCover).subscribe(
+    this.subsImgbb2 = this.imgbb.uploadImage(this.imageCover).subscribe(
       res => {
         this.gs.log('[IMAGE_COVER_SUCCESS]', res);
         this.fg.controls.image_cover.patchValue(res.data.image.url);
@@ -239,7 +267,7 @@ export class UserEditComponent implements OnInit {
       this.bs.idle();
       return;
     }
-    this.us.updateUser(this.username, {
+    this.subsUserUpdate = this.us.updateUser(this.username, {
       data: window.btoa(JSON.stringify({
         ...body
       }))
@@ -251,7 +279,7 @@ export class UserEditComponent implements OnInit {
         this.as.removeUser();
         localStorage.setItem(environment.tokenName, res.result.token);
         this.bs.busy();
-        this.as.verify(res.result.token).subscribe(
+        this.subsVerify = this.as.verify(res.result.token).subscribe(
           success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();

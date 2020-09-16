@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Warna } from '../../../_shared/models/Warna';
@@ -14,7 +14,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
   templateUrl: './anime-detail.component.html',
   styleUrls: ['./anime-detail.component.css']
 })
-export class AnimeDetailComponent implements OnInit {
+export class AnimeDetailComponent implements OnInit, OnDestroy {
 
   animeId = 0;
   animeData = null;
@@ -49,6 +49,11 @@ export class AnimeDetailComponent implements OnInit {
     }
   ];
 
+  subsParam = null;
+  subsAnime = null;
+  subsBerkas = null;
+  subsFansub = null;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -60,11 +65,26 @@ export class AnimeDetailComponent implements OnInit {
   ) {
   }
 
+  ngOnDestroy(): void {
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
+    if (this.subsAnime) {
+      this.subsAnime.unsubscribe();
+    }
+    if (this.subsBerkas) {
+      this.subsAnime.unsubscribe();
+    }
+    if (this.subsFansub) {
+      this.subsAnime.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
+    this.subsParam = this.activatedRoute.params.subscribe(params => {
       this.animeId = params.animeId;
       this.bs.busy();
-      this.anime.getAnime(this.animeId).subscribe(
+      this.subsAnime = this.anime.getAnime(this.animeId).subscribe(
         res => {
           this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
           this.animeData = res.result;
@@ -117,7 +137,7 @@ export class AnimeDetailComponent implements OnInit {
 
   getBerkasAnime(): void {
     this.bs.busy();
-    this.anime.getBerkasAnime([this.animeId], this.q, this.page, this.row).subscribe(
+    this.subsBerkas = this.anime.getBerkasAnime([this.animeId], this.q, this.page, this.row).subscribe(
       res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
@@ -143,7 +163,7 @@ export class AnimeDetailComponent implements OnInit {
 
   getFansubAnime(): void {
     this.bs.busy();
-    this.anime.getFansubAnime([this.animeId]).subscribe(
+    this.subsFansub = this.anime.getFansubAnime([this.animeId]).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         this.fansubAnime = [];

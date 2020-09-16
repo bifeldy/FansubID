@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChartType, ChartOptions } from 'chart.js';
@@ -14,7 +14,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
   templateUrl: './fansub-list.component.html',
   styleUrls: ['./fansub-list.component.css']
 })
-export class FansubListComponent implements OnInit {
+export class FansubListComponent implements OnInit, OnDestroy {
 
   allFansubId = [];
   fansubData = [];
@@ -65,6 +65,9 @@ export class FansubListComponent implements OnInit {
   fansubActive = 0;
   fansubInActive = 0;
 
+  subsFansub = null;
+  subsAnime = null;
+
   constructor(
     private router: Router,
     private gs: GlobalService,
@@ -79,13 +82,22 @@ export class FansubListComponent implements OnInit {
     monkeyPatchChartJsLegend();
   }
 
+  ngOnDestroy(): void {
+    if (this.subsFansub) {
+      this.subsFansub.unsubscribe();
+    }
+    if (this.subsAnime) {
+      this.subsAnime.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
     this.getFansubData();
   }
 
   getFansubData(): void {
     this.bs.busy();
-    this.fansub.getAllFansub().subscribe(
+    this.subsFansub = this.fansub.getAllFansub().subscribe(
       res => {
         this.gs.log('[FANSUB_LIST_SUCCESS]', res);
         for (const r of res.results) {
@@ -128,7 +140,7 @@ export class FansubListComponent implements OnInit {
 
   getAnimeFansub(): void {
     this.bs.busy();
-    this.fansub.getAnimeFansub(this.allFansubId).subscribe(
+    this.subsAnime = this.fansub.getAnimeFansub(this.allFansubId).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         for (const f of this.fansubData) {

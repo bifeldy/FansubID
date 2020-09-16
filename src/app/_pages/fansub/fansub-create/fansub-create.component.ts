@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -19,7 +19,7 @@ import { ImgbbService } from '../../../_shared/services/imgbb.service';
   templateUrl: './fansub-create.component.html',
   styleUrls: ['./fansub-create.component.css']
 })
-export class FansubCreateComponent implements OnInit {
+export class FansubCreateComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -37,6 +37,9 @@ export class FansubCreateComponent implements OnInit {
 
   gambar = null;
 
+  subsImgbb = null;
+  subsFansub = null;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -50,6 +53,15 @@ export class FansubCreateComponent implements OnInit {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsImgbb) {
+      this.subsImgbb.unsubscribe();
+    }
+    if (this.subsFansub) {
+      this.subsFansub.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -139,7 +151,7 @@ export class FansubCreateComponent implements OnInit {
 
   submitImage(): void {
     this.submitted = true;
-    this.imgbb.uploadImage(this.image).subscribe(
+    this.subsImgbb = this.imgbb.uploadImage(this.image).subscribe(
       res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.data.image.url);
@@ -174,7 +186,7 @@ export class FansubCreateComponent implements OnInit {
       this.bs.idle();
       return;
     }
-    this.fansub.createFansub({
+    this.subsFansub = this.fansub.createFansub({
       data: window.btoa(JSON.stringify({
         image: this.fg.value.image,
         name: this.fg.value.name,

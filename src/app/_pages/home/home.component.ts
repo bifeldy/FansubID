@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GlobalService } from '../../_shared/services/global.service';
-import { BerkasService } from '../../_shared/services/berkas.service';
-import { FabService } from '../../_shared/services/fab.service';
-import { BusyService } from '../../_shared/services/busy.service';
+// import { BerkasService } from '../../_shared/services/berkas.service';
+// import { FabService } from '../../_shared/services/fab.service';
+// import { BusyService } from '../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-home',
@@ -13,31 +13,65 @@ import { BusyService } from '../../_shared/services/busy.service';
 })
 export class HomeComponent implements OnInit {
 
-  berkasData = [];
+  discordGuildId = '342220398022098944';
+  discordInviteCode = 'xGWdExk';
 
-  tabData: any = [
+  gridListBreakpoint = 1;
+
+  uploaderMingguan = [
+    { username: 'Bifeldy', total_berkas: 7, image_url: 'https://i.ibb.co/dDHWy2g/1598472779359.gif' },
+    { username: 'Bifeldy', total_berkas: 8, image_url: 'https://i.ibb.co/dDHWy2g/1598472779359.gif' },
+    { username: 'Bifeldy', total_berkas: 9, image_url: 'https://i.ibb.co/dDHWy2g/1598472779359.gif' },
+    { username: 'Bifeldy', total_berkas: 10, image_url: 'https://i.ibb.co/dDHWy2g/1598472779359.gif' },
+    { username: 'Bifeldy', total_berkas: 11, image_url: 'https://i.ibb.co/dDHWy2g/1598472779359.gif' },
+    { username: 'Bifeldy', total_berkas: 12, image_url: 'https://i.ibb.co/dDHWy2g/1598472779359.gif' },
+  ];
+
+  berkasPopuler = [
     {
-      name: 'Berkas Terkini',
-      icon: 'file_copy',
-      type: 'table',
-      data: {
-        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'Pemilik'],
-        row: []
-      }
+      id: 'e7696a8f-67ea-4876-803e-07d5b6867b34',
+      title: '[HunterSubs] Neko Neko Fantasia [DVD 480p MP3][056AFD19].mkv',
+      view_count: 1,
+      image_url: 'https://i.ibb.co/1XdNQNB/1599143795237.jpg'
+    },
+    {
+      id: 'e7696a8f-67ea-4876-803e-07d5b6867b34',
+      title: '[HunterSubs] Neko Neko Fantasia [DVD 480p MP3][056AFD19].mkv',
+      view_count: 2,
+      image_url: 'https://i.ibb.co/1XdNQNB/1599143795237.jpg'
+    },
+    {
+      id: 'e7696a8f-67ea-4876-803e-07d5b6867b34',
+      title: '[HunterSubs] Neko Neko Fantasia [DVD 480p MP3][056AFD19].mkv',
+      view_count: 3,
+      image_url: 'https://i.ibb.co/1XdNQNB/1599143795237.jpg'
+    },
+    {
+      id: 'e7696a8f-67ea-4876-803e-07d5b6867b34',
+      title: '[HunterSubs] Neko Neko Fantasia [DVD 480p MP3][056AFD19].mkv',
+      view_count: 4,
+      image_url: 'https://i.ibb.co/1XdNQNB/1599143795237.jpg'
+    },
+    {
+      id: 'e7696a8f-67ea-4876-803e-07d5b6867b34',
+      title: '[HunterSubs] Neko Neko Fantasia [DVD 480p MP3][056AFD19].mkv',
+      view_count: 5,
+      image_url: 'https://i.ibb.co/1XdNQNB/1599143795237.jpg'
+    },
+    {
+      id: 'e7696a8f-67ea-4876-803e-07d5b6867b34',
+      title: '[HunterSubs] Neko Neko Fantasia [DVD 480p MP3][056AFD19].mkv',
+      view_count: 6,
+      image_url: 'https://i.ibb.co/1XdNQNB/1599143795237.jpg'
     }
   ];
 
-  count = 0;
-  page = 1;
-  row = 10;
-  q = '';
-
   constructor(
-    private router: Router,
     private gs: GlobalService,
-    private bs: BusyService,
-    private berkas: BerkasService,
-    private fs: FabService
+    private router: Router,
+    // private bs: BusyService,
+    // private berkas: BerkasService,
+    // private fs: FabService
   ) {
     this.gs.bannerImg = '/assets/img/home-banner.png';
     this.gs.sizeContain = false;
@@ -45,54 +79,22 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getBerkas();
+    this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
-  getBerkas(): void {
-    this.bs.busy();
-    this.berkas.getAllBerkas(this.q, this.page, this.row).subscribe(
-      res => {
-        this.gs.log('[BERKAS_LIST_SUCCESS]', res);
-        this.count = res.count;
-        this.berkasData = [];
-        for (const r of res.results) {
-          this.berkasData.push({
-            id: r.id,
-            foto: r.user_.image_url,
-            Jenis: r.project_type_.name,
-            Image: r.image_url,
-            Upload: r.created_at,
-            Pemilik: r.user_.username,
-            'Nama Berkas': r.name
-          });
-        }
-        this.tabData[0].data.row = this.berkasData;
-        this.fs.initializeFab('add', null, 'Tambah Berkas Baru', `/berkas/create`, false);
-        this.bs.idle();
-      },
-      err => {
-        this.gs.log('[BERKAS_LIST_ERROR]', err);
-        this.bs.idle();
-      }
-    );
+  onResize(event): void {
+    this.gs.log('[ReSize]', event);
+    this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
   openBerkas(data): void {
-    this.gs.log('[BERKAS_LIST_CLICK_BERKAS]', data);
+    this.gs.log('[HOME_CLICK_BERKAS]', data);
     this.router.navigateByUrl(`/berkas/${data.id}`);
   }
 
-  onPaginatorClicked(data): void {
-    this.gs.log('[BERKAS_LIST_CLICK_PAGINATOR]', data);
-    this.page = data.pageIndex + 1;
-    this.row = data.pageSize;
-    this.getBerkas();
-  }
-
-  onServerSideFilter(data: any): void {
-    this.gs.log('[BERKAS_LIST_ENTER_FILTER]', data);
-    this.q = data;
-    this.getBerkas();
+  openUserProfile(data): void {
+    this.gs.log('[HOME_CLICK_USER]', data);
+    this.router.navigateByUrl(`/user/${data.username}`);
   }
 
 }

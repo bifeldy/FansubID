@@ -6,6 +6,7 @@ import { MaterialTabModule } from '../../_shared/components/material-tab/materia
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
 import { HomeComponent } from './home.component';
+import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 
 const routes: Routes = [
   {
@@ -20,7 +21,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     MaterialTabModule,
-    NotificationsModule
+    NotificationsModule,
+    SharedMaterialModule
   ]
 })
 export class HomeModule { }

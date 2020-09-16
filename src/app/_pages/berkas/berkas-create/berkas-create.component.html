@@ -1,19 +1,5 @@
 <!-- Notification -->
-<div class="container" *ngIf="currentUser && !currentUser.verified">
-  <div class="row pt-3">
-    <div class="col-12">
-      <div class="alert alert-warning alert-dismissible fade show">
-        <strong>Verifikasi! </strong>
-        Fitur lampiran DDL tidak dapat digunakan, silahkan
-        <a routerLink="/verify" class="text-decoration-none">
-          verifikasi akun
-        </a>
-        terlebih dahulu. Terima kasih. ^_^
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-      </div>
-    </div>
-  </div>
-</div>
+<app-notifications></app-notifications>
 
 <!-- Content -->
 <div class="container">

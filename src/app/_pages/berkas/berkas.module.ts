@@ -15,6 +15,7 @@ import { BerkasCreateComponent } from './berkas-create/berkas-create.component';
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';
 import { BerkasEditComponent } from './berkas-edit/berkas-edit.component';
 import { BerkasListComponent } from './berkas-list/berkas-list.component';
+import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
 const routes: Routes = [
   {
@@ -63,7 +64,8 @@ const routes: Routes = [
     MaterialTabModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialFileInputModule
+    MaterialFileInputModule,
+    NotificationsModule
   ]
 })
 export class BerkasModule { }

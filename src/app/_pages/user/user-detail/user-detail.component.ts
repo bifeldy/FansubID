@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -12,7 +12,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.css']
 })
-export class UserDetailComponent implements OnInit {
+export class UserDetailComponent implements OnInit, OnDestroy {
 
   username = null;
   userData = null;
@@ -38,6 +38,10 @@ export class UserDetailComponent implements OnInit {
   row = 10;
   q = '';
 
+  subsParam = null;
+  subsUser = null;
+  subsBerkas = null;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -49,11 +53,23 @@ export class UserDetailComponent implements OnInit {
   ) {
   }
 
+  ngOnDestroy(): void {
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
+    if (this.subsUser) {
+      this.subsUser.unsubscribe();
+    }
+    if (this.subsBerkas) {
+      this.subsBerkas.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
+    this.subsParam = this.activatedRoute.params.subscribe(params => {
       this.username = params.username;
       this.bs.busy();
-      this.us.getUserData(this.username).subscribe(
+      this.subsUser = this.us.getUserData(this.username).subscribe(
         res => {
           this.gs.log('[USER_DETAIL_SUCCESS]', res);
           this.userData = res.result;
@@ -84,7 +100,7 @@ export class UserDetailComponent implements OnInit {
 
   getUserBerkas(): void {
     this.bs.busy();
-    this.us.getUserBerkas(this.username, this.q, this.page, this.row).subscribe(
+    this.subsBerkas = this.us.getUserBerkas(this.username, this.q, this.page, this.row).subscribe(
       res => {
         this.gs.log('[USER_BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;

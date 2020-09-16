@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -15,7 +15,7 @@ import { BusyService } from '../../_shared/services/busy.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
   usernameUsed = null;
   emailUsed = null;
@@ -27,6 +27,9 @@ export class RegisterComponent implements OnInit {
   bgRegisterImg = '/assets/img/bg-loginregister.svg';
   registerInfo = 'Ayo bergabung dan masuk dalam komunitas~';
 
+  subsRegister = null;
+  subsVerify = null;
+
   constructor(
     private fb: FormBuilder,
     private gs: GlobalService,
@@ -37,6 +40,15 @@ export class RegisterComponent implements OnInit {
   ) {
     if (this.as.currentUserValue) {
       this.router.navigate(['/home']);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsRegister) {
+      this.subsRegister.unsubscribe();
+    }
+    if (this.subsVerify) {
+      this.subsVerify.unsubscribe();
     }
   }
 
@@ -69,7 +81,7 @@ export class RegisterComponent implements OnInit {
     }
     if (this.fg.valid) {
       this.submitted = true;
-      this.as.register({
+      this.subsRegister = this.as.register({
         data: window.btoa(JSON.stringify({
           username: this.fg.value.username,
           name: this.fg.value.name,
@@ -82,7 +94,7 @@ export class RegisterComponent implements OnInit {
           this.bs.idle();
           this.registerInfo = res.info;
           this.bs.busy();
-          this.as.verify(localStorage.getItem(environment.tokenName)).subscribe(
+          this.subsVerify = this.as.verify(localStorage.getItem(environment.tokenName)).subscribe(
             success => {
               this.registerInfo = success.info;
               this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);

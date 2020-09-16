@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { PageInfoService } from '../../services/page-info.service';
 import { LeftMenuService } from '../../services/left-menu.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +15,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private lms: LeftMenuService,
+    private router: Router,
     public pi: PageInfoService
   ) {
   }
@@ -27,6 +29,10 @@ export class HeaderComponent implements OnInit {
 
   openDiscord(): void {
     window.open(this.discordUrl, '_blank');
+  }
+
+  openSearch(): void {
+    this.router.navigateByUrl('/search');
   }
 
 }

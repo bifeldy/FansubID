@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 
 import { AboutComponent } from './about.component';
+import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
 const routes: Routes = [
   {
@@ -18,7 +19,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    SharedMaterialModule
+    SharedMaterialModule,
+    NotificationsModule
   ]
 })
 export class AboutModule { }

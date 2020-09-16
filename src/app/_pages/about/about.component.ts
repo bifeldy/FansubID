@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { dependencies } from '../../../../package.json';
 
-import { GlobalService } from 'src/app/_shared/services/global.service';
+import { GlobalService } from '../../_shared/services/global.service';
 
 @Component({
   selector: 'app-about',

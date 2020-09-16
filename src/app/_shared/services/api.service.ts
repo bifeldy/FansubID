@@ -45,7 +45,7 @@ export class ApiService {
   getData(path: string, timedOut = 10000): Observable<any> {
     return this.http.get(path.startsWith('http') ? path : environment.apiUrl + path).pipe(
       catchError(err => throwError(err)),
-      map(res => res), timeout(timedOut), retry(3)
+      map(res => res), timeout(timedOut), retry(5)
     );
   }
 

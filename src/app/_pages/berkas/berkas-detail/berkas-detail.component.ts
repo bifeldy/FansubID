@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BerkasService } from '../../../_shared/services/berkas.service';
@@ -10,17 +10,20 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
 
 import User from '../../../_shared/models/User';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-berkas-detail',
   templateUrl: './berkas-detail.component.html',
   styleUrls: ['./berkas-detail.component.css']
 })
-export class BerkasDetailComponent implements OnInit {
+export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   berkasId = 0;
   berkasData = null;
+
+  subsParam = null;
+  subsBerkas = null;
 
   constructor(
     private router: Router,
@@ -39,11 +42,20 @@ export class BerkasDetailComponent implements OnInit {
     return this.as.currentUserValue;
   }
 
+  ngOnDestroy(): void {
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
+    if (this.subsBerkas) {
+      this.subsBerkas.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
+    this.subsParam = this.activatedRoute.params.subscribe(params => {
       this.berkasId = params.berkasId;
       this.bs.busy();
-      this.berkas.getBerkas(this.berkasId).subscribe(
+      this.subsBerkas = this.berkas.getBerkas(this.berkasId).subscribe(
         res => {
           this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
           this.berkasData = res.result;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Warna } from '../../../_shared/models/Warna';
@@ -14,7 +14,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
   templateUrl: './fansub-detail.component.html',
   styleUrls: ['./fansub-detail.component.css']
 })
-export class FansubDetailComponent implements OnInit {
+export class FansubDetailComponent implements OnInit, OnDestroy {
 
   fansubId = 0;
   fansubData = null;
@@ -49,6 +49,11 @@ export class FansubDetailComponent implements OnInit {
     }
   ];
 
+  subsActRoute = null;
+  subsFansub = null;
+  subsBerkas = null;
+  subsAnime = null;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -60,11 +65,26 @@ export class FansubDetailComponent implements OnInit {
   ) {
   }
 
+  ngOnDestroy(): void {
+    if (this.subsActRoute) {
+      this.subsActRoute.unsubscribe();
+    }
+    if (this.subsFansub) {
+      this.subsFansub.unsubscribe();
+    }
+    if (this.subsBerkas) {
+      this.subsBerkas.unsubscribe();
+    }
+    if (this.subsAnime) {
+      this.subsAnime.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
+    this.subsActRoute = this.activatedRoute.params.subscribe(params => {
       this.fansubId = parseInt(params.fansubId, 10);
       this.bs.busy();
-      this.fansub.getFansub(this.fansubId).subscribe(
+      this.subsFansub = this.fansub.getFansub(this.fansubId).subscribe(
         res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
           this.fansubData = res.result;
@@ -110,7 +130,7 @@ export class FansubDetailComponent implements OnInit {
 
   getBerkasFansub(): void {
     this.bs.busy();
-    this.fansub.getBerkasFansub([this.fansubId], this.q, this.page, this.row).subscribe(
+    this.subsBerkas = this.fansub.getBerkasFansub([this.fansubId], this.q, this.page, this.row).subscribe(
       res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
@@ -136,7 +156,7 @@ export class FansubDetailComponent implements OnInit {
 
   getAnimeFansub(): void {
     this.bs.busy();
-    this.fansub.getAnimeFansub([this.fansubId]).subscribe(
+    this.subsAnime = this.fansub.getAnimeFansub([this.fansubId]).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         this.animeFansub = [];

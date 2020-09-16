@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
@@ -36,7 +36,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class AnimeListComponent implements OnInit {
+export class AnimeListComponent implements OnInit, OnDestroy {
 
   fg: FormGroup;
 
@@ -70,6 +70,10 @@ export class AnimeListComponent implements OnInit {
     }
   ];
 
+  subsParam = null;
+  subsSeasonalAnime = null;
+  subsFansubAnime = null;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -80,6 +84,18 @@ export class AnimeListComponent implements OnInit {
   ) {
     this.gs.bgRepeat = true;
     this.gs.sizeContain = true;
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
+    if (this.subsSeasonalAnime) {
+      this.subsSeasonalAnime.unsubscribe();
+    }
+    if (this.subsFansubAnime) {
+      this.subsFansubAnime.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -94,7 +110,7 @@ export class AnimeListComponent implements OnInit {
   }
 
   watchUrlRoute(): void {
-    this.activatedRoute.queryParams.subscribe(p => {
+    this.subsParam = this.activatedRoute.queryParams.subscribe(p => {
       this.currentYear = p.year ? parseInt(p.year, 10) : new Date().getFullYear();
       this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
       this.selectedSeasonName = p.season ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth);
@@ -119,7 +135,7 @@ export class AnimeListComponent implements OnInit {
 
   getSeasonalAnime(showFab = false): void {
     this.bs.busy();
-    this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
+    this.subsSeasonalAnime = this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
       res => {
         this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
         this.seasonalAnime = res.results.filter(a => a.continuing === false && a.kids === false).sort((a, b) => b.score - a.score);
@@ -143,7 +159,7 @@ export class AnimeListComponent implements OnInit {
     for (const sA of this.seasonalAnime) {
       seasonalAnimeListId.push(sA.mal_id);
     }
-    this.anime.getFansubAnime(seasonalAnimeListId).subscribe(
+    this.subsFansubAnime = this.anime.getFansubAnime(seasonalAnimeListId).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         let seasonalAnimeWithFansub = [];

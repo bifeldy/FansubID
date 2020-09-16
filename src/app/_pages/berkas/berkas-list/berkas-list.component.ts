@@ -1,20 +1,106 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { GlobalService } from '../../../_shared/services/global.service';
+import { BerkasService } from '../../../_shared/services/berkas.service';
+import { FabService } from '../../../_shared/services/fab.service';
+import { BusyService } from '../../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-berkas-list',
   templateUrl: './berkas-list.component.html',
   styleUrls: ['./berkas-list.component.css']
 })
-export class BerkasListComponent implements OnInit {
+export class BerkasListComponent implements OnInit, OnDestroy {
+
+  berkasData = [];
+
+  tabData: any = [
+    {
+      name: 'Berkas Terkini',
+      icon: 'file_copy',
+      type: 'table',
+      data: {
+        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'Pemilik'],
+        row: []
+      }
+    }
+  ];
+
+  count = 0;
+  page = 1;
+  row = 10;
+  q = '';
+
+  subsBerkas = null;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private gs: GlobalService,
+    private bs: BusyService,
+    private berkas: BerkasService,
+    private fs: FabService
   ) {
-    this.router.navigateByUrl('/home');
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsBerkas) {
+      this.subsBerkas.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
+    this.getBerkas();
+  }
+
+  getBerkas(): void {
+    this.bs.busy();
+    this.subsBerkas = this.berkas.getAllBerkas(this.q, this.page, this.row).subscribe(
+      res => {
+        this.gs.log('[BERKAS_LIST_SUCCESS]', res);
+        this.count = res.count;
+        this.berkasData = [];
+        for (const r of res.results) {
+          this.berkasData.push({
+            id: r.id,
+            foto: r.user_.image_url,
+            Jenis: r.project_type_.name,
+            Image: r.image_url,
+            Upload: r.created_at,
+            Pemilik: r.user_.username,
+            'Nama Berkas': r.name
+          });
+        }
+        this.tabData[0].data.row = this.berkasData;
+        this.fs.initializeFab('add', null, 'Tambah Berkas Baru', `/berkas/create`, false);
+        this.bs.idle();
+      },
+      err => {
+        this.gs.log('[BERKAS_LIST_ERROR]', err);
+        this.bs.idle();
+      }
+    );
+  }
+
+  openBerkas(data): void {
+    this.gs.log('[BERKAS_LIST_CLICK_BERKAS]', data);
+    this.router.navigateByUrl(`/berkas/${data.id}`);
+  }
+
+  onPaginatorClicked(data): void {
+    this.gs.log('[BERKAS_LIST_CLICK_PAGINATOR]', data);
+    this.page = data.pageIndex + 1;
+    this.row = data.pageSize;
+    this.getBerkas();
+  }
+
+  onServerSideFilter(data: any): void {
+    this.gs.log('[BERKAS_LIST_ENTER_FILTER]', data);
+    this.q = data;
+    this.getBerkas();
   }
 
 }

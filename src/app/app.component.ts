@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
@@ -18,11 +18,15 @@ import { GlobalService } from './_shared/services/global.service';
   styleUrls: ['./app.component.css'],
   animations: [ onMainContentChange ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('leftSideNavContent') leftSideNavContent;
 
   selectedBackgroundImage = '';
+
+  subsRouter = null;
+  subsRouterChild = null;
+  subsVerify = null;
 
   constructor(
     public router: Router,
@@ -36,6 +40,18 @@ export class AppComponent implements OnInit {
   ) {
   }
 
+  ngOnDestroy(): void {
+    if (this.subsRouter) {
+      this.subsRouter.unsubscribe();
+    }
+    if (this.subsRouterChild) {
+      this.subsRouterChild.unsubscribe();
+    }
+    if (this.subsVerify) {
+      this.subsVerify.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
     this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: ${environment.production ? 'Production' : 'Development'} With Logging Enabled 📌`);
     this.pi.updatePageMetaData(
@@ -44,7 +60,7 @@ export class AppComponent implements OnInit {
       '「💤 Hikki」, 「🌞 Hikikomori」',
       '/favicon.ico'
     );
-    this.router.events.subscribe(e1 => {
+    this.subsRouter = this.router.events.subscribe(e1 => {
       if (e1 instanceof RouteConfigLoadStart) {
         this.bs.busy();
       }
@@ -52,7 +68,7 @@ export class AppComponent implements OnInit {
         this.bs.idle();
       }
       else if (e1 instanceof NavigationEnd) {
-        this.route.firstChild.data.subscribe(e2 => {
+        this.subsRouterChild = this.route.firstChild.data.subscribe(e2 => {
           this.pi.updatePageMetaData(e2.title, e2.description, e2.keywords);
           this.updateBackgroundImage();
           this.leftSideNavContent.nativeElement.scrollTop = 0;
@@ -63,7 +79,7 @@ export class AppComponent implements OnInit {
     const token = localStorage.getItem(environment.tokenName);
     if (token) {
       this.bs.busy();
-      this.as.verify(token).subscribe(
+      this.subsVerify = this.as.verify(token).subscribe(
         success => {
           this.gs.log('[VERIFY_SUCCESS]', success);
           this.bs.idle();

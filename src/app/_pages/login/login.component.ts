@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -15,7 +15,7 @@ import { BusyService } from '../../_shared/services/busy.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   fg: FormGroup;
   submitted = false;
@@ -24,6 +24,9 @@ export class LoginComponent implements OnInit {
   loginImg = '/assets/img/loginregister.png';
   bgLoginImg = '/assets/img/bg-loginregister.svg';
   loginInfo = 'Silahkan login terlebih dahulu~';
+
+  subsLogin = null;
+  subsVerify = null;
 
   constructor(
     private fb: FormBuilder,
@@ -35,6 +38,15 @@ export class LoginComponent implements OnInit {
   ) {
     if (this.as.currentUserValue) {
       this.router.navigate(['/home']);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsLogin) {
+      this.subsLogin.unsubscribe();
+    }
+    if (this.subsVerify) {
+      this.subsVerify.unsubscribe();
     }
   }
 
@@ -64,7 +76,7 @@ export class LoginComponent implements OnInit {
     }
     if (this.fg.valid) {
       this.submitted = true;
-      this.as.login({
+      this.subsLogin = this.as.login({
         data: window.btoa(JSON.stringify({
           userNameOrEmail: this.fg.value.userNameOrEmail,
           password: CryptoJS.SHA512(this.fg.value.password).toString(),
@@ -75,7 +87,7 @@ export class LoginComponent implements OnInit {
           this.bs.idle();
           this.loginInfo = res.info;
           this.bs.busy();
-          this.as.verify(localStorage.getItem(environment.tokenName)).subscribe(
+          this.subsVerify = this.as.verify(localStorage.getItem(environment.tokenName)).subscribe(
             success => {
               this.loginInfo = success.info;
               this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);

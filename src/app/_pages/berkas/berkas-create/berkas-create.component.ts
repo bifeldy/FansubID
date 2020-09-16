@@ -63,6 +63,13 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   gambar = null;
   ddl = null;
 
+  subsProject = null;
+  subsFansub = null;
+  subsAnimeDetail = null;
+  subsAnimeNew = null;
+  subsImgbb = null;
+  subsBerkasCreate = null;
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -109,11 +116,29 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     if (this.timerTimeout) {
       clearTimeout(this.timerTimeout);
     }
+    if (this.subsProject) {
+      this.subsProject.unsubscribe();
+    }
+    if (this.subsFansub) {
+      this.subsFansub.unsubscribe();
+    }
+    if (this.subsAnimeDetail) {
+      this.subsAnimeDetail.unsubscribe();
+    }
+    if (this.subsAnimeNew) {
+      this.subsAnimeNew.unsubscribe();
+    }
+    if (this.subsImgbb) {
+      this.subsImgbb.unsubscribe();
+    }
+    if (this.subsBerkasCreate) {
+      this.subsBerkasCreate.unsubscribe();
+    }
   }
 
   loadProjectList(): void {
     this.bs.busy();
-    this.project.getProject().subscribe(
+    this.subsProject = this.project.getProject().subscribe(
       res => {
         this.gs.log('[PROJECT_LOAD_SUCCESS]', res);
         this.projectList = res.results;
@@ -128,7 +153,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   loadFansubList(): void {
     this.bs.busy();
-    this.fansub.getAllFansub().subscribe(
+    this.subsFansub = this.fansub.getAllFansub().subscribe(
       res => {
         this.gs.log('[FANSUB_LOAD_SUCCESS]', res);
         this.fansubs = res.results;
@@ -156,7 +181,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       attachment_id: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       download_url: this.fb.array([this.createDownloadLink()])
     });
-    this.fg.get('anime_id').valueChanges.pipe(
+    this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
       debounceTime(500),
       tap(() => this.isLoading = true),
       switchMap(searchQuery => this.anime.searchAnime(
@@ -247,7 +272,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.fg.controls.episode.setValidators([
       Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), Validators.max(data.episodes)
     ]);
-    this.anime.addNewAnime({
+    this.subsAnimeNew = this.anime.addNewAnime({
       data: window.btoa(JSON.stringify({
         id: this.selectedFilterAnime.mal_id,
         name: this.selectedFilterAnime.title,
@@ -306,7 +331,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   submitImage(): void {
     this.submitted = true;
-    this.imgbb.uploadImage(this.image).subscribe(
+    this.subsImgbb = this.imgbb.uploadImage(this.image).subscribe(
       res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.data.image.url);
@@ -335,7 +360,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     for (const fs of this.fg.value.fansub_list) {
       fansubId.push(fs.fansub_id);
     }
-    this.berkas.createBerkas({
+    this.subsBerkasCreate = this.berkas.createBerkas({
       data: window.btoa(JSON.stringify({
         image: this.fg.value.image,
         name: this.fg.value.name,
@@ -422,7 +447,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
           this.attachmentIsUploading = false;
           this.attachmentIsCompleted = true;
           this.fg.controls.attachment_id.patchValue(e.result.id);
-          console.log(this.uploadToast);
           this.toast.remove(this.uploadToast.toastId);
           const timer = (2 * 60 * 1000) + (30 * 1000);
           this.uploadToast = this.toast.warning(

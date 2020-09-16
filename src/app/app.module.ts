@@ -32,7 +32,6 @@ import { HeaderModule } from './_shared/components/header/header.module';
 import { LeftMenuModule } from './_shared/components/left-menu/left-menu.module';
 import { FooterModule } from './_shared/components/footer/footer.module';
 import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
-import { NotificationsModule } from './_shared/components/notifications/notifications.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,7 +50,6 @@ import { NotificationsModule } from './_shared/components/notifications/notifica
     HammerModule,
     MaterialFabModule,
     NgxSpinnerModule,
-    NotificationsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',

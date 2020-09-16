@@ -1,8 +1,9 @@
+<!-- Content -->
 <div class="container" *ngIf="animeData">
   <div class="anime-info align-items-center">
     <div class="media row py-3 px-2 d-flex">
 
-      <!-- Content -->
+      <!-- Data -->
       <div class="col-md-8 col-xl-9 pt-3 order-2 order-md-1">
         <div class="row py-3 px-0 mt-auto">
           <h1 class="m-0">
@@ -11,6 +12,9 @@
         </div>
         <div class="row py-3">
           <app-material-chip (chipClicked)="openGenre($event)" [chipData]="chipData"></app-material-chip>
+        </div>
+        <div class="row">
+          <app-notifications class="px-0"></app-notifications>
         </div>
         <div class="row py-3">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>

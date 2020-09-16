@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -19,7 +19,7 @@ import { ImgbbService } from '../../../_shared/services/imgbb.service';
   templateUrl: './fansub-edit.component.html',
   styleUrls: ['./fansub-edit.component.css']
 })
-export class FansubEditComponent implements OnInit {
+export class FansubEditComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -42,6 +42,11 @@ export class FansubEditComponent implements OnInit {
 
   gambar = null;
 
+  subsActRoute = null;
+  subsFansubUpdate = null;
+  subsFansubDetail = null;
+  subsImgbb = null;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -58,6 +63,21 @@ export class FansubEditComponent implements OnInit {
     this.gs.bgRepeat = false;
   }
 
+  ngOnDestroy(): void {
+    if (this.subsActRoute) {
+      this.subsActRoute.unsubscribe();
+    }
+    if (this.subsFansubUpdate) {
+      this.subsFansubUpdate.unsubscribe();
+    }
+    if (this.subsFansubDetail) {
+      this.subsFansubDetail.unsubscribe();
+    }
+    if (this.subsImgbb) {
+      this.subsImgbb.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
     this.pi.updatePageMetaData(
       `Fansub - Ubah Data`,
@@ -65,9 +85,9 @@ export class FansubEditComponent implements OnInit {
       `Ubah Fansub`
       );
     this.bs.busy();
-    this.activatedRoute.params.subscribe(params => {
+    this.subsActRoute = this.activatedRoute.params.subscribe(params => {
       this.fansubId = params.fansubId;
-      this.fansub.getFansub(this.fansubId).subscribe(
+      this.subsFansubDetail = this.fansub.getFansub(this.fansubId).subscribe(
         res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
           this.initForm(res.result);
@@ -173,7 +193,7 @@ export class FansubEditComponent implements OnInit {
 
   submitImage(): void {
     this.submitted = true;
-    this.imgbb.uploadImage(this.image).subscribe(
+    this.subsImgbb = this.imgbb.uploadImage(this.image).subscribe(
       res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.data.image.url);
@@ -222,7 +242,7 @@ export class FansubEditComponent implements OnInit {
       this.bs.idle();
       return;
     }
-    this.fansub.updateFansub(this.fansubId, {
+    this.subsFansubUpdate = this.fansub.updateFansub(this.fansubId, {
       data: window.btoa(JSON.stringify({
         ...body
       }))

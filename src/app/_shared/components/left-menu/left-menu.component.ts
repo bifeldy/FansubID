@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { onSideNavChange, animateText } from '../../animations/anim-side-menu';
@@ -18,7 +18,7 @@ import User from '../../models/User';
   styleUrls: ['./left-menu.component.css'],
   animations: [onSideNavChange, animateText]
 })
-export class LeftMenuComponent implements OnInit {
+export class LeftMenuComponent implements OnInit, OnDestroy {
 
   currentUser: User = null;
 
@@ -29,14 +29,19 @@ export class LeftMenuComponent implements OnInit {
       icon: 'dashboard'
     },
     {
+      name: 'Anime Musiman',
+      link: '/anime',
+      icon: 'live_tv'
+    },
+    {
       name: 'Katalog Fansub',
       link: '/fansub',
       icon: 'closed_caption'
     },
     {
-      name: 'Anime Musiman',
-      link: '/anime',
-      icon: 'live_tv'
+      name: 'Semua Berkas',
+      link: '/berkas',
+      icon: 'file_copy'
     },
     // {
     //   name: 'Film & Drama',
@@ -57,11 +62,13 @@ export class LeftMenuComponent implements OnInit {
 
   public miscMenus: Menu[] = [
     {
-      name: 'About',
+      name: 'About Us',
       link: '/about',
       icon: 'info'
     }
   ];
+
+  subsLogout = null;
 
   constructor(
     private router: Router,
@@ -70,6 +77,12 @@ export class LeftMenuComponent implements OnInit {
     private gs: GlobalService,
     private bs: BusyService
   ) {
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsLogout) {
+      this.subsLogout.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -104,7 +117,7 @@ export class LeftMenuComponent implements OnInit {
 
   logout(): void {
     this.bs.busy();
-    this.as.logout().subscribe(
+    this.subsLogout = this.as.logout().subscribe(
       (res: any) => {
         this.gs.log('[LOGOUT_SUCCESS]', res);
         this.as.removeUser();
