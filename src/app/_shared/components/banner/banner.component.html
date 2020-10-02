@@ -1,0 +1,15 @@
+
+<div class="row" (window:resize)="onResize($event)">
+  <div class="col-12 sticky-top bg-light">
+    <h2 class="pt-3 border-bottom-dotted">
+      <b class="text-secondary">Yuk Gabung Obrolan!</b>
+    </h2>
+  </div>
+  <div class="col-12">
+    <p class="px-2">
+      <a href="https://discord.gg/{{ discordInviteCode }}" target="_blank">
+        <img src="https://discord.com/api/guilds/{{ discordGuildId }}/widget.png?style=banner{{ gridListBreakpoint + 1}}" class="w-100" />
+      </a>
+    </p>
+  </div>
+</div>

@@ -50,8 +50,16 @@
     <mat-divider style="margin-top: 8px;"></mat-divider>
 
     <mat-nav-list>
-      <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of miscMenus" routerLinkActive="side-menu-link-active"
-        (click)="onMouseHoverOut()">
+      <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of animeMenus" routerLinkActive="side-menu-link-active" (click)="onMouseHoverOut()">
+        <mat-icon style="padding-left: 0.2em;">{{ menu?.icon }}</mat-icon>
+        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu?.name }}</span>
+      </a>
+    </mat-nav-list>
+
+    <mat-divider style="margin-top: 8px;"></mat-divider>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of miscMenus" routerLinkActive="side-menu-link-active" (click)="onMouseHoverOut()">
         <mat-icon style="padding-left: 0.2em;">{{ menu?.icon }}</mat-icon>
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu?.name }}</span>
       </a>
@@ -60,14 +68,5 @@
     <div style="margin-top: 8px;"></div>
 
   </div>
-
-  <span class="spacer"></span>
-
-  <!-- <div fxLayout="column" fxLayoutAlign="end center" style="padding: 0px 10px;">
-    <button mat-icon-button (click)="onSideNavToggle()">
-      <mat-icon *ngIf="sideNavState">arrow_left</mat-icon>
-      <mat-icon *ngIf="!sideNavState">arrow_right</mat-icon>
-    </button>
-  </div> -->
 
 </div>

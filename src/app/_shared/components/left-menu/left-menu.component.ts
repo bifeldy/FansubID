@@ -22,12 +22,25 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   currentUser: User = null;
 
-  public mainMenus: Menu[] = [
+  mainMenus: Menu[] = [
     {
       name: 'Beranda',
       link: '/home',
       icon: 'dashboard'
     },
+    {
+      name: 'Berita & Informasi',
+      link: '/news',
+      icon: 'receipt_long'
+    },
+    // {
+    //   name: 'RSS Feed',
+    //   link: '/rss',
+    //   icon: 'rss_feed'
+    // }
+  ];
+
+  animeMenus: Menu[] = [
     {
       name: 'Anime Musiman',
       link: '/anime',
@@ -39,30 +52,15 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
       icon: 'closed_caption'
     },
     {
-      name: 'Semua Berkas',
+      name: 'Berbagi Berkas',
       link: '/berkas',
       icon: 'file_copy'
-    },
-    // {
-    //   name: 'Film & Drama',
-    //   link: '/drama',
-    //   icon: 'movie_filter'
-    // },
-    // {
-    //   name: 'Komik & Novel',
-    //   link: '/book',
-    //   icon: 'book'
-    // },
-    // {
-    //   name: 'Gim & Piranti',
-    //   link: '/software',
-    //   icon: 'videogame_asset'
-    // }
+    }
   ];
 
-  public miscMenus: Menu[] = [
+  miscMenus: Menu[] = [
     {
-      name: 'About Us',
+      name: 'About',
       link: '/about',
       icon: 'info'
     }
@@ -97,14 +95,6 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   get linkText(): any {
     return this.lms.linkText;
-  }
-
-  changeSideNavState(): void {
-    this.lms.changeSideNavState();
-  }
-
-  onSideNavToggle(): void {
-    this.lms.changeSideNavState();
   }
 
   onMouseHoverIn(): void {

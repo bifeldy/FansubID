@@ -7,6 +7,8 @@ import { NotificationsModule } from '../../_shared/components/notifications/noti
 
 import { HomeComponent } from './home.component';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { BannerModule } from '../../_shared/components/banner/banner.module';
+import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 
 const routes: Routes = [
   {
@@ -20,6 +22,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    BannerModule,
+    StatsServerModule,
     MaterialTabModule,
     NotificationsModule,
     SharedMaterialModule

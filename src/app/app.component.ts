@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
@@ -18,8 +18,9 @@ import { GlobalService } from './_shared/services/global.service';
   styleUrls: ['./app.component.css'],
   animations: [ onMainContentChange ]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  @ViewChild('leftSideNav') leftSideNav;
   @ViewChild('leftSideNavContent') leftSideNavContent;
 
   selectedBackgroundImage = '';
@@ -50,6 +51,10 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.subsVerify) {
       this.subsVerify.unsubscribe();
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.lms.sideNav = this.leftSideNav;
   }
 
   ngOnInit(): void {
@@ -105,10 +110,6 @@ export class AppComponent implements OnInit, OnDestroy {
       default:
         this.selectedBackgroundImage = ``;
     }
-  }
-
-  closeSideNav(): void {
-    this.lms.onMouseHoverOut();
   }
 
 }

@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleSideNav(): void {
-    this.lms.onSideNavToggle();
+    this.lms.onSideNavToggleView();
   }
 
   openDiscord(): void {

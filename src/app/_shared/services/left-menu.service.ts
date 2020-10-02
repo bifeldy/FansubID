@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class LeftMenuService {
 
+  public sideNav = null;
   sideNavExpanded = false;
 
   linkText = false;
@@ -20,7 +21,11 @@ export class LeftMenuService {
     }, 200);
   }
 
-  onSideNavToggle(): void {
+  onSideNavToggleView(): void {
+    this.sideNav.toggle();
+  }
+
+  onSideNavToggleExpanded(): void {
     this.sideNavExpanded = !this.sideNavExpanded;
     this.changeSideNavState();
   }

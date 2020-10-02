@@ -15,7 +15,7 @@
   </mat-sidenav>
 
   <!-- Main Content -->
-  <mat-sidenav-content (click)="closeSideNav()"
+  <mat-sidenav-content
     [style.background-repeat]="router.url == '/verify' || router.url == '/about' ? 'repeat' : 'no-repeat'"
     [style.background-size]="router.url == '/verify' || router.url == '/about' ? '' : '128px'"
     [style.background-position]="router.url == '/verify' || router.url == '/about' ? '' : 'bottom right'"
