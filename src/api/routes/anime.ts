@@ -15,7 +15,6 @@ import { Anime } from '../entities/Anime';
 const router = Router();
 
 const jikanV3 = 'http://api.jikan.moe/v3';
-const jikanV4 = 'http://api.jikan.moe/v4-alpha';
 
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
@@ -252,11 +251,21 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
 router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) => {
   return request({
     method: 'GET',
-    uri: `${jikanV4}/anime/${req.params.id}`
+    uri: `${jikanV3}/anime/${req.params.id}`
   }, async (error, result, body) => {
+    const animeDetail = JSON.parse(body);
+    if ('request_hash' in animeDetail) {
+      delete animeDetail.request_hash;
+    }
+    if ('request_cached' in animeDetail) {
+      delete animeDetail.request_cached;
+    }
+    if ('request_cache_expiry' in animeDetail) {
+      delete animeDetail.request_cache_expiry;
+    }
     res.status(result.statusCode).json({
       info: `😅 ${result.statusCode} - Anime API :: Detail ${req.params.id} 🤣`,
-      result: JSON.parse(body).data
+      result: animeDetail
     });
   });
 });

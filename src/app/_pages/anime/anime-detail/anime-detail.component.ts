@@ -94,7 +94,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             `${this.animeData.title}`,
             `${this.animeData.synopsis}`,
             `${Array.isArray(this.animeData.title_synonyms) ? this.animeData.title_synonyms.join(', ') : this.animeData.title}`,
-            this.animeData.images.jpg.image_url
+            this.animeData.image_url
           );
           this.panelData = [];
           this.panelData.push({ title: 'Synopsis', icon: 'history_edu', text: this.animeData.synopsis });
@@ -121,10 +121,11 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   openSeasonalAnime(): void {
+    const seasonYear = this.animeData.premiered ? this.animeData.premiered.toLowerCase().split(' ') : '';
     this.router.navigate(['/anime'], {
       queryParams: {
-        season: this.animeData.season,
-        year: this.animeData.year
+        season: seasonYear[0] ? seasonYear[0] : '',
+        year: seasonYear[1] ? seasonYear[1] : ''
       }
     });
   }
