@@ -97,7 +97,12 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             this.animeData.image_url
           );
           this.panelData = [];
-          this.panelData.push({ title: 'Synopsis', icon: 'history_edu', text: this.animeData.synopsis });
+          this.panelData.push({
+            title: 'Ringkasan Cerita',
+            icon: 'history_edu',
+            text: this.animeData.synopsis,
+            tooltip: `Alih Bahasa Oleh 'Google Translate' 😘`
+          });
           this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
           this.bs.idle();
           this.getFansubAnime();

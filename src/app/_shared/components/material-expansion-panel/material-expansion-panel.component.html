@@ -3,7 +3,11 @@
 
     <!-- Header -->
     <mat-expansion-panel-header>
-      <mat-panel-title class="font-weight-bold">{{ d.title }}</mat-panel-title>
+      <mat-panel-title class="font-weight-bold">
+        <span matTooltip="{{ d.tooltip }}" [matTooltipPosition]="'above'">
+          {{ d.title }}
+        </span>
+      </mat-panel-title>
       <mat-panel-description>
         <mat-icon class="ml-auto">{{ d.icon }}</mat-icon>
       </mat-panel-description>

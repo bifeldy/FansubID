@@ -15,7 +15,12 @@ export class MaterialExpansionPanelComponent implements OnInit {
   defaultFirstOpened = true;
 
   @Input() panelData = [
-    { title: 'Title', icon: 'warning', text: 'Lorem ipsum ...' }
+    {
+      title: 'Title',
+      icon: 'warning',
+      text: 'Lorem ipsum ...',
+      tooltip: 'Info'
+    }
   ];
 
   constructor(

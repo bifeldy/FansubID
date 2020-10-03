@@ -1,4 +1,5 @@
 import request from 'request';
+import translate from '@k3rn31p4nic/google-translate-api';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, In } from 'typeorm';
@@ -263,10 +264,23 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     if ('request_cache_expiry' in animeDetail) {
       delete animeDetail.request_cache_expiry;
     }
-    res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - Anime API :: Detail ${req.params.id} 🤣`,
-      result: animeDetail
-    });
+    try {
+      if (animeDetail.synopsis) {
+        const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
+        animeDetail.synopsis = translatedAnimeSynopsis.text;
+      }
+      res.status(result.statusCode).json({
+        info: `😅 ${result.statusCode} - Anime API :: Detail ${req.params.id} 🤣`,
+        result: animeDetail
+      });
+    } catch (error) {
+      res.status(500).json({
+        info: `🙄 500 - Gagal Mendapatkan Data Anime :: ${req.params.id} 😪`,
+        result: {
+          message: 'Penerjemah / Alih Bahasa Gagal!'
+        }
+      });
+    }
   });
 });
 
