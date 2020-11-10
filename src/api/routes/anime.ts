@@ -25,7 +25,7 @@ const seasonal = [
 // GET `/api/anime`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const searchQuery = req.query.q || '';
-  const searchType = req.query.q || '';
+  const searchType = req.query.type || '';
   return request({
     method: 'GET',
     uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`

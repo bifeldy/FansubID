@@ -19,9 +19,12 @@ import { environment } from '../../../../environments/environment';
 })
 export class BerkasDetailComponent implements OnInit, OnDestroy {
 
+  currentUser: User = null;
+
   berkasId = 0;
   berkasData = null;
 
+  subsUser = null;
   subsParam = null;
   subsBerkas = null;
 
@@ -38,11 +41,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  get currentUser(): User {
-    return this.as.currentUserValue;
-  }
-
   ngOnDestroy(): void {
+    if (this.subsUser) {
+      this.subsUser.unsubscribe();
+    }
     if (this.subsParam) {
       this.subsParam.unsubscribe();
     }
@@ -52,6 +54,9 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subsUser = this.as.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
     this.subsParam = this.activatedRoute.params.subscribe(params => {
       this.berkasId = params.berkasId;
       this.bs.busy();

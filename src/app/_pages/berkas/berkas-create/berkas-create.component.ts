@@ -25,6 +25,8 @@ import User from '../../../_shared/models/User';
 })
 export class BerkasCreateComponent implements OnInit, OnDestroy {
 
+  currentUser: User = null;
+
   fg: FormGroup;
 
   submitted = false;
@@ -63,6 +65,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   gambar = null;
   ddl = null;
 
+  subsUser = null;
   subsProject = null;
   subsFansub = null;
   subsAnimeDetail = null;
@@ -86,11 +89,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  get currentUser(): User {
-    return this.as.currentUserValue;
-  }
-
   ngOnInit(): void {
+    this.subsUser = this.as.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
     this.pi.updatePageMetaData(
       `Berkas - Buat Baru`,
       `Halaman Membuat Berkas Baru`,
@@ -102,6 +104,9 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.subsUser) {
+      this.subsUser.unsubscribe();
+    }
     if (this.uploadHandler) {
       this.uploadHandler.unsubscribe();
       this.attachmentMode = 'indeterminate';

@@ -156,6 +156,9 @@ export class FansubListComponent implements OnInit, OnDestroy {
           this.barChartLabels.push(f['Nama Fansub']);
           this.barChartData.push(f.Garapan);
         }
+        for (const f of this.fansubData) {
+          f.Garapan = `${f.Garapan} Anime`;
+        }
         this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
         this.pieChartData = [this.fansubActive, this.fansubInActive];
         this.bs.idle();

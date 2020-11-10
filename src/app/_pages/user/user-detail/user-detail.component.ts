@@ -27,7 +27,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       icon: 'file_copy',
       type: 'table',
       data: {
-        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'View', 'Pemilik'],
+        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'Kunjungan', 'Pemilik'],
         row: []
       }
     }
@@ -112,7 +112,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             Jenis: r.project_type_.name,
             Image: r.image_url,
             Upload: r.created_at,
-            View: `${r.view_count}x`,
+            Kunjungan: `${r.view_count}x Views`,
             Pemilik: r.user_.username,
             'Nama Berkas': r.name
           });

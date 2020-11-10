@@ -52,7 +52,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
       icon: 'closed_caption'
     },
     {
-      name: 'Berbagi Berkas',
+      name: 'Berbagi Garapan',
       link: '/berkas',
       icon: 'file_copy'
     }
@@ -66,6 +66,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     }
   ];
 
+  subsUser = null;
   subsLogout = null;
 
   constructor(
@@ -78,13 +79,16 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.subsUser) {
+      this.subsUser.unsubscribe();
+    }
     if (this.subsLogout) {
       this.subsLogout.unsubscribe();
     }
   }
 
   ngOnInit(): void {
-    this.as.currentUser.subscribe(user => {
+    this.subsUser = this.as.currentUser.subscribe(user => {
       this.currentUser = user;
     });
   }
