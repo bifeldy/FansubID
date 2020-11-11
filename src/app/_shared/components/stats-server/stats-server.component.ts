@@ -7,9 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StatsServerComponent implements OnInit {
 
-  bandwidth = 979220000;
-  diskUsage = 285550000;
-  iNodes = 509;
+  portalVer = '0x00000000';
   activeDdl = 1;
   visitor = 2;
 

@@ -1,6 +1,9 @@
 <!-- Home Banner (1920px * 128px)-->
-<div class="container-fluid notif-banner align-items-center" [style.background-size]="gs.sizeContain ? 'contain' : 'cover'"
-  [style.background-image]="'url(' + gs.bannerImg + ')'" [style.background-repeat]="gs.bgRepeat ? 'repeat-x' : 'no-repeat'"
+<div class="container-fluid notif-banner align-items-center"
+  [style.background-size]="gs.sizeContain ? 'contain' : 'cover'"
+  [style.background-image]="'url(' + gs.bannerImg + ')'"
+  [style.background-repeat]="gs.bgRepeat ? 'repeat-x' : 'no-repeat'"
+  [style.height]="router.url == '/home' ? '192px' : '128px'"
   *ngIf="gs.bannerImg && (
     router.url == '/home' || router.url == '/berkas' || router.url == '/fansub' || router.url == '/anime' || router.url.includes('/anime?')
   )">

@@ -9,13 +9,33 @@
       <div class="row">
         <div class="col-12 sticky-top bg-light">
           <h2 class="pt-3 border-bottom-dotted">
-            <b class="text-secondary">Informasi, Pengumuman, Dan Berita Terkini</b>
+            <a class="float-right text-decoration-none" routerLink="/news" style="font-size: small;">
+              Selengkapnya
+            </a>
+            <b class="text-secondary">Papan Pengumuman</b>
           </h2>
         </div>
         <div class="col-12">
-          <p class="px-2" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]">
-            // TODO {{ i }} :: home works!
-          </p>
+          <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 p-3" *ngFor="let n of news | slice:0:6">
+              <mat-card>
+                <img mat-card-image [src]="n.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/news/{{ n.id }}" />
+                <mat-card-content routerLink="/news/{{ n.id }}" style="cursor: pointer;">
+                  <h3>
+                    <b>{{ n.title }}</b>
+                  </h3>
+                </mat-card-content>
+                <mat-card-header>
+                  <div mat-card-avatar style="background-size: cover;"
+                  [style.background-image]="'url(' + n.user_.image_url + ')'"></div>
+                  <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-primary mb-1" style="cursor: pointer;">
+                    <h3 class="mb-0">{{ n.user_.username }}</h3>
+                  </mat-card-title>
+                  <mat-card-subtitle class="mb-0">{{ n.created_at }}</mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
