@@ -54,17 +54,11 @@
                 Unggah
               </button>
             </div>
-          </div>
-          <div class="row py-3">
             <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
-          </div>
-          <div class="row py-3" style="display: none;">
-            <mat-form-field appearance="outline" class="p-3 w-100">
+            <mat-form-field appearance="outline" class="p-3 w-100" style="display: none;">
               <mat-label>Username / Email (Optional Autocomplete)</mat-label>
               <input matInput value="{{ userData.username }}" disabled autocomplete="email, username" />
             </mat-form-field>
-          </div>
-          <div class="row py-3">
             <mat-form-field appearance="outline" class="p-3 w-100">
               <mat-label>Konfirmasi Kata Sandi</mat-label>
               <input matInput [type]="passwordHide ? 'password' : 'text'" formControlName="new_password"
