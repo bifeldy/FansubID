@@ -126,10 +126,10 @@ export function app(): express.Express {
   server.set('trust proxy', true);
 
   // Middleware
+  server.use(cors(corsOptions));
   server.use(MorganChalk.morganChalk);
   server.use(express.json({ limit: '992mb' }));
   server.use(express.urlencoded({ extended: false, limit: '992mb' }));
-  server.use(cors(corsOptions));
   server.use('/api', apiLimiter, indexRouter);
 
   logger.log(`Working Directory :: ${currentWorkingDir}`);

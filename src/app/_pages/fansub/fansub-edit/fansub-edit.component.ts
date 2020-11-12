@@ -52,11 +52,11 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private bs: BusyService,
     private activatedRoute: ActivatedRoute,
-    private gs: GlobalService,
     private pi: PageInfoService,
     private imgbb: ImgbbService,
     private fansub: FansubService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    public gs: GlobalService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;

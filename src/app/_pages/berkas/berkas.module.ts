@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
@@ -65,7 +66,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MaterialFileInputModule,
-    NotificationsModule
+    NotificationsModule,
+    AngularEditorModule
   ]
 })
 export class BerkasModule { }

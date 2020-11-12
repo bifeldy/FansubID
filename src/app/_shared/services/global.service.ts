@@ -2,6 +2,10 @@ import { Injectable, isDevMode, Inject, PLATFORM_ID } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,6 +18,14 @@ export class GlobalService {
   public bgRepeat = false;
 
   public isBrowser = null;
+
+  public angularEditorConfig: AngularEditorConfig = {
+    editable: true,
+    minHeight: '256px',
+    placeholder: 'Deskripsi, Informasi, Atau Keterangan Lainnya ...',
+    uploadUrl: `${environment.apiUrl}/image`,
+    uploadWithCredentials: false,
+  };
 
   constructor(
     @Inject(PLATFORM_ID) platformId: string

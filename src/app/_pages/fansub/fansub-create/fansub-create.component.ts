@@ -43,12 +43,12 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private gs: GlobalService,
     private bs: BusyService,
     private pi: PageInfoService,
     private imgbb: ImgbbService,
     private fansub: FansubService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    public gs: GlobalService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;

@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { Role } from '../../_shared/models/Role';
@@ -52,7 +53,8 @@ const routes: Routes = [
     MaterialTabModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialFileInputModule
+    MaterialFileInputModule,
+    AngularEditorModule
   ]
 })
 export class UserModule { }

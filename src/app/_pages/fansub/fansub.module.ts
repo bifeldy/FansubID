@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ChartsModule } from 'ng2-charts';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 
@@ -72,7 +73,8 @@ const routes: Routes = [
     NotificationsModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialFileInputModule
+    MaterialFileInputModule,
+    AngularEditorModule
   ]
 })
 export class FansubModule { }

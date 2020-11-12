@@ -76,7 +76,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private gs: GlobalService,
     private bs: BusyService,
     private pi: PageInfoService,
     private anime: AnimeService,
@@ -85,6 +84,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     private berkas: BerkasService,
     private imgbb: ImgbbService,
     private toast: ToastrService,
+    public gs: GlobalService,
     public as: AuthService
   ) {
   }

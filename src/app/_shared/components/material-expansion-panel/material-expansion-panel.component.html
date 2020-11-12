@@ -15,7 +15,7 @@
 
     <!-- Content -->
     <ng-template matExpansionPanelContent>
-      <h3 class="m-0 text-justify" style="white-space: pre-line !important;">{{ d.text }}</h3>
+      <h3 class="m-0 text-justify" style="white-space: pre-line !important;" [innerHTML]="d.text"></h3>
     </ng-template>
 
   </mat-expansion-panel>

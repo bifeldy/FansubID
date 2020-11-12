@@ -84,7 +84,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private bs: BusyService,
-    private gs: GlobalService,
     private pi: PageInfoService,
     private anime: AnimeService,
     private project: ProjectService,
@@ -92,6 +91,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     private berkas: BerkasService,
     private toast: ToastrService,
     private imgbb: ImgbbService,
+    public gs: GlobalService,
     public as: AuthService
   ) {
   }

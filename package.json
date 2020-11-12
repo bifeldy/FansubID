@@ -35,6 +35,7 @@
     "@angular/platform-server": "~10.1.0",
     "@angular/router": "~10.1.0",
     "@k3rn31p4nic/google-translate-api": "^1.1.1",
+    "@kolkov/angular-editor": "^1.1.5",
     "@nguniversal/express-engine": "^10.1.0",
     "chalk": "^4.1.0",
     "chart.js": "^2.9.3",

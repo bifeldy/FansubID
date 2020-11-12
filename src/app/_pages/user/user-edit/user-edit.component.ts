@@ -59,12 +59,12 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private toast: ToastrService,
-    private gs: GlobalService,
     private bs: BusyService,
     private us: UserService,
     private pi: PageInfoService,
     private fb: FormBuilder,
     private imgbb: ImgbbService,
+    public gs: GlobalService,
     public as: AuthService
   ) {
   }

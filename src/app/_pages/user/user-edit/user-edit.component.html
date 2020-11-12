@@ -56,17 +56,7 @@
             </div>
           </div>
           <div class="row py-3">
-            <mat-form-field appearance="outline" class="p-3 w-100">
-              <mat-label>Deskripsi & Informasi</mat-label>
-              <textarea matInput #deskripsi formControlName="description" rows="6"
-                placeholder="Cerita Singkat Atau Informasi Mengenai Garapannya Mungkin ?"></textarea>
-              <mat-icon matSuffix>receipt_long</mat-icon>
-              <mat-hint align="end">{{ deskripsi.value?.length || 0 }} Huruf</mat-hint>
-              <mat-error>
-                <strong *ngIf="fg.get('description').hasError('required')">Deskripsi Tidak Boleh Kosong</strong>
-                <strong *ngIf="fg.get('description').hasError('pattern')">Deskripsi Hanya Boleh Huruf Standar Papan Ketik</strong>
-              </mat-error>
-            </mat-form-field>
+            <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
           </div>
           <div class="row py-3" style="display: none;">
             <mat-form-field appearance="outline" class="p-3 w-100">
