@@ -34,10 +34,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private bs: BusyService,
     private pi: PageInfoService,
-    private lms: LeftMenuService,
     private as: AuthService,
     private fs: FabService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    public lms: LeftMenuService
   ) {
   }
 

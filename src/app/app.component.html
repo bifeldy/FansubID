@@ -8,7 +8,7 @@
 <mat-sidenav-container class="sidenav-container">
 
   <!-- Side Menu -->
-  <mat-sidenav #leftSideNav mode="side" opened [ngStyle]="{
+  <mat-sidenav #leftSideNav mode="side" [opened]="lms.opened" [ngStyle]="{
     'background-image': 'url(/assets/img/bg-side-menu.png)'
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-left-menu></app-left-menu>
