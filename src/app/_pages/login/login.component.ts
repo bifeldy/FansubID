@@ -77,11 +77,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.fg.valid) {
       this.submitted = true;
       this.subsLogin = this.as.login({
-        data: window.btoa(JSON.stringify({
-          userNameOrEmail: this.fg.value.userNameOrEmail,
-          password: CryptoJS.SHA512(this.fg.value.password).toString(),
-          rememberMe: this.fg.value.rememberMe
-        }))
+        userNameOrEmail: this.fg.value.userNameOrEmail,
+        password: CryptoJS.SHA512(this.fg.value.password).toString(),
+        rememberMe: this.fg.value.rememberMe
       }).subscribe(
         (res: any) => {
           this.bs.idle();

@@ -268,9 +268,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       return;
     }
     this.subsUserUpdate = this.us.updateUser(this.username, {
-      data: window.btoa(JSON.stringify({
-        ...body
-      }))
+      ...body
     }).subscribe(
       res => {
         this.gs.log('[USER_EDIT_SUCCESS]', res);

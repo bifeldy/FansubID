@@ -332,12 +332,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), Validators.max(data.episodes)
     ]);
     this.subsAnimeNew = this.anime.addNewAnime({
-      data: window.btoa(JSON.stringify({
-        id: this.selectedFilterAnime.mal_id,
-        name: this.selectedFilterAnime.title,
-        image_url: this.selectedFilterAnime.image_url,
-        type: this.selectedFilterAnime.type
-      }))
+      id: this.selectedFilterAnime.mal_id,
+      name: this.selectedFilterAnime.title,
+      image_url: this.selectedFilterAnime.image_url,
+      type: this.selectedFilterAnime.type
     }).subscribe(
       res => {
         this.gs.log('[ANIME_CHECK_ADD_SUCCESS]', res);
@@ -429,9 +427,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       return;
     }
     this.subsBerkasUpdate = this.berkas.updateBerkas(this.berkasId, {
-      data: window.btoa(JSON.stringify({
-        ...body
-      }))
+      ...body
     }).subscribe(
       res => {
         this.gs.log('[BERKAS_EDIT_SUCCESS]', res);

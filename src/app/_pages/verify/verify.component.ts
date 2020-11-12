@@ -87,11 +87,9 @@ export class VerifyComponent implements OnInit, OnDestroy {
     if (captchaResponse) {
       this.fg1.controls['g-recaptcha-response'].patchValue(captchaResponse);
       this.subsCekNik = this.us.cekNik({
-        data: window.btoa(JSON.stringify({
-          nik: this.fg1.value.nik,
-          nama: this.fg1.value.nama,
-          'g-recaptcha-response': this.fg1.value['g-recaptcha-response']
-        }))
+        nik: this.fg1.value.nik,
+        nama: this.fg1.value.nama,
+        'g-recaptcha-response': this.fg1.value['g-recaptcha-response']
       }).subscribe(
         res => {
           this.gs.log('[KPU_RI-CEK_NIK]', res);
@@ -133,9 +131,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
       }
     }
     this.subsVerify1 = this.us.verifikasi({
-      data: window.btoa(JSON.stringify({
-        ...body
-      }))
+      ...body
     }).subscribe(
       res => {
         this.gs.log('[USER_VERIFIKASI_SUCCESS]', res);

@@ -9,8 +9,6 @@ import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
 import { User } from '../entities/User';
 
-import { universalAtob } from '../helpers/base64';
-
 // Middleware
 import auth from '../middlewares/auth';
 
@@ -41,7 +39,6 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 // POST `/api/fansub`
 router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
     if (
       'name' in req.body && 'born' in req.body && 'slug' in req.body &&
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
@@ -263,7 +260,6 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 // PUT `/api/fansub/:id`
 router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
     if (
       'name' in req.body || 'born' in req.body || 'description' in req.body ||
       'slug' in req.body || 'active' in req.body || 'image' in req.body ||

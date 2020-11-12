@@ -6,8 +6,6 @@ import { getRepository, Like, In } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { universalAtob } from '../helpers/base64';
-
 import auth from '../middlewares/auth';
 
 import { Berkas } from '../entities/Berkas';
@@ -40,7 +38,6 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 // POST `/api/anime`
 router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
     if ('id' in req.body && 'name' in req.body && 'image_url' in req.body) {
       const animeRepo = getRepository(Anime);
       const animes = await animeRepo.find({

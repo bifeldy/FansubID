@@ -82,13 +82,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (this.fg.valid) {
       this.submitted = true;
       this.subsRegister = this.as.register({
-        data: window.btoa(JSON.stringify({
-          username: this.fg.value.username,
-          name: this.fg.value.name,
-          email: this.fg.value.email,
-          password: CryptoJS.SHA512(this.fg.value.password).toString(),
-          agree: this.fg.value.agree
-        }))
+        username: this.fg.value.username,
+        name: this.fg.value.name,
+        email: this.fg.value.email,
+        password: CryptoJS.SHA512(this.fg.value.password).toString(),
+        agree: this.fg.value.agree
       }).subscribe(
         (res: any) => {
           this.bs.idle();

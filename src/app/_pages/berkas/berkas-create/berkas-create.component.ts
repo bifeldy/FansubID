@@ -278,12 +278,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), Validators.max(data.episodes)
     ]);
     this.subsAnimeNew = this.anime.addNewAnime({
-      data: window.btoa(JSON.stringify({
-        id: this.selectedFilterAnime.mal_id,
-        name: this.selectedFilterAnime.title,
-        image_url: this.selectedFilterAnime.image_url,
-        type: this.selectedFilterAnime.type
-      }))
+      id: this.selectedFilterAnime.mal_id,
+      name: this.selectedFilterAnime.title,
+      image_url: this.selectedFilterAnime.image_url,
+      type: this.selectedFilterAnime.type
     }).subscribe(
       res => {
         this.gs.log('[ANIME_CHECK_ADD_SUCCESS]', res);
@@ -366,18 +364,16 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       fansubId.push(fs.fansub_id);
     }
     this.subsBerkasCreate = this.berkas.createBerkas({
-      data: window.btoa(JSON.stringify({
-        image: this.fg.value.image,
-        name: this.fg.value.name,
-        description: this.fg.value.description,
-        episode: parseInt(this.fg.value.episode, 10),
-        private: false,
-        projectType_id: this.fg.value.projectType_id,
-        anime_id: this.fg.value.anime_id,
-        fansub_id: fansubId,
-        download_url: this.fg.value.download_url,
-        attachment_id: this.fg.value.attachment_id
-      }))
+      image: this.fg.value.image,
+      name: this.fg.value.name,
+      description: this.fg.value.description,
+      episode: parseInt(this.fg.value.episode, 10),
+      private: false,
+      projectType_id: this.fg.value.projectType_id,
+      anime_id: this.fg.value.anime_id,
+      fansub_id: fansubId,
+      download_url: this.fg.value.download_url,
+      attachment_id: this.fg.value.attachment_id
     }).subscribe(
       res => {
         this.gs.log('[BERKAS_CREATE_SUCCESS]', res);

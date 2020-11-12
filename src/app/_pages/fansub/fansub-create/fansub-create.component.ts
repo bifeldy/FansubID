@@ -187,16 +187,14 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       return;
     }
     this.subsFansub = this.fansub.createFansub({
-      data: window.btoa(JSON.stringify({
-        image: this.fg.value.image,
-        name: this.fg.value.name,
-        description: this.fg.value.description,
-        born: this.fg.value.born.getTime(),
-        active: this.fg.value.active,
-        tags: this.fg.value.tags,
-        slug: this.fg.value.slug,
-        urls
-      }))
+      image: this.fg.value.image,
+      name: this.fg.value.name,
+      description: this.fg.value.description,
+      born: this.fg.value.born.getTime(),
+      active: this.fg.value.active,
+      tags: this.fg.value.tags,
+      slug: this.fg.value.slug,
+      urls
     }).subscribe(
       res => {
         this.gs.log('[FANSUB_CREATE_SUCCESS]', res);

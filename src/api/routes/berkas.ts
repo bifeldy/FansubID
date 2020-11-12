@@ -5,8 +5,6 @@ import { getRepository, Like, Equal, In } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { universalAtob } from '../helpers/base64';
-
 import { ProjectType } from '../entities/ProjectType';
 import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
@@ -74,7 +72,6 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 // POST `/api/berkas`
 router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
     if (
       'name' in req.body && 'description' in req.body && 'episode' in req.body && 'projectType_id' in req.body &&
       'download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0 &&
@@ -252,7 +249,6 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
 // PUT `/api/berkas/:id`
 router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
     if (
       'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body ||
       'anime_id' in req.body || 'projectType_id' in req.body || 'attachment_id' in req.body ||

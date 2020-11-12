@@ -5,8 +5,6 @@ import { getRepository, Like, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { universalAtob } from '../helpers/base64';
-
 import { User } from '../entities/User';
 import { Berkas } from '../entities/Berkas';
 import { Profile } from '../entities/Profile';
@@ -67,7 +65,6 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
 // PUT `/api/user/:username`
 router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
     if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body) {
       try {
         const userRepo = getRepository(User);

@@ -243,9 +243,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       return;
     }
     this.subsFansubUpdate = this.fansub.updateFansub(this.fansubId, {
-      data: window.btoa(JSON.stringify({
-        ...body
-      }))
+      ...body
     }).subscribe(
       res => {
         this.gs.log('[FANSUB_EDIT_SUCCESS]', res);

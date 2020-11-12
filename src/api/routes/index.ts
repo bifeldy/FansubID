@@ -8,8 +8,6 @@ import multer from 'multer';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { universalAtob } from '../helpers/base64';
-
 import { environment } from '../../environments/environment';
 
 import { User } from '../entities/User';
@@ -138,7 +136,6 @@ router.post('/image', auth.isAuthorized, upload.single('file'), async (req: User
 // POST `/api/kpu/cek-nik`
 router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
     if ('nik' in req.body && 'nama' in req.body && 'g-recaptcha-response' in req.body) {
       return request(`
         ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${req.connection.remoteAddress}
@@ -186,7 +183,6 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
 // PUT `/api/kpu/verify`
 router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => {
   try {
-    req.body = JSON.parse(universalAtob(req.body.data));
     if (req.user.verified) {
       res.status(200).json({
         info: `😅 200 - User Telah Diverifikasi 🤣`,
