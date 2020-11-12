@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { ApiService } from './api.service';
 
-import { environment } from '../../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -14,11 +12,15 @@ export class ImgbbService {
   ) {
   }
 
-  uploadImage(imageFile): any {
-    return this.api.postData(`https://api.imgbb.com/1/upload`, {
-      key: environment.imgbbKey,
-      name: new Date().getTime(),
-      image: imageFile,
-    }, true);
+  uploadImage(imageFile, binaryDataNotBase64 = true): any {
+    let imageData = null;
+    if (!binaryDataNotBase64) {
+      imageData = imageFile.startsWith('data:image/gif;base64,') ? imageFile.slice(22, imageFile.length) : imageFile;
+    } else {
+      imageData = imageFile;
+    }
+    return this.api.postData(`/image`, {
+      file: imageData
+    }, binaryDataNotBase64);
   }
 }

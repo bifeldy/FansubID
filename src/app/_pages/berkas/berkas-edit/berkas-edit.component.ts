@@ -394,7 +394,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.subsImgbb = this.imgbb.uploadImage(this.image).subscribe(
       res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
-        this.fg.controls.image.patchValue(res.data.image.url);
+        this.fg.controls.image.patchValue(res.result.url);
         this.fg.controls.image.markAsDirty();
         this.submitted = false;
       },
@@ -482,7 +482,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       }
     );
     this.uploadHandler = this.berkas.uploadLampiran({
-      lampiran: this.attachment
+      file: this.attachment
     }).subscribe(
       event => {
         this.gs.log('[UPLOAD_EVENTS]', event);

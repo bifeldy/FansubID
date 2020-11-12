@@ -4,6 +4,7 @@ import { getRepository, Equal, In } from 'typeorm';
 
 import createError from 'http-errors';
 import request from 'request';
+import multer from 'multer';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -28,7 +29,33 @@ import berkasRouter from './berkas';
 import userRouter from './user';
 import attachmentRouter from './attachment';
 
+// tslint:disable-next-line: typedef
+function fileGambarFilter(req, file, cb) {
+  const typeArray = file.mimetype.split('/');
+  const fileType = typeArray[0];
+  const fileExt = typeArray[1];
+  if (fileType === 'image' && file) {
+    if (fileExt === 'jpeg' || fileExt === 'jpg' || fileExt === 'gif' || fileExt === 'png') {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  } else {
+    cb(null, false);
+  }
+}
+
+const upload = multer({
+  fileFilter: fileGambarFilter,
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 256 * 1000
+  },
+});
+
 const router = Router();
+
+const imgBB = 'https://api.imgbb.com/1/upload';
 
 // Child route url
 router.use('/anime', seasonalRouter);
@@ -76,6 +103,35 @@ router.post('/verify', auth.isAuthorized, (req: any, res: Response, next) => {
   res.status(200).json({
     info: '😍 200 - Token Selesai Di Verifikasi! UwUu~ 🥰',
     result: req.user
+  });
+});
+
+// POST `/api/image`
+router.post('/image', auth.isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next) => {
+  return request({
+    method: 'POST',
+    uri: imgBB,
+    formData: {
+      key: environment.imgbbKey,
+      name: new Date().getTime(),
+      image: req.file.buffer.toString('base64')
+    }
+  }, async (error, result, body) => {
+    const data = JSON.parse(body).data;
+    res.status(result.statusCode).json({
+      info: `😅 ${result.statusCode} - ImgBB :: Upload Image 🤣`,
+      result: {
+        id: data.id,
+        title: data.title,
+        url: data.image.url,
+        mime: data.image.mime,
+        extension: data.image.extension,
+        size: data.size,
+        time: data.time,
+        expiration: data.expiration,
+      },
+      imageUrl: data.image.url
+    });
   });
 });
 

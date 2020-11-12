@@ -189,7 +189,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.subsImgbb1 = this.imgbb.uploadImage(this.imagePhoto).subscribe(
       res => {
         this.gs.log('[IMAGE_PHOTO_SUCCESS]', res);
-        this.fg.controls.image_photo.patchValue(res.data.image.url);
+        this.fg.controls.image_photo.patchValue(res.result.url);
         this.fg.controls.image_photo.markAsDirty();
         this.submitted = false;
       },
@@ -241,7 +241,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.subsImgbb2 = this.imgbb.uploadImage(this.imageCover).subscribe(
       res => {
         this.gs.log('[IMAGE_COVER_SUCCESS]', res);
-        this.fg.controls.image_cover.patchValue(res.data.image.url);
+        this.fg.controls.image_cover.patchValue(res.result.url);
         this.fg.controls.image_cover.markAsDirty();
         this.submitted = false;
       },

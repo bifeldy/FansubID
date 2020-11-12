@@ -196,7 +196,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     this.subsImgbb = this.imgbb.uploadImage(this.image).subscribe(
       res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
-        this.fg.controls.image.patchValue(res.data.image.url);
+        this.fg.controls.image.patchValue(res.result.url);
         this.fg.controls.image.markAsDirty();
         this.submitted = false;
       },

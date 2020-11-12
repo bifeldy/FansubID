@@ -88,7 +88,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
 });
 
 // POST `/api/attachment`
-router.post('/', auth.isAuthorized, upload.single('lampiran'), async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next: NextFunction) => {
   if (req.file) {
     if (req.user.verified) {
       const tempAttachmentRepo = getRepository(TempAttachment);
