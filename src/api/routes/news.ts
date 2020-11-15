@@ -182,7 +182,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             res.status(401).json({
               info: '🙄 401 - Authorisasi Kepemilikan Gagal! 😪',
               result: {
-                message: 'Profil Milik Orang Lain!'
+                message: 'Berita Milik Orang Lain!'
               }
             });
           }
