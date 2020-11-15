@@ -143,7 +143,33 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
         ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${req.connection.remoteAddress}
       `.trim(), (e1, r1, b1) => {
         b1 = JSON.parse(b1);
-        if (b1.success !== undefined && !b1.success) {
+        if (b1 && b1.success) {
+          return request({
+            method: 'POST',
+            uri: environment.apiKpuAndroid,
+            body: JSON.stringify({
+              nik: req.body.nik,
+              nama: req.body.nama,
+              ck_kpu: environment.kpuAndroidSecretKey
+            })
+          }, (e2, r2, b2) => {
+            if (b2) {
+              const resKPU = JSON.parse(b2);
+              delete resKPU.data.tps;
+              return res.status(r2.statusCode).json({
+                info: `😍 ${r2.statusCode} - Data Kartu Tanda Penduduk~ 🥰`,
+                result: resKPU
+              });
+            } else {
+              res.status(500).json({
+                info: '🙄 500 - API Pemerintah Error! 😪',
+                result: {
+                  message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya'
+                }
+              });
+            }
+          });
+        } else {
           return res.status(r1.statusCode).json({
             info: `🙄 ${r1.statusCode} - Wrong Captcha! 😪`,
             result: {
@@ -151,22 +177,6 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
             }
           });
         }
-        return request({
-          method: 'POST',
-          uri: environment.apiKpuAndroid,
-          body: JSON.stringify({
-            nik: req.body.nik,
-            nama: req.body.nama,
-            ck_kpu: environment.kpuAndroidSecretKey
-          })
-        }, (e2, r2, b2) => {
-          const resKPU = JSON.parse(b2);
-          delete resKPU.data.tps;
-          res.status(r2.statusCode).json({
-            info: `😍 ${r2.statusCode} - Data Kartu Tanda Penduduk~ 🥰`,
-            result: resKPU
-          });
-        });
       });
     } else {
       throw new Error('Data Tidak Lengkap!');

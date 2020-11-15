@@ -34,9 +34,16 @@ export class NotificationsService {
             title: 'Verifikasi!',
             content: 'Fitur lampiran berkas DDL tidak dapat digunakan, silahkan <a href="/verify" class="text-decoration-none"> verifikasi akun </a> terlebih dahulu. Terima kasih. ^_^'
           });
+          this.notifications.splice(0, 0, {
+            id: -2,
+            type: 'danger',
+            title: 'Verifikasi!',
+            content: 'Fitur verifikasi tidak dapat digunakan saat ini karena pemerintah telah fixing kebocoran data. Terima kasih. ^_^'
+          });
         }
       } else {
         this.removeNotif(-1);
+        this.removeNotif(-2);
       }
     });
   }
