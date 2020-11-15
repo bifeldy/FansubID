@@ -32,7 +32,7 @@ export class NotificationsService {
             id: -1,
             type: 'warning',
             title: 'Verifikasi!',
-            content: 'Fitur lampiran DDL tidak dapat digunakan, silahkan <a href="/verify" class="text-decoration-none"> verifikasi akun </a> terlebih dahulu. Terima kasih. ^_^'
+            content: 'Fitur lampiran berkas DDL tidak dapat digunakan, silahkan <a href="/verify" class="text-decoration-none"> verifikasi akun </a> terlebih dahulu. Terima kasih. ^_^'
           });
         }
       } else {

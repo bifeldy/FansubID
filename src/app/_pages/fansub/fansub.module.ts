@@ -35,7 +35,7 @@ const routes: Routes = [
       title: 'Fansub - Buat Baru',
       description: 'Halaman Menambahkan Fansub Baru',
       keywords: 'Create Fansub',
-      roles: [Role.ADMIN, Role.FANSUBBER, Role.MODERATOR, Role.USER]
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
     }
   },
   {
@@ -46,7 +46,7 @@ const routes: Routes = [
       title: 'Fansub - Ubah Data',
       description: 'Halaman Pembaharuan Data Fansub',
       keywords: 'Ubah Fansub',
-      roles: [Role.ADMIN, Role.FANSUBBER, Role.MODERATOR, Role.USER]
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
     }
   },
   {

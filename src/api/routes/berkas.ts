@@ -10,11 +10,13 @@ import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
 import { Anime } from '../entities/Anime';
+import { Attachment } from '../entities/Attachment';
+import { TempAttachment } from '../entities/TempAttachment';
+
+import { Role } from '../../app/_shared/models/Role';
 
 // Middleware
 import auth from '../middlewares/auth';
-import { Attachment } from '../entities/Attachment';
-import { TempAttachment } from '../entities/TempAttachment';
 
 const router = Router();
 
@@ -263,7 +265,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
           ],
           relations: ['user_', 'attachment_', 'anime_', 'project_type_', 'fansub_']
         });
-        if (req.user.id === file.user_.id || req.user.role === 'MODERATOR' || req.user.role === 'ADMIN') {
+        if (req.user.id === file.user_.id || req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
           if (req.body.name) {
             file.name = req.body.name;
           }

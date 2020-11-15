@@ -39,6 +39,9 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     public as: AuthService,
     public dm: DownloadManagerService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnDestroy(): void {

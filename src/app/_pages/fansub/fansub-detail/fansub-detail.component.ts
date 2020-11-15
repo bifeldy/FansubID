@@ -63,6 +63,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private fansub: FansubService
   ) {
+    this.gs.bannerImg = '/assets/img/fansub-banner.png';
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnDestroy(): void {
@@ -90,7 +93,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           this.fansubData = res.result;
           if (Array.isArray(this.fansubData.tags)) {
             for (let i = 0; i < this.fansubData.tags.length; i++) {
-              this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color:  Warna.BIRU, selected: true });
+              this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
             }
           }
           this.pi.updatePageMetaData(

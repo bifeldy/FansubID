@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 
@@ -20,8 +19,6 @@ import { ImgbbService } from '../../../_shared/services/imgbb.service';
   styleUrls: ['./fansub-create.component.css']
 })
 export class FansubCreateComponent implements OnInit, OnDestroy {
-
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   fg: FormGroup;
 

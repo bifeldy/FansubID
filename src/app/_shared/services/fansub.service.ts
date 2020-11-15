@@ -16,12 +16,12 @@ export class FansubService {
     return this.api.getData(`/fansub`);
   }
 
-  createFansub(encryptedFansubData): any {
-    return this.api.postData(`/fansub`, encryptedFansubData);
+  createFansub(fansubData): any {
+    return this.api.postData(`/fansub`, fansubData);
   }
 
-  updateFansub(fansubId, encryptedFansubData): any {
-    return this.api.putData(`/fansub/${fansubId}`, encryptedFansubData);
+  updateFansub(fansubId, fansubData): any {
+    return this.api.putData(`/fansub/${fansubId}`, fansubData);
   }
 
   getFansub(fansubId: number): any {

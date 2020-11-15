@@ -55,6 +55,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'news',
+    loadChildren: () => import('./_pages/news/news.module').then(m => m.NewsModule),
+    data: {
+      title: 'Berita & Informasi',
+      description: 'Papan Pengumuman',
+      keywords: 'News'
+    }
+  },
+  {
     path: 'berkas',
     loadChildren: () => import('./_pages/berkas/berkas.module').then(m => m.BerkasModule),
     data: {

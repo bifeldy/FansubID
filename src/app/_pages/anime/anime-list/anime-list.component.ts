@@ -8,6 +8,8 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 
+import { Seasons } from '../../../_shared/models/Seasons';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -41,10 +43,10 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   fg: FormGroup;
 
   seasonalBanner = [
-    { id: 1, name: 'winter', img: '/assets/img/season/winter.png' },
-    { id: 2, name: 'spring', img: '/assets/img/season/spring.png' },
-    { id: 3, name: 'summer', img: '/assets/img/season/summer.png' },
-    { id: 4, name: 'fall', img: '/assets/img/season/fall.png' }
+    { id: 1, name: Seasons.WINTER, img: '/assets/img/season/winter.png' },
+    { id: 2, name: Seasons.SPRING, img: '/assets/img/season/spring.png' },
+    { id: 3, name: Seasons.SUMMER, img: '/assets/img/season/summer.png' },
+    { id: 4, name: Seasons.FALL, img: '/assets/img/season/fall.png' }
   ];
 
   currentMonth = null;
@@ -82,6 +84,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     private fs: FabService,
     private anime: AnimeService
   ) {
+    this.gs.bannerImg = '/assets/img/season/winter.png';
     this.gs.bgRepeat = true;
     this.gs.sizeContain = true;
   }
@@ -111,9 +114,19 @@ export class AnimeListComponent implements OnInit, OnDestroy {
 
   watchUrlRoute(): void {
     this.subsParam = this.activatedRoute.queryParams.subscribe(p => {
-      this.currentYear = p.year ? parseInt(p.year, 10) : new Date().getFullYear();
+      this.currentYear = p.year ? (
+        Number.isNaN(parseInt(p.year, 10)) ? this.currentYear : parseInt(p.year, 10)
+      ) : this.currentYear;
       this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
-      this.selectedSeasonName = p.season ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth);
+      this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
+      this.selectedSeasonName = p.season ? (
+        [
+          Seasons.WINTER,
+          Seasons.SPRING,
+          Seasons.SUMMER,
+          Seasons.FALL
+        ].indexOf(p.season) >= 0 ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth)
+      ) : this.findSeasonNameByMonthNumber(this.currentMonth);
       this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
       this.getSeasonalAnime(p.year && p.season);
     });

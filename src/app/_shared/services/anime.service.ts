@@ -20,8 +20,8 @@ export class AnimeService {
     return this.api.getData(`/anime/${animeId}`);
   }
 
-  addNewAnime(encryptedAnimeData): any {
-    return this.api.postData(`/anime`, encryptedAnimeData);
+  addNewAnime(animeData): any {
+    return this.api.postData(`/anime`, animeData);
   }
 
   getSeasonalAnime(year: number, season: string): any {

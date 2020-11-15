@@ -63,6 +63,9 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     private anime: AnimeService,
     private fs: FabService
   ) {
+    this.gs.bannerImg = '/assets/img/season/winter.png';
+    this.gs.bgRepeat = true;
+    this.gs.sizeContain = true;
   }
 
   ngOnDestroy(): void {

@@ -12,7 +12,7 @@ export class BerkasService {
   ) {
   }
 
-  getAllBerkas(q = null, page = 1, row = 10): any {
+  getAllBerkas(q = '', page = 1, row = 10): any {
     return this.api.getData(`/berkas?q=${q}&page=${page}&row=${row}`);
   }
 
@@ -20,12 +20,12 @@ export class BerkasService {
     return this.api.getData(`/berkas/${berkasId}`);
   }
 
-  createBerkas(encryptedBerkasData): any {
-    return this.api.postData(`/berkas`, encryptedBerkasData);
+  createBerkas(berkasData): any {
+    return this.api.postData(`/berkas`, berkasData);
   }
 
-  updateBerkas(berkasId, encryptedBerkasData): any {
-    return this.api.putData(`/berkas/${berkasId}`, encryptedBerkasData);
+  updateBerkas(berkasId, berkasData): any {
+    return this.api.putData(`/berkas/${berkasId}`, berkasData);
   }
 
   uploadLampiran(lampiran): any {

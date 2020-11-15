@@ -1,6 +1,7 @@
 import { Injectable, isDevMode, Inject, PLATFORM_ID } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
@@ -10,6 +11,8 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class GlobalService {
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   readonly allKeyboardKeysRegex = /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/;
 

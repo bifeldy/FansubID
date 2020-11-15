@@ -43,6 +43,7 @@ import { Berkas } from './src/api/entities/Berkas';
 import { Attachment } from './src/api/entities/Attachment';
 import { TempAttachment } from './src/api/entities/TempAttachment';
 import { CorsApiKey } from './src/api/entities/CorsApiKey';
+import { News } from './src/api/entities/News';
 
 const dbName = process.env.DB_NAME || 'hikki';
 const dbUsername = process.env.DB_USERNAME || 'root';
@@ -67,7 +68,8 @@ const typeOrmConfig: any = {
     Berkas,
     Attachment,
     TempAttachment,
-    CorsApiKey
+    CorsApiKey,
+    News
   ]
 };
 

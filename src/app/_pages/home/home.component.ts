@@ -1,60 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 // import { Router } from '@angular/router';
 
 import { GlobalService } from '../../_shared/services/global.service';
-// import { BerkasService } from '../../_shared/services/berkas.service';
-// import { FabService } from '../../_shared/services/fab.service';
-// import { BusyService } from '../../_shared/services/busy.service';
+import { NewsService } from '../../_shared/services/news.service';
+import { BusyService } from '../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
-  news = [
-    {
-      id: 2,
-      title: 'Fitur Baru Anime & Fansub Database',
-      image_url: '/assets/img/fansub-banner.png',
-      created_at: '14 Juni 2016',
-      user_: {
-        email: 'bifeldy@gmail.com',
-        id: 1,
-        image_url: 'https://i.ibb.co/dDHWy2g/1598472779359.gif',
-        username: 'bifeldy',
-        verified: true
-      },
-    },
-    {
-      id: 1,
-      title: 'Uji Coba Rilis & Peluncuran Website',
-      image_url: '/assets/img/home-banner.png',
-      created_at: '14 Juni 2013',
-      user_: {
-        email: 'bifeldy@gmail.com',
-        id: 1,
-        image_url: 'https://i.ibb.co/dDHWy2g/1598472779359.gif',
-        username: 'bifeldy',
-        verified: true
-      },
-    },
-  ];
+  newsData = [];
+
+  subsNews = null;
 
   constructor(
     private gs: GlobalService,
-    // private router: Router,
-    // private bs: BusyService,
-    // private berkas: BerkasService,
-    // private fs: FabService
+    private news: NewsService,
+    private bs: BusyService
   ) {
     this.gs.bannerImg = '/assets/img/home-banner.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
   }
 
+  ngOnDestroy(): void {
+    if (this.subsNews) {
+      this.subsNews.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
+    this.getNews();
+  }
+
+  getNews(): void {
+    this.bs.busy();
+    this.subsNews = this.news.getAllNews('', 1, 3).subscribe(
+      res => {
+        this.gs.log('[HOME_NEWS_LIST_SUCCESS]', res);
+        this.newsData = res.results;
+        this.bs.idle();
+      },
+      err => {
+        this.gs.log('[HOME_NEWS_LIST_ERROR]', err);
+        this.bs.idle();
+      }
+    );
   }
 
 }

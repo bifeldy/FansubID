@@ -3,12 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'ty
 import { KartuTandaPenduduk } from './KartuTandaPenduduk';
 import { Profile } from './Profile';
 
-enum Role {
-  ADMIN = 'ADMIN',
-  MODERATOR = 'MODERATOR',
-  FANSUBBER = 'FANSUBBER',
-  USER = 'USER'
-}
+import { Role } from '../../app/_shared/models/Role';
 
 @Entity({ name: 'users' })
 export class User {
@@ -26,7 +21,10 @@ export class User {
   // tslint:disable-next-line: variable-name
   image_url: string;
 
-  @Column({ type: 'enum', enum: ['ADMIN', 'MODERATOR', 'FANSUBBER', 'USER'], default: 'USER' })
+  @Column({ type: 'enum', enum: [
+    Role.ADMIN, Role.MODERATOR,
+    Role.FANSUBBER, Role.USER
+  ], default: Role.USER })
   role: Role;
 
   @Column({ type: 'varchar', length: 255 })

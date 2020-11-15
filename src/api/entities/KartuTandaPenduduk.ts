@@ -1,30 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-enum JenisKelamin {
-  LAKI = 'L',
-  PEREMPUAN = 'P'
-}
-
-enum GolonganDarah {
-  A = 'A',
-  B = 'B',
-  O = 'O',
-  AB = 'AB'
-}
-
-enum Agama {
-  BUDDHA = 'Buddha',
-  HINDU = 'Hindu',
-  ISLAM = 'Islam',
-  KATHOLIK = 'Katholik',
-  KONG_HU_CU = 'Kong Hu Cu',
-  KRISTEN_PROTESTAN = 'Kristen Protestan'
-}
-
-enum WargaNegara {
-  WNI = 'WNI',
-  WNA = 'WNA'
-}
+import { JenisKelamin } from '../../app/_shared/models/JenisKelamin';
+import { GolonganDarah } from '../../app/_shared/models/GolonganDarah';
+import { Agama } from '../../app/_shared/models/Agama';
+import { WargaNegara } from '../../app/_shared/models/WargaNegara';
 
 @Entity({ name: 'kartu_tanda_penduduk' })
 export class KartuTandaPenduduk {
@@ -46,11 +25,19 @@ export class KartuTandaPenduduk {
   // tslint:disable-next-line: variable-name
   tanggal_lahir: Date;
 
-  @Column({ type: 'enum', enum: ['L', 'P'], nullable: true })
+  @Column({ type: 'enum', enum: [
+    JenisKelamin.LAKI,
+    JenisKelamin.PEREMPUAN
+  ], nullable: true })
   // tslint:disable-next-line: variable-name
   jenis_kelamin: JenisKelamin;
 
-  @Column({ type: 'enum', enum: ['A', 'B', 'O', 'AB'], nullable: true })
+  @Column({ type: 'enum', enum: [
+    GolonganDarah.A,
+    GolonganDarah.B,
+    GolonganDarah.O,
+    GolonganDarah.AB
+  ], nullable: true })
   // tslint:disable-next-line: variable-name
   golongan_darah: GolonganDarah;
 
@@ -70,11 +57,14 @@ export class KartuTandaPenduduk {
   @Column({ type: 'varchar', length: 255, nullable: true })
   kecamatan: string;
 
-  @Column({
-    type: 'enum',
-    enum: ['Buddha', 'Hindu', 'Islam', 'Katholik', 'Kong Hu Cu', 'Kristen Protestan'],
-    nullable: true
-  })
+  @Column({type: 'enum', enum: [
+    Agama.BUDDHA,
+    Agama.HINDU,
+    Agama.ISLAM,
+    Agama.KATHOLIK,
+    Agama.KONG_HU_CU,
+    Agama.KRISTEN_PROTESTAN
+  ], nullable: true })
   agama: Agama;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -84,7 +74,10 @@ export class KartuTandaPenduduk {
   @Column({ type: 'varchar', length: 255, nullable: true })
   pekerjaan: string;
 
-  @Column({ type: 'enum', enum: ['WNI', 'WNA'], nullable: true })
+  @Column({ type: 'enum', enum: [
+    WargaNegara.WNI,
+    WargaNegara.WNA
+  ], nullable: true })
   kewarganegaraan: WargaNegara;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

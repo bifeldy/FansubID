@@ -87,6 +87,9 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     public gs: GlobalService,
     public as: AuthService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {

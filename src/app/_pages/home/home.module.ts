@@ -4,11 +4,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
-
-import { HomeComponent } from './home.component';
+import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { BannerModule } from '../../_shared/components/banner/banner.module';
-import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
+
+import { HomeComponent } from './home.component';
 
 const routes: Routes = [
   {

@@ -20,20 +20,20 @@ export class UserService {
     return this.api.getData(`/user/${username}`);
   }
 
-  updateUser(username, encryptedUserData): any {
-    return this.api.putData(`/user/${username}`, encryptedUserData);
+  updateUser(username, userData): any {
+    return this.api.putData(`/user/${username}`, userData);
   }
 
   getUserBerkas(username, q = null, page = 1, row = 10): any {
     return this.api.getData(`/user/${username}/berkas?q=${q}&page=${page}&row=${row}`);
   }
 
-  cekNik(encryptedUserData): any {
-    return this.api.postData('/cek-nik', encryptedUserData);
+  cekNik(userData): any {
+    return this.api.postData('/cek-nik', userData);
   }
 
-  verifikasi(encryptedUserData): any {
-    return this.api.putData('/verify', encryptedUserData);
+  verifikasi(userData): any {
+    return this.api.putData('/verify', userData);
   }
 
 }

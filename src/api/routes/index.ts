@@ -26,6 +26,7 @@ import fansubRouter from './fansub';
 import berkasRouter from './berkas';
 import userRouter from './user';
 import attachmentRouter from './attachment';
+import newsRouter from './news';
 
 // tslint:disable-next-line: typedef
 function fileGambarFilter(req, file, cb) {
@@ -62,6 +63,7 @@ router.use('/fansub', fansubRouter);
 router.use('/berkas', berkasRouter);
 router.use('/user', userRouter);
 router.use('/attachment', attachmentRouter);
+router.use('/news', newsRouter);
 
 // GET `/api`
 router.get('/', (req, res) => {

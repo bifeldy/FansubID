@@ -1,5 +1,6 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable } from '@angular/core';
+
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,9 @@ export class LeftMenuService {
   public opened = true;
 
   constructor(
-    @Inject(PLATFORM_ID) platformId: string
+    private gs: GlobalService
   ) {
-    if (isPlatformBrowser(platformId)) {
+    if (this.gs.isBrowser) {
       this.opened = (window.innerWidth >= 992) ? true : false;
     }
   }

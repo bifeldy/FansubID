@@ -96,7 +96,7 @@
                         {{ t }}
                         <mat-icon matChipRemove>cancel</mat-icon>
                       </mat-chip>
-                      <input placeholder="Label Tag / Kategori" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      <input placeholder="Label Tag / Kategori" [matChipInputSeparatorKeyCodes]="gs.separatorKeysCodes"
                         [matChipInputFor]="tag" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addTag($event)" />
                       <mat-icon matSuffix>loyalty</mat-icon>
                     </mat-chip-list>
