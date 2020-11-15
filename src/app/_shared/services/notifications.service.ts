@@ -49,7 +49,7 @@ export class NotificationsService {
   }
 
   addNotif(notifId, notifType, notifTitle, notifContent): void {
-    this.notifications.push({
+    this.notifications.splice(0, 0, {
       id: notifId,
       type: notifType,
       title: notifTitle,
