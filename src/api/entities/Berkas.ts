@@ -29,14 +29,6 @@ export class Berkas {
   // tslint:disable-next-line: variable-name
   image_url: string;
 
-  // @Column({ type: 'int', nullable: true })
-  // // tslint:disable-next-line: variable-name
-  // mal_id: number;
-
-  @Column({ type: 'int' })
-  // tslint:disable-next-line: variable-name
-  episode: number;
-
   @Column({ type: 'int', default: 0 })
   // tslint:disable-next-line: variable-name
   view_count: number;

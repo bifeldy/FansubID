@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -213,10 +213,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   initForm(data): void {
     this.fg = this.fb.group({
       name: [data.name, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      episode: new FormControl(
-        { value: data.episode, disabled: false },
-        Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])
-      ),
       description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       projectType_id: [data.project_type_.id, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       anime_id: [data.anime_.id, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
@@ -329,11 +325,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   filterAnimeSelected(data): void {
     this.gs.log('[ANIME_FILTER_CLICK]', data);
     this.selectedFilterAnime = data;
-    this.fg.controls.episode.enable();
-    this.fg.controls.episode.patchValue(null);
-    this.fg.controls.episode.setValidators([
-      Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), Validators.max(data.episodes)
-    ]);
     this.subsAnimeNew = this.anime.addNewAnime({
       id: this.selectedFilterAnime.mal_id,
       name: this.selectedFilterAnime.title,

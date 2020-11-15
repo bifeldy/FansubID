@@ -75,7 +75,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (
-      'name' in req.body && 'description' in req.body && 'episode' in req.body && 'projectType_id' in req.body &&
+      'name' in req.body && 'description' in req.body && 'projectType_id' in req.body &&
       'download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0 &&
       'fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0
     ) {
@@ -90,7 +90,6 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       file.name = req.body.name;
       file.download_url = JSON.stringify(filteredUrls);
       file.description = req.body.description;
-      file.episode = req.body.episode;
       if (req.body.private) {
         file.private = req.body.private;
       }
@@ -274,9 +273,6 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
           }
           if (req.body.image) {
             file.image_url = req.body.image;
-          }
-          if (req.body.episode) {
-            file.episode = req.body.episode;
           }
           if (req.body.private) {
             file.private = req.body.private;

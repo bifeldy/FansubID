@@ -112,24 +112,13 @@
               </div>
               <div class="col-12 col-md-7 col-xl-8 pt-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-xl-10 col-lg-9 col-md-8">
+                  <mat-form-field appearance="outline" class="p-3 col-12">
                     <mat-label>Nama Berkas</mat-label>
                     <input matInput formControlName="name" placeholder="[Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32].mkv" />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
                       <strong *ngIf="fg.get('name').hasError('required')">Nama Berkas Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('name').hasError('pattern')">Nama Berkas Hanya Boleh Huruf Standar Papan Ketik</strong>
-                    </mat-error>
-                  </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-xl-2 col-lg-3 col-md-4">
-                    <mat-label>Episode</mat-label>
-                    <input matInput formControlName="episode" placeholder="--" type="number" />
-                    <mat-icon matSuffix>watch_later</mat-icon>
-                    <mat-error>
-                      <strong *ngIf="fg.get('episode').hasError('required')">Episode Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('episode').hasError('pattern') || fg.get('episode').hasError('min') || fg.get('episode').hasError('max')">
-                        Angka Episode Tidak Valid
-                      </strong>
                     </mat-error>
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>

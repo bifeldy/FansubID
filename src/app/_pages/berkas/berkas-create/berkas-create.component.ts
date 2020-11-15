@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -177,10 +177,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   initForm(): void {
     this.fg = this.fb.group({
       name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      episode: new FormControl(
-        { value: null, disabled: true },
-        Validators.compose([Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), Validators.max(0)])
-      ),
       description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       anime_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
@@ -275,11 +271,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   filterAnimeSelected(data): void {
     this.gs.log('[ANIME_FILTER_CLICK]', data);
     this.selectedFilterAnime = data;
-    this.fg.controls.episode.enable();
-    this.fg.controls.episode.patchValue(null);
-    this.fg.controls.episode.setValidators([
-      Validators.required, Validators.pattern(/^\d+$/), Validators.min(1), Validators.max(data.episodes)
-    ]);
     this.subsAnimeNew = this.anime.addNewAnime({
       id: this.selectedFilterAnime.mal_id,
       name: this.selectedFilterAnime.title,
@@ -370,7 +361,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       image: this.fg.value.image,
       name: this.fg.value.name,
       description: this.fg.value.description,
-      episode: parseInt(this.fg.value.episode, 10),
       private: false,
       projectType_id: this.fg.value.projectType_id,
       anime_id: this.fg.value.anime_id,
