@@ -80,7 +80,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private fs: FabService,
     private anime: AnimeService
   ) {
@@ -109,7 +109,9 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
     this.minDate = new Date('1917-01-01');
     this.maxDate = new Date(this.currentYear + 1, 11, 31);
-    this.watchUrlRoute();
+    if (this.gs.isBrowser) {
+      this.watchUrlRoute();
+    }
   }
 
   watchUrlRoute(): void {

@@ -31,7 +31,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService,
     private pi: PageInfoService,
     private berkas: BerkasService,
@@ -57,9 +57,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsUser = this.as.currentUser.subscribe(user => {
-      this.currentUser = user;
-    });
     this.subsParam = this.activatedRoute.params.subscribe(params => {
       this.berkasId = params.berkasId;
       this.bs.busy();
@@ -74,7 +71,9 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             this.berkasData.image_url
           );
           this.bs.idle();
-          this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
+          if (this.gs.isBrowser) {
+            this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
+          }
         },
         err => {
           this.gs.log('[BERKAS_DETAIL_ERROR]', err);
@@ -87,6 +86,11 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
         }
       );
     });
+    if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe(user => {
+        this.currentUser = user;
+      });
+    }
   }
 
   login(): void {

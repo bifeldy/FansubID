@@ -45,7 +45,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService,
     private fs: FabService,
     private pi: PageInfoService,
@@ -79,11 +79,13 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             `${this.userData.username}`,
             this.userData.image_url
           );
-          this.panelData = [];
-          this.panelData.push({ title: 'Tentang Saya', icon: 'info', text: this.userData.profile_.description });
-          this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
           this.bs.idle();
-          this.getUserBerkas();
+          if (this.gs.isBrowser) {
+            this.panelData = [];
+            this.panelData.push({ title: 'Tentang Saya', icon: 'info', text: this.userData.profile_.description });
+            this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
+            this.getUserBerkas();
+          }
         },
         err => {
           this.gs.log('[USER_DETAIL_ERROR]', err);

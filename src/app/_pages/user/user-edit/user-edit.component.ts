@@ -99,34 +99,36 @@ export class UserEditComponent implements OnInit, OnDestroy {
       `User - Ubah Profile`,
       `Halaman Pembaharuan Profile`,
       `Ubah Profile`
-      );
-    this.subsParam = this.activatedRoute.params.subscribe(params => {
-      this.username = params.username;
-      this.bs.busy();
-      this.subsUserDetail = this.us.getUserData(this.username).subscribe(
-        res => {
-          this.gs.log('[USER_DETAIL_SUCCESS]', res);
-          this.bs.idle();
-          if (this.as.currentUserValue.id !== res.result.id) {
-            if (this.gs.isBrowser) {
-              this.toast.warning('Profile Ini Milik Orang Lain', 'Whoops!');
+    );
+    if (this.gs.isBrowser) {
+      this.subsParam = this.activatedRoute.params.subscribe(params => {
+        this.username = params.username;
+        this.bs.busy();
+        this.subsUserDetail = this.us.getUserData(this.username).subscribe(
+          res => {
+            this.gs.log('[USER_DETAIL_SUCCESS]', res);
+            this.bs.idle();
+            if (this.as.currentUserValue.id !== res.result.id) {
+              if (this.gs.isBrowser) {
+                this.toast.warning('Profile Ini Milik Orang Lain', 'Whoops!');
+              }
+              this.router.navigateByUrl(`/user/${this.username}`);
+            } else {
+              this.initForm(res.result);
             }
-            this.router.navigateByUrl(`/user/${this.username}`);
-          } else {
-            this.initForm(res.result);
+          },
+          err => {
+            this.gs.log('[USER_DETAIL_ERROR]', err);
+            this.bs.idle();
+            this.router.navigate(['/error'], {
+              queryParams: {
+                returnUrl: `/user/${this.username}`
+              }
+            });
           }
-        },
-        err => {
-          this.gs.log('[USER_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: `/user/${this.username}`
-            }
-          });
-        }
-      );
-    });
+        );
+      });
+    }
   }
 
   initForm(data): void {

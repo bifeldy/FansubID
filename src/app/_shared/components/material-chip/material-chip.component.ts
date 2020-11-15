@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+import { GlobalService } from '../../services/global.service';
+
 @Component({
   selector: 'app-material-chip',
   templateUrl: './material-chip.component.html',
@@ -18,10 +20,15 @@ export class MaterialChipComponent implements OnInit {
 
   @Output() chipClicked = new EventEmitter();
 
-  constructor() {
+  constructor(
+    public gs: GlobalService
+  ) {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   onChipClicked(data: any): void {

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import { GlobalService } from './global.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,8 +12,12 @@ export class BusyService {
   private busyRequestCount = 0;
 
   constructor(
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   public busy(): void {

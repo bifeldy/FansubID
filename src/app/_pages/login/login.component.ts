@@ -30,14 +30,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private route: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
     public as: AuthService
   ) {
-    if (this.as.currentUserValue) {
-      this.router.navigate(['/home']);
+    if (this.gs.isBrowser) {
+      if (this.as.currentUserValue) {
+        this.router.navigate(['/home']);
+      }
     }
   }
 
@@ -57,6 +59,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
       rememberMe: [false, []]
     });
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   get loginFormVal(): any {

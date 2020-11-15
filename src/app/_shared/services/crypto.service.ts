@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import * as CryptoJS from 'crypto-js';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,12 @@ export class CryptoService {
   ivSize = 128;
   iterations = 100;
 
-  constructor() {
+  constructor(
+    private gs: GlobalService
+  ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   encrypt(msg, pass): any {

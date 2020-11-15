@@ -36,7 +36,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService,
     private news: NewsService,
     private fs: FabService
@@ -53,7 +53,9 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getNews();
+    if (this.gs.isBrowser) {
+      this.getNews();
+    }
   }
 
   getNews(): void {

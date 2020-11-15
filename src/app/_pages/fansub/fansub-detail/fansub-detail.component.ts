@@ -58,7 +58,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private fs: FabService,
     private pi: PageInfoService,
     private fansub: FansubService
@@ -91,23 +91,25 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
           this.fansubData = res.result;
-          if (Array.isArray(this.fansubData.tags)) {
-            for (let i = 0; i < this.fansubData.tags.length; i++) {
-              this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
-            }
-          }
           this.pi.updatePageMetaData(
             `${this.fansubData.name}`,
             `${this.fansubData.description}`,
             `${Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name}`,
-            this.getUrlByName('web')
+            this.fansubData.image_url
           );
-          this.panelData = [];
-          this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
-          this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
           this.bs.idle();
-          this.getAnimeFansub();
-          this.getBerkasFansub();
+          if (this.gs.isBrowser) {
+            if (Array.isArray(this.fansubData.tags)) {
+              for (let i = 0; i < this.fansubData.tags.length; i++) {
+                this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
+              }
+            }
+            this.panelData = [];
+            this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
+            this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
+            this.getAnimeFansub();
+            this.getBerkasFansub();
+          }
         },
         err => {
           this.gs.log('[FANSUB_DETAIL_ERROR]', err);

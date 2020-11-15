@@ -33,14 +33,16 @@ export class VerifyComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private us: UserService,
     private bs: BusyService,
     public route: ActivatedRoute,
     public as: AuthService
   ) {
-    if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-      this.router.navigate(['/home']);
+    if (this.gs.isBrowser) {
+      if (this.as.currentUserValue && this.as.currentUserValue.verified) {
+        this.router.navigate(['/home']);
+      }
     }
   }
 
@@ -57,29 +59,31 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fg1 = this.fb.group({
-      nik: [null, [Validators.required, Validators.pattern(/^\d+$/)]],
-      nama: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
-      completed: [null, [Validators.required]],
-      'g-recaptcha-response': [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-    });
-    this.fg2 = this.fb.group({
-      nik: [null, [Validators.pattern(/^\d+$/)]],
-      nama: [null, [Validators.pattern('^[a-zA-Z. ]+$')]],
-      tempat_lahir: [null, [Validators.pattern('^[a-zA-Z ]+$')]],
-      tanggal_lahir: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      jenis_kelamin: [null, [Validators.pattern('^[LP]+$')]],
-      golongan_darah: [null, [Validators.pattern('^[ABO]+$')]],
-      alamat: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      rt: [null, [Validators.pattern(/^\d+$/)]],
-      rw: [null, [Validators.pattern(/^\d+$/)]],
-      kelurahan_desa: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      kecamatan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      agama: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      status_perkawinan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      pekerjaan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      kewarganegaraan: [null, [Validators.pattern('^[WNIA]+$')]],
-    });
+    if (this.gs.isBrowser) {
+      this.fg1 = this.fb.group({
+        nik: [null, [Validators.required, Validators.pattern(/^\d+$/)]],
+        nama: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
+        completed: [null, [Validators.required]],
+        'g-recaptcha-response': [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      });
+      this.fg2 = this.fb.group({
+        nik: [null, [Validators.pattern(/^\d+$/)]],
+        nama: [null, [Validators.pattern('^[a-zA-Z. ]+$')]],
+        tempat_lahir: [null, [Validators.pattern('^[a-zA-Z ]+$')]],
+        tanggal_lahir: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+        jenis_kelamin: [null, [Validators.pattern('^[LP]+$')]],
+        golongan_darah: [null, [Validators.pattern('^[ABO]+$')]],
+        alamat: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+        rt: [null, [Validators.pattern(/^\d+$/)]],
+        rw: [null, [Validators.pattern(/^\d+$/)]],
+        kelurahan_desa: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+        kecamatan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+        agama: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+        status_perkawinan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+        pekerjaan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+        kewarganegaraan: [null, [Validators.pattern('^[WNIA]+$')]],
+      });
+    }
   }
 
   cekNIK(captchaResponse, captchaRef, stepper): void {

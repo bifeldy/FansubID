@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   subsNews = null;
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     private news: NewsService,
     private bs: BusyService
   ) {
@@ -33,7 +33,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getNews();
+    if (this.gs.isBrowser) {
+      this.getNews();
+    }
   }
 
   getNews(): void {

@@ -80,13 +80,16 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
   }
 
   ngOnInit(): void {
     this.urlPath = this.router.url;
     this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   onResize(event): void {

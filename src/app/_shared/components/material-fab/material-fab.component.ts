@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { FabService } from '../../services/fab.service';
+import { GlobalService } from '../../services/global.service';
 
 @Component({
   selector: 'app-material-fab',
@@ -10,11 +11,15 @@ import { FabService } from '../../services/fab.service';
 export class MaterialFabComponent implements OnInit {
 
   constructor(
-    private fs: FabService
+    private fs: FabService,
+    public gs: GlobalService
   ) {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   get isHidden(): boolean {

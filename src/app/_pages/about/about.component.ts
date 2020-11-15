@@ -49,7 +49,7 @@ export class AboutComponent implements OnInit {
   library = dependencies;
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -57,6 +57,9 @@ export class AboutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
 }

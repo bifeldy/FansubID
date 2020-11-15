@@ -19,15 +19,17 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.as.currentUser.subscribe(user => this.currentUser = user);
-    const userToken = localStorage.getItem(environment.tokenName);
-    if (this.currentUser && userToken && request.url.startsWith(environment.apiUrl)) {
-      this.gs.log('[INTERCEPT_REQUEST]', userToken.slice(0, 5) + '..........' + userToken.slice(userToken.length - 5, userToken.length));
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${userToken}`
-        }
-      });
+    if (this.gs.isBrowser) {
+      this.as.currentUser.subscribe(user => this.currentUser = user);
+      const userToken = localStorage.getItem(environment.tokenName);
+      if (this.currentUser && userToken && request.url.startsWith(environment.apiUrl)) {
+        this.gs.log('[INTERCEPT_REQUEST]', userToken.slice(0, 5) + '..........' + userToken.slice(userToken.length - 5, userToken.length));
+        request = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${userToken}`
+          }
+        });
+      }
     }
     return next.handle(request);
   }

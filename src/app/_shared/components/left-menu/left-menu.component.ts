@@ -73,7 +73,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     private router: Router,
     private lms: LeftMenuService,
     private as: AuthService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService
   ) {
   }
@@ -88,9 +88,11 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsUser = this.as.currentUser.subscribe(user => {
-      this.currentUser = user;
-    });
+    if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe(user => {
+        this.currentUser = user;
+      });
+    }
   }
 
   get sideNavExpanded(): any {

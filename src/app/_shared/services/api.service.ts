@@ -17,6 +17,9 @@ export class ApiService {
     private http: HttpClient,
     private gs: GlobalService,
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   uploadFile(path: string, model = {}): Observable<any> {

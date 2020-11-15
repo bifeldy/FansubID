@@ -15,12 +15,15 @@ export class BannerComponent implements OnInit {
   gridListBreakpoint = 1;
 
   constructor(
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
   }
 
   ngOnInit(): void {
     this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   onResize(event): void {

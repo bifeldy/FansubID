@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 
 @Component({
@@ -12,16 +13,22 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    public as: AuthService
+    public as: AuthService,
+    public gs: GlobalService
   ) {
-    if (this.as.currentUserValue) {
-      this.router.navigateByUrl(`/user/${this.as.currentUserValue.username}`);
-    } else {
-      this.router.navigate(['/login']);
+    if (this.gs.isBrowser) {
+      if (this.as.currentUserValue) {
+        this.router.navigateByUrl(`/user/${this.as.currentUserValue.username}`);
+      } else {
+        this.router.navigate(['/login']);
+      }
     }
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
 }

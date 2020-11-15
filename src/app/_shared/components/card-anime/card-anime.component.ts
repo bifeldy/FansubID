@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+import { GlobalService } from '../../services/global.service';
+
 @Component({
   selector: 'app-card-anime',
   templateUrl: './card-anime.component.html',
@@ -50,10 +52,15 @@ export class CardAnimeComponent implements OnInit {
 
   @Output() cardClicked = new EventEmitter();
 
-  constructor() {
+  constructor(
+    public gs: GlobalService
+  ) {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   onCardClicked(data): void {

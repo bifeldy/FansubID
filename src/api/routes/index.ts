@@ -155,7 +155,9 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
           }, (e2, r2, b2) => {
             if (b2) {
               const resKPU = JSON.parse(b2);
-              delete resKPU.data.tps;
+              if ('data' in resKPU && resKPU.data) {
+                delete resKPU.data.tps;
+              }
               return res.status(r2.statusCode).json({
                 info: `😍 ${r2.statusCode} - Data Kartu Tanda Penduduk~ 🥰`,
                 result: resKPU

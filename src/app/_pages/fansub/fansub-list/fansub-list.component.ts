@@ -70,7 +70,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService,
     private fs: FabService,
     private fansub: FansubService
@@ -92,7 +92,9 @@ export class FansubListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getFansubData();
+    if (this.gs.isBrowser) {
+      this.getFansubData();
+    }
   }
 
   getFansubData(): void {

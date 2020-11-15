@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { GlobalService } from '../../services/global.service';
+
 @Component({
   selector: 'app-stats-server',
   templateUrl: './stats-server.component.html',
@@ -11,10 +13,15 @@ export class StatsServerComponent implements OnInit {
   activeDdl = 1;
   visitor = 2;
 
-  constructor() {
+  constructor(
+    public gs: GlobalService
+  ) {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
 }

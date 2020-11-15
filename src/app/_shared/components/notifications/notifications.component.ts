@@ -19,6 +19,9 @@ export class NotificationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   removeNotif(id: number): void {

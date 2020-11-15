@@ -3,6 +3,8 @@ import { Title, Meta } from '@angular/platform-browser';
 
 import { environment } from '../../../environments/environment';
 
+import { GlobalService } from './global.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,9 +19,13 @@ export class PageInfoService {
 
   constructor(
     private t: Title,
-    private m: Meta
+    private m: Meta,
+    private gs: GlobalService
   ) {
     this.m.updateTag({ property: 'og:site_name', content: this.siteName });
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   get getTitle(): string {

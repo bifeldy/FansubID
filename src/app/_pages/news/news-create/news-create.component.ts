@@ -50,7 +50,9 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
       `Halaman Menambahkan Berita Baru`,
       `Create News`
     );
-    this.initForm();
+    if (this.gs.isBrowser) {
+      this.initForm();
+    }
   }
 
   ngOnDestroy(): void {

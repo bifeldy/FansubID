@@ -32,7 +32,7 @@ export class MaterialTableComponent implements OnInit, OnChanges {
   pageSizeOptions = [10, 25, 50, 100];
 
   constructor(
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
   }
 
@@ -41,12 +41,15 @@ export class MaterialTableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
     this.dataSource = new MatTableDataSource(this.tableDataRow);
     if (!this.serverSide) {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     }
-    this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnChanges(): void {

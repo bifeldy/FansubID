@@ -67,7 +67,9 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       `Halaman Menambahkan Fansub Baru`,
       `Create Fansub`
     );
-    this.initForm();
+    if (this.gs.isBrowser) {
+      this.initForm();
+    }
   }
 
   initForm(): void {

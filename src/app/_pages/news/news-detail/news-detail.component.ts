@@ -28,7 +28,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private fs: FabService,
     private pi: PageInfoService,
     private news: NewsService
@@ -55,19 +55,21 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
         res => {
           this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
           this.newsData = res.result;
-          if (Array.isArray(this.newsData.tags)) {
-            for (let i = 0; i < this.newsData.tags.length; i++) {
-              this.chipData.push({ id_tag: i, name: this.newsData.tags[i], color: Warna.PINK, selected: true });
-            }
-          }
           this.pi.updatePageMetaData(
             `${this.newsData.title}`,
             `${this.newsData.content}`,
             `${Array.isArray(this.newsData.tags) ? this.newsData.tags.join(', ') : this.newsData.title}`,
             this.newsData.image_url
           );
-          this.fs.initializeFab('edit', null, 'Ubah Data Berita', `/news/${this.newsId}/edit`, false);
           this.bs.idle();
+          if (this.gs.isBrowser) {
+            if (Array.isArray(this.newsData.tags)) {
+              for (let i = 0; i < this.newsData.tags.length; i++) {
+                this.chipData.push({ id_tag: i, name: this.newsData.tags[i], color: Warna.PINK, selected: true });
+              }
+            }
+            this.fs.initializeFab('edit', null, 'Ubah Data Berita', `/news/${this.newsId}/edit`, false);
+          }
         },
         err => {
           this.gs.log('[NEWS_DETAIL_ERROR]', err);

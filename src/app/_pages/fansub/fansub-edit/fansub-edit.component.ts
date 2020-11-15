@@ -80,27 +80,29 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       `Fansub - Ubah Data`,
       `Halaman Pembaharuan Data Fansub`,
       `Ubah Fansub`
-      );
-    this.bs.busy();
-    this.subsActRoute = this.activatedRoute.params.subscribe(params => {
-      this.fansubId = params.fansubId;
-      this.subsFansubDetail = this.fansub.getFansub(this.fansubId).subscribe(
-        res => {
-          this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
-          this.initForm(res.result);
-          this.bs.idle();
-        },
-        err => {
-          this.gs.log('[FANSUB_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: `/fansub/${this.fansubId}`
-            }
-          });
-        }
-      );
-    });
+    );
+    if (this.gs.isBrowser) {
+      this.subsActRoute = this.activatedRoute.params.subscribe(params => {
+        this.fansubId = params.fansubId;
+        this.bs.busy();
+        this.subsFansubDetail = this.fansub.getFansub(this.fansubId).subscribe(
+          res => {
+            this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
+            this.initForm(res.result);
+            this.bs.idle();
+          },
+          err => {
+            this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+            this.bs.idle();
+            this.router.navigate(['/error'], {
+              queryParams: {
+                returnUrl: `/fansub/${this.fansubId}`
+              }
+            });
+          }
+        );
+      });
+    }
   }
 
   initForm(data): void {

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import User from '../models/User';
 
 import { AuthService } from './auth.service';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,31 +22,34 @@ export class NotificationsService {
   ];
 
   constructor(
-    public as: AuthService
+    private as: AuthService,
+    private gs: GlobalService
   ) {
-    this.as.currentUser.subscribe(user => {
-      this.currentUser = user;
-      if (this.currentUser && !this.currentUser.verified) {
-        const verifyNotifIdx = this.notifications.findIndex(n => n.id === -1);
-        if (verifyNotifIdx < 0) {
-          this.notifications.splice(0, 0, {
-            id: -1,
-            type: 'warning',
-            title: 'Verifikasi!',
-            content: 'Fitur lampiran berkas DDL tidak dapat digunakan, silahkan <a href="/verify" class="text-decoration-none"> verifikasi akun </a> terlebih dahulu. Terima kasih. ^_^'
-          });
-          this.notifications.splice(0, 0, {
-            id: -2,
-            type: 'danger',
-            title: 'Verifikasi!',
-            content: 'Fitur verifikasi tidak dapat digunakan saat ini karena pemerintah telah fixing kebocoran data. Terima kasih. ^_^'
-          });
+    if (this.gs.isBrowser) {
+      this.as.currentUser.subscribe(user => {
+        this.currentUser = user;
+        if (this.currentUser && !this.currentUser.verified) {
+          const verifyNotifIdx = this.notifications.findIndex(n => n.id === -1);
+          if (verifyNotifIdx < 0) {
+            this.notifications.splice(0, 0, {
+              id: -1,
+              type: 'warning',
+              title: 'Verifikasi!',
+              content: 'Fitur lampiran berkas DDL tidak dapat digunakan, silahkan <a href="/verify" class="text-decoration-none"> verifikasi akun </a> terlebih dahulu. Terima kasih. ^_^'
+            });
+            this.notifications.splice(0, 0, {
+              id: -2,
+              type: 'danger',
+              title: 'Verifikasi!',
+              content: 'Fitur verifikasi tidak dapat digunakan saat ini karena pemerintah telah fixing kebocoran data. Terima kasih. ^_^'
+            });
+          }
+        } else {
+          this.removeNotif(-1);
+          this.removeNotif(-2);
         }
-      } else {
-        this.removeNotif(-1);
-        this.removeNotif(-2);
-      }
-    });
+      });
+    }
   }
 
   addNotif(notifId, notifType, notifTitle, notifContent): void {

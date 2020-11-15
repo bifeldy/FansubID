@@ -22,18 +22,20 @@ export class AuthService {
     private crypt: CryptoService,
     private api: ApiService
   ) {
-    let token = null;
-    let userSession = null;
-    try {
-      token = localStorage.getItem(environment.tokenName);
-      const userEncrypted = localStorage.getItem(environment.sessionName);
-      const userDecrypted = this.crypt.decrypt(userEncrypted, token);
-      userSession = JSON.parse(userDecrypted);
-    } catch (e) {
-      localStorage.removeItem(environment.sessionName);
+    if (this.gs.isBrowser) {
+      let token = null;
+      let userSession = null;
+      try {
+        token = localStorage.getItem(environment.tokenName);
+        const userEncrypted = localStorage.getItem(environment.sessionName);
+        const userDecrypted = this.crypt.decrypt(userEncrypted, token);
+        userSession = JSON.parse(userDecrypted);
+      } catch (e) {
+        localStorage.removeItem(environment.sessionName);
+      }
+      this.currentUserSubject = new BehaviorSubject<User>(userSession);
+      this.currentUser = this.currentUserSubject.asObservable();
     }
-    this.currentUserSubject = new BehaviorSubject<User>(userSession);
-    this.currentUser = this.currentUserSubject.asObservable();
   }
 
   public get currentUserValue(): User {

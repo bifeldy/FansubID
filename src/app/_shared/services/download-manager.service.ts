@@ -18,6 +18,9 @@ export class DownloadManagerService {
     private toast: ToastrService,
     private api: ApiService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   getAttachmentDownloadFile(attachment): any {

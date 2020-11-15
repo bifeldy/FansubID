@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { GlobalService } from '../../services/global.service';
+
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
@@ -7,10 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  constructor() {
+  constructor(
+    public gs: GlobalService
+  ) {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
 }

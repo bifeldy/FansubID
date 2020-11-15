@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { GlobalService } from '../../_shared/services/global.service';
+
 @Component({
   selector: 'app-not-found',
   templateUrl: './not-found.component.html',
@@ -14,21 +16,26 @@ export class NotFoundComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public gs: GlobalService
   ) {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
-    if (this.returnUrl) {
-      this.timedOut = setTimeout(() => {
-        this.router.navigateByUrl(this.returnUrl);
-      }, 3000);
+    if (this.gs.isBrowser) {
+      this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
+      if (this.returnUrl) {
+        this.timedOut = setTimeout(() => {
+          this.router.navigateByUrl(this.returnUrl);
+        }, 3000);
+      }
     }
   }
 
   ngOnDestroy(): void {
-    clearTimeout(this.timedOut);
+    if (this.timedOut) {
+      clearTimeout(this.timedOut);
+    }
   }
 
 }

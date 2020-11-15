@@ -100,43 +100,45 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsUser = this.as.currentUser.subscribe(user => {
-      this.currentUser = user;
-    });
     this.pi.updatePageMetaData(
       `Berkas - Ubah Berkas`,
       `Halaman Pembaharuan Data Berkas`,
       `Ubah Berkas`
-      );
-    this.subsParam = this.activatedRoute.params.subscribe(params => {
-      this.berkasId = params.berkasId;
-      this.bs.busy();
-      this.subsBerkasDetail = this.berkas.getBerkas(this.berkasId).subscribe(
-        res => {
-          this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
-          this.bs.idle();
-          if (this.as.currentUserValue.id !== res.result.user_.id) {
-            if (this.gs.isBrowser) {
-              this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
+    );
+    if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe(user => {
+        this.currentUser = user;
+      });
+      this.subsParam = this.activatedRoute.params.subscribe(params => {
+        this.berkasId = params.berkasId;
+        this.bs.busy();
+        this.subsBerkasDetail = this.berkas.getBerkas(this.berkasId).subscribe(
+          res => {
+            this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
+            this.bs.idle();
+            if (this.as.currentUserValue.id !== res.result.user_.id) {
+              if (this.gs.isBrowser) {
+                this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
+              }
+              this.router.navigateByUrl(`/berkas/${res.result.id}`);
+            } else {
+              this.loadProjectList();
+              this.loadFansubList();
+              this.initForm(res.result);
             }
-            this.router.navigateByUrl(`/berkas/${res.result.id}`);
-          } else {
-            this.loadProjectList();
-            this.loadFansubList();
-            this.initForm(res.result);
+          },
+          err => {
+            this.gs.log('[BERKAS_DETAIL_ERROR]', err);
+            this.bs.idle();
+            this.router.navigate(['/error'], {
+              queryParams: {
+                returnUrl: `/berkas/${this.berkasId}`
+              }
+            });
           }
-        },
-        err => {
-          this.gs.log('[BERKAS_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: `/berkas/${this.berkasId}`
-            }
-          });
-        }
-      );
-    });
+        );
+      });
+    }
   }
 
   ngOnDestroy(): void {

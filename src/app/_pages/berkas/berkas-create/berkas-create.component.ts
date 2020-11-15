@@ -93,17 +93,19 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsUser = this.as.currentUser.subscribe(user => {
-      this.currentUser = user;
-    });
     this.pi.updatePageMetaData(
       `Berkas - Buat Baru`,
       `Halaman Membuat Berkas Baru`,
       `Create Berkas`
     );
-    this.loadProjectList();
-    this.loadFansubList();
-    this.initForm();
+    if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe(user => {
+        this.currentUser = user;
+      });
+      this.loadProjectList();
+      this.loadFansubList();
+      this.initForm();
+    }
   }
 
   ngOnDestroy(): void {

@@ -24,12 +24,15 @@ export class MaterialExpansionPanelComponent implements OnInit {
   ];
 
   constructor(
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
   }
 
   ngOnInit(): void {
     this.defaultFirstOpened = (window.innerWidth >= 1200) ? true : false;
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   onResize(event): void {

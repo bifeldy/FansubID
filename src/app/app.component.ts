@@ -36,7 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private pi: PageInfoService,
     private as: AuthService,
     private fs: FabService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     public lms: LeftMenuService
   ) {
   }
@@ -75,26 +75,30 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       else if (e1 instanceof NavigationEnd) {
         this.subsRouterChild = this.route.firstChild.data.subscribe(e2 => {
           this.pi.updatePageMetaData(e2.title, e2.description, e2.keywords);
-          this.updateBackgroundImage();
-          this.leftSideNavContent.nativeElement.scrollTop = 0;
-          this.fs.removeFab();
+          if (this.gs.isBrowser) {
+            this.updateBackgroundImage();
+            this.leftSideNavContent.nativeElement.scrollTop = 0;
+            this.fs.removeFab();
+          }
         });
       }
     });
-    const token = localStorage.getItem(environment.tokenName);
-    if (token) {
-      this.bs.busy();
-      this.subsVerify = this.as.verify(token).subscribe(
-        success => {
-          this.gs.log('[VERIFY_SUCCESS]', success);
-          this.bs.idle();
-        },
-        error => {
-          this.gs.log('[VERIFY_ERROR]', error);
-          this.bs.idle();
-          this.as.removeUser();
-        }
-      );
+    if (this.gs.isBrowser) {
+      const token = localStorage.getItem(environment.tokenName);
+      if (token) {
+        this.bs.busy();
+        this.subsVerify = this.as.verify(token).subscribe(
+          success => {
+            this.gs.log('[VERIFY_SUCCESS]', success);
+            this.bs.idle();
+          },
+          error => {
+            this.gs.log('[VERIFY_ERROR]', error);
+            this.bs.idle();
+            this.as.removeUser();
+          }
+        );
+      }
     }
   }
 

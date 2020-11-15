@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { PageInfoService } from '../../services/page-info.service';
 import { LeftMenuService } from '../../services/left-menu.service';
-import { Router } from '@angular/router';
+import { GlobalService } from '../../services/global.service';
 
 @Component({
   selector: 'app-header',
@@ -16,11 +17,15 @@ export class HeaderComponent implements OnInit {
   constructor(
     private lms: LeftMenuService,
     private router: Router,
-    public pi: PageInfoService
+    public pi: PageInfoService,
+    public gs: GlobalService
   ) {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   toggleSideNav(): void {

@@ -266,18 +266,14 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
         const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
         animeDetail.synopsis = translatedAnimeSynopsis.text;
       }
-      res.status(result.statusCode).json({
-        info: `😅 ${result.statusCode} - Anime API :: Detail ${req.params.id} 🤣`,
-        result: animeDetail
-      });
     } catch (error) {
-      res.status(500).json({
-        info: `🙄 500 - Gagal Mendapatkan Data Anime :: ${req.params.id} 😪`,
-        result: {
-          message: 'Penerjemah / Alih Bahasa Gagal!'
-        }
-      });
+      console.error(error);
+      animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
     }
+    res.status(result.statusCode).json({
+      info: `😅 ${result.statusCode} - Anime API :: Detail ${req.params.id} 🤣`,
+      result: animeDetail
+    });
   });
 });
 

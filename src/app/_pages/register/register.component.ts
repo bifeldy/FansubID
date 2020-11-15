@@ -32,14 +32,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private router: Router,
     private bs: BusyService,
     public route: ActivatedRoute,
     public as: AuthService
   ) {
-    if (this.as.currentUserValue) {
-      this.router.navigate(['/home']);
+    if (this.gs.isBrowser) {
+      if (this.as.currentUserValue) {
+        this.router.navigate(['/home']);
+      }
     }
   }
 
@@ -60,6 +62,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
       password: [null, [Validators.required, Validators.minLength(5), Validators.pattern(this.gs.allKeyboardKeysRegex)]],
       agree: [null, [Validators.required]]
     });
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   get registerFormVal(): any {

@@ -36,7 +36,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService,
     private berkas: BerkasService,
     private fs: FabService
@@ -53,7 +53,9 @@ export class BerkasListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getBerkas();
+    if (this.gs.isBrowser) {
+      this.getBerkas();
+    }
   }
 
   getBerkas(): void {

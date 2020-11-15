@@ -20,18 +20,18 @@ export class AuthGuard implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const currentUser = this.as.currentUserValue;
-    if (currentUser) {
-      if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
-        if (this.gs.isBrowser) {
-          this.toast.error(`Membutuhkan Role :: ${route.data.roles.join(' / ')}`, 'Whoops, Akses Ditolak!');
-        }
-        this.router.navigate(['/']);
-        return false;
-      }
-      return true;
-    }
     if (this.gs.isBrowser) {
+      const currentUser = this.as.currentUserValue;
+      if (currentUser) {
+        if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
+          if (this.gs.isBrowser) {
+            this.toast.error(`Membutuhkan Role :: ${route.data.roles.join(' / ')}`, 'Whoops, Akses Ditolak!');
+          }
+          this.router.navigate(['/']);
+          return false;
+        }
+        return true;
+      }
       this.toast.error(`Harap Login Terlebih Dahulu~`, 'Whoops, Akses Ditolak!');
     }
     this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
