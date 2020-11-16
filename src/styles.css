@@ -74,3 +74,7 @@ re-captcha > div {
   margin-left: auto !important;
   margin-right: auto !important;
 }
+
+.white-space-normal-important {
+  white-space: normal !important;
+}

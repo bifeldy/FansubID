@@ -28,6 +28,17 @@ export class GlobalService {
     placeholder: 'Deskripsi, Informasi, Atau Keterangan Lainnya ...',
     uploadUrl: `${environment.apiUrl}/image`,
     uploadWithCredentials: false,
+    defaultParagraphSeparator: 'p',
+    customClasses: [
+      {
+        name: 'white-space-normal-important',
+        class: 'white-space-normal-important',
+      },
+      {
+        name: 'text-decoration-none',
+        class: 'text-decoration-none',
+      },
+    ],
   };
 
   constructor(
