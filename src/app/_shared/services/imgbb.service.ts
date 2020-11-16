@@ -17,15 +17,7 @@ export class ImgbbService {
     }
   }
 
-  uploadImage(imageFile, binaryDataNotBase64 = true): any {
-    let imageData = null;
-    if (!binaryDataNotBase64) {
-      imageData = imageFile.startsWith('data:image/gif;base64,') ? imageFile.slice(22, imageFile.length) : imageFile;
-    } else {
-      imageData = imageFile;
-    }
-    return this.api.postData(`/image`, {
-      file: imageData
-    }, binaryDataNotBase64);
+  uploadImage(image): any {
+    return this.api.postData(`/image`, image, true);
   }
 }

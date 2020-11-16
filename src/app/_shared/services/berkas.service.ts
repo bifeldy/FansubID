@@ -33,8 +33,11 @@ export class BerkasService {
     return this.api.putData(`/berkas/${berkasId}`, berkasData);
   }
 
-  uploadLampiran(lampiran): any {
-    return this.api.uploadFile(`/attachment`, lampiran);
+  uploadLampiran(attachment): any {
+    return this.api.postData(`/attachment`, attachment, true, {
+      observe: 'events',
+      reportProgress: true
+    });
   }
 
 }

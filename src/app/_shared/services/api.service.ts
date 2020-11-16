@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { catchError, timeout, map, retry } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
@@ -22,67 +22,34 @@ export class ApiService {
     }
   }
 
-  uploadFile(path: string, model = {}): Observable<any> {
-    this.gs.log('[API_POST]', path);
-    const options: any = {
-      observe: 'events',
-      reportProgress: true
-    };
-    let body = model;
-    const headers = new HttpHeaders().append('Content-Type', 'multipart/form-data');
-    Object.assign(options, { headers });
-    body = this.prepareFormData(model);
-    return this.http.post(path.startsWith('http') ? path : environment.apiUrl + path, body, options);
-  }
-
-  downloadFile(path: string): Observable<any> {
-    this.gs.log('[API_DOWNLOAD]', path);
-    const options: any = {
-      responseType: 'blob',
-      observe: 'events',
-      reportProgress: true
-    };
-    return this.http.get(path.startsWith('http') ? path : environment.apiUrl + path, options);
-  }
-
-  getData(path: string, timedOut = 10000): Observable<any> {
-    return this.http.get(path.startsWith('http') ? path : environment.apiUrl + path).pipe(
+  getData(path: string, options = {}, timedOut = 10000): Observable<any> {
+    return this.http.get(path.startsWith('http') ? path : environment.apiUrl + path, options).pipe(
       catchError(err => throwError(err)),
       map(res => res), timeout(timedOut), retry(5)
     );
   }
 
-  postData(path: string, model = {}, multipart = false, timedOut = 10000): Observable<any> {
+  postData(path: string, model = {}, multipart = false, options = {}, timedOut = 10000): Observable<any> {
     this.gs.log('[API_POST]', path);
-    const options = {};
     let body = model;
-    let timer = timedOut;
     if (multipart) {
-      const headers = new HttpHeaders().append('Content-Type', 'multipart/form-data');
-      Object.assign(options, { headers });
       body = this.prepareFormData(model);
-      timer = 20000;
     }
     return this.http.post(path.startsWith('http') ? path : environment.apiUrl + path, body, options).pipe(
       catchError(err => throwError(err)),
-      map(res => res), timeout(timer)
+      map(res => res), timeout(timedOut)
     );
   }
 
-  putData(path: string, model = {}, multipart = false, timedOut = 10000): Observable<any> {
+  putData(path: string, model = {}, multipart = false, options = {}, timedOut = 10000): Observable<any> {
     this.gs.log('[API_PUT]', path);
-    const options = {};
     let body = model;
-    let timer = timedOut;
     if (multipart) {
-      const headers = new HttpHeaders().append('Content-Type', 'multipart/form-data');
-      Object.assign(options, { headers });
       body = this.prepareFormData(model);
-      timer = 20000;
     }
     return this.http.put(path.startsWith('http') ? path : environment.apiUrl + path, body, options).pipe(
       catchError(err => throwError(err)),
-      map(res => res), timeout(timer)
+      map(res => res), timeout(timedOut)
     );
   }
 

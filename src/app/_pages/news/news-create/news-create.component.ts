@@ -108,7 +108,9 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
 
   submitImage(): void {
     this.submitted = true;
-    this.subsImgbb = this.imgbb.uploadImage(this.image).subscribe(
+    this.subsImgbb = this.imgbb.uploadImage({
+      file: this.image
+    }).subscribe(
       res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.result.url);

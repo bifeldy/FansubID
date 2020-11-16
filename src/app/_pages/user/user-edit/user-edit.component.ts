@@ -188,7 +188,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   submitPhotoImage(): void {
     this.submitted = true;
-    this.subsImgbb1 = this.imgbb.uploadImage(this.imagePhoto).subscribe(
+    this.subsImgbb1 = this.imgbb.uploadImage({
+      file: this.imagePhoto
+    }).subscribe(
       res => {
         this.gs.log('[IMAGE_PHOTO_SUCCESS]', res);
         this.fg.controls.image_photo.patchValue(res.result.url);
@@ -240,7 +242,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   submitCoverImage(): void {
     this.submitted = true;
-    this.subsImgbb2 = this.imgbb.uploadImage(this.imageCover).subscribe(
+    this.subsImgbb2 = this.imgbb.uploadImage({
+      file: this.imageCover
+    }).subscribe(
       res => {
         this.gs.log('[IMAGE_COVER_SUCCESS]', res);
         this.fg.controls.image_cover.patchValue(res.result.url);

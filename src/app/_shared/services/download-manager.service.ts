@@ -57,7 +57,11 @@ export class DownloadManagerService {
     );
     if (!attachment.isCompleted) {
       attachment.isDownloading = true;
-      attachment.handler = this.api.downloadFile(`/attachment?id=${attachmentId}`).subscribe(
+      attachment.handler = this.api.getData(`/attachment?id=${attachmentId}`, {
+        responseType: 'blob',
+        observe: 'events',
+        reportProgress: true
+      }).subscribe(
         event => {
           this.gs.log('[DOWNLOAD_EVENTS]', event);
           if ((event as any).loaded && (event as any).total) {
