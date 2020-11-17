@@ -17,36 +17,50 @@ const router = Router();
 
 // GET `/api/news`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const newsRepo = getRepository(News);
-  const [news, count] = await newsRepo.findAndCount({
-    where: [
-      { title: Like(`%${req.query.q ? req.query.q : ''}%`) }
-    ],
-    order: {
-      created_at: 'DESC',
-      title: 'ASC'
-    },
-    relations: ['user_'],
-    skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-    take: req.query.row > 0 ? req.query.row : 10
-  });
-  for (const n of news) {
-    delete n.content;
-    delete n.updated_at;
-    n.tags = JSON.parse(n.tags);
-    if ('user_' in n && n.user_) {
-      delete n.user_.role;
-      delete n.user_.password;
-      delete n.user_.session_token;
-      delete n.user_.created_at;
-      delete n.user_.updated_at;
+  try {
+    const newsRepo = getRepository(News);
+    const [news, count] = await newsRepo.findAndCount({
+      where: [
+        { title: Like(`%${req.query.q ? req.query.q : ''}%`) }
+      ],
+      order: {
+        ...((req.query.sort && req.query.order) ? {
+          [req.query.sort]: req.query.order.toUpperCase()
+        } : {
+          created_at: 'DESC',
+          name: 'ASC',
+        })
+      },
+      relations: ['user_'],
+      skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+      take: req.query.row > 0 ? req.query.row : 10
+    });
+    for (const n of news) {
+      delete n.content;
+      delete n.updated_at;
+      n.tags = JSON.parse(n.tags);
+      if ('user_' in n && n.user_) {
+        delete n.user_.role;
+        delete n.user_.password;
+        delete n.user_.session_token;
+        delete n.user_.created_at;
+        delete n.user_.updated_at;
+      }
     }
+    res.status(200).json({
+      info: `😅 200 - News API :: List All 🤣`,
+      count,
+      results: news
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      info: `🙄 400 - Gagal Mendapatkan All News 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!!'
+      }
+    });
   }
-  res.status(200).json({
-    info: `😅 200 - News API :: List All 🤣`,
-    count,
-    results: news
-  });
 });
 
 // POST `/api/news`

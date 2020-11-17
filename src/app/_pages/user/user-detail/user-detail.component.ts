@@ -36,7 +36,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   count = 0;
   page = 1;
   row = 10;
+
   q = '';
+  sort = '';
+  order = '';
 
   subsParam = null;
   subsUser = null;
@@ -102,7 +105,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   getUserBerkas(): void {
     this.bs.busy();
-    this.subsBerkas = this.us.getUserBerkas(this.username, this.q, this.page, this.row).subscribe(
+    this.subsBerkas = this.us.getUserBerkas(
+      this.username, this.q, this.page, this.row, this.sort, this.order
+    ).subscribe(
       res => {
         this.gs.log('[USER_BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
@@ -144,6 +149,14 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   onServerSideFilter(data: any): void {
     this.gs.log('[USER_BERKAS_LIST_ENTER_FILTER]', data);
     this.q = data;
+    this.getUserBerkas();
+  }
+
+  onServerSideOrder(data: any): void {
+    this.gs.log('[USER_BERKAS_CLICK_ORDER]', data);
+    this.q = data.q;
+    this.sort = data.active;
+    this.order = data.direction;
     this.getUserBerkas();
   }
 

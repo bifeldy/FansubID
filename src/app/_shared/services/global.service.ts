@@ -22,6 +22,9 @@ export class GlobalService {
 
   public isBrowser = null;
 
+  public gridListBreakpoint = 1;
+  public isDesktop = true;
+
   public angularEditorConfig: AngularEditorConfig = {
     editable: true,
     minHeight: '256px',
@@ -75,6 +78,21 @@ export class GlobalService {
   get randomColor(): any {
     // tslint:disable-next-line: no-bitwise
     return (Math.random() * 0xFFFFFF << 0).toString(16);
+  }
+
+  onResize(event): void {
+    this.log('[ReSize]', event);
+    if (window.innerWidth >= 1200) {
+      this.isDesktop = true;
+      this.gridListBreakpoint = 3;
+    } else if (window.innerWidth >= 992) {
+      this.isDesktop = true;
+      this.gridListBreakpoint = 2;
+    } else {
+      this.isDesktop = false;
+      this.gridListBreakpoint = 1;
+    }
+    // this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
 }

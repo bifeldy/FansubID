@@ -22,7 +22,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   count = 0;
   page = 1;
   row = 10;
+
   q = '';
+  sort = '';
+  order = '';
 
   animeFansub = [];
   berkasFansub = [];
@@ -43,7 +46,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
       icon: 'file_copy',
       type: 'table',
       data: {
-        column: ['Upload', 'Nama File', 'Pemilik'],
+        column: ['Upload', 'Nama Berkas', 'Pemilik'],
         row: []
       }
     }
@@ -135,7 +138,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   getBerkasFansub(): void {
     this.bs.busy();
-    this.subsBerkas = this.fansub.getBerkasFansub([this.fansubId], this.q, this.page, this.row).subscribe(
+    this.subsBerkas = this.fansub.getBerkasFansub(
+      [this.fansubId], this.q, this.page, this.row, this.sort, this.order
+    ).subscribe(
       res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
@@ -146,7 +151,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Upload: r.created_at,
-            'Nama File': r.name
+            'Nama Berkas': r.name
           });
         }
         this.tabData[1].data.row = this.berkasFansub;
@@ -189,6 +194,14 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   onServerSideFilter(data: any): void {
     this.gs.log('[BERKAS_FANSUB_ENTER_FILTER]', data);
     this.q = data;
+    this.getBerkasFansub();
+  }
+
+  onServerSideOrder(data: any): void {
+    this.gs.log('[BERKAS_FANSUB_CLICK_ORDER]', data);
+    this.q = data.q;
+    this.sort = data.active;
+    this.order = data.direction;
     this.getBerkasFansub();
   }
 

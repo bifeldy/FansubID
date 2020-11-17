@@ -14,6 +14,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() count = 0;
   @Input() serverSide = false;
   @Output() serverSideFilter = new EventEmitter();
+  @Output() serverSideOrder = new EventEmitter();
 
   SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
 
@@ -22,8 +23,6 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectedIndexTab = 0;
   totalTabsCount = 2;
-
-  gridListBreakpoint = 1;
 
   urlPath = null;
 
@@ -86,15 +85,9 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.urlPath = this.router.url;
-    this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
     if (this.gs.isBrowser) {
       //
     }
-  }
-
-  onResize(event): void {
-    this.gs.log('[ReSize]', event);
-    this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
   ngAfterViewInit(): void {
@@ -136,6 +129,10 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onServerSideFilter(data: any): void {
     this.serverSideFilter.emit(data);
+  }
+
+  onServerSideOrder(data: any): void {
+    this.serverSideOrder.emit(data);
   }
 
 }

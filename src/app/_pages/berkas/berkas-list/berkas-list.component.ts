@@ -30,7 +30,10 @@ export class BerkasListComponent implements OnInit, OnDestroy {
   count = 0;
   page = 1;
   row = 10;
+
   q = '';
+  sort = '';
+  order = '';
 
   subsBerkas = null;
 
@@ -60,7 +63,9 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   getBerkas(): void {
     this.bs.busy();
-    this.subsBerkas = this.berkas.getAllBerkas(this.q, this.page, this.row).subscribe(
+    this.subsBerkas = this.berkas.getAllBerkas(
+      this.q, this.page, this.row, this.sort, this.order
+    ).subscribe(
       res => {
         this.gs.log('[BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
@@ -102,6 +107,14 @@ export class BerkasListComponent implements OnInit, OnDestroy {
   onServerSideFilter(data: any): void {
     this.gs.log('[BERKAS_LIST_ENTER_FILTER]', data);
     this.q = data;
+    this.getBerkas();
+  }
+
+  onServerSideOrder(data: any): void {
+    this.gs.log('[BERKAS_LIST_CLICK_ORDER]', data);
+    this.q = data.q;
+    this.sort = data.active;
+    this.order = data.direction;
     this.getBerkas();
   }
 

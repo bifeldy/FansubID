@@ -16,24 +16,34 @@ const router = Router();
 
 // GET `/api/fansub`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const fansubRepo = getRepository(Fansub);
-  const [fansubs, count] = await fansubRepo.findAndCount({
-    order: {
-      name: 'ASC',
-      active: 'DESC'
+  try {
+    const fansubRepo = getRepository(Fansub);
+    const [fansubs, count] = await fansubRepo.findAndCount({
+      order: {
+        name: 'ASC',
+        active: 'DESC'
+      }
+    });
+    for (const f of fansubs) {
+      delete f.description;
+      delete f.updated_at;
+      f.urls = JSON.parse(f.urls);
+      f.tags = JSON.parse(f.tags);
     }
-  });
-  for (const f of fansubs) {
-    delete f.description;
-    delete f.updated_at;
-    f.urls = JSON.parse(f.urls);
-    f.tags = JSON.parse(f.tags);
+    res.status(200).json({
+      info: `😅 200 - Fansub API :: List All 🤣`,
+      count,
+      results: fansubs
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      info: `🙄 400 - Gagal Mendapatkan All Fansub 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!!'
+      }
+    });
   }
-  res.status(200).json({
-    info: `😅 200 - Fansub API :: List All 🤣`,
-    count,
-    results: fansubs
-  });
 });
 
 // POST `/api/fansub`
@@ -109,7 +119,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
     const fansubId = req.query.id.split(',').map(Number);
     if (Array.isArray(fansubId) && fansubId.length > 0) {
       const fileRepo = getRepository(Berkas);
-      const [files, count] = await fileRepo
+      let fileRepoQuery = fileRepo
         .createQueryBuilder('berkas')
         .leftJoinAndSelect('berkas.project_type_', 'project_type_')
         .leftJoinAndSelect('berkas.anime_', 'anime_')
@@ -117,9 +127,15 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         .leftJoinAndSelect('berkas.fansub_', 'fansub_')
         .where('fansub_.id IN (:...id)', { id: fansubId })
         .andWhere('berkas.private = :isPrivate', { isPrivate: false })
-        .andWhere('berkas.name LIKE :query', { query: `%${req.query.q ? req.query.q : ''}%` })
-        .orderBy('berkas.created_at', 'DESC')
-        .addOrderBy('berkas.name', 'ASC')
+        .andWhere('berkas.name LIKE :query', { query: `%${req.query.q ? req.query.q : ''}%` });
+      if (req.query.sort && req.query.order) {
+        fileRepoQuery = fileRepoQuery.orderBy(req.query.sort, req.query.order.toUpperCase());
+      } else {
+        fileRepoQuery = fileRepoQuery
+          .orderBy('berkas.created_at', 'DESC')
+          .addOrderBy('berkas.name', 'ASC');
+      }
+      const [files, count] = await fileRepoQuery
         .skip(req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0)
         .take(req.query.row > 0 ? req.query.row : 10)
         .getManyAndCount();

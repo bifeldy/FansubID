@@ -12,8 +12,6 @@ export class MaterialExpansionPanelComponent implements OnInit {
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
-  defaultFirstOpened = true;
-
   @Input() panelData = [
     {
       title: 'Title',
@@ -29,7 +27,6 @@ export class MaterialExpansionPanelComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.defaultFirstOpened = (window.innerWidth >= 1200) ? true : false;
     if (this.gs.isBrowser) {
       //
     }
@@ -37,7 +34,7 @@ export class MaterialExpansionPanelComponent implements OnInit {
 
   onResize(event): void {
     this.gs.log('[ReSize]', event);
-    if (window.innerWidth >= 1200) {
+    if (this.gs.isDesktop) {
       this.accordion.openAll();
     }
     else {

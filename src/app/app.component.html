@@ -22,7 +22,7 @@
     [style.background-image]="'url(' + selectedBackgroundImage + ')'">
 
     <!-- Routing Content -->
-    <div class="main_content" #leftSideNavContent>
+    <div class="main_content" #leftSideNavContent (window:resize)="gs.onResize($event)">
 
       <!-- Data Content -->
       <router-outlet></router-outlet>

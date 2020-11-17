@@ -22,7 +22,10 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   count = 0;
   page = 1;
   row = 10;
+
   q = '';
+  sort = '';
+  order = '';
 
   fansubAnime = [];
   berkasAnime = [];
@@ -146,9 +149,19 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     this.getBerkasAnime();
   }
 
+  onServerSideOrder(data: any): void {
+    this.gs.log('[BERKAS_ANIME_CLICK_ORDER]', data);
+    this.q = data.q;
+    this.sort = data.active;
+    this.order = data.direction;
+    this.getBerkasAnime();
+  }
+
   getBerkasAnime(): void {
     this.bs.busy();
-    this.subsBerkas = this.anime.getBerkasAnime([this.animeId], this.q, this.page, this.row).subscribe(
+    this.subsBerkas = this.anime.getBerkasAnime(
+      [this.animeId], this.q, this.page, this.row, this.sort, this.order
+    ).subscribe(
       res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;

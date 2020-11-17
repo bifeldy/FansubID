@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 
@@ -16,7 +17,8 @@ import { MaterialChipModule } from '../material-chip/material-chip.module';
   imports: [
     CommonModule,
     SharedMaterialModule,
-    MaterialChipModule
+    MaterialChipModule,
+    FormsModule
   ],
   exports: [MaterialTableComponent]
 })

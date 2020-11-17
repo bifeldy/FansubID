@@ -17,8 +17,8 @@ export class NewsService {
     }
   }
 
-  getAllNews(q = '', page = 1, row = 10): any {
-    return this.api.getData(`/news?q=${q}&page=${page}&row=${row}`);
+  getAllNews(q = '', page = 1, row = 10, sort = '', order = ''): any {
+    return this.api.getData(`/news?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   createNews(newsData): any {

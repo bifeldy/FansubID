@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,11 +10,12 @@ import { GlobalService } from '../../services/global.service';
   templateUrl: './material-table.component.html',
   styleUrls: ['./material-table.component.scss']
 })
-export class MaterialTableComponent implements OnInit, OnChanges {
+export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   @Input() count = 0;
   @Input() serverSide = false;
   @Output() serverSideFilter = new EventEmitter();
+  @Output() serverSideOrder = new EventEmitter();
 
   @Input() tableDataRow: any = [];
   @Input() tableDataColumn: any = [];
@@ -27,9 +28,10 @@ export class MaterialTableComponent implements OnInit, OnChanges {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   dataSource: MatTableDataSource<any>;
-  rippleDisabled = null;
 
   pageSizeOptions = [10, 25, 50, 100];
+
+  searchQuery = '';
 
   constructor(
     public gs: GlobalService
@@ -41,14 +43,12 @@ export class MaterialTableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
     this.dataSource = new MatTableDataSource(this.tableDataRow);
-    if (!this.serverSide) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
     if (this.gs.isBrowser) {
-      //
+      if (!this.serverSide) {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
     }
   }
 
@@ -62,21 +62,52 @@ export class MaterialTableComponent implements OnInit, OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.sort) {
+      if (this.sort.sortChange) {
+        this.sort.sortChange.unsubscribe();
+      }
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe((data) => {
+      this.paginator.pageIndex = 0;
+      this.onServerSideOrder(data);
+    });
+  }
+
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchQuery = (event.target as HTMLInputElement).value.trim().toLowerCase();
     if (!this.serverSide) {
-      this.dataSource.filter = filterValue;
+      this.dataSource.filter = this.searchQuery;
       if (this.dataSource.paginator) {
         this.dataSource.paginator.firstPage();
       }
     } else {
-      this.onServerSideFilter(filterValue);
+      this.onServerSideFilter(this.searchQuery);
     }
   }
 
-  onResize(event): void {
-    this.gs.log('[ReSize]', event);
-    this.rippleDisabled = (window.innerWidth >= 992) ? true : false;
+  onServerSideOrder(data: any): void {
+    if (!data.direction) {
+      data.active = '';
+    } else {
+      if (data.active.toUpperCase() === 'NAMA BERKAS') {
+        data.active = 'name';
+      } else if (data.active.toUpperCase() === 'UPLOAD' || data.active.toUpperCase() === 'TANGGAL') {
+        data.active = 'created_at';
+      } else if (data.active.toUpperCase() === 'TOPIK') {
+        data.active = 'title';
+      } else {
+        data.active = '';
+        data.direction = '';
+      }
+    }
+    this.serverSideOrder.emit({
+      q: this.searchQuery,
+      ...data
+    });
   }
 
   onServerSideFilter(data: any): void {

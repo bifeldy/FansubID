@@ -22,53 +22,67 @@ const router = Router();
 
 // GET `/api/berkas`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const fileRepo = getRepository(Berkas);
-  const [files, count] = await fileRepo.findAndCount({
-    where: [
-      { private: false, name: Like(`%${req.query.q ? req.query.q : ''}%`) }
-    ],
-    order: {
-      created_at: 'DESC',
-      name: 'ASC'
-    },
-    relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
-    skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-    take: req.query.row > 0 ? req.query.row : 10
-  });
-  for (const f of files) {
-    delete f.private;
-    delete f.download_url;
-    delete f.description;
-    if ('project_type_' in f && f.project_type_) {
-      delete f.project_type_.created_at;
-      delete f.project_type_.updated_at;
-    }
-    if ('fansub_' in f && f.fansub_) {
-      for (const fansub of f.fansub_) {
-        delete fansub.description;
-        delete fansub.urls;
-        delete fansub.tags;
-        delete fansub.created_at;
-        delete fansub.updated_at;
+  try {
+    const fileRepo = getRepository(Berkas);
+    const [files, count] = await fileRepo.findAndCount({
+      where: [
+        { private: false, name: Like(`%${req.query.q ? req.query.q : ''}%`) }
+      ],
+      order: {
+        ...((req.query.sort && req.query.order) ? {
+          [req.query.sort]: req.query.order.toUpperCase()
+        } : {
+          created_at: 'DESC',
+          name: 'ASC',
+        })
+      },
+      relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
+      skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+      take: req.query.row > 0 ? req.query.row : 10
+    });
+    for (const f of files) {
+      delete f.private;
+      delete f.download_url;
+      delete f.description;
+      if ('project_type_' in f && f.project_type_) {
+        delete f.project_type_.created_at;
+        delete f.project_type_.updated_at;
+      }
+      if ('fansub_' in f && f.fansub_) {
+        for (const fansub of f.fansub_) {
+          delete fansub.description;
+          delete fansub.urls;
+          delete fansub.tags;
+          delete fansub.created_at;
+          delete fansub.updated_at;
+        }
+      }
+      if ('anime_' in f && f.anime_) {
+        delete f.anime_.created_at;
+        delete f.anime_.updated_at;
+      }
+      if ('user_' in f && f.user_) {
+        delete f.user_.role;
+        delete f.user_.password;
+        delete f.user_.session_token;
+        delete f.user_.created_at;
+        delete f.user_.updated_at;
       }
     }
-    if ('anime_' in f && f.anime_) {
-      delete f.anime_.created_at;
-      delete f.anime_.updated_at;
-    }
-    if ('user_' in f && f.user_) {
-      delete f.user_.role;
-      delete f.user_.password;
-      delete f.user_.session_token;
-      delete f.user_.created_at;
-      delete f.user_.updated_at;
-    }
+    res.status(200).json({
+      info: `😅 200 - Berkas API :: List All 🤣`,
+      count,
+      results: files
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      info: `🙄 400 - Gagal Mendapatkan All Berkas 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!!'
+      }
+    });
   }
-  res.status(200).json({
-    info: `😅 200 - Berkas API :: List All 🤣`,
-    count,
-    results: files
-  });
 });
 
 // POST `/api/berkas`
