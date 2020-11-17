@@ -376,7 +376,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[BERKAS_CREATE_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl('/berkas');
       },
       err => {
         this.gs.log('[BERKAS_CREATE_ERROR]', err);
