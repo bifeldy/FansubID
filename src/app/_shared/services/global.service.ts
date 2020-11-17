@@ -48,6 +48,9 @@ export class GlobalService {
     @Inject(PLATFORM_ID) platformId: string
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+    if (this.isBrowser) {
+      this.onResize('First Run Checking Window Size');
+    }
   }
 
   log(message: string, data: any = null, type: string = 'log'): void {
@@ -92,7 +95,6 @@ export class GlobalService {
       this.isDesktop = false;
       this.gridListBreakpoint = 1;
     }
-    // this.gridListBreakpoint = (window.innerWidth >= 1200) ? 3 : (window.innerWidth >= 992) ? 2 : 1;
   }
 
 }

@@ -46,7 +46,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
       icon: 'file_copy',
       type: 'table',
       data: {
-        column: ['Upload', 'Nama Berkas', 'Pemilik'],
+        column: ['Tanggal', 'Nama Berkas', 'Pemilik'],
         row: []
       }
     }
@@ -150,7 +150,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             id: r.id,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
-            Upload: r.created_at,
+            Tanggal: r.created_at,
             'Nama Berkas': r.name
           });
         }

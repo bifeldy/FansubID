@@ -21,7 +21,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
       icon: 'file_copy',
       type: 'table',
       data: {
-        column: ['Jenis', 'Image', 'Nama Berkas', 'Upload', 'Pemilik'],
+        column: ['Jenis', 'Image', 'Nama Berkas', 'Tanggal', 'Pemilik'],
         row: []
       }
     }
@@ -76,7 +76,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
             foto: r.user_.image_url,
             Jenis: r.project_type_.name,
             Image: r.image_url,
-            Upload: r.created_at,
+            Tanggal: r.created_at,
             Pemilik: r.user_.username,
             'Nama Berkas': r.name
           });

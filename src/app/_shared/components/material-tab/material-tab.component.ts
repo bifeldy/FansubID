@@ -46,7 +46,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
     //       {
     //         NamaFile: '[FanSub] Berkas Dengan Judul Anime - 01 [BD][1080p].mkv',
     //         Pemilik: 'Bifeldy',
-    //         TanggalUpload: '12:34:56 AM JST+9'
+    //         Tanggal: '12:34:56 AM JST+9'
     //       }
     //     ]
     //   }

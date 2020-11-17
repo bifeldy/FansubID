@@ -46,7 +46,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
       icon: 'file_copy',
       type: 'table',
       data: {
-        column: ['Upload', 'Nama File', 'Pemilik'],
+        column: ['Tanggal', 'Nama File', 'Pemilik'],
         row: []
       }
     }
@@ -171,7 +171,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             id: r.id,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
-            Upload: r.created_at,
+            Tanggal: r.created_at,
             'Nama File': r.name
           });
         }
