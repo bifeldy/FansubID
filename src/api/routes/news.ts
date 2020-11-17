@@ -28,7 +28,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           [req.query.sort]: req.query.order.toUpperCase()
         } : {
           created_at: 'DESC',
-          name: 'ASC',
+          title: 'ASC',
         })
       },
       relations: ['user_'],
