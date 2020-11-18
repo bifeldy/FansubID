@@ -224,7 +224,9 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
         }
       }
       for (const [key, value] of Object.entries(results)) {
-        results[key] = (value as any).filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b);
+        results[key] = (value as any)
+          .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
+          .sort((a, b) => (a.name > b.name) ? 1 : -1);
       }
       res.status(200).json({
         info: `😅 200 - Anime Fansub API :: ${fansubId.join(', ')} 🤣`,
