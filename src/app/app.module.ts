@@ -53,7 +53,6 @@ import { MaterialFabModule } from './_shared/components/material-fab/material-fa
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',
-      preventDuplicates: true,
       closeButton: true,
       progressBar: true,
       progressAnimation: 'increasing'

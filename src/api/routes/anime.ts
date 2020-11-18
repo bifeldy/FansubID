@@ -256,6 +256,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     uri: `${jikanV3}/anime/${req.params.id}`
   }, async (error, result, body) => {
     const animeDetail = JSON.parse(body);
+    let httpStatusCode = result.statusCode;
     if ('request_hash' in animeDetail) {
       delete animeDetail.request_hash;
     }
@@ -272,10 +273,11 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       }
     } catch (error) {
       console.error(error);
+      httpStatusCode = 202;
       animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
     }
-    res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - Anime API :: Detail ${req.params.id} 🤣`,
+    res.status(httpStatusCode).json({
+      info: `😅 ${httpStatusCode} - Anime API :: Detail ${req.params.id} 🤣`,
       result: animeDetail
     });
   });
