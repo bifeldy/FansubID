@@ -6,6 +6,7 @@ import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
 import { DISQUS_SHORTNAME } from 'ngx-disqus';
 import { CookieService } from 'ngx-cookie-service';
@@ -17,6 +18,7 @@ import { NgProgressHttpModule } from 'ngx-progressbar/http';
 import { AppRoutingModule } from './app-routing.module';
 
 import { MyHammerConfig } from './_shared/helpers/my-hammer.config';
+import { MyTooltipConfig } from './_shared/helpers/my-tooltip.config';
 
 import { FakeBackendProvider } from './_shared/backends/fake-backend';
 import { HttpRequestInterceptor } from './_shared/interceptors/http-request.interceptor';
@@ -51,7 +53,7 @@ import { MaterialFabModule } from './_shared/components/material-fab/material-fa
     MaterialFabModule,
     NgxSpinnerModule,
     ToastrModule.forRoot({
-      timeOut: 3000,
+      timeOut: 1234,
       positionClass: 'toast-top-right',
       closeButton: true,
       progressBar: true,
@@ -62,6 +64,7 @@ import { MaterialFabModule } from './_shared/components/material-fab/material-fa
   ],
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
+    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: MyTooltipConfig },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: BrowserStateInterceptor, multi: true },
