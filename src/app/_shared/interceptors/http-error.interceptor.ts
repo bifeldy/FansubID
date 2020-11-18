@@ -24,61 +24,43 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       tap((res) => {
         if (res instanceof HttpResponse && this.gs.isBrowser) {
-          if ((res as any).status === 200) {
-            let successMessage = null;
-            if (res) {
-              if ((res as any).body) {
-                if ((res as any).body.result) {
-                  if ((res as any).body.result.message) {
-                    successMessage = (res as any).body.result.message;
-                  }
+          let okMessage = 'UwUu~ Berhasil~';
+          let okTitle = 'Yeay, Selesai!';
+          if (res) {
+            if ((res as any).body) {
+              if ((res as any).body.info) {
+                okTitle = (res as any).body.info;
+              }
+              if ((res as any).body.result) {
+                if ((res as any).body.result.message) {
+                  okMessage = (res as any).body.result.message;
                 }
               }
             }
-            if (!successMessage) {
-              successMessage = 'UwUu~ Berhasil~';
-            }
-            let successTitle = null;
-            if (res) {
-              if ((res as any).body) {
-                if ((res as any).body.info) {
-                  successTitle = (res as any).body.info;
-                }
-              }
-            }
-            if (!successTitle) {
-              successTitle = 'Yeay, Selesai!';
-            }
-            this.toast.success(successMessage, successTitle);
+          }
+          if ((res as any).status === 202) {
+            this.toast.info(okMessage, okTitle);
+          } else if ((res as any).status === 200) {
+            this.toast.success(okMessage, okTitle);
           }
         }
       }),
       catchError(e => {
         this.gs.log(`[INTERCEPT_ERROR-${e.status}]`, e.statusText);
         if (this.gs.isBrowser) {
-          let errorMessage = null;
+          let errorMessage = 'Terjadi Kesalahan Pada Jaringan~';
+          let errorTitle = 'Whoops, Server Sibuk T.T';
           if (e) {
             if (e.error) {
+              if (e.error.info) {
+                errorTitle = e.error.info;
+              }
               if (e.error.result) {
                 if (e.error.result.message) {
                   errorMessage = e.error.result.message;
                 }
               }
             }
-          }
-          if (!errorMessage) {
-            errorMessage = 'Terjadi Kesalahan Pada Jaringan~';
-          }
-          let errorTitle = null;
-          if (e) {
-            if (e.error) {
-              if (e.error.info) {
-                errorTitle = e.error.info;
-              }
-            }
-          }
-          if (!errorTitle) {
-            errorTitle = 'Whoops, Server Down/Sibuk T.T';
           }
           this.toast.error(errorMessage, errorTitle);
         }
