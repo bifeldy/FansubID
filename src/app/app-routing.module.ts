@@ -67,8 +67,8 @@ const routes: Routes = [
     path: 'berkas',
     loadChildren: () => import('./_pages/berkas/berkas.module').then(m => m.BerkasModule),
     data: {
-      title: 'Berkas',
-      description: 'Kelola Berkas',
+      title: 'Semua Berkas',
+      description: 'Kelola Arsip Berkas',
       keywords: 'Berkas File'
     }
   },

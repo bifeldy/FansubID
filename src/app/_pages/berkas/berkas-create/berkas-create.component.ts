@@ -272,6 +272,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   filterAnimeSelected(data): void {
     this.gs.log('[ANIME_FILTER_CLICK]', data);
+    this.submitted = true;
     this.selectedFilterAnime = data;
     this.subsAnimeNew = this.anime.addNewAnime({
       id: this.selectedFilterAnime.mal_id,
@@ -282,9 +283,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       res => {
         this.gs.log('[ANIME_CHECK_ADD_SUCCESS]', res);
         this.animeCheckOrAddResponse = res.result;
+        this.submitted = false;
       },
       err => {
         this.gs.log('[ANIME_CHECK_ADD_ERROR]', err);
+        this.submitted = false;
       }
     );
   }
