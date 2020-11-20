@@ -1,23 +1,23 @@
-# <img src="src/assets/img/favicon.png" width="24px" /> [Hikki | Indonesian Fansub Database](https://hikki.bifeldy.id)
+# <img src="src/assets/img/favicon.png" width="24px" /> [Hikki | Database Fansub Indonesia](https://hikki.bifeldy.id)
 
-This project was initially generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.4.
+Proyek ini awalnya dibuat dengan [Angular CLI](https://github.com/angular/angular-cli) versi 10.0.4.
 
-> Join our Discord chat server <br />
+> Ayo gabung di kanal Discord kita! <br />
 [![Chat on Discord](https://discordapp.com/api/guilds/342220398022098944/widget.png "Chat on Discord")](https://discord.gg/xGWdExk)
 
 ![](src/assets/img/fansub-banner.png)
 
 ----
 
-## Build & Run
+## *Build* & *Run*
 
-Run `npm run bifeldy:prod` to build the entire project (express & angular) in production mode. <br /> The build artifacts will be stored in the `dist/` directory.
-* Run `npm run bifeldy:express && npm run bifeldy:start` to build and serve the backend server. <br /> Server running in `http://localhost:4000`
-* Run standard `ng serve` to serve the frontend server. <br /> Website running in `http://localhost:4200`
+Jalankan `npm run bifeldy: prod` untuk *build* seluruh proyek (*frontend* & *backend*) dalam *production*. <br /> Hasil akan tersimpan di folder `dist/`.
+* Jalankan `npm run bifeldy:express && npm run bifeldy:start` untuk *build* dan *serve* *backend* saja. <br /> Akses *API* pada `http://localhost:4000`
+* Jalankan `ng serve` untuk *serve* seperti biasa. <br /> Lalu buka situs di `http://localhost:4200`
 
-## Further help
+## Bantuan lebih lanjut
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Untuk mendapatkan bantuan lebih lanjut tentang Angular CLI gunakan `ng help` atau kunjungi [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 ## Lisensi
 
