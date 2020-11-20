@@ -1,27 +1,29 @@
-# Hikki
+# <img src="src/assets/img/favicon.png" width="24px" /> [Hikki | Indonesian Fansub Database](https://hikki.bifeldy.id)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.4.
+This project was initially generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.4.
 
-## Development server
+> Jangan lupa *join* Discord <br />
+[![Chat on Discord](https://discordapp.com/api/guilds/342220398022098944/widget.png "Chat on Discord")](https://discord.gg/xGWdExk)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+![](src/assets/img/fansub-banner.png)
 
-## Code scaffolding
+----
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Build & Run
 
-## Build
+Run `npm run bifeldy:prod` to build the entire project (express & angular) in production mode. <br /> The build artifacts will be stored in the `dist/` directory.
+* Run `npm run bifeldy:express && npm run bifeldy:start` to build and serve the backend server. <br /> Server running in `http://localhost:4000`
+* Run standard `ng serve` to serve the frontend server. <br /> Website running in `http://localhost:4200`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+<br />
 
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+<br />
+
+## Lisensi
+
+Proyek ini berada di bawah Lisensi GNU General Public License v3.0 <br />
+Harap melihat [LICENSE](LICENSE) untuk informasi tingkat lanjut.
