@@ -112,6 +112,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
 
   onServerSideFilter(data: any): void {
     this.serverSideFilter.emit(data);
+    this.paginator.firstPage();
   }
 
   onPaginatorClicked(data: any): void {

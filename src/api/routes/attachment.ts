@@ -57,7 +57,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
       return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
         const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
         if (fIdx >= 0) {
-          res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
+          return res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
             if (err) {
               console.error(err);
             } else {

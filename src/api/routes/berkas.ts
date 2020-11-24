@@ -1,9 +1,13 @@
 import createError from 'http-errors';
+import find from 'find';
+import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, Equal, In } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
+
+import { environment } from '../../environments/environment';
 
 import { ProjectType } from '../entities/ProjectType';
 import { User } from '../entities/User';
@@ -17,6 +21,9 @@ import { Role } from '../../app/_shared/models/Role';
 
 // Middleware
 import auth from '../middlewares/auth';
+
+// Helper
+import mkvExtract from '../helpers/mkvExtract';
 
 const router = Router();
 
@@ -129,6 +136,39 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         const resAttachmentSave = await attachmentRepo.save(attachment);
         file.attachment_ = resAttachmentSave;
         await tempAttachmentRepo.remove(tempAttachment);
+        find.file(/$/, `${environment.uploadFolder}`, async (files) => {
+          const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
+          if (fIdx >= 0) {
+            mkvExtract(attachment.name.toString().toLowerCase(), files[fIdx], async (error, extractedFiles) => {
+              if (error) {
+                console.error(error);
+              } else {
+                for (const f of extractedFiles) {
+                  fs.writeFile(`${environment.uploadFolder}/${f.name}`, f.data, async (err) => {
+                    if (err) {
+                      console.error(err);
+                    } else {
+                      try {
+                        const mkvAttachment = new Attachment();
+                        mkvAttachment.name = f.name;
+                        mkvAttachment.size = f.size;
+                        const strSplit = f.name.split('.');
+                        mkvAttachment.ext = strSplit[strSplit.length - 1];
+                        mkvAttachment.user_ = attachment.user_;
+                        mkvAttachment.rootAttachment_ = resAttachmentSave;
+                        await attachmentRepo.save(mkvAttachment);
+                      } catch (e) {
+                        console.error(e);
+                      }
+                    }
+                  });
+                }
+              }
+            });
+          } else {
+            return next(createError(404));
+          }
+        });
       }
       const animeRepo = getRepository(Anime);
       const anime = await animeRepo.findOneOrFail({
@@ -246,6 +286,39 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
       resFileSave.download_url = JSON.parse(resFileSave.download_url);
       if (!req.user.verified) {
         delete resFileSave.attachment_;
+      } else {
+        if ('attachment_' in resFileSave && resFileSave.attachment_) {
+          const attachmentRepo = getRepository(Attachment);
+          const subtitles = await attachmentRepo.find({
+            where: [
+              { ext: Equal('ass'), rootAttachment_: Equal(resFileSave.attachment_.id) },
+              { ext: Equal('srt'), rootAttachment_: Equal(resFileSave.attachment_.id) }
+            ],
+            relations: ['rootAttachment_']
+          });
+          for (const s of subtitles) {
+            delete s.created_at;
+            delete s.download_count;
+            delete s.rootAttachment_;
+            delete s.updated_at;
+            delete s.user_;
+          }
+          (resFileSave as any).attachment_.subtitles_ = subtitles;
+          const fonts = await attachmentRepo.find({
+            where: [
+              { ext: Equal('ttf'), rootAttachment_: Equal(resFileSave.attachment_.id) }
+            ],
+            relations: ['rootAttachment_']
+          });
+          for (const f of fonts) {
+            delete f.created_at;
+            delete f.download_count;
+            delete f.rootAttachment_;
+            delete f.updated_at;
+            delete f.user_;
+          }
+          (resFileSave as any).attachment_.fonts_ = fonts;
+        }
       }
     } else {
       delete resFileSave.download_url;
@@ -266,7 +339,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
   try {
     if (
       'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body ||
-      'anime_id' in req.body || 'projectType_id' in req.body || 'attachment_id' in req.body ||
+      'anime_id' in req.body || 'projectType_id' in req.body ||
       ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) ||
       ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
     ) {
@@ -308,24 +381,6 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               }
             }
             file.download_url = JSON.stringify(filteredUrls);
-          }
-          if (req.body.attachment_id) {
-            const tempAttachmentRepo = getRepository(TempAttachment);
-            const tempAttachment = await tempAttachmentRepo.findOneOrFail({
-              relations: ['user_'],
-              where: [
-                { id: Equal(req.body.attachment_id) }
-              ]
-            });
-            const attachmentRepo = getRepository(Attachment);
-            const attachment = new Attachment();
-            attachment.name = tempAttachment.name;
-            attachment.size = tempAttachment.size;
-            attachment.ext = tempAttachment.ext;
-            attachment.user_ = tempAttachment.user_;
-            const resAttachmentSave = await attachmentRepo.save(attachment);
-            file.attachment_ = resAttachmentSave;
-            await tempAttachmentRepo.remove(tempAttachment);
           }
           if (req.body.fansub_id) {
             const fansubRepo = getRepository(Fansub);

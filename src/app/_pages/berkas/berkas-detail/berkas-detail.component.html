@@ -26,109 +26,142 @@
   <div class="container">
   
     <div class="row">
-      <div class="col-md-5 col-xl-4 py-3">
-        <div class="row mb-3">
-          <img class="w-100" src="{{ berkasData.image_url }}" />
-        </div>
-        <div class="row mb-3">
-          <div class="col-12 pt-3 sticky-top bg-light">
-            <h2 class="border-bottom-dotted">
-              <b class="text-secondary">Tautan Rujukan</b></h2>
-          </div>
-          <div class="col-12">
-            <mat-selection-list [multiple]="false">
-              <mat-list-option routerLink="/anime/{{ berkasData.anime_.id }}">
-                <img matListAvatar src="{{ berkasData.anime_.image_url }}" class="ml-3" style="border-radius: 0;" />
-                <h4>{{ berkasData.anime_.name }}</h4>
-              </mat-list-option>
-              <mat-list-option routerLink="/fansub/{{ fs.id }}" *ngFor="let fs of berkasData.fansub_">
-                <img matListAvatar src="{{ fs.image_url }}" class="ml-3" style="border-radius: 0;" />
-                <h4>{{ fs.name }}</h4>
-              </mat-list-option>
-              <mat-list-option routerLink="/user/{{ berkasData.user_.username }}">
-                <img matListAvatar src="{{ berkasData.user_.image_url }}" class="ml-3" />
-                <h4>{{ berkasData.user_.username }}</h4>
-              </mat-list-option>
-            </mat-selection-list>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-12 pt-3 sticky-top bg-light">
-            <h2 class="border-bottom-dotted">
-              <b class="text-secondary">Tautan Unduhan</b>
-            </h2>
-          </div>
-          <div class="col-12 text-center" *ngIf="currentUser">
-            <a href="{{ i.url }}" class="m-1" target="_blank" mat-stroked-button color="primary" *ngFor="let i of berkasData.download_url">
-              <mat-icon class="mr-2">cloud_download</mat-icon>
-              {{ i.name }}
-            </a>
-          </div>
-          <div class="col-12 text-center" *ngIf="!currentUser">
-            <button class="m-1" mat-stroked-button color="primary" (click)="login()">
-              <mat-icon class="mr-2">vpn_key</mat-icon>
-              Klik Untuk Login
-            </button>
-          </div>
-        </div>
-        <div class="row mb-3" *ngIf="currentUser && berkasData.attachment_">
-          <div class="col-12 pt-3 sticky-top bg-light">
-            <h2 class="border-bottom-dotted">
-              <b class="text-secondary">Tautan DDL</b>
-            </h2>
-          </div>
-          <div class="col-12 text-center" *ngIf="currentUser.verified">
-            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="ddl()"
-              matTooltip="Diunduh Sebanyak :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
-              <mat-icon class="mr-2">save_alt</mat-icon>
-              {{ lampiran.ext }} ({{ lampiran.size }} Bytes)
-            </button>
-            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="cancel_dl()"
-              matTooltip="Diunduh Sebanyak :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
-              <mat-icon class="mr-2">close</mat-icon>
-              Batal Unduh
-            </button>
-            <button class="m-1 w-100" mat-stroked-button color="primary" (click)="saveFileAs()" *ngIf="lampiran.data"
-              matTooltip="Diunduh Sebanyak :: {{ lampiran.download_count }}x">
-              <mat-icon class="mr-2">save</mat-icon>
-              {{ lampiran.name + '.' + lampiran.ext }}
-            </button>
-            <div class="col">
-              <div class="px-3" *ngIf="lampiran.isDownloading || lampiran.isCompleted">
-                {{ lampiran.percentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }}
-                {{ lampiran.percentage }}% @ {{ lampiran.speed }} KB/s
-                <br />
-                <mat-progress-bar [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
+      <div class="col-md-5 col-xl-4 p-3">
+        <div class="row sticky-top">
+          <div class="col">
+            <div class="row py-3">
+              <img class="w-100" src="{{ berkasData.image_url }}" />
+            </div>
+            <div class="row py-3">
+              <div class="col-12 pt-3 sticky-top bg-light">
+                <h2 class="border-bottom-dotted">
+                  <b class="text-secondary">Tautan Rujukan</b></h2>
+              </div>
+              <div class="col-12">
+                <mat-selection-list [multiple]="false">
+                  <mat-list-option routerLink="/anime/{{ berkasData.anime_.id }}">
+                    <img matListAvatar src="{{ berkasData.anime_.image_url }}" class="ml-3" style="border-radius: 0;" />
+                    <h4>{{ berkasData.anime_.name }}</h4>
+                  </mat-list-option>
+                  <mat-list-option routerLink="/fansub/{{ fs.id }}" *ngFor="let fs of berkasData.fansub_">
+                    <img matListAvatar src="{{ fs.image_url }}" class="ml-3" style="border-radius: 0;" />
+                    <h4>{{ fs.name }}</h4>
+                  </mat-list-option>
+                  <mat-list-option routerLink="/user/{{ berkasData.user_.username }}">
+                    <img matListAvatar src="{{ berkasData.user_.image_url }}" class="ml-3" />
+                    <h4>{{ berkasData.user_.username }}</h4>
+                  </mat-list-option>
+                </mat-selection-list>
               </div>
             </div>
-            <div class="col">
-              <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdl()" style="cursor: pointer;">
-                Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
+            <div class="row py-3">
+              <div class="col-12 pt-3 sticky-top bg-light">
+                <h2 class="border-bottom-dotted">
+                  <b class="text-secondary">Tautan Unduhan</b>
+                </h2>
+              </div>
+              <div class="col-12 text-center" *ngIf="currentUser">
+                <a href="{{ i.url }}" class="m-1" target="_blank" mat-stroked-button color="primary" *ngFor="let i of berkasData.download_url">
+                  <mat-icon class="mr-2">cloud_download</mat-icon>
+                  {{ i.name }}
+                </a>
+              </div>
+              <div class="col-12 text-center" *ngIf="!currentUser">
+                <button class="m-1" mat-stroked-button color="primary" (click)="login()">
+                  <mat-icon class="mr-2">vpn_key</mat-icon>
+                  Klik Untuk Login
+                </button>
               </div>
             </div>
-          </div>
-          <div class="col-12 text-center" *ngIf="!currentUser.verified">
-            <button class="m-1" mat-stroked-button color="primary" (click)="verify()">
-              <mat-icon class="mr-2">domain_verification</mat-icon>
-              Klik Untuk Verifikasi
-            </button>
+            <div class="row py-3" *ngIf="currentUser && berkasData.attachment_">
+              <div class="col-12 pt-3 sticky-top bg-light">
+                <h2 class="border-bottom-dotted">
+                  <b class="text-secondary">Tautan DDL</b>
+                </h2>
+              </div>
+              <div class="col-12 text-center" *ngIf="currentUser.verified">
+                <button class="m-1 w-100" mat-stroked-button color="primary" (click)="ddl(berkasData.attachment_.id)"
+                  matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
+                  <mat-icon class="mr-2">movie</mat-icon>
+                  {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
+                </button>
+                <button class="m-1 w-100" mat-stroked-button color="primary" (click)="cancel_dl(berkasData.attachment_.id)"
+                  matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
+                  <mat-icon class="mr-2">close</mat-icon>
+                  Batal Unduh
+                </button>
+                <button class="m-1 w-100" mat-stroked-button color="primary" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
+                  matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x">
+                  <mat-icon class="mr-2">save</mat-icon>
+                  {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }}
+                </button>
+                <div class="col">
+                  <div class="px-3" *ngIf="lampiran.isDownloading || lampiran.isCompleted">
+                    {{ lampiran.percentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }}
+                    {{ lampiran.percentage }}% @ {{ lampiran.speed }} KB/s
+                    <br />
+                    <mat-progress-bar [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdl(berkasData.attachment_.id)" style="cursor: pointer;">
+                    Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
+                  </div>
+                </div>
+                <button class="m-1 w-100" mat-stroked-button color="primary" *ngFor="let s of berkasData.attachment_.subtitles_"
+                  (click)="standardDdl(s.id)" matTooltip="{{ s.name }}">
+                  <mat-icon class="mr-2">notes</mat-icon>
+                  {{ s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
+                </button>
+                <button class="m-1 w-100" mat-stroked-button color="primary" *ngFor="let f of berkasData.attachment_.fonts_"
+                  (click)="standardDdl(f.id)" matTooltip="{{ f.name }}">
+                  <mat-icon class="mr-2">font_download</mat-icon>
+                  {{ f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
+                </button>
+              </div>
+              <div class="col-12 text-center" *ngIf="!currentUser.verified">
+                <button class="m-1" mat-stroked-button color="primary" (click)="verify()">
+                  <mat-icon class="mr-2">domain_verification</mat-icon>
+                  Klik Untuk Verifikasi
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-7 col-xl-8 py-3">
-        <div class="row mt-3 mb-5">
-          <div class="col-12 pt-3 sticky-top bg-light">
-            <h2 class="border-bottom-dotted">
-              <b class="text-secondary">Deskripsi & Informasi</b>
-            </h2>
-          </div>
-          <div class="col-12">
-            <div class="p-2" style="white-space: pre-line !important;" [innerHTML]="berkasData.description"></div>
-          </div>
-        </div>
-        <div class="row mt-5 mb-3">
-          <div class="col-12">
-            <app-material-tab></app-material-tab>
+      <div class="col-md-7 col-xl-8 p-3 sticky-top">
+        <div class="row sticky-top">
+          <div class="col">
+            <div class="row py-3" *ngIf="berkasData.attachment_ && vjsReady">
+              <div class="col-12 pt-3 sticky-top bg-light">
+                <h2 class="border-bottom-dotted">
+                  <b class="text-secondary">Video Stream -- BetA!</b>
+                </h2>
+              </div>
+              <div class="col-12">
+                <div class="py-2">Dapat Digunakan Sebagai Referensi Untuk Pratinjau, Namun Kemungkinan Jenis Huruf Tulisan Gagal Dimuat Sehingga Nantinya Akan Untuk Muncul Huruf Dengan Gambar 🔳 Misalnya Kanji, Lalu Juga Memungkinkan Terjadinya Gerakan Patah - Patah Jika Browser Tidak Kuat Untuk Render .ASS Subtitle Dengan Efek Yang Terlalu Banyak.</div>
+                <app-vjs-player
+                  [videoUrl]="ddlVideo"
+                  [subtitleUrl]="ddlSubtitles"
+                  [subtitleFonts]="ddlFonts"
+                  [poster]="'/favicon.ico'"></app-vjs-player>
+              </div>
+            </div>
+            <div class="row py-3">
+              <div class="col-12 pt-3 sticky-top bg-light">
+                <h2 class="border-bottom-dotted">
+                  <b class="text-secondary">Deskripsi & Informasi</b>
+                </h2>
+              </div>
+              <div class="col-12">
+                <div class="p-2" style="white-space: pre-line !important;" [innerHTML]="berkasData.description"></div>
+              </div>
+            </div>
+            <div class="row py-3">
+              <div class="col-12">
+                <app-material-tab></app-material-tab>
+              </div>
+            </div>
           </div>
         </div>
       </div>

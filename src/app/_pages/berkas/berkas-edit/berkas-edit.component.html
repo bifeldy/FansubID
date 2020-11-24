@@ -123,39 +123,21 @@
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
                 </div>
-                <div class="row" *ngIf="currentUser && currentUser.verified">
+                <div class="row" *ngIf="attachmentFile">
                   <div class="col-12 p-3">
                     <mat-divider></mat-divider>
                   </div>
                 </div>
-                <div class="row" *ngIf="currentUser && currentUser.verified">
-                  <mat-form-field appearance="outline" class="px-3 pt-3 col">
-                    <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
-                    <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event)" #ddl [disabled]="attachmentIsUploading || attachmentIsCompleted"
-                      [accept]="'video/x-matroska, video/mp4'"></ngx-mat-file-input>
-                    <mat-icon matSuffix>attach_file</mat-icon>
-                  </mat-form-field>
-                  <mat-error class="px-4 w-100">
-                    <small>
-                      <strong>{{ attachmentErrorText }}</strong>
-                    </small>
-                  </mat-error>
-                </div>
-                <div class="row" *ngIf="attachment">
-                  <div class="col">
-                    <div class="px-3" *ngIf="attachmentIsUploading || attachmentIsCompleted">
-                      {{ attachmentPercentage >= 100 ? 'Selesai Mengunggah ... '  : 'Sedang Mengunggah ... ' }}
-                      {{ attachmentPercentage }}% @ {{ attachmentSpeed }} KB/s
-                      <br />
-                      <mat-progress-bar [mode]="attachmentMode" [value]="attachmentPercentage"></mat-progress-bar>
-                    </div>
-                  </div>
-                  <div class="col-3" *ngIf="!attachmentIsUploading && !attachmentIsCompleted">
-                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitAttachment()">
-                      <mat-icon class="mr-1">attachment</mat-icon>
-                      Unggah
-                    </button>
-                  </div>
+                <div class="row" *ngIf="attachmentFile">
+                  <mat-list>
+                    <div mat-subheader class="text-primary">Berkas yang terlampir tidak boleh diubah.</div>
+                    <mat-list-item>
+                      <mat-icon mat-list-icon>attach_file</mat-icon>
+                      <div mat-line>{{ attachmentFile.name }}.{{ attachmentFile.ext }}</div>
+                      <div mat-line>{{ attachmentFile.size | bytes }} | {{ attachmentFile.created_at | date }}</div>
+                    </mat-list-item>
+                    <p class="p-3 m-0" *ngIf="attachmentFontSubtitle.length > 0">{{ attachmentFontSubtitle.join(', ').toLowerCase() }}</p>
+                  </mat-list>
                 </div>
                 <div class="row">
                   <div class="col-12 p-3">
@@ -216,7 +198,7 @@
                     </a>
                   </div>
                   <div class="col-12 col-md-3 pb-3">
-                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty || attachmentIsUploading">
+                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty">
                       Simpan
                       <mat-icon class="ml-1">save</mat-icon>
                     </button>

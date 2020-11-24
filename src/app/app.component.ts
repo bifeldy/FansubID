@@ -73,6 +73,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bs.idle();
       }
       else if (e1 instanceof NavigationEnd) {
+        this.bs.idle();
         this.subsRouterChild = this.route.firstChild.data.subscribe(e2 => {
           this.pi.updatePageMetaData(e2.title, e2.description, e2.keywords);
           if (this.gs.isBrowser) {

@@ -134,7 +134,7 @@ export function app(): express.Express {
   server.use(express.urlencoded({ extended: false, limit: '992mb' }));
   server.use('/api', apiLimiter, indexRouter);
 
-  logger.log(`Working Directory :: ${currentWorkingDir}`);
+  logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
 
   const distFolder = join(currentWorkingDir, 'dist/hikki/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
@@ -164,11 +164,12 @@ createConnection({
   ...typeOrmConfig
 }).then(async connection => {
   const c: any = connection;
-  logger.log(`📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`);
+  // tslint:disable-next-line: max-line-length
+  logger.log(`[CONNECTION] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
   const port = process.env.PORT || 4000;
   const server = app();
   server.listen(port, () => {
-    logger.log(`✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`);
+    logger.log(`[NODEJS] ✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`, null, true);
   });
 }).catch(
   error => console.error(error)

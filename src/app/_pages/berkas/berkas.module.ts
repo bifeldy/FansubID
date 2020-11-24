@@ -9,9 +9,12 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
+import { VjsPlayerModule } from '../../_shared/components/vjs-player/vjs-player.module';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { Role } from '../../_shared/models/Role';
+
+import { BytesPipe } from '../../_shared/pipes/bytes.pipe';
 
 import { BerkasCreateComponent } from './berkas-create/berkas-create.component';
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';
@@ -56,7 +59,8 @@ const routes: Routes = [
     BerkasCreateComponent,
     BerkasDetailComponent,
     BerkasEditComponent,
-    BerkasListComponent
+    BerkasListComponent,
+    BytesPipe
   ],
   imports: [
     CommonModule,
@@ -67,7 +71,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     MaterialFileInputModule,
     NotificationsModule,
-    AngularEditorModule
+    AngularEditorModule,
+    VjsPlayerModule
   ]
 })
 export class BerkasModule { }

@@ -51,23 +51,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   animeCheckOrAddResponse = null;
 
-  attachment = null;
-  attachmentPercentage = 0;
-  attachmentIsUploading = false;
-  attachmentIsCompleted = false;
-  attachmentErrorText = '';
-
-  uploadHandler = null;
-  uploadToast = null;
-
-  attachmentPreviousLoaded = null;
-  attachmentSpeed = 0;
-  attachmentMode = 'indeterminate';
-
-  timerTimeout = null;
+  attachmentFile = null;
+  attachmentFontSubtitle = [];
 
   gambar = null;
-  ddl = null;
 
   subsUser = null;
   subsParam = null;
@@ -145,20 +132,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     if (this.subsUser) {
       this.subsUser.unsubscribe();
     }
-    if (this.uploadHandler) {
-      this.uploadHandler.unsubscribe();
-      this.attachmentMode = 'indeterminate';
-      this.attachmentPercentage = 0;
-      this.attachmentSpeed = 0;
-      this.attachmentIsUploading = false;
-      this.attachmentIsCompleted = false;
-    }
-    if (this.uploadToast) {
-      this.toast.remove(this.uploadToast.toastId);
-    }
-    if (this.timerTimeout) {
-      clearTimeout(this.timerTimeout);
-    }
     if (this.subsProject) {
       this.subsProject.unsubscribe();
     }
@@ -213,6 +186,19 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   }
 
   initForm(data): void {
+    if ('attachment_' in data && data.attachment_) {
+      this.attachmentFile = data.attachment_;
+      if (data.attachment_.fonts_) {
+        data.attachment_.fonts_.forEach(f => {
+          this.attachmentFontSubtitle.push(f.name);
+        });
+      }
+      if (data.attachment_.subtitles_) {
+        data.attachment_.subtitles_.forEach(s => {
+          this.attachmentFontSubtitle.push(s.name);
+        });
+      }
+    }
     this.fg = this.fb.group({
       name: [data.name, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
@@ -220,7 +206,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       anime_id: [data.anime_.id, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
       fansub_list: this.fb.array([]),
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      attachment_id: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       download_url: this.fb.array([])
     });
     this.image_url = data.image_url;
@@ -419,7 +404,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       delete body.fansub_list;
     }
     this.submitted = true;
-    if (this.fg.invalid || this.attachmentIsUploading || (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true)) {
+    if (this.fg.invalid || (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true)) {
       if (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) {
         this.fg.controls.anime_id.patchValue(null);
       }
@@ -440,96 +425,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.gs.log('[BERKAS_EDIT_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
-      }
-    );
-  }
-
-  uploadAttachment(event, ddl): void {
-    this.ddl = ddl;
-    const file = event.target.files[0];
-    this.gs.log('[AttachmentLoad]', file);
-    this.fg.controls.attachment_id.patchValue(null);
-    this.fg.controls.attachment_id.markAsPristine();
-    try {
-      if (file.size <= 992 * 1000 * 1000) {
-        this.attachment = file;
-        this.attachmentErrorText = '';
-      } else {
-        this.attachment = null;
-        this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 992 MB!';
-        this.ddl.clear(event);
-      }
-    } catch (error) {
-      this.attachment = null;
-      this.attachmentErrorText = '';
-      this.ddl.clear();
-    }
-  }
-
-  submitAttachment(): void {
-    this.attachmentIsUploading = true;
-    this.uploadToast = this.toast.warning(
-      `${this.attachmentPercentage}% @ ${this.attachmentSpeed} KB/s`,
-      `Mengunggah ...`,
-      {
-        closeButton: false,
-        timeOut: 0,
-        disableTimeOut: 'extendedTimeOut',
-        tapToDismiss: false
-      }
-    );
-    this.uploadHandler = this.berkas.uploadLampiran({
-      file: this.attachment
-    }).subscribe(
-      event => {
-        this.gs.log('[UPLOAD_EVENTS]', event);
-        if ((event as any).loaded && (event as any).total) {
-          const e = (event as any);
-          this.gs.log('[UPLOAD_PROGRESS]', e);
-          this.attachmentMode = 'determinate';
-          this.attachmentPercentage = Math.round(e.loaded / e.total * 100);
-          if (this.attachmentPercentage < 100) {
-            this.attachmentSpeed = (e.loaded - this.attachmentPreviousLoaded) / 1000;
-            this.attachmentPreviousLoaded = e.loaded;
-            if (this.attachmentSpeed <= 0) {
-              this.attachmentSpeed = 0;
-            }
-          }
-          this.uploadToast.toastRef.componentInstance.message = `${this.attachmentPercentage}% @ ${this.attachmentSpeed} KB/s`;
-        }
-        if ((event as any).body) {
-          const e = (event as any).body;
-          this.gs.log('[UPLOAD_COMPLETED]', e);
-          this.attachmentMode = 'determinate';
-          this.attachmentIsUploading = false;
-          this.attachmentIsCompleted = true;
-          this.fg.controls.attachment_id.patchValue(e.result.id);
-          this.fg.controls.attachment_id.markAsDirty();
-          this.toast.remove(this.uploadToast.toastId);
-          const timer = (2 * 60 * 1000) + (30 * 1000);
-          this.uploadToast = this.toast.warning(
-            `Segera Kirim Data Berkas Anda!`,
-            `Lampiran Akan Dihapus ...`,
-            {
-              closeButton: false,
-              timeOut: timer,
-              disableTimeOut: 'extendedTimeOut',
-              tapToDismiss: false,
-              progressAnimation: 'decreasing'
-            }
-          );
-          this.timerTimeout = setTimeout(() => {
-            this.attachmentMode = 'determinate';
-            this.attachmentIsUploading = false;
-            this.attachmentIsCompleted = false;
-            this.attachment = null;
-            this.attachmentErrorText = '';
-            this.fg.controls.attachment_id.patchValue(null);
-            this.fg.controls.attachment_id.markAsPristine();
-            this.toast.remove(this.uploadToast.toastId);
-            this.ddl.clear();
-          }, timer);
-        }
       }
     );
   }

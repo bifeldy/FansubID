@@ -150,7 +150,7 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
 // tslint:disable-next-line: typedef
 async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
   try {
-    const token = req.headers.authorization || req.headers['x-access-token'] || req.body.token || '';
+    const token = req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token) {
       isAuthorized(req, res, next);
     } else {

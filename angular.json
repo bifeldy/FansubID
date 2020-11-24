@@ -50,6 +50,7 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/video.js/dist/video-js.min.css",
               "./node_modules/ngx-toastr/toastr.css",
               "src/styles.scss",
               "src/styles.css"
@@ -123,6 +124,9 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/video.js/dist/video-js.min.css",
+              "./node_modules/ngx-toastr/toastr.css",
+              "src/styles.scss",
               "src/styles.css"
             ],
             "scripts": []

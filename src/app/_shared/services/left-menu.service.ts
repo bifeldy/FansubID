@@ -27,7 +27,7 @@ export class LeftMenuService {
     clearTimeout(this.sideMoveTimeout);
     this.sideMoveTimeout = setTimeout(() => {
       this.linkText = this.sideNavExpanded;
-    }, 200);
+    }, 250);
   }
 
   onSideNavToggleView(): void {

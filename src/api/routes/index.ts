@@ -18,6 +18,7 @@ import auth from '../middlewares/auth';
 
 // Helper
 import jwt from '../helpers/jwt';
+import logger from '../helpers/logger';
 
 // Child router
 import seasonalRouter from './anime';
@@ -55,6 +56,9 @@ const upload = multer({
 const router = Router();
 
 const imgBB = 'https://api.imgbb.com/1/upload';
+
+// Logging Request Body
+router.use(logger.reqBodyLogger);
 
 // Child route url
 router.use('/anime', seasonalRouter);

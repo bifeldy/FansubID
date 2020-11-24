@@ -8,6 +8,7 @@ import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
+import { VjsService } from '../../../_shared/services/vjs.service';
 
 import User from '../../../_shared/models/User';
 import { environment } from '../../../../environments/environment';
@@ -28,6 +29,11 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   subsParam = null;
   subsBerkas = null;
 
+  subtitles = [];
+  fonts = [];
+
+  vjsReady = false;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -36,6 +42,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService,
+    public vjs: VjsService,
     public as: AuthService,
     public dm: DownloadManagerService
   ) {
@@ -73,6 +80,20 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           this.bs.idle();
           if (this.gs.isBrowser) {
             this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
+            if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
+              if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
+                this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
+                  this.subtitles = data;
+                  this.checkVjs();
+                });
+              }
+              if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
+                this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
+                  this.fonts = data;
+                  this.checkVjs();
+                });
+              }
+            }
           }
         },
         err => {
@@ -113,25 +134,53 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return this.dm.getAttachmentDownloadFile(this.berkasData.attachment_);
   }
 
-  ddl(): void {
-    this.dm.startDownload(this.berkasData.attachment_.id);
+  ddl(id): void {
+    this.dm.startDownload(id);
   }
 
-  cancel_dl(): void {
-    this.dm.cancelDownload(this.berkasData.attachment_.id);
+  cancel_dl(id): void {
+    this.dm.cancelDownload(id);
   }
 
-  saveFileAs(): void {
-    this.dm.saveFileAs(this.berkasData.attachment_.id);
+  saveFileAs(id): void {
+    this.dm.saveFileAs(id);
   }
 
-  standardDdl(): void {
-    const ddlApi = 'https://hikki.bifeldy.id/api/attachment';
-    const lampiranId = `?id=${this.berkasData.attachment_.id}`;
+  standardDdl(id): void {
+    window.open(this.ddlUrlLink(id), '_blank');
+  }
+
+  ddlUrlLink(id): string {
+    const ddlApi = `${environment.apiUrl}/attachment`;
+    const lampiranId = `?id=${id}`;
     const token = `&token=${localStorage.getItem(environment.tokenName)}`;
     const ddlUrl = ddlApi + lampiranId + token;
-    this.cancel_dl();
-    window.open(ddlUrl, '_blank');
+    return ddlUrl;
+  }
+
+  get ddlVideo(): string {
+    return this.ddlUrlLink(this.berkasData.attachment_.id);
+  }
+
+  get ddlSubtitles(): string {
+    return (this.subtitles.length > 0) ? this.subtitles[0] : '';
+  }
+
+  get ddlFonts(): any[] {
+    return (this.fonts.length > 0) ? this.fonts : [];
+  }
+
+  checkVjs(): void {
+    if (this.berkasData && this.berkasData.attachment_) {
+      if ('subtitles_' in this.berkasData.attachment_ && 'fonts_' in this.berkasData.attachment_) {
+        if (
+          this.subtitles.length === this.berkasData.attachment_.subtitles_.length &&
+          this.fonts.length === this.berkasData.attachment_.fonts_.length
+        ) {
+          this.vjsReady = true;
+        }
+      }
+    }
   }
 
 }

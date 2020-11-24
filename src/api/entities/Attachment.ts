@@ -33,4 +33,8 @@ export class Attachment {
   @ManyToOne(type => User)
   // tslint:disable-next-line: variable-name
   user_: User;
+
+  @ManyToOne(type => Attachment)
+  // tslint:disable-next-line: variable-name
+  rootAttachment_: Attachment;
 }
