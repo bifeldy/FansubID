@@ -11,9 +11,7 @@
         <div class="col-12">
           <div class="row">
             <div class="col-12">
-              <p class="px-2">
-                <img src="{{ newsData.image_url }}" class="w-100" />
-              </p>
+              <img src="{{ newsData.image_url }}" class="w-100" />
             </div>
             <div class="col-12 p-3">
               <app-material-chip (chipClicked)="openTag($event)" [chipData]="chipData"></app-material-chip>
