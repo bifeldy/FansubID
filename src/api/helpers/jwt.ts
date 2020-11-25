@@ -28,8 +28,8 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
     return { ...decoded, token };
   } catch (err) {
     console.error(err);
-    res.status(401).json({
-      info: '🤧 401 - Whoops, Akses Ditolak! 😷',
+    return res.status(401).json({
+      info: '🤧 401 - Authentication API :: Whoops, Akses Ditolak 😷',
       result: err
     });
   }

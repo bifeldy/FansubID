@@ -39,7 +39,7 @@ const routes: Routes = [
     }
   },
   {
-    path: ':fansubId/edit',
+    path: ':fansubSlug/edit',
     component: FansubEditComponent,
     canActivate: [AuthGuard],
     data: {
@@ -50,7 +50,7 @@ const routes: Routes = [
     }
   },
   {
-    path: ':fansubId',
+    path: ':fansubSlug',
     component: FansubDetailComponent
   }
 ];

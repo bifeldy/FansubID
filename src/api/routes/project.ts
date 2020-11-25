@@ -23,8 +23,8 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     delete p.description;
     delete p.updated_at;
   }
-  res.status(200).json({
-    info: `😅 200 - Project Type API :: List All 🤣`,
+  return res.status(200).json({
+    info: `😅 200 - Project API :: List All 🤣`,
     count,
     results: projects
   });
@@ -43,13 +43,13 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       project.description = req.body.description;
     }
     const resProjectSave = await projectRepo.save(project);
-    res.status(200).json({
-      info: `😅 200 - Project Type API :: Tambah Baru 🤣`,
+    return res.status(200).json({
+      info: `😅 200 - Project API :: Tambah Baru 🤣`,
       result: resProjectSave
     });
   } else {
-    res.status(400).json({
-      info: '🙄 400 - Gagal Menambah Jenis Project Baru! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - Project API :: Gagal Menambah Jenis Project Baru 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -66,8 +66,8 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
         { id: Equal(req.params.id) }
       ]
     });
-    res.status(200).json({
-      info: `😅 200 - Project Type API :: Detail ${req.params.id} 🤣`,
+    return res.status(200).json({
+      info: `😅 200 - Project API :: Detail ${req.params.id} 🤣`,
       result: project
     });
   } catch (error) {
@@ -100,8 +100,8 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
         project.image_url = req.body.image_url;
       }
       const resProjectSave = await projectRepo.save(project);
-      res.status(200).json({
-        info: `😅 200 - Project Type API :: Ubah ${req.params.id} 🤣`,
+      return res.status(200).json({
+        info: `😅 200 - Project API :: Ubah ${req.params.id} 🤣`,
         result: resProjectSave
       });
     } else {
@@ -109,8 +109,8 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mengubah Jenis Project :: ${req.params.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Project API :: Gagal Mengubah Jenis Project ${req.params.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }

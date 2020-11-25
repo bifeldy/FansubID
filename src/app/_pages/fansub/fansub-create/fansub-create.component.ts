@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 
+import { debounceTime, distinctUntilChanged, retry, switchMap, tap } from 'rxjs/operators';
 import moment from 'moment';
 
 import { ToastrService } from 'ngx-toastr';
@@ -36,6 +37,9 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
 
   subsImgbb = null;
   subsFansub = null;
+  subsCekFansubSlug = null;
+
+  slugInfo = '';
 
   constructor(
     private fb: FormBuilder,
@@ -85,6 +89,18 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       facebook: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       discord: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
+    this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => this.slugInfo = 'Mengecek ...'),
+      switchMap(slugQuery => this.fansub.cekSlug({ slug: slugQuery })),
+      retry(-1)
+    ).subscribe(
+      res => {
+        this.gs.log('[FANSUB_CEK_SLUG_RESULT]', res);
+        this.slugInfo = (res as any).result.message;
+      }
+    );
   }
 
   dateValidator(AC: AbstractControl): any {

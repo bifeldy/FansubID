@@ -63,7 +63,7 @@
                         </mat-option>
                       </ng-container>
                     </mat-autocomplete>
-                    <strong *ngIf="selectedFilterAnime" class="text-primary">{{ selectedFilterAnime.title }}</strong>
+                    <small *ngIf="selectedFilterAnime" class="text-primary">{{ selectedFilterAnime.title }}</small>
                     <mat-error>
                       <strong *ngIf="fg.get('anime_id').hasError('required')">ID Anime Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('anime_id').hasError('pattern')">ID Anime Hanya Boleh Angka</strong>
@@ -88,7 +88,7 @@
                               <span>{{ f.name }}</span>
                             </mat-option>
                           </mat-autocomplete>
-                          <strong class="text-primary">{{ fs.get('fansub_name').value }}</strong>
+                          <small class="text-primary">{{ fs.get('fansub_name').value }}</small>
                           <mat-error>
                             <strong *ngIf="fs.get('fansub_id').hasError('required')">ID Fansub Tidak Boleh Kosong</strong>
                             <strong *ngIf="fs.get('fansub_id').hasError('pattern')">ID Fansub Hanya Boleh Angka</strong>

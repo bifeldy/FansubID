@@ -28,9 +28,14 @@ function log(text, data = null, print = false) {
 }
 
 // tslint:disable-next-line: typedef
-async function reqBodyLogger(req: UserRequest, res: Response, next: NextFunction) {
+async function reqBodyCleanUp(req: UserRequest, res: Response, next: NextFunction) {
+  for (const propName in req.body) {
+    if (req.body[propName] === null || req.body[propName] === undefined || req.body[propName] === '') {
+      delete req.body[propName];
+    }
+  }
   log('[REQUEST_BODY] 🏹 ', req.body);
   return next();
 }
 
-export default { log, reqBodyLogger };
+export default { log, reqBodyCleanUp };

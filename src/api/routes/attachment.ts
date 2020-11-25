@@ -70,16 +70,16 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
         }
       });
     } else {
-      res.status(400).json({
-        info: '🙄 400 - Download DDL Gagal! 😪',
+      return res.status(400).json({
+        info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
         result: {
           message: 'Khusus Pengguna Terverifikasi!'
         }
       });
     }
   } else {
-    res.status(400).json({
-      info: '🙄 400 - Download DDL Gagal! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -129,7 +129,7 @@ router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserReque
           console.error(error);
         }
       }, 3 * 60 * 1000);
-      res.status(200).json({
+      return res.status(200).json({
         info: `😅 200 - Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
         result: resAttachmentSave
       });
@@ -139,16 +139,16 @@ router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserReque
           console.error(err);
         }
       });
-      res.status(400).json({
-        info: '🙄 400 - Gagal Mengunggah Lampiran! 😪',
+      return res.status(400).json({
+        info: '🙄 400 - Attachment API :: Gagal Mengunggah Lampiran 😪',
         result: {
           message: 'Khusus Pengguna Terverifikasi!'
         }
       });
     }
   } else {
-    res.status(400).json({
-      info: '🙄 400 - Gagal Mengunggah Lampiran! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - Attachment API :: Gagal Mengunggah Lampiran 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }

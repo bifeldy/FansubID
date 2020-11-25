@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 
 import { RegisterComponent } from './register.component';
@@ -21,7 +23,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedMaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
   ]
 })
 export class RegisterModule { }

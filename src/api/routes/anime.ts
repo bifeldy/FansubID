@@ -28,7 +28,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     method: 'GET',
     uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`
   }, async (error, result, body) => {
-    res.status(result.statusCode).json({
+    return res.status(result.statusCode).json({
       info: `😅 ${result.statusCode} - Anime API :: Search ${searchQuery} 🤣`,
       results: JSON.parse(body).results
     });
@@ -52,7 +52,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         anime.image_url = req.body.image_url;
         anime.type = req.body.type;
         const resultSaveAnime = await animeRepo.save(anime);
-        res.status(200).json({
+        return res.status(200).json({
           info: `😅 200 - Anime API :: Tambah Baru 🤣`,
           result: resultSaveAnime
         });
@@ -75,13 +75,13 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           anime.type = req.body.type;
         }
         const resultSaveAnime = await animeRepo.save(anime);
-        res.status(202).json({
-          info: `😅 202 - Data Anime Diperbaharui 🤣`,
+        return res.status(202).json({
+          info: `😅 202 - Anime API :: Data Anime Diperbaharui 🤣`,
           result: resultSaveAnime
         });
       } else {
-        res.status(202).json({
-          info: `😍 202 - Data Anime Multi Duplikat 🥰`,
+        return res.status(202).json({
+          info: `😍 202 - Anime API :: Data Anime Multi Duplikat 🥰`,
           result: animes
         });
       }
@@ -90,8 +90,8 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Menambah Anime 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Anime API :: Gagal Menambah Anime 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -108,7 +108,7 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
     method: 'GET',
     uri: `${jikanV3}/season/${year}/${season}`
   }, async (error, result, body) => {
-    res.status(result.statusCode).json({
+    return res.status(result.statusCode).json({
       info: `😅 ${result.statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
       results: JSON.parse(body).anime
     });
@@ -178,8 +178,8 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         }
         results[f.anime_.id].push(f);
       }
-      res.status(200).json({
-        info: `😅 200 - Berkas Anime API :: ${animeId.join(', ')} 🤣`,
+      return res.status(200).json({
+        info: `😅 200 - Anime API :: Berkas ${animeId.join(', ')} 🤣`,
         count, results
       });
     } else {
@@ -187,8 +187,8 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mencari Berkas :: ${req.query.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Anime API :: Gagal Mencari Berkas ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -233,8 +233,8 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
           .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
           .sort((a, b) => (a.name > b.name) ? 1 : -1);
       }
-      res.status(200).json({
-        info: `😅 200 - Fansub Anime API :: ${animeId.join(', ')} 🤣`,
+      return res.status(200).json({
+        info: `😅 200 - Anime API :: Fansub ${animeId.join(', ')} 🤣`,
         count, results
       });
     } else {
@@ -242,8 +242,8 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mencari Fansub :: ${req.query.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Anime API :: Gagal Mencari Fansub ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -278,7 +278,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       httpStatusCode = 202;
       animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
     }
-    res.status(httpStatusCode).json({
+    return res.status(httpStatusCode).json({
       info: `😅 ${httpStatusCode} - Anime API :: Detail ${req.params.id} 🤣`,
       result: animeDetail
     });

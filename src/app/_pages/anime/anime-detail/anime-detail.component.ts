@@ -196,6 +196,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             id: r.id,
             image: r.image_url,
             title: r.name,
+            slug: r.slug,
             description: `${r.slug} :: ${r.active ? 'Aktif' : 'Non-Aktif'}`
           });
         }
@@ -216,7 +217,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
 
   openFansub(data): void {
     this.gs.log('[ANIME_DETAIL_CLICK_FANSUB]', data);
-    this.router.navigateByUrl(`/fansub/${data.id}`);
+    this.router.navigateByUrl(`/fansub/${data.slug}`);
   }
 
   onPaginatorClicked(data): void {

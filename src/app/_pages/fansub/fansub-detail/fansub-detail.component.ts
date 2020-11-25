@@ -16,7 +16,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 })
 export class FansubDetailComponent implements OnInit, OnDestroy {
 
-  fansubId = 0;
+  fansubSlug = null;
   fansubData = null;
 
   count = 0;
@@ -88,9 +88,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subsActRoute = this.activatedRoute.params.subscribe(params => {
-      this.fansubId = parseInt(params.fansubId, 10);
+      this.fansubSlug = params.fansubSlug;
       this.bs.busy();
-      this.subsFansub = this.fansub.getFansub(this.fansubId).subscribe(
+      this.subsFansub = this.fansub.getFansub(this.fansubSlug).subscribe(
         res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
           this.fansubData = res.result;
@@ -139,13 +139,13 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   getBerkasFansub(): void {
     this.bs.busy();
     this.subsBerkas = this.fansub.getBerkasFansub(
-      [this.fansubId], this.q, this.page, this.row, this.sort, this.order
+      [this.fansubData.id], this.q, this.page, this.row, this.sort, this.order
     ).subscribe(
       res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
         this.berkasFansub = [];
-        for (const r of res.results[this.fansubId]) {
+        for (const r of res.results[this.fansubData.id]) {
           this.berkasFansub.push({
             id: r.id,
             foto: r.user_.image_url,
@@ -166,11 +166,11 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   getAnimeFansub(): void {
     this.bs.busy();
-    this.subsAnime = this.fansub.getAnimeFansub([this.fansubId]).subscribe(
+    this.subsAnime = this.fansub.getAnimeFansub([this.fansubData.id]).subscribe(
       res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         this.animeFansub = [];
-        for (const r of res.results[this.fansubId]) {
+        for (const r of res.results[this.fansubData.id]) {
           this.animeFansub.push({
             id: r.id,
             image: r.image_url,
@@ -188,7 +188,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   editFansubData(): void {
-    this.router.navigateByUrl(`/fansub/${this.fansubId}/edit`);
+    this.router.navigateByUrl(`/fansub/${this.fansubSlug}/edit`);
   }
 
   onServerSideFilter(data: any): void {

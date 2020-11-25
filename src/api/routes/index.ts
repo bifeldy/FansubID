@@ -58,7 +58,7 @@ const router = Router();
 const imgBB = 'https://api.imgbb.com/1/upload';
 
 // Logging Request Body
-router.use(logger.reqBodyLogger);
+router.use(logger.reqBodyCleanUp);
 
 // Child route url
 router.use('/anime', seasonalRouter);
@@ -76,8 +76,8 @@ router.get('/', (req, res) => {
 
 // POST `/api/register`
 router.post('/register', auth.registerModule, (req: any, res: Response, next) => {
-  res.status(200).json({
-    info: '😚 200 - Berhasil Registrasi. Yeay! 🤩',
+  return res.status(200).json({
+    info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {
       token: req.user.session_token
     }
@@ -86,8 +86,8 @@ router.post('/register', auth.registerModule, (req: any, res: Response, next) =>
 
 // POST `/api/login`
 router.post('/login', auth.loginModule, (req: any, res: Response, next) => {
-  res.status(200).json({
-    info: '😚 200 - Berhasil Login. Yeay! 🤩',
+  return res.status(200).json({
+    info: '😚 200 - Login API :: Berhasil Login Yeay 🤩',
     result: {
       token: req.user.session_token
     }
@@ -96,16 +96,16 @@ router.post('/login', auth.loginModule, (req: any, res: Response, next) => {
 
 // DEL `/api/logout`
 router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: any, res: Response, next) => {
-  res.status(200).json({
-    info: '😍 200 - Berhasil Keluar~ 🥰',
+  return res.status(200).json({
+    info: '😍 200 - Logout API :: Berhasil Keluar UwUu 🥰',
     result: req.user
   });
 });
 
 // POST `/api/verify`
 router.post('/verify', auth.isAuthorized, (req: any, res: Response, next) => {
-  res.status(200).json({
-    info: '😍 200 - Token Selesai Di Verifikasi! UwUu~ 🥰',
+  return res.status(200).json({
+    info: '😍 200 - Verifikasi API :: Token Selesai Di Verifikasi UwUu 🥰',
     result: req.user
   });
 });
@@ -122,8 +122,8 @@ router.post('/image', auth.isAuthorized, upload.single('file'), async (req: User
     }
   }, async (error, result, body) => {
     const data = JSON.parse(body).data;
-    res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - ImgBB :: Upload Image 🤣`,
+    return res.status(result.statusCode).json({
+      info: `😅 ${result.statusCode} - ImgBB API :: Upload Image 🤣`,
       result: {
         id: data.id,
         title: data.title,
@@ -163,23 +163,23 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
                 delete resKPU.data.tps;
               }
               return res.status(r2.statusCode).json({
-                info: `😍 ${r2.statusCode} - Data Kartu Tanda Penduduk~ 🥰`,
+                info: `😍 ${r2.statusCode} - KTP API :: Data Kartu Tanda Penduduk 🥰`,
                 result: resKPU
               });
             } else {
-              res.status(500).json({
-                info: '🙄 500 - API Pemerintah Error! 😪',
+              return res.status(500).json({
+                info: '🙄 500 - KTP API :: API Pemerintah Error 😪',
                 result: {
-                  message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya'
+                  message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya?'
                 }
               });
             }
           });
         } else {
           return res.status(r1.statusCode).json({
-            info: `🙄 ${r1.statusCode} - Wrong Captcha! 😪`,
+            info: `🙄 ${r1.statusCode} - Google API :: Wrong Captcha 😪`,
             result: {
-              message: 'Captcha Salah / Expired'
+              message: 'Captcha Salah / Expired!'
             }
           });
         }
@@ -189,8 +189,8 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: '🙄 400 - Cek NIK Gagal! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - KTP API :: Cek NIK Gagal 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -202,10 +202,10 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
 router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => {
   try {
     if (req.user.verified) {
-      res.status(200).json({
-        info: `😅 200 - User Telah Diverifikasi 🤣`,
+      return res.status(200).json({
+        info: `😅 200 - Verifikasi API :: User Telah Diverifikasi 🤣`,
         result: {
-          message: 'User Telah Diverifikasi'
+          message: 'User Telah Diverifikasi!'
         }
       });
     } else if (
@@ -219,8 +219,8 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => 
         ]
       });
       if (ktps.length > 0) {
-        res.status(400).json({
-          info: '🙄 400 - Verifikasi Gagal! 😪',
+        return res.status(400).json({
+          info: '🙄 400 - Verifikasi API :: Verifikasi Gagal 😪',
           result: {
             message: 'NIK Telah Digunakan!'
           }
@@ -258,8 +258,8 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => 
         }
         user.session_token = jwt.JwtEncode(resUserSave, false);
         resUserSave = await userRepo.save(user);
-        res.status(200).json({
-          info: `😍 200 - Verifikasi Berhasil 🥰`,
+        return res.status(200).json({
+          info: `😍 200 - Verifikasi API :: Verifikasi Berhasil 🥰`,
           result: {
             token: resUserSave.session_token
           }
@@ -270,8 +270,8 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => 
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: '🙄 400 - Verifikasi Gagal! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - Verifikasi API :: Verifikasi Gagal! 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -288,8 +288,8 @@ router.use((req, res, next) => {
 router.use((err: any, req, res: Response, next) => {
   res.locals.message = err.message;
   res.locals.error = err;
-  res.status(err.status || 500).json({
-    info: `😫 ${err.status || 500} - Whoops, Terjadi Kesalahan! 💩`,
+  return res.status(err.status || 500).json({
+    info: `😫 ${err.status || 500} - Error API :: Whoops Terjadi Kesalahan 💩`,
     result: err
   });
 });

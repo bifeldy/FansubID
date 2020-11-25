@@ -47,17 +47,17 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         delete n.user_.updated_at;
       }
     }
-    res.status(200).json({
+    return res.status(200).json({
       info: `😅 200 - News API :: List All 🤣`,
       count,
       results: news
     });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mendapatkan All News 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - News API :: Gagal Mendapatkan All News 😪`,
       result: {
-        message: 'Data Tidak Lengkap!!'
+        message: 'Data Tidak Lengkap!'
       }
     });
   }
@@ -96,7 +96,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete resNewsSave.user_.created_at;
           delete resNewsSave.user_.updated_at;
         }
-        res.status(200).json({
+        return res.status(200).json({
           info: `😅 200 - News API :: Tambah Baru 🤣`,
           result: resNewsSave
         });
@@ -104,8 +104,8 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         throw new Error('Data Tidak Lengkap!');
       }
     } else {
-      res.status(401).json({
-        info: '🙄 401 - Authorisasi Pengguna Gagal! 😪',
+      return res.status(401).json({
+        info: '🙄 401 - News API :: Authorisasi Pengguna Gagal 😪',
         result: {
           message: 'Khusus Admin / Moderator!'
         }
@@ -113,8 +113,8 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: '🙄 400 - Gagal Menambah News Baru! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - News API :: Gagal Menambah News Baru 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -140,7 +140,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       delete news.user_.created_at;
       delete news.user_.updated_at;
     }
-    res.status(200).json({
+    return res.status(200).json({
       info: `😅 200 - News API :: Detail ${req.params.id} 🤣`,
       result: news
     });
@@ -188,13 +188,13 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               delete resNewsSave.user_.created_at;
               delete resNewsSave.user_.updated_at;
             }
-            res.status(200).json({
+            return res.status(200).json({
               info: `😅 200 - News API :: Ubah ${req.params.id} 🤣`,
               result: resNewsSave
             });
           } else {
-            res.status(401).json({
-              info: '🙄 401 - Authorisasi Kepemilikan Gagal! 😪',
+            return res.status(401).json({
+              info: '🙄 401 - News API :: Authorisasi Kepemilikan Gagal 😪',
               result: {
                 message: 'Berita Milik Orang Lain!'
               }
@@ -208,8 +208,8 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
         throw new Error('Data Tidak Lengkap!');
       }
     } else {
-      res.status(401).json({
-        info: '🙄 401 - Authorisasi Pengguna Gagal! 😪',
+      return res.status(401).json({
+        info: '🙄 401 - News API :: Authorisasi Pengguna Gagal 😪',
         result: {
           message: 'Khusus Admin / Moderator!'
         }
@@ -217,8 +217,8 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mengubah News :: ${req.params.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - News API :: Gagal Mengubah News ${req.params.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }

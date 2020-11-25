@@ -76,17 +76,17 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         delete f.user_.updated_at;
       }
     }
-    res.status(200).json({
+    return res.status(200).json({
       info: `😅 200 - Berkas API :: List All 🤣`,
       count,
       results: files
     });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mendapatkan All Berkas 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Berkas API :: Gagal Mendapatkan All Berkas 😪`,
       result: {
-        message: 'Data Tidak Lengkap!!'
+        message: 'Data Tidak Lengkap!'
       }
     });
   }
@@ -228,7 +228,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         delete resFileSave.user_.created_at;
         delete resFileSave.user_.updated_at;
       }
-      res.status(200).json({
+      return res.status(200).json({
         info: `😅 200 - Berkas API :: Tambah Baru 🤣`,
         result: resFileSave
       });
@@ -237,8 +237,8 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: '🙄 400 - Gagal Menambah Berkas Baru! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - Berkas API :: Gagal Menambah Berkas Baru 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -324,7 +324,7 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
       delete resFileSave.download_url;
       delete resFileSave.attachment_;
     }
-    res.status(200).json({
+    return res.status(200).json({
       info: `😅 200 - Berkas API :: Detail ${req.params.id} 🤣`,
       result: resFileSave
     });
@@ -430,13 +430,13 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             delete resFileSave.user_.created_at;
             delete resFileSave.user_.updated_at;
           }
-          res.status(200).json({
+          return res.status(200).json({
             info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
             result: resFileSave
           });
         } else {
-          res.status(401).json({
-            info: '🙄 401 - Authorisasi Kepemilikan Gagal! 😪',
+          return res.status(401).json({
+            info: '🙄 401 - Berkas API :: Authorisasi Kepemilikan Gagal 😪',
             result: {
               message: 'Berkas Milik Orang Lain!'
             }
@@ -451,8 +451,8 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mengubah Berkas :: ${req.params.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Berkas API :: Gagal Mengubah Berkas ${req.params.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }

@@ -52,8 +52,8 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
       delete selectedUser.profile_.created_at;
       delete selectedUser.profile_.updated_at;
     }
-    res.status(200).json({
-      info: `😅 200 - Profile API :: Detail ${req.params.username} 🤣`,
+    return res.status(200).json({
+      info: `😅 200 - User API :: Detail ${req.params.username} 🤣`,
       result: selectedUser
     });
   } catch (error) {
@@ -103,7 +103,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             delete resUserSave.profile_;
             selectedUser.session_token = jwt.JwtEncode(resUserSave, false);
             resUserSave = await userRepo.save(selectedUser);
-            res.status(200).json({
+            return res.status(200).json({
               info: `😅 200 - User API :: Ubah ${req.params.username} 🤣`,
               result: {
                 token: resUserSave.session_token
@@ -114,8 +114,8 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             return next(createError(404));
           }
         } else {
-          res.status(401).json({
-            info: '🙄 401 - Authorisasi Kepemilikan Gagal! 😪',
+          return res.status(401).json({
+            info: '🙄 401 - User API :: Authorisasi Kepemilikan Gagal 😪',
             result: {
               message: 'Profil Milik Orang Lain!'
             }
@@ -130,8 +130,8 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mengubah Profile :: ${req.params.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - User API :: Gagal Mengubah Profile ${req.params.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -200,8 +200,8 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
         delete f.user_.updated_at;
       }
     }
-    res.status(200).json({
-      info: `😅 200 - Profile API :: Berkas ${req.params.username} 🤣`,
+    return res.status(200).json({
+      info: `😅 200 - User API :: Berkas ${req.params.username} 🤣`,
       count,
       results: files
     });

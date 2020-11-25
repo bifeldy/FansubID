@@ -1,4 +1,6 @@
 
+import request from 'request';
+
 import { getRepository, Equal } from 'typeorm';
 
 import { Response, NextFunction } from 'express';
@@ -11,6 +13,8 @@ import { Profile } from '../entities/Profile';
 
 import * as CryptoJS from 'crypto-js';
 
+import { environment } from 'src/environments/environment';
+
 // Helper
 import jwt from '../helpers/jwt';
 
@@ -22,60 +26,75 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
       'name' in req.body &&
       'email' in req.body &&
       'password' in req.body &&
-      'agree' in req.body && (JSON.parse(req.body.agree) === true)
+      'agree' in req.body && (JSON.parse(req.body.agree) === true) &&
+      'g-recaptcha-response' in req.body
     ) {
-      const userRepo = getRepository(User);
-      const selectedUser = await userRepo.find({
-        where: [
-          { username: Equal(req.body.username) },
-          { email: Equal(req.body.email) }
-        ]
-      });
-      if (selectedUser.length === 0) {
-        const ktpRepo = getRepository(KartuTandaPenduduk);
-        const newUserKtp = new KartuTandaPenduduk();
-        newUserKtp.nama = req.body.name;
-        const resKtpSave = await ktpRepo.save(newUserKtp);
-        const profileRepo = getRepository(Profile);
-        const newUserProfile = new Profile();
-        newUserProfile.description = '// No Description';
-        newUserProfile.cover_url = '/favicon.ico';
-        const resProfileSave = await profileRepo.save(newUserProfile);
-        const newUser = new User();
-        newUser.username = req.body.username;
-        newUser.email = req.body.email;
-        newUser.image_url = '/favicon.ico';
-        newUser.password = CryptoJS.SHA512(req.body.password).toString();
-        newUser.kartu_tanda_penduduk_ = resKtpSave;
-        newUser.profile_ = resProfileSave;
-        let resUserSave = await userRepo.save(newUser);
-        const { password, session_token, ...noPwdSsToken } = resUserSave;
-        newUser.session_token = jwt.JwtEncode(noPwdSsToken, false);
-        resUserSave = await userRepo.save(newUser);
-        req.user = (resUserSave as any);
-        return next();
-      } else {
-        const result: any = {};
-        for (const sU of selectedUser) {
-          if (sU.username === req.body.username) {
-            result.username = `${sU.username} Sudah Terpakai`;
+      return request(`
+        ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${req.connection.remoteAddress}
+      `.trim(), async (e1, r1, b1) => {
+        b1 = JSON.parse(b1);
+        if (b1 && b1.success) {
+          const userRepo = getRepository(User);
+          const selectedUser = await userRepo.find({
+            where: [
+              { username: Equal(req.body.username) },
+              { email: Equal(req.body.email) }
+            ]
+          });
+          if (selectedUser.length === 0) {
+            const ktpRepo = getRepository(KartuTandaPenduduk);
+            const newUserKtp = new KartuTandaPenduduk();
+            newUserKtp.nama = req.body.name;
+            const resKtpSave = await ktpRepo.save(newUserKtp);
+            const profileRepo = getRepository(Profile);
+            const newUserProfile = new Profile();
+            newUserProfile.description = '// No Description';
+            newUserProfile.cover_url = '/favicon.ico';
+            const resProfileSave = await profileRepo.save(newUserProfile);
+            const newUser = new User();
+            newUser.username = req.body.username;
+            newUser.email = req.body.email;
+            newUser.image_url = '/favicon.ico';
+            newUser.password = CryptoJS.SHA512(req.body.password).toString();
+            newUser.kartu_tanda_penduduk_ = resKtpSave;
+            newUser.profile_ = resProfileSave;
+            let resUserSave = await userRepo.save(newUser);
+            const { password, session_token, ...noPwdSsToken } = resUserSave;
+            newUser.session_token = jwt.JwtEncode(noPwdSsToken, false);
+            resUserSave = await userRepo.save(newUser);
+            req.user = (resUserSave as any);
+            return next();
+          } else {
+            const result: any = {};
+            for (const sU of selectedUser) {
+              if (sU.username === req.body.username) {
+                result.username = `${sU.username} Sudah Terpakai`;
+              }
+              if (sU.email === req.body.email) {
+                result.email = `${sU.email} Sudah Terpakai`;
+              }
+            }
+            return res.status(400).json({
+              info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
+              result
+            });
           }
-          if (sU.email === req.body.email) {
-            result.email = `${sU.email} Sudah Terpakai`;
-          }
+        } else {
+          return res.status(r1.statusCode).json({
+            info: `🙄 ${r1.statusCode} - Google API :: Wrong Captcha 😪`,
+            result: {
+              message: 'Captcha Salah / Expired!'
+            }
+          });
         }
-        res.status(400).json({
-          info: '🙄 400 - Pendaftaran Gagal! 😪',
-          result
-        });
-      }
+      });
     } else {
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: '🙄 400 - Pendaftaran Gagal! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -105,8 +124,8 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: '🙄 400 - Login Gagal! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - Authentication API :: Login Gagal! 😪',
       result: {
         message: 'Username, Email, atau Password tidak tepat!'
       }
@@ -137,8 +156,8 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       req.user = (selectedUser[0] as any);
       return next();
     } else {
-      res.status(401).json({
-        info: '🙄 401 - Authorisasi Sesi Gagal! 😪',
+      return res.status(401).json({
+        info: '🙄 401 - Authentication API :: Authorisasi Sesi Gagal 😪',
         result: {
           message: 'Akses Token Ditolak!'
         }
@@ -181,8 +200,8 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       return next();
     } catch (error) {
       console.error(error);
-      res.status(400).json({
-        info: '🙄 400 - Logout Gagal! 😪',
+      return res.status(400).json({
+        info: '🙄 400 - Authentication API :: Logout Gagal 😪',
         result: {
           message: 'Sesi Anda Tidak Dapat Dicocokkan!'
         }

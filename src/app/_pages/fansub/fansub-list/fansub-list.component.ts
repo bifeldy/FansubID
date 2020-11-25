@@ -118,6 +118,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
           }
           this.fansubData.push({
             id: r.id,
+            slug: r.slug,
             Logo: r.image_url,
             Status: r.active ? 'AKTIF' : 'TIDAK AKTIF',
             'Nama Fansub': r.name,
@@ -174,7 +175,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
 
   openFansub(data): void {
     this.gs.log('[FANSUB_LIST_OPEN_FANSUB]', data);
-    this.router.navigateByUrl(`/fansub/${data.id}`);
+    this.router.navigateByUrl(`/fansub/${data.slug}`);
   }
 
 }

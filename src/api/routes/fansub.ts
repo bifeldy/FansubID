@@ -30,17 +30,56 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       f.urls = JSON.parse(f.urls);
       f.tags = JSON.parse(f.tags);
     }
-    res.status(200).json({
+    return res.status(200).json({
       info: `😅 200 - Fansub API :: List All 🤣`,
       count,
       results: fansubs
     });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mendapatkan All Fansub 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Fansub API :: Gagal Mendapatkan All Fansub 😪`,
       result: {
-        message: 'Data Tidak Lengkap!!'
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
+
+// POST `/api/fansub/cek-slug`
+router.post('/cek-slug', async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if ('slug' in req.body && req.body.slug) {
+      const fansubRepo = getRepository(Fansub);
+      const selectedFansub = await fansubRepo.find({
+        where: [
+          { slug: Equal(req.body.slug) }
+        ]
+      });
+      if (selectedFansub.length === 0) {
+        return res.status(200).json({
+          info: `😅 200 - Fansub API :: Cek Slug Berhasil 🤣`,
+          result: {
+            message: `'${req.body.slug}' Dapat Digunakan`
+          }
+        });
+      } else {
+        return res.status(202).json({
+          info: '😅 202 - Fansub API :: Cek Fansub Slug Gagal 🥰',
+          result: {
+            message: `'${req.body.slug}' Sudah Terpakai`
+          }
+        });
+      }
+    } else {
+      throw new Error('Data Tidak Lengkap!');
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      info: '🙄 400 - Fansub API :: Gagal Mengecek Fansub Slug 😪',
+      result: {
+        message: 'Data Tidak Lengkap!'
       }
     });
   }
@@ -53,59 +92,73 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       'name' in req.body && 'born' in req.body && 'slug' in req.body &&
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
-      const userRepo = getRepository(User);
-      const user = await userRepo.findOneOrFail({
+      const fansubRepo = getRepository(Fansub);
+      const selectedFansub = await fansubRepo.find({
         where: [
-          { id: Equal(req.user.id) }
+          { slug: Equal(req.body.slug) }
         ]
       });
-      const fansubRepo = getRepository(Fansub);
-      const fansub = new Fansub();
-      fansub.user_ = user;
-      fansub.name = req.body.name;
-      fansub.born = new Date(req.body.born);
-      fansub.slug = req.body.slug;
-      const filteredUrls = [];
-      for (const u of req.body.urls) {
-        if ('url' in u && 'name' in u && u.url && u.name) {
-          filteredUrls.push(u);
+      if (selectedFansub.length === 0) {
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.user.id) }
+          ]
+        });
+        const fansub = new Fansub();
+        fansub.user_ = user;
+        fansub.name = req.body.name;
+        fansub.born = new Date(req.body.born);
+        fansub.slug = req.body.slug;
+        const filteredUrls = [];
+        for (const u of req.body.urls) {
+          if ('url' in u && 'name' in u && u.url && u.name) {
+            filteredUrls.push(u);
+          }
         }
-      }
-      fansub.urls = JSON.stringify(filteredUrls);
-      if (req.body.image) {
-        fansub.image_url = req.body.image;
+        fansub.urls = JSON.stringify(filteredUrls);
+        if (req.body.image) {
+          fansub.image_url = req.body.image;
+        } else {
+          fansub.image_url = '/favicon.ico';
+        }
+        if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
+          const filteredTagsUnique = [...new Set(req.body.tags)];
+          fansub.tags = JSON.stringify(filteredTagsUnique);
+        }
+        if (req.body.description) {
+          fansub.description = req.body.description;
+        }
+        if (req.body.active) {
+          fansub.active = req.body.active;
+        }
+        const resFansubSave = await fansubRepo.save(fansub);
+        if ('user_' in resFansubSave && resFansubSave.user_) {
+          delete resFansubSave.user_.role;
+          delete resFansubSave.user_.password;
+          delete resFansubSave.user_.session_token;
+          delete resFansubSave.user_.created_at;
+          delete resFansubSave.user_.updated_at;
+        }
+        return res.status(200).json({
+          info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
+          result: resFansubSave
+        });
       } else {
-        fansub.image_url = '/favicon.ico';
+        return res.status(400).json({
+          info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
+          result: {
+            message: `'${req.body.slug}' Sudah Terpakai`
+          }
+        });
       }
-      if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
-        const filteredTagsUnique = [...new Set(req.body.tags)];
-        fansub.tags = JSON.stringify(filteredTagsUnique);
-      }
-      if (req.body.description) {
-        fansub.description = req.body.description;
-      }
-      if (req.body.active) {
-        fansub.active = req.body.active;
-      }
-      const resFansubSave = await fansubRepo.save(fansub);
-      if ('user_' in resFansubSave && resFansubSave.user_) {
-        delete resFansubSave.user_.role;
-        delete resFansubSave.user_.password;
-        delete resFansubSave.user_.session_token;
-        delete resFansubSave.user_.created_at;
-        delete resFansubSave.user_.updated_at;
-      }
-      res.status(200).json({
-        info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
-        result: resFansubSave
-      });
     } else {
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: '🙄 400 - Gagal Menambah Fansub Baru! 😪',
+    return res.status(400).json({
+      info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -176,8 +229,8 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
           }
         }
       }
-      res.status(200).json({
-        info: `😅 200 - Berkas Fansub API :: ${fansubId.join(', ')} 🤣`,
+      return res.status(200).json({
+        info: `😅 200 - Fansub API :: Berkas ${fansubId.join(', ')} 🤣`,
         count, results
       });
     } else {
@@ -185,8 +238,8 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mencari Berkas :: ${req.query.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Fansub API :: Gagal Mencari Berkas ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -228,8 +281,8 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
           .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
           .sort((a, b) => (a.name > b.name) ? 1 : -1);
       }
-      res.status(200).json({
-        info: `😅 200 - Anime Fansub API :: ${fansubId.join(', ')} 🤣`,
+      return res.status(200).json({
+        info: `😅 200 - Fansub API :: Anime ${fansubId.join(', ')} 🤣`,
         count, results
       });
     } else {
@@ -237,8 +290,8 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mencari Anime :: ${req.query.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Fansub API :: Gagal Mencari Anime ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -246,13 +299,13 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
   }
 });
 
-// GET `/api/fansub/:id`
-router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) => {
+// GET `/api/fansub/:slug`
+router.get('/:slug', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubRepo = getRepository(Fansub);
     const fansub = await fansubRepo.findOneOrFail({
       where: [
-        { id: Equal(req.params.id) }
+        { slug: Equal(req.params.slug) }
       ],
       relations: ['user_']
     });
@@ -265,8 +318,8 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       delete fansub.user_.created_at;
       delete fansub.user_.updated_at;
     }
-    res.status(200).json({
-      info: `😅 200 - Fansub API :: Detail ${req.params.id} 🤣`,
+    return res.status(200).json({
+      info: `😅 200 - Fansub API :: Detail ${req.params.slug} 🤣`,
       result: fansub
     });
   } catch (error) {
@@ -275,8 +328,8 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
   }
 });
 
-// PUT `/api/fansub/:id`
-router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+// PUT `/api/fansub/:slug`
+router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (
       'name' in req.body || 'born' in req.body || 'description' in req.body ||
@@ -287,17 +340,27 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
       const fansubRepo = getRepository(Fansub);
       const fansub = await fansubRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.id) }
+          { slug: Equal(req.params.slug) }
         ],
         relations: ['user_']
       });
-      const userRepo = getRepository(User);
-      const user = await userRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.user.id) }
-        ]
-      });
-      fansub.user_ = user;
+      if (req.body.slug) {
+        const selectedFansub = await fansubRepo.find({
+          where: [
+            { slug: Equal(req.body.slug) }
+          ]
+        });
+        if (selectedFansub.length === 0) {
+          fansub.slug = req.body.slug;
+        } else {
+          return res.status(202).json({
+            info: `😅 202 - Fansub API :: Gagal Mengubah Fansub ${req.params.id} 🥰`,
+            result: {
+              message: `'${req.body.slug}' Sudah Terpakai`
+            }
+          });
+        }
+      }
       if (req.body.name) {
         fansub.name = req.body.name;
       }
@@ -306,9 +369,6 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
       }
       if (req.body.description) {
         fansub.description = req.body.description;
-      }
-      if (req.body.slug) {
-        fansub.born = req.body.slug;
       }
       if (req.body.active) {
         fansub.active = req.body.active;
@@ -329,6 +389,13 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
         }
         fansub.urls = JSON.stringify(filteredUrls);
       }
+      const userRepo = getRepository(User);
+      const user = await userRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.user.id) }
+        ]
+      });
+      fansub.user_ = user;
       const resFansubSave = await fansubRepo.save(fansub);
       if ('user_' in resFansubSave && resFansubSave.user_) {
         delete resFansubSave.user_.role;
@@ -337,7 +404,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
         delete resFansubSave.user_.created_at;
         delete resFansubSave.user_.updated_at;
       }
-      res.status(200).json({
+      return res.status(200).json({
         info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
         result: resFansubSave
       });
@@ -346,8 +413,8 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      info: `🙄 400 - Gagal Mengubah Fansub :: ${req.params.id} 😪`,
+    return res.status(400).json({
+      info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.slug} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }

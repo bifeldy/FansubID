@@ -19,6 +19,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   usernameUsed = null;
   emailUsed = null;
+  captchaRef = null;
 
   fg: FormGroup;
   submitted = false;
@@ -60,7 +61,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
       name: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
       email: [null, [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]],
       password: [null, [Validators.required, Validators.minLength(5), Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      agree: [null, [Validators.required]]
+      agree: [null, [Validators.required]],
+      'g-recaptcha-response': [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
     });
     if (this.gs.isBrowser) {
       //
@@ -91,7 +93,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
         name: this.fg.value.name,
         email: this.fg.value.email,
         password: CryptoJS.SHA512(this.fg.value.password).toString(),
-        agree: this.fg.value.agree
+        agree: this.fg.value.agree,
+        'g-recaptcha-response': this.fg.value['g-recaptcha-response']
       }).subscribe(
         (res: any) => {
           this.bs.idle();
@@ -102,24 +105,35 @@ export class RegisterComponent implements OnInit, OnDestroy {
               this.registerInfo = success.info;
               this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);
               this.bs.idle();
+              this.captchaRef.reset();
               this.router.navigateByUrl('/');
             },
             error => {
               this.gs.log('[VERIFY_REGISTER_ERROR]', error);
               this.bs.idle();
+              this.captchaRef.reset();
               this.router.navigateByUrl('/login');
             }
           );
         },
         err => {
           this.gs.log('[REGISTER_FORM_ERROR]', err);
-          this.registerInfo = err.error.result.message || err.error.info;
+          this.bs.idle();
           this.submitted = false;
+          this.captchaRef.reset();
+          this.registerInfo = err.error.result.message || err.error.info;
           this.usernameUsed = err.error.result.username || null;
           this.emailUsed = err.error.result.email || null;
-          this.bs.idle();
         }
       );
+    }
+  }
+
+  captcha(captchaResponse, captchaRef): void {
+    this.gs.log(`[GOOGLE_CAPTCHA] ${captchaResponse}`);
+    this.captchaRef = captchaRef;
+    if (captchaResponse) {
+      this.fg.controls['g-recaptcha-response'].patchValue(captchaResponse);
     }
   }
 

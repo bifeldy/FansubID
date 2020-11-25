@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
+import { debounceTime, distinctUntilChanged, retry, switchMap, tap } from 'rxjs/operators';
 import moment from 'moment';
 
 import { ToastrService } from 'ngx-toastr';
@@ -20,7 +21,7 @@ import { ImgbbService } from '../../../_shared/services/imgbb.service';
 })
 export class FansubEditComponent implements OnInit, OnDestroy {
 
-  fansubId = 0;
+  fansubSlug = null;
 
   fg: FormGroup;
 
@@ -43,6 +44,9 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   subsFansubUpdate = null;
   subsFansubDetail = null;
   subsImgbb = null;
+  subsCekFansubSlug = null;
+
+  slugInfo = '';
 
   constructor(
     private fb: FormBuilder,
@@ -83,9 +87,9 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     );
     if (this.gs.isBrowser) {
       this.subsActRoute = this.activatedRoute.params.subscribe(params => {
-        this.fansubId = params.fansubId;
+        this.fansubSlug = params.fansubSlug;
         this.bs.busy();
-        this.subsFansubDetail = this.fansub.getFansub(this.fansubId).subscribe(
+        this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe(
           res => {
             this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
             this.initForm(res.result);
@@ -96,7 +100,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
-                returnUrl: `/fansub/${this.fansubId}`
+                returnUrl: `/fansub/${this.fansubSlug}`
               }
             });
           }
@@ -125,6 +129,18 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       facebook: [FACEBOOK ? FACEBOOK.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       discord: [DISCORD ? DISCORD.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
+    this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => this.slugInfo = 'Mengecek ...'),
+      switchMap(slugQuery => this.fansub.cekSlug({ slug: slugQuery })),
+      retry(-1)
+    ).subscribe(
+      res => {
+        this.gs.log('[FANSUB_CEK_SLUG_RESULT]', res);
+        this.slugInfo = (res as any).result.message;
+      }
+    );
   }
 
   dateValidator(AC: AbstractControl): any {
@@ -243,14 +259,14 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       this.bs.idle();
       return;
     }
-    this.subsFansubUpdate = this.fansub.updateFansub(this.fansubId, {
+    this.subsFansubUpdate = this.fansub.updateFansub(this.fansubSlug, {
       ...body
     }).subscribe(
       res => {
         this.gs.log('[FANSUB_EDIT_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
-        this.router.navigateByUrl(`/fansub/${this.fansubId}`);
+        this.router.navigateByUrl(`/fansub/${res.result.slug}`);
       },
       err => {
         this.gs.log('[FANSUB_EDIT_ERROR]', err);

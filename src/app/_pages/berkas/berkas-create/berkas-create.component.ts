@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { tap, debounceTime, switchMap, finalize,  map, startWith } from 'rxjs/operators';
+import { tap, debounceTime, switchMap, finalize,  map, startWith, distinctUntilChanged, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -189,6 +189,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     });
     this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
       debounceTime(500),
+      distinctUntilChanged(),
       tap(() => this.isLoading = true),
       switchMap(searchQuery => this.anime.searchAnime(
         searchQuery,
@@ -201,14 +202,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       .pipe(
         finalize(() => this.isLoading = false),
         )
-      )
+      ),
+      retry(-1)
     ).subscribe(
       res => {
-        this.gs.log('[BERKAS_CREATE_SEARCH_SUCCESS]', res);
+        this.gs.log('[BERKAS_CREATE_SEARCH_ANIME_RESULT]', res);
         this.filteredAnime = (res as any).results;
-      },
-      err => {
-        this.gs.log('[BERKAS_CREATE_SEARCH_ERROR]', err);
       }
     );
   }
