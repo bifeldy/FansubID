@@ -22,6 +22,10 @@ export class Attachment {
   // tslint:disable-next-line: variable-name
   download_count: number;
 
+  @Column({ type: 'boolean', default: false })
+  // tslint:disable-next-line: variable-name
+  google_drive: boolean;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   // tslint:disable-next-line: variable-name
   created_at: number;

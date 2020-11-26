@@ -119,6 +119,34 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       } else {
         file.image_url = '/favicon.ico';
       }
+      const animeRepo = getRepository(Anime);
+      const anime = await animeRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.body.anime_id) }
+        ]
+      });
+      file.anime_ = anime;
+      const fansubRepo = getRepository(Fansub);
+      const fansub = await fansubRepo.find({
+        where: [
+          { id: In([req.body.fansub_id]) }
+        ]
+      });
+      file.fansub_ = fansub;
+      const projectRepo = getRepository(ProjectType);
+      const project = await projectRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.body.projectType_id) }
+        ]
+      });
+      file.project_type_ = project;
+      const userRepo = getRepository(User);
+      const user = await userRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.user.id) }
+        ]
+      });
+      file.user_ = user;
       if (req.body.attachment_id) {
         const tempAttachmentRepo = getRepository(TempAttachment);
         const tempAttachment = await tempAttachmentRepo.findOneOrFail({
@@ -163,6 +191,19 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
                     }
                   });
                 }
+                //
+                // TODO :: Upload To Google Drive
+                // https://github.com/googleapis/google-api-nodejs-client/issues/1633
+                //
+                // fs.unlink(`${environment.uploadFolder}/${resAttachmentSave.name}`, (err) => {
+                //   if (err) {
+                //     console.error(err);
+                //   }
+                // });
+                // resAttachmentSave.name = 'ID_FROM_GOOGLE_DRIVE';
+                // resAttachmentSave.google_drive = true;
+                // await attachmentRepo.save(resAttachmentSave);
+                //
               }
             });
           } else {
@@ -170,34 +211,6 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           }
         });
       }
-      const animeRepo = getRepository(Anime);
-      const anime = await animeRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.body.anime_id) }
-        ]
-      });
-      file.anime_ = anime;
-      const fansubRepo = getRepository(Fansub);
-      const fansub = await fansubRepo.find({
-        where: [
-          { id: In([req.body.fansub_id]) }
-        ]
-      });
-      file.fansub_ = fansub;
-      const projectRepo = getRepository(ProjectType);
-      const project = await projectRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.body.projectType_id) }
-        ]
-      });
-      file.project_type_ = project;
-      const userRepo = getRepository(User);
-      const user = await userRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.user.id) }
-        ]
-      });
-      file.user_ = user;
       const resFileSave = await fileRepo.save(file);
       resFileSave.download_url = JSON.parse(resFileSave.download_url);
       if ('fansub_' in resFileSave && resFileSave.fansub_) {

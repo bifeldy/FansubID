@@ -54,21 +54,42 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
           { id: Equal(lampiranId) }
         ]
       });
-      return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
-        const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
-        if (fIdx >= 0) {
-          return res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
-            if (err) {
-              console.error(err);
-            } else {
-              attachment.download_count++;
-              await attachmentRepo.save(attachment);
-            }
-          });
-        } else {
-          return next(createError(404));
-        }
-      });
+      if (attachment.google_drive) {
+        //
+        // TODO :: Download From Google Drive
+        // https://stackoverflow.com/questions/64646100/send-pdf-from-server-to-client
+        //
+        // return drive.files.get({
+        //   fileId: attachment.name.toString(),
+        //   alt: 'media'
+        // }, {
+        //   responseType: 'stream'
+        // }).then(response => {
+        //   response.data.on('end', async () => {
+        //     attachment.download_count++;
+        //     await attachmentRepo.save(attachment);
+        //   }).on('error', (err) => {
+        //     console.error(err);
+        //   }).pipe(res);
+        // });
+        //
+      } else {
+        return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
+          const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
+          if (fIdx >= 0) {
+            return res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
+              if (err) {
+                console.error(err);
+              } else {
+                attachment.download_count++;
+                await attachmentRepo.save(attachment);
+              }
+            });
+          } else {
+            return next(createError(404));
+          }
+        });
+      }
     } else {
       return res.status(400).json({
         info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
