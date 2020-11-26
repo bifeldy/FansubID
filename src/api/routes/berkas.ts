@@ -167,45 +167,43 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         find.file(/$/, `${environment.uploadFolder}`, async (files) => {
           const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
           if (fIdx >= 0) {
-            mkvExtract(attachment.name.toString().toLowerCase(), files[fIdx], async (error, extractedFiles) => {
-              if (error) {
-                console.error(error);
-              } else {
-                for (const f of extractedFiles) {
-                  fs.writeFile(`${environment.uploadFolder}/${f.name}`, f.data, async (err) => {
-                    if (err) {
-                      console.error(err);
-                    } else {
-                      try {
-                        const mkvAttachment = new Attachment();
-                        mkvAttachment.name = f.name;
-                        mkvAttachment.size = f.size;
-                        const strSplit = f.name.split('.');
-                        mkvAttachment.ext = strSplit[strSplit.length - 1];
-                        mkvAttachment.user_ = attachment.user_;
-                        mkvAttachment.rootAttachment_ = resAttachmentSave;
-                        await attachmentRepo.save(mkvAttachment);
-                      } catch (e) {
-                        console.error(e);
+            if (attachment.ext === 'mkv') {
+              mkvExtract(attachment.name.toString().toLowerCase(), files[fIdx], async (error, extractedFiles) => {
+                if (error) {
+                  console.error(error);
+                } else {
+                  for (const f of extractedFiles) {
+                    fs.writeFile(`${environment.uploadFolder}/${f.name}`, f.data, async (err) => {
+                      if (err) {
+                        console.error(err);
+                      } else {
+                        try {
+                          const mkvAttachment = new Attachment();
+                          mkvAttachment.name = f.name;
+                          mkvAttachment.size = f.size;
+                          const strSplit = f.name.split('.');
+                          mkvAttachment.ext = strSplit[strSplit.length - 1];
+                          mkvAttachment.user_ = attachment.user_;
+                          mkvAttachment.rootAttachment_ = resAttachmentSave;
+                          await attachmentRepo.save(mkvAttachment);
+                        } catch (e) {
+                          console.error(e);
+                        }
                       }
-                    }
-                  });
+                    });
+                  }
+                  //
+                  // TODO :: Upload File-MKV To Google Drive
+                  // https://github.com/googleapis/google-api-nodejs-client/issues/1633
+                  //
                 }
-                //
-                // TODO :: Upload To Google Drive
-                // https://github.com/googleapis/google-api-nodejs-client/issues/1633
-                //
-                // fs.unlink(`${environment.uploadFolder}/${resAttachmentSave.name}`, (err) => {
-                //   if (err) {
-                //     console.error(err);
-                //   }
-                // });
-                // resAttachmentSave.name = 'ID_FROM_GOOGLE_DRIVE';
-                // resAttachmentSave.google_drive = true;
-                // await attachmentRepo.save(resAttachmentSave);
-                //
-              }
-            });
+              });
+            } else {
+              //
+              // TODO :: Upload File-MP4 To Google Drive
+              // https://github.com/googleapis/google-api-nodejs-client/issues/1633
+              //
+            }
           } else {
             return next(createError(404));
           }

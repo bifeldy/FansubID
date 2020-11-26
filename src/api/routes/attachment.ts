@@ -66,22 +66,8 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
         });
         if (attachment.google_drive) {
           //
-          // TODO :: Download From Google Drive
+          // TODO :: Download File-MKV/MP4 From Google Drive
           // https://stackoverflow.com/questions/64646100/send-pdf-from-server-to-client
-          //
-          // return drive.files.get({
-          //   fileId: attachment.name.toString(),
-          //   alt: 'media'
-          // }, {
-          //   responseType: 'stream'
-          // }).then(response => {
-          //   response.data.on('end', async () => {
-          //     attachment.download_count++;
-          //     await attachmentRepo.save(attachment);
-          //   }).on('error', (err) => {
-          //     console.error(err);
-          //   }).pipe(res);
-          // });
           //
         } else {
           return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
