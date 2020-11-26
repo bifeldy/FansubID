@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationStart } from '@angular/router';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
 
@@ -72,6 +72,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       else if (e1 instanceof RouteConfigLoadEnd) {
         this.bs.idle();
       }
+      else if (e1 instanceof NavigationStart) {
+        this.bs.busy();
+      }
       else if (e1 instanceof NavigationEnd) {
         this.bs.idle();
         this.subsRouterChild = this.route.firstChild.data.subscribe(e2 => {
@@ -80,27 +83,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.updateBackgroundImage();
             this.leftSideNavContent.nativeElement.scrollTop = 0;
             this.fs.removeFab();
+            this.checkStorage();
           }
         });
       }
     });
-    if (this.gs.isBrowser) {
-      const token = localStorage.getItem(environment.tokenName);
-      if (token) {
-        this.bs.busy();
-        this.subsVerify = this.as.verify(token).subscribe(
-          success => {
-            this.gs.log('[VERIFY_SUCCESS]', success);
-            this.bs.idle();
-          },
-          error => {
-            this.gs.log('[VERIFY_ERROR]', error);
-            this.bs.idle();
-            this.as.removeUser();
-          }
-        );
-      }
-    }
   }
 
   updateBackgroundImage(): void {
@@ -114,6 +101,24 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       default:
         this.selectedBackgroundImage = ``;
+    }
+  }
+
+  checkStorage(): void {
+    const token = localStorage.getItem(environment.tokenName);
+    if (token) {
+      this.bs.busy();
+      this.subsVerify = this.as.verify(token).subscribe(
+        success => {
+          this.gs.log('[VERIFY_SUCCESS]', success);
+          this.bs.idle();
+        },
+        error => {
+          this.gs.log('[VERIFY_ERROR]', error);
+          this.bs.idle();
+          this.as.removeUser();
+        }
+      );
     }
   }
 
