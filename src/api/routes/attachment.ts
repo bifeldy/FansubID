@@ -43,62 +43,76 @@ const upload = multer({
 
 const router = Router();
 
+// tslint:disable-next-line: typedef
+function deleteAttachment(fileName) {
+  fs.unlink(`${environment.uploadFolder}/${fileName}`, (err) => {
+    if (err) {
+      console.error(err);
+    }
+  });
+}
+
 // GET `/api/attachment?id=`
 router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
-  const lampiranId = req.query.id || '';
-  if (lampiranId) {
-    if (req.user.verified) {
-      const attachmentRepo = getRepository(Attachment);
-      const attachment =  await attachmentRepo.findOneOrFail({
-        where: [
-          { id: Equal(lampiranId) }
-        ]
-      });
-      if (attachment.google_drive) {
-        //
-        // TODO :: Download From Google Drive
-        // https://stackoverflow.com/questions/64646100/send-pdf-from-server-to-client
-        //
-        // return drive.files.get({
-        //   fileId: attachment.name.toString(),
-        //   alt: 'media'
-        // }, {
-        //   responseType: 'stream'
-        // }).then(response => {
-        //   response.data.on('end', async () => {
-        //     attachment.download_count++;
-        //     await attachmentRepo.save(attachment);
-        //   }).on('error', (err) => {
-        //     console.error(err);
-        //   }).pipe(res);
-        // });
-        //
+  try {
+    const lampiranId = req.query.id || '';
+    if (lampiranId) {
+      if (req.user.verified) {
+        const attachmentRepo = getRepository(Attachment);
+        const attachment =  await attachmentRepo.findOneOrFail({
+          where: [
+            { id: Equal(lampiranId) }
+          ]
+        });
+        if (attachment.google_drive) {
+          //
+          // TODO :: Download From Google Drive
+          // https://stackoverflow.com/questions/64646100/send-pdf-from-server-to-client
+          //
+          // return drive.files.get({
+          //   fileId: attachment.name.toString(),
+          //   alt: 'media'
+          // }, {
+          //   responseType: 'stream'
+          // }).then(response => {
+          //   response.data.on('end', async () => {
+          //     attachment.download_count++;
+          //     await attachmentRepo.save(attachment);
+          //   }).on('error', (err) => {
+          //     console.error(err);
+          //   }).pipe(res);
+          // });
+          //
+        } else {
+          return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
+            const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
+            if (fIdx >= 0) {
+              return res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  attachment.download_count++;
+                  await attachmentRepo.save(attachment);
+                }
+              });
+            } else {
+              return next(createError(404));
+            }
+          });
+        }
       } else {
-        return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
-          const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
-          if (fIdx >= 0) {
-            return res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
-              if (err) {
-                console.error(err);
-              } else {
-                attachment.download_count++;
-                await attachmentRepo.save(attachment);
-              }
-            });
-          } else {
-            return next(createError(404));
+        return res.status(400).json({
+          info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
+          result: {
+            message: 'Khusus Pengguna Terverifikasi!'
           }
         });
       }
     } else {
-      return res.status(400).json({
-        info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
-        result: {
-          message: 'Khusus Pengguna Terverifikasi!'
-        }
-      });
+      throw new Error('Data Tidak Lengkap!');
     }
-  } else {
+  } catch (error) {
+    console.error(error);
     return res.status(400).json({
       info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
       result: {
@@ -110,64 +124,62 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
 
 // POST `/api/attachment`
 router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next: NextFunction) => {
-  if (req.file) {
-    if (req.user.verified) {
-      const tempAttachmentRepo = getRepository(TempAttachment);
-      const tempAttachment = new TempAttachment();
-      tempAttachment.name = req.file.filename;
-      const fileOriginalNameSplit = req.file.originalname.split('.');
-      tempAttachment.ext = fileOriginalNameSplit[fileOriginalNameSplit.length - 1];
-      tempAttachment.size = req.file.size;
-      const userRepo = getRepository(User);
-      const user = await userRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.user.id) }
-        ]
-      });
-      tempAttachment.user_ = user;
-      const resAttachmentSave = await tempAttachmentRepo.save(tempAttachment);
-      if ('user_' in resAttachmentSave && resAttachmentSave.user_) {
-        delete resAttachmentSave.user_.role;
-        delete resAttachmentSave.user_.password;
-        delete resAttachmentSave.user_.session_token;
-        delete resAttachmentSave.user_.created_at;
-        delete resAttachmentSave.user_.updated_at;
+  try {
+    if (req.file) {
+      if (req.user.verified) {
+        const tempAttachmentRepo = getRepository(TempAttachment);
+        const tempAttachment = new TempAttachment();
+        tempAttachment.name = req.file.filename;
+        const fileOriginalNameSplit = req.file.originalname.split('.');
+        tempAttachment.ext = fileOriginalNameSplit[fileOriginalNameSplit.length - 1];
+        tempAttachment.size = req.file.size;
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.user.id) }
+          ]
+        });
+        tempAttachment.user_ = user;
+        const resAttachmentSave = await tempAttachmentRepo.save(tempAttachment);
+        if ('user_' in resAttachmentSave && resAttachmentSave.user_) {
+          delete resAttachmentSave.user_.role;
+          delete resAttachmentSave.user_.password;
+          delete resAttachmentSave.user_.session_token;
+          delete resAttachmentSave.user_.created_at;
+          delete resAttachmentSave.user_.updated_at;
+        }
+        setTimeout(async () => {
+          try {
+            const attachmentToBeDeleted = await tempAttachmentRepo.findOneOrFail({
+              where: [
+                { id: Equal(resAttachmentSave.id), name: Equal(resAttachmentSave.name) }
+              ]
+            });
+            deleteAttachment(attachmentToBeDeleted.name);
+            await tempAttachmentRepo.remove(attachmentToBeDeleted);
+          } catch (err) {
+            console.error(err);
+          }
+        }, 3 * 60 * 1000);
+        return res.status(200).json({
+          info: `😅 200 - Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
+          result: resAttachmentSave
+        });
+      } else {
+        deleteAttachment(req.file.filename);
+        return res.status(400).json({
+          info: '🙄 400 - Attachment API :: Gagal Mengunggah Lampiran 😪',
+          result: {
+            message: 'Khusus Pengguna Terverifikasi!'
+          }
+        });
       }
-      setTimeout(async () => {
-        try {
-          const attachmentToBeDeleted = await tempAttachmentRepo.findOneOrFail({
-            where: [
-              { id: Equal(resAttachmentSave.id), name: Equal(resAttachmentSave.name) }
-            ]
-          });
-          fs.unlink(`${environment.uploadFolder}/${attachmentToBeDeleted.name}`, (err) => {
-            if (err) {
-              console.error(err);
-            }
-          });
-          await tempAttachmentRepo.remove(attachmentToBeDeleted);
-        } catch (error) {
-          console.error(error);
-        }
-      }, 3 * 60 * 1000);
-      return res.status(200).json({
-        info: `😅 200 - Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
-        result: resAttachmentSave
-      });
     } else {
-      fs.unlink(`${environment.uploadFolder}/${req.file.filename}`, (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-      return res.status(400).json({
-        info: '🙄 400 - Attachment API :: Gagal Mengunggah Lampiran 😪',
-        result: {
-          message: 'Khusus Pengguna Terverifikasi!'
-        }
-      });
+      throw new Error('Data Tidak Lengkap!');
     }
-  } else {
+  } catch (error) {
+    console.error(error);
+    deleteAttachment(req.file.filename);
     return res.status(400).json({
       info: '🙄 400 - Attachment API :: Gagal Mengunggah Lampiran 😪',
       result: {
