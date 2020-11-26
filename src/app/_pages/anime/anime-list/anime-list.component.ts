@@ -116,9 +116,10 @@ export class AnimeListComponent implements OnInit, OnDestroy {
 
   watchUrlRoute(): void {
     this.subsParam = this.activatedRoute.queryParams.subscribe(p => {
+      this.bs.busy();
       this.currentYear = p.year ? (
         Number.isNaN(parseInt(p.year, 10)) ? this.currentYear : parseInt(p.year, 10)
-      ) : this.currentYear;
+      ) : new Date().getFullYear();
       this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
       this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
       this.selectedSeasonName = p.season ? (
@@ -130,6 +131,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
         ].indexOf(p.season) >= 0 ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth)
       ) : this.findSeasonNameByMonthNumber(this.currentMonth);
       this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
+      this.bs.idle();
       this.getSeasonalAnime(p.year && p.season);
     });
   }
