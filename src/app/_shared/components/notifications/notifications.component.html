@@ -27,7 +27,7 @@
       <div class="alert alert-{{ n.type }} alert-dismissible fade show">
         <strong class="mr-1">{{ n.title }}</strong>
         <span [innerHTML]="n.content"></span>
-        <button type="button" class="close" data-dismiss="alert" (click)="removeNotif(n.id)">&times;</button>
+        <button type="button" class="btn-close" data-dismiss="alert" *ngIf="n.dismissible" (click)="removeNotif(n.id)"></button>
       </div>
     </div>
   </div>

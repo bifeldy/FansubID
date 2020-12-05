@@ -17,7 +17,8 @@ export class NotificationsService {
       id: 0,
       type: 'info',
       title: 'Pemberitahuan!',
-      content: 'Website masih dalam tahap pengembangan sehingga belum semua fitur tersedia. Jika Ingin Request Fitur Dapat Menghubungi \'<a href="https://discordapp.com/users/306076547616473089" target="_blank" class="text-decoration-none">Bifeldy#4945</a>\'. Terima kasih. ^_^'
+      content: 'Website masih dalam tahap pengembangan sehingga belum semua fitur tersedia. Jika Ingin Request Fitur Dapat Menghubungi \'<a href="https://discordapp.com/users/306076547616473089" target="_blank" class="text-decoration-none">Bifeldy#4945</a>\'. Terima kasih. ^_^',
+      dismissible: true
     }
   ];
 
@@ -35,13 +36,18 @@ export class NotificationsService {
               id: -1,
               type: 'warning',
               title: 'Verifikasi!',
-              content: 'Fitur lampiran berkas DDL tidak dapat digunakan, silahkan <a href="/verify" class="text-decoration-none"> verifikasi akun </a> terlebih dahulu. Terima kasih. ^_^'
+              content: 'Fitur lampiran berkas DDL tidak dapat digunakan, silahkan <a href="/verify" class="text-decoration-none"> verifikasi akun </a> terlebih dahulu. Terima kasih. ^_^',
+              dismissible: false
             });
+          }
+          const pemerintahNotifIdx = this.notifications.findIndex(n => n.id === -2);
+          if (pemerintahNotifIdx < 0) {
             this.notifications.splice(0, 0, {
               id: -2,
               type: 'danger',
               title: 'Verifikasi!',
-              content: 'Fitur verifikasi tidak dapat digunakan saat ini karena pemerintah telah fixing kebocoran data. Terima kasih. ^_^'
+              content: 'Fitur verifikasi tidak dapat digunakan saat ini karena pemerintah telah fixing kebocoran data. Terima kasih. ^_^',
+              dismissible: false
             });
           }
         } else {
@@ -52,12 +58,13 @@ export class NotificationsService {
     }
   }
 
-  addNotif(notifId, notifType, notifTitle, notifContent): void {
+  addNotif(notifId, notifType, notifTitle, notifContent, dismissible = true): void {
     this.notifications.splice(0, 0, {
       id: notifId,
       type: notifType,
       title: notifTitle,
-      content: notifContent
+      content: notifContent,
+      dismissible
     });
   }
 

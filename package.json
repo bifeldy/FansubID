@@ -37,6 +37,7 @@
     "@k3rn31p4nic/google-translate-api": "^1.1.1",
     "@kolkov/angular-editor": "^1.1.5",
     "@nguniversal/express-engine": "^11.0.0",
+    "bootstrap": "^5.0.0-alpha3",
     "chalk": "^4.1.0",
     "chart.js": "^2.9.4",
     "cors": "^2.8.5",
@@ -72,6 +73,7 @@
     "tslib": "^2.0.0",
     "typeorm": "^0.2.29",
     "video.js": "^7.10.2",
+    "wanakana": "^4.0.2",
     "zone.js": "^0.11.3"
   },
   "devDependencies": {
