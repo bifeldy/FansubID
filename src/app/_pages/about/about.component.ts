@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { dependencies } from '../../../../package.json';
 
 import { GlobalService } from '../../_shared/services/global.service';
+import { FabService } from '../../_shared/services/fab.service';
 
 @Component({
   selector: 'app-about',
@@ -50,6 +51,7 @@ export class AboutComponent implements OnInit {
 
   constructor(
     public gs: GlobalService,
+    private fs: FabService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -58,7 +60,7 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      //
+      this.fs.initializeFab(null, '/assets/img/discord-pink.png', 'Discord Server', 'https://discord.gg/xGWdExk', true);
     }
   }
 

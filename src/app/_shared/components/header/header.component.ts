@@ -32,10 +32,6 @@ export class HeaderComponent implements OnInit {
     this.lms.onSideNavToggleView();
   }
 
-  openDiscord(): void {
-    window.open(this.discordUrl, '_blank');
-  }
-
   openSearch(): void {
     this.router.navigateByUrl('/search');
   }

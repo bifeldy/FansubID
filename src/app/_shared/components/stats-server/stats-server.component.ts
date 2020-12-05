@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GlobalService } from '../../services/global.service';
+import { StatsServerService } from '../../services/stats-server.service';
 
 @Component({
   selector: 'app-stats-server',
@@ -9,12 +10,9 @@ import { GlobalService } from '../../services/global.service';
 })
 export class StatsServerComponent implements OnInit {
 
-  portalVer = '0x00000000';
-  activeDdl = 1;
-  visitor = 2;
-
   constructor(
-    public gs: GlobalService
+    public gs: GlobalService,
+    public ss: StatsServerService
   ) {
   }
 

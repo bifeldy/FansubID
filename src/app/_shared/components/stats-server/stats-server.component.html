@@ -8,19 +8,19 @@
     <p class="px-2">
       Versi Portal ::
       <span class="text-success">
-        {{ portalVer }}
+        {{ ss.portalVer | slice:0:14 }}
       </span>
     </p>
     <p class="px-2">
       Active Download ::
       <span class="text-success">
-        {{ activeDdl }} Users
+        {{ ss.activeDdl }} Users
       </span>
     </p>
     <p class="px-2">
       Page Visitor ::
       <span class="text-success">
-        {{ visitor }} Users
+        {{ ss.visitor }} Users
       </span>
     </p>
   </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GlobalService } from '../../services/global.service';
+import { StatsServerService } from '../../services/stats-server.service';
 
 @Component({
   selector: 'app-footer',
@@ -10,7 +11,8 @@ import { GlobalService } from '../../services/global.service';
 export class FooterComponent implements OnInit {
 
   constructor(
-    public gs: GlobalService
+    public gs: GlobalService,
+    public ss: StatsServerService
   ) {
   }
 
