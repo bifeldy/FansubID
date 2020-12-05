@@ -5,22 +5,28 @@
     </h2>
   </div>
   <div class="col-12">
-    <p class="px-2">
-      Versi Portal ::
+    <p class="px-2 text-truncate">
+      Portal ::
       <span class="text-success">
-        {{ ss.portalVer | slice:0:14 }}
+        {{ ss.portalVer }}
       </span>
     </p>
     <p class="px-2">
-      Active Download ::
-      <span class="text-success">
-        {{ ss.activeDdl }} Users
+      Session ::
+      <span class="text-success" *ngIf="ss.mySocket">
+        {{ ss.mySocket.id }}
       </span>
     </p>
     <p class="px-2">
-      Page Visitor ::
+      Latency ::
       <span class="text-success">
-        {{ ss.visitor }} Users
+        {{ ss.latency }} ms
+      </span>
+    </p>
+    <p class="px-2">
+      Pengunjung ::
+      <span class="text-success">
+        {{ ss.visitor }} Koneksi
       </span>
     </p>
   </div>

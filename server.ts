@@ -4,9 +4,14 @@ import 'reflect-metadata';
 
 import fs from 'fs';
 import path from 'path';
+import http from 'http';
 
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
+
+import * as socketIo from 'socket.io';
+
+import { UserRequest } from './src/api/models/UserRequest';
 
 const currentWorkingDir = process.cwd();
 
@@ -76,100 +81,115 @@ const typeOrmConfig: any = {
 // Express Router
 import indexRouter from './src/api/routes';
 
-// The Express app is exported so that it can be used by serverless Functions.
-export function app(): express.Express {
+const expressApp = express();
+const httpApp = http.createServer(expressApp);
+const io = new socketIo.Server(httpApp);
 
-  const server = express();
+// Express rest api endpoints
+const apiLimiter = rateLimit({
+  windowMs: 1000, // 1 Second
+  max: 10, // 10 Request
+  message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 💩'
+});
 
-  // Express rest api endpoints
-  const apiLimiter = rateLimit({
-    windowMs: 1000, // 1 Second
-    max: 10, // 10 Request
-    message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 💩'
-  });
-
-  // CORS Options
-  const corsOptions = {
-    origin: async (origin, callback) => {
-      try {
-        let orig = origin;
-        if (!orig) {
+// CORS Options
+const corsOptions = {
+  origin: async (origin, callback) => {
+    try {
+      let orig = origin;
+      if (!orig) {
+        callback(null, true);
+      } else {
+        if (orig.startsWith('http://')) {
+          orig = orig.slice(7, orig.length);
+        } else if (orig.startsWith('https://')) {
+          orig = orig.slice(8, orig.length);
+        }
+        if (orig.startsWith('www.')) {
+          orig = orig.slice(4, orig.length);
+        }
+        orig = orig.split(':')[0];
+        const originApiKeyRepo = getRepository(CorsApiKey);
+        const originApiKey = await originApiKeyRepo.findOneOrFail({
+          where: [
+            { domain: Equal(orig) }
+          ]
+        });
+        if (originApiKey) {
           callback(null, true);
         } else {
-          if (orig.startsWith('http://')) {
-            orig = orig.slice(7, orig.length);
-          } else if (orig.startsWith('https://')) {
-            orig = orig.slice(8, orig.length);
-          }
-          if (orig.startsWith('www.')) {
-            orig = orig.slice(4, orig.length);
-          }
-          orig = orig.split(':')[0];
-          const originApiKeyRepo = getRepository(CorsApiKey);
-          const originApiKey = await originApiKeyRepo.findOneOrFail({
-            where: [
-              { domain: Equal(orig) }
-            ]
-          });
-          if (originApiKey) {
-            callback(null, true);
-          } else {
-            throw new Error('CORS Wheiy~ Siapa Nih ?');
-          }
+          throw new Error('CORS Wheiy~ Siapa Nih ?');
         }
-      } catch (error) {
-        console.error(error);
-        callback(new Error('CORS Wheiy~ Siapa Nih ?'), false);
       }
+    } catch (error) {
+      console.error(error);
+      callback(new Error('CORS Wheiy~ Siapa Nih ?'), false);
     }
-  };
+  }
+};
 
-  // Config
-  server.set('trust proxy', true);
+// Config
+expressApp.set('trust proxy', true);
 
-  // Middleware
-  server.use(cors(corsOptions));
-  server.use(MorganChalk.morganChalk);
-  server.use(express.json({ limit: '992mb' }));
-  server.use(express.urlencoded({ extended: false, limit: '992mb' }));
-  server.use('/api', apiLimiter, indexRouter);
+// Middleware
+expressApp.use(cors(corsOptions));
+expressApp.use(MorganChalk.morganChalk);
+expressApp.use(express.json({ limit: '992mb' }));
+expressApp.use(express.urlencoded({ extended: false, limit: '992mb' }));
 
-  logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
+expressApp.use((req: UserRequest, res, next) => {
+  req.io = io;
+  next();
+});
 
-  const distFolder = join(currentWorkingDir, 'dist/hikki/browser');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+expressApp.use('/api', apiLimiter, indexRouter);
 
-  // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
-  server.engine('html', ngExpressEngine({
-    bootstrap: AppServerModule
-  }));
+logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
 
-  server.set('view engine', 'html');
-  server.set('views', distFolder);
+const distFolder = join(currentWorkingDir, 'dist/hikki/browser');
+const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
-  // Serve static files from /browser
-  server.get('*.*', express.static(distFolder, {
-    maxAge: '1y'
-  }));
+// Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
+expressApp.engine('html', ngExpressEngine({
+  bootstrap: AppServerModule
+}));
 
-  // All regular routes use the Universal engine
-  server.get('*', (req, res) => {
-    res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+expressApp.set('view engine', 'html');
+expressApp.set('views', distFolder);
+
+// Serve static files from /browser
+expressApp.get('*.*', express.static(distFolder, {
+  maxAge: '1y'
+}));
+
+// All regular routes use the Universal engine
+expressApp.get('*', (req, res) => {
+  res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+});
+
+/********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
+
+io.on('connection', (socket: socketIo.Socket) => {
+  io.emit('visitors', io.sockets.sockets.size);
+  socket.on('disconnect', () => {
+    io.emit('visitors', io.sockets.sockets.size);
   });
-
-  return server;
-}
+  socket.on('ping-pong', (cb) => {
+    if (typeof cb === 'function') {
+      cb();
+    }
+  });
+});
 
 createConnection({
   ...typeOrmConfig
 }).then(async connection => {
   const c: any = connection;
   // tslint:disable-next-line: max-line-length
-  logger.log(`[CONNECTION] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
+  logger.log(`[DB] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
   const port = process.env.PORT || 4000;
-  const server = app();
-  server.listen(port, () => {
-    logger.log(`[NODEJS] ✨ Node Angular TypeORM Express ~ http://localhost:${port} 💘`, null, true);
+  const listener: any = httpApp.listen(port, () => {
+    logger.log(`[HTTP] ✨ Node Angular TypeORM Express Socket ~ ${listener.address().address}:${listener.address().port} 💘`, null, true);
   });
 }).catch(
   error => console.error(error)
