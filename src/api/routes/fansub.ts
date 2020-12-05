@@ -182,7 +182,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         .andWhere('berkas.private = :isPrivate', { isPrivate: false })
         .andWhere('berkas.name LIKE :query', { query: `%${req.query.q ? req.query.q : ''}%` });
       if (req.query.sort && req.query.order) {
-        fileRepoQuery = fileRepoQuery.orderBy(req.query.sort, req.query.order.toUpperCase());
+        fileRepoQuery = fileRepoQuery.orderBy(`berkas.${req.query.sort}`, req.query.order.toUpperCase());
       } else {
         fileRepoQuery = fileRepoQuery
           .orderBy('berkas.created_at', 'DESC')
