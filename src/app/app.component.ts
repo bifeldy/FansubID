@@ -67,19 +67,25 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     this.subsRouter = this.router.events.subscribe(e1 => {
       if (e1 instanceof RouteConfigLoadStart) {
-        this.bs.busy();
+        if (this.gs.isBrowser) {
+          this.bs.busy();
+        }
       }
       else if (e1 instanceof RouteConfigLoadEnd) {
-        this.bs.idle();
+        if (this.gs.isBrowser) {
+          this.bs.idle();
+        }
       }
       else if (e1 instanceof NavigationStart) {
-        this.bs.busy();
+        if (this.gs.isBrowser) {
+          this.bs.busy();
+        }
       }
       else if (e1 instanceof NavigationEnd) {
-        this.bs.idle();
         this.subsRouterChild = this.route.firstChild.data.subscribe(e2 => {
           this.pi.updatePageMetaData(e2.title, e2.description, e2.keywords);
           if (this.gs.isBrowser) {
+            this.bs.idle();
             this.updateBackgroundImage();
             this.leftSideNavContent.nativeElement.scrollTop = 0;
             this.fs.removeFab();

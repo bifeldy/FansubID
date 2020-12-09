@@ -94,6 +94,9 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
                 });
               }
             }
+            this.subsUser = this.as.currentUser.subscribe(user => {
+              this.currentUser = user;
+            });
           }
         },
         err => {
@@ -107,11 +110,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
         }
       );
     });
-    if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe(user => {
-        this.currentUser = user;
-      });
-    }
   }
 
   login(): void {
@@ -148,6 +146,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   standardDdl(id): void {
     window.open(this.ddlUrlLink(id), '_blank');
+  }
+
+  refreshPage(): void {
+    window.open(`/login?returnUrl=${this.router.url}`, '_self');
   }
 
   ddlUrlLink(id): string {

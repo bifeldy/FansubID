@@ -6,7 +6,7 @@
         <div class="col-lg-7 col-md-9 mr-auto p-0">
           <div class="card bg-transparent border-0">
             <div class="card-body">
-              <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()">
+              <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()" *ngIf="fg">
                 <div class="text-center mb-4">
                   <img class="mb-4" src="/favicon.ico" style="transform: rotateY(180deg);" />
                   <h1 class="h3 mb-3 font-weight-normal">Hai, Selamat Datang! >_<"</h1>

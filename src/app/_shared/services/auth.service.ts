@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   public get currentUserValue(): User {
-    return this.currentUserSubject.value;
+    return this.currentUserSubject ? this.currentUserSubject.value : null;
   }
 
   verify(token: string): any {

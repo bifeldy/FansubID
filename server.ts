@@ -21,9 +21,13 @@ const domino = require('domino');
 const ssrPage = fs.readFileSync(path.join(currentWorkingDir, 'dist/hikki/browser', 'index.html')).toString();
 const win = domino.createWindow(ssrPage);
 
+const MockBrowser = require('mock-browser').mocks.MockBrowser;
+const mock = new MockBrowser();
+
 global.window = win;
 global.document = win.document;
 global.localStorage = localStorage;
+global.navigator = mock.getNavigator();
 
 import { createConnection, Equal, getRepository } from 'typeorm';
 

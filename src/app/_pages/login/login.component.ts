@@ -37,9 +37,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     public as: AuthService
   ) {
     if (this.gs.isBrowser) {
-      if (this.as.currentUserValue) {
-        this.router.navigate(['/home']);
-      }
+      //
     }
   }
 
@@ -54,14 +52,14 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
+    if (this.as.currentUserValue) {
+      this.router.navigate([this.returnUrl]);
+    }
     this.fg = this.fb.group({
       userNameOrEmail: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
       password: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
       rememberMe: [false, []]
     });
-    if (this.gs.isBrowser) {
-      //
-    }
   }
 
   get loginFormVal(): any {

@@ -21,15 +21,19 @@ export class BusyService {
   }
 
   public busy(): void {
-    this.busyRequestCount++;
-    this.spinnerService.show();
+    if (this.gs.isBrowser) {
+      this.busyRequestCount++;
+      this.spinnerService.show();
+    }
   }
 
   public idle(): void {
-    this.busyRequestCount--;
-    if (this.busyRequestCount <= 0) {
-      this.busyRequestCount = 0;
-      this.spinnerService.hide();
+    if (this.gs.isBrowser) {
+      this.busyRequestCount--;
+      if (this.busyRequestCount <= 0) {
+        this.busyRequestCount = 0;
+        this.spinnerService.hide();
+      }
     }
   }
 
