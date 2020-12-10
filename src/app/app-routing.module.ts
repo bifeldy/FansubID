@@ -64,6 +64,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'nihongo',
+    loadChildren: () => import('./_pages/nihongo/nihongo.module').then(m => m.NihongoModule),
+    data: {
+      title: 'Belajar Bahasa Jepang',
+      description: 'Jejepangan Lebih Seru Dengan Bahasa Aslinya',
+      keywords: 'Bahasa Jepang'
+    }
+  },
+  {
     path: 'berkas',
     loadChildren: () => import('./_pages/berkas/berkas.module').then(m => m.BerkasModule),
     data: {

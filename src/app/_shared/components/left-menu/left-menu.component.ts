@@ -33,6 +33,11 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
       link: '/news',
       icon: 'receipt_long'
     },
+    {
+      name: 'Nihongo 日本語',
+      link: '/nihongo',
+      icon: 'translate'
+    },
     // {
     //   name: 'RSS Feed',
     //   link: '/rss',

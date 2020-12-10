@@ -82,11 +82,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
       else if (e1 instanceof NavigationEnd) {
-        this.subsRouterChild = this.route.firstChild.data.subscribe(e2 => {
-          this.pi.updatePageMetaData(e2.title, e2.description, e2.keywords);
+        let activatedRouteChild = this.route.firstChild;
+        for (const aRC of activatedRouteChild.children) {
+          activatedRouteChild = aRC;
+        }
+        this.subsRouterChild = activatedRouteChild.data.subscribe(e2 => {
+          this.updateBackgroundImage();
+          this.pi.updatePageMetaData(
+            e2.title,
+            e2.description,
+            e2.keywords,
+            this.selectedBackgroundImage ? this.selectedBackgroundImage : '/favicon.ico'
+          );
           if (this.gs.isBrowser) {
             this.bs.idle();
-            this.updateBackgroundImage();
             this.leftSideNavContent.nativeElement.scrollTop = 0;
             this.fs.removeFab();
             this.checkStorage();

@@ -5,7 +5,6 @@ import { io } from 'socket.io-client';
 import { environment } from '../../../environments/environment';
 
 import { GlobalService } from './global.service';
-import { ApiService } from './api.service';
 import { NotificationsService } from './notifications.service';
 
 @Injectable({
@@ -15,7 +14,6 @@ export class StatsServerService {
 
   mySocket = null;
 
-  public portalVer = '0000000';
   public visitor = 0;
   public latency = 0;
 
@@ -23,19 +21,9 @@ export class StatsServerService {
 
   constructor(
     private gs: GlobalService,
-    private api: ApiService,
     private notif: NotificationsService
   ) {
     if (this.gs.isBrowser) {
-      this.api.getData('https://api.github.com/repos/Bifeldy/Hikki/commits').subscribe(
-        res => {
-          this.gs.log('[GITHUB_API]', res);
-          this.portalVer = res[0].sha;
-        },
-        err => {
-          this.gs.log('[GITHUB_API]', err);
-        }
-      );
       this.mySocket = io(environment.socketUrl);
       this.socketStart();
     }
