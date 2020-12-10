@@ -394,12 +394,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.gs.log('[AttachmentLoad]', file);
     this.fg.controls.attachment_id.patchValue(null);
     try {
-      if (file.size <= 992 * 1000 * 1000) {
+      if (file.size <= 256 * 1000 * 1000) {
         this.attachment = file;
         this.attachmentErrorText = '';
       } else {
         this.attachment = null;
-        this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 992 MB!';
+        this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 256 MB!';
         this.ddl.clear(event);
       }
     } catch (error) {

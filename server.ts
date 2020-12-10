@@ -85,10 +85,6 @@ const typeOrmConfig: any = {
 // Express Router
 import indexRouter from './src/api/routes';
 
-const expressApp = express();
-const httpApp = http.createServer(expressApp);
-const io = new socketIo.Server(httpApp);
-
 // Express rest api endpoints
 const apiLimiter = rateLimit({
   windowMs: 1000, // 1 Second
@@ -132,14 +128,20 @@ const corsOptions = {
   }
 };
 
+const expressApp = express();
+const httpApp = http.createServer(expressApp);
+const io = new socketIo.Server(httpApp, {
+  cors: corsOptions
+});
+
 // Config
 expressApp.set('trust proxy', true);
 
 // Middleware
 expressApp.use(cors(corsOptions));
 expressApp.use(MorganChalk.morganChalk);
-expressApp.use(express.json({ limit: '992mb' }));
-expressApp.use(express.urlencoded({ extended: false, limit: '992mb' }));
+expressApp.use(express.json({ limit: '512mb' }));
+expressApp.use(express.urlencoded({ extended: false, limit: '512mb' }));
 
 expressApp.use((req: UserRequest, res, next) => {
   req.io = io;

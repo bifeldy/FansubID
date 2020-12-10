@@ -37,7 +37,7 @@ const upload = multer({
   dest: environment.uploadFolder,
   fileFilter: fileLampiranFilter,
   limits: {
-    fileSize: 992 * 1000 * 1000
+    fileSize: 256 * 1000 * 1000
   }
 });
 
