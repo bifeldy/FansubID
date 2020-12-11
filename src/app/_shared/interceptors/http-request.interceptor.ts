@@ -21,11 +21,11 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.gs.isBrowser) {
+    if (this.gs.isBrowser && request.url.startsWith(environment.apiUrl)) {
       this.as.currentUser.subscribe(user => this.currentUser = user);
       const userToken = localStorage.getItem(environment.tokenName);
       const header: any = {};
-      if (this.currentUser && userToken && request.url.startsWith(environment.apiUrl)) {
+      if (this.currentUser && userToken) {
         this.gs.log('[INTERCEPT_REQUEST]', userToken.slice(0, 5) + '.....' + userToken.slice(userToken.length - 5, userToken.length));
         header.Authorization = `Bearer ${userToken}`;
       }

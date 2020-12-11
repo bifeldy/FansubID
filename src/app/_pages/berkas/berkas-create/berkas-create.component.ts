@@ -99,9 +99,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       `Create Berkas`
     );
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe(user => {
-        this.currentUser = user;
-      });
+      this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
       this.loadProjectList();
       this.loadFansubList();
       this.initForm();

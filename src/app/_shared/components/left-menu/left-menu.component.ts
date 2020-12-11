@@ -94,9 +94,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe(user => {
-        this.currentUser = user;
-      });
+      this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
     }
   }
 

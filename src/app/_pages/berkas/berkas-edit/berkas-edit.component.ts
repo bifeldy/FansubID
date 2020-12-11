@@ -93,9 +93,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       `Ubah Berkas`
     );
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe(user => {
-        this.currentUser = user;
-      });
+      this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
       this.subsParam = this.activatedRoute.params.subscribe(params => {
         this.berkasId = params.berkasId;
         this.bs.busy();

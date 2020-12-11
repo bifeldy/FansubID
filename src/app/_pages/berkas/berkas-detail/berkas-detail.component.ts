@@ -79,6 +79,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           );
           this.bs.idle();
           if (this.gs.isBrowser) {
+            this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
             this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
             if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
               if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
@@ -94,9 +95,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
                 });
               }
             }
-            this.subsUser = this.as.currentUser.subscribe(user => {
-              this.currentUser = user;
-            });
           }
         },
         err => {

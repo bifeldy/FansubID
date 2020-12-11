@@ -63,13 +63,13 @@ import { MaterialFabModule } from './_shared/components/material-fab/material-fa
     NgProgressHttpModule
   ],
   providers: [
-    { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
-    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: MyTooltipConfig },
+    { provide: HTTP_INTERCEPTORS, useClass: BrowserStateInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: BrowserStateInterceptor, multi: true },
+    { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
+    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: MyTooltipConfig },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'always' } },
-    { provide: DISQUS_SHORTNAME, useValue: 'bifeldy' },
+    { provide: DISQUS_SHORTNAME, useValue: 'hikki-bifeldy' },
     FakeBackendProvider, Title, CookieService, NgxSpinnerService, LeftMenuService
   ],
   bootstrap: [AppComponent]
