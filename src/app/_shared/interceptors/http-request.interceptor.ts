@@ -24,17 +24,18 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     if (this.gs.isBrowser && request.url.startsWith(environment.apiUrl)) {
       this.as.currentUser.subscribe(user => this.currentUser = user);
       const userToken = localStorage.getItem(environment.tokenName);
-      const header: any = {};
       if (this.currentUser && userToken) {
-        this.gs.log('[INTERCEPT_REQUEST]', userToken.slice(0, 5) + '.....' + userToken.slice(userToken.length - 5, userToken.length));
-        header.Authorization = `Bearer ${userToken}`;
+        this.gs.log('[INTERCEPT_REQUEST] Authorization');
+        request = request.clone({
+          headers: request.headers.append('Authorization', `Bearer ${userToken}`)
+        });
       }
-      if (this.ss.mySocket) {
-        header.Socket = this.ss.mySocket.id;
+      if (this.ss.mySocket && this.ss.mySocket.id) {
+        this.gs.log('[INTERCEPT_REQUEST] Socket');
+        request = request.clone({
+          headers: request.headers.append('Socket', this.ss.mySocket.id)
+        });
       }
-      request = request.clone({
-        setHeaders: header
-      });
     }
     return next.handle(request);
   }
