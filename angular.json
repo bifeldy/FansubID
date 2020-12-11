@@ -64,7 +64,8 @@
               "crypto-js",
               "chart.js",
               "lodash",
-              "file-saver"
+              "file-saver",
+              "socket.io-client"
             ]
           },
           "configurations": {
