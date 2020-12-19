@@ -5,6 +5,7 @@ import find from 'find';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal } from 'typeorm';
+import { drive_v3 } from 'googleapis';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -13,6 +14,8 @@ import { environment } from '../../environments/environment';
 import { User } from '../entities/User';
 import { Attachment } from '../entities/Attachment';
 import { TempAttachment } from '../entities/TempAttachment';
+
+import { gDrive } from '../helpers/gDrive';
 
 // Middleware
 import auth from '../middlewares/auth';
@@ -65,10 +68,25 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
           ]
         });
         if (attachment.google_drive) {
-          //
-          // TODO :: Download File-MKV/MP4 From Google Drive
-          // https://stackoverflow.com/questions/64646100/send-pdf-from-server-to-client
-          //
+          return gDrive(async (d: drive_v3.Drive) => {
+            d.files.get(
+              { fileId: attachment.google_drive, alt: 'media' },
+              { responseType: 'stream', headers: { range: req.headers.range } },
+              (e, r: any) => {
+                if (e) {
+                  console.error(e);
+                } else {
+                  res.writeHead(r.status, r.headers);
+                  r.data.on('error', err => {
+                    console.error(err);
+                  }).on('end', async () => {
+                    attachment.download_count++;
+                    await attachmentRepo.save(attachment);
+                  }).pipe(res);
+                }
+              }
+            );
+          });
         } else {
           return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
             const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));

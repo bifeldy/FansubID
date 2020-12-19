@@ -4,6 +4,7 @@ import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, Equal, In } from 'typeorm';
+import { drive_v3 } from 'googleapis';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -18,6 +19,8 @@ import { Attachment } from '../entities/Attachment';
 import { TempAttachment } from '../entities/TempAttachment';
 
 import { Role } from '../../app/_shared/models/Role';
+
+import { gDrive } from '../helpers/gDrive';
 
 // Middleware
 import auth from '../middlewares/auth';
@@ -166,6 +169,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         await tempAttachmentRepo.remove(tempAttachment);
         find.file(/$/, `${environment.uploadFolder}`, async (files) => {
           const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
+          let mimeType = 'video/';
           if (fIdx >= 0) {
             if (attachment.ext === 'mkv') {
               mkvExtract(attachment.name.toString().toLowerCase(), files[fIdx], async (error, extractedFiles) => {
@@ -192,18 +196,35 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
                       }
                     });
                   }
-                  //
-                  // TODO :: Upload File-MKV To Google Drive
-                  // https://github.com/googleapis/google-api-nodejs-client/issues/1633
-                  //
                 }
               });
+              mimeType += 'x-matroska';
             } else {
-              //
-              // TODO :: Upload File-MP4 To Google Drive
-              // https://github.com/googleapis/google-api-nodejs-client/issues/1633
-              //
+              mimeType += attachment.ext.toString().toLowerCase();
             }
+            gDrive(async (d: drive_v3.Drive) => {
+              const dFile = await d.files.create({
+                requestBody: {
+                  name: `${attachment.name.toString().toLowerCase()}.${attachment.ext.toString().toLowerCase()}`,
+                  parents: [
+                    '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ' // Hikki ひきこもり - Folder
+                  ],
+                  mimeType
+                },
+                media: {
+                  mimeType,
+                  body: fs.createReadStream(files[fIdx])
+                },
+                fields: 'id'
+              });
+              resAttachmentSave.google_drive = dFile.data.id;
+              await attachmentRepo.save(resAttachmentSave);
+              fs.unlink(files[fIdx], (er) => {
+                if (er) {
+                  console.error(er);
+                }
+              });
+            });
           } else {
             return next(createError(404));
           }

@@ -30,6 +30,8 @@ export class DownloadManagerService {
       this.attachmentsDownload[attachment.id].size = attachment.size;
       this.attachmentsDownload[attachment.id].ext = attachment.ext;
       this.attachmentsDownload[attachment.id].download_count = attachment.download_count;
+      this.attachmentsDownload[attachment.id].loaded = 0;
+      this.attachmentsDownload[attachment.id].total = 0;
       this.attachmentsDownload[attachment.id].percentage = 0;
       this.attachmentsDownload[attachment.id].mode = 'indeterminate';
       this.attachmentsDownload[attachment.id].isDownloading = false;
@@ -64,17 +66,24 @@ export class DownloadManagerService {
       }).subscribe(
         event => {
           this.gs.log('[DOWNLOAD_EVENTS]', event);
-          if ((event as any).loaded && (event as any).total) {
+          if ((event as any).loaded) {
             const e = (event as any);
             this.gs.log('[DOWNLOAD_PROGRESS]', e);
             attachment.mode = 'determinate';
-            attachment.percentage = Math.round(e.loaded / e.total * 100);
-            if (attachment.percentage < 100) {
-              attachment.speed = (e.loaded - attachment.previousLoaded) / 1000;
-              attachment.previousLoaded = e.loaded;
-              if (attachment.speed <= 0) {
-                attachment.speed = 0;
+            attachment.loaded = e.loaded;
+            if ((event as any).total) {
+              attachment.total = e.total;
+              attachment.percentage = Math.round(attachment.loaded / attachment.total * 100);
+              if (attachment.percentage < 100) {
+                attachment.speed = (attachment.loaded - attachment.previousLoaded) / 1000;
+                attachment.previousLoaded = attachment.loaded;
+                if (attachment.speed <= 0) {
+                  attachment.speed = 0;
+                }
               }
+            } else {
+              attachment.percentage = '?';
+              attachment.speed = '?';
             }
             attachment.toast.toastRef.componentInstance.message = `${attachment.percentage}% @ ${attachment.speed} KB/s`;
           }
