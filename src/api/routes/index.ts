@@ -347,7 +347,6 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
                   const sosmeds = await sosmedRepo.find({
                     where: [
                       {
-                        id: Equal(discordProfile.id),
                         type: SosMed.DISCORD,
                         user_: {
                           id: Equal(req.user.id)
@@ -358,9 +357,12 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
                   });
                   if (sosmeds.length > 0) {
                     await sosmedRepo.update({
-                      id: sosmeds[0].id,
-                      type: sosmeds[0].type
+                      type: sosmeds[0].type,
+                      user_: {
+                        id: req.user.id
+                      }
                     }, {
+                      id: discordProfile.id,
                       refresh_token: discordAuth.refresh_token
                     });
                   } else {
