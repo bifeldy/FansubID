@@ -109,7 +109,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
               .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, '').trim())
               .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
               .setTimestamp(resUserSave.updated_at)
-              .setFooter(resUserSave.id)
+              .setFooter(`${resUserSave.id} :: ${resUserSave.username}`)
             );
             delete resUserSave.password;
             delete resUserSave.session_token;

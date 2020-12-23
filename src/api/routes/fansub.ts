@@ -154,7 +154,11 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           // tslint:disable-next-line: max-line-length
           .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
           .setTimestamp(resFansubSave.updated_at)
-          .setFooter(resFansubSave.id)
+          .setFooter(
+            `${resFansubSave.id} :: ${resFansubSave.user_.username}`,
+            // tslint:disable-next-line: max-line-length
+            resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
+          )
         );
         return res.status(200).json({
           info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
@@ -430,7 +434,11 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
         // tslint:disable-next-line: max-line-length
         .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
         .setTimestamp(resFansubSave.updated_at)
-        .setFooter(resFansubSave.id)
+        .setFooter(
+          `${resFansubSave.id} :: ${resFansubSave.user_.username}`,
+          // tslint:disable-next-line: max-line-length
+          resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
+        )
       );
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,

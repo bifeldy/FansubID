@@ -90,7 +90,7 @@ router.post('/register', auth.registerModule, async (req: UserRequest, res: Resp
     .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, '').trim())
     .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
     .setTimestamp(req.user.updated_at)
-    .setFooter(req.user.id)
+    .setFooter(`${req.user.id} :: ${req.user.username}`)
   );
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
