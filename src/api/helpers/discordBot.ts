@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { Message } from 'discord.js';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Equal, getRepository } from 'typeorm';
 
 import { environment } from '../../environments/environment';
@@ -26,7 +26,8 @@ export async function discordBot(io: Server, msg: Message) {
         const user = await userRepo.findOneOrFail({
           where: [
             { id: Equal(decoded.user.id) }
-          ]
+          ],
+          relations: ['kartu_tanda_penduduk_', 'profile_']
         });
         if (user.verified) {
           await msg.channel.send(`<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰`);
@@ -41,6 +42,17 @@ export async function discordBot(io: Server, msg: Message) {
                 await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
               }
               await msg.channel.send(`<@${msg.author.id}> Berhasil 😚 Enjoy! 🤩`);
+              await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send(
+                new MessageEmbed()
+                .setColor('#43b581')
+                .setTitle(user.kartu_tanda_penduduk_.nama)
+                .setURL(`${environment.baseUrl}/user/${user.username}`)
+                .setAuthor('Hikki - Verifikasi Pengguna', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+                .setDescription(user.profile_.description.replace(/<[^>]*>/g, '').trim())
+                .setThumbnail(user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url)
+                .setTimestamp(user.updated_at)
+                .setFooter(user.id)
+              );
             } else {
               await msg.channel.send(`<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔`);
             }

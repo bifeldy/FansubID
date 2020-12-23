@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from '../services/global.service';
 import { AuthService } from '../services/auth.service';
+import { BusyService } from '../services/busy.service';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -16,7 +17,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private gs: GlobalService,
     private router: Router,
     private as: AuthService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private bs: BusyService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -69,6 +71,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
         if (e.status === 401) {
           this.as.removeUser();
+          this.bs.idle();
           this.router.navigate(['/login'], {
             queryParams: {
               err: true

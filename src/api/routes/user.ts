@@ -16,6 +16,9 @@ import auth from '../middlewares/auth';
 import jwt from '../helpers/jwt';
 
 import CryptoJS from 'crypto-js';
+import { MessageEmbed } from 'discord.js';
+
+import { environment } from '../../environments/environment';
 
 const router = Router();
 
@@ -97,6 +100,17 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             const resProfileSave = await profileRepo.save(selectedProfile);
             selectedUser.profile_ = resProfileSave;
             let resUserSave = await userRepo.save(selectedUser);
+            await req.bot.send(
+              new MessageEmbed()
+              .setColor('#ff4081')
+              .setTitle(resUserSave.kartu_tanda_penduduk_.nama)
+              .setURL(`${environment.baseUrl}/user/${resUserSave.username}`)
+              .setAuthor('Hikki - Pembaharuan Data Pengguna', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+              .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, '').trim())
+              .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
+              .setTimestamp(resUserSave.updated_at)
+              .setFooter(resUserSave.id)
+            );
             delete resUserSave.password;
             delete resUserSave.session_token;
             delete resUserSave.kartu_tanda_penduduk_;

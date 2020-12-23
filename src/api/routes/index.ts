@@ -30,7 +30,9 @@ import userRouter from './user';
 import attachmentRouter from './attachment';
 import newsRouter from './news';
 
-import { SosMed } from 'src/app/_shared/models/SosMed';
+import { SosMed } from '../../app/_shared/models/SosMed';
+
+import { MessageEmbed } from 'discord.js';
 
 // tslint:disable-next-line: typedef
 function fileGambarFilter(req, file, cb) {
@@ -78,7 +80,18 @@ router.get('/', (req: UserRequest, res: Response) => {
 });
 
 // POST `/api/register`
-router.post('/register', auth.registerModule, (req: any, res: Response, next) => {
+router.post('/register', auth.registerModule, async (req: UserRequest, res: Response, next) => {
+  await req.bot.send(
+    new MessageEmbed()
+    .setColor('#0099ff')
+    .setTitle(req.user.kartu_tanda_penduduk_.nama)
+    .setURL(`${environment.baseUrl}/user/${req.user.username}`)
+    .setAuthor('Hikki - Pendaftaran Pengguna Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+    .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, '').trim())
+    .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
+    .setTimestamp(req.user.updated_at)
+    .setFooter(req.user.id)
+  );
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {
@@ -88,7 +101,7 @@ router.post('/register', auth.registerModule, (req: any, res: Response, next) =>
 });
 
 // POST `/api/login`
-router.post('/login', auth.loginModule, (req: any, res: Response, next) => {
+router.post('/login', auth.loginModule, (req: UserRequest, res: Response, next) => {
   return res.status(200).json({
     info: '😚 200 - Login API :: Berhasil Login Yeay 🤩',
     result: {

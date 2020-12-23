@@ -12,6 +12,10 @@ import { User } from '../entities/User';
 // Middleware
 import auth from '../middlewares/auth';
 
+import { MessageEmbed } from 'discord.js';
+
+import { environment } from '../../environments/environment';
+
 const router = Router();
 
 // GET `/api/fansub`
@@ -140,6 +144,18 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete resFansubSave.user_.created_at;
           delete resFansubSave.user_.updated_at;
         }
+        await req.bot.send(
+          new MessageEmbed()
+          .setColor('#0099ff')
+          .setTitle(resFansubSave.name)
+          .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
+          .setAuthor('Hikki - Penambahan Fansub Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+          .setDescription(resFansubSave.description.replace(/<[^>]*>/g, '').trim())
+          // tslint:disable-next-line: max-line-length
+          .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
+          .setTimestamp(resFansubSave.updated_at)
+          .setFooter(resFansubSave.id)
+        );
         return res.status(200).json({
           info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
           result: resFansubSave
@@ -404,6 +420,18 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
         delete resFansubSave.user_.created_at;
         delete resFansubSave.user_.updated_at;
       }
+      await req.bot.send(
+        new MessageEmbed()
+        .setColor('#ff4081')
+        .setTitle(resFansubSave.name)
+        .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
+        .setAuthor('Hikki - Pembaharuan Data Fansub', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+        .setDescription(resFansubSave.description.replace(/<[^>]*>/g, '').trim())
+        // tslint:disable-next-line: max-line-length
+        .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
+        .setTimestamp(resFansubSave.updated_at)
+        .setFooter(resFansubSave.id)
+      );
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
         result: resFansubSave

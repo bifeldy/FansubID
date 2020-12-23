@@ -9,7 +9,7 @@ import { GlobalService } from './global.service';
 })
 export class BusyService {
 
-  private busyRequestCount = 0;
+  busyRequestCount = 0;
 
   constructor(
     private spinnerService: NgxSpinnerService,

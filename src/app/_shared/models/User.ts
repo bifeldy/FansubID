@@ -13,6 +13,7 @@ interface User {
   updated_at?: number;
   kartu_tanda_penduduk_?: KartuTandaPenduduk;
   profile_?: Profile;
+  session_token?: string;
 }
 
 export default User;
