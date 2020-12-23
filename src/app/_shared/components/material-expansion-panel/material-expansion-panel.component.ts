@@ -24,6 +24,9 @@ export class MaterialExpansionPanelComponent implements OnInit {
   constructor(
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

@@ -28,6 +28,9 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
   constructor(
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

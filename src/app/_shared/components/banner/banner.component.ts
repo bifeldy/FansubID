@@ -15,6 +15,9 @@ export class BannerComponent implements OnInit {
   constructor(
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

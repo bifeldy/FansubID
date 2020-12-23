@@ -18,6 +18,9 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     private as: AuthService,
     private ss: StatsServerService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

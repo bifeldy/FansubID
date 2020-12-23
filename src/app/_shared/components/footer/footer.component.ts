@@ -14,6 +14,9 @@ export class FooterComponent implements OnInit {
     public gs: GlobalService,
     public gh: GithubService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

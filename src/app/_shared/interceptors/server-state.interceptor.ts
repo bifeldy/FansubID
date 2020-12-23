@@ -7,13 +7,19 @@ import { tap } from 'rxjs/operators';
 
 import memoryCache from 'memory-cache';
 
+import { GlobalService } from '../services/global.service';
+
 @Injectable()
 export class ServerStateInterceptor implements HttpInterceptor {
 
   constructor(
     private transferState: TransferState,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): any {

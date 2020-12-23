@@ -39,6 +39,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     public gs: GlobalService,
     public lms: LeftMenuService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnDestroy(): void {

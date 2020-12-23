@@ -81,6 +81,9 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     public gs: GlobalService,
     private bs: BusyService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnDestroy(): void {

@@ -18,6 +18,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private as: AuthService,
     private toast: ToastrService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

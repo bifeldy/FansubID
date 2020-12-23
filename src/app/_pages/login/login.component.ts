@@ -37,9 +37,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     public as: AuthService
   ) {
     if (this.gs.isBrowser) {
-      if (this.as.currentUserValue) {
-        this.router.navigateByUrl(this.returnUrl);
-      }
+      //
     }
   }
 
@@ -55,7 +53,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
     if (this.gs.isBrowser) {
-      this.initForm();
+      if (this.as.currentUserValue) {
+        this.router.navigateByUrl(this.returnUrl);
+      } else {
+        this.initForm();
+      }
     }
   }
 

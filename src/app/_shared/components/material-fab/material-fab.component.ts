@@ -14,6 +14,9 @@ export class MaterialFabComponent implements OnInit {
     private fs: FabService,
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

@@ -19,6 +19,9 @@ export class AuthGuard implements CanActivate {
     private gs: GlobalService,
     private bs: BusyService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {

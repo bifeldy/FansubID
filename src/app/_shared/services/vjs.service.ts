@@ -12,6 +12,9 @@ export class VjsService {
     private api: ApiService,
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   // tslint:disable-next-line: typedef

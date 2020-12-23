@@ -16,6 +16,9 @@ export class NotificationsComponent implements OnInit {
     public gs: GlobalService,
     public notif: NotificationsService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

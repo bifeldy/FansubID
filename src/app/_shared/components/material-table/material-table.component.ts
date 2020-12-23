@@ -36,6 +36,9 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   constructor(
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   checkIsArray(data): boolean {

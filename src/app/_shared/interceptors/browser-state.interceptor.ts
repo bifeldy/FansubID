@@ -4,6 +4,8 @@ import { TransferState, makeStateKey } from '@angular/platform-browser';
 
 import { Observable, of } from 'rxjs';
 
+import { GlobalService } from '../services/global.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +13,11 @@ export class BrowserStateInterceptor implements HttpInterceptor {
 
   constructor(
     private transferState: TransferState,
+    public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

@@ -23,6 +23,9 @@ export class MaterialChipComponent implements OnInit {
   constructor(
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

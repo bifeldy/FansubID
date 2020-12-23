@@ -19,6 +19,9 @@ export class NotFoundComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

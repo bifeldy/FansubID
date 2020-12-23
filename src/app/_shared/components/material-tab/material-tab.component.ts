@@ -81,6 +81,9 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

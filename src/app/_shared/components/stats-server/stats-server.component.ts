@@ -16,6 +16,9 @@ export class StatsServerComponent implements OnInit {
     public gh: GithubService,
     public ss: StatsServerService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {

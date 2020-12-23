@@ -20,6 +20,9 @@ export class HeaderComponent implements OnInit {
     public pi: PageInfoService,
     public gs: GlobalService
   ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {
