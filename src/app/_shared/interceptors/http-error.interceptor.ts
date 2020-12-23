@@ -66,7 +66,11 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
         if (e.status === 401) {
           this.as.removeUser();
-          this.router.navigate(['/login'], { queryParams: { err: true } });
+          this.router.navigate(['/login'], {
+            queryParams: {
+              err: true
+            }
+          });
         }
         return throwError(e);
       }

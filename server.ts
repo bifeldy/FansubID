@@ -9,7 +9,7 @@ import http from 'http';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 
-import * as socketIo from 'socket.io';
+import socketIo from 'socket.io';
 
 import { UserRequest } from './src/api/models/UserRequest';
 
@@ -32,14 +32,18 @@ global.navigator = mock.getNavigator();
 import { createConnection, Equal, getRepository } from 'typeorm';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
-import * as express from 'express';
+import express from 'express';
 import { join } from 'path';
 
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
-import { existsSync } from 'fs';
+
+import { Client, TextChannel, Message } from 'discord.js';
 
 import MorganChalk from './src/api/helpers/morganChalk';
+import { discordBot } from './src/api/helpers/discordBot';
+
+import { environment } from './src/environments/environment';
 
 // Model
 import { Profile } from './src/api/entities/Profile';
@@ -53,6 +57,7 @@ import { Attachment } from './src/api/entities/Attachment';
 import { TempAttachment } from './src/api/entities/TempAttachment';
 import { CorsApiKey } from './src/api/entities/CorsApiKey';
 import { News } from './src/api/entities/News';
+import { SocialMedia } from './src/api/entities/SocialMedia';
 
 const dbName = process.env.DB_NAME || 'hikki';
 const dbUsername = process.env.DB_USERNAME || 'root';
@@ -78,7 +83,8 @@ const typeOrmConfig: any = {
     Attachment,
     TempAttachment,
     CorsApiKey,
-    News
+    News,
+    SocialMedia
   ]
 };
 
@@ -136,6 +142,7 @@ export function app(): http.Server {
   const io = new socketIo.Server(httpApp, {
     cors: corsOptions
   });
+  const bot = new Client();
 
   // Config
   expressApp.set('trust proxy', true);
@@ -146,9 +153,15 @@ export function app(): http.Server {
   expressApp.use(express.json({ limit: '512mb' }));
   expressApp.use(express.urlencoded({ extended: false, limit: '512mb' }));
 
-  expressApp.use((req: UserRequest, res, next) => {
+  expressApp.use(async (req: UserRequest, res, next) => {
     req.io = io;
+    req.bot = (bot.channels.cache.get(environment.discordBotChannelEventId) as TextChannel);
     next();
+  });
+
+  // GET `/verify-discord`
+  expressApp.get('/verify-discord', (req, res) => {
+    return res.redirect(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`);
   });
 
   expressApp.use('/api', apiLimiter, indexRouter);
@@ -156,7 +169,7 @@ export function app(): http.Server {
   logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
 
   const distFolder = join(currentWorkingDir, 'dist/hikki/browser');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+  const indexHtml = fs.existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   expressApp.engine('html', ngExpressEngine({
@@ -173,7 +186,7 @@ export function app(): http.Server {
 
   // All regular routes use the Universal engine
   expressApp.get('*', (req, res) => {
-    res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+    return res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
   });
 
   /********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
@@ -189,6 +202,34 @@ export function app(): http.Server {
       }
     });
   });
+
+  /********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
+
+  bot.on('ready', () => {
+    logger.log(`[DISCORD] 🎉 ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
+    bot.user.setPresence({
+      status: 'online',
+      activity: {
+        name: 'Nihongo 日本語',
+        type: 'WATCHING',
+        url: 'http://hikki.bifeldy.id'
+      }
+    });
+  });
+
+  bot.on('message', async (msg: Message) => {
+    try {
+      msg.channel = (msg.channel as TextChannel);
+      if (msg.channel.id === environment.discordBotChannelBotId) {
+        logger.log(`[${msg.guild.name}] [${msg.channel.name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content}`);
+        await discordBot(io, msg);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  bot.login(environment.discordBotLoginToken).catch(console.error);
 
   return httpApp;
 }

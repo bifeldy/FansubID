@@ -108,7 +108,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   updateBackgroundImage(): void {
     switch (this.router.url.substr(1).split('/').length) {
       case 1:
-        if (this.router.url === '/verify' || this.router.url === '/about') {
+        if (this.router.url.startsWith('/verify') || this.router.url.startsWith('/about')) {
           this.selectedBackgroundImage = `/assets/img/bg-aboutverify.svg`;
         } else {
           this.selectedBackgroundImage = `/assets/img/router/bg-${this.router.url.substr(1).split('/')[0].split('?')[0]}.png`;

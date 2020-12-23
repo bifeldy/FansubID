@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { environment } from '../../environments/environment';
 
-const JWT = require('jsonwebtoken');
+import CryptoJS from 'crypto-js';
+import JWT from 'jsonwebtoken';
 
 const jwtAlgorithm = 'HS512';
 const jwtIssuer = 'Bifeldy';
 const jwtAudience = environment.siteName;
-const jwtSecretKey = `Bifeldy-${jwtAudience}`;
+const jwtSecretKey = CryptoJS.SHA512(environment.jwtSecretKey).toString();
 const jwtExpiredIn = 24 * 60 * 60;
 
 function JwtEncode(user: any, rememberMe = false): any {
@@ -24,7 +25,7 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length);
     }
-    const decoded = JWT.verify(token, jwtSecretKey);
+    const decoded: {} = JWT.verify(token, jwtSecretKey);
     return { ...decoded, token };
   } catch (err) {
     console.error(err);
@@ -35,4 +36,17 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
   }
 }
 
-export default { JwtEncode, JwtDecode };
+function JwtEncrypt(data): any {
+  return JWT.sign(data, jwtSecretKey, {
+    algorithm: jwtAlgorithm,
+    issuer: jwtIssuer,
+    audience: jwtAudience,
+    expiresIn: 1 * 60,
+  });
+}
+
+function JwtDecrypt(token: string): any {
+  return JWT.verify(token, jwtSecretKey);
+}
+
+export default { JwtEncode, JwtDecode, JwtEncrypt, JwtDecrypt };

@@ -15,7 +15,7 @@ import auth from '../middlewares/auth';
 // Helper
 import jwt from '../helpers/jwt';
 
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 
 const router = Router();
 

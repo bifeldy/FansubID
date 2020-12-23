@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content class="p-4" [innerHTML]="data.htmlMessage" class="text-break"></div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true" class="ml-auto">{{ data.confirmText }}</button>
+  <button mat-button [mat-dialog-close]="false" *ngIf="data.cancelText">{{ data.cancelText }}</button>
+</div>

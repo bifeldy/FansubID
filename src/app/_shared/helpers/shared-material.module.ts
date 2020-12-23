@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -35,7 +36,6 @@ import { MatSortModule } from '@angular/material/sort';
 // import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 // import { MatButtonToggleModule } from '@angular/material/button-toggle';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
-// import { MatDialogModule } from '@angular/material/dialog';
 // import { MatMenuModule } from '@angular/material/menu';
 // import { MatRadioModule } from '@angular/material/radio';
 // import { MatSliderModule } from '@angular/material/slider';
@@ -52,6 +52,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatCardModule,
     MatChipsModule,
     MatDatepickerModule,
+    MatDialogModule,
     MatDividerModule,
     MatExpansionModule,
     MatGridListModule,

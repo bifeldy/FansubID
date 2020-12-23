@@ -53,6 +53,18 @@ export class ApiService {
     );
   }
 
+  patchData(path: string, model = {}, multipart = false, options = {}, timedOut = 10000): Observable<any> {
+    this.gs.log('[API_PATCH]', path);
+    let body = model;
+    if (multipart) {
+      body = this.prepareFormData(model);
+    }
+    return this.http.patch(path.startsWith('http') ? path : environment.apiUrl + path, body, options).pipe(
+      catchError(err => throwError(err)),
+      map(res => res), timeout(timedOut)
+    );
+  }
+
   deleteData(path: string, timedOut = 10000): Observable<any> {
     this.gs.log('[API_DEL]', path);
     return this.http.delete(path.startsWith('http') ? path : environment.apiUrl + path).pipe(

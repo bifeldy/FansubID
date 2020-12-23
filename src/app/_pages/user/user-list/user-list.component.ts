@@ -20,7 +20,7 @@ export class UserListComponent implements OnInit {
       if (this.as.currentUserValue) {
         this.router.navigateByUrl(`/user/${this.as.currentUserValue.username}`);
       } else {
-        this.router.navigate(['/login']);
+        this.router.navigateByUrl('/login');
       }
     }
   }

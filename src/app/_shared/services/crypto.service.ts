@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 import { GlobalService } from './global.service';
 
 @Injectable({

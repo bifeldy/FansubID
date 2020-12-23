@@ -24,7 +24,7 @@ export class StatsServerService {
     private notif: NotificationsService
   ) {
     if (this.gs.isBrowser) {
-      this.mySocket = io(environment.socketUrl);
+      this.mySocket = io(environment.baseUrl);
       this.socketStart();
     }
   }

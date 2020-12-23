@@ -11,7 +11,7 @@ import { User } from '../entities/User';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 import { Profile } from '../entities/Profile';
 
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 
 import { environment } from 'src/environments/environment';
 
@@ -145,15 +145,16 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       relations: ['kartu_tanda_penduduk_', 'profile_'],
     });
     if (selectedUser.length === 1) {
-      delete selectedUser[0].password;
-      delete selectedUser[0].session_token;
-      delete selectedUser[0].kartu_tanda_penduduk_.id;
-      delete selectedUser[0].kartu_tanda_penduduk_.created_at;
-      delete selectedUser[0].kartu_tanda_penduduk_.updated_at;
-      delete selectedUser[0].profile_.id;
-      delete selectedUser[0].profile_.created_at;
-      delete selectedUser[0].profile_.updated_at;
-      req.user = (selectedUser[0] as any);
+      const usr = selectedUser[0];
+      delete usr.password;
+      delete usr.session_token;
+      delete usr.kartu_tanda_penduduk_.id;
+      delete usr.kartu_tanda_penduduk_.created_at;
+      delete usr.kartu_tanda_penduduk_.updated_at;
+      delete usr.profile_.id;
+      delete usr.profile_.created_at;
+      delete usr.profile_.updated_at;
+      req.user = (usr as any);
       return next();
     } else {
       return res.status(401).json({

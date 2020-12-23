@@ -160,4 +160,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.getUserBerkas();
   }
 
+  openDiscordProfile(): void {
+    window.open(`https://discordapp.com/users/${this.userData.discord}`, '_blank');
+  }
+
 }

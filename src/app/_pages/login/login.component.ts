@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 
 import { environment } from '../../../environments/environment';
 
@@ -37,7 +37,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     public as: AuthService
   ) {
     if (this.gs.isBrowser) {
-      //
+      if (this.as.currentUserValue) {
+        this.router.navigateByUrl(this.returnUrl);
+      }
     }
   }
 
@@ -52,18 +54,21 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
-    if (this.as.currentUserValue) {
-      this.router.navigate([this.returnUrl]);
+    if (this.gs.isBrowser) {
+      this.initForm();
     }
+  }
+
+  get loginFormVal(): any {
+    return this.fg.controls;
+  }
+
+  initForm(): void {
     this.fg = this.fb.group({
       userNameOrEmail: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
       password: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
       rememberMe: [false, []]
     });
-  }
-
-  get loginFormVal(): any {
-    return this.fg.controls;
   }
 
   onClickedSubmit(): void {
@@ -93,7 +98,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               this.loginInfo = success.info;
               this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
               this.bs.idle();
-              this.router.navigate([this.returnUrl]);
+              this.router.navigateByUrl(this.returnUrl);
             },
             error => {
               this.gs.log('[VERIFY_LOGIN_ERROR]', error);

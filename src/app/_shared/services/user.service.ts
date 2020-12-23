@@ -41,4 +41,8 @@ export class UserService {
     return this.api.putData('/verify', userData);
   }
 
+  sosmedLogin(data): any {
+    return this.api.patchData('/verify', data);
+  }
+
 }

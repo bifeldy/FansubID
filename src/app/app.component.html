@@ -16,9 +16,9 @@
 
   <!-- Main Content -->
   <mat-sidenav-content
-    [style.background-repeat]="router.url == '/verify' || router.url == '/about' ? 'repeat' : 'no-repeat'"
-    [style.background-size]="router.url == '/verify' || router.url == '/about' ? '' : '128px'"
-    [style.background-position]="router.url == '/verify' || router.url == '/about' ? '' : 'bottom right'"
+    [style.background-repeat]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? 'repeat' : 'no-repeat'"
+    [style.background-size]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? '' : '128px'"
+    [style.background-position]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? '' : 'bottom right'"
     [style.background-image]="'url(' + selectedBackgroundImage + ')'">
 
     <!-- Routing Content -->

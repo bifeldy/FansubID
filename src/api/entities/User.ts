@@ -33,6 +33,9 @@ export class User {
   @Column({ type: 'boolean', default: false })
   verified: boolean;
 
+  @Column({ type: 'varchar', nullable: true, default: null, unique: true })
+  discord: boolean;
+
   @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name
   session_token: string;

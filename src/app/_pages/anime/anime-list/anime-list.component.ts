@@ -5,7 +5,7 @@ import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/mat
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 
-import * as _moment from 'moment';
+import _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 
 import { Seasons } from '../../../_shared/models/Seasons';

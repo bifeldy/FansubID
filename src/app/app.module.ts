@@ -34,6 +34,7 @@ import { HeaderModule } from './_shared/components/header/header.module';
 import { LeftMenuModule } from './_shared/components/left-menu/left-menu.module';
 import { FooterModule } from './_shared/components/footer/footer.module';
 import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
+import { MaterialDialogModule } from './_shared/components/material-dialog/material-dialog.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -48,12 +49,13 @@ import { MaterialFabModule } from './_shared/components/material-fab/material-fa
     ReactiveFormsModule,
     HttpClientModule,
     SharedMaterialModule,
+    MaterialDialogModule,
     FlexLayoutModule,
     HammerModule,
     MaterialFabModule,
     NgxSpinnerModule,
     ToastrModule.forRoot({
-      timeOut: 1234,
+      timeOut: 3000,
       positionClass: 'toast-top-right',
       closeButton: true,
       progressBar: true,

@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import videojs from 'video.js';
-import * as SubtitlesOctopus from '../../../../assets/lib/subtitles-octopus.js';
+import SubtitlesOctopus from '../../../../assets/lib/subtitles-octopus.js';
 
 import { GlobalService } from '../../services/global.service';
 

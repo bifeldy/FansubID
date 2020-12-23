@@ -5,7 +5,7 @@ import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import * as memoryCache from 'memory-cache';
+import memoryCache from 'memory-cache';
 
 @Injectable()
 export class ServerStateInterceptor implements HttpInterceptor {

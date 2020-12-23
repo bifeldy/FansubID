@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 
 import { BusyService } from '../../../_shared/services/busy.service';
 import { UserService } from '../../../_shared/services/user.service';

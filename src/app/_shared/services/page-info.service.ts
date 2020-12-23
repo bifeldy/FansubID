@@ -42,7 +42,7 @@ export class PageInfoService {
 
   updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = '/favicon.ico'): void {
     this.title = newTitle;
-    this.description = newDescription;
+    this.description = this.gs.htmlToText(newDescription);
     this.keywords = newKeywords;
     this.image = newImage;
     this.t.setTitle(`${this.title} | ${this.siteName}`);

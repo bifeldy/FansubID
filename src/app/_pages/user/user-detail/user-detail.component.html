@@ -20,17 +20,21 @@
           </h1>
         </div>
         <div class="row p-3">
-          <button mat-button class="col-12 col-md-3" *ngIf="userData.id" matTooltip="Nomor ID Pengguna" color="accent">
+          <button mat-stroked-button class="col-12 col-md-4" *ngIf="userData.id" matTooltip="Nomor ID Pengguna" color="accent">
             <mat-icon class="mr-2">accessibility_new</mat-icon>
             {{ userData.id }}
           </button>
-          <button mat-button class="col-12 col-md-9 col-lg-4" *ngIf="userData.kartu_tanda_penduduk_.tempat_lahir" matTooltip="Kota Kelahiran" color="accent">
+          <button mat-stroked-button class="col-12 col-md-8" *ngIf="userData.updated_at" matTooltip="Terakhir Login" color="accent">
+            <mat-icon class="mr-2">access_time</mat-icon>
+            {{ userData.updated_at | date:'short' }}
+          </button>
+          <button mat-stroked-button class="col" *ngIf="userData.kartu_tanda_penduduk_.tempat_lahir" matTooltip="Kota Kelahiran" color="accent">
             <mat-icon class="mr-2">location_on</mat-icon>
             {{ userData.kartu_tanda_penduduk_.tempat_lahir }}
           </button>
-          <button mat-button class="col" *ngIf="userData.updated_at" matTooltip="Terakhir Login" color="accent">
-            <mat-icon class="mr-2">access_time</mat-icon>
-            {{ userData.updated_at | date:'short' }}
+          <button mat-stroked-button class="col" *ngIf="userData.discord" matTooltip="Discord Profile" color="accent" (click)="openDiscordProfile()">
+            <mat-icon class="mr-2">chat</mat-icon>
+            {{ userData.discord }}
           </button>
         </div>
         <div class="row py-3" *ngIf="panelData.length > 0">

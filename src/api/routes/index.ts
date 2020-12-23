@@ -11,6 +11,7 @@ import { UserRequest } from '../models/UserRequest';
 import { environment } from '../../environments/environment';
 
 import { User } from '../entities/User';
+import { SocialMedia } from '../entities/SocialMedia';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
 // Middleware
@@ -28,6 +29,8 @@ import berkasRouter from './berkas';
 import userRouter from './user';
 import attachmentRouter from './attachment';
 import newsRouter from './news';
+
+import { SosMed } from 'src/app/_shared/models/SosMed';
 
 // tslint:disable-next-line: typedef
 function fileGambarFilter(req, file, cb) {
@@ -70,8 +73,8 @@ router.use('/attachment', attachmentRouter);
 router.use('/news', newsRouter);
 
 // GET `/api`
-router.get('/', (req, res) => {
-  res.redirect('/');
+router.get('/', (req: UserRequest, res: Response) => {
+  return res.redirect('/');
 });
 
 // POST `/api/register`
@@ -95,15 +98,15 @@ router.post('/login', auth.loginModule, (req: any, res: Response, next) => {
 });
 
 // DEL `/api/logout`
-router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: any, res: Response, next) => {
+router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest, res: Response, next) => {
   return res.status(200).json({
     info: '😍 200 - Logout API :: Berhasil Keluar UwUu 🥰',
     result: req.user
   });
 });
 
-// POST `/api/verify`
-router.post('/verify', auth.isAuthorized, (req: any, res: Response, next) => {
+// POST `/api/verify` -- Verify Login Session
+router.post('/verify', auth.isAuthorized, (req: UserRequest, res: Response, next) => {
   return res.status(200).json({
     info: '😍 200 - Verifikasi API :: Token Selesai Di Verifikasi UwUu 🥰',
     result: req.user
@@ -121,65 +124,83 @@ router.post('/image', auth.isAuthorized, upload.single('file'), async (req: User
       image: req.file.buffer.toString('base64')
     }
   }, async (error, result, body) => {
-    const data = JSON.parse(body).data;
-    return res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - ImgBB API :: Upload Image 🤣`,
-      result: {
-        id: data.id,
-        title: data.title,
-        url: data.image.url,
-        mime: data.image.mime,
-        extension: data.image.extension,
-        size: data.size,
-        time: data.time,
-        expiration: data.expiration,
-      },
-      imageUrl: data.image.url
-    });
+    if (!error) {
+      const data = JSON.parse(body).data;
+      return res.status(result.statusCode).json({
+        info: `😅 ${result.statusCode} - ImgBB API :: Upload Image 🤣`,
+        result: {
+          id: data.id,
+          title: data.title,
+          url: data.image.url,
+          mime: data.image.mime,
+          extension: data.image.extension,
+          size: data.size,
+          time: data.time,
+          expiration: data.expiration,
+        },
+        imageUrl: data.image.url
+      });
+    } else {
+      return res.status(result.statusCode).json({
+        info: `🙄 ${result.statusCode} - ImgBB API :: Upload Image Gagal 😪`,
+        result: {
+          message: 'Data Tidak Lengkap / ImgBB Down!'
+        }
+      });
+    }
   });
 });
 
-// POST `/api/kpu/cek-nik`
-router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) => {
+// POST `/api/cek-nik`
+router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if ('nik' in req.body && 'nama' in req.body && 'g-recaptcha-response' in req.body) {
       return request(`
         ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${req.connection.remoteAddress}
       `.trim(), (e1, r1, b1) => {
-        b1 = JSON.parse(b1);
-        if (b1 && b1.success) {
-          return request({
-            method: 'POST',
-            uri: environment.apiKpuAndroid,
-            body: JSON.stringify({
-              nik: req.body.nik,
-              nama: req.body.nama,
-              ck_kpu: environment.kpuAndroidSecretKey
-            })
-          }, (e2, r2, b2) => {
-            if (b2) {
-              const resKPU = JSON.parse(b2);
-              if ('data' in resKPU && resKPU.data) {
-                delete resKPU.data.tps;
-              }
-              return res.status(r2.statusCode).json({
-                info: `😍 ${r2.statusCode} - KTP API :: Data Kartu Tanda Penduduk 🥰`,
-                result: resKPU
-              });
-            } else {
-              return res.status(500).json({
-                info: '🙄 500 - KTP API :: API Pemerintah Error 😪',
-                result: {
-                  message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya?'
+        if (!e1) {
+          b1 = JSON.parse(b1);
+          if (b1 && b1.success) {
+            return request({
+              method: 'POST',
+              uri: environment.apiKpuAndroid,
+              body: JSON.stringify({
+                nik: req.body.nik,
+                nama: req.body.nama,
+                ck_kpu: environment.kpuAndroidSecretKey
+              })
+            }, (e2, r2, b2) => {
+              if (!e2) {
+                const resKPU = JSON.parse(b2);
+                if ('data' in resKPU && resKPU.data) {
+                  delete resKPU.data.tps;
                 }
-              });
-            }
-          });
+                return res.status(r2.statusCode).json({
+                  info: `😍 ${r2.statusCode} - KTP API :: Data Kartu Tanda Penduduk 🥰`,
+                  result: resKPU
+                });
+              } else {
+                return res.status(r2.statusCode).json({
+                  info: `🙄 ${r2.statusCode} - KTP API :: API Pemerintah Error 😪`,
+                  result: {
+                    message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya?'
+                  }
+                });
+              }
+            });
+          } else {
+            return res.status(r1.statusCode).json({
+              info: `🙄 ${r1.statusCode} - Google API :: Captcha Bermasalah 😪`,
+              result: {
+                message: 'Captcha Salah / Expired!'
+              }
+            });
+          }
         } else {
           return res.status(r1.statusCode).json({
-            info: `🙄 ${r1.statusCode} - Google API :: Wrong Captcha 😪`,
+            info: `🙄 ${r1.statusCode} - Google API :: Captcha Bermasalah 😪`,
             result: {
-              message: 'Captcha Salah / Expired!'
+              message: 'Data Tidak Lengkap / Google API Down!'
             }
           });
         }
@@ -198,8 +219,8 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res, next) =
   }
 });
 
-// PUT `/api/kpu/verify`
-router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => {
+// PUT `/api/verify` -- Verify Account By KTP
+router.put('/verify', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if (req.user.verified) {
       return res.status(200).json({
@@ -279,13 +300,148 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res, next) => 
   }
 });
 
+// PATCH `/api/verify` -- Verify Account By Social Media :: DISCORD, DISQUS, GOOGLE, FACEBOOK, Etc
+router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
+  try {
+    if (req.user.verified) {
+      return res.status(200).json({
+        info: `😅 200 - Verifikasi API :: User Telah Diverifikasi 🤣`,
+        result: {
+          title: 'Akun Telah Diverifikasi!',
+          message: 'Whoops! Yeay~'
+        }
+      });
+    } else if ('app' in req.body && 'code' in req.body) {
+      const sosmedRepo = getRepository(SocialMedia);
+      const userRepo = getRepository(User);
+      const user = await userRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.user.id) }
+        ]
+      });
+      if (req.body.app === SosMed.DISCORD) {
+        return request({
+          method: 'POST',
+          uri: `${environment.discordApiUrl}/oauth2/token`,
+          formData: {
+            client_id: environment.discordClientId,
+            client_secret: environment.discordClientSecret,
+            grant_type: 'authorization_code',
+            code: req.body.code,
+            redirect_uri: `${environment.baseUrl}/verify?app=discord`,
+            scope: 'identify email guilds.join'
+          }
+        }, async (er, rs, bd) => {
+          if (!er) {
+            const discordAuth = JSON.parse(bd);
+            return request({
+              method: 'GET',
+              uri: `${environment.discordApiUrl}/users/@me`,
+              headers: {
+                Authorization: `${discordAuth.token_type} ${discordAuth.access_token}`
+              }
+            }, async (e, r, b) => {
+              if (!e) {
+                try {
+                  const discordProfile = JSON.parse(b);
+                  const sosmeds = await sosmedRepo.find({
+                    where: [
+                      {
+                        id: Equal(discordProfile.id),
+                        type: SosMed.DISCORD,
+                        user_: {
+                          id: Equal(req.user.id)
+                        }
+                      }
+                    ],
+                    relations: ['user_']
+                  });
+                  if (sosmeds.length > 0) {
+                    await sosmedRepo.update({
+                      id: sosmeds[0].id,
+                      type: sosmeds[0].type
+                    }, {
+                      refresh_token: discordAuth.refresh_token
+                    });
+                  } else {
+                    const sosmed = new SocialMedia();
+                    sosmed.id = discordProfile.id;
+                    sosmed.refresh_token = discordAuth.refresh_token;
+                    sosmed.type = SosMed.DISCORD;
+                    sosmed.user_ = user;
+                    await sosmedRepo.insert(sosmed);
+                  }
+                  user.discord = discordProfile.id;
+                  const resUserSave = await userRepo.save(user);
+                  delete resUserSave.password;
+                  delete resUserSave.session_token;
+                  delete resUserSave.kartu_tanda_penduduk_;
+                  delete resUserSave.profile_;
+                  return res.status(r.statusCode).json({
+                    info: `😅 ${r.statusCode} - Discord API :: Masuk & Verify 🤣`,
+                    result: {
+                      title: 'Kirim Token Ke Hikki Discord BOT Dalam 1 Menit! #🚮-bot-spam',
+                      message: '~verify DISCORD ' + jwt.JwtEncrypt({ discord: discordProfile, user: resUserSave }) + ' DELETE_CHAT'
+                    }
+                  });
+                } catch (err) {
+                  console.error(err);
+                  return res.status(r.statusCode).json({
+                    info: `🙄 ${r.statusCode} - Discord API :: Gagal Masuk 😪`,
+                    result: {
+                      title: 'Kode oAuth Salah / Expired / Akun Telah Digunakan!',
+                      message: 'Silahkan ulangi langkah sebelumnya atau coba dengan akun yang lain.'
+                    }
+                  });
+                }
+              } else {
+                return res.status(r.statusCode).json({
+                  info: `🙄 ${r.statusCode} - Discord API :: Gagal Verify 😪`,
+                  result: {
+                    message: 'Data Tidak Lengkap / Discord API Down!'
+                  }
+                });
+              }
+            });
+          } else {
+            return res.status(rs.statusCode).json({
+              info: `🙄 ${rs.statusCode} - Discord API :: Gagal Masuk 😪`,
+              result: {
+                message: 'Data Tidak Lengkap / Discord API Down!'
+              }
+            });
+          }
+        });
+      // } else if (req.body.app === SosMed.DISQUS) {
+      //   // TODO :: If Other SosMed
+      // } else if (req.body.app === SosMed.GOOGLE) {
+      //   // TODO :: If Other SosMed
+      // } else if (req.body.app === SosMed.FACEBOOK) {
+      //   // TODO :: If Other SosMed
+      } else {
+        throw new Error('Data Tidak Lengkap!');
+      }
+    } else {
+      throw new Error('Data Tidak Lengkap!');
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      info: '🙄 400 - Social Media :: Verifikasi Gagal! 😪',
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
+
 // Catch 404 and forward to error handler
-router.use((req, res, next) => {
-  next(createError(404));
+router.use((req: UserRequest, res: Response, next) => {
+  return next(createError(404));
 });
 
 // Error handler
-router.use((err: any, req, res: Response, next) => {
+router.use((err: any, req: UserRequest, res: Response, next) => {
   res.locals.message = err.message;
   res.locals.error = err;
   return res.status(err.status || 500).json({

@@ -2,10 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { SosMed } from '../../_shared/models/SosMed';
+
 import { AuthService } from '../../_shared/services/auth.service';
 import { GlobalService } from '../../_shared/services/global.service';
 import { UserService } from '../../_shared/services/user.service';
 import { BusyService } from '../../_shared/services/busy.service';
+import { DialogService } from '../../_shared/services/dialog.service';
 
 import { environment } from '../../../environments/environment';
 
@@ -29,20 +32,21 @@ export class VerifyComponent implements OnInit, OnDestroy {
   subsCekNik = null;
   subsVerify1 = null;
   subsVerify2 = null;
+  subsParam = null;
+  subsSosmed = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    public gs: GlobalService,
     private us: UserService,
     private bs: BusyService,
+    private ds: DialogService,
+    public gs: GlobalService,
     public route: ActivatedRoute,
     public as: AuthService
   ) {
     if (this.gs.isBrowser) {
-      if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-        this.router.navigate(['/home']);
-      }
+      //
     }
   }
 
@@ -56,34 +60,89 @@ export class VerifyComponent implements OnInit, OnDestroy {
     if (this.subsVerify2) {
       this.subsVerify2.unsubscribe();
     }
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
+    if (this.subsSosmed) {
+      this.subsSosmed.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.fg1 = this.fb.group({
-        nik: [null, [Validators.required, Validators.pattern(/^\d+$/)]],
-        nama: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
-        completed: [null, [Validators.required]],
-        'g-recaptcha-response': [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      });
-      this.fg2 = this.fb.group({
-        nik: [null, [Validators.pattern(/^\d+$/)]],
-        nama: [null, [Validators.pattern('^[a-zA-Z. ]+$')]],
-        tempat_lahir: [null, [Validators.pattern('^[a-zA-Z ]+$')]],
-        tanggal_lahir: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-        jenis_kelamin: [null, [Validators.pattern('^[LP]+$')]],
-        golongan_darah: [null, [Validators.pattern('^[ABO]+$')]],
-        alamat: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-        rt: [null, [Validators.pattern(/^\d+$/)]],
-        rw: [null, [Validators.pattern(/^\d+$/)]],
-        kelurahan_desa: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-        kecamatan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-        agama: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-        status_perkawinan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-        pekerjaan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-        kewarganegaraan: [null, [Validators.pattern('^[WNIA]+$')]],
+      this.initKTP();
+      this.subsParam = this.route.queryParams.subscribe(p => {
+        if (p.app && p.code) {
+          this.sosmedVerify(p.app, p.code);
+        } else {
+          if (this.as.currentUserValue && this.as.currentUserValue.verified) {
+            this.router.navigateByUrl('/home');
+          }
+        }
       });
     }
+  }
+
+  sosmedVerify(sosmedApp: string, oAuthCode: string): void {
+    this.bs.busy();
+    this.subsSosmed = this.us.sosmedLogin({
+      app: sosmedApp.toUpperCase(),
+      code: oAuthCode
+    }).subscribe(
+      res => {
+        this.gs.log('[SOSMED]', res);
+        this.bs.idle();
+        this.ds.openInfoDialog({
+          data: {
+            title: res.result.title,
+            htmlMessage: res.result.message,
+            confirmText: 'Berhasil',
+            cancelText: 'Coba Lagi'
+          },
+          disableClose: false
+        }).afterClosed().subscribe(re => {
+          if (re === true) {
+            this.as.removeUser();
+            this.router.navigateByUrl('/login');
+          } else if (re === false) {
+            if (sosmedApp.toUpperCase() === SosMed.DISCORD) {
+              window.open(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`, '_self');
+            }
+            // TODO :: If Other SosMed
+          }
+        });
+      },
+      err => {
+        this.gs.log('[SOSMED]', err);
+        this.bs.idle();
+      }
+    );
+  }
+
+  initKTP(): void {
+    this.fg1 = this.fb.group({
+      nik: [null, [Validators.required, Validators.pattern(/^\d+$/)]],
+      nama: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
+      completed: [null, [Validators.required]],
+      'g-recaptcha-response': [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+    });
+    this.fg2 = this.fb.group({
+      nik: [null, [Validators.pattern(/^\d+$/)]],
+      nama: [null, [Validators.pattern('^[a-zA-Z. ]+$')]],
+      tempat_lahir: [null, [Validators.pattern('^[a-zA-Z ]+$')]],
+      tanggal_lahir: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      jenis_kelamin: [null, [Validators.pattern('^[LP]+$')]],
+      golongan_darah: [null, [Validators.pattern('^[ABO]+$')]],
+      alamat: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      rt: [null, [Validators.pattern(/^\d+$/)]],
+      rw: [null, [Validators.pattern(/^\d+$/)]],
+      kelurahan_desa: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      kecamatan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      agama: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      status_perkawinan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      pekerjaan: [null, [Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      kewarganegaraan: [null, [Validators.pattern('^[WNIA]+$')]],
+    });
   }
 
   cekNIK(captchaResponse, captchaRef, stepper): void {

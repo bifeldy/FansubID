@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 
 import { environment } from '../../../environments/environment';
 
@@ -24,6 +24,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   fg: FormGroup;
   submitted = false;
 
+  returnUrl = '/';
   registerImg = '/assets/img/loginregister.png';
   bgRegisterImg = '/assets/img/bg-loginregister.svg';
   registerInfo = 'Ayo bergabung dan masuk dalam komunitas~';
@@ -41,7 +42,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ) {
     if (this.gs.isBrowser) {
       if (this.as.currentUserValue) {
-        this.router.navigate(['/home']);
+        this.router.navigateByUrl(this.returnUrl);
       }
     }
   }
@@ -56,6 +57,17 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
+    if (this.gs.isBrowser) {
+      this.initForm();
+    }
+  }
+
+  get registerFormVal(): any {
+    return this.fg.controls;
+  }
+
+  initForm(): void {
     this.fg = this.fb.group({
       username: [null, [Validators.required, Validators.minLength(5), Validators.pattern('^[a-z0-9]+$')]],
       name: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
@@ -64,13 +76,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       agree: [null, [Validators.required]],
       'g-recaptcha-response': [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
     });
-    if (this.gs.isBrowser) {
-      //
-    }
-  }
-
-  get registerFormVal(): any {
-    return this.fg.controls;
   }
 
   onClickedSubmit(): void {
@@ -106,7 +111,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
               this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);
               this.bs.idle();
               this.captchaRef.reset();
-              this.router.navigateByUrl('/');
+              this.router.navigateByUrl(this.returnUrl);
             },
             error => {
               this.gs.log('[VERIFY_REGISTER_ERROR]', error);

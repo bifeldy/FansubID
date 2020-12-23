@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
         if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
           this.toast.error(`Membutuhkan Role :: ${route.data.roles.join(' / ')}`, 'Whoops, Akses Ditolak!');
           this.bs.idle();
-          this.router.navigate(['/']);
+          this.router.navigateByUrl('/');
           return false;
         }
         return true;
@@ -36,7 +36,11 @@ export class AuthGuard implements CanActivate {
       this.toast.error(`Harap Login Terlebih Dahulu~`, 'Whoops, Akses Ditolak!');
       this.bs.idle();
     }
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
+    this.router.navigate(['/login'], {
+      queryParams: {
+        returnUrl: state.url
+      }
+    });
     return false;
   }
 
