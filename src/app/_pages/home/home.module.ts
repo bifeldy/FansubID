@@ -6,7 +6,7 @@ import { MaterialTabModule } from '../../_shared/components/material-tab/materia
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
-import { BannerModule } from '../../_shared/components/banner/banner.module';
+import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
 
 import { HomeComponent } from './home.component';
@@ -23,7 +23,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    BannerModule,
+    BannerDiscordModule,
     BannerNihongoModule,
     StatsServerModule,
     MaterialTabModule,

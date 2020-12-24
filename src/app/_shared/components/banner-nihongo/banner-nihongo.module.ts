@@ -13,6 +13,6 @@ import { SharedMaterialModule } from '../../../_shared/helpers/shared-material.m
     RouterModule,
     SharedMaterialModule
   ],
-  exports: [BannerNihongoComponent],
+  exports: [BannerNihongoComponent]
 })
 export class BannerNihongoModule { }

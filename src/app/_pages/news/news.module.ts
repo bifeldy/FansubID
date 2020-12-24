@@ -14,7 +14,7 @@ import { MaterialChipModule } from '../../_shared/components/material-chip/mater
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
-import { BannerModule } from '../../_shared/components/banner/banner.module';
+import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 
 import { NewsCreateComponent } from './news-create/news-create.component';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
@@ -71,7 +71,7 @@ const routes: Routes = [
     MaterialFileInputModule,
     NotificationsModule,
     AngularEditorModule,
-    BannerModule,
+    BannerDiscordModule,
     StatsServerModule,
     MaterialChipModule,
   ]

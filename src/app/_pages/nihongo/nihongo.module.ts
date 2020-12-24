@@ -6,7 +6,7 @@ import { NihongoListComponent } from './nihongo-list/nihongo-list.component';
 import { HirakataComponent } from './hirakata/hirakata.component';
 
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
-import { BannerModule } from '../../_shared/components/banner/banner.module';
+import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
@@ -45,7 +45,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     NotificationsModule,
-    BannerModule,
+    BannerDiscordModule,
     BannerNihongoModule,
     MaterialTabModule,
     StatsServerModule
