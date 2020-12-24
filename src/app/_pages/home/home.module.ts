@@ -7,6 +7,7 @@ import { NotificationsModule } from '../../_shared/components/notifications/noti
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { BannerModule } from '../../_shared/components/banner/banner.module';
+import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
 
 import { HomeComponent } from './home.component';
 
@@ -23,6 +24,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     BannerModule,
+    BannerNihongoModule,
     StatsServerModule,
     MaterialTabModule,
     NotificationsModule,
