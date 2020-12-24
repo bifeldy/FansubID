@@ -18,8 +18,34 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-12 sticky-top bg-light">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-secondary">Asah & Uji Kemampuan</b>
+          </h2>
+        </div>
         <div class="col-12">
-          <app-material-tab></app-material-tab>
+          <div class="row">
+            <div class="col-12 col-md-6 col-xl-3 p-3" *ngFor="let t of testNihongo">
+              <mat-card>
+                <mat-card-header routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
+                  <div mat-card-avatar style="background-size: cover;"
+                    [style.background-image]="'url(' + (t.image_url ? t.image_url : '') + ')'">
+                    <mat-icon style="font-size: 300%;" *ngIf="t.icon">{{ t.icon }}</mat-icon>
+                  </div>
+                  <mat-card-title class="text-primary mb-1" style="cursor: pointer;">
+                    <h3 class="mb-0">{{ t.name }}</h3>
+                  </mat-card-title>
+                  <mat-card-subtitle class="mb-0">{{ t.letter }}</mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12">
+          <app-material-tab (tableRowClicked)="openModule($event)" (paginatorClicked)="onPaginatorClicked($event)"
+            [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-tab>
         </div>
       </div>
     </div>

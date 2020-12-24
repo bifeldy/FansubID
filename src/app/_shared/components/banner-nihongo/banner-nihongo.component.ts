@@ -11,12 +11,12 @@ export class BannerNihongoComponent implements OnInit {
     {
       url: 'hirakata',
       title: 'Mengenal Huruf Hiragana & Katakana',
-      image_url: '/assets/img/hirakata.png'
+      image_url: '/assets/img/nihongo/hirakata.png'
     },
     {
       url: 'kanji',
       title: 'Daftar Huruf Kanji JLPT N5 - N1',
-      image_url: '/assets/img/jlpt.png'
+      image_url: '/assets/img/nihongo/jlpt.png'
     }
   ];
 
