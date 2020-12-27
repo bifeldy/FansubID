@@ -22,8 +22,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           [req.query.sort]: req.query.order.toUpperCase()
         } : {
           created_at: 'DESC',
-          id: 'ASC',
-          kanji: 'ASC'
+          id: 'ASC'
         })
       },
       skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
