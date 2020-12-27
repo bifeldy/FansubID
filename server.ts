@@ -58,6 +58,10 @@ import { TempAttachment } from './src/api/entities/TempAttachment';
 import { CorsApiKey } from './src/api/entities/CorsApiKey';
 import { News } from './src/api/entities/News';
 import { SocialMedia } from './src/api/entities/SocialMedia';
+import { Edict } from './src/api/entities/Edict';
+import { Kanji } from './src/api/entities/Kanji';
+import { Kanjivg } from './src/api/entities/Kanjivg';
+import { Tatoeba } from './src/api/entities/Tatoeba';
 
 const dbName = process.env.DB_NAME || 'hikki';
 const dbUsername = process.env.DB_USERNAME || 'root';
@@ -84,7 +88,11 @@ const typeOrmConfig: any = {
     TempAttachment,
     CorsApiKey,
     News,
-    SocialMedia
+    SocialMedia,
+    Edict,
+    Kanji,
+    Kanjivg,
+    Tatoeba
   ]
 };
 

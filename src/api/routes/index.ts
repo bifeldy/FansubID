@@ -29,6 +29,7 @@ import berkasRouter from './berkas';
 import userRouter from './user';
 import attachmentRouter from './attachment';
 import newsRouter from './news';
+import nihongoRouter from './nihongo';
 
 import { SosMed } from '../../app/_shared/models/SosMed';
 
@@ -73,6 +74,7 @@ router.use('/berkas', berkasRouter);
 router.use('/user', userRouter);
 router.use('/attachment', attachmentRouter);
 router.use('/news', newsRouter);
+router.use('/nihongo', nihongoRouter);
 
 // GET `/api`
 router.get('/', (req: UserRequest, res: Response) => {

@@ -32,12 +32,12 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           [req.query.sort]: req.query.order.toUpperCase()
         } : {
           created_at: 'DESC',
-          title: 'ASC',
+          title: 'ASC'
         })
       },
       relations: ['user_'],
       skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-      take: req.query.row > 0 ? req.query.row : 10
+      take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
     });
     for (const n of news) {
       delete n.content;

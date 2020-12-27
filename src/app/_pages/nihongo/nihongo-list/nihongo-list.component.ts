@@ -43,6 +43,15 @@ export class NihongoListComponent implements OnInit {
 
   tabData: any = [
     {
+      name: 'Modul Pendukung',
+      icon: 'file_copy',
+      type: 'table',
+      data: {
+        column: ['Tanggal', 'Nama Modul', 'Pemilik'],
+        row: []
+      }
+    },
+    {
       name: 'JLPT Roadmap',
       icon: 'pin_drop',
       type: 'html',
@@ -65,15 +74,6 @@ export class NihongoListComponent implements OnInit {
         <p class="text-danger mat-body-strong mat-body-2 font-weight-bold">N5 dan N4 adalah level termudah untuk diselesaikan dalam tes tetapi jika ingin menyelesaikan level yang lebih tinggi seperti N3, N2 dan N1 maka harus menghadiri pusat pembinaan di mana mereka menyediakan bahan pelajaran yang baik dan memiliki pelatih berpengalaman akan membantu belajar bahasa jepang dengan mudah.</p>
         <p>Informasi lebih lanjut, silahkan kunjungi <a target="_blank" class="text-decoration-none" href="https://www.jlpt.jp/e/index.html">https://www.jlpt.jp/e/index.html</a>.</p>
       `
-    },
-    {
-      name: 'Modul Pendukung',
-      icon: 'file_copy',
-      type: 'table',
-      data: {
-        column: ['Tanggal', 'Nama Modul', 'Pemilik'],
-        row: []
-      }
     }
   ];
 

@@ -17,7 +17,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const projectRepo = getRepository(ProjectType);
   const [projects, count] = await projectRepo.findAndCount({
     skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-    take: req.query.row > 0 ? req.query.row : 10
+    take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
   });
   for (const p of projects) {
     delete p.description;
