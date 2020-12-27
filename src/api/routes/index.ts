@@ -8,7 +8,7 @@ import multer from 'multer';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/server/environment';
 
 import { User } from '../entities/User';
 import { SocialMedia } from '../entities/SocialMedia';

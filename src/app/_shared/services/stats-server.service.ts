@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { io } from 'socket.io-client';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/client/environment';
 
 import { GlobalService } from './global.service';
 import { NotificationsService } from './notifications.service';

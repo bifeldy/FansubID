@@ -11,7 +11,7 @@ import { DownloadManagerService } from '../../../_shared/services/download-manag
 import { VjsService } from '../../../_shared/services/vjs.service';
 
 import User from '../../../_shared/models/User';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/client/environment';
 
 @Component({
   selector: 'app-berkas-detail',

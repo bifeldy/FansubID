@@ -15,7 +15,7 @@ import auth from '../middlewares/auth';
 
 import { MessageEmbed } from 'discord.js';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/server/environment';
 
 const router = Router();
 

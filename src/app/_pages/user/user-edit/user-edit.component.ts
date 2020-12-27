@@ -13,7 +13,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/client/environment';
 
 @Component({
   selector: 'app-user-edit',

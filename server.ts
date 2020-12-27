@@ -43,7 +43,7 @@ import { Client, TextChannel, Message } from 'discord.js';
 import MorganChalk from './src/api/helpers/morganChalk';
 import { discordBot } from './src/api/helpers/discordBot';
 
-import { environment } from './src/environments/environment';
+import { environment } from './src/environments/server/environment';
 
 // Model
 import { Profile } from './src/api/entities/Profile';

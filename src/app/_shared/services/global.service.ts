@@ -5,7 +5,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/client/environment';
 
 @Injectable({
   providedIn: 'root'

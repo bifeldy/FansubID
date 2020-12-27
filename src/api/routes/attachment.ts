@@ -9,7 +9,7 @@ import { drive_v3 } from 'googleapis';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/server/environment';
 
 import { User } from '../entities/User';
 import { Attachment } from '../entities/Attachment';

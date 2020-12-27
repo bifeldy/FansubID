@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/server/environment';
 
 import CryptoJS from 'crypto-js';
 import JWT from 'jsonwebtoken';

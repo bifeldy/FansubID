@@ -8,7 +8,7 @@ import { drive_v3 } from 'googleapis';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/server/environment';
 
 import { ProjectType } from '../entities/ProjectType';
 import { User } from '../entities/User';
@@ -209,7 +209,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
                 requestBody: {
                   name: `${attachment.name.toString().toLowerCase()}.${attachment.ext.toString().toLowerCase()}`,
                   parents: [
-                    '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ' // Hikki ひきこもり - Folder
+                    environment.gdriveFolderId // Hikki ひきこもり - Folder
                   ],
                   mimeType
                 },

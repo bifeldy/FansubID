@@ -45,12 +45,8 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environments
-environment.prod.ts
-environment.ts
-Hikki-Bifeldy-5b4fb0c54cd3.json
-client_secret_878859208574-ouhcfsn5llj9iaq2880n6v63vdua1ern.apps.googleusercontent.com.json
-
-# Other
+# Other & Environments
+src/environments/*
 src/assets/raw/*
 stdout.log
+stderr.log

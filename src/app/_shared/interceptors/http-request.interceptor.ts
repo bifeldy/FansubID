@@ -4,9 +4,10 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/c
 import { Observable } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
-import { environment } from '../../../environments/environment';
 import { GlobalService } from '../services/global.service';
 import { StatsServerService } from '../services/stats-server.service';
+
+import { environment } from '../../../environments/client/environment';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {

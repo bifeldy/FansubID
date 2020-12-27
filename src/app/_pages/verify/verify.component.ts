@@ -10,7 +10,7 @@ import { UserService } from '../../_shared/services/user.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/client/environment';
 
 @Component({
   selector: 'app-verify',

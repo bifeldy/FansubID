@@ -3,7 +3,7 @@ import { Response, NextFunction } from 'express';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/server/environment';
 
 // tslint:disable-next-line: typedef
 function log(text, data = null, print = false) {

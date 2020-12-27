@@ -18,7 +18,7 @@ import jwt from '../helpers/jwt';
 import CryptoJS from 'crypto-js';
 import { MessageEmbed } from 'discord.js';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/server/environment';
 
 const router = Router();
 

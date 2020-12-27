@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import CryptoJS from 'crypto-js';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/client/environment';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';

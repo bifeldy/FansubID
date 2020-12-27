@@ -13,7 +13,7 @@ import { Profile } from '../entities/Profile';
 
 import CryptoJS from 'crypto-js';
 
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/server/environment';
 
 // Helper
 import jwt from '../helpers/jwt';

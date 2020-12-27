@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import User from '../models/User';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/client/environment';
 
 import { GlobalService } from './global.service';
 import { CryptoService } from './crypto.service';
