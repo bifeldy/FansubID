@@ -15,6 +15,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const tatoebaRepo = getRepository(Tatoeba);
     const [tatoebas, count] = await tatoebaRepo.findAndCount({
       where: [
+        { phrase: Like(`%${req.query.q ? req.query.q : ''}%`) },
         { kanji: Like(`%${req.query.q ? req.query.q : ''}%`) }
       ],
       order: {
