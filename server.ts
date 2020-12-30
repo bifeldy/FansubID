@@ -8,6 +8,7 @@ import http from 'http';
 
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
+import compression from 'compression';
 
 import socketIo from 'socket.io';
 
@@ -156,6 +157,7 @@ export function app(): http.Server {
   expressApp.set('trust proxy', true);
 
   // Middleware
+  expressApp.use(compression());
   expressApp.use(cors(corsOptions));
   expressApp.use(MorganChalk.morganChalk);
   expressApp.use(express.json({ limit: '512mb' }));
