@@ -1,4 +1,5 @@
 import createError from 'http-errors';
+import translate from '@k3rn31p4nic/google-translate-api';
 
 import { Router, Response, NextFunction } from 'express';
 import { Equal, getRepository, Like } from 'typeorm';
@@ -68,6 +69,12 @@ router.get('/:character', async (req: UserRequest, res: Response, next: NextFunc
         { character: Equal(req.params.character) }
       ]
     });
+    try {
+      const translated = await translate(kanji.translate, { to: 'id' });
+      (kanji as any).terjemahan = translated.text;
+    } catch (e) {
+      console.error(e);
+    }
     return res.status(200).json({
       info: `😅 200 - Kanji API :: Detail ${req.params.character} 🤣`,
       result: kanji
