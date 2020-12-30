@@ -1,5 +1,4 @@
 import createError from 'http-errors';
-import translate from '@k3rn31p4nic/google-translate-api';
 
 import { Router, Response, NextFunction } from 'express';
 import { Equal, getRepository, Like } from 'typeorm';
@@ -56,12 +55,6 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
         { id: Equal(req.params.id) }
       ]
     });
-    try {
-      const translated = await translate(tatoeba.translate, { to: 'id' });
-      (tatoeba as any).terjemahan = translated.text;
-    } catch (e) {
-      console.error(e);
-    }
     return res.status(200).json({
       info: `😅 200 - Tatoeba API :: Detail ${req.params.id} 🤣`,
       result: tatoeba
