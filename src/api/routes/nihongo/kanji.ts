@@ -15,9 +15,21 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const kanjiRepo = getRepository(Kanji);
     const [kanjis, count] = await kanjiRepo.findAndCount({
       where: [
-        { character: Like(`%${req.query.q ? req.query.q : ''}%`) },
-        { v_onyomi: Like(`%${req.query.q ? req.query.q : ''}%`) },
-        { v_kunyomi: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        {
+          character: Like(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
+          school: Like(`%${req.query.school ? req.query.school : ''}%`)
+        },
+        {
+          v_onyomi: Like(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
+          school: Like(`%${req.query.school ? req.query.school : ''}%`)
+        },
+        {
+          v_kunyomi: Like(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
+          school: Like(`%${req.query.school ? req.query.school : ''}%`)
+        }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
@@ -33,6 +45,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     return res.status(200).json({
       info: `😅 200 - Kanji API :: List All 🤣`,
       count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: kanjis
     });
   } catch (error) {

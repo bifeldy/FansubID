@@ -213,16 +213,50 @@ export function app(): http.Server {
 
   /********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
 
+  let botPresenceStatusInterval = null;
+
+  bot.on('disconnect', (event) => {
+    logger.log(`[DISCORD] 🎉 DISCONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
+    if (botPresenceStatusInterval) {
+      clearInterval(botPresenceStatusInterval);
+    }
+  });
+
   bot.on('ready', () => {
-    logger.log(`[DISCORD] 🎉 ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
-    bot.user.setPresence({
-      status: 'online',
-      activity: {
-        name: 'Nihongo 日本語',
-        type: 'WATCHING',
-        url: 'http://hikki.bifeldy.id'
+    logger.log(`[DISCORD] 🎉 CONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
+    botPresenceStatusInterval = setInterval(async () => {
+      try {
+        const presenceStatus: any = [
+          'dnd',
+          'idle',
+          'online'
+        ];
+        const presenceType: any = [
+          'COMPETING',
+          'WATCHING',
+          'LISTENING',
+          'PLAYING',
+          'STREAMING',
+          'CUSTOM_STATUS'
+        ];
+        const presenceName: any = [
+          'http://www.hikki.id',
+          'Anime Database',
+          'Fansub Database',
+          'Nihongo 日本語'
+        ];
+        await bot.user.setPresence({
+          status: presenceStatus[Math.floor(Math.random() * presenceStatus.length)],
+          activity: {
+            name: presenceName[Math.floor(Math.random() * presenceName.length)],
+            type: presenceType[Math.floor(Math.random() * presenceType.length)],
+            url: 'http://hikki.bifeldy.id'
+          }
+        });
+      } catch (error) {
+        console.error(error);
       }
-    });
+    }, 15000);
   });
 
   bot.on('message', async (msg: Message) => {

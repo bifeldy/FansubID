@@ -15,7 +15,8 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const kanjivgRepo = getRepository(Kanjivg);
     const [kanjivgs, count] = await kanjivgRepo.findAndCount({
       where: [
-        { kanji: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        { kanji: Like(`%${req.query.q ? req.query.q : ''}%`) },
+        { level: Like(`%${req.query.q ? req.query.q : ''}%`) }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
@@ -31,6 +32,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     return res.status(200).json({
       info: `😅 200 - Kanjivg API :: List All 🤣`,
       count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: kanjivgs
     });
   } catch (error) {

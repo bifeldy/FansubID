@@ -13,7 +13,8 @@ import { User } from '../entities/User';
 // tslint:disable-next-line: typedef
 export async function discordBot(io: Server, msg: Message) {
   if (msg.content === '~ping') {
-    msg.channel.send(`<@${msg.author.id}> Pong ${new Date().getTime() - new Date(msg.createdTimestamp).getTime()} ms!`);
+    const latency = new Date().getTime() - new Date(msg.createdTimestamp).getTime();
+    msg.channel.send(`<@${msg.author.id}> Pong ${latency} ms late!`);
   } else if (msg.content.startsWith('~verify ')) {
     const args = msg.content.split(' ');
     if (args.length >= 3 && args.length <= 4) {

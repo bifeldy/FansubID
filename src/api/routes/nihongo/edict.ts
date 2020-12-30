@@ -15,8 +15,14 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const edictRepo = getRepository(Edict);
     const [edicts, count] = await edictRepo.findAndCount({
       where: [
-        { kanji: Like(`%${req.query.q ? req.query.q : ''}%`) },
-        { reading: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        {
+          kanji: Like(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`)
+        },
+        {
+          reading: Like(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`)
+        }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
@@ -32,6 +38,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     return res.status(200).json({
       info: `😅 200 - Edict API :: List All 🤣`,
       count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: edicts
     });
   } catch (error) {

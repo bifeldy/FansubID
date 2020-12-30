@@ -180,7 +180,9 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
       }
       return res.status(200).json({
         info: `😅 200 - Anime API :: Berkas ${animeId.join(', ')} 🤣`,
-        count, results
+        count,
+        pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+        results
       });
     } else {
       throw new Error('Data Tidak Lengkap!');
@@ -235,7 +237,9 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
       }
       return res.status(200).json({
         info: `😅 200 - Anime API :: Fansub ${animeId.join(', ')} 🤣`,
-        count, results
+        count,
+        pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+        results
       });
     } else {
       throw new Error('Data Tidak Lengkap!');

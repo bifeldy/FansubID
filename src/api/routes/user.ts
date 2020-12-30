@@ -217,6 +217,7 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
     return res.status(200).json({
       info: `😅 200 - User API :: Berkas ${req.params.username} 🤣`,
       count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: files
     });
   } catch (error) {
