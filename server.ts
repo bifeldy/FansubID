@@ -245,7 +245,8 @@ export function app(): http.Server {
           'http://www.hikki.id',
           'Anime Database',
           'Fansub Database',
-          'Nihongo 日本語'
+          'Nihongo 日本語',
+          `${io.sockets.sockets.size} Pengunjung`
         ];
         await bot.user.setPresence({
           status: presenceStatus[Math.floor(Math.random() * presenceStatus.length)],
