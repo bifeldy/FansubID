@@ -8,10 +8,9 @@ import { GlobalService } from './global.service';
 export class LeftMenuService {
 
   public sideNav = null;
-  sideNavExpanded = false;
+  public sideNavExpanded = false;
 
   linkText = false;
-  sideMoveTimeout = null;
 
   public opened = true;
 
@@ -24,10 +23,7 @@ export class LeftMenuService {
   }
 
   changeSideNavState(): void {
-    clearTimeout(this.sideMoveTimeout);
-    this.sideMoveTimeout = setTimeout(() => {
-      this.linkText = this.sideNavExpanded;
-    }, 250);
+    this.linkText = this.sideNavExpanded;
   }
 
   onSideNavToggleView(): void {

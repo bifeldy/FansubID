@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationStart } from '@angular/router';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
@@ -20,8 +20,8 @@ import { GlobalService } from './_shared/services/global.service';
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('leftSideNav') leftSideNav;
-  @ViewChild('leftSideNavContent') leftSideNavContent;
+  @ViewChild('leftSideNav', { static: true }) leftSideNav: ElementRef;
+  @ViewChild('leftSideNavContent', { static: true }) leftSideNavContent;
 
   selectedBackgroundImage = '';
 
@@ -99,9 +99,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           );
           if (this.gs.isBrowser) {
             this.bs.idle();
-            this.leftSideNavContent.nativeElement.scrollTop = 0;
             this.fs.removeFab();
             this.checkStorage();
+            this.leftSideNavContent.elementRef.nativeElement.scrollTop = 0;
           }
         });
       }

@@ -5,24 +5,24 @@
 <ng-progress [color]="'#ff4081'" [fixed]="false" [meteor]="false" [thick]="true"></ng-progress>
 
 <!-- Side Menu Drawer & Content -->
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container class="sidenav-container" [hasBackdrop]="lms.sideNavExpanded">
 
   <!-- Side Menu -->
-  <mat-sidenav #leftSideNav mode="side" [opened]="lms.opened" [ngStyle]="{
+  <mat-sidenav #leftSideNav [mode]="'side'" [opened]="lms.opened" [ngStyle]="{
     'background-image': 'url(/assets/img/bg-side-menu.png)'
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-left-menu></app-left-menu>
   </mat-sidenav>
 
   <!-- Main Content -->
-  <mat-sidenav-content
+  <mat-sidenav-content #leftSideNavContent
     [style.background-repeat]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? 'repeat' : 'no-repeat'"
     [style.background-size]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? '' : '128px'"
     [style.background-position]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? '' : 'bottom right'"
     [style.background-image]="'url(' + selectedBackgroundImage + ')'">
 
     <!-- Routing Content -->
-    <div class="main_content" #leftSideNavContent (window:resize)="gs.onResize($event)">
+    <div class="main_content" (window:resize)="gs.onResize($event)">
 
       <!-- Data Content -->
       <router-outlet></router-outlet>

@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { MatTabGroup } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 
 import { GlobalService } from '../../services/global.service';
@@ -18,8 +18,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
 
-  @ViewChild(MatTabGroup) tabGroup;
-  @ViewChildren(MatTab) tab;
+  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
 
   selectedIndexTab = 0;
   totalTabsCount = 2;
@@ -94,7 +93,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.totalTabsCount = this.tab.length;
+    this.totalTabsCount = this.tabData.length;
   }
 
   ngOnDestroy(): void {
