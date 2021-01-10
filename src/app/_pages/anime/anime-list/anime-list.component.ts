@@ -185,8 +185,6 @@ export class AnimeListComponent implements OnInit, OnDestroy {
           for (const f of sA.namaFansubs) {
             f.selected = true;
             f.type = 'chip';
-            f.name = f.slug;
-            delete f.slug;
           }
           seasonalAnimeWithFansub.push({
             mal_id: sA.mal_id,
