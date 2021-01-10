@@ -55,7 +55,9 @@
                     <mat-label>Singkatan</mat-label>
                     <input matInput formControlName="slug" placeholder="Jalsub" />
                     <mat-icon matSuffix>short_text</mat-icon>
-                    <small *ngIf="slugInfo" class="text-info">{{ slugInfo }}</small>
+                    <small *ngIf="slugInfo" class="text-info">
+                      <strong>{{ slugInfo }}</strong>
+                    </small>
                     <mat-error>
                       <strong *ngIf="fg.get('slug').hasError('required')">Singkatan Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('slug').hasError('pattern')">Singkatan Hanya Boleh Huruf Standar Papan Ketik</strong>
