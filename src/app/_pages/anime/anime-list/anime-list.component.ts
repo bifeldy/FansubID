@@ -226,7 +226,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
 
   openFansub(data): void {
     this.gs.log('[ANIME_SEASONAL_CLICK_FANSUB]', data);
-    this.router.navigateByUrl(`/fansub/${data.id}`);
+    this.router.navigateByUrl(`/fansub/${data.slug}`);
   }
 
 }
