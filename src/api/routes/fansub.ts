@@ -37,7 +37,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     return res.status(200).json({
       info: `😅 200 - Fansub API :: List All 🤣`,
       count,
-      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+      pages: 1,
       results: fansubs
     });
   } catch (error) {

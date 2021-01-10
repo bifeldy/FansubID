@@ -16,8 +16,9 @@ const router = Router();
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const projectRepo = getRepository(ProjectType);
   const [projects, count] = await projectRepo.findAndCount({
-    skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-    take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
+    order: {
+      name: 'ASC'
+    }
   });
   for (const p of projects) {
     delete p.description;
@@ -26,7 +27,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   return res.status(200).json({
     info: `😅 200 - Project API :: List All 🤣`,
     count,
-    pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+    pages: 1,
     results: projects
   });
 });
