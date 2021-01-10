@@ -52,7 +52,10 @@ export async function discordBot(io: Server, msg: Message) {
                 .setDescription(user.profile_.description.replace(/<[^>]*>/g, '').trim())
                 .setThumbnail(user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url)
                 .setTimestamp(user.updated_at)
-                .setFooter(user.id)
+                .setFooter(
+                  user.username,
+                  user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url
+                )
               );
             } else {
               await msg.channel.send(`<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔`);

@@ -242,7 +242,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           f.urls = JSON.parse(f.urls);
           delete f.created_at;
           delete f.updated_at;
-          fansubEmbedData.push(f.slug);
+          fansubEmbedData.push(f.name);
         }
       }
       if ('attachment_' in resFileSave && resFileSave.attachment_) {
@@ -466,7 +466,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               f.urls = JSON.parse(f.urls);
               delete f.created_at;
               delete f.updated_at;
-              fansubEmbedData.push(f.slug);
+              fansubEmbedData.push(f.name);
             }
           }
           if ('attachment_' in resFileSave && resFileSave.attachment_) {

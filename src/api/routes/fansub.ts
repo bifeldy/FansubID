@@ -114,7 +114,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         fansub.user_ = user;
         fansub.name = req.body.name;
         fansub.born = new Date(req.body.born);
-        fansub.slug = req.body.slug;
+        fansub.slug = req.body.slug.replace(/\s/g, '');
         const filteredUrls = [];
         for (const u of req.body.urls) {
           if ('url' in u && 'name' in u && u.url && u.name) {
@@ -156,7 +156,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
           .setTimestamp(resFansubSave.updated_at)
           .setFooter(
-            `${resFansubSave.id} :: ${resFansubSave.user_.username}`,
+            resFansubSave.user_.username,
             // tslint:disable-next-line: max-line-length
             resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
           )
@@ -376,7 +376,7 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
           ]
         });
         if (selectedFansub.length === 0) {
-          fansub.slug = req.body.slug;
+          fansub.slug = req.body.slug.replace(/\s/g, '');
         } else {
           return res.status(202).json({
             info: `😅 202 - Fansub API :: Gagal Mengubah Fansub ${req.params.id} 🥰`,
@@ -440,7 +440,7 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
         .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
         .setTimestamp(resFansubSave.updated_at)
         .setFooter(
-          `${resFansubSave.id} :: ${resFansubSave.user_.username}`,
+          resFansubSave.user_.username,
           // tslint:disable-next-line: max-line-length
           resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
         )

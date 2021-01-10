@@ -52,8 +52,8 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
             newUserProfile.cover_url = '/favicon.ico';
             const resProfileSave = await profileRepo.save(newUserProfile);
             const newUser = new User();
-            newUser.username = req.body.username;
-            newUser.email = req.body.email;
+            newUser.username = req.body.username.replace(/\s/g, '');
+            newUser.email = req.body.email.replace(/\s/g, '');
             newUser.image_url = '/favicon.ico';
             newUser.password = CryptoJS.SHA512(req.body.password).toString();
             newUser.kartu_tanda_penduduk_ = resKtpSave;
