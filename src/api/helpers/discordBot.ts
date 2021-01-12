@@ -12,9 +12,11 @@ import { User } from '../entities/User';
 
 // tslint:disable-next-line: typedef
 export async function discordBot(io: Server, msg: Message) {
-  if (msg.content === '~ping') {
+  if (msg.content === '~about') {
+    return msg.channel.send(`<@${msg.author.id}> https://github.com/bifeldy/Hikki`);
+  } else if (msg.content === '~ping') {
     const latency = new Date().getTime() - new Date(msg.createdTimestamp).getTime();
-    msg.channel.send(`<@${msg.author.id}> Pong ${latency} ms late!`);
+    return msg.channel.send(`<@${msg.author.id}> Pong ${latency} ms late!`);
   } else if (msg.content.startsWith('~verify ')) {
     const args = msg.content.split(' ');
     if (args.length >= 3 && args.length <= 4) {
@@ -43,7 +45,7 @@ export async function discordBot(io: Server, msg: Message) {
                 await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
               }
               await msg.channel.send(`<@${msg.author.id}> Berhasil 😚 Enjoy! 🤩`);
-              await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send(
+              return (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send(
                 new MessageEmbed()
                 .setColor('#43b581')
                 .setTitle(user.kartu_tanda_penduduk_.nama)
@@ -58,7 +60,7 @@ export async function discordBot(io: Server, msg: Message) {
                 )
               );
             } else {
-              await msg.channel.send(`<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔`);
+              return msg.channel.send(`<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔`);
             }
           } else {
             throw new Error('Format Data Salah / Token Expired!');
@@ -67,7 +69,7 @@ export async function discordBot(io: Server, msg: Message) {
         // TODO :: If Other SosMed
       } catch (error) {
         console.error(error);
-        await msg.channel.send(`<@${msg.author.id}> Format data salah atau token expired 🤔`);
+        return msg.channel.send(`<@${msg.author.id}> Format data salah atau token expired 🤔`);
       }
     }
   }

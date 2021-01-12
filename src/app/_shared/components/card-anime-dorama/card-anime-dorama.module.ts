@@ -5,15 +5,15 @@ import { SwiperModule } from 'ngx-swiper-wrapper';
 
 import { SharedMaterialModule } from '../../helpers/shared-material.module';
 
-import { CardAnimeComponent } from './card-anime.component';
+import { CardAnimeDoramaComponent } from './card-anime-dorama.component';
 
 @NgModule({
-  declarations: [CardAnimeComponent],
+  declarations: [CardAnimeDoramaComponent],
   imports: [
     CommonModule,
     SharedMaterialModule,
     SwiperModule
   ],
-  exports: [CardAnimeComponent]
+  exports: [CardAnimeDoramaComponent]
 })
-export class CardAnimeModule { }
+export class CardAnimeDoramaModule { }

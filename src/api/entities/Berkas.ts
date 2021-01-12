@@ -4,6 +4,7 @@ import { User } from './User';
 import { Fansub } from './Fansub';
 import { ProjectType } from './ProjectType';
 import { Anime } from './Anime';
+import { Dorama } from './Dorama';
 import { Attachment } from './Attachment';
 
 @Entity({ name: 'berkas' })
@@ -48,6 +49,10 @@ export class Berkas {
   @ManyToOne(type => Anime)
   // tslint:disable-next-line: variable-name
   anime_: Anime;
+
+  @ManyToOne(type => Dorama)
+  // tslint:disable-next-line: variable-name
+  dorama_: Dorama;
 
   @ManyToMany(type => Fansub)
   @JoinTable()

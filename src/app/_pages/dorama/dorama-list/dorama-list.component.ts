@@ -12,20 +12,20 @@ import { Seasons } from '../../../_shared/models/Seasons';
 import { moment, MY_FORMATS } from '../../../_shared/helpers/moment';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { AnimeService } from '../../../_shared/services/anime.service';
+import { DoramaService } from '../../../_shared/services/dorama.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 
 @Component({
-  selector: 'app-anime-list',
-  templateUrl: './anime-list.component.html',
-  styleUrls: ['./anime-list.component.css'],
+  selector: 'app-dorama-list',
+  templateUrl: './dorama-list.component.html',
+  styleUrls: ['./dorama-list.component.css'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]},
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ]
 })
-export class AnimeListComponent implements OnInit, OnDestroy {
+export class DoramaListComponent implements OnInit, OnDestroy {
 
   fg: FormGroup;
 
@@ -39,13 +39,17 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   currentMonth = null;
   currentYear = null;
 
+  selectedCountryName = "";
   selectedSeasonName = null;
+
+  doramaCountry = [];
 
   minDate: Date;
   maxDate: Date;
 
-  seasonalAnimeCard = [];
-  seasonalAnime = [];
+  seasonalDorama = [];
+  seasonalDoramaCard = [];
+  seasonalDoramaWithFansub = [];
 
   tabData = [
     {
@@ -53,15 +57,15 @@ export class AnimeListComponent implements OnInit, OnDestroy {
       icon: 'closed_caption',
       type: 'table',
       data: {
-        column: ['Jenis', 'Poster', 'Judul Anime', 'Nama Fansub'],
+        column: ['Jenis', 'Poster', 'Judul Dorama', 'Nama Fansub'],
         row: []
       }
     }
   ];
 
   subsParam = null;
-  subsSeasonalAnime = null;
-  subsFansubAnime = null;
+  subsSeasonalDorama = null;
+  subsFansubDorama = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -69,7 +73,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     public gs: GlobalService,
     private fs: FabService,
-    private anime: AnimeService
+    private dorama: DoramaService
   ) {
     this.gs.bannerImg = '/assets/img/season/winter.png';
     this.gs.bgRepeat = true;
@@ -80,11 +84,11 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     if (this.subsParam) {
       this.subsParam.unsubscribe();
     }
-    if (this.subsSeasonalAnime) {
-      this.subsSeasonalAnime.unsubscribe();
+    if (this.subsSeasonalDorama) {
+      this.subsSeasonalDorama.unsubscribe();
     }
-    if (this.subsFansubAnime) {
-      this.subsFansubAnime.unsubscribe();
+    if (this.subsFansubDorama) {
+      this.subsFansubDorama.unsubscribe();
     }
   }
 
@@ -94,7 +98,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     });
     this.currentMonth = new Date(this.fg.value.currentDate.format()).getMonth() + 1;
     this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
-    this.minDate = new Date('1917-01-01');
+    this.minDate = new Date('2011-01-01');
     this.maxDate = new Date(this.currentYear + 1, 11, 31);
     if (this.gs.isBrowser) {
       this.watchUrlRoute();
@@ -119,7 +123,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
       ) : this.findSeasonNameByMonthNumber(this.currentMonth);
       this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
       this.bs.idle();
-      this.getSeasonalAnime(p.year && p.season);
+      this.getSeasonalDorama(p.year && p.season);
     });
   }
 
@@ -134,69 +138,74 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     this.currentMonth = new Date(this.fg.value.currentDate.format()).getMonth() + 1;
     this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
     datepicker.close();
-    this.changeSeasonalAnime();
+    this.changeSeasonalDorama();
   }
 
-  getSeasonalAnime(showFab = false): void {
+  getSeasonalDorama(showFab = false): void {
     this.bs.busy();
-    this.subsSeasonalAnime = this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
+    this.subsSeasonalDorama = this.dorama.getSeasonalDorama(this.currentYear, this.selectedSeasonName).subscribe(
       res => {
-        this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
-        this.seasonalAnime = res.results.filter(a => a.continuing === false && a.kids === false).sort((a, b) => b.score - a.score);
+        this.gs.log('[DORAMA_SEASONAL_SUCCESS]', res);
+        this.seasonalDorama = res.results.sort((a, b) => b.rating - a.rating);
+        this.doramaCountry = [];
+        for (const sD of this.seasonalDorama) {
+          sD.mdl_id = sD.id;
+          sD.image_url = sD.cover;
+          this.doramaCountry.push(sD.country);
+        }
+        this.doramaCountry = [...new Set(this.doramaCountry)]
         if (showFab) {
-          this.fs.initializeFab('settings_backup_restore', null, 'Kembali Ke Musim Sekarang', '/anime', false);
+          this.fs.initializeFab('settings_backup_restore', null, 'Kembali Ke Musim Sekarang', '/dorama', false);
         }
         this.bs.idle();
-        this.getFansubAnime();
+        this.getFansubDorama();
       },
       err => {
-        this.gs.log('[ANIME_SEASONAL_ERROR]', err);
+        this.gs.log('[DORAMA_SEASONAL_ERROR]', err);
         this.bs.idle();
       }
     );
   }
 
-  getFansubAnime(): void {
+  getFansubDorama(): void {
     this.bs.busy();
     this.tabData[0].data.row = [];
-    const seasonalAnimeListId = [];
-    for (const sA of this.seasonalAnime) {
-      seasonalAnimeListId.push(sA.mal_id);
+    const seasonalDoramaListId = [];
+    for (const sD of this.seasonalDorama) {
+      seasonalDoramaListId.push(sD.mdl_id);
     }
-    this.subsFansubAnime = this.anime.getFansubAnime(seasonalAnimeListId).subscribe(
+    this.subsFansubDorama = this.dorama.getFansubDorama(seasonalDoramaListId).subscribe(
       res => {
-        this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
-        let seasonalAnimeWithFansub = [];
-        for (const sA of this.seasonalAnime) {
-          sA.namaFansubs = res.results[sA.mal_id];
-          for (const f of sA.namaFansubs) {
+        this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
+        this.seasonalDoramaWithFansub = [];
+        for (const sD of this.seasonalDorama) {
+          sD.namaFansubs = res.results[sD.mdl_id];
+          for (const f of sD.namaFansubs) {
             f.selected = true;
             f.type = 'chip';
           }
-          seasonalAnimeWithFansub.push({
-            mal_id: sA.mal_id,
-            Jenis: sA.type,
-            Poster: sA.image_url,
-            'Judul Anime': sA.title,
-            'Nama Fansub': sA.namaFansubs,
+          this.seasonalDoramaWithFansub.push({
+            url: sD.url,
+            country: sD.country,
+            Jenis: sD.type,
+            Poster: sD.image_url,
+            'Judul Dorama': sD.title,
+            'Nama Fansub': sD.namaFansubs,
           });
         }
-        seasonalAnimeWithFansub = seasonalAnimeWithFansub.sort((a, b) => b['Nama Fansub'].length - a['Nama Fansub'].length);
-        this.tabData[0].data.row = seasonalAnimeWithFansub;
-        this.seasonalAnimeCard = this.seasonalAnime.filter(a =>
-          a.continuing === false && a.type === 'TV' && a.r18 === false && a.kids === false
-        );
+        this.seasonalDoramaWithFansub = this.seasonalDoramaWithFansub.sort((a, b) => b['Nama Fansub'].length - a['Nama Fansub'].length);
         this.bs.idle();
+        this.changeCountryDorama();
       },
       err => {
-        this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.gs.log('[FANSUB_DORAMA_ERROR]', err);
         this.bs.idle();
       }
     );
   }
 
-  changeSeasonalAnime(): void {
-    this.router.navigate(['/anime'], {
+  changeSeasonalDorama(): void {
+    this.router.navigate(['/dorama'], {
       queryParams: {
         season: this.selectedSeasonName,
         year: this.currentYear
@@ -204,13 +213,18 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openAnimePage(data): void {
-    this.gs.log('[ANIME_SEASONAL_CLICK_ANIME]', data.mal_id);
-    this.router.navigateByUrl(`/anime/${data.mal_id}`);
+  changeCountryDorama(): void {
+    this.tabData[0].data.row = this.seasonalDoramaWithFansub.filter(x => x.country.includes(this.selectedCountryName));
+    this.seasonalDoramaCard = this.seasonalDorama.filter(x => x.country.includes(this.selectedCountryName));
+  }
+
+  openDoramaPage(data): void {
+    this.gs.log('[DORAMA_SEASONAL_CLICK_DORAMA]', data.url);
+    this.router.navigateByUrl(`/dorama${data.url}`);
   }
 
   openFansub(data): void {
-    this.gs.log('[ANIME_SEASONAL_CLICK_FANSUB]', data);
+    this.gs.log('[DORAMA_SEASONAL_CLICK_FANSUB]', data);
     this.router.navigateByUrl(`/fansub/${data.slug}`);
   }
 

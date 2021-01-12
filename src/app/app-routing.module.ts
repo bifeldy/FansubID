@@ -91,6 +91,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'dorama',
+    loadChildren: () => import('./_pages/dorama/dorama.module').then(m => m.DoramaModule),
+    data: {
+      title: 'List Dorama & Garapan Musiman',
+      description: 'Daftar Isi Dorama Musiman Yang Baru Saja Rilis Subtitle Indonesianya',
+      keywords: 'Dorama Subtitle Indonesia'
+    }
+  },
+  {
     path: 'fansub',
     loadChildren: () => import('./_pages/fansub/fansub.module').then(m => m.FansubModule),
     data: {

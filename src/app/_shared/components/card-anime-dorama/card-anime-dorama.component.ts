@@ -3,11 +3,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { GlobalService } from '../../services/global.service';
 
 @Component({
-  selector: 'app-card-anime',
-  templateUrl: './card-anime.component.html',
-  styleUrls: ['./card-anime.component.css']
+  selector: 'app-card-anime-dorama',
+  templateUrl: './card-anime-dorama.component.html',
+  styleUrls: ['./card-anime-dorama.component.css']
 })
-export class CardAnimeComponent implements OnInit {
+export class CardAnimeDoramaComponent implements OnInit {
 
   swiperConfig = {
     slidesPerView: 1.75,
@@ -48,7 +48,7 @@ export class CardAnimeComponent implements OnInit {
     }
   };
 
-  @Input() animeData = [];
+  @Input() animeDoramaData = [];
 
   @Output() cardClicked = new EventEmitter();
 

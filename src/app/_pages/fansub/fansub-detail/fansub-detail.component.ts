@@ -36,8 +36,14 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   tabData: any = [
     {
-      name: 'Proyek',
+      name: 'Anime',
       icon: 'live_tv',
+      type: 'list',
+      data: []
+    },
+    {
+      name: 'Dorama',
+      icon: 'movie',
       type: 'list',
       data: []
     },
@@ -154,7 +160,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             'Nama Berkas': r.name
           });
         }
-        this.tabData[1].data.row = this.berkasFansub;
+        this.tabData[2].data.row = this.berkasFansub;
         this.bs.idle();
       },
       err => {

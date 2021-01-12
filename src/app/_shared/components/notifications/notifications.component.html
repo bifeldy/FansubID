@@ -6,7 +6,8 @@
   [style.height]="router.url == '/home' ? '192px' : '128px'"
   *ngIf="gs.bannerImg && (
     router.url == '/home' || router.url == '/berkas' || router.url == '/fansub' ||
-    router.url == '/anime' || router.url.includes('/anime?')
+    router.url == '/anime' || router.url.includes('/anime?') ||
+    router.url == '/dorama' || router.url.includes('/dorama?')
   )">
   <!-- <div class="row align-items-center h-100">
     <div class="col-9 mx-auto text-light text-center" style="background-color: rgba(0, 0, 0, 0.25);">

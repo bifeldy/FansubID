@@ -10,24 +10,24 @@ import { MaterialExpansionPanelModule } from '../../_shared/components/material-
 import { CardAnimeDoramaModule } from '../../_shared/components/card-anime-dorama/card-anime-dorama.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
-import { AnimeListComponent } from './anime-list/anime-list.component';
-import { AnimeDetailComponent } from './anime-detail/anime-detail.component';
+import { DoramaListComponent } from './dorama-list/dorama-list.component';
+import { DoramaDetailComponent } from './dorama-detail/dorama-detail.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AnimeListComponent
+    component: DoramaListComponent
   },
   {
     path: ':animeId',
-    component: AnimeDetailComponent
+    component: DoramaDetailComponent
   }
 ];
 
 @NgModule({
   declarations: [
-    AnimeListComponent,
-    AnimeDetailComponent
+    DoramaListComponent,
+    DoramaDetailComponent
   ],
   imports: [
     CommonModule,
@@ -42,4 +42,4 @@ const routes: Routes = [
     NotificationsModule
   ]
 })
-export class AnimeModule { }
+export class DoramaModule { }

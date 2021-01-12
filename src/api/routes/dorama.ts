@@ -9,84 +9,89 @@ import { UserRequest } from '../models/UserRequest';
 import auth from '../middlewares/auth';
 
 import { Berkas } from '../entities/Berkas';
-import { Anime } from '../entities/Anime';
+import { Dorama } from '../entities/Dorama';
 
 const router = Router();
 
-const jikanV3 = 'http://api.jikan.moe/v3';
+const myDramaListV1 = 'https://mydramalist.com/v1';
+const kuryanaApi = 'https://kuryana.vercel.app';
 
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
   { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
 ];
 
-// GET `/api/anime`
+// GET `/api/dorama`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const searchQuery = req.query.q || '';
   const searchType = req.query.type || '';
   return request({
     method: 'GET',
-    uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`
+    uri: `${kuryanaApi}/search/q/${searchQuery}`
   }, async (error, result, body) => {
     return res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - Anime API :: Search ${searchQuery} 🤣`,
+      info: `😅 ${result.statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
       results: (
         'results' in JSON.parse(body)
-          ? JSON.parse(body).results
+          ? JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType))
           : []
       )
     });
   });
 });
 
-// POST `/api/anime`
+// POST `/api/dorama`
 router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('id' in req.body && 'name' in req.body && 'image_url' in req.body) {
-      const animeRepo = getRepository(Anime);
-      const animes = await animeRepo.find({
+      const doramaRepo = getRepository(Dorama);
+      const doramas = await doramaRepo.find({
         where: [
           { id: req.body.id }
         ]
       });
-      if (animes.length === 0) {
-        const anime = new Anime();
-        anime.id = req.body.id;
-        anime.name = req.body.name;
-        anime.image_url = req.body.image_url;
-        anime.type = req.body.type;
-        const resultSaveAnime = await animeRepo.save(anime);
+      if (doramas.length === 0) {
+        const dorama = new Dorama();
+        dorama.id = req.body.id;
+        dorama.slug = req.body.slug;
+        dorama.name = req.body.name;
+        dorama.image_url = req.body.image_url;
+        dorama.type = req.body.type;
+        const resultSaveDorama = await doramaRepo.save(dorama);
         return res.status(200).json({
-          info: `😅 200 - Anime API :: Tambah Baru 🤣`,
-          result: resultSaveAnime
+          info: `😅 200 - Dorama API :: Tambah Baru 🤣`,
+          result: resultSaveDorama
         });
-      } else if (animes.length === 1) {
-        const anime = await animeRepo.findOneOrFail({
+      } else if (doramas.length === 1) {
+        const dorama = await doramaRepo.findOneOrFail({
           where: [
-            { id: animes[0].id }
+            { id: doramas[0].id }
           ]
         });
         if (req.body.id) {
-          anime.id = req.body.id;
+          dorama.id = req.body.id;
+        }
+        if (req.body.slug) {
+          dorama.slug = req.body.slug;
         }
         if (req.body.name) {
-          anime.name = req.body.name;
+          dorama.name = req.body.name;
         }
         if (req.body.image_url) {
-          anime.image_url = req.body.image_url;
+          dorama.image_url = req.body.image_url;
         }
         if (req.body.type) {
-          anime.type = req.body.type;
+          dorama.type = req.body.type;
         }
-        const resultSaveAnime = await animeRepo.save(anime);
+        const resultSaveDorama = await doramaRepo.save(dorama);
         return res.status(202).json({
-          info: `😅 202 - Anime API :: Data Anime Diperbaharui 🤣`,
-          result: resultSaveAnime
+          info: `😅 202 - Dorama API :: Data Dorama Diperbaharui 🤣`,
+          result: resultSaveDorama
         });
       } else {
         return res.status(202).json({
-          info: `😍 202 - Anime API :: Data Anime Multi Duplikat 🥰`,
-          result: animes
+          info: `😍 202 - Dorama API :: Data Dorama Multi Duplikat 🥰`,
+          result: doramas
         });
       }
     } else {
@@ -95,7 +100,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Anime API :: Gagal Menambah Anime 😪`,
+      info: `🙄 400 - Dorama API :: Gagal Menambah Dorama 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -103,39 +108,44 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
   }
 });
 
-// GET `/api/anime/seasonal`
+// GET `/api/dorama/seasonal`
 router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFunction) => {
   const currDate = new Date();
   const year = req.query.year || currDate.getFullYear();
   const season = req.query.season || seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
+  const quarter = seasonal.find(sB => sB.name === season).id || Math.ceil((currDate.getMonth() + 1) / 3);
   return request({
-    method: 'GET',
-    uri: `${jikanV3}/season/${year}/${season}`
+    method: 'POST',
+    uri: `${myDramaListV1}/quarter_calendar`,
+    formData: {
+      quarter,
+      year
+    }
   }, async (error, result, body) => {
     return res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
+      info: `😅 ${result.statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
       results: (
-        'anime' in JSON.parse(body)
-          ? JSON.parse(body).anime
+        Array.isArray(JSON.parse(body))
+          ? JSON.parse(body)
           : []
       )
     });
   });
 });
 
-// GET `/api/anime/berkas?id=`
+// GET `/api/dorama/berkas?id=`
 router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const animeId = req.query.id.split(',').map(Number);
-    if (Array.isArray(animeId) && animeId.length > 0) {
+    const doramaId = req.query.id.split(',');
+    if (Array.isArray(doramaId) && doramaId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [
           {
             name: Like(`%${req.query.q ? req.query.q : ''}%`),
             private: false,
-            anime_: {
-              id: In(animeId)
+            dorama_: {
+              id: In(doramaId)
             }
           }
         ],
@@ -147,12 +157,12 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
             name: 'ASC'
           })
         },
-        relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
+        relations: ['project_type_', 'fansub_', 'user_', 'dorama_'],
         skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
         take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
       });
       const results: any = {};
-      for (const i of animeId) {
+      for (const i of doramaId) {
         results[i] = [];
       }
       for (const f of files) {
@@ -173,9 +183,9 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
             delete fansub.updated_at;
           }
         }
-        if ('anime_' in f && f.anime_) {
-          delete f.anime_.created_at;
-          delete f.anime_.updated_at;
+        if ('dorama_' in f && f.dorama_) {
+          delete f.dorama_.created_at;
+          delete f.dorama_.updated_at;
         }
         if ('user_' in f && f.user_) {
           delete f.user_.role;
@@ -184,10 +194,10 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
           delete f.user_.created_at;
           delete f.user_.updated_at;
         }
-        results[f.anime_.id].push(f);
+        results[f.dorama_.id].push(f);
       }
       return res.status(200).json({
-        info: `😅 200 - Anime API :: Berkas 🤣`,
+        info: `😅 200 - Dorama API :: Berkas 🤣`,
         count,
         pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
         results
@@ -198,7 +208,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Anime API :: Gagal Mencari Berkas ${req.query.id} 😪`,
+      info: `🙄 400 - Dorama API :: Gagal Mencari Berkas ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -206,24 +216,24 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
   }
 });
 
-// GET `/api/anime/fansubs?id=`
+// GET `/api/dorama/fansubs?id=`
 router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const animeId = req.query.id.split(',').map(Number);
-    if (Array.isArray(animeId) && animeId.length > 0) {
+    const doramaId = req.query.id.split(',');
+    if (Array.isArray(doramaId) && doramaId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
         where: [
           {
-            anime_: {
-              id: In([animeId])
+            dorama_: {
+              id: In([doramaId])
             }
           }
         ],
-        relations: ['fansub_', 'anime_']
+        relations: ['fansub_', 'dorama_']
       });
       const results: any = {};
-      for (const i of animeId) {
+      for (const i of doramaId) {
         results[i] = [];
       }
       for (const f of files) {
@@ -234,7 +244,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
             delete fansub.tags;
             delete fansub.created_at;
             delete fansub.updated_at;
-            results[f.anime_.id].push(fansub);
+            results[f.dorama_.id].push(fansub);
           }
         }
       }
@@ -244,7 +254,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
           .sort((a, b) => (a.name > b.name) ? 1 : -1);
       }
       return res.status(200).json({
-        info: `😅 200 - Anime API :: Fansub 🤣`,
+        info: `😅 200 - Dorama API :: Fansub 🤣`,
         count,
         pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
         results
@@ -255,7 +265,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Anime API :: Gagal Mencari Fansub ${req.query.id} 😪`,
+      info: `🙄 400 - Dorama API :: Gagal Mencari Fansub ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -263,36 +273,35 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
   }
 });
 
-// GET `/api/anime/:malId`
-router.get('/:malId', async (req: UserRequest, res: Response, next: NextFunction) => {
+// GET `/api/dorama/:mdlSlug`
+router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
   return request({
     method: 'GET',
-    uri: `${jikanV3}/anime/${req.params.malId}`
+    uri: `${kuryanaApi}/id/${req.params.mdlSlug}`
   }, async (error, result, body) => {
-    const animeDetail = JSON.parse(body);
+    const dramaDetail = JSON.parse(body);
     let httpStatusCode = result.statusCode;
-    if ('request_hash' in animeDetail) {
-      delete animeDetail.request_hash;
-    }
-    if ('request_cached' in animeDetail) {
-      delete animeDetail.request_cached;
-    }
-    if ('request_cache_expiry' in animeDetail) {
-      delete animeDetail.request_cache_expiry;
-    }
-    try {
-      if (animeDetail.synopsis) {
-        const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
-        animeDetail.synopsis = translatedAnimeSynopsis.text;
+    if (httpStatusCode === 200) {
+      try {
+        if (dramaDetail.data.synopsis) {
+          const translatedDoramaSynopsis = await translate(dramaDetail.data.synopsis, { to: 'id' });
+          dramaDetail.data.synopsis = translatedDoramaSynopsis.text;
+        }
+      } catch (error) {
+        console.error(error);
+        httpStatusCode = 202;
+        dramaDetail.data.message = 'Penerjemah / Alih Bahasa Gagal!';
       }
-    } catch (error) {
-      console.error(error);
-      httpStatusCode = 202;
-      animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+    } else {
+      httpStatusCode = dramaDetail.status_code;
     }
     return res.status(httpStatusCode).json({
-      info: `😅 ${httpStatusCode} - Anime API :: Detail ${req.params.malId} 🤣`,
-      result: animeDetail
+      info: `😅 ${httpStatusCode} - Dorama API :: Detail ${req.params.mdlSlug} 🤣`,
+      result: (
+        'data' in dramaDetail
+          ? dramaDetail.data
+          : dramaDetail
+      )
     });
   });
 });

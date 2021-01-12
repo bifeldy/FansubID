@@ -6,8 +6,8 @@ import { Server } from 'socket.io';
 import { TextChannel } from 'discord.js';
 
 export interface UserRequest extends Request {
-  user: User;
   query: any;
-  io: Server;
-  bot: TextChannel;
+  user?: User;
+  io?: Server;
+  bot?: TextChannel;
 }

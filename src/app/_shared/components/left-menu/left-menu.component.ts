@@ -52,6 +52,11 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
       icon: 'live_tv'
     },
     {
+      name: 'Drama Musiman',
+      link: '/dorama',
+      icon: 'movie'
+    },
+    {
       name: 'Katalog Fansub',
       link: '/fansub',
       icon: 'closed_caption'

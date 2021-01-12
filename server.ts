@@ -53,6 +53,7 @@ import { User } from './src/api/entities/User';
 import { ProjectType } from './src/api/entities/ProjectType';
 import { Fansub } from './src/api/entities/Fansub';
 import { Anime } from './src/api/entities/Anime';
+import { Dorama } from './src/api/entities/Dorama';
 import { Berkas } from './src/api/entities/Berkas';
 import { Attachment } from './src/api/entities/Attachment';
 import { TempAttachment } from './src/api/entities/TempAttachment';
@@ -84,6 +85,7 @@ const typeOrmConfig: any = {
     ProjectType,
     Fansub,
     Anime,
+    Dorama,
     Berkas,
     Attachment,
     TempAttachment,
@@ -216,14 +218,12 @@ export function app(): http.Server {
   /********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
 
   let botPresenceStatusInterval = null;
-
   bot.on('disconnect', (event) => {
     logger.log(`[DISCORD] 🎉 DISCONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
     if (botPresenceStatusInterval) {
       clearInterval(botPresenceStatusInterval);
     }
   });
-
   bot.on('ready', () => {
     logger.log(`[DISCORD] 🎉 CONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
     botPresenceStatusInterval = setInterval(async () => {
@@ -261,7 +261,6 @@ export function app(): http.Server {
       }
     }, 15000);
   });
-
   bot.on('message', async (msg: Message) => {
     try {
       msg.channel = (msg.channel as TextChannel);
@@ -273,8 +272,9 @@ export function app(): http.Server {
       console.error(error);
     }
   });
-
-  bot.login(environment.discordBotLoginToken).catch(console.error);
+  if (environment.production) {
+    bot.login(environment.discordBotLoginToken).catch(console.error);
+  }
 
   return httpApp;
 }

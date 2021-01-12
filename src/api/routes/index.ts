@@ -22,7 +22,8 @@ import jwt from '../helpers/jwt';
 import logger from '../helpers/logger';
 
 // Child router
-import seasonalRouter from './anime';
+import animeRouter from './anime';
+import doramaRouter from './dorama';
 import projectRouter from './project';
 import fansubRouter from './fansub';
 import berkasRouter from './berkas';
@@ -67,7 +68,8 @@ const imgBB = 'https://api.imgbb.com/1/upload';
 router.use(logger.reqBodyCleanUp);
 
 // Child route url
-router.use('/anime', seasonalRouter);
+router.use('/anime', animeRouter);
+router.use('/dorama', doramaRouter);
 router.use('/project', projectRouter);
 router.use('/fansub', fansubRouter);
 router.use('/berkas', berkasRouter);

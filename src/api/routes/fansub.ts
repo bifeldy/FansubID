@@ -197,6 +197,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         .createQueryBuilder('berkas')
         .leftJoinAndSelect('berkas.project_type_', 'project_type_')
         .leftJoinAndSelect('berkas.anime_', 'anime_')
+        .leftJoinAndSelect('berkas.dorama_', 'dorama_')
         .leftJoinAndSelect('berkas.user_', 'user_')
         .leftJoinAndSelect('berkas.fansub_', 'fansub_')
         .where('fansub_.id IN (:...id)', { id: fansubId })
@@ -230,6 +231,10 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
           delete f.anime_.created_at;
           delete f.anime_.updated_at;
         }
+        if ('dorama_' in f && f.dorama_) {
+          delete f.dorama_.created_at;
+          delete f.dorama_.updated_at;
+        }
         if ('user_' in f && f.user_) {
           delete f.user_.role;
           delete f.user_.password;
@@ -251,7 +256,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         }
       }
       return res.status(200).json({
-        info: `😅 200 - Fansub API :: Berkas ${fansubId.join(', ')} 🤣`,
+        info: `😅 200 - Fansub API :: Berkas 🤣`,
         count,
         pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
         results
@@ -281,6 +286,7 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
         .leftJoinAndSelect('berkas.anime_', 'anime_')
         .leftJoinAndSelect('berkas.fansub_', 'fansub_')
         .where('fansub_.id IN (:...id)', { id: fansubId })
+        .andWhere('berkas.anime_ IS NOT NULL')
         .getManyAndCount();
       const results: any = {};
       for (const i of fansubId) {
@@ -305,7 +311,7 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
           .sort((a, b) => (a.name > b.name) ? 1 : -1);
       }
       return res.status(200).json({
-        info: `😅 200 - Fansub API :: Anime ${fansubId.join(', ')} 🤣`,
+        info: `😅 200 - Fansub API :: Anime 🤣`,
         count,
         pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
         results
@@ -317,6 +323,61 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
     console.error(error);
     return res.status(400).json({
       info: `🙄 400 - Fansub API :: Gagal Mencari Anime ${req.query.id} 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
+
+// GET `/api/fansub/dorama?id=`
+router.get('/dorama', async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const fansubId = req.query.id.split(',').map(Number);
+    if (Array.isArray(fansubId) && fansubId.length > 0) {
+      const fileRepo = getRepository(Berkas);
+      const [files, count] = await fileRepo
+        .createQueryBuilder('berkas')
+        .leftJoinAndSelect('berkas.dorama_', 'dorama_')
+        .leftJoinAndSelect('berkas.fansub_', 'fansub_')
+        .where('fansub_.id IN (:...id)', { id: fansubId })
+        .andWhere('berkas.dorama_ IS NOT NULL')
+        .getManyAndCount();
+      const results: any = {};
+      for (const i of fansubId) {
+        results[i] = [];
+      }
+      for (const f of files) {
+        if ('dorama_' in f && f.dorama_) {
+          delete f.dorama_.created_at;
+          delete f.dorama_.updated_at;
+        }
+        if ('fansub_' in f && f.fansub_) {
+          for (const fansub of f.fansub_) {
+            if (fansubId.includes(fansub.id)) {
+              results[fansub.id].push(f.dorama_);
+            }
+          }
+        }
+      }
+      for (const [key, value] of Object.entries(results)) {
+        results[key] = (value as any)
+          .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
+          .sort((a, b) => (a.name > b.name) ? 1 : -1);
+      }
+      return res.status(200).json({
+        info: `😅 200 - Fansub API :: Dorama 🤣`,
+        count,
+        pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+        results
+      });
+    } else {
+      throw new Error('Data Tidak Lengkap!');
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      info: `🙄 400 - Fansub API :: Gagal Mencari Dorama 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
