@@ -35,18 +35,18 @@
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="primary" (click)="openSeasonalDorama()"
-              matTooltip="Lihat Semua Dorama Pada Musim '{{ seasonDorama }} {{ yearDorama.getFullYear() }}'">
-              <mat-icon>dynamic_feed</mat-icon> {{ doramaData.details.episodes ? doramaData.details.episodes : '?' }} Eps &nbsp;
+              matTooltip="Lihat Semua Dorama Pada Musim '{{ seasonDorama }} {{ yearDorama ? yearDorama.getFullYear() : '' }}'">
+              <mat-icon>dynamic_feed</mat-icon> {{ doramaData.details ? (doramaData.details.episodes ? doramaData.details.episodes : '?') : '?' }} Eps &nbsp;
               <mat-icon>star_half</mat-icon> {{ doramaData.rating ? doramaData.rating : '?' }} <br />
-              <mat-icon>date_range</mat-icon> {{ doramaData.details.release_date ? doramaData.details.release_date : (doramaData.details.aired ? doramaData.details.aired : '?') }}
+              <mat-icon>date_range</mat-icon> {{ doramaData.details ? doramaData.details.release_date ? doramaData.details.release_date : (doramaData.details.aired ? doramaData.details.aired : '?') : '?' }}
             </button>
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyDramaList"
               (click)="openRank()">
-              <mat-icon>timeline</mat-icon> {{ doramaData.details.ranked ? doramaData.details.ranked : '?' }} &nbsp;
-              <mat-icon>local_fire_department</mat-icon> {{ doramaData.details.popularity ? doramaData.details.popularity : '?' }} <br />
-              <mat-icon>label</mat-icon> {{ doramaData.details.type }}
+              <mat-icon>timeline</mat-icon> {{ doramaData.details ? doramaData.details.ranked ? doramaData.details.ranked : '?' : '?' }} &nbsp;
+              <mat-icon>local_fire_department</mat-icon> {{ doramaData.details ? doramaData.details.popularity ? doramaData.details.popularity : '?' : '?' }} <br />
+              <mat-icon>label</mat-icon> {{ doramaData.details ? doramaData.details.type : '?' }}
             </button>
           </div>
         </div>

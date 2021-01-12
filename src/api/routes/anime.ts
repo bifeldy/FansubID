@@ -281,7 +281,7 @@ router.get('/:malId', async (req: UserRequest, res: Response, next: NextFunction
       delete animeDetail.request_cache_expiry;
     }
     try {
-      if (animeDetail.synopsis) {
+      if ('synopsis' in animeDetail && animeDetail.synopsis) {
         const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
         animeDetail.synopsis = translatedAnimeSynopsis.text;
       }

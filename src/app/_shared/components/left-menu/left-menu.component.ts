@@ -52,7 +52,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
       icon: 'live_tv'
     },
     {
-      name: 'Drama Musiman',
+      name: 'Film Drama',
       link: '/dorama',
       icon: 'movie'
     },

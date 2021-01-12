@@ -283,7 +283,7 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
     let httpStatusCode = result.statusCode;
     if (httpStatusCode === 200) {
       try {
-        if (dramaDetail.data.synopsis) {
+        if ('synopsis' in dramaDetail.data && dramaDetail.data.synopsis) {
           const translatedDoramaSynopsis = await translate(dramaDetail.data.synopsis, { to: 'id' });
           dramaDetail.data.synopsis = translatedDoramaSynopsis.text;
         }

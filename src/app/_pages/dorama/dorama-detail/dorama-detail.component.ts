@@ -98,7 +98,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
     this.subsParam = this.activatedRoute.params.subscribe(params => {
       this.doramaId = params.doramaId.split('-')[0];
       this.bs.busy();
-      this.subsDorama = this.dorama.getDorama(this.doramaId).subscribe(
+      this.subsDorama = this.dorama.getDorama(params.doramaId).subscribe(
         res => {
           this.gs.log('[DORAMA_DETAIL_SUCCESS]', res);
           this.doramaData = res.result;
@@ -111,15 +111,17 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
           );
           this.bs.idle();
           if (this.gs.isBrowser) {
-            const genres = this.doramaData.others.genres.split(', ');
-            for (const g of genres) {
-              this.chipData.push({
-                mdl_id: 8,
-                name: g,
-                url: '',
-                selected: true,
-                color: Warna.PINK
-              });
+            if ('others' in this.doramaData) {
+              const genres = this.doramaData.others.genres.split(', ');
+              for (const g of genres) {
+                this.chipData.push({
+                  mdl_id: 8,
+                  name: g,
+                  url: '',
+                  selected: true,
+                  color: Warna.PINK
+                });
+              }
             }
             this.panelData = [];
             this.panelData.push({
@@ -156,10 +158,14 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   }
 
   get yearDorama(): Date {
-    if ('release_date' in this.doramaData.details) {
-      return new Date(this.doramaData.details.release_date);
-    } else if ('aired' in this.doramaData.details) {
-      return new Date(this.doramaData.details.aired.split(' - ')[0]);
+    try {
+      if ('release_date' in this.doramaData.details) {
+        return new Date(this.doramaData.details.release_date);
+      } else {
+        return new Date(this.doramaData.details.aired.split(' - ')[0]);
+      }
+    } catch (e) {
+      return null;
     }
   }
 
