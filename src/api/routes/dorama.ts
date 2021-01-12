@@ -2,7 +2,7 @@ import request from 'request';
 import translate from '@k3rn31p4nic/google-translate-api';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, In } from 'typeorm';
+import { getRepository, Like, In, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -47,7 +47,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       const doramaRepo = getRepository(Dorama);
       const doramas = await doramaRepo.find({
         where: [
-          { id: req.body.id }
+          { id: Equal(req.body.id) }
         ]
       });
       if (doramas.length === 0) {
@@ -63,11 +63,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           result: resultSaveDorama
         });
       } else if (doramas.length === 1) {
-        const dorama = await doramaRepo.findOneOrFail({
-          where: [
-            { id: doramas[0].id }
-          ]
-        });
+        const dorama = doramas[0];
         if (req.body.id) {
           dorama.id = req.body.id;
         }

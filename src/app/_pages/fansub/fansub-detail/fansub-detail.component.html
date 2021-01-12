@@ -55,7 +55,7 @@
         </div>
         <div class="row py-3">
           <div class="col-12">
-            <app-material-tab (listClicked)="openAnime($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
+            <app-material-tab (listClicked)="openAnime($event)" (gridClicked)="openDorama($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
               [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-tab>
           </div>
         </div>

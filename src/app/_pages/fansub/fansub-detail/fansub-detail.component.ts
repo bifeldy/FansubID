@@ -28,6 +28,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   order = '';
 
   animeFansub = [];
+  doramaFansub = [];
   berkasFansub = [];
 
   chipData = [];
@@ -44,7 +45,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     {
       name: 'Dorama',
       icon: 'movie',
-      type: 'list',
+      type: 'grid',
       data: []
     },
     {
@@ -62,6 +63,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   subsFansub = null;
   subsBerkas = null;
   subsAnime = null;
+  subsDorama = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -90,6 +92,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     if (this.subsAnime) {
       this.subsAnime.unsubscribe();
     }
+    if (this.subsDorama) {
+      this.subsDorama.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -117,6 +122,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
             this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
             this.getAnimeFansub();
+            this.getDoramaFansub();
             this.getBerkasFansub();
           }
         },
@@ -193,6 +199,30 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     );
   }
 
+  getDoramaFansub(): void {
+    this.bs.busy();
+    this.subsDorama = this.fansub.getDoramaFansub([this.fansubData.id]).subscribe(
+      res => {
+        this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
+        this.doramaFansub = [];
+        for (const r of res.results[this.fansubData.id]) {
+          this.doramaFansub.push({
+            id: r.id,
+            image: r.image_url,
+            title: r.name,
+            slug: r.slug
+          });
+        }
+        this.tabData[1].data = this.doramaFansub;
+        this.bs.idle();
+      },
+      err => {
+        this.gs.log('[FANSUB_DORAMA_ERROR]', err);
+        this.bs.idle();
+      }
+    );
+  }
+
   editFansubData(): void {
     this.router.navigateByUrl(`/fansub/${this.fansubSlug}/edit`);
   }
@@ -226,6 +256,11 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   openAnime(data): void {
     this.gs.log('[FANSUB_DETAIL_OPEN_ANIME]', data);
     this.router.navigateByUrl(`/anime/${data.id}`);
+  }
+
+  openDorama(data): void {
+    this.gs.log('[FANSUB_DETAIL_OPEN_DORAMA]', data);
+    this.router.navigateByUrl(`/dorama/${data.slug}`);
   }
 
   openTag(data): void {

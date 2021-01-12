@@ -39,9 +39,13 @@
               </div>
               <div class="col-12">
                 <mat-selection-list [multiple]="false">
-                  <mat-list-option routerLink="/anime/{{ berkasData.anime_.id }}">
+                  <mat-list-option routerLink="/anime/{{ berkasData.anime_.id }}" *ngIf="berkasData.anime_">
                     <img matListAvatar src="{{ berkasData.anime_.image_url }}" class="ml-3" style="border-radius: 0;" />
                     <h4>{{ berkasData.anime_.name }}</h4>
+                  </mat-list-option>
+                  <mat-list-option routerLink="/dorama/{{ berkasData.dorama_.slug }}" *ngIf="berkasData.dorama_">
+                    <img matListAvatar src="{{ berkasData.dorama_.image_url }}" class="ml-3" style="border-radius: 0;" />
+                    <h4>{{ berkasData.dorama_.name }}</h4>
                   </mat-list-option>
                   <mat-list-option routerLink="/fansub/{{ fs.slug }}" *ngFor="let fs of berkasData.fansub_">
                     <img matListAvatar src="{{ fs.image_url }}" class="ml-3" style="border-radius: 0;" />

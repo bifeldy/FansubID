@@ -2,7 +2,7 @@ import request from 'request';
 import translate from '@k3rn31p4nic/google-translate-api';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, In } from 'typeorm';
+import { getRepository, Like, In, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -46,7 +46,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       const animeRepo = getRepository(Anime);
       const animes = await animeRepo.find({
         where: [
-          { id: req.body.id }
+          { id: Equal(req.body.id) }
         ]
       });
       if (animes.length === 0) {
@@ -61,11 +61,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           result: resultSaveAnime
         });
       } else if (animes.length === 1) {
-        const anime = await animeRepo.findOneOrFail({
-          where: [
-            { id: animes[0].id }
-          ]
-        });
+        const anime = animes[0];
         if (req.body.id) {
           anime.id = req.body.id;
         }

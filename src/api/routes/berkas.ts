@@ -15,6 +15,7 @@ import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
 import { Anime } from '../entities/Anime';
+import { Dorama } from '../entities/Dorama';
 import { Attachment } from '../entities/Attachment';
 import { TempAttachment } from '../entities/TempAttachment';
 
@@ -48,7 +49,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           name: 'ASC'
         })
       },
-      relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
+      relations: ['project_type_', 'fansub_', 'user_', 'dorama_', 'anime_'],
       skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
       take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
     });
@@ -72,6 +73,10 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       if ('anime_' in f && f.anime_) {
         delete f.anime_.created_at;
         delete f.anime_.updated_at;
+      }
+      if ('dorama_' in f && f.dorama_) {
+        delete f.dorama_.created_at;
+        delete f.dorama_.updated_at;
       }
       if ('user_' in f && f.user_) {
         delete f.user_.role;
@@ -103,6 +108,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
   try {
     if (
       'name' in req.body && 'description' in req.body && 'projectType_id' in req.body &&
+      ('anime_id' in req.body || 'dorama_id' in req.body) &&
       'download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0 &&
       'fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0
     ) {
@@ -125,13 +131,24 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       } else {
         file.image_url = '/favicon.ico';
       }
-      const animeRepo = getRepository(Anime);
-      const anime = await animeRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.body.anime_id) }
-        ]
-      });
-      file.anime_ = anime;
+      if (req.body.anime_id) {
+        const animeRepo = getRepository(Anime);
+        const anime = await animeRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.body.anime_id) }
+          ]
+        });
+        file.anime_ = anime;
+      }
+      if (req.body.dorama_id) {
+        const doramaRepo = getRepository(Dorama);
+        const dorama = await doramaRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.body.dorama_id) }
+          ]
+        });
+        file.dorama_ = dorama;
+      }
       const fansubRepo = getRepository(Fansub);
       const fansub = await fansubRepo.find({
         where: [
@@ -272,8 +289,8 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
         .setAuthor('Hikki - Penambahan Berkas Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
         .setDescription(resFileSave.description.replace(/<[^>]*>/g, '').trim())
+        .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
         .addFields(
-          { name: 'Anime', value: resFileSave.anime_.name, inline: false },
           { name: 'Fansub', value: fansubEmbedData.join(', '), inline: true },
           { name: 'Jenis', value: resFileSave.project_type_.name, inline: true },
           { name: 'DDL & Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
@@ -311,7 +328,7 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
       where: [
         { id: Equal(req.params.id) }
       ],
-      relations: ['project_type_', 'fansub_', 'user_', 'anime_', 'attachment_'],
+      relations: ['project_type_', 'fansub_', 'user_', 'anime_', 'dorama_', 'attachment_'],
     });
     file.view_count++;
     const resFileSave = await fileRepo.save(file);
@@ -331,6 +348,10 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
     if ('anime_' in resFileSave && resFileSave.anime_) {
       delete resFileSave.anime_.created_at;
       delete resFileSave.anime_.updated_at;
+    }
+    if ('dorama_' in resFileSave && resFileSave.dorama_) {
+      delete resFileSave.dorama_.created_at;
+      delete resFileSave.dorama_.updated_at;
     }
     if ('user_' in resFileSave && resFileSave.user_) {
       delete resFileSave.user_.role;
@@ -396,7 +417,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
   try {
     if (
       'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body ||
-      'anime_id' in req.body || 'projectType_id' in req.body ||
+      'anime_id' in req.body || 'dorama_id' in req.body || 'projectType_id' in req.body ||
       ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) ||
       ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
     ) {
@@ -406,7 +427,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
           where: [
             { id: Equal(req.params.id) }
           ],
-          relations: ['user_', 'attachment_', 'anime_', 'project_type_', 'fansub_']
+          relations: ['user_', 'attachment_', 'anime_', 'dorama_', 'project_type_', 'fansub_']
         });
         if (req.user.id === file.user_.id || req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
           if (req.body.name) {
@@ -429,6 +450,17 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               ]
             });
             file.anime_ = anime;
+            file.dorama_ = null;
+          }
+          if (req.body.dorama_id) {
+            const doramaRepo = getRepository(Dorama);
+            const dorama = await doramaRepo.findOneOrFail({
+              where: [
+                { id: Equal(req.body.dorama_id) }
+              ]
+            });
+            file.anime_ = null;
+            file.dorama_ = dorama;
           }
           if (req.body.download_url) {
             const filteredUrls = [];
@@ -478,6 +510,10 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             delete resFileSave.anime_.created_at;
             delete resFileSave.anime_.updated_at;
           }
+          if ('dorama_' in resFileSave && resFileSave.dorama_) {
+            delete resFileSave.dorama_.created_at;
+            delete resFileSave.dorama_.updated_at;
+          }
           if ('project_type_' in resFileSave && resFileSave.project_type_) {
             delete resFileSave.project_type_.created_at;
             delete resFileSave.project_type_.updated_at;
@@ -496,8 +532,9 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
             .setAuthor('Hikki - Pembaharuan Data Berkas', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
             .setDescription(resFileSave.description.replace(/<[^>]*>/g, '').trim())
+            // tslint:disable-next-line: max-line-length
+            .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
             .addFields(
-              { name: 'Anime', value: resFileSave.anime_.name, inline: false },
               { name: 'Fansub', value: fansubEmbedData.join(', '), inline: true },
               { name: 'Jenis', value: resFileSave.project_type_.name, inline: true },
               { name: 'DDL & Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }

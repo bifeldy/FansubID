@@ -45,4 +45,8 @@ export class FansubService {
     return this.api.getData(`/fansub/anime?id=${fansubId}`);
   }
 
+  getDoramaFansub(fansubId = []): any {
+    return this.api.getData(`/fansub/dorama?id=${fansubId}`);
+  }
+
 }

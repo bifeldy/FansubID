@@ -25,19 +25,46 @@ export class FansubListComponent implements OnInit, OnDestroy {
       icon: 'closed_caption',
       type: 'table',
       data: {
-        column: ['Status', 'Logo', 'Nama Fansub', 'Garapan', 'Tautan Komunitas'],
+        column: ['Status', 'Logo', 'Nama Fansub', 'Anime', 'Dorama', 'Tautan Komunitas'],
         row: []
       }
     }
   ];
 
   pieChartOptions: ChartOptions = {
+    title: {
+      display: true,
+      text: 'Kondisi Fansub Terkini'
+    },
     responsive: true,
     legend: {
       position: 'right'
     },
   };
-  barChartOptions: ChartOptions = {
+  barChartAnimeOptions: ChartOptions = {
+    title: {
+      display: true,
+      text: 'Garapan Anime Terbanyak'
+    },
+    responsive: true,
+    legend: {
+      position: 'right'
+    },
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          }
+        }
+      ]
+    }
+  };
+  barChartDoramaOptions: ChartOptions = {
+    title: {
+      display: true,
+      text: 'Garapan Dorama Terbanyak'
+    },
     responsive: true,
     legend: {
       position: 'right'
@@ -56,8 +83,10 @@ export class FansubListComponent implements OnInit, OnDestroy {
 
   pieChartData: SingleDataSet = [];
   pieChartLabels: Label[] = [];
-  barChartData: SingleDataSet = [];
-  barChartLabels: Label[] = [];
+  barChartAnimeData: SingleDataSet = [];
+  barChartAnimeLabels: Label[] = [];
+  barChartDoramaData: SingleDataSet = [];
+  barChartDoramaLabels: Label[] = [];
 
   pieChartType: ChartType = 'pie';
   barChartType: ChartType = 'horizontalBar';
@@ -67,6 +96,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
 
   subsFansub = null;
   subsAnime = null;
+  subsDorama = null;
 
   constructor(
     private router: Router,
@@ -131,6 +161,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
           }
         }
         this.getAnimeFansub();
+        this.getDoramaFansub();
         this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/create', false);
         this.bs.idle();
       },
@@ -148,19 +179,16 @@ export class FansubListComponent implements OnInit, OnDestroy {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         for (const f of this.fansubData) {
           if (res.results[f.id]) {
-            f.Garapan = res.results[f.id].length;
+            f.Anime = res.results[f.id].length;
           } else {
-            f.Garapan = 0;
+            f.Anime = 0;
           }
         }
         this.tabData[0].data.row = this.fansubData;
-        const fansubRank = [...this.fansubData].sort((a, b) => b.Garapan - a.Garapan).slice(0, 10);
+        const fansubRank = [...this.fansubData].sort((a, b) => b.Anime - a.Anime).slice(0, 10);
         for (const f of fansubRank) {
-          this.barChartLabels.push(f['Nama Fansub']);
-          this.barChartData.push(f.Garapan);
-        }
-        for (const f of this.fansubData) {
-          f.Garapan = f.Garapan;
+          this.barChartAnimeLabels.push(f['Nama Fansub']);
+          this.barChartAnimeData.push(f.Anime);
         }
         this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
         this.pieChartData = [this.fansubActive, this.fansubInActive];
@@ -168,6 +196,35 @@ export class FansubListComponent implements OnInit, OnDestroy {
       },
       err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.bs.idle();
+      }
+    );
+  }
+
+  getDoramaFansub(): void {
+    this.bs.busy();
+    this.subsDorama = this.fansub.getDoramaFansub(this.allFansubId).subscribe(
+      res => {
+        this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
+        for (const f of this.fansubData) {
+          if (res.results[f.id]) {
+            f.Dorama = res.results[f.id].length;
+          } else {
+            f.Dorama = 0;
+          }
+        }
+        this.tabData[0].data.row = this.fansubData;
+        const fansubRank = [...this.fansubData].sort((a, b) => b.Dorama - a.Dorama).slice(0, 10);
+        for (const f of fansubRank) {
+          this.barChartDoramaLabels.push(f['Nama Fansub']);
+          this.barChartDoramaData.push(f.Dorama);
+        }
+        this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
+        this.pieChartData = [this.fansubActive, this.fansubInActive];
+        this.bs.idle();
+      },
+      err => {
+        this.gs.log('[FANSUB_DORAMA_ERROR]', err);
         this.bs.idle();
       }
     );

@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
+import { DoramaService } from '../../../_shared/services/dorama.service';
 import { ProjectService } from '../../../_shared/services/project.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
@@ -39,13 +40,16 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   image_url = '/assets/img/form-no-image.png';
 
   filteredAnime = [];
+  filteredDorama = [];
   selectedFilterAnime = null;
+  selectedFilterDorama = null;
   isLoading = false;
 
   fansubs = [];
   filteredFansub: Observable<any[]>;
 
   animeCheckOrAddResponse = null;
+  doramaCheckOrAddResponse = null;
 
   attachment = null;
   attachmentPercentage = 0;
@@ -69,9 +73,13 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   subsProject = null;
   subsFansub = null;
   subsAnimeDetail = null;
+  subsDoramaDetail = null;
   subsAnimeNew = null;
+  subsDoramaNew = null;
   subsImgbb = null;
   subsBerkasCreate = null;
+
+  berkasType = '';
 
   constructor(
     private router: Router,
@@ -79,6 +87,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private pi: PageInfoService,
     private anime: AnimeService,
+    private dorama: DoramaService,
     private project: ProjectService,
     private fansub: FansubService,
     private berkas: BerkasService,
@@ -133,8 +142,14 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     if (this.subsAnimeDetail) {
       this.subsAnimeDetail.unsubscribe();
     }
+    if (this.subsDoramaDetail) {
+      this.subsDoramaDetail.unsubscribe();
+    }
     if (this.subsAnimeNew) {
       this.subsAnimeNew.unsubscribe();
+    }
+    if (this.subsDoramaNew) {
+      this.subsDoramaNew.unsubscribe();
     }
     if (this.subsImgbb) {
       this.subsImgbb.unsubscribe();
@@ -179,7 +194,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      anime_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
+      anime_id: [null, Validators.compose([])],
+      dorama_id: [null, Validators.compose([])],
       fansub_list: this.fb.array([this.createFansub()]),
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       attachment_id: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
@@ -206,6 +222,66 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       res => {
         this.gs.log('[BERKAS_CREATE_SEARCH_ANIME_RESULT]', res);
         this.filteredAnime = (res as any).results;
+      }
+    );
+    this.subsDoramaDetail = this.fg.get('dorama_id').valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => this.isLoading = true),
+      switchMap(searchQuery => this.dorama.searchDorama(
+        searchQuery,
+        this.fg.get('projectType_id').value ?
+          this.projectList.find(
+            p => parseInt(this.fg.get('projectType_id').value, 10) === p.id
+          ).name.toLowerCase().replace('dorama_', '')
+        : null
+      )
+      .pipe(
+        finalize(() => this.isLoading = false),
+        )
+      ),
+      retry(-1)
+    ).subscribe(
+      res => {
+        this.gs.log('[BERKAS_CREATE_SEARCH_DORAMA_RESULT]', res);
+        for (const r of (res as any).results) {
+          r.mdl_id = r.mdl_id.split('-')[1];
+          r.image_url = r.thumb;
+        }
+        this.filteredDorama = (res as any).results;
+      }
+    );
+    this.fg.get('projectType_id').valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      retry(-1)
+    ).subscribe(
+      projectId => {
+        this.gs.log('[BERKAS_CREATE_PROJECT_CHANGE]', projectId);
+        const selectedProject = this.projectList.find(p => p.id === projectId);
+        this.resetSelectedAnime();
+        this.resetSelectedDorama();
+        this.fg.controls.anime_id.patchValue(null);
+        this.fg.controls.dorama_id.patchValue(null);
+        this.fg.controls.anime_id.setErrors(null);
+        this.fg.controls.dorama_id.setErrors(null);
+        this.fg.controls.anime_id.clearValidators();
+        this.fg.controls.dorama_id.clearValidators();
+        this.fg.controls.anime_id.markAsPristine();
+        this.fg.controls.dorama_id.markAsPristine();
+        this.fg.controls.anime_id.markAsUntouched();
+        this.fg.controls.dorama_id.markAsUntouched();
+        if (selectedProject.name.toLowerCase().includes('anime')) {
+          this.berkasType = selectedProject.name;
+          this.fg.controls.anime_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+        } else if (selectedProject.name.toLowerCase().includes('dorama')) {
+          this.berkasType = selectedProject.name;
+          this.fg.controls.dorama_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+        } else {
+          this.berkasType = '';
+        }
+        this.fg.controls.anime_id.updateValueAndValidity();
+        this.fg.controls.dorama_id.updateValueAndValidity();
       }
     );
   }
@@ -263,6 +339,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.selectedFilterAnime = null;
   }
 
+  resetSelectedDorama(): void {
+    this.selectedFilterDorama = null;
+  }
+
   resetSelectedFansub(i: number): any {
     this.getFansubControl.controls[i].get('fansub_name').patchValue(null);
   }
@@ -284,6 +364,29 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       },
       err => {
         this.gs.log('[ANIME_CHECK_ADD_ERROR]', err);
+        this.submitted = false;
+      }
+    );
+  }
+
+  filterDoramaSelected(data): void {
+    this.gs.log('[DORAMA_FILTER_CLICK]', data);
+    this.submitted = true;
+    this.selectedFilterDorama = data;
+    this.subsDoramaNew = this.dorama.addNewDorama({
+      id: parseInt(this.selectedFilterDorama.mdl_id, 10),
+      slug: this.selectedFilterDorama.slug,
+      name: this.selectedFilterDorama.title,
+      image_url: this.selectedFilterDorama.image_url,
+      type: this.selectedFilterDorama.type
+    }).subscribe(
+      res => {
+        this.gs.log('[DORAMA_CHECK_ADD_SUCCESS]', res);
+        this.doramaCheckOrAddResponse = res.result;
+        this.submitted = false;
+      },
+      err => {
+        this.gs.log('[DORAMA_CHECK_ADD_ERROR]', err);
         this.submitted = false;
       }
     );
@@ -349,9 +452,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.bs.busy();
     this.submitted = true;
-    if (this.fg.invalid || !this.selectedFilterAnime || this.attachmentIsUploading) {
+    if (this.fg.invalid || (!this.selectedFilterAnime && !this.selectedFilterDorama) || this.attachmentIsUploading) {
       if (!this.selectedFilterAnime) {
         this.fg.controls.anime_id.patchValue(null);
+      }
+      if (!this.selectedFilterDorama) {
+        this.fg.controls.dorama_id.patchValue(null);
       }
       this.submitted = false;
       this.bs.idle();
@@ -368,6 +474,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       private: false,
       projectType_id: this.fg.value.projectType_id,
       anime_id: this.fg.value.anime_id,
+      dorama_id: this.fg.value.dorama_id,
       fansub_id: fansubId,
       download_url: this.fg.value.download_url,
       attachment_id: this.fg.value.attachment_id
