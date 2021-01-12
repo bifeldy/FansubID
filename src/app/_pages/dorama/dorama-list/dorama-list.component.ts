@@ -219,7 +219,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
   }
 
   openDoramaPage(data): void {
-    this.gs.log('[DORAMA_SEASONAL_CLICK_DORAMA]', data.url);
+    this.gs.log('[DORAMA_SEASONAL_CLICK_DORAMA]', data);
     this.router.navigateByUrl(`/dorama${data.url}`);
   }
 

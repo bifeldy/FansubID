@@ -19,7 +19,7 @@ const routes: Routes = [
     component: DoramaListComponent
   },
   {
-    path: ':animeId',
+    path: ':doramaId',
     component: DoramaDetailComponent
   }
 ];

@@ -205,7 +205,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   }
 
   openAnimePage(data): void {
-    this.gs.log('[ANIME_SEASONAL_CLICK_ANIME]', data.mal_id);
+    this.gs.log('[ANIME_SEASONAL_CLICK_ANIME]', data);
     this.router.navigateByUrl(`/anime/${data.mal_id}`);
   }
 

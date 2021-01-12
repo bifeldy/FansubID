@@ -46,7 +46,7 @@
               (click)="openRank()">
               <mat-icon>timeline</mat-icon> {{ animeData.rank ? animeData.rank : '?' }} &nbsp;
               <mat-icon>local_fire_department</mat-icon> {{ animeData.popularity ? animeData.popularity : '?' }} <br />
-              <mat-icon>schedule</mat-icon> {{ animeData.status ? animeData.status : '?' }}
+              <mat-icon>label</mat-icon> {{ animeData.status ? animeData.status : '?' }} - {{ animeData.type }}
             </button>
           </div>
         </div>

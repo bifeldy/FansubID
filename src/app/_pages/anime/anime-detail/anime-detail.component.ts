@@ -79,10 +79,10 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
       this.subsAnime.unsubscribe();
     }
     if (this.subsBerkas) {
-      this.subsAnime.unsubscribe();
+      this.subsBerkas.unsubscribe();
     }
     if (this.subsFansub) {
-      this.subsAnime.unsubscribe();
+      this.subsFansub.unsubscribe();
     }
   }
 
@@ -211,7 +211,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   openGenre(data): void {
-    this.gs.log('[ANIME_DETAIL_CLICK_GENRE]', data.mal_id);
+    this.gs.log('[ANIME_DETAIL_CLICK_GENRE]', data);
     window.open(data.url, '_blank');
   }
 

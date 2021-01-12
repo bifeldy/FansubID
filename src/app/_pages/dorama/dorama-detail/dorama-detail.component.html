@@ -1,1 +1,58 @@
-<p>dorama-detail works!</p>
+<!-- Content -->
+<div class="container" *ngIf="doramaData">
+  <div class="dorama-info align-items-center">
+    <div class="media row py-3 px-2 d-flex">
+
+      <!-- Data -->
+      <div class="col-md-8 col-xl-9 pt-3 order-2 order-md-1">
+        <div class="row py-3 px-0 mt-auto">
+          <h1 class="m-0">
+            <b>{{ doramaData.title }}</b>
+          </h1>
+        </div>
+        <div class="row py-3">
+          <app-material-chip (chipClicked)="openGenre($event)" [chipData]="chipData"></app-material-chip>
+        </div>
+        <div class="row">
+          <app-notifications class="px-0"></app-notifications>
+        </div>
+        <div class="row py-3">
+          <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
+        </div>
+        <div class="row py-3">
+          <div class="col-12">
+            <app-material-tab (gridClicked)="openFansub($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
+              [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-tab>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information -->
+      <div class="col-md-4 col-xl-3 px-3 order-1 order-md-2">
+        <div class="row sticky-top pt-3">
+          <div class="col-12">
+            <img class="w-100" [src]="doramaData.image_url" />
+          </div>
+          <div class="col-12 text-center pt-3">
+            <button mat-stroked-button class="w-100" color="primary" (click)="openSeasonalDorama()"
+              matTooltip="Lihat Semua Dorama Pada Musim '{{ seasonDorama }} {{ yearDorama.getFullYear() }}'">
+              <mat-icon>dynamic_feed</mat-icon> {{ doramaData.details.episodes ? doramaData.details.episodes : '?' }} Eps &nbsp;
+              <mat-icon>star_half</mat-icon> {{ doramaData.rating ? doramaData.rating : '?' }} <br />
+              <mat-icon>date_range</mat-icon> {{ doramaData.details.release_date ? doramaData.details.release_date : (doramaData.details.aired ? doramaData.details.aired : '?') }}
+            </button>
+          </div>
+          <div class="col-12 text-center pt-3">
+            <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyDramaList"
+              (click)="openRank()">
+              <mat-icon>timeline</mat-icon> {{ doramaData.details.ranked ? doramaData.details.ranked : '?' }} &nbsp;
+              <mat-icon>local_fire_department</mat-icon> {{ doramaData.details.popularity ? doramaData.details.popularity : '?' }} <br />
+              <mat-icon>label</mat-icon> {{ doramaData.details.type }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dorama-banner dorama-banner-1 align-items-center" [style.background-image]="'url(' + doramaData.image_url + ')'"></div>
+  <div class="dorama-banner dorama-banner-2 align-items-center"></div>
+</div>
