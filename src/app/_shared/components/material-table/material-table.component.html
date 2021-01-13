@@ -10,7 +10,7 @@
 <table mat-table matSort [dataSource]="dataSource">
   <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
     <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
-      tdc.toUpperCase() != 'NAMA BERKAS' && tdc.toUpperCase() != 'TANGGAL'  && tdc.toUpperCase() != 'NAMA FANSUB' &&
+      tdc.toUpperCase() != 'NAMA BERKAS' && tdc.toUpperCase() != 'TANGGAL'  && tdc.toUpperCase() != 'NAMA FANSUB' && tdc.toUpperCase() != 'JUDUL DORAMA' &&
       tdc.toUpperCase() != 'TOPIK' && tdc.toUpperCase() != 'JUDUL ANIME' && tdc.toUpperCase() != 'ANIME'  && tdc.toUpperCase() != 'DORAMA' && tdc.toUpperCase() != 'JENIS'
     ">
       <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
