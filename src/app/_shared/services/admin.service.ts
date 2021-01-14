@@ -63,7 +63,7 @@ export class AdminService {
   }
 
   createNotif(notifData): any {
-    return this.api.postData('/push-notification', notifData);
+    return this.api.postData('/notification', notifData);
   }
 
 }

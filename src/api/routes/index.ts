@@ -13,7 +13,6 @@ import { environment } from '../../environments/server/environment';
 import { User } from '../entities/User';
 import { SocialMedia } from '../entities/SocialMedia';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
-import { Notification } from '../entities/Notification';
 
 // Middleware
 import auth from '../middlewares/auth';
@@ -33,9 +32,9 @@ import attachmentRouter from './attachment';
 import newsRouter from './news';
 import nihongoRouter from './nihongo';
 import bannedRouter from './banned';
+import notificationRouter from './notification';
 
 import { SosMed } from '../../app/_shared/models/SosMed';
-import { Role } from '../../app/_shared/models/Role';
 
 import { MessageEmbed } from 'discord.js';
 
@@ -81,6 +80,7 @@ router.use('/attachment', attachmentRouter);
 router.use('/news', newsRouter);
 router.use('/nihongo', nihongoRouter);
 router.use('/banned', bannedRouter);
+router.use('/notification', notificationRouter);
 
 // GET `/api`
 router.get('/', (req: UserRequest, res: Response) => {
@@ -454,75 +454,6 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
     console.error(error);
     return res.status(400).json({
       info: '🙄 400 - Social Media :: Verifikasi Gagal! 😪',
-      result: {
-        message: 'Data Tidak Lengkap!'
-      }
-    });
-  }
-});
-
-// POST `/api/push-notification`
-router.post('/push-notification', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
-  if ('type' in req.body && 'title' in req.body && 'content' in req.body && 'dismissible' in req.body) {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
-      let notifTemplate = {
-        id: new Date().getTime(),
-        type: req.body.type.replace(/<[^>]*>/g, ' ').trim(),
-        title: req.body.title.replace(/<[^>]*>/g, ' ').trim(),
-        content: req.body.content.replace(/<[^>]*>/g, ' ').trim(),
-        dismissible: (req.body.dismissible === false && req.user.role === Role.ADMIN ? false : true),
-        user_: {
-          username: req.user.username
-        }
-      };
-      if (req.body.deadline) {
-        try {
-          const userRepo = getRepository(User);
-          const user = await userRepo.findOneOrFail({
-            where: [
-              { id: Equal(req.user.id) }
-            ]
-          });
-          const notifRepo = getRepository(Notification);
-          const notif = new Notification();
-          notif.type = notifTemplate.type;
-          notif.title = notifTemplate.title;
-          notif.content = notifTemplate.content;
-          notif.dismissible = notifTemplate.dismissible;
-          notif.deadline = req.body.deadline;
-          notif.user_ = user;
-          notifTemplate = await notifRepo.save(notif);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-      req.io.volatile.emit('notification', {
-        notifCreator: notifTemplate.user_.username,
-        notifData: {
-          id: notifTemplate.id,
-          type: notifTemplate.type,
-          title: notifTemplate.title,
-          content: notifTemplate.content,
-          dismissible: notifTemplate.dismissible
-        }
-      });
-      return res.status(200).json({
-        info: '😚 200 - Push Notification API :: Berhasil Membuat Notifikasi 🤩',
-        result: {
-          message: 'Notifikasi Telah Dikirim!'
-        }
-      });
-    } else {
-      return res.status(401).json({
-        info: '🙄 401 - Push Notification API :: Authorisasi Pengguna Gagal 😪',
-        result: {
-          message: 'Khusus Admin / Moderator!'
-        }
-      });
-    }
-  } else {
-    return res.status(400).json({
-      info: '🙄 400 - Push Notification API :: Gagal Membuat Push Notifikasi 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
