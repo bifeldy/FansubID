@@ -10,6 +10,13 @@ export class AdminService {
 
   public menuList = [
     {
+      url: 'banned-list',
+      name: 'Banned List',
+      image_url: null,
+      icon: 'lock_open',
+      deskripsi: 'Kelola Banned User'
+    },
+    {
       url: 'ddl-list',
       name: 'Berkas DDL',
       image_url: null,

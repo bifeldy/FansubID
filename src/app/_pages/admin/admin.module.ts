@@ -16,11 +16,23 @@ import { AdminListUserComponent } from './admin-list-user/admin-list-user.compon
 import { AdminListProjectTypeComponent } from './admin-list-project-type/admin-list-project-type.component';
 import { AdminPushNotificationComponent } from './admin-push-notification/admin-push-notification.component';
 import { AdminListFansubMemberComponent } from './admin-list-fansub-member/admin-list-fansub-member.component';
+import { AdminListBannedComponent } from './admin-list-banned/admin-list-banned.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminMenuComponent
+  },
+  {
+    path: 'banned-list',
+    component: AdminListBannedComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Admin - List All Banned User',
+      description: 'Kelola Banned User',
+      keywords: 'Kelola Banned User',
+      roles: [Role.ADMIN, Role.MODERATOR]
+    }
   },
   {
     path: 'ddl-list',
@@ -86,7 +98,8 @@ const routes: Routes = [
     AdminListUserComponent,
     AdminListProjectTypeComponent,
     AdminPushNotificationComponent,
-    AdminListFansubMemberComponent
+    AdminListFansubMemberComponent,
+    AdminListBannedComponent
   ],
   imports: [
     CommonModule,
