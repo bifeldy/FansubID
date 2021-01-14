@@ -70,6 +70,11 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   miscMenus: Menu[] = [
     {
+      name: 'Admin & Mod',
+      link: '/admin-mod',
+      icon: 'settings'
+    },
+    {
       name: 'About',
       link: '/about',
       icon: 'info'

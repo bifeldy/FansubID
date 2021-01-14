@@ -1,23 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AuthGuard } from './_shared/helpers/auth-guard';
+import { Role } from './_shared/models/Role';
+
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
   },
-  // {
-  //   path: 'admin',
-  //   loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
-  //   canActivate: [AuthGuardService],
-  //   data: {
-  //     title: 'Admin Panel Management',
-  //     description: 'Halaman Khusus Untuk Administrasi',
-  //     keywords: 'Admin Fansub Database',
-  //     roles: [Role.Admin]
-  //   }
-  // },
+  {
+    path: 'admin-mod',
+    loadChildren: () => import('./_pages/admin/admin.module').then(m => m.AdminModule),
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Admin & Moderator Panel Management',
+      description: 'Halaman Khusus Untuk Administrasi & Moderasi',
+      keywords: 'Admin Moderator Fansub Database',
+      roles: [Role.ADMIN, Role.MODERATOR]
+    }
+  },
   {
     path: 'login',
     loadChildren: () => import('./_pages/login/login.module').then(m => m.LoginModule),
