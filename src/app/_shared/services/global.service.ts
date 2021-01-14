@@ -98,7 +98,7 @@ export class GlobalService {
   }
 
   htmlToText(htmlString: string): string {
-    return htmlString.replace(/<[^>]*>/g, '').trim();
+    return htmlString.replace(/<[^>]*>/g, ' ').trim();
   }
 
   shuffle(array): any {

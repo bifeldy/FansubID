@@ -23,16 +23,21 @@ export class ServerStateInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): any {
+    this.gs.log(`[SERVER_STATE_REQUEST]`, req);
     const cachedData = memoryCache.get(req.url);
     if (cachedData) {
+      this.gs.log(`[SERVER_STATE_LOAD]`, cachedData);
       this.transferState.set(makeStateKey(req.url), cachedData);
       return of(new HttpResponse({ body: cachedData, status: 200 }));
     }
     return next.handle(req).pipe(tap(event => {
+      this.gs.log(`[SERVER_STATE_PASS]`, event);
       if (event instanceof HttpResponse) {
         this.transferState.set(makeStateKey(req.url), event.body);
         this.ngZone.runOutsideAngular(() => {
-          memoryCache.put(req.url, event.body, 1000 * 60);
+          memoryCache.put(req.url, event.body, 1000 * 60, (key, value) => {
+            this.gs.log(`[SERVER_STATE_CLEAR] ${key}`, value);
+          });
         });
       }}
     ));
