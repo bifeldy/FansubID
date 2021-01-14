@@ -26,10 +26,18 @@
 <div class="container">
   <div class="row pt-3">
     <div class="col-12" *ngFor="let n of notif.notifications; let i = index">
-      <div class="alert alert-{{ n.type }} alert-dismissible fade show">
-        <strong class="mr-1">{{ n.title }}</strong>
-        <span [innerHTML]="n.content"></span>
-        <button type="button" class="btn-close" data-dismiss="alert" *ngIf="n.dismissible" (click)="removeNotif(n.id)"></button>
+      <div class="alert alert-{{ n.notifData.type }} alert-dismissible fade show">
+        <strong class="mr-1">{{ n.notifData.title }}</strong>
+        <span [innerHTML]="n.notifData.content"></span>
+        <strong class="ml-1" *ngIf="n.notifCreator">
+          --
+          <i>
+            <a href="/user/{{ n.notifCreator }}" class="text-decoration-none">
+              {{ n.notifCreator }}
+            </a>
+          </i>
+        </strong>
+        <button type="button" class="btn-close" data-dismiss="alert" *ngIf="n.notifData.dismissible" (click)="removeNotif(n.notifData.id)"></button>
       </div>
     </div>
   </div>

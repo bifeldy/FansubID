@@ -13,6 +13,8 @@ import { AdminMenuComponent } from './admin-menu/admin-menu.component';
 import { AdminListUserComponent } from './admin-list-user/admin-list-user.component';
 import { AdminListProjectTypeComponent } from './admin-list-project-type/admin-list-project-type.component';
 import { AdminListFansubLeaderComponent } from './admin-list-fansub-leader/admin-list-fansub-leader.component';
+import { AdminPushNotificationComponent } from './admin-push-notification/admin-push-notification.component';
+import { AdminListDdlComponent } from './admin-list-ddl/admin-list-ddl.component';
 
 const routes: Routes = [
   {
@@ -20,7 +22,18 @@ const routes: Routes = [
     component: AdminMenuComponent
   },
   {
-    path: 'user',
+    path: 'ddl-list',
+    component: AdminListDdlComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Admin - List All Berkas DDL',
+      description: 'Kelola Berkas DDL',
+      keywords: 'Kelola Berkas DDL',
+      roles: [Role.ADMIN]
+    }
+  },
+  {
+    path: 'user-list',
     component: AdminListUserComponent,
     canActivate: [AuthGuard],
     data: {
@@ -51,6 +64,17 @@ const routes: Routes = [
       keywords: 'Keanggotaan Fansub',
       roles: [Role.ADMIN, Role.MODERATOR]
     }
+  },
+  {
+    path: 'push-notification',
+    component: AdminPushNotificationComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Admin - Push Notification',
+      description: 'Buat Pengumuman Dadakan',
+      keywords: 'Push Notification',
+      roles: [Role.ADMIN, Role.MODERATOR]
+    }
   }
 ];
 
@@ -59,11 +83,16 @@ const routes: Routes = [
     AdminMenuComponent,
     AdminListUserComponent,
     AdminListProjectTypeComponent,
-    AdminListFansubLeaderComponent
+    AdminListFansubLeaderComponent,
+    AdminPushNotificationComponent,
+    AdminListDdlComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    SharedMaterialModule,
+    MaterialTableModule,
+    NotificationsModule
   ]
 })
 export class AdminModule { }

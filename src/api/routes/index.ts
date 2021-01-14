@@ -33,6 +33,7 @@ import newsRouter from './news';
 import nihongoRouter from './nihongo';
 
 import { SosMed } from '../../app/_shared/models/SosMed';
+import { Role } from '../../app/_shared/models/Role';
 
 import { MessageEmbed } from 'discord.js';
 
@@ -452,6 +453,35 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
       info: '🙄 400 - Social Media :: Verifikasi Gagal! 😪',
       result: {
         message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
+
+// POST `/api/push-notification`
+router.post('/push-notification', auth.isAuthorized, (req: UserRequest, res: Response, next) => {
+  if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    req.io.volatile.emit('notification', {
+      notifCreator: req.user.username,
+      notifData: {
+        id: new Date().getTime(),
+        type: req.body.type.replace(/<[^>]*>/g, '').trim(),
+        title: req.body.title.replace(/<[^>]*>/g, '').trim(),
+        content: req.body.content.replace(/<[^>]*>/g, '').trim(),
+        dismissible: (req.body.dismissible == false && req.user.role === Role.ADMIN ? false : true)
+      }
+    });
+    return res.status(200).json({
+      info: '😚 200 - Push Notification API :: Berhasil Membuat Notifikasi 🤩',
+      result: {
+        message: 'Notifikasi Telah Dikirim!'
+      }
+    });
+  } else {
+    return res.status(401).json({
+      info: '🙄 401 - Push Notification API :: Authorisasi Pengguna Gagal 😪',
+      result: {
+        message: 'Khusus Admin / Moderator!'
       }
     });
   }

@@ -53,8 +53,14 @@ export class StatsServerService {
       this.gs.log(`[SOCKET_VISITOR] Total Visitors :: ${this.visitor}`);
     });
     this.mySocket.on('notification', notifObj => {
-      const { notifId, notifType, notifTitle, notifContent, dismissible } = notifObj;
-      this.notif.addNotif(notifId, notifType, notifTitle, notifContent, dismissible);
+      this.notif.addNotif(
+        notifObj.notifCreator,
+        notifObj.notifData.id,
+        notifObj.notifData.type,
+        notifObj.notifData.title,
+        notifObj.notifData.content,
+        notifObj.notifData.dismissible
+      );
       this.gs.log(`[SOCKET_NOTIFICATION]`, notifObj);
     });
     this.intervalPingPong = setInterval(() => {
