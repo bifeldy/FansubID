@@ -96,6 +96,13 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete bannedUser.user_.created_at;
           delete bannedUser.user_.updated_at;
         }
+        if ('banned_by_' in bannedUser && bannedUser.banned_by_) {
+          delete bannedUser.banned_by_.role;
+          delete bannedUser.banned_by_.password;
+          delete bannedUser.banned_by_.session_token;
+          delete bannedUser.banned_by_.created_at;
+          delete bannedUser.banned_by_.updated_at;
+        }
         // TODO :: req.bot Reporting
         return res.status(200).json({
           info: `😅 200 - Banned API :: Berhasil BAN User 🤣`,
