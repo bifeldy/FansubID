@@ -282,7 +282,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         delete resFileSave.user_.created_at;
         delete resFileSave.user_.updated_at;
       }
-      await req.bot.send(
+      req.bot.send(
         new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(resFileSave.name)
@@ -429,7 +429,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
           ],
           relations: ['user_', 'attachment_', 'anime_', 'dorama_', 'project_type_', 'fansub_']
         });
-        if (req.user.id === file.user_.id || req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+        if (req.user.id === file.user_.id) {
           if (req.body.name) {
             file.name = req.body.name;
           }
@@ -525,7 +525,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             delete resFileSave.user_.created_at;
             delete resFileSave.user_.updated_at;
           }
-          await req.bot.send(
+          req.bot.send(
             new MessageEmbed()
             .setColor('#ff4081')
             .setTitle(resFileSave.name)
@@ -573,6 +573,43 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
         message: 'Data Tidak Lengkap!'
       }
     });
+  }
+});
+
+// DELETE `/api/berkas/:id`
+router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      const berkasRepo = getRepository(Berkas);
+      const berkas =  await berkasRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.id) }
+        ]
+      });
+      const deletedBerkas = await berkasRepo.remove(berkas);
+      if ('user_' in deletedBerkas && deletedBerkas.user_) {
+        delete deletedBerkas.user_.role;
+        delete deletedBerkas.user_.password;
+        delete deletedBerkas.user_.session_token;
+        delete deletedBerkas.user_.created_at;
+        delete deletedBerkas.user_.updated_at;
+      }
+      // TODO :: req.bot Reporting
+      return res.status(200).json({
+        info: `😅 200 - Berkas API :: Berhasil Menghapus Berkas 🤣`,
+        results: deletedBerkas
+      });
+    } else {
+      return res.status(401).json({
+        info: '🙄 401 - Berkas API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
   }
 });
 

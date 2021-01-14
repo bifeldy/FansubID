@@ -34,7 +34,7 @@ export class User {
   verified: boolean;
 
   @Column({ type: 'varchar', nullable: true, default: null, unique: true })
-  discord: boolean;
+  discord: string;
 
   @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name

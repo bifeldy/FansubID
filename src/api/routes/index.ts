@@ -31,6 +31,7 @@ import userRouter from './user';
 import attachmentRouter from './attachment';
 import newsRouter from './news';
 import nihongoRouter from './nihongo';
+import bannedRouter from './banned';
 
 import { SosMed } from '../../app/_shared/models/SosMed';
 import { Role } from '../../app/_shared/models/Role';
@@ -78,6 +79,7 @@ router.use('/user', userRouter);
 router.use('/attachment', attachmentRouter);
 router.use('/news', newsRouter);
 router.use('/nihongo', nihongoRouter);
+router.use('/banned', bannedRouter);
 
 // GET `/api`
 router.get('/', (req: UserRequest, res: Response) => {
@@ -86,7 +88,7 @@ router.get('/', (req: UserRequest, res: Response) => {
 
 // POST `/api/register`
 router.post('/register', auth.registerModule, async (req: UserRequest, res: Response, next) => {
-  await req.bot.send(
+  req.bot.send(
     new MessageEmbed()
     .setColor('#0099ff')
     .setTitle(req.user.kartu_tanda_penduduk_.nama)

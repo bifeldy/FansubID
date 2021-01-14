@@ -5,9 +5,12 @@ import { getRepository, Like, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
+import { Role } from '../../app/_shared/models/Role';
+
 import { User } from '../entities/User';
 import { Berkas } from '../entities/Berkas';
 import { Profile } from '../entities/Profile';
+import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
 // Middleware
 import auth from '../middlewares/auth';
@@ -191,7 +194,6 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
       delete f.private;
       delete f.download_url;
       delete f.description;
-      delete f.updated_at;
       if ('project_type_' in f && f.project_type_) {
         delete f.project_type_.created_at;
         delete f.project_type_.updated_at;
@@ -223,6 +225,57 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
       pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: files
     });
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
+  }
+});
+
+// DELETE `/api/user/:username`
+router.delete('/:username', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      const ktpRepo = getRepository(KartuTandaPenduduk);
+      const profileRepo = getRepository(Profile);
+      const userRepo = getRepository(User);
+      const user =  await userRepo.findOneOrFail({
+        where: [
+          { username: Equal(req.params.username) }
+        ]
+      });
+      const ktp = await ktpRepo.findOneOrFail({
+        where: [
+          { id: Equal(user.id) }
+        ]
+      });
+      const profile = await profileRepo.findOneOrFail({
+        where: [
+          { id: Equal(user.id) }
+        ]
+      });
+      const deletedUser = await userRepo.remove(user);
+      const deletedKtp = await ktpRepo.remove(ktp);
+      const deletedProfile = await profileRepo.remove(profile);
+      delete deletedUser.role;
+      delete deletedUser.password;
+      delete deletedUser.session_token;
+      // TODO :: req.bot Reporting
+      return res.status(200).json({
+        info: `😅 200 - User API :: Berhasil Menghapus User 🤣`,
+        results: {
+          user: deletedUser,
+          ktp: deletedKtp,
+          profile: deletedProfile
+        }
+      });
+    } else {
+      return res.status(401).json({
+        info: '🙄 401 - User API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
+        }
+      });
+    }
   } catch (error) {
     console.error(error);
     return next(createError(404));

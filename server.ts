@@ -64,6 +64,7 @@ import { Edict } from './src/api/entities/Edict';
 import { Kanji } from './src/api/entities/Kanji';
 import { Kanjivg } from './src/api/entities/Kanjivg';
 import { Tatoeba } from './src/api/entities/Tatoeba';
+import { Banned } from './src/api/entities/Banned';
 
 const dbName = process.env.DB_NAME || 'hikki';
 const dbUsername = process.env.DB_USERNAME || 'root';
@@ -95,7 +96,8 @@ const typeOrmConfig: any = {
     Edict,
     Kanji,
     Kanjivg,
-    Tatoeba
+    Tatoeba,
+    Banned
   ]
 };
 

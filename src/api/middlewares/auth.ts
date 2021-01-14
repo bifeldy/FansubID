@@ -10,10 +10,11 @@ import { UserRequest } from '../models/UserRequest';
 import { User } from '../entities/User';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 import { Profile } from '../entities/Profile';
+import { Banned } from '../entities/Banned';
 
 import CryptoJS from 'crypto-js';
 
-import { environment } from 'src/environments/server/environment';
+import { environment } from '../../environments/server/environment';
 
 // Helper
 import jwt from '../helpers/jwt';
@@ -92,13 +93,39 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(400).json({
       info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
     });
+  }
+}
+
+// tslint:disable-next-line: typedef
+async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
+  try {
+    const bannedRepo = getRepository(Banned);
+    const banned = await bannedRepo.findOneOrFail({
+      where: [
+        {
+          user_: {
+            id: Equal(req.user.id)
+          }
+        }
+      ],
+      relations: ['user_']
+    });
+    return res.status(400).json({
+      info: `🙄 400 - Banned API :: ${banned.user_.username} Telah Di BAN 😪`,
+      result: {
+        message: `Akun Tidak Dapat Digunakan :: ${banned.reason}`
+      }
+    });
+  } catch (error) {
+    // console.error(error);
+    return next();
   }
 }
 
@@ -118,12 +145,12 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
       selectedUser.session_token = jwt.JwtEncode(noPwdSsToken, ('rememberMe' in req.body && JSON.parse(req.body.rememberMe) === true));
       const resUserSave = await userRepo.save(selectedUser);
       req.user = (resUserSave as any);
-      return next();
+      checkBan(req, res, next);
     } else {
       throw new Error('Username, Email, atau Password tidak tepat!');
     }
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(400).json({
       info: '🙄 400 - Authentication API :: Login Gagal! 😪',
       result: {
@@ -155,7 +182,7 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       delete usr.profile_.created_at;
       delete usr.profile_.updated_at;
       req.user = (usr as any);
-      return next();
+      checkBan(req, res, next);
     } else {
       return res.status(401).json({
         info: '🙄 401 - Authentication API :: Authorisasi Sesi Gagal 😪',
@@ -177,7 +204,7 @@ async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
       throw new Error('User Is Not Login');
     }
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     req.user = null;
     return next();
   }
@@ -200,7 +227,7 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       req.user = (noPwdSsToken as any);
       return next();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       return res.status(400).json({
         info: '🙄 400 - Authentication API :: Logout Gagal 😪',
         result: {

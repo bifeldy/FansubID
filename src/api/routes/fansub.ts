@@ -5,6 +5,8 @@ import { getRepository, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
+import { Role } from '../../app/_shared/models/Role';
+
 import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
 import { User } from '../entities/User';
@@ -30,7 +32,6 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     });
     for (const f of fansubs) {
       delete f.description;
-      delete f.updated_at;
       f.urls = JSON.parse(f.urls);
       f.tags = JSON.parse(f.tags);
     }
@@ -145,7 +146,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete resFansubSave.user_.created_at;
           delete resFansubSave.user_.updated_at;
         }
-        await req.bot.send(
+        req.bot.send(
           new MessageEmbed()
           .setColor('#0099ff')
           .setTitle(resFansubSave.name)
@@ -222,7 +223,6 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         delete f.private;
         delete f.download_url;
         delete f.description;
-        delete f.updated_at;
         if ('project_type_' in f && f.project_type_) {
           delete f.project_type_.created_at;
           delete f.project_type_.updated_at;
@@ -490,7 +490,7 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
         delete resFansubSave.user_.created_at;
         delete resFansubSave.user_.updated_at;
       }
-      await req.bot.send(
+      req.bot.send(
         new MessageEmbed()
         .setColor('#ff4081')
         .setTitle(resFansubSave.name)
@@ -521,6 +521,43 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
         message: 'Data Tidak Lengkap!'
       }
     });
+  }
+});
+
+// DELETE `/api/fansub/:slug`
+router.delete('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      const fansubRepo = getRepository(Fansub);
+      const fansub =  await fansubRepo.findOneOrFail({
+        where: [
+          { slug: Equal(req.params.slug) }
+        ]
+      });
+      const deletedFansub = await fansubRepo.remove(fansub);
+      if ('user_' in deletedFansub && deletedFansub.user_) {
+        delete deletedFansub.user_.role;
+        delete deletedFansub.user_.password;
+        delete deletedFansub.user_.session_token;
+        delete deletedFansub.user_.created_at;
+        delete deletedFansub.user_.updated_at;
+      }
+      // TODO :: req.bot Reporting
+      return res.status(200).json({
+        info: `😅 200 - Fansub API :: Berhasil Menghapus Fansub 🤣`,
+        results: deletedFansub
+      });
+    } else {
+      return res.status(401).json({
+        info: '🙄 401 - Fansub API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
   }
 });
 

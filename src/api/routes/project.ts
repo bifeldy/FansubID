@@ -5,6 +5,8 @@ import { getRepository, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
+import { Role } from '../../app/_shared/models/Role';
+
 import { ProjectType } from '../entities/ProjectType';
 
 // Middleware
@@ -22,7 +24,6 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   });
   for (const p of projects) {
     delete p.description;
-    delete p.updated_at;
   }
   return res.status(200).json({
     info: `😅 200 - Project API :: List All 🤣`,
@@ -117,6 +118,36 @@ router.put('/:id',  auth.isAuthorized, async (req: UserRequest, res: Response, n
         message: 'Data Tidak Lengkap!'
       }
     });
+  }
+});
+
+// DELETE `/api/project/:id`
+router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      const projectRepo = getRepository(ProjectType);
+      const project =  await projectRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.id) }
+        ]
+      });
+      const deletedProject = await projectRepo.remove(project);
+      // TODO :: req.bot Reporting
+      return res.status(200).json({
+        info: `😅 200 - Project API :: Berhasil Menghapus Project 🤣`,
+        results: deletedProject
+      });
+    } else {
+      return res.status(401).json({
+        info: '🙄 401 - Project API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
   }
 });
 

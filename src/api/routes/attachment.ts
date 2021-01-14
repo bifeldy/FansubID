@@ -4,10 +4,11 @@ import fs from 'fs';
 import find from 'find';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Equal } from 'typeorm';
+import { getRepository, Equal, Like } from 'typeorm';
 import { drive_v3 } from 'googleapis';
 
 import { UserRequest } from '../models/UserRequest';
+import { Role } from '../../app/_shared/models/Role';
 
 import { environment } from '../../environments/server/environment';
 
@@ -59,9 +60,9 @@ function deleteAttachment(fileName) {
 router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const lampiranId = req.query.id || '';
+    const attachmentRepo = getRepository(Attachment);
     if (lampiranId) {
       if (req.user.verified) {
-        const attachmentRepo = getRepository(Attachment);
         const attachment =  await attachmentRepo.findOneOrFail({
           where: [
             { id: Equal(lampiranId) }
@@ -113,7 +114,50 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
         });
       }
     } else {
-      throw new Error('Data Tidak Lengkap!');
+      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+        const [attachments, count] = await attachmentRepo.findAndCount({
+          where: [
+            { name: Like(`%${req.query.q ? req.query.q : ''}%`) }
+          ],
+          order: {
+            ...((req.query.sort && req.query.order) ? {
+              [req.query.sort]: req.query.order.toUpperCase()
+            } : {
+              created_at: 'DESC',
+              name: 'ASC'
+            })
+          },
+          relations: ['user_', 'rootAttachment_'],
+          skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+          take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
+        });
+        for (const a of attachments) {
+          if ('user_' in a && a.user_) {
+            delete a.user_.role;
+            delete a.user_.password;
+            delete a.user_.session_token;
+            delete a.user_.created_at;
+            delete a.user_.updated_at;
+          }
+          if ('rootAttachment_' in a && a.rootAttachment_) {
+            delete a.rootAttachment_.created_at;
+            delete a.rootAttachment_.updated_at;
+          }
+        }
+        return res.status(200).json({
+          info: `😅 200 - Attachment API :: List All 🤣`,
+          count,
+          pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+          results: attachments
+        });
+      } else {
+        return res.status(401).json({
+          info: '🙄 401 - Attachment API :: Authorisasi Pengguna Gagal 😪',
+          result: {
+            message: 'Khusus Admin / Moderator!'
+          }
+        });
+      }
     }
   } catch (error) {
     console.error(error);
@@ -190,6 +234,43 @@ router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserReque
         message: 'Data Tidak Lengkap!'
       }
     });
+  }
+});
+
+// DELETE `/api/attachment/:id`
+router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      const attachmentRepo = getRepository(Attachment);
+      const attachment =  await attachmentRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.id) }
+        ]
+      });
+      deleteAttachment(attachment.name);
+      const deletedAttachment = await attachmentRepo.remove(attachment);
+      if ('user_' in deletedAttachment && deletedAttachment.user_) {
+        delete deletedAttachment.user_.role;
+        delete deletedAttachment.user_.password;
+        delete deletedAttachment.user_.session_token;
+        delete deletedAttachment.user_.created_at;
+        delete deletedAttachment.user_.updated_at;
+      }
+      return res.status(200).json({
+        info: `😅 200 - Attachment API :: Berhasil Menghapus DDL 🤣`,
+        results: deletedAttachment
+      });
+    } else {
+      return res.status(401).json({
+        info: '🙄 401 - Attachment API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
   }
 });
 

@@ -165,7 +165,6 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         delete f.private;
         delete f.download_url;
         delete f.description;
-        delete f.updated_at;
         if ('project_type_' in f && f.project_type_) {
           delete f.project_type_.created_at;
           delete f.project_type_.updated_at;

@@ -41,7 +41,6 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     });
     for (const n of news) {
       delete n.content;
-      delete n.updated_at;
       n.tags = JSON.parse(n.tags);
       if ('user_' in n && n.user_) {
         delete n.user_.role;
@@ -101,7 +100,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete resNewsSave.user_.created_at;
           delete resNewsSave.user_.updated_at;
         }
-        await req.bot.send(
+        req.bot.send(
           new MessageEmbed()
           .setColor('#0099ff')
           .setTitle(resNewsSave.title)
@@ -207,7 +206,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               delete resNewsSave.user_.created_at;
               delete resNewsSave.user_.updated_at;
             }
-            await req.bot.send(
+            req.bot.send(
               new MessageEmbed()
               .setColor('#ff4081')
               .setTitle(resNewsSave.title)
@@ -257,6 +256,43 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
         message: 'Data Tidak Lengkap!'
       }
     });
+  }
+});
+
+// DELETE `/api/news/:id`
+router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      const newsRepo = getRepository(News);
+      const news =  await newsRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.id) }
+        ]
+      });
+      const deletedNews = await newsRepo.remove(news);
+      if ('user_' in deletedNews && deletedNews.user_) {
+        delete deletedNews.user_.role;
+        delete deletedNews.user_.password;
+        delete deletedNews.user_.session_token;
+        delete deletedNews.user_.created_at;
+        delete deletedNews.user_.updated_at;
+      }
+      // TODO :: req.bot Reporting
+      return res.status(200).json({
+        info: `😅 200 - News API :: Berhasil Menghapus News 🤣`,
+        results: deletedNews
+      });
+    } else {
+      return res.status(401).json({
+        info: '🙄 401 - News API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
   }
 });
 
