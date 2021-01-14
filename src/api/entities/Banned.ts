@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { User } from './User';
 
 @Entity({ name: 'banned' })
@@ -22,4 +22,8 @@ export class Banned {
   @JoinColumn()
   // tslint:disable-next-line: variable-name
   user_: User;
+
+  @ManyToOne(type => User)
+  // tslint:disable-next-line: variable-name
+  banned_by_: User;
 }

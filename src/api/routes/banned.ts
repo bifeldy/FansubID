@@ -68,18 +68,26 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
 // POST `/api/banned`
 router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if ('reason' in req.body || 'username' in req.body) {
+    if ('reason' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
       if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
         const userRepo = getRepository(User);
         const user =  await userRepo.findOneOrFail({
           where: [
-            { username: Equal(req.body.username) }
+            { id: Equal(req.body.id) },
+            { username: Equal(req.body.username) },
+            { email: Equal(req.body.email) }
+          ]
+        });
+        const bannedBy =  await userRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.user.id) }
           ]
         });
         const bannedRepo = getRepository(Banned);
         const banned = new Banned();
         banned.reason = req.body.reason;
         banned.user_ = user;
+        banned.banned_by_ = bannedBy;
         const bannedUser = await bannedRepo.save(banned);
         if ('user_' in bannedUser && bannedUser.user_) {
           delete bannedUser.user_.role;
