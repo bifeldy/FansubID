@@ -13,7 +13,8 @@ export class AdminMenuComponent implements OnInit {
   constructor(
     public gs: GlobalService,
     public adm: AdminService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }

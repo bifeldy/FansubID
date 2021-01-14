@@ -101,6 +101,6 @@
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-500px) rotate(500deg);
+    transform: translateY(-512px) rotate(512deg);
   }
 }

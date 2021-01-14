@@ -1,1 +1,118 @@
-<p>admin-push-notification works!</p>
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+  
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-lg-8 col-xl-9">
+      <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
+        <div class="row sticky-top bg-light">
+          <div class="col-12 sticky-top bg-light">
+            <h2 class="pt-3 border-bottom-dotted">
+              <b class="text-secondary">Buat Push Notifikasi</b>
+            </h2>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
+                <mat-label>Judul</mat-label>
+                <input matInput formControlName="title" placeholder="Perhatian!" />
+                <mat-icon matSuffix>short_text</mat-icon>
+                <mat-hint align="end">Teks Tebal Di Kiri</mat-hint>
+                <mat-error>
+                  <strong *ngIf="fg.get('title').hasError('required')">Judul Tidak Boleh Kosong</strong>
+                  <strong *ngIf="fg.get('title').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-8">
+                <mat-label>Konten / Isi</mat-label>
+                <input matInput formControlName="content" placeholder="Akan Diadakan Maintenance Pada ..." />
+                <mat-icon matSuffix>wysiwyg</mat-icon>
+                <mat-error>
+                  <strong *ngIf="fg.get('content').hasError('required')">Isi Tidak Boleh Kosong</strong>
+                  <strong *ngIf="fg.get('content').hasError('pattern')">Isi Hanya Boleh Huruf Standar Papan Ketik</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-6">
+                <mat-label>Jenis Warna</mat-label>
+                <mat-select formControlName="type" placeholder="Class Warna Bootstrap">
+                  <mat-option value="danger">Merah</mat-option>
+                  <mat-option value="warning">Kuning</mat-option>
+                  <mat-option value="success">Hijau</mat-option>
+                  <mat-option value="light">Putih</mat-option>
+                  <mat-option value="dark">Hitam</mat-option>
+                  <mat-option value="secondary">Abu Abu</mat-option>
+                  <mat-option value="primary">Biru Tua</mat-option>
+                  <mat-option value="info">Biru Muda</mat-option>
+                </mat-select>
+                <mat-error>
+                  <strong *ngIf="fg.get('type').hasError('required')">Mohon Pilih Salah Satu</strong>
+                  <strong *ngIf="fg.get('type').hasError('pattern')">Tipe Hanya Boleh Huruf Standar Papan Ketik</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-6">
+                <mat-label>Dapat Ditutup</mat-label>
+                <mat-select formControlName="dismissible" placeholder="Ya / Tidak">
+                  <mat-option value="1">Ya - *Default</mat-option>
+                  <mat-option value="0">Tidak - *Khusus Admin</mat-option>
+                </mat-select>
+                <mat-hint align="end">Tombol X Di Kanan</mat-hint>
+                <mat-error>
+                  <strong *ngIf="fg.get('dismissible').hasError('required')">Mohon Pilih Salah Satu</strong>
+                  <strong *ngIf="fg.get('dismissible').hasError('pattern')">Dismissible Hanya Boleh Huruf Standar Papan Ketik</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-12 col-md-3 pb-3">
+                    <a mat-stroked-button routerLink="../" class="w-100" [disabled]="submitted">
+                      <mat-icon class="mr-1">undo</mat-icon>
+                      Batal
+                    </a>
+                  </div>
+                  <div class="col-12 col-md-3 pb-3">
+                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid">
+                      Simpan
+                      <mat-icon class="ml-1">save</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-4 col-xl-3">
+      <div class="row sticky-top bg-light">
+        <div class="col-12 sticky-top bg-light">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-secondary">Menu Admin Lainnya</b>
+          </h2>
+        </div>
+        <div class="col-12 px-3">
+          <div class="col-12 p-2" *ngFor="let m of adm.menuList">
+            <mat-card>
+              <mat-card-header routerLink="/admin-mod/{{ m.url }}" style="cursor: pointer;">
+                <div mat-card-avatar style="background-size: cover;"
+                  [style.background-image]="'url(' + (m.image_url ? m.image_url : '') + ')'">
+                  <mat-icon style="font-size: 300%;" *ngIf="m.icon">{{ m.icon }}</mat-icon>
+                </div>
+                <mat-card-title class="text-primary mb-1" style="cursor: pointer;">
+                  <h3 class="mb-0">{{ m.name }}</h3>
+                </mat-card-title>
+                <mat-card-subtitle class="mb-0">{{ m.deskripsi }}</mat-card-subtitle>
+              </mat-card-header>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

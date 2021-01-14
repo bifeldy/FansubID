@@ -29,8 +29,8 @@
               </div>
             </div>
             <div class="col-12" *ngIf="newsData.length > 0">
-              <div class="row">
-                <div class="col-12 col-md-6 col-xl-4 p-3" *ngFor="let n of newsData | slice:0:6">
+              <div class="row px-3">
+                <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let n of newsData | slice:0:6">
                   <mat-card>
                     <img mat-card-image [src]="n.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/news/{{ n.id }}" />
                     <mat-card-content routerLink="/news/{{ n.id }}" style="cursor: pointer;">
@@ -53,7 +53,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-12 sticky-top bg-light">
           <h2 class="pt-3 border-bottom-dotted">
             <a class="float-right text-decoration-none" routerLink="/nihongo" style="font-size: small;">
@@ -65,7 +65,7 @@
         <div class="col-12">
           <app-banner-nihongo></app-banner-nihongo>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="col-lg-4 col-xl-3">
       <div class="row sticky-top">

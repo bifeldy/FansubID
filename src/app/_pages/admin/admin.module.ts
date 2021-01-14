@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
@@ -10,11 +11,11 @@ import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { Role } from '../../_shared/models/Role';
 
 import { AdminMenuComponent } from './admin-menu/admin-menu.component';
+import { AdminListDdlComponent } from './admin-list-ddl/admin-list-ddl.component';
 import { AdminListUserComponent } from './admin-list-user/admin-list-user.component';
 import { AdminListProjectTypeComponent } from './admin-list-project-type/admin-list-project-type.component';
-import { AdminListFansubLeaderComponent } from './admin-list-fansub-leader/admin-list-fansub-leader.component';
 import { AdminPushNotificationComponent } from './admin-push-notification/admin-push-notification.component';
-import { AdminListDdlComponent } from './admin-list-ddl/admin-list-ddl.component';
+import { AdminListFansubMemberComponent } from './admin-list-fansub-member/admin-list-fansub-member.component';
 
 const routes: Routes = [
   {
@@ -55,11 +56,11 @@ const routes: Routes = [
     }
   },
   {
-    path: 'fansub-leader',
-    component: AdminListFansubLeaderComponent,
+    path: 'fansub-member',
+    component: AdminListFansubMemberComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Admin - List All Fansub Leader',
+      title: 'Admin - List All Fansub Member',
       description: 'Atur Keanggotaan Fansub',
       keywords: 'Keanggotaan Fansub',
       roles: [Role.ADMIN, Role.MODERATOR]
@@ -81,18 +82,20 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AdminMenuComponent,
+    AdminListDdlComponent,
     AdminListUserComponent,
     AdminListProjectTypeComponent,
-    AdminListFansubLeaderComponent,
     AdminPushNotificationComponent,
-    AdminListDdlComponent
+    AdminListFansubMemberComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     SharedMaterialModule,
     MaterialTableModule,
-    NotificationsModule
+    NotificationsModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class AdminModule { }

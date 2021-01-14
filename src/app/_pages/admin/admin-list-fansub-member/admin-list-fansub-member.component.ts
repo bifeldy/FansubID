@@ -4,11 +4,11 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 
 @Component({
-  selector: 'app-admin-list-user',
-  templateUrl: './admin-list-user.component.html',
-  styleUrls: ['./admin-list-user.component.css']
+  selector: 'app-admin-list-fansub-member',
+  templateUrl: './admin-list-fansub-member.component.html',
+  styleUrls: ['./admin-list-fansub-member.component.css']
 })
-export class AdminListUserComponent implements OnInit {
+export class AdminListFansubMemberComponent implements OnInit {
 
   constructor(
     public gs: GlobalService,

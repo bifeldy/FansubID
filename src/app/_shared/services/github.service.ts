@@ -9,6 +9,8 @@ import { ApiService } from './api.service';
 export class GithubService {
 
   public portalVer = '0000000';
+  public commitDate = null;
+  public commitUser = null;
 
   constructor(
     private gs: GlobalService,
@@ -19,6 +21,8 @@ export class GithubService {
         res => {
           this.gs.log('[GITHUB_API]', res);
           this.portalVer = res[0].sha;
+          this.commitUser = res[0].commit.author.name;
+          this.commitDate = new Date(res[0].commit.author.date);
         },
         err => {
           this.gs.log('[GITHUB_API]', err);

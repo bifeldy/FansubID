@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { ApiService } from './api.service';
+import { GlobalService } from './global.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,8 +17,8 @@ export class AdminService {
       deskripsi: 'Kelola Berkas DDL'
     },
     {
-      url: 'fansub-leader',
-      name: 'Fansub Leader',
+      url: 'fansub-member',
+      name: 'Fansub Lead & Staff',
       image_url: null,
       icon: 'stars',
       deskripsi: 'Atur Keanggotaan Fansub'
@@ -43,5 +46,17 @@ export class AdminService {
     }
   ];
 
-  constructor() { }
+  constructor(
+    private api: ApiService,
+    private gs: GlobalService
+  ) {
+    if (this.gs.isBrowser) {
+      //
+    }
+  }
+
+  createNotif(notifData): any {
+    return this.api.postData('/push-notification', notifData);
+  }
+
 }

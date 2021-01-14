@@ -11,6 +11,20 @@
         {{ gh.portalVer }}
       </span>
     </p>
+    <p class="px-2 text-truncate">
+      Date ::
+      <span class="text-success">
+        {{ gh.commitDate | date:'medium' }}
+      </span>
+    </p>
+    <p class="px-2 text-truncate">
+      Commiter ::
+      <span class="text-success">
+        <a href="https://github.com/{{ gh.commitUser }}" target="_blank" class="text-decoration-none">
+          {{ gh.commitUser }}
+        </a>
+      </span>
+    </p>
     <p class="px-2">
       Socket ::
       <span class="text-success" *ngIf="ss.mySocket">
@@ -24,7 +38,7 @@
       </span>
     </p>
     <p class="px-2">
-      Pengunjung ::
+      Pengunjung Aktif ::
       <span class="text-success">
         {{ ss.visitor }} Koneksi
       </span>
