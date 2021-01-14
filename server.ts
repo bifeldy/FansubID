@@ -30,7 +30,7 @@ global.document = win.document;
 global.localStorage = localStorage;
 global.navigator = mock.getNavigator();
 
-import { createConnection, Equal, getRepository } from 'typeorm';
+import { createConnection, Equal, getRepository, MoreThanOrEqual } from 'typeorm';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import express from 'express';
@@ -65,6 +65,7 @@ import { Kanji } from './src/api/entities/Kanji';
 import { Kanjivg } from './src/api/entities/Kanjivg';
 import { Tatoeba } from './src/api/entities/Tatoeba';
 import { Banned } from './src/api/entities/Banned';
+import { Notification } from './src/api/entities/Notification';
 
 const dbName = process.env.DB_NAME || 'hikki';
 const dbUsername = process.env.DB_USERNAME || 'root';
@@ -97,7 +98,8 @@ const typeOrmConfig: any = {
     Kanji,
     Kanjivg,
     Tatoeba,
-    Banned
+    Banned,
+    Notification
   ]
 };
 
@@ -205,7 +207,7 @@ export function app(): http.Server {
 
   /********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
 
-  io.on('connection', (socket: socketIo.Socket) => {
+  io.on('connection', async (socket: socketIo.Socket) => {
     io.emit('visitors', io.sockets.sockets.size);
     socket.on('disconnect', () => {
       io.emit('visitors', io.sockets.sockets.size);
@@ -215,6 +217,29 @@ export function app(): http.Server {
         cb();
       }
     });
+    try {
+      const notifRepo = getRepository(Notification);
+      const notif = await notifRepo.find({
+        where: [
+          { deadline: MoreThanOrEqual(new Date()) }
+        ],
+        relations: ['user_']
+      });
+      for (const n of notif) {
+        socket.emit('notification', {
+          notifCreator: n.user_.username,
+          notifData: {
+            id: n.id,
+            type: n.type,
+            title: n.title,
+            content: n.content,
+            dismissible: n.dismissible
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   /********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
