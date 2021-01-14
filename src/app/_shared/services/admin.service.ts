@@ -34,7 +34,7 @@ export class AdminService {
       url: 'push-notification',
       name: 'Push Notification',
       image_url: null,
-      icon: 'notification_add',
+      icon: 'notifications_active',
       deskripsi: 'Buat Pengumuman Dadakan'
     },
     {
