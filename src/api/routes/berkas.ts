@@ -288,7 +288,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         .setTitle(resFileSave.name)
         .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
         .setAuthor('Hikki - Penambahan Berkas Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-        .setDescription(resFileSave.description.replace(/<[^>]*>/g, '').trim())
+        .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
         .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
         .addFields(
           { name: 'Fansub', value: fansubEmbedData.join(', '), inline: true },
@@ -531,7 +531,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             .setTitle(resFileSave.name)
             .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
             .setAuthor('Hikki - Pembaharuan Data Berkas', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-            .setDescription(resFileSave.description.replace(/<[^>]*>/g, '').trim())
+            .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
             // tslint:disable-next-line: max-line-length
             .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
             .addFields(

@@ -95,7 +95,7 @@ router.post('/register', auth.registerModule, async (req: UserRequest, res: Resp
     .setTitle(req.user.kartu_tanda_penduduk_.nama)
     .setURL(`${environment.baseUrl}/user/${req.user.username}`)
     .setAuthor('Hikki - Pendaftaran Pengguna Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-    .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, '').trim())
+    .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
     .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
     .setTimestamp(req.user.updated_at)
     .setFooter(

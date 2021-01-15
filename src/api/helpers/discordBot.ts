@@ -51,7 +51,7 @@ export async function discordBot(io: Server, msg: Message) {
                 .setTitle(user.kartu_tanda_penduduk_.nama)
                 .setURL(`${environment.baseUrl}/user/${user.username}`)
                 .setAuthor('Hikki - Verifikasi Pengguna', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-                .setDescription(user.profile_.description.replace(/<[^>]*>/g, '').trim())
+                .setDescription(user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
                 .setThumbnail(user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url)
                 .setTimestamp(user.updated_at)
                 .setFooter(

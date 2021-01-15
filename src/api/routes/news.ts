@@ -106,7 +106,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           .setTitle(resNewsSave.title)
           .setURL(`${environment.baseUrl}/news/${resNewsSave.id}`)
           .setAuthor('Hikki - Penambahan Berita Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-          .setDescription(resNewsSave.content.replace(/<[^>]*>/g, '').trim())
+          .setDescription(resNewsSave.content.replace(/<[^>]*>/g, ' ').trim())
           .setImage(resNewsSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.image_url)
           .setTimestamp(resNewsSave.updated_at)
           .setFooter(
@@ -212,7 +212,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               .setTitle(resNewsSave.title)
               .setURL(`${environment.baseUrl}/news/${resNewsSave.id}`)
               .setAuthor('Hikki - Pembaharuan Data Berita', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-              .setDescription(resNewsSave.content.replace(/<[^>]*>/g, '').trim())
+              .setDescription(resNewsSave.content.replace(/<[^>]*>/g, ' ').trim())
               .setImage(resNewsSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.image_url)
               .setTimestamp(resNewsSave.updated_at)
               .setFooter(

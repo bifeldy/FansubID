@@ -109,7 +109,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
               .setTitle(resUserSave.kartu_tanda_penduduk_.nama)
               .setURL(`${environment.baseUrl}/user/${resUserSave.username}`)
               .setAuthor('Hikki - Pembaharuan Data Pengguna', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-              .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, '').trim())
+              .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, ' ').trim())
               .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
               .setTimestamp(resUserSave.updated_at)
               .setFooter(
