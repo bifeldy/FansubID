@@ -187,11 +187,11 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res: Respons
           if (b1 && b1.success) {
             return request({
               method: 'POST',
-              uri: environment.apiKpuAndroid,
+              uri: environment.apiPemerintahKTPUrl,
               body: JSON.stringify({
                 nik: req.body.nik,
                 nama: req.body.nama,
-                ck_kpu: environment.kpuAndroidSecretKey
+                ck_kpu: environment.apiPemerintahKTPSecretKey
               })
             }, (e2, r2, b2) => {
               if (!e2) {
