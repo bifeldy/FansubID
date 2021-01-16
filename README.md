@@ -11,9 +11,8 @@ Proyek ini awalnya dibuat dengan [Angular CLI](https://github.com/angular/angula
 
 ## *Build* & *Run*
 
-Jalankan `npm run bifeldy: prod` untuk *build* seluruh proyek (*frontend* & *backend*) dalam *production*. <br /> Hasil akan tersimpan di folder `dist/`.
-* Jalankan `npm run bifeldy:express && npm run bifeldy:start` untuk *build* dan *serve* *backend* saja. <br /> Akses *API* pada `http://localhost:4000`
-* Jalankan `ng serve` untuk *serve* seperti biasa. <br /> Lalu buka situs di `http://localhost:4200`
+Jalankan `npm run bifeldy:prod` untuk *build* seluruh proyek (*frontend* & *backend*) dalam *production*. <br /> Hasil akan tersimpan di folder `dist/`.
+* Jalankan `npm run bifeldy:dev` untuk *serve* SSR dalam *development*. <br /> Lalu buka situs di `http://localhost:0000` portnya dapat dilihat pada berkas `stdout.log`
 
 ## Bantuan lebih lanjut
 

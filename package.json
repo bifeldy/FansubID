@@ -15,7 +15,7 @@
     "bifeldy:angular-dev": "ng build",
     "bifeldy:angular-prod": "ng build --prod",
     "bifeldy:express": "ng run hikki:server:production",
-    "bifeldy:dev": "ng build && ng run hikki:server:production",
+    "bifeldy:dev": "ng run hikki:serve-ssr",
     "bifeldy:prod": "ng build --prod && ng run hikki:server:production",
     "bifeldy:start": "node dist/hikki/server/main.js",
     "postinstall": "ngcc"
