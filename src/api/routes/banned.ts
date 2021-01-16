@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, Equal } from 'typeorm';
+import { getRepository, Like, Equal, In } from 'typeorm';
 
 import { MessageEmbed } from 'discord.js';
 
@@ -20,57 +20,125 @@ import auth from '../middlewares/auth';
 const router = Router();
 
 // GET `/api/banned`
-router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
-      const bannedRepo = getRepository(Banned);
-      const [banneds, count] = await bannedRepo.findAndCount({
-        where: [
-          { reason: Like(`%${req.query.q ? req.query.q : ''}%`) }
-        ],
-        order: {
-          ...((req.query.sort && req.query.order) ? {
-            [req.query.sort]: req.query.order.toUpperCase()
-          } : {
-            created_at: 'DESC',
-            reason: 'ASC'
-          })
-        },
-        relations: ['user_', 'banned_by_'],
-        skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-        take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
-      });
-      for (const b of banneds) {
-        if ('user_' in b && b.user_) {
-          delete b.user_.role;
-          delete b.user_.password;
-          delete b.user_.session_token;
-          delete b.user_.created_at;
-          delete b.user_.updated_at;
+    const bannedRepo = getRepository(Banned);
+    const queryId = req.query.id;
+    if (queryId) {
+      const userId = queryId.split(',').map(Number);
+      if (Array.isArray(userId) && userId.length > 0) {
+        if (userId.length > 1) {
+          if (req.user) {
+            if (req.user.role !== Role.ADMIN && req.user.role !== Role.MODERATOR) {
+              return res.status(401).json({
+                info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
+                result: {
+                  message: 'Membutuhkan Hak Admin / Moderator!'
+                }
+              });
+            }
+          } else {
+            return res.status(401).json({
+              info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
+              result: {
+                message: 'Harap Login Terlebih Dahulu!'
+              }
+            });
+          }
         }
-        if ('banned_by_' in b && b.banned_by_) {
-          delete b.banned_by_.role;
-          delete b.banned_by_.password;
-          delete b.banned_by_.session_token;
-          delete b.banned_by_.created_at;
-          delete b.banned_by_.updated_at;
+        const [banneds, count] = await bannedRepo.findAndCount({
+          where: [
+            {
+              user_: {
+                id: In([userId])
+              }
+            }
+          ],
+          relations: ['user_']
+        });
+        const results: any = {};
+        for (const i of userId) {
+          results[i] = {};
         }
+        for (const b of banneds) {
+          if ('user_' in b && b.user_) {
+            delete b.user_.role;
+            delete b.user_.password;
+            delete b.user_.session_token;
+            delete b.user_.created_at;
+            delete b.user_.updated_at;
+            results[b.user_.id] = b;
+          }
+        }
+        return res.status(200).json({
+          info: `😅 200 - Banned API :: User 🤣`,
+          count,
+          pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+          results
+        });
+      } else {
+        throw new Error('Data Tidak Lengkap!');
       }
-      return res.status(200).json({
-        info: `😅 200 - Banned API :: List All 🤣`,
-        count,
-        pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
-        results: banneds
-      });
     } else {
-      throw new Error('Khusus Admin / Moderator!');
+      try {
+        if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+          const [banneds, count] = await bannedRepo.findAndCount({
+            where: [
+              { reason: Like(`%${req.query.q ? req.query.q : ''}%`) }
+            ],
+            order: {
+              ...((req.query.sort && req.query.order) ? {
+                [req.query.sort]: req.query.order.toUpperCase()
+              } : {
+                created_at: 'DESC',
+                reason: 'ASC'
+              })
+            },
+            relations: ['user_', 'banned_by_'],
+            skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+            take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
+          });
+          for (const b of banneds) {
+            if ('user_' in b && b.user_) {
+              delete b.user_.role;
+              delete b.user_.password;
+              delete b.user_.session_token;
+              delete b.user_.created_at;
+              delete b.user_.updated_at;
+            }
+            if ('banned_by_' in b && b.banned_by_) {
+              delete b.banned_by_.role;
+              delete b.banned_by_.password;
+              delete b.banned_by_.session_token;
+              delete b.banned_by_.created_at;
+              delete b.banned_by_.updated_at;
+            }
+          }
+          return res.status(200).json({
+            info: `😅 200 - Banned API :: List All 🤣`,
+            count,
+            pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+            results: banneds
+          });
+        } else {
+          throw new Error('Khusus Admin / Moderator!');
+        }
+      } catch (error) {
+        console.error(error);
+        return res.status(401).json({
+          info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
+          result: {
+            message: 'Khusus Admin / Moderator!'
+          }
+        });
+      }
     }
-  } catch (error) {
-    console.error(error);
-    return res.status(401).json({
-      info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({
+      info: `🙄 400 - Fansub API :: Gagal Mencari Banned ${req.query.id} 😪`,
       result: {
-        message: 'Khusus Admin / Moderator!'
+        message: 'Data Tidak Lengkap!'
       }
     });
   }

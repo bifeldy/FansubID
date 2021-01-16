@@ -17,6 +17,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   username = null;
   userData = null;
 
+  userBanned = null;
+
   berkasData = [];
 
   panelData = [];
@@ -44,6 +46,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   subsParam = null;
   subsUser = null;
   subsBerkas = null;
+  subsBanned = null;
 
   constructor(
     private router: Router,
@@ -69,6 +72,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     if (this.subsBerkas) {
       this.subsBerkas.unsubscribe();
     }
+    if (this.subsBanned) {
+      this.subsBanned.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -90,6 +96,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             this.panelData = [];
             this.panelData.push({ title: 'Tentang Saya', icon: 'info', text: this.userData.profile_.description });
             this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
+            this.checkBanned();
             this.getUserBerkas();
           }
         },
@@ -104,6 +111,23 @@ export class UserDetailComponent implements OnInit, OnDestroy {
         }
       );
     });
+  }
+
+  checkBanned(): void {
+    this.bs.busy();
+    this.subsBanned = this.us.checkBanned(this.userData.id).subscribe(
+      res => {
+        this.gs.log('[USER_CHECK_BANNED_SUCCESS]', res);
+        if (Object.keys(res.results[this.userData.id]).length > 0) {
+          this.userBanned = res.results[this.userData.id];
+        }
+        this.bs.idle();
+      },
+      err => {
+        this.gs.log('[USER_CHECK_BANNED_ERROR]', err);
+        this.bs.idle();
+      }
+    );
   }
 
   getUserBerkas(): void {

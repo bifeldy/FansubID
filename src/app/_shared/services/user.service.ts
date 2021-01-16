@@ -17,6 +17,10 @@ export class UserService {
     }
   }
 
+  checkBanned(userId): any {
+    return this.api.getData(`/banned?id=${userId}`);
+  }
+
   getAllUser(): any {
     return this.api.getData('/user');
   }

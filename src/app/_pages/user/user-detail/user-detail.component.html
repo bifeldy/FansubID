@@ -17,6 +17,7 @@
           <h1 class="m-0 mt-auto">
             <b>{{ userData.kartu_tanda_penduduk_.nama }}</b>
             <mat-icon class="ml-2" matTooltip="Terverifikasi" *ngIf="userData.verified">verified</mat-icon>
+            <mat-icon class="ml-2" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned">lock</mat-icon>
           </h1>
         </div>
         <div class="row p-3">
