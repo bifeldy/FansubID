@@ -3,7 +3,11 @@ import createError from 'http-errors';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, Equal } from 'typeorm';
 
+import { MessageEmbed } from 'discord.js';
+
 import { UserRequest } from '../models/UserRequest';
+
+import { environment } from '../../environments/server/environment';
 
 import { Role } from '../../app/_shared/models/Role';
 
@@ -32,7 +36,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
             reason: 'ASC'
           })
         },
-        relations: ['user_'],
+        relations: ['user_', 'banned_by_'],
         skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
         take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
       });
@@ -43,6 +47,13 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
           delete b.user_.session_token;
           delete b.user_.created_at;
           delete b.user_.updated_at;
+        }
+        if ('banned_by_' in b && b.banned_by_) {
+          delete b.banned_by_.role;
+          delete b.banned_by_.password;
+          delete b.banned_by_.session_token;
+          delete b.banned_by_.created_at;
+          delete b.banned_by_.updated_at;
         }
       }
       return res.status(200).json({
@@ -103,7 +114,22 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete bannedUser.banned_by_.created_at;
           delete bannedUser.banned_by_.updated_at;
         }
-        // TODO :: req.bot Reporting
+        req.bot.send(
+          new MessageEmbed()
+          .setColor('#c5e510')
+          .setTitle(banned.user_.username)
+          .setURL(`${environment.baseUrl}/user/${banned.user_.username}`)
+          .setAuthor('Hikki - Akun BANNED', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+          .addField('Alasan', banned.reason, false)
+          // tslint:disable-next-line: max-line-length
+          .setThumbnail(banned.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.user_.image_url)
+          .setTimestamp(banned.updated_at)
+          .setFooter(
+            (banned.banned_by_ ? banned.banned_by_.username : 'AUTO_BANNED'),
+            // tslint:disable-next-line: max-line-length
+            (banned.banned_by_ ? (banned.banned_by_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
+          )
+        );
         return res.status(200).json({
           info: `😅 200 - Banned API :: Berhasil BAN User 🤣`,
           results: bannedUser
@@ -139,7 +165,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         where: [
           { id: req.params.id }
         ],
-        relations: ['user_']
+        relations: ['user_', 'banned_by_']
       });
       const unBannedUser = await bannedRepo.remove(banned);
       if ('user_' in unBannedUser && unBannedUser.user_) {
@@ -149,7 +175,13 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         delete unBannedUser.user_.created_at;
         delete unBannedUser.user_.updated_at;
       }
-      // TODO :: req.bot Reporting
+      if ('banned_by_' in unBannedUser && unBannedUser.banned_by_) {
+        delete unBannedUser.banned_by_.role;
+        delete unBannedUser.banned_by_.password;
+        delete unBannedUser.banned_by_.session_token;
+        delete unBannedUser.banned_by_.created_at;
+        delete unBannedUser.banned_by_.updated_at;
+      }
       return res.status(200).json({
         info: `😅 200 - Banned API :: Berhasil UnBAN User 🤣`,
         results: unBannedUser

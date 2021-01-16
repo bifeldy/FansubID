@@ -20,11 +20,13 @@
       <div *ngIf="checkIsArray(row[tdc]) == false">
         <h3 class="m-0" [style.color]="
           (tdc == 'Pemilik' || tdc == 'Penulis') ? '#3f51b5' :
-            tdc == 'Tanggal' ? '#28a745' :
+            (tdc == 'Tanggal' || tdc == 'Pelaku') ? '#28a745' :
               tdc == 'Jenis' ? '#7289da' :
-                tdc == 'Status' ? '#f44336' :
+                (tdc == 'Status' || tdc == 'Korban') ? '#f44336' :
         '#343a40'">
           <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pemilik' || tdc == 'Penulis'" />
+          <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Korban'" />
+          <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pelaku'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc == 'Logo'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc == 'Image'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc == 'Poster'" />
