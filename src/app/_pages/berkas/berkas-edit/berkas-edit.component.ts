@@ -228,10 +228,12 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     if (data.anime_) {
       this.selectedFilterAnime = data.anime_;
       this.selectedFilterAnime.title = data.anime_.name;
+      this.fg.controls.anime_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
     }
     if (data.dorama_) {
       this.selectedFilterDorama = data.dorama_;
       this.selectedFilterDorama.title = data.dorama_.name;
+      this.fg.controls.dorama_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
     }
     for (const dl of data.download_url) {
       this.addDownloadLink(dl);
