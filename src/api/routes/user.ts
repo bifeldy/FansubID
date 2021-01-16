@@ -259,7 +259,6 @@ router.delete('/:username', auth.isAuthorized, async (req: UserRequest, res: Res
       delete deletedUser.role;
       delete deletedUser.password;
       delete deletedUser.session_token;
-      // TODO :: req.bot Reporting
       return res.status(200).json({
         info: `😅 200 - User API :: Berhasil Menghapus User 🤣`,
         results: {

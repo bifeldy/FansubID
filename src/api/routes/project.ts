@@ -132,7 +132,6 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         ]
       });
       const deletedProject = await projectRepo.remove(project);
-      // TODO :: req.bot Reporting
       return res.status(200).json({
         info: `😅 200 - Project API :: Berhasil Menghapus Project 🤣`,
         results: deletedProject

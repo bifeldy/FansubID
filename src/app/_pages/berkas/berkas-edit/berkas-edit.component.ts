@@ -411,6 +411,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       err => {
         this.gs.log('[ANIME_CHECK_ADD_ERROR]', err);
         this.submitted = false;
+        this.resetSelectedAnime();
+        this.fg.controls.anime_id.patchValue(null);
       }
     );
   }
@@ -434,6 +436,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       err => {
         this.gs.log('[DORAMA_CHECK_ADD_ERROR]', err);
         this.submitted = false;
+        this.resetSelectedDorama();
+        this.fg.controls.dorama_id.patchValue(null);
       }
     );
   }
@@ -511,7 +515,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       delete body.fansub_list;
     }
     this.submitted = true;
-    if (this.fg.invalid || ((!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) && (!this.selectedFilterDorama && this.fg.controls.dorama_id.dirty === true))) {
+    if (this.fg.invalid || (
+      (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) &&
+      (!this.selectedFilterDorama && this.fg.controls.dorama_id.dirty === true)
+    )) {
       if (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) {
         this.fg.controls.anime_id.patchValue(null);
       }

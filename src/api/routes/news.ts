@@ -277,7 +277,6 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         delete deletedNews.user_.created_at;
         delete deletedNews.user_.updated_at;
       }
-      // TODO :: req.bot Reporting
       return res.status(200).json({
         info: `😅 200 - News API :: Berhasil Menghapus News 🤣`,
         results: deletedNews

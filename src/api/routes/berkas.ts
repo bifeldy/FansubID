@@ -139,6 +139,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           ]
         });
         file.anime_ = anime;
+        file.dorama_ = null;
       }
       if (req.body.dorama_id) {
         const doramaRepo = getRepository(Dorama);
@@ -147,6 +148,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             { id: Equal(req.body.dorama_id) }
           ]
         });
+        file.anime_ = null;
         file.dorama_ = dorama;
       }
       const fansubRepo = getRepository(Fansub);
@@ -594,7 +596,6 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         delete deletedBerkas.user_.created_at;
         delete deletedBerkas.user_.updated_at;
       }
-      // TODO :: req.bot Reporting
       return res.status(200).json({
         info: `😅 200 - Berkas API :: Berhasil Menghapus Berkas 🤣`,
         results: deletedBerkas

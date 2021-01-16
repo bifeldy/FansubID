@@ -365,6 +365,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       err => {
         this.gs.log('[ANIME_CHECK_ADD_ERROR]', err);
         this.submitted = false;
+        this.resetSelectedAnime();
+        this.fg.controls.anime_id.patchValue(null);
       }
     );
   }
@@ -388,6 +390,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       err => {
         this.gs.log('[DORAMA_CHECK_ADD_ERROR]', err);
         this.submitted = false;
+        this.resetSelectedDorama();
+        this.fg.controls.dorama_id.patchValue(null);
       }
     );
   }
