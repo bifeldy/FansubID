@@ -109,7 +109,7 @@ import indexRouter from './src/api/routes';
 // Express rest api endpoints
 const apiLimiter = rateLimit({
   windowMs: 1000, // 1 Second
-  max: 10, // 10 Request
+  max: 5, // 5 Request
   message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 💩'
 });
 
