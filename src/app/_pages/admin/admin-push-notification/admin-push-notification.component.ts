@@ -151,7 +151,7 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
   deleteNotif(data): void {
     this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE]', data);
     this.bs.busy();
-    this.subsNotifGet = this.adm.deleteNotif(data.id).subscribe(
+    this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe(
       res => {
         this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_SUCCESS]', res);
         this.bs.idle();
