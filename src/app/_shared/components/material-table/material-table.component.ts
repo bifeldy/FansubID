@@ -21,6 +21,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   @Input() tableDataColumn: any = [];
 
   @Output() chipClicked = new EventEmitter();
+  @Output() buttonClicked = new EventEmitter();
   @Output() rowClicked = new EventEmitter();
   @Output() paginatorClicked = new EventEmitter();
 
@@ -128,6 +129,10 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
 
   onChipClicked(data: any): void {
     this.chipClicked.emit(data);
+  }
+
+  onButtonClicked(data: any): void {
+    this.buttonClicked.emit(data);
   }
 
 }

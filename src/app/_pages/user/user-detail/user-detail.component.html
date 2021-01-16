@@ -26,7 +26,7 @@
           </button>
           <button mat-stroked-button class="col-12 col-md-8" *ngIf="userData.updated_at" matTooltip="Terakhir Login" color="accent">
             <mat-icon class="mr-2">access_time</mat-icon>
-            {{ userData.updated_at | date:'short' }}
+            {{ userData.updated_at | date:'d/M/yy, h:mm a' }}
           </button>
           <button mat-stroked-button class="col" *ngIf="userData.kartu_tanda_penduduk_.tempat_lahir" matTooltip="Kota Kelahiran" color="accent">
             <mat-icon class="mr-2">location_on</mat-icon>

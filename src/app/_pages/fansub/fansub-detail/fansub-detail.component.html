@@ -10,7 +10,7 @@
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-button class="w-100" color="warn" matTooltip="Berdiri Sejak">
-              <mat-icon>calendar_today</mat-icon> {{ fansubData.born | date:'longDate' }}
+              <mat-icon>calendar_today</mat-icon> {{ fansubData.born | date:'d MMMM y' }}
             </button>
             <button mat-button class="w-100" color="accent" matTooltip="Status Fansub">
               <mat-icon>history</mat-icon> {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}

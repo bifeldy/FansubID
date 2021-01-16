@@ -35,7 +35,7 @@
                   <strong *ngIf="fg.get('content').hasError('pattern')">Isi Hanya Boleh Huruf Standar Papan Ketik</strong>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-6">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
                 <mat-label>Jenis Warna</mat-label>
                 <mat-select formControlName="type" placeholder="Class Warna Bootstrap">
                   <mat-option value="danger">Merah</mat-option>
@@ -52,7 +52,7 @@
                   <strong *ngIf="fg.get('type').hasError('pattern')">Tipe Hanya Boleh Huruf Standar Papan Ketik</strong>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-6">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
                 <mat-label>Dapat Ditutup</mat-label>
                 <mat-select formControlName="dismissible" placeholder="Ya / Tidak">
                   <mat-option value="1">Ya - *Default</mat-option>
@@ -62,6 +62,20 @@
                 <mat-error>
                   <strong *ngIf="fg.get('dismissible').hasError('required')">Mohon Pilih Salah Satu</strong>
                   <strong *ngIf="fg.get('dismissible').hasError('pattern')">Dismissible Hanya Boleh Huruf Standar Papan Ketik</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
+                <mat-label>Deadline</mat-label>
+                <input matInput [ngxMatDatetimePicker]="kalender" formControlName="deadline" (focus)="kalender.open()" placeholder="{{ currentDateTime | date:'d MMMM y, h:mm:ss'}}"
+                  [min]="currentDateTime" [max]="maxDateTime" />
+                <mat-datepicker-toggle matSuffix [for]="kalender"></mat-datepicker-toggle>
+                <ngx-mat-datetime-picker #kalender [showSpinners]="true" [showSeconds]="true" [enableMeridian]="true"></ngx-mat-datetime-picker>
+                <mat-hint align="end">Muncul Setiap Halaman Di Refresh</mat-hint>
+                <mat-error>
+                  <strong *ngIf="fg.get('deadline').hasError('matDatetimePickerParse')">Tanggal Tidak Valid</strong>
+                  <strong *ngIf="fg.get('deadline').hasError('matDatetimePickerMax')">Paling Lama 7 Hari Mendatang</strong>
+                  <strong *ngIf="fg.get('deadline').hasError('matDatetimePickerMin')">Paling Cepat Detik Ini Sekarang</strong>
+                  <strong *ngIf="fg.get('deadline').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</strong>
                 </mat-error>
               </mat-form-field>
             </div>
@@ -94,11 +108,8 @@
           </h2>
         </div>
         <div class="col-12">
-          <div class="p-3">
-            <div *ngFor="let i of [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0]">{{ i }}</div>
-            <!-- <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row" [count]="count" [serverSide]="serverSide" (serverSideFilter)="onServerSideFilter($event)"
-              (chipClicked)="onChipClicked($event)" (rowClicked)="onTableRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table> -->
-          </div>
+          <app-material-table [tableDataColumn]="notifData.column" [tableDataRow]="notifData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
+            (buttonClicked)="deleteNotif($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
         </div>
       </div>
     </div>

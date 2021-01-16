@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
@@ -109,6 +111,9 @@ const routes: Routes = [
     NotificationsModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxMatNativeDateModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule
   ]
 })
 export class AdminModule { }

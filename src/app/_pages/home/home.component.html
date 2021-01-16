@@ -44,7 +44,7 @@
                       <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-primary mb-1" style="cursor: pointer;">
                         <h3 class="mb-0">{{ n.user_.username }}</h3>
                       </mat-card-title>
-                      <mat-card-subtitle class="mb-0">{{ n.created_at | date:'mediumDate' }}</mat-card-subtitle>
+                      <mat-card-subtitle class="mb-0">{{ n.created_at | date:'d MMM y' }}</mat-card-subtitle>
                     </mat-card-header>
                   </mat-card>
                 </div>

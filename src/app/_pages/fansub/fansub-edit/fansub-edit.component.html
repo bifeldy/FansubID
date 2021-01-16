@@ -66,11 +66,11 @@
                   <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-6">
                     <mat-label>Mulai Ada Sejak</mat-label>
-                    <input matInput [matDatepicker]="kalender" formControlName="born" (focus)="kalender.open()" placeholder="{{ currentDate | date:'longDate'}}" />
+                    <input matInput [matDatepicker]="kalender" formControlName="born" (focus)="kalender.open()" placeholder="{{ currentDate | date:'d MMMM y'}}" />
                     <mat-datepicker-toggle matSuffix [for]="kalender"></mat-datepicker-toggle>
                     <mat-datepicker #kalender disabled="false"></mat-datepicker>
                     <mat-error>
-                      <strong *ngIf="fg.get('born').hasError('required')">Tanggal Tidak Valid</strong>
+                      <strong *ngIf="fg.get('born').hasError('required') || fg.get('born').hasError('matDatepickerParse')">Tanggal Harus Diisi Secara Valid</strong>
                       <strong *ngIf="fg.get('born').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>

@@ -71,7 +71,7 @@
       </ng-template>
       <div class="p-3">
         <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row" [count]="count" [serverSide]="serverSide" (serverSideFilter)="onServerSideFilter($event)"
-          (chipClicked)="onChipClicked($event)" (rowClicked)="onTableRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
+        (buttonClicked)="onButtonClicked($event)" (chipClicked)="onChipClicked($event)" (rowClicked)="onTableRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
       </div>
     </div>
   </mat-tab>

@@ -235,4 +235,9 @@ export class FansubListComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`/fansub/${data.slug}`);
   }
 
+  openUrl(data): void {
+    this.gs.log('[FANSUB_LIST_OPEN_URL]', data);
+    window.open(data.url, '_blank');
+  }
+
 }

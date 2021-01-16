@@ -39,7 +39,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
   currentMonth = null;
   currentYear = null;
 
-  selectedCountryName = "";
+  selectedCountryName = '';
   selectedSeasonName = null;
 
   doramaCountry = [];

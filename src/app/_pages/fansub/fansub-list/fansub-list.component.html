@@ -25,7 +25,7 @@
 
   <!-- Detail -->
   <div class="row">
-    <app-material-tab (tableRowClicked)="openFansub($event)" [tabData]="tabData"></app-material-tab>
+    <app-material-tab (tableRowClicked)="openFansub($event)" (buttonClicked)="openUrl($event)" [tabData]="tabData"></app-material-tab>
   </div>
 
 </div>

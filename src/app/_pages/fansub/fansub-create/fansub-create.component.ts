@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 
 import { debounceTime, distinctUntilChanged, retry, switchMap, tap } from 'rxjs/operators';
-import moment from 'moment';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -80,7 +79,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     this.fg = this.fb.group({
       name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      born: [null, Validators.compose([Validators.required, this.dateValidator, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      born: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       active: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       slug: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       tags: [[], Validators.compose([])],
@@ -101,15 +100,6 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
         this.slugInfo = (res as any).result.message;
       }
     );
-  }
-
-  dateValidator(AC: AbstractControl): any {
-    if (AC && AC.value && !moment(AC.value, 'YYYY-MM-DD', true).isValid()) {
-      return {
-        dateVaidator: true
-      };
-    }
-    return null;
   }
 
   addTag(event: MatChipInputEvent): void {

@@ -71,6 +71,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
 
   @Output() chipClicked = new EventEmitter();
+  @Output() buttonClicked = new EventEmitter();
   @Output() gridClicked = new EventEmitter();
   @Output() listClicked = new EventEmitter();
   @Output() tableRowClicked = new EventEmitter();
@@ -123,6 +124,10 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onChipClicked(data: any): void {
     this.chipClicked.emit(data);
+  }
+
+  onButtonClicked(data: any): void {
+    this.buttonClicked.emit(data);
   }
 
   onPaginatorClicked(data: any): void {

@@ -11,7 +11,8 @@
   <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
     <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
       tdc.toUpperCase() != 'NAMA BERKAS' && tdc.toUpperCase() != 'TANGGAL'  && tdc.toUpperCase() != 'NAMA FANSUB' && tdc.toUpperCase() != 'JUDUL DORAMA' &&
-      tdc.toUpperCase() != 'TOPIK' && tdc.toUpperCase() != 'JUDUL ANIME' && tdc.toUpperCase() != 'ANIME'  && tdc.toUpperCase() != 'DORAMA' && tdc.toUpperCase() != 'JENIS'
+      tdc.toUpperCase() != 'TOPIK' && tdc.toUpperCase() != 'JUDUL ANIME' && tdc.toUpperCase() != 'ANIME'  && tdc.toUpperCase() != 'DORAMA' &&
+      tdc.toUpperCase() != 'JENIS' && tdc.toUpperCase() != 'DEADLINE'
     ">
       <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
     </th>
@@ -27,18 +28,19 @@
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc == 'Logo'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc == 'Image'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc == 'Poster'" />
-          <span *ngIf="tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' && tdc != 'Tanggal'">{{ row[tdc] }}</span>
+          <span *ngIf="tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' && tdc != 'Tanggal' && tdc != 'Deadline'">{{ row[tdc] }}</span>
           <span *ngIf="tdc == 'Tanggal'">{{ row[tdc] | dateAgo }}</span>
+          <span *ngIf="tdc == 'Deadline'">{{ row[tdc] | date:'d/M/yy, h:mm:ss a' }}</span>
         </h3>
       </div>
       <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc].length > 0 && row[tdc][0].type == 'chip'" class="p-1">
-        <app-material-chip (chipClicked)="onChipClicked($event)" [chipData]="row[tdc]"></app-material-chip>
+        <app-material-chip (chipClicked)="onChipClicked($event); $event.stopPropagation()" [chipData]="row[tdc]"></app-material-chip>
       </div>
       <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc].length > 0 && row[tdc][0].type == 'button'">
-        <a mat-icon-button href="{{ rt.url }}" target="_blank" *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}">
+        <button mat-icon-button *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}" (click)="onButtonClicked(rt); $event.stopPropagation()">
           <mat-icon *ngIf="rt.icon">{{ rt.icon }}</mat-icon>
           <img src="{{ rt.image }}" width="24px" *ngIf="rt.image" />
-        </a>
+        </button>
       </div>
     </td>
   </ng-container>

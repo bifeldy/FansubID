@@ -1,3 +1,5 @@
+import { NgxMatDateFormats } from '@angular-material-components/datetime-picker';
+
 import _moment from 'moment';
 import { default as _rollupMoment } from 'moment';
 
@@ -13,4 +15,16 @@ export const MY_FORMATS = {
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'YYYY',
   },
+};
+
+export const CUSTOM_DATE_FORMATS: NgxMatDateFormats = {
+  parse: {
+    dateInput: 'l, LTS'
+  },
+  display: {
+    dateInput: 'l, LTS',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  }
 };
