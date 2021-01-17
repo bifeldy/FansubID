@@ -1,0 +1,48 @@
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+  
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-lg-8 col-xl-9">
+      <div class="row">
+        <div class="col-12 sticky-top bg-light">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-secondary">Kelola API Key</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          // Kiri
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xl-3">
+      <div class="row sticky-top bg-light">
+        <div class="col-12 sticky-top bg-light">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-secondary">Menu Admin Lainnya</b>
+          </h2>
+        </div>
+        <div class="col-12 px-3">
+          <div class="col-12 p-2" *ngFor="let m of adm.menuList">
+            <mat-card>
+              <mat-card-header routerLink="/admin-mod/{{ m.url }}" style="cursor: pointer;">
+                <div mat-card-avatar style="background-size: cover;"
+                  [style.background-image]="'url(' + (m.image_url ? m.image_url : '') + ')'">
+                  <mat-icon style="font-size: 300%;" *ngIf="m.icon">{{ m.icon }}</mat-icon>
+                </div>
+                <mat-card-title class="text-primary mb-1" style="cursor: pointer;">
+                  <h3 class="mb-0">{{ m.name }}</h3>
+                </mat-card-title>
+                <mat-card-subtitle class="mb-0">{{ m.deskripsi }}</mat-card-subtitle>
+              </mat-card-header>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

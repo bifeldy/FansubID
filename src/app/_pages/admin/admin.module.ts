@@ -20,6 +20,7 @@ import { AdminListProjectTypeComponent } from './admin-list-project-type/admin-l
 import { AdminPushNotificationComponent } from './admin-push-notification/admin-push-notification.component';
 import { AdminListFansubMemberComponent } from './admin-list-fansub-member/admin-list-fansub-member.component';
 import { AdminListBannedComponent } from './admin-list-banned/admin-list-banned.component';
+import { AdminListCorsComponent } from './admin-list-cors/admin-list-cors.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,17 @@ const routes: Routes = [
       title: 'Admin - List All Banned User',
       description: 'Kelola Banned User',
       keywords: 'Kelola Banned User',
+      roles: [Role.ADMIN, Role.MODERATOR]
+    }
+  },
+  {
+    path: 'cors-list',
+    component: AdminListCorsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'CORS - List All Api Key',
+      description: 'Kelola Api Key',
+      keywords: 'Kelola Api Key',
       roles: [Role.ADMIN, Role.MODERATOR]
     }
   },
@@ -102,7 +114,8 @@ const routes: Routes = [
     AdminListProjectTypeComponent,
     AdminPushNotificationComponent,
     AdminListFansubMemberComponent,
-    AdminListBannedComponent
+    AdminListBannedComponent,
+    AdminListCorsComponent
   ],
   imports: [
     CommonModule,

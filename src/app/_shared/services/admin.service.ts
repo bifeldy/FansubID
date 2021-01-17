@@ -24,6 +24,13 @@ export class AdminService {
       deskripsi: 'Kelola Berkas DDL'
     },
     {
+      url: 'cors-list',
+      name: 'CORS & API Key',
+      image_url: null,
+      icon: 'privacy_tip',
+      deskripsi: 'Cross-Origin Resource Sharing'
+    },
+    {
       url: 'fansub-member',
       name: 'Fansub Lead & Staff',
       image_url: null,
