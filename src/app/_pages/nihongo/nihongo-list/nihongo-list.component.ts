@@ -23,7 +23,7 @@ export class NihongoListComponent implements OnInit {
       name: 'Huruf Katakana',
       image_url: '/assets/img/nihongo/katakana.png',
       icon: null,
-      letter: '48 Karakter'
+      letter: '46 Karakter'
     },
     {
       url: 'angka',
