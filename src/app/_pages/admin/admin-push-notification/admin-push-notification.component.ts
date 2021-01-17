@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-admin-push-notification',
@@ -41,6 +42,7 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
     public router: Router,
     private fb: FormBuilder,
     private bs: BusyService,
+    private ds: DialogService,
     public gs: GlobalService,
     public adm: AdminService
   ) {
@@ -95,7 +97,8 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
               type: 'button',
               icon: 'close',
               name: 'Hapus',
-              id: r.id
+              id: r.id,
+              title: r.title
             }]
           });
         }
@@ -150,19 +153,33 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
 
   deleteNotif(data): void {
     this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE]', data);
-    this.bs.busy();
-    this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe(
-      res => {
-        this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_SUCCESS]', res);
-        this.bs.idle();
-        this.getNotif();
+    this.ds.openInfoDialog({
+      data: {
+        title: `Hapus Notif -- '${data.id}' :: '${data.title}'`,
+        htmlMessage: 'Yakin Akan Menghapus Notifikasi Ini ?',
+        confirmText: 'Ya, Hapus',
+        cancelText: 'Tidak, Batal'
       },
-      err => {
-        this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_ERROR]', err);
-        this.bs.idle();
+      disableClose: false
+    }).afterClosed().subscribe(re => {
+      if (re === true) {
+        this.bs.busy();
+        this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe(
+          res => {
+            this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_SUCCESS]', res);
+            this.bs.idle();
+            this.getNotif();
+          },
+          err => {
+            this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_ERROR]', err);
+            this.bs.idle();
+            this.getNotif();
+          }
+        );
+      } else if (re === false) {
         this.getNotif();
       }
-    );
+    });
   }
 
   onPaginatorClicked(data): void {
