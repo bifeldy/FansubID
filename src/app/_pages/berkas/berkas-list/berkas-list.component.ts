@@ -44,7 +44,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
     private berkas: BerkasService,
     private fs: FabService
   ) {
-    this.gs.bannerImg = null;
+    this.gs.bannerImg = '/assets/img/shipping.gif';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
   }
