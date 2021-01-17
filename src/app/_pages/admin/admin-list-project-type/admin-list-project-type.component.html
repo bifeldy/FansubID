@@ -8,13 +8,94 @@
   <div class="row pb-3 px-0">
     <div class="col-lg-8 col-xl-9">
       <div class="row">
+        <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
+          <div class="col-12 sticky-top bg-light">
+            <h2 class="pt-3 border-bottom-dotted">
+              <b class="text-secondary">Buat Tipe Jenis Proyek Baru</b>
+            </h2>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-12 col-md-5 col-xl-4 p-3">
+                <div class="row">
+                  <div class="col-12">
+                    <img class="w-100 border" [src]="image_url" />
+                    <mat-form-field appearance="outline" class="pt-3 w-100">
+                      <mat-label>Gambar</mat-label>
+                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
+                        [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+                      <mat-icon matSuffix>image</mat-icon>
+                    </mat-form-field>
+                    <mat-error class="px-3 w-100">
+                      <small>
+                        <strong>{{ imageErrorText }}</strong>
+                      </small>
+                    </mat-error>
+                  </div>
+                  <div class="col-12" *ngIf="image && !fg.value.image">
+                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+                      <mat-icon class="mr-1">add_photo_alternate</mat-icon>
+                      Unggah
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-7 col-xl-8 p-3">
+                <div class="row">
+                  <mat-form-field appearance="outline" class="p-3 col-12">
+                    <mat-label>Nama</mat-label>
+                    <input matInput formControlName="name" placeholder="**_BD" />
+                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-hint align="end">Untuk Jenis Berkas</mat-hint>
+                    <mat-error>
+                      <strong *ngIf="fg.get('name').hasError('required')">Nama Tidak Boleh Kosong</strong>
+                      <strong *ngIf="fg.get('name').hasError('pattern')">Nama Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="p-3 col-12">
+                    <mat-label>Deskripsi</mat-label>
+                    <input matInput formControlName="description" placeholder="Edisi Terbatas" />
+                    <mat-icon matSuffix>wysiwyg</mat-icon>
+                    <mat-error>
+                      <strong *ngIf="fg.get('description').hasError('required')">Deskripsi Tidak Boleh Kosong</strong>
+                      <strong *ngIf="fg.get('description').hasError('pattern')">Deskripsi Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-12 p-3">
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <div class="row">
+                      <div class="col"></div>
+                      <div class="col-12 col-md-3 pb-3">
+                        <a mat-stroked-button routerLink="../" class="w-100" [disabled]="submitted">
+                          <mat-icon class="mr-1">undo</mat-icon>
+                          Batal
+                        </a>
+                      </div>
+                      <div class="col-12 col-md-3 pb-3">
+                        <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid">
+                          Simpan
+                          <mat-icon class="ml-1">save</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="row">
         <div class="col-12 sticky-top bg-light">
           <h2 class="pt-3 border-bottom-dotted">
-            <b class="text-secondary">Kelola Jenis Proyek</b>
+            <b class="text-secondary">Hapus Jenis Proyek Yang Ada</b>
           </h2>
         </div>
         <div class="col-12">
-          // Kiri
+          <app-material-table [tableDataColumn]="projectData.column" [tableDataRow]="projectData.row" (buttonClicked)="deleteProject($event)"></app-material-table>
         </div>
       </div>
     </div>

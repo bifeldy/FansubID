@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
@@ -113,7 +114,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     NgxMatNativeDateModule,
     NgxMatDatetimePickerModule,
-    NgxMatTimepickerModule
+    NgxMatTimepickerModule,
+    MaterialFileInputModule
   ]
 })
 export class AdminModule { }
