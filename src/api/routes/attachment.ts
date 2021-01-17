@@ -257,7 +257,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         delete deletedAttachment.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Attachment API :: Berhasil Menghapus DDL 🤣`,
+        info: `😅 200 - Attachment API :: Berhasil Menghapus DDL ${req.params.id} 🤣`,
         results: deletedAttachment
       });
     } else {

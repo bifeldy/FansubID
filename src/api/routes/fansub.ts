@@ -439,8 +439,8 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
         if (selectedFansub.length === 0) {
           fansub.slug = req.body.slug.replace(/\s/g, '');
         } else {
-          return res.status(202).json({
-            info: `😅 202 - Fansub API :: Gagal Mengubah Fansub ${req.params.id} 🥰`,
+          return res.status(400).json({
+            info: `😅 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.id} 🥰`,
             result: {
               message: `'${req.body.slug}' Sudah Terpakai`
             }
@@ -544,7 +544,7 @@ router.delete('/:slug', auth.isAuthorized, async (req: UserRequest, res: Respons
       }
       // TODO :: req.bot Reporting
       return res.status(200).json({
-        info: `😅 200 - Fansub API :: Berhasil Menghapus Fansub 🤣`,
+        info: `😅 200 - Fansub API :: Berhasil Menghapus Fansub ${req.params.slug} 🤣`,
         results: deletedFansub
       });
     } else {

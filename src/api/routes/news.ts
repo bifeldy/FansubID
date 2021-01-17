@@ -278,7 +278,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         delete deletedNews.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - News API :: Berhasil Menghapus News 🤣`,
+        info: `😅 200 - News API :: Berhasil Menghapus News ${req.params.id} 🤣`,
         results: deletedNews
       });
     } else {

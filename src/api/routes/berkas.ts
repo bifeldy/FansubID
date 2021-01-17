@@ -597,7 +597,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         delete deletedBerkas.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Berkas API :: Berhasil Menghapus Berkas 🤣`,
+        info: `😅 200 - Berkas API :: Berhasil Menghapus Berkas ${req.params.id} 🤣`,
         results: deletedBerkas
       });
     } else {

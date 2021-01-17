@@ -251,7 +251,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
         delete unBannedUser.banned_by_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Banned API :: Berhasil UnBAN User 🤣`,
+        info: `😅 200 - Banned API :: Berhasil UnBAN User ${req.params.id} 🤣`,
         results: unBannedUser
       });
     } else {

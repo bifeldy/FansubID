@@ -73,7 +73,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
       });
       const deletedProject = await projectRepo.remove(project);
       return res.status(200).json({
-        info: `😅 200 - Project API :: Berhasil Menghapus Project 🤣`,
+        info: `😅 200 - Project API :: Berhasil Menghapus Project ${req.params.id} 🤣`,
         results: deletedProject
       });
     } else {
