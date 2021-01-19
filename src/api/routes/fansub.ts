@@ -542,7 +542,6 @@ router.delete('/:slug', auth.isAuthorized, async (req: UserRequest, res: Respons
         delete deletedFansub.user_.created_at;
         delete deletedFansub.user_.updated_at;
       }
-      // TODO :: req.bot Reporting
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Berhasil Menghapus Fansub ${req.params.slug} 🤣`,
         results: deletedFansub
