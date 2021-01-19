@@ -6,9 +6,9 @@
   <div class="row">
     <div class="col-12">
       <div class="row">
-        <div class="col-12 pb-3 sticky-top" [formGroup]="fg" style="background-color: #fafafa !important;">
+        <div class="col-12 pb-3 sticky-top bg-bifeldy-dark" [formGroup]="fg">
           <h3 class="m-0 border-bottom border-primary row">
-            <mat-form-field class="pt-3 col-4 col-lg-2">
+            <mat-form-field class="pt-3 col-4 col-lg-2" [color]="'accent'">
               <mat-label>Tema Musim</mat-label>
               <mat-select [(value)]="selectedSeasonName" (valueChange)="changeSeasonalDorama()">
                 <mat-option value="winter">Winter</mat-option>
@@ -23,7 +23,7 @@
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)" disabled="false"></mat-datepicker>
             </mat-form-field>
-            <mat-form-field class="pt-3 col-4 col-lg-2">
+            <mat-form-field class="pt-3 col-4 col-lg-2" [color]="'accent'">
               <mat-label>Negara</mat-label>
               <mat-select [(value)]="selectedCountryName" (valueChange)="changeCountryDorama()">
                 <mat-option value="">Semua</mat-option>

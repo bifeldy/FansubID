@@ -97,7 +97,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.router.navigate(['/error'], {
           queryParams: {
-            returnUrl: '/'
+            returnUrl: '/berkas'
           }
         });
       }

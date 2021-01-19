@@ -9,9 +9,9 @@
     <div class="col-12">
       <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
         <div class="row mt-3 mb-3">
-          <div class="col-12 sticky-top bg-light">
+          <div class="col-12 sticky-top bg-bifeldy-dark">
             <h2 class="pt-3 border-bottom-dotted">
-              <b class="text-secondary">Perbaharui Data Fansub</b>
+              <b class="text-bifeldy-dark">Perbaharui Data Fansub</b>
             </h2>
           </div>
           <div class="col-12">
@@ -74,7 +74,7 @@
                       <strong *ngIf="fg.get('born').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-6">
+                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-6" [color]="'accent'">
                     <mat-label>Status</mat-label>
                     <mat-select formControlName="active" placeholder="Aktif / Non-Aktif">
                       <mat-option value="0">Tidak Aktif</mat-option>

@@ -2,7 +2,7 @@
   style="background-size: cover; background-repeat: repeat; background-position: center; transform: rotateY(180deg);">
   <div class="row align-items-center h-100 m-0" style="transform: rotateY(180deg);">
     <div class="col-12 col-md-10 m-auto py-3">
-      <div class="row border rounded bg-light">
+      <div class="row border rounded bg-bifeldy-dark">
         <div class="col-lg-7 col-md-9 mr-auto p-0">
           <div class="card bg-transparent border-0">
             <div class="card-body">
@@ -15,7 +15,7 @@
                 <div class="form-group row py-2">
                   <label for="username" class="col-md-4 col-form-label text-md-right">Nama Pengguna</label>
                   <div class="col-md-8">
-                    <input type="text" id="username" class="form-control {{
+                    <input type="text" id="username" class="text-light form-control {{
                         !fg.get('username').valid && fg.get('username').touched ? 'is-invalid' : ''
                       }}" placeholder="Username Minimal 5 Huruf" required autofocus formControlName="username" autocomplete="username" />
                     <span class="invalid-feedback" role="alert">
@@ -37,7 +37,7 @@
                 <div class="form-group row py-2">
                   <label for="name" class="col-md-4 col-form-label text-md-right">Nama Lengkap</label>
                   <div class="col-md-8">
-                    <input type="text" id="name" class="form-control {{
+                    <input type="text" id="name" class="text-light form-control {{
                         !fg.get('name').valid && fg.get('name').touched ? 'is-invalid' : ''
                       }}" placeholder="Nama Lengkap" required autofocus formControlName="name" autocomplete="name" />
                     <span class="invalid-feedback" role="alert">
@@ -53,7 +53,7 @@
                 <div class="form-group row py-2">
                   <label for="email" class="col-md-4 col-form-label text-md-right">Alamat Surel</label>
                   <div class="col-md-8">
-                    <input type="email" id="email" class="form-control {{
+                    <input type="email" id="email" class="text-light form-control {{
                         !fg.get('email').valid && fg.get('email').touched ? 'is-invalid' : ''
                       }}" placeholder="Alamat E-Mail" required autofocus formControlName="email" autocomplete="email" />
                     <span class="invalid-feedback" role="alert">
@@ -74,7 +74,7 @@
                 <div class="form-group row py-2">
                   <label for="password" class="col-md-4 col-form-label text-md-right">Kata Sandi</label>
                   <div class="col-md-8">
-                    <input type="password" id="password" class="form-control {{
+                    <input type="password" id="password" class="text-light form-control {{
                         !fg.get('password').valid && fg.get('password').touched ? 'is-invalid' : ''
                       }}" placeholder="Password Minimal 5 Huruf" required formControlName="password" autocomplete="current-password, new-password" />
                     <span class="invalid-feedback" role="alert">

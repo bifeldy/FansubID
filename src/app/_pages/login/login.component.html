@@ -2,7 +2,7 @@
   style="background-size: cover; background-repeat: repeat; background-position: center; transform: rotateY(180deg);">
   <div class="row align-items-center h-100 m-0" style="transform: rotateY(180deg);">
     <div class="col-12 col-md-10 m-auto py-3">
-      <div class="row border rounded bg-light">
+      <div class="row border rounded bg-bifeldy-dark">
         <div class="col-lg-5 col-md-3 ml-auto p-0" [ngStyle]="{
           'background-position': 'center',
           'background-size': 'cover',
@@ -20,7 +20,7 @@
                 <div class="form-group row py-2">
                   <label for="userNameOrEmail" class="col-md-4 col-form-label text-md-right">Nama Pengguna</label>
                   <div class="col-md-8">
-                    <input type="text" id="userNameOrEmail" class="form-control {{
+                    <input type="text" id="userNameOrEmail" class="text-light form-control {{
                         !fg.get('userNameOrEmail').valid && fg.get('userNameOrEmail').touched ? 'is-invalid' : ''
                       }}" placeholder="Username / E-Mail" required autofocus formControlName="userNameOrEmail" autocomplete="email, username" />
                     <span class="invalid-feedback" role="alert">
@@ -36,7 +36,7 @@
                 <div class="form-group row py-2">
                   <label for="password" class="col-md-4 col-form-label text-md-right">Kata Sandi</label>
                   <div class="col-md-8">
-                    <input type="password" id="password" class="form-control {{
+                    <input type="password" id="password" class="text-light form-control {{
                         !fg.get('password').valid && fg.get('password').touched ? 'is-invalid' : ''
                       }}" placeholder="Password" required formControlName="password" autocomplete="current-password, new-password" />
                     <span class="invalid-feedback" role="alert">

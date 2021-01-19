@@ -1,5 +1,5 @@
 <!-- Input Form Filter -->
-<mat-form-field hintLabel="Anime / Fansub / Uploader / etc." class="px-3 mb-3" style="background-color: #fafafa !important;">
+<mat-form-field hintLabel="Anime / Fansub / Uploader / etc." class="px-3 mb-3" [color]="'accent'">
   <mat-label>Filter Dan Pencarian</mat-label>
   <input matInput #input maxlength="200" placeholder="Ex. [Fansub] Judul - 00 [BD 4K x265 FLAC][CRC32]" (keyup.enter)="applyFilter($event)" [(ngModel)]="searchQuery" />
   <mat-icon matSuffix>search</mat-icon>
@@ -7,7 +7,7 @@
 </mat-form-field>
 
 <!-- Table -->
-<table mat-table matSort [dataSource]="dataSource">
+<table mat-table matSort [dataSource]="dataSource" class="bg-transparent">
   <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
     <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
       tdc.toUpperCase() != 'NAMA BERKAS' && tdc.toUpperCase() != 'TANGGAL'  && tdc.toUpperCase() != 'NAMA FANSUB' && tdc.toUpperCase() != 'JUDUL DORAMA' &&
@@ -23,7 +23,7 @@
             (tdc == 'Tanggal' || tdc == 'Pelaku') ? '#28a745' :
               tdc == 'Jenis' ? '#7289da' :
                 (tdc == 'Status' || tdc == 'Korban') ? '#f44336' :
-        '#343a40'">
+        '#acacac'">
           <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pemilik' || tdc == 'Penulis'" />
           <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Korban'" />
           <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pelaku'" />
@@ -63,4 +63,4 @@
     </td>
   </tr>
 </table>
-<mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="onPaginatorClicked($event)" [length]="count"></mat-paginator>
+<mat-paginator class="bg-transparent" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="onPaginatorClicked($event)" [length]="count"></mat-paginator>

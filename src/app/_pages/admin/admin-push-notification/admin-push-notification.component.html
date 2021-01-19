@@ -9,9 +9,9 @@
     <div class="col-lg-8 col-xl-9">
       <div class="row">
         <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
-          <div class="col-12 sticky-top bg-light">
+          <div class="col-12 sticky-top bg-bifeldy-dark">
             <h2 class="pt-3 border-bottom-dotted">
-              <b class="text-secondary">Buat Push Notifikasi</b>
+              <b class="text-bifeldy-dark">Buat Push Notifikasi</b>
             </h2>
           </div>
           <div class="col-12">
@@ -35,7 +35,7 @@
                   <strong *ngIf="fg.get('content').hasError('pattern')">Isi Hanya Boleh Huruf Standar Papan Ketik</strong>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Jenis Warna</mat-label>
                 <mat-select formControlName="type" placeholder="Class Warna Bootstrap">
                   <mat-option value="danger">Merah</mat-option>
@@ -52,7 +52,7 @@
                   <strong *ngIf="fg.get('type').hasError('pattern')">Tipe Hanya Boleh Huruf Standar Papan Ketik</strong>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Dapat Ditutup</mat-label>
                 <mat-select formControlName="dismissible" placeholder="Ya / Tidak">
                   <mat-option value="1">Ya - *Default</mat-option>
@@ -102,9 +102,9 @@
         </form>
       </div>
       <div class="row">
-        <div class="col-12 sticky-top bg-light">
+        <div class="col-12 sticky-top bg-bifeldy-dark">
           <h2 class="pt-3 border-bottom-dotted">
-            <b class="text-secondary">Deadline Notifikasi</b>
+            <b class="text-bifeldy-dark">Deadline Notifikasi</b>
           </h2>
         </div>
         <div class="col-12">
@@ -114,10 +114,10 @@
       </div>
     </div>
     <div class="col-lg-4 col-xl-3">
-      <div class="row sticky-top bg-light">
-        <div class="col-12 sticky-top bg-light">
+      <div class="row sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-dark">
           <h2 class="pt-3 border-bottom-dotted">
-            <b class="text-secondary">Menu Admin Lainnya</b>
+            <b class="text-bifeldy-dark">Menu Admin Lainnya</b>
           </h2>
         </div>
         <div class="col-12 px-3">

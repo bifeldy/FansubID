@@ -1,4 +1,4 @@
-<mat-tab-group class="px-0" dynamicHeight mat-stroked-button [color]="'accent'" [backgroundColor]=""
+<mat-tab-group class="px-0" dynamicHeight mat-stroked-button [color]="'accent'"
   [selectedIndex]="selectedIndexTab" (swipeleft)="swipe($event.type)" (swiperight)="swipe($event.type)">
   <mat-tab *ngFor="let tab of tabData">
     <div *ngIf="tab.type == 'html'">

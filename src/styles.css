@@ -38,17 +38,13 @@ body {
   padding: 0 !important;
 }
 
-.mat-row {
-  background-color: #fafafa;
-}
-
 .mat-tab-label-active {
   color: #ff4081;
   opacity: 1 !important;
 }
 
-.mat-tab-header{
-  background-color: #fafafa !important;
+.mat-tab-header {
+  background-color: #303030 !important;
   position: sticky !important;
   top: 0;
   z-index: 1020;
@@ -79,6 +75,22 @@ re-captcha > div {
   white-space: normal !important;
 }
 
+.img-thumbnail {
+  background-color: #424242 !important;
+}
+
 .img-thumbnail:hover {
   border: 1px solid #ff4081;
+}
+
+.bg-bifeldy-dark {
+  background-color: #303030 !important;
+}
+
+.text-bifeldy-dark {
+  color: #acacac !important;
+}
+
+.angular-editor-toolbar {
+  background-color: transparent !important;
 }

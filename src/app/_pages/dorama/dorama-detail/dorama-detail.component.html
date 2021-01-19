@@ -34,7 +34,7 @@
             <img class="w-100" [src]="doramaData.image_url" />
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="primary" (click)="openSeasonalDorama()"
+            <button mat-stroked-button class="w-100" color="accent" (click)="openSeasonalDorama()"
               matTooltip="Lihat Semua Dorama Pada Musim '{{ seasonDorama }} {{ yearDorama ? yearDorama.getFullYear() : '' }}'">
               <mat-icon>dynamic_feed</mat-icon> {{ doramaData.details ? (doramaData.details.episodes ? doramaData.details.episodes : '?') : '?' }} Eps &nbsp;
               <mat-icon>star_half</mat-icon> {{ doramaData.rating ? doramaData.rating : '?' }} <br />

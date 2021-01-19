@@ -9,9 +9,9 @@
     <div class="col-12">
       <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
         <div class="row mt-3 mb-3">
-          <div class="col-12 sticky-top bg-light">
+          <div class="col-12 sticky-top bg-bifeldy-dark">
             <h2 class="pt-3 border-bottom-dotted">
-              <b class="text-secondary">Ubah Berkas</b>
+              <b class="text-bifeldy-dark">Ubah Berkas</b>
             </h2>
           </div>
           <div class="col-12">
@@ -38,7 +38,7 @@
                       Unggah
                     </button>
                   </div>
-                  <mat-form-field appearance="outline" class="p-3 col-12 mt-4">
+                  <mat-form-field appearance="outline" class="p-3 col-12 mt-4" [color]="'accent'">
                     <mat-label>Jenis Proyek</mat-label>
                     <mat-select formControlName="projectType_id" placeholder="Anime / Drama">
                       <mat-option *ngFor="let p of projectList" [value]="p.id">{{ p.name }}</mat-option>

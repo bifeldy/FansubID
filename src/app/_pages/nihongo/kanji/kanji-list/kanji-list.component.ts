@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { GlobalService } from '../../../../_shared/services/global.service';
+
 @Component({
   selector: 'app-kanji-list',
   templateUrl: './kanji-list.component.html',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class KanjiListComponent implements OnInit {
 
-  constructor() { }
+  jlptRank = '';
+  schoolRank = '';
+
+  searchQuery = null;
+
+  constructor(
+    private gs: GlobalService
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  applyFilter(event: Event): void {
+    this.searchQuery = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  }
+
+  paginatorChanged(event: Event): void {
+    this.gs.log('[PAGINATOR_VALUE_CHANGED]', event);
   }
 
 }
