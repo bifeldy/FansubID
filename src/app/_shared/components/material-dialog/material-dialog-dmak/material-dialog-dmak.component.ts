@@ -17,7 +17,7 @@ export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
   @ViewChild('dmakElement') dmakElement: ElementRef;
 
   dmak = null;
-  dmakUrl = 'http://kanjivg.tagaini.net/kanjivg/kanji/';
+  dmakUrl = 'https://kanjivg.tagaini.net/kanjivg/kanji/';
 
   charToDraw = 'NO DATA';
 
