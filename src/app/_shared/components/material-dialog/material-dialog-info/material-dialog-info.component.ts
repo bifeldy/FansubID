@@ -22,6 +22,7 @@ export class MaterialDialogInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.gs.log('[DIALOG_DATA]', this.data);
   }
 
 }

@@ -4,6 +4,7 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 import { GlobalService } from './global.service';
 
 import { MaterialDialogInfoComponent } from '../components/material-dialog/material-dialog-info/material-dialog-info.component';
+import { MaterialDialogDmakComponent } from '../components/material-dialog/material-dialog-dmak/material-dialog-dmak.component';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,13 @@ export class DialogService {
       dataInfo.disableClose = true;
     }
     return this.dialog.open(MaterialDialogInfoComponent, dataInfo);
+  }
+
+  openDmakDialog(dataInfo: MatDialogConfig): MatDialogRef<MaterialDialogDmakComponent> {
+    if (!('disableClose' in dataInfo)) {
+      dataInfo.disableClose = true;
+    }
+    return this.dialog.open(MaterialDialogDmakComponent, dataInfo);
   }
 
 }

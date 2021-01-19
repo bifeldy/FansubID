@@ -31,7 +31,7 @@
                 <div class="col-12">
                   <div class="row text-center px-3" *ngFor="let hs of daftarHuruf.standard | keyvalue">
                     <div class="col p-1" *ngFor="let char of hs.value">
-                      <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char }}.png" class="rounded img-thumbnail" />
+                      <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)"/>
                     </div>
                   </div>
                 </div>
@@ -47,7 +47,7 @@
                 <div class="col-12">
                   <div class="row text-center px-3" *ngFor="let hs of daftarHuruf.dakuon | keyvalue">
                     <div class="col p-1" *ngFor="let char of hs.value">
-                      <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char }}.png" class="rounded img-thumbnail" />
+                      <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)"/>
                     </div>
                   </div>
                 </div>
@@ -61,7 +61,7 @@
                 <div class="col-12">
                   <div class="row text-center px-3" *ngFor="let hs of daftarHuruf.handakuon | keyvalue">
                     <div class="col p-1" *ngFor="let char of hs.value">
-                      <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char }}.png" class="rounded img-thumbnail" />
+                      <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)"/>
                     </div>
                   </div>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="col-12">
                   <div class="row text-center px-3" *ngFor="let hs of daftarHuruf.yuon | keyvalue">
                     <div class="col p-1" *ngFor="let char of hs.value">
-                      <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char }}.png" class="rounded img-thumbnail" />
+                      <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)"/>
                     </div>
                   </div>
                 </div>

@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Cara Penulisan '{{ data.romaji }}'</h1>
+<div mat-dialog-content class="p-4" class="text-break">
+  <div id="dmakElement" #dmakElement class="text-center"></div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button class="ml-auto" (click)="back()" matTooltip="Back">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <button mat-button class="ml-auto" (click)="pause()" matTooltip="Pause">
+    <mat-icon>pause</mat-icon>
+  </button>
+  <button mat-button class="ml-auto" (click)="play()" matTooltip="Play">
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+  <button mat-button class="ml-auto" (click)="next()" matTooltip="Next">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+  <button mat-button class="ml-auto" (click)="reset()" matTooltip="Reset">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
