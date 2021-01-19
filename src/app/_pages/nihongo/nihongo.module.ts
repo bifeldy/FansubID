@@ -18,6 +18,7 @@ import { SharedMaterialModule } from '../../_shared/helpers/shared-material.modu
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: NihongoListComponent
   },
   {

@@ -21,7 +21,7 @@ export class DoramaService {
     return this.api.getData(`/dorama?q=${q}&type=${type}`);
   }
 
-  getDorama(doramaId: number): any {
+  getDorama(doramaId: string): any {
     return this.api.getData(`/dorama/${doramaId}`);
   }
 

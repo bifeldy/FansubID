@@ -21,7 +21,7 @@ export class BerkasService {
     return this.api.getData(`/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getBerkas(berkasId: number): any {
+  getBerkas(berkasId: string): any {
     return this.api.getData(`/berkas/${berkasId}`);
   }
 

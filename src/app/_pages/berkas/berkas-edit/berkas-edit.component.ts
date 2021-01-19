@@ -28,7 +28,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   currentUser: User = null;
 
-  berkasId = null;
+  berkasId = '';
 
   fg: FormGroup;
 
@@ -102,36 +102,33 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       `Ubah Berkas`
     );
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
-      this.subsParam = this.activatedRoute.params.subscribe(params => {
-        this.berkasId = params.berkasId;
-        this.bs.busy();
-        this.subsBerkasDetail = this.berkas.getBerkas(this.berkasId).subscribe(
-          res => {
-            this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
-            this.bs.idle();
-            if (this.as.currentUserValue.id !== res.result.user_.id) {
-              if (this.gs.isBrowser) {
-                this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
-              }
-              this.router.navigateByUrl(`/berkas/${res.result.id}`);
-            } else {
-              this.loadProjectList();
-              this.loadFansubList();
-              this.initForm(res.result);
+      this.berkasId = this.activatedRoute.snapshot.paramMap.get('berkasId');
+      this.bs.busy();
+      this.subsBerkasDetail = this.berkas.getBerkas(this.berkasId).subscribe(
+        res => {
+          this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
+          this.bs.idle();
+          if (this.as.currentUserValue.id !== res.result.user_.id) {
+            if (this.gs.isBrowser) {
+              this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
             }
-          },
-          err => {
-            this.gs.log('[BERKAS_DETAIL_ERROR]', err);
-            this.bs.idle();
-            this.router.navigate(['/error'], {
-              queryParams: {
-                returnUrl: `/berkas/${this.berkasId}`
-              }
-            });
+            this.router.navigateByUrl(`/berkas/${res.result.id}`);
+          } else {
+            this.loadProjectList();
+            this.loadFansubList();
+            this.initForm(res.result);
           }
-        );
-      });
+        },
+        err => {
+          this.gs.log('[BERKAS_DETAIL_ERROR]', err);
+          this.bs.idle();
+          this.router.navigate(['/error'], {
+            queryParams: {
+              returnUrl: `/berkas/${this.berkasId}`
+            }
+          });
+        }
+      );
     }
   }
 

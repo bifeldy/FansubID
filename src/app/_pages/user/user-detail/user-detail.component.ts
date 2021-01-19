@@ -14,7 +14,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 })
 export class UserDetailComponent implements OnInit, OnDestroy {
 
-  username = null;
+  username = '';
   userData = null;
 
   userBanned = null;
@@ -78,39 +78,37 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsParam = this.activatedRoute.params.subscribe(params => {
-      this.username = params.username;
-      this.bs.busy();
-      this.subsUser = this.us.getUserData(this.username).subscribe(
-        res => {
-          this.gs.log('[USER_DETAIL_SUCCESS]', res);
-          this.userData = res.result;
-          this.pi.updatePageMetaData(
-            `${this.userData.kartu_tanda_penduduk_.nama}`,
-            `${this.userData.profile_.description}`,
-            `${this.userData.username}`,
-            this.userData.image_url
-          );
-          this.bs.idle();
-          if (this.gs.isBrowser) {
-            this.panelData = [];
-            this.panelData.push({ title: 'Tentang Saya', icon: 'info', text: this.userData.profile_.description });
-            this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
-            this.checkBanned();
-            this.getUserBerkas();
-          }
-        },
-        err => {
-          this.gs.log('[USER_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: '/'
-            }
-          });
+    this.username = this.activatedRoute.snapshot.paramMap.get('username');
+    this.bs.busy();
+    this.subsUser = this.us.getUserData(this.username).subscribe(
+      res => {
+        this.gs.log('[USER_DETAIL_SUCCESS]', res);
+        this.userData = res.result;
+        this.pi.updatePageMetaData(
+          `${this.userData.kartu_tanda_penduduk_.nama}`,
+          `${this.userData.profile_.description}`,
+          `${this.userData.username}`,
+          this.userData.image_url
+        );
+        this.bs.idle();
+        if (this.gs.isBrowser) {
+          this.panelData = [];
+          this.panelData.push({ title: 'Tentang Saya', icon: 'info', text: this.userData.profile_.description });
+          this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
+          this.checkBanned();
+          this.getUserBerkas();
         }
-      );
-    });
+      },
+      err => {
+        this.gs.log('[USER_DETAIL_ERROR]', err);
+        this.bs.idle();
+        this.router.navigate(['/error'], {
+          queryParams: {
+            returnUrl: '/'
+          }
+        });
+      }
+    );
   }
 
   checkBanned(): void {

@@ -63,33 +63,31 @@ export class NewsEditComponent implements OnInit, OnDestroy {
       `Edit News`
     );
     if (this.gs.isBrowser) {
-      this.subsActRoute = this.activatedRoute.params.subscribe(params => {
-        this.newsId = params.newsId;
-        this.bs.busy();
-        this.subsNewsDetail = this.news.getNews(this.newsId).subscribe(
-          res => {
-            this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
-            this.bs.idle();
-            if (this.as.currentUserValue.id !== res.result.user_.id) {
-              if (this.gs.isBrowser) {
-                this.toast.warning('Berita Ini Milik Orang Lain', 'Whoops!');
-              }
-              this.router.navigateByUrl(`/news/${this.newsId}`);
-            } else {
-              this.initForm(res.result);
+      this.newsId = Number(this.activatedRoute.snapshot.paramMap.get('newsId'));
+      this.bs.busy();
+      this.subsNewsDetail = this.news.getNews(this.newsId).subscribe(
+        res => {
+          this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
+          this.bs.idle();
+          if (this.as.currentUserValue.id !== res.result.user_.id) {
+            if (this.gs.isBrowser) {
+              this.toast.warning('Berita Ini Milik Orang Lain', 'Whoops!');
             }
-          },
-          err => {
-            this.gs.log('[NEWS_DETAIL_ERROR]', err);
-            this.bs.idle();
-            this.router.navigate(['/error'], {
-              queryParams: {
-                returnUrl: `/news/${this.newsId}`
-              }
-            });
+            this.router.navigateByUrl(`/news/${this.newsId}`);
+          } else {
+            this.initForm(res.result);
           }
-        );
-      });
+        },
+        err => {
+          this.gs.log('[NEWS_DETAIL_ERROR]', err);
+          this.bs.idle();
+          this.router.navigate(['/error'], {
+            queryParams: {
+              returnUrl: `/news/${this.newsId}`
+            }
+          });
+        }
+      );
     }
   }
 

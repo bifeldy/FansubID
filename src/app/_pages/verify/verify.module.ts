@@ -15,6 +15,7 @@ import { VerifyComponent } from './verify.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: VerifyComponent,
     canActivate: [AuthGuard],
     data: {

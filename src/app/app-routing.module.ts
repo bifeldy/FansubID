@@ -7,8 +7,8 @@ import { Role } from './_shared/models/Role';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    pathMatch: 'full',
+    redirectTo: 'home'
   },
   {
     path: 'admin-mod',
@@ -148,7 +148,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, {
     initialNavigation: 'enabled',
     scrollPositionRestoration: 'enabled',
-    relativeLinkResolution: 'legacy'
+    relativeLinkResolution: 'corrected'
 })],
   exports: [RouterModule]
 })

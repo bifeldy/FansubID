@@ -20,6 +20,7 @@ import { UserEditComponent } from './user-edit/user-edit.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: UserListComponent
   },
   {

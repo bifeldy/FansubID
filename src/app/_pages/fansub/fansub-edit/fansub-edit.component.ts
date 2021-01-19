@@ -20,7 +20,7 @@ import { ImgbbService } from '../../../_shared/services/imgbb.service';
 })
 export class FansubEditComponent implements OnInit, OnDestroy {
 
-  fansubSlug = null;
+  fansubSlug = '';
 
   fg: FormGroup;
 
@@ -85,26 +85,24 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       `Ubah Fansub`
     );
     if (this.gs.isBrowser) {
-      this.subsActRoute = this.activatedRoute.params.subscribe(params => {
-        this.fansubSlug = params.fansubSlug;
-        this.bs.busy();
-        this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe(
-          res => {
-            this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
-            this.initForm(res.result);
-            this.bs.idle();
-          },
-          err => {
-            this.gs.log('[FANSUB_DETAIL_ERROR]', err);
-            this.bs.idle();
-            this.router.navigate(['/error'], {
-              queryParams: {
-                returnUrl: `/fansub/${this.fansubSlug}`
-              }
-            });
-          }
-        );
-      });
+      this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
+      this.bs.busy();
+      this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe(
+        res => {
+          this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
+          this.initForm(res.result);
+          this.bs.idle();
+        },
+        err => {
+          this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+          this.bs.idle();
+          this.router.navigate(['/error'], {
+            queryParams: {
+              returnUrl: `/fansub/${this.fansubSlug}`
+            }
+          });
+        }
+      );
     }
   }
 

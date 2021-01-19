@@ -16,6 +16,7 @@ import { DoramaDetailComponent } from './dorama-detail/dorama-detail.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: DoramaListComponent
   },
   {

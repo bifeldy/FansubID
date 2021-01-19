@@ -22,7 +22,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   currentUser: User = null;
 
-  berkasId = 0;
+  berkasId = '';
   berkasData = null;
 
   subsUser = null;
@@ -64,50 +64,48 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsParam = this.activatedRoute.params.subscribe(params => {
-      this.berkasId = params.berkasId;
-      this.bs.busy();
-      this.subsBerkas = this.berkas.getBerkas(this.berkasId).subscribe(
-        res => {
-          this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
-          this.berkasData = res.result;
-          this.pi.updatePageMetaData(
-            `${this.berkasData.name}`,
-            `${this.berkasData.description}`,
-            `${this.berkasData.name}`,
-            this.berkasData.image_url
-          );
-          this.bs.idle();
-          if (this.gs.isBrowser) {
-            this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
-            this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
-            if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
-              if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
-                this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
-                  this.subtitles = data;
-                  this.checkVjs();
-                });
-              }
-              if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
-                this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
-                  this.fonts = data;
-                  this.checkVjs();
-                });
-              }
+    this.berkasId = this.activatedRoute.snapshot.paramMap.get('berkasId');
+    this.bs.busy();
+    this.subsBerkas = this.berkas.getBerkas(this.berkasId).subscribe(
+      res => {
+        this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
+        this.berkasData = res.result;
+        this.pi.updatePageMetaData(
+          `${this.berkasData.name}`,
+          `${this.berkasData.description}`,
+          `${this.berkasData.name}`,
+          this.berkasData.image_url
+        );
+        this.bs.idle();
+        if (this.gs.isBrowser) {
+          this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
+          this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
+          if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
+            if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
+              this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
+                this.subtitles = data;
+                this.checkVjs();
+              });
+            }
+            if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
+              this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
+                this.fonts = data;
+                this.checkVjs();
+              });
             }
           }
-        },
-        err => {
-          this.gs.log('[BERKAS_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: '/'
-            }
-          });
         }
-      );
-    });
+      },
+      err => {
+        this.gs.log('[BERKAS_DETAIL_ERROR]', err);
+        this.bs.idle();
+        this.router.navigate(['/error'], {
+          queryParams: {
+            returnUrl: '/'
+          }
+        });
+      }
+    );
   }
 
   login(): void {

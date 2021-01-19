@@ -12,10 +12,10 @@
     "serve:ssr": "node dist/hikki/server/main.js",
     "build:ssr": "ng build --prod && ng run hikki:server:production",
     "prerender": "ng run hikki:prerender",
-    "bifeldy:angular-dev": "ng build",
+    "bifeldy:angular-dev": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build",
     "bifeldy:angular-prod": "ng build --prod",
     "bifeldy:express": "ng run hikki:server:production",
-    "bifeldy:dev": "ng run hikki:serve-ssr",
+    "bifeldy:dev": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng run hikki:serve-ssr",
     "bifeldy:prod": "ng build --prod && ng run hikki:server:production",
     "bifeldy:start": "node dist/hikki/server/main.js",
     "postinstall": "ngcc"

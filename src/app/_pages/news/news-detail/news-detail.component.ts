@@ -48,40 +48,38 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsActRoute = this.activatedRoute.params.subscribe(params => {
-      this.newsId = parseInt(params.newsId, 10);
-      this.bs.busy();
-      this.subsNews = this.news.getNews(this.newsId).subscribe(
-        res => {
-          this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
-          this.newsData = res.result;
-          this.pi.updatePageMetaData(
-            `${this.newsData.title}`,
-            `${this.newsData.content}`,
-            `${Array.isArray(this.newsData.tags) ? this.newsData.tags.join(', ') : this.newsData.title}`,
-            this.newsData.image_url
-          );
-          this.bs.idle();
-          if (this.gs.isBrowser) {
-            if (Array.isArray(this.newsData.tags)) {
-              for (let i = 0; i < this.newsData.tags.length; i++) {
-                this.chipData.push({ id_tag: i, name: this.newsData.tags[i], color: Warna.PINK, selected: true });
-              }
+    this.newsId = Number(this.activatedRoute.snapshot.paramMap.get('newsId'));
+    this.bs.busy();
+    this.subsNews = this.news.getNews(this.newsId).subscribe(
+      res => {
+        this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
+        this.newsData = res.result;
+        this.pi.updatePageMetaData(
+          `${this.newsData.title}`,
+          `${this.newsData.content}`,
+          `${Array.isArray(this.newsData.tags) ? this.newsData.tags.join(', ') : this.newsData.title}`,
+          this.newsData.image_url
+        );
+        this.bs.idle();
+        if (this.gs.isBrowser) {
+          if (Array.isArray(this.newsData.tags)) {
+            for (let i = 0; i < this.newsData.tags.length; i++) {
+              this.chipData.push({ id_tag: i, name: this.newsData.tags[i], color: Warna.PINK, selected: true });
             }
-            this.fs.initializeFab('edit', null, 'Ubah Data Berita', `/news/${this.newsId}/edit`, false);
           }
-        },
-        err => {
-          this.gs.log('[NEWS_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: '/news'
-            }
-          });
+          this.fs.initializeFab('edit', null, 'Ubah Data Berita', `/news/${this.newsId}/edit`, false);
         }
-      );
-    });
+      },
+      err => {
+        this.gs.log('[NEWS_DETAIL_ERROR]', err);
+        this.bs.idle();
+        this.router.navigate(['/error'], {
+          queryParams: {
+            returnUrl: '/news'
+          }
+        });
+      }
+    );
   }
 
   openTag(data): void {

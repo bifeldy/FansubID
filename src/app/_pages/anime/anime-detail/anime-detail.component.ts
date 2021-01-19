@@ -87,46 +87,44 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsParam = this.activatedRoute.params.subscribe(params => {
-      this.animeId = params.animeId;
-      this.bs.busy();
-      this.subsAnime = this.anime.getAnime(this.animeId).subscribe(
-        res => {
-          this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
-          this.animeData = res.result;
-          this.pi.updatePageMetaData(
-            `${this.animeData.title}`,
-            `${this.animeData.synopsis}`,
-            `${Array.isArray(this.animeData.title_synonyms) ? this.animeData.title_synonyms.join(', ') : this.animeData.title}`,
-            this.animeData.image_url
-          );
-          this.bs.idle();
-          if (this.gs.isBrowser) {
-            this.chipData = this.animeData.genres;
-            this.chipData.map(g => (g.selected = true, g.color = Warna.PINK));
-            this.panelData = [];
-            this.panelData.push({
-              title: 'Ringkasan Cerita',
-              icon: 'history_edu',
-              text: this.animeData.synopsis,
-              tooltip: `Alih Bahasa Oleh 'Google Translate' 😘`
-            });
-            this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
-            this.getFansubAnime();
-            this.getBerkasAnime();
-          }
-        },
-        err => {
-          this.gs.log('[ANIME_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: '/anime'
-            }
+    this.animeId = Number(this.activatedRoute.snapshot.paramMap.get('animeId'));
+    this.bs.busy();
+    this.subsAnime = this.anime.getAnime(this.animeId).subscribe(
+      res => {
+        this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
+        this.animeData = res.result;
+        this.pi.updatePageMetaData(
+          `${this.animeData.title}`,
+          `${this.animeData.synopsis}`,
+          `${Array.isArray(this.animeData.title_synonyms) ? this.animeData.title_synonyms.join(', ') : this.animeData.title}`,
+          this.animeData.image_url
+        );
+        this.bs.idle();
+        if (this.gs.isBrowser) {
+          this.chipData = this.animeData.genres;
+          this.chipData.map(g => (g.selected = true, g.color = Warna.PINK));
+          this.panelData = [];
+          this.panelData.push({
+            title: 'Ringkasan Cerita',
+            icon: 'history_edu',
+            text: this.animeData.synopsis,
+            tooltip: `Alih Bahasa Oleh 'Google Translate' 😘`
           });
+          this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
+          this.getFansubAnime();
+          this.getBerkasAnime();
         }
-      );
-    });
+      },
+      err => {
+        this.gs.log('[ANIME_DETAIL_ERROR]', err);
+        this.bs.idle();
+        this.router.navigate(['/error'], {
+          queryParams: {
+            returnUrl: '/anime'
+          }
+        });
+      }
+    );
   }
 
   openRank(): void {

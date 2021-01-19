@@ -16,6 +16,7 @@ import { AnimeDetailComponent } from './anime-detail/anime-detail.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: AnimeListComponent
   },
   {

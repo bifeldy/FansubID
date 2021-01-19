@@ -25,6 +25,7 @@ import { FansubEditComponent } from './fansub-edit/fansub-edit.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: FansubListComponent
   },
   {

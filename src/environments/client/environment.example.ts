@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   siteName: 'Hikki',
-  tokenName: 'bifeldy_token',
-  sessionName: 'bifeldy_session',
+  tokenName: 'hikki_token',
+  sessionName: 'hikki_session',
   baseUrl: 'http://localhost:4000',
   apiUrl: '/api',
   discordClientId: '789831990433153034'

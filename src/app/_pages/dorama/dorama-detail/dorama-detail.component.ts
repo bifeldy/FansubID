@@ -24,7 +24,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
     { id: 4, name: Seasons.FALL, img: '/assets/img/season/fall.png' }
   ];
 
-  doramaId = 0;
+  doramaId = '';
   doramaData = null;
 
   count = 0;
@@ -95,62 +95,61 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subsParam = this.activatedRoute.params.subscribe(params => {
-      this.doramaId = params.doramaId.split('-')[0];
-      this.bs.busy();
-      this.subsDorama = this.dorama.getDorama(params.doramaId).subscribe(
-        res => {
-          this.gs.log('[DORAMA_DETAIL_SUCCESS]', res);
-          this.doramaData = res.result;
-          this.doramaData.image_url = this.doramaData.poster;
-          this.pi.updatePageMetaData(
-            `${this.doramaData.title}`,
-            `${this.doramaData.synopsis}`,
-            `${this.doramaData.others ? this.doramaData.others.tags : this.doramaData.title}`,
-            this.doramaData.image_url
-          );
-          this.bs.idle();
-          if (this.gs.isBrowser) {
-            if ('others' in this.doramaData) {
-              const genres = this.doramaData.others.genres.split(', ');
-              for (const g of genres) {
-                this.chipData.push({
-                  mdl_id: 8,
-                  name: g,
-                  url: '',
-                  selected: true,
-                  color: Warna.PINK
-                });
-              }
+    const paramDoramaId = this.activatedRoute.snapshot.paramMap.get('doramaId');
+    this.doramaId = paramDoramaId.split('-')[0];
+    this.bs.busy();
+    this.subsDorama = this.dorama.getDorama(paramDoramaId).subscribe(
+      res => {
+        this.gs.log('[DORAMA_DETAIL_SUCCESS]', res);
+        this.doramaData = res.result;
+        this.doramaData.image_url = this.doramaData.poster;
+        this.pi.updatePageMetaData(
+          `${this.doramaData.title}`,
+          `${this.doramaData.synopsis}`,
+          `${this.doramaData.others ? this.doramaData.others.tags : this.doramaData.title}`,
+          this.doramaData.image_url
+        );
+        this.bs.idle();
+        if (this.gs.isBrowser) {
+          if ('others' in this.doramaData) {
+            const genres = this.doramaData.others.genres.split(', ');
+            for (const g of genres) {
+              this.chipData.push({
+                mdl_id: 8,
+                name: g,
+                url: '',
+                selected: true,
+                color: Warna.PINK
+              });
             }
-            this.panelData = [];
-            this.panelData.push({
-              title: 'Ringkasan Cerita',
-              icon: 'history_edu',
-              text: this.doramaData.synopsis,
-              tooltip: `Alih Bahasa Oleh 'Google Translate' 😘`
-            });
-            this.fs.initializeFab(
-              null,
-              '/assets/img/mdl-logo.png', 'Buka Di MyDramaList',
-              `https://mydramalist.com/${this.router.url.split('/')[this.router.url.split('/').length - 1]}`,
-              true
-            );
-            this.getFansubDorama();
-            this.getBerkasDorama();
           }
-        },
-        err => {
-          this.gs.log('[DORAMA_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: '/dorama'
-            }
+          this.panelData = [];
+          this.panelData.push({
+            title: 'Ringkasan Cerita',
+            icon: 'history_edu',
+            text: this.doramaData.synopsis,
+            tooltip: `Alih Bahasa Oleh 'Google Translate' 😘`
           });
+          this.fs.initializeFab(
+            null,
+            '/assets/img/mdl-logo.png', 'Buka Di MyDramaList',
+            `https://mydramalist.com/${this.router.url.split('/')[this.router.url.split('/').length - 1]}`,
+            true
+          );
+          this.getFansubDorama();
+          this.getBerkasDorama();
         }
-      );
-    });
+      },
+      err => {
+        this.gs.log('[DORAMA_DETAIL_ERROR]', err);
+        this.bs.idle();
+        this.router.navigate(['/error'], {
+          queryParams: {
+            returnUrl: '/dorama'
+          }
+        });
+      }
+    );
   }
 
   openRank(): void {

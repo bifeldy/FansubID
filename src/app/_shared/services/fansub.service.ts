@@ -33,7 +33,7 @@ export class FansubService {
     return this.api.putData(`/fansub/${fansubSlug}`, fansubData);
   }
 
-  getFansub(fansubSlug: number): any {
+  getFansub(fansubSlug: string): any {
     return this.api.getData(`/fansub/${fansubSlug}`);
   }
 

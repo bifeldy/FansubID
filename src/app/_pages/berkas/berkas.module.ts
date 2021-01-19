@@ -24,6 +24,7 @@ import { BerkasListComponent } from './berkas-list/berkas-list.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: BerkasListComponent
   },
   {

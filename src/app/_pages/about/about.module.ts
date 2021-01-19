@@ -10,6 +10,7 @@ import { AboutComponent } from './about.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: AboutComponent
   }
 ];

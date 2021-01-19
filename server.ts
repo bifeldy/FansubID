@@ -149,101 +149,12 @@ const corsOptions = {
   }
 };
 
-// The Express app is exported so that it can be used by serverless Functions.
-export function app(): http.Server {
+// Standard server not serverless
+let io = null;
+let bot = null;
 
-  const expressApp = express();
-  const httpApp = http.createServer(expressApp);
-  const io = new socketIo.Server(httpApp, {
-    cors: corsOptions
-  });
-  const bot = new Client();
-
-  // Config
-  expressApp.set('trust proxy', true);
-
-  // Middleware
-  expressApp.use(compression());
-  expressApp.use(cors(corsOptions));
-  expressApp.use(MorganChalk.morganChalk);
-  expressApp.use(express.json({ limit: '512mb' }));
-  expressApp.use(express.urlencoded({ extended: false, limit: '512mb' }));
-
-  expressApp.use(async (req: UserRequest, res, next) => {
-    req.io = io;
-    req.bot = (bot.channels.cache.get(environment.discordBotChannelEventId) as TextChannel);
-    next();
-  });
-
-  // GET `/verify-discord`
-  expressApp.get('/verify-discord', (req, res) => {
-    return res.redirect(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`);
-  });
-
-  expressApp.use('/api', apiLimiter, indexRouter);
-
-  logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
-
-  const distFolder = join(currentWorkingDir, 'dist/hikki/browser');
-  const indexHtml = fs.existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
-
-  // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
-  expressApp.engine('html', ngExpressEngine({
-    bootstrap: AppServerModule
-  }));
-
-  expressApp.set('view engine', 'html');
-  expressApp.set('views', distFolder);
-
-  // Serve static files from /browser
-  expressApp.get('*.*', express.static(distFolder, {
-    maxAge: '1y'
-  }));
-
-  // All regular routes use the Universal engine
-  expressApp.get('*', (req, res) => {
-    return res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
-  });
-
-  /********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
-
-  io.on('connection', async (socket: socketIo.Socket) => {
-    io.emit('visitors', io.sockets.sockets.size);
-    socket.on('disconnect', () => {
-      io.emit('visitors', io.sockets.sockets.size);
-    });
-    socket.on('ping-pong', (cb) => {
-      if (typeof cb === 'function') {
-        cb();
-      }
-    });
-    try {
-      const notifRepo = getRepository(Notification);
-      const notif = await notifRepo.find({
-        where: [
-          { deadline: MoreThanOrEqual(new Date()) }
-        ],
-        relations: ['user_']
-      });
-      for (const n of notif) {
-        socket.emit('notification', {
-          notifCreator: n.user_.username,
-          notifData: {
-            id: n.id,
-            type: n.type,
-            title: n.title,
-            content: n.content,
-            dismissible: n.dismissible
-          }
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  });
-
-  /********** ********** ********** ********** ********** ********** ********** ********** ********** **********/
-
+// Discord Bot
+function startDiscordBot(): void {
   let botPresenceStatusInterval = null;
   bot.on('disconnect', (event) => {
     logger.log(`[DISCORD] 🎉 DISCONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
@@ -302,27 +213,122 @@ export function app(): http.Server {
   if (environment.production) {
     bot.login(environment.discordBotLoginToken).catch(console.error);
   }
+}
+
+// Socket.io
+function startSocketIo(): void {
+  io.on('connection', async (socket: socketIo.Socket) => {
+    io.emit('visitors', io.sockets.sockets.size);
+    socket.on('disconnect', () => {
+      io.emit('visitors', io.sockets.sockets.size);
+    });
+    socket.on('ping-pong', (cb) => {
+      if (typeof cb === 'function') {
+        cb();
+      }
+    });
+    try {
+      const notifRepo = getRepository(Notification);
+      const notif = await notifRepo.find({
+        where: [
+          { deadline: MoreThanOrEqual(new Date()) }
+        ],
+        relations: ['user_']
+      });
+      for (const n of notif) {
+        socket.emit('notification', {
+          notifCreator: n.user_.username,
+          notifData: {
+            id: n.id,
+            type: n.type,
+            title: n.title,
+            content: n.content,
+            dismissible: n.dismissible
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+}
+
+// The Express app is exported so that it can be used by serverless Functions.
+export function app(): http.Server {
+
+  const expressApp = express();
+  const httpApp = http.createServer(expressApp);
+  if (!io) {
+    io = new socketIo.Server(httpApp, {
+      cors: corsOptions
+    });
+    startSocketIo();
+  }
+  if (!bot) {
+    bot = new Client();
+    startDiscordBot();
+  }
+
+  // Config
+  expressApp.set('trust proxy', true);
+
+  // Middleware
+  expressApp.use(compression());
+  expressApp.use(cors(corsOptions));
+  expressApp.use(MorganChalk.morganChalk);
+  expressApp.use(express.json({ limit: '512mb' }));
+  expressApp.use(express.urlencoded({ extended: false, limit: '512mb' }));
+
+  expressApp.use(async (req: UserRequest, res, next) => {
+    req.io = io;
+    req.bot = (bot.channels.cache.get(environment.discordBotChannelEventId) as TextChannel);
+    next();
+  });
+
+  // GET `/verify-discord`
+  expressApp.get('/verify-discord', (req, res) => {
+    return res.redirect(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`);
+  });
+
+  expressApp.use('/api', apiLimiter, indexRouter);
+
+  logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
+
+  const distFolder = join(currentWorkingDir, 'dist/hikki/browser');
+  const indexHtml = fs.existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+
+  // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
+  expressApp.engine('html', ngExpressEngine({
+    bootstrap: AppServerModule
+  }));
+
+  expressApp.set('view engine', 'html');
+  expressApp.set('views', distFolder);
+
+  // Serve static files from /browser
+  expressApp.get('*.*', express.static(distFolder));
+
+  // All regular routes use the Universal engine
+  expressApp.get('*', (req, res) => {
+    return res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+  });
 
   return httpApp;
 }
 
-function run(): void {
-  createConnection({
-    ...typeOrmConfig
-  }).then(async connection => {
-    const c: any = connection;
-    // tslint:disable-next-line: max-line-length
-    logger.log(`[DB] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
-    const port = process.env.PORT || 4000;
-    const listener: any = app().listen(port, () => {
-      logger.log(`[HTTP] ✨ Node Angular TypeORM Express Socket ~ ${listener.address().address}:${listener.address().port} 💘`, null, true);
-    });
-  }).catch(
-    error => console.error(error)
-  );
-}
-
-// Run the apps
-run();
+// Main application
+createConnection({
+  ...typeOrmConfig
+}).then(async connection => {
+  const c: any = connection;
+  // tslint:disable-next-line: max-line-length
+  logger.log(`[DB] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
+  const port = process.env.PORT || 4000;
+  const listener: any = app().listen(port, () => {
+    logger.log(`[HTTP] ✨ Node Angular TypeORM Express Socket ~ ${listener.address().address}:${listener.address().port} 💘`, null, true);
+  });
+}).catch(
+  error => console.error(error)
+);
 
 export * from './src/main.server';

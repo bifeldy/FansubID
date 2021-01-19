@@ -8,6 +8,7 @@ import { KanjiDetailComponent } from './kanji-detail/kanji-detail.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: KanjiListComponent
   },
   {

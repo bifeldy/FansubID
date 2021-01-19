@@ -25,6 +25,7 @@ import { AdminListCorsComponent } from './admin-list-cors/admin-list-cors.compon
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: AdminMenuComponent
   },
   {
