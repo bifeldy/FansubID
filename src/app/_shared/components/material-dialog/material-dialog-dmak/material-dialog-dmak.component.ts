@@ -48,6 +48,10 @@ export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
       stroke: {
         order: {
           visible: true
+        },
+        attr: {
+          active: '#f44336',
+          stroke: '#69f0ae'
         }
       }
     });
