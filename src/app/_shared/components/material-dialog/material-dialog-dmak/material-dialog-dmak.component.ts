@@ -65,8 +65,4 @@ export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
     this.dmak.renderNextStrokes(1);
   }
 
-  reset(): void {
-    this.dmak.erase();
-  }
-
 }
