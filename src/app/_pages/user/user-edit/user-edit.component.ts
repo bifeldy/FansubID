@@ -48,7 +48,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
   photoImage = null;
   coverImage = null;
 
-  subsParam = null;
   subsUserDetail = null;
   subsImgbb1 = null;
   subsImgbb2 = null;
@@ -77,9 +76,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
     if (this.subsUserDetail) {
       this.subsUserDetail.unsubscribe();
     }

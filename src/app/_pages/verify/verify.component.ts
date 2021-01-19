@@ -32,7 +32,6 @@ export class VerifyComponent implements OnInit, OnDestroy {
   subsCekNik = null;
   subsVerify1 = null;
   subsVerify2 = null;
-  subsParam = null;
   subsSosmed = null;
 
   constructor(
@@ -60,9 +59,6 @@ export class VerifyComponent implements OnInit, OnDestroy {
     if (this.subsVerify2) {
       this.subsVerify2.unsubscribe();
     }
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
     if (this.subsSosmed) {
       this.subsSosmed.unsubscribe();
     }
@@ -71,15 +67,15 @@ export class VerifyComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.initKTP();
-      this.subsParam = this.route.queryParams.subscribe(p => {
-        if (p.app && p.code) {
-          this.sosmedVerify(p.app, p.code);
-        } else {
-          if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-            this.router.navigateByUrl('/home');
-          }
+      const app = this.route.snapshot.queryParamMap.get('app');
+      const code = this.route.snapshot.queryParamMap.get('code');
+      if (app && code) {
+        this.sosmedVerify(app, code);
+      } else {
+        if (this.as.currentUserValue && this.as.currentUserValue.verified) {
+          this.router.navigateByUrl('/home');
         }
-      });
+      }
     }
   }
 

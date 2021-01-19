@@ -43,7 +43,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   sort = '';
   order = '';
 
-  subsParam = null;
   subsUser = null;
   subsBerkas = null;
   subsBanned = null;
@@ -63,9 +62,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
     if (this.subsUser) {
       this.subsUser.unsubscribe();
     }

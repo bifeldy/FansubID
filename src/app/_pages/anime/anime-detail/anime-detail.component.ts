@@ -52,7 +52,6 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     }
   ];
 
-  subsParam = null;
   subsAnime = null;
   subsBerkas = null;
   subsFansub = null;
@@ -72,9 +71,6 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
     if (this.subsAnime) {
       this.subsAnime.unsubscribe();
     }

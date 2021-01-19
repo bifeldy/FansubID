@@ -61,7 +61,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   gambar = null;
 
   subsUser = null;
-  subsParam = null;
   subsProject = null;
   subsFansub = null;
   subsAnimeDetail = null;

@@ -26,7 +26,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   berkasData = null;
 
   subsUser = null;
-  subsParam = null;
   subsBerkas = null;
 
   subtitles = [];
@@ -54,9 +53,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.subsUser) {
       this.subsUser.unsubscribe();
-    }
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
     }
     if (this.subsBerkas) {
       this.subsBerkas.unsubscribe();
