@@ -14,6 +14,8 @@ declare const Dmak: any;
 })
 export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
 
+  // see options: https://github.com/mbilbille/dmak
+
   @ViewChild('dmakElement') dmakElement: ElementRef;
 
   dmak = null;

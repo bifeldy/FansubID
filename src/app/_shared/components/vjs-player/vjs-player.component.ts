@@ -54,8 +54,8 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
               video: this.target.nativeElement,
               subUrl: this.subtitleUrl,
               fonts: this.subtitleFonts,
-              workerUrl: 'http://localhost:4200/assets/lib/subtitles-octopus-worker.js',
-              legacyWorkerUrl: 'http://localhost:4200/assets/lib/subtitles-octopus-worker-legacy.js'
+              workerUrl: '/assets/lib/subtitles-octopus-worker.js',
+              legacyWorkerUrl: '/assets/lib/subtitles-octopus-worker-legacy.js'
             });
             this.gs.log('[SUBTITLE_INIT]', this.subtitlesOctopus);
           }
