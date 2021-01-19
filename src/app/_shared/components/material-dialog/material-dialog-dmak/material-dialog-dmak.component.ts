@@ -14,12 +14,14 @@ declare const Dmak: any;
 })
 export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
 
-  // see options: https://github.com/mbilbille/dmak
+  // references:
+  // https://github.com/mbilbille/dmak
+  // https://github.com/KanjiVG/kanjivg
 
   @ViewChild('dmakElement') dmakElement: ElementRef;
 
   dmak = null;
-  dmakUrl = 'https://kanjivg.tagaini.net/kanjivg/kanji/';
+  dmakUrl = '/assets/kanji/';
 
   charToDraw = 'NO DATA';
 
