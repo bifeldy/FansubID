@@ -76,11 +76,12 @@ re-captcha > div {
 }
 
 .img-thumbnail {
-  background-color: #424242 !important;
+  background-color: #dddddd;
 }
 
 .img-thumbnail:hover {
-  border: 1px solid #ff4081;
+  border: 1px solid #69f0ae;
+  background-color: #ff4081;
 }
 
 .bg-bifeldy-dark {

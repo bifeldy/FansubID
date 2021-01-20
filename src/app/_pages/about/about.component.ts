@@ -30,8 +30,8 @@ export class AboutComponent implements OnInit {
       site_url: 'https://angular.io'
     },
     {
-      logo: '/assets/img/about/expressjs.png',
-      pict: '/assets/img/about/expressjs.png',
+      logo: '/assets/img/about/express_logo.png',
+      pict: '/assets/img/about/express_pict.png',
       name: 'ExpressJS',
       version: 'v4.15.2',
       description: 'Fast, unopinionated, minimalist web framework for Node.js',
