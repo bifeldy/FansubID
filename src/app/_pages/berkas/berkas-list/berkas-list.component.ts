@@ -63,6 +63,10 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   getBerkas(): void {
     this.bs.busy();
+    if (this.subsBerkas) {
+      this.subsBerkas.unsubscribe();
+      this.bs.idle();
+    }
     this.subsBerkas = this.berkas.getAllBerkas(
       this.q, this.page, this.row, this.sort, this.order
     ).subscribe(

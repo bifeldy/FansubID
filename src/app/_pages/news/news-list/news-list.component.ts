@@ -63,6 +63,10 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
   getNews(): void {
     this.bs.busy();
+    if (this.subsNews) {
+      this.subsNews.unsubscribe();
+      this.bs.idle();
+    }
     this.subsNews = this.news.getAllNews(
       this.q, this.page, this.row, this.sort, this.order
     ).subscribe(

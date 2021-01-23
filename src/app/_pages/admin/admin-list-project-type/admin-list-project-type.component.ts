@@ -81,6 +81,10 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
 
   getProject(): void {
     this.bs.busy();
+    if (this.subsProjectGet) {
+      this.subsProjectGet.unsubscribe();
+      this.bs.idle();
+    }
     this.subsProjectGet = this.project.getProject().subscribe(
       res => {
         this.gs.log('[PROJECT_LIST_SUCCESS]', res);

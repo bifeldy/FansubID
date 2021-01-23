@@ -53,6 +53,10 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
 
   getBan(): void {
     this.bs.busy();
+    if (this.subsBannedGet) {
+      this.subsBannedGet.unsubscribe();
+      this.bs.idle();
+    }
     this.subsBannedGet = this.adm.getAllBanned(
       this.q, this.page, this.row, this.sort, this.order
     ).subscribe(

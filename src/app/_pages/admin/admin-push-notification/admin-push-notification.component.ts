@@ -79,6 +79,10 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
 
   getNotif(): void {
     this.bs.busy();
+    if (this.subsNotifGet) {
+      this.subsNotifGet.unsubscribe();
+      this.bs.idle();
+    }
     this.subsNotifGet = this.adm.getAllNotif(
       this.q, this.page, this.row, this.sort, this.order
     ).subscribe(
