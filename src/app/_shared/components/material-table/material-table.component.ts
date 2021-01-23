@@ -30,7 +30,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
 
   dataSource: MatTableDataSource<any>;
 
-  pageSizeOptions = [10, 25, 50, 100];
+  pageSizeOptions = [10, 25, 50, 100, 125, 250, 500];
 
   searchQuery = '';
 

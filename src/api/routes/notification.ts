@@ -35,7 +35,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
         },
         relations: ['user_'],
         skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-        take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
+        take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
       });
       for (const n of notifications) {
         if ('user_' in n && n.user_) {

@@ -188,7 +188,7 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
       },
       relations: ['project_type_', 'fansub_', 'user_', 'anime_'],
       skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-      take: (req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10
+      take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const f of files) {
       delete f.private;

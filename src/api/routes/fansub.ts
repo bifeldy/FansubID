@@ -213,7 +213,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
       }
       const [files, count] = await fileRepoQuery
         .skip(req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0)
-        .take((req.query.row > 0 && req.query.row <= 100) ? req.query.row : 10)
+        .take((req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10)
         .getManyAndCount();
       const results: any = {};
       for (const i of fansubId) {
