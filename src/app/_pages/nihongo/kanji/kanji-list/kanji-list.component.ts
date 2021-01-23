@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
+import { BusyService } from '../../../../_shared/services/busy.service';
+import { NihongoService } from '../../../../_shared/services/nihongo.service';
 
 @Component({
   selector: 'app-kanji-list',
@@ -9,24 +11,75 @@ import { GlobalService } from '../../../../_shared/services/global.service';
 })
 export class KanjiListComponent implements OnInit {
 
-  jlptRank = '';
-  schoolRank = '';
+  pageSizeOptions = [50, 125, 250, 500];
 
-  searchQuery = null;
+  jlpt = '';
+  school = '';
+
+  count = 0;
+  page = 1;
+  row = 50;
+
+  q = '';
+  sort = '';
+  order = '';
+
+  kanjiData = [];
 
   constructor(
-    private gs: GlobalService
-  ) { }
+    private gs: GlobalService,
+    private bs: BusyService,
+    private nihon: NihongoService
+  ) {
+  }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      this.getKanji();
+    }
   }
 
-  applyFilter(event: Event): void {
-    this.searchQuery = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  changeJlpt(data): void {
+    this.gs.log('[JLPT_CHANGE]', data);
+    this.jlpt = data;
+    this.getKanji();
   }
 
-  paginatorChanged(event: Event): void {
-    this.gs.log('[PAGINATOR_VALUE_CHANGED]', event);
+  changeSchool(data): void {
+    this.gs.log('[SCHOOL_CHANGE]', data);
+    this.school = data;
+    this.getKanji();
+  }
+
+  applyFilter(event): void {
+    this.gs.log('[SEARCH_VALUE_CHANGED]', event);
+    this.q = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.getKanji();
+  }
+
+  paginatorChanged(data): void {
+    this.gs.log('[PAGINATOR_VALUE_CHANGED]', data);
+    this.page = data.pageIndex + 1;
+    this.row = data.pageSize;
+    this.getKanji();
+  }
+
+  getKanji(): void {
+    this.bs.busy();
+    this.nihon.getAllKanji(
+      this.jlpt, this.school, this.q, this.page, this.row, 'context', 'asc'
+    ).subscribe(
+      res => {
+        this.gs.log('[KANJI_LIST_SUCCESS]', res);
+        this.count = res.count;
+        this.kanjiData = res.results;
+        this.bs.idle();
+      },
+      err => {
+        this.gs.log('[KANJI_LIST_ERROR]', err);
+        this.bs.idle();
+      }
+    );
   }
 
 }

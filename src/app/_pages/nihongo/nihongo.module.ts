@@ -62,7 +62,7 @@ const routes: Routes = [
     loadChildren: () => import('./kanji/kanji.module').then(m => m.KanjiModule),
     data: {
       title: 'Huruf Kanji',
-      description: 'Mengenal Huruf Kanji',
+      description: 'Mengenal Huruf Kanji Sesuai Rank JLPT & Sekolah',
       keywords: 'Kanji'
     }
   }

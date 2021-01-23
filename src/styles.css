@@ -75,11 +75,15 @@ re-captcha > div {
   white-space: normal !important;
 }
 
+.card {
+  background-color: #424242;
+}
+
 .img-thumbnail {
   background-color: #dddddd;
 }
 
-.img-thumbnail:hover {
+.img-thumbnail:hover, .card:hover {
   border: 1px solid #69f0ae;
   background-color: #ff4081;
 }

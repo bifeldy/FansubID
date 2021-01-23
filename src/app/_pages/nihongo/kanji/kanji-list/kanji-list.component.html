@@ -10,29 +10,48 @@
       <h3 class="m-0 border-bottom border-primary row">
         <mat-form-field class="pt-3 col-4 col-lg-2" [color]="'accent'">
           <mat-label>JLPT</mat-label>
-          <mat-select [(value)]="jlptRank">
+          <mat-select [(value)]="jlpt" (valueChange)="changeJlpt($event)">
             <mat-option value="">Semua</mat-option>
             <mat-option value="{{ i }}" *ngFor="let i of [5,4,3,2,1]">N{{ i }}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="pt-3 col-4 col-lg-2" [color]="'accent'">
           <mat-label>Sekolah</mat-label>
-          <mat-select [(value)]="schoolRank">
+          <mat-select [(value)]="school" (valueChange)="changeSchool($event)">
             <mat-option value="">Semua</mat-option>
             <mat-option value="{{ i }}" *ngFor="let i of [1,2,3,4,5,6,7,8,9]">Kelas {{ i }}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="ml-auto pt-3 col-4 col-lg-4" [color]="'accent'">
           <mat-label>Cari ...</mat-label>
-          <input matInput maxlength="200" placeholder="Ex. 私" (keyup.enter)="applyFilter($event)" [(ngModel)]="searchQuery" />
+          <input matInput maxlength="200" placeholder="Ex. 私" (keyup.enter)="applyFilter($event)" [(ngModel)]="q" />
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </h3>
     </div>
     <div class="col-12">
       <div class="row">
-        <div class="col-12" *ngFor="let i of [1,2,3,4,5,6,7,8,9,0,11,12,13,14,15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,0,11,12,13,14,15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,0,11,12,13,14,15,16,17,18,19,20]">
-          // Konten {{ i }}
+        <div class="col-12 p-3" *ngIf="kanjiData.length <= 0"
+          style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+          <div class="row align-items-center h-100">
+            <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+              <h3 class="m-0">
+                Tidak Ada Data ¯\_(ツ)_/¯
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="kanjiData.length > 0">
+          <div class="row px-3">
+            <div class="col-6 col-md-3 col-lg-2 p-2" style="cursor: pointer;" *ngFor="let k of kanjiData">
+              <div class="card text-center p-3">
+                <div class="card-body p-0">
+                  <h5 class="card-title py-3" style="font-size: 300%;">{{ k.character }}</h5>
+                  <div>{{ k.translate }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -42,6 +61,5 @@
 
 <!-- Bottom Navigation Bar -->
 <div class="container position-sticky bottom-0">
-  <mat-paginator class="bg-bifeldy-dark" showFirstLastButtons
-    [length]="1234" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]" (page)="paginatorChanged($event)"></mat-paginator>
+  <mat-paginator class="bg-bifeldy-dark" showFirstLastButtons [length]="count" [pageSizeOptions]="pageSizeOptions" (page)="paginatorChanged($event)"></mat-paginator>
 </div>
