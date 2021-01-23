@@ -12,17 +12,17 @@
     <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
       tdc.toUpperCase() != 'NAMA BERKAS' && tdc.toUpperCase() != 'TANGGAL'  && tdc.toUpperCase() != 'NAMA FANSUB' && tdc.toUpperCase() != 'JUDUL DORAMA' &&
       tdc.toUpperCase() != 'TOPIK' && tdc.toUpperCase() != 'JUDUL ANIME' && tdc.toUpperCase() != 'ANIME'  && tdc.toUpperCase() != 'DORAMA' &&
-      tdc.toUpperCase() != 'JENIS' && tdc.toUpperCase() != 'DEADLINE'
+      tdc.toUpperCase() != 'JENIS' && tdc.toUpperCase() != 'DEADLINE' && tdc.toUpperCase() != 'JUDUL' && tdc.toUpperCase() != 'KONTEN' &&
+      tdc.toUpperCase() != 'ID' && tdc.toUpperCase() != 'ALASAN'
     ">
       <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
     </th>
     <td mat-cell *matCellDef="let row" class="px-3">
       <div *ngIf="checkIsArray(row[tdc]) == false">
         <h3 class="m-0" [style.color]="
-          (tdc == 'Pemilik' || tdc == 'Penulis') ? '#3f51b5' :
-            (tdc == 'Tanggal' || tdc == 'Pelaku') ? '#28a745' :
-              tdc == 'Jenis' ? '#7289da' :
-                (tdc == 'Status' || tdc == 'Korban') ? '#f44336' :
+          (tdc == 'Pemilik' || tdc == 'Penulis' || tdc == 'Status' || tdc == 'Korban') ? '#ffc107' :
+            (tdc == 'Tanggal' || tdc == 'Pelaku' || tdc == 'Judul') ? '#28a745' :
+              (tdc == 'Jenis' || tdc == 'Proyek') ? '#7289da' :
         '#acacac'">
           <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pemilik' || tdc == 'Penulis'" />
           <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Korban'" />
@@ -30,9 +30,14 @@
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc == 'Logo'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc == 'Image'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc == 'Poster'" />
-          <span *ngIf="tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' && tdc != 'Tanggal' && tdc != 'Deadline'">{{ row[tdc] }}</span>
           <span *ngIf="tdc == 'Tanggal'">{{ row[tdc] | dateAgo }}</span>
           <span *ngIf="tdc == 'Deadline'">{{ row[tdc] | date:'d/M/yy, h:mm:ss a' }}</span>
+          <span *ngIf="tdc == 'Anime'">{{ row[tdc] }} Anime</span>
+          <span *ngIf="tdc == 'Dorama'">{{ row[tdc] }} Dorama</span>
+          <span *ngIf="tdc == 'Kunjungan'">{{ row[tdc] }}x Dilihat</span>
+          <span *ngIf="tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' && tdc != 'Tanggal' && tdc != 'Deadline' && tdc != 'Anime' && tdc != 'Dorama' && tdc != 'Kunjungan'">
+            {{ row[tdc] }}
+          </span>
         </h3>
       </div>
       <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc].length > 0 && row[tdc][0].type == 'chip'" class="p-1">

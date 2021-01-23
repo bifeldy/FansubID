@@ -101,8 +101,16 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
         data.active = 'name';
       } else if (data.active.toUpperCase() === 'TANGGAL') {
         data.active = 'created_at';
-      } else if (data.active.toUpperCase() === 'TOPIK') {
+      } else if (data.active.toUpperCase() === 'TOPIK' || data.active.toUpperCase() === 'JUDUL') {
         data.active = 'title';
+      } else if (data.active.toUpperCase() === 'KONTEN') {
+        data.active = 'content';
+      } else if (data.active.toUpperCase() === 'DEADLINE') {
+        data.active = 'deadline';
+      } else if (data.active.toUpperCase() === 'ID') {
+        data.active = 'id';
+      } else if (data.active.toUpperCase() === 'ALASAN') {
+        data.active = 'reason';
       } else {
         data.active = '';
         data.direction = '';
