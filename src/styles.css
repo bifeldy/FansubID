@@ -95,3 +95,11 @@ re-captcha > div {
 .angular-editor-toolbar {
   background-color: transparent !important;
 }
+
+.mat-drawer-backdrop.mat-drawer-shown {
+  background: rgba(0,0,0,.5) !important;
+}
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(0,0,0,.5) !important;
+}

@@ -23,7 +23,7 @@
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)" disabled="false"></mat-datepicker>
             </mat-form-field>
-            <mat-form-field class="pt-3 col-4 col-lg-2" [color]="'accent'">
+            <mat-form-field class="ml-auto pt-3 col-4 col-lg-2" [color]="'accent'">
               <mat-label>Negara</mat-label>
               <mat-select [(value)]="selectedCountryName" (valueChange)="changeCountryDorama()">
                 <mat-option value="">Semua</mat-option>
