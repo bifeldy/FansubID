@@ -11,7 +11,7 @@ import { NihongoService } from '../../../../_shared/services/nihongo.service';
 })
 export class KanjiListComponent implements OnInit {
 
-  pageSizeOptions = [50, 100, 125, 250, 500];
+  pageSizeOptions = [50, 75, 100, 125, 150];
 
   jlpt = '';
   school = '';
