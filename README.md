@@ -1,4 +1,4 @@
-# <img src="src/assets/img/favicon.png" width="24px" /> [Hikki | Database Fansub Indonesia](https://hikki.bifeldy.id)
+# <img src="src/assets/img/favicon.png" width="24px" /> [Hikki | Database Fansub Indonesia](https://hikki.id)
 
 Proyek ini awalnya dibuat dengan [Angular CLI](https://github.com/angular/angular-cli) versi 10.0.4.
 

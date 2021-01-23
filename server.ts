@@ -191,7 +191,7 @@ function startDiscordBot(): void {
           activity: {
             name: presenceName[Math.floor(Math.random() * presenceName.length)],
             type: presenceType[Math.floor(Math.random() * presenceType.length)],
-            url: 'http://hikki.bifeldy.id'
+            url: 'http://hikki.id'
           }
         });
       } catch (error) {
