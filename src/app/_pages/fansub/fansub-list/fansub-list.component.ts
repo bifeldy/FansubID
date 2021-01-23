@@ -31,7 +31,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
     }
   ];
 
-  pieChartOptions: ChartOptions = {
+  pieChartStatusOptions: ChartOptions = {
     title: {
       display: true,
       text: 'Kondisi Fansub Terkini'
@@ -41,6 +41,17 @@ export class FansubListComponent implements OnInit, OnDestroy {
       position: 'right'
     },
   };
+  pieChartGarapanOptions: ChartOptions = {
+    title: {
+      display: true,
+      text: 'Total Garapan Fansub'
+    },
+    responsive: true,
+    legend: {
+      position: 'right'
+    },
+  };
+
   barChartAnimeOptions: ChartOptions = {
     title: {
       display: true,
@@ -55,6 +66,16 @@ export class FansubListComponent implements OnInit, OnDestroy {
         {
           ticks: {
             beginAtZero: true
+          },
+          gridLines: {
+            color: 'rgba(92,92,92,1)'
+          }
+        }
+      ],
+      yAxes: [
+        {
+          gridLines: {
+            color: 'rgba(92,92,92,1)'
           }
         }
       ]
@@ -74,6 +95,16 @@ export class FansubListComponent implements OnInit, OnDestroy {
         {
           ticks: {
             beginAtZero: true
+          },
+          gridLines: {
+            color: 'rgba(92,92,92,1)'
+          }
+        }
+      ],
+      yAxes: [
+        {
+          gridLines: {
+            color: 'rgba(92,92,92,1)'
           }
         }
       ]
@@ -81,8 +112,10 @@ export class FansubListComponent implements OnInit, OnDestroy {
   };
   chartPlugins = [];
 
-  pieChartData: SingleDataSet = [];
-  pieChartLabels: Label[] = [];
+  pieChartStatusData: SingleDataSet = [];
+  pieChartStatusLabels: Label[] = [];
+  pieChartGarapanData: SingleDataSet = [];
+  pieChartGarapanLabels: Label[] = [];
   barChartAnimeData: SingleDataSet = [];
   barChartAnimeLabels: Label[] = [];
   barChartDoramaData: SingleDataSet = [];
@@ -93,6 +126,9 @@ export class FansubListComponent implements OnInit, OnDestroy {
 
   fansubActive = 0;
   fansubInActive = 0;
+
+  fansubBerkasAnime = 0;
+  fansubBerkasDorama = 0;
 
   subsFansub = null;
   subsAnime = null;
@@ -160,6 +196,8 @@ export class FansubListComponent implements OnInit, OnDestroy {
             this.fansubInActive++;
           }
         }
+        this.pieChartStatusLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
+        this.pieChartStatusData = [this.fansubActive, this.fansubInActive];
         this.getAnimeFansub();
         this.getDoramaFansub();
         this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/create', false);
@@ -183,15 +221,16 @@ export class FansubListComponent implements OnInit, OnDestroy {
           } else {
             f.Anime = 0;
           }
+          this.fansubBerkasAnime += f.Anime;
         }
+        this.pieChartGarapanLabels.push('Berkas Anime');
+        this.pieChartGarapanData.push(this.fansubBerkasAnime);
         this.tabData[0].data.row = this.fansubData;
         const fansubRank = [...this.fansubData].sort((a, b) => b.Anime - a.Anime).slice(0, 10);
         for (const f of fansubRank) {
           this.barChartAnimeLabels.push(f['Nama Fansub']);
           this.barChartAnimeData.push(f.Anime);
         }
-        this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
-        this.pieChartData = [this.fansubActive, this.fansubInActive];
         this.bs.idle();
       },
       err => {
@@ -212,15 +251,16 @@ export class FansubListComponent implements OnInit, OnDestroy {
           } else {
             f.Dorama = 0;
           }
+          this.fansubBerkasDorama += f.Dorama;
         }
+        this.pieChartGarapanLabels.push('Berkas Dorama');
+        this.pieChartGarapanData.push(this.fansubBerkasDorama);
         this.tabData[0].data.row = this.fansubData;
         const fansubRank = [...this.fansubData].sort((a, b) => b.Dorama - a.Dorama).slice(0, 10);
         for (const f of fansubRank) {
           this.barChartDoramaLabels.push(f['Nama Fansub']);
           this.barChartDoramaData.push(f.Dorama);
         }
-        this.pieChartLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
-        this.pieChartData = [this.fansubActive, this.fansubInActive];
         this.bs.idle();
       },
       err => {

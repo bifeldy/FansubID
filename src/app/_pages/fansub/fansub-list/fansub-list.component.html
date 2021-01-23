@@ -6,19 +6,24 @@
 
   <!-- Summaries -->
   <div class="row p-3">
-    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="barChartAnimeData.length > 0 && barChartAnimeLabels.length > 0 && barChartAnimeData.length == barChartAnimeLabels.length">
+    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="barChartAnimeData.length > 0 && barChartAnimeLabels.length > 0">
       <canvas baseChart [data]="barChartAnimeData" [labels]="barChartAnimeLabels" [chartType]="barChartType"
         [options]="barChartAnimeOptions" [plugins]="chartPlugins" [legend]="false">
       </canvas>
     </div>
-    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="barChartDoramaData.length > 0 && barChartDoramaLabels.length > 0 && barChartDoramaData.length == barChartDoramaLabels.length">
+    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="barChartDoramaData.length > 0 && barChartDoramaLabels.length > 0">
       <canvas baseChart [data]="barChartDoramaData" [labels]="barChartDoramaLabels" [chartType]="barChartType"
         [options]="barChartDoramaOptions" [plugins]="chartPlugins" [legend]="false">
       </canvas>
     </div>
-    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="pieChartData.length > 0 && pieChartLabels.length > 0 && pieChartData.length == pieChartLabels.length">
-      <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
-        [options]="pieChartOptions" [plugins]="chartPlugins" [legend]="true">
+    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="pieChartStatusData.length == 2 && pieChartStatusLabels.length == 2">
+      <canvas baseChart [data]="pieChartStatusData" [labels]="pieChartStatusLabels" [chartType]="pieChartType"
+        [options]="pieChartStatusOptions" [plugins]="chartPlugins" [legend]="true">
+      </canvas>
+    </div>
+    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="pieChartGarapanData.length == 2 && pieChartGarapanLabels.length == 2">
+      <canvas baseChart [data]="pieChartGarapanData" [labels]="pieChartGarapanLabels" [chartType]="pieChartType"
+        [options]="pieChartGarapanOptions" [plugins]="chartPlugins" [legend]="true">
       </canvas>
     </div>
   </div>

@@ -107,3 +107,7 @@ re-captcha > div {
 .cdk-overlay-dark-backdrop {
   background: rgba(0,0,0,.5) !important;
 }
+
+.text-success {
+  color: #69f0ae !important;
+}
