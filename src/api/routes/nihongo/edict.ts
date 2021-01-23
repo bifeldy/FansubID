@@ -22,6 +22,10 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         {
           reading: Like(`%${req.query.q ? req.query.q : ''}%`),
           jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`)
+        },
+        {
+          meaning: Like(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`)
         }
       ],
       order: {

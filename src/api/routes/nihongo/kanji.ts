@@ -29,6 +29,11 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           v_kunyomi: Like(`%${req.query.q ? req.query.q : ''}%`),
           jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
           school: Like(`%${req.query.school ? req.query.school : ''}%`)
+        },
+        {
+          translate: Like(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
+          school: Like(`%${req.query.school ? req.query.school : ''}%`)
         }
       ],
       order: {
