@@ -236,7 +236,7 @@ function startSocketIo(): void {
         relations: ['user_']
       });
       for (const n of notif) {
-        socket.emit('notification', {
+        socket.emit('new-notification', {
           notifCreator: n.user_.username,
           notifData: {
             id: n.id,

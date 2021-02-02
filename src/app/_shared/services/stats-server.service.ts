@@ -6,6 +6,7 @@ import { environment } from '../../../environments/client/environment';
 
 import { GlobalService } from './global.service';
 import { NotificationsService } from './notifications.service';
+import { LeftMenuService } from './left-menu.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,14 @@ export class StatsServerService {
 
   intervalPingPong = null;
 
+  public badgeNews = [];
+  public badgeBerkas = [];
+  public badgeFansub = [];
+
   constructor(
     private gs: GlobalService,
-    private notif: NotificationsService
+    private notif: NotificationsService,
+    private lms: LeftMenuService
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io(environment.baseUrl);
@@ -52,7 +58,8 @@ export class StatsServerService {
       this.visitor = visitors;
       this.gs.log(`[SOCKET_VISITOR] Total Visitors :: ${this.visitor}`);
     });
-    this.mySocket.on('notification', notifObj => {
+    this.mySocket.on('new-notification', notifObj => {
+      this.gs.log(`[SOCKET_NOTIFICATION]`, notifObj);
       this.notif.addNotif(
         notifObj.notifCreator,
         notifObj.notifData.id,
@@ -61,7 +68,36 @@ export class StatsServerService {
         notifObj.notifData.content,
         notifObj.notifData.dismissible
       );
-      this.gs.log(`[SOCKET_NOTIFICATION]`, notifObj);
+    });
+    this.mySocket.on('new-berkas', berkasObj => {
+      this.gs.log(`[SOCKET_BERKAS]`, berkasObj);
+      this.badgeBerkas.push(berkasObj);
+      const berkas = this.lms.mainMenus.find(m => m.link === '/berkas');
+      if (this.badgeBerkas.length > 0) {
+        berkas.badge = this.badgeBerkas.length;
+      } else {
+        berkas.badge = null;
+      }
+    });
+    this.mySocket.on('new-fansub', fansubObj => {
+      this.gs.log(`[SOCKET_FANSUB]`, fansubObj);
+      this.badgeFansub.push(fansubObj);
+      const fansub = this.lms.mainMenus.find(m => m.link === '/fansub');
+      if (this.badgeFansub.length > 0) {
+        fansub.badge = this.badgeFansub.length;
+      } else {
+        fansub.badge = null;
+      }
+    });
+    this.mySocket.on('new-news', newsObj => {
+      this.gs.log(`[SOCKET_NEWS]`, newsObj);
+      this.badgeNews.push(newsObj);
+      const news = this.lms.mainMenus.find(m => m.link === '/news');
+      if (this.badgeNews.length > 0) {
+        news.badge = this.badgeNews.length;
+      } else {
+        news.badge = null;
+      }
     });
     this.intervalPingPong = setInterval(() => {
       const start = Date.now();
@@ -69,7 +105,7 @@ export class StatsServerService {
         this.latency = Date.now() - start;
         this.gs.log(`[SOCKET_PING-PONG] Latency :: ${this.latency} ms`);
       });
-    }, 5 * 1000);
+    }, 1 * 60 * 1000);
   }
 
 }

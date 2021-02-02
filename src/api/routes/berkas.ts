@@ -124,7 +124,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       file.download_url = JSON.stringify(filteredUrls);
       file.description = req.body.description;
       if ('private' in req.body) {
-        file.private = req.body.private;
+        file.private = (JSON.parse(req.body.private) === true);
       }
       if (req.body.image) {
         file.image_url = req.body.image;
@@ -284,11 +284,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         delete resFileSave.user_.created_at;
         delete resFileSave.user_.updated_at;
       }
-      res.status(200).json({
-        info: `😅 200 - Berkas API :: Tambah Baru 🤣`,
-        result: resFileSave
-      });
-      return req.bot.send(
+      req.bot.send(
         new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(resFileSave.name)
@@ -308,6 +304,13 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
         )
       );
+      if (!resFileSave.private) {
+        req.io.volatile.emit('new-berkas', resFileSave);
+      }
+      return res.status(200).json({
+        info: `😅 200 - Berkas API :: Tambah Baru 🤣`,
+        result: resFileSave
+      });
     } else {
       throw new Error('Data Tidak Lengkap!');
     }
@@ -442,7 +445,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             file.image_url = req.body.image;
           }
           if ('private' in req.body) {
-            file.private = req.body.private;
+            file.private = (JSON.parse(req.body.private) === true);
           }
           if (req.body.anime_id) {
             const animeRepo = getRepository(Anime);
@@ -527,11 +530,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             delete resFileSave.user_.created_at;
             delete resFileSave.user_.updated_at;
           }
-          res.status(200).json({
-            info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
-            result: resFileSave
-          });
-          return req.bot.send(
+          req.bot.send(
             new MessageEmbed()
             .setColor('#ff4081')
             .setTitle(resFileSave.name)
@@ -552,6 +551,10 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
             )
           );
+          return res.status(200).json({
+            info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
+            result: resFileSave
+          });
         } else {
           return res.status(401).json({
             info: '🙄 401 - Berkas API :: Authorisasi Kepemilikan Gagal 😪',

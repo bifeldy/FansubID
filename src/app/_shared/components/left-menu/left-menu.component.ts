@@ -3,14 +3,13 @@ import { Router } from '@angular/router';
 
 import { onSideNavChange, animateText } from '../../animations/anim-side-menu';
 
-import { Menu } from '../../models/Menu';
-
 import { LeftMenuService } from '../../services/left-menu.service';
 import { AuthService } from '../../services/auth.service';
 import { GlobalService } from '../../services/global.service';
 import { BusyService } from '../../services/busy.service';
 
 import User from '../../models/User';
+import { Menu } from '../../models/Menu';
 
 @Component({
   selector: 'app-left-menu',
@@ -21,65 +20,6 @@ import User from '../../models/User';
 export class LeftMenuComponent implements OnInit, OnDestroy {
 
   currentUser: User = null;
-
-  mainMenus: Menu[] = [
-    {
-      name: 'Beranda',
-      link: '/home',
-      icon: 'dashboard'
-    },
-    {
-      name: 'Berita & Informasi',
-      link: '/news',
-      icon: 'receipt_long'
-    },
-    {
-      name: 'Nihongo 日本語',
-      link: '/nihongo',
-      icon: 'translate'
-    },
-    // {
-    //   name: 'RSS Feed',
-    //   link: '/rss',
-    //   icon: 'rss_feed'
-    // }
-  ];
-
-  animeMenus: Menu[] = [
-    {
-      name: 'Anime Musiman',
-      link: '/anime',
-      icon: 'live_tv'
-    },
-    {
-      name: 'Film Drama',
-      link: '/dorama',
-      icon: 'movie'
-    },
-    {
-      name: 'Katalog Fansub',
-      link: '/fansub',
-      icon: 'closed_caption'
-    },
-    {
-      name: 'Berbagi Garapan',
-      link: '/berkas',
-      icon: 'file_copy'
-    }
-  ];
-
-  miscMenus: Menu[] = [
-    {
-      name: 'Admin & Mod Panel',
-      link: '/admin-mod',
-      icon: 'admin_panel_settings'
-    },
-    {
-      name: 'About',
-      link: '/about',
-      icon: 'info'
-    }
-  ];
 
   subsUser = null;
   subsLogout = null;
@@ -94,6 +34,18 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get mainMenus(): Menu[] {
+    return this.lms.mainMenus;
+  }
+
+  get contentMenus(): Menu[] {
+    return this.lms.contentMenus;
+  }
+
+  get miscMenus(): Menu[] {
+    return this.lms.miscMenus;
   }
 
   ngOnDestroy(): void {

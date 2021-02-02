@@ -162,6 +162,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
           )
         );
+        req.io.volatile.emit('new-fansub', resFansubSave);
         return res.status(200).json({
           info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
           result: resFansubSave

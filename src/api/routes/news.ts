@@ -114,6 +114,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
           )
         );
+        req.io.volatile.emit('new-news', resNewsSave);
         return res.status(200).json({
           info: `😅 200 - News API :: Tambah Baru 🤣`,
           result: resNewsSave

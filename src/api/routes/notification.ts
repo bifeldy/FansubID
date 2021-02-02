@@ -101,7 +101,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           console.error(error);
         }
       }
-      req.io.emit('notification', {
+      req.io.volatile.emit('new-notification', {
         notifCreator: notifTemplate.user_.username,
         notifData: {
           id: notifTemplate.id,

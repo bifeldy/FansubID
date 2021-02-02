@@ -11,6 +11,7 @@ import { AuthService } from './_shared/services/auth.service';
 import { FabService } from './_shared/services/fab.service';
 import { BusyService } from './_shared/services/busy.service';
 import { GlobalService } from './_shared/services/global.service';
+import { StatsServerService } from './_shared/services/stats-server.service';
 
 @Component({
   selector: 'app-root',
@@ -37,7 +38,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private as: AuthService,
     private fs: FabService,
     public gs: GlobalService,
-    public lms: LeftMenuService
+    public lms: LeftMenuService,
+    public ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -85,6 +87,28 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
       else if (e1 instanceof NavigationEnd) {
+        if (e1.url) {
+          const str = e1.url.split('/')[1];
+          if (str) {
+            const stringBadge = `badge${str[0].toUpperCase()}${str.slice(1)}`;
+            let arrBadge = this.ss[stringBadge];
+            if (arrBadge) {
+              arrBadge = [];
+              const mainMenu = this.lms.mainMenus.find(m => m.link === e1.url);
+              const contentMenu = this.lms.contentMenus.find(m => m.link === e1.url);
+              const miscMenu = this.lms.miscMenus.find(m => m.link === e1.url);
+              if (mainMenu) {
+                mainMenu.badge = null;
+              }
+              if (contentMenu) {
+                contentMenu.badge = null;
+              }
+              if (miscMenu) {
+                miscMenu.badge = null;
+              }
+            }
+          }
+        }
         let activatedRouteChild = this.route.firstChild;
         for (const aRC of activatedRouteChild.children) {
           activatedRouteChild = aRC;

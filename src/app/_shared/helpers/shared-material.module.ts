@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -33,7 +34,6 @@ import { MatSortModule } from '@angular/material/sort';
 // import { ScrollingModule } from '@angular/cdk/scrolling';
 // import { CdkTableModule } from '@angular/cdk/table';
 // import { CdkTreeModule } from '@angular/cdk/tree';
-// import { MatBadgeModule } from '@angular/material/badge';
 // import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 // import { MatButtonToggleModule } from '@angular/material/button-toggle';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -48,6 +48,7 @@ import { MatSortModule } from '@angular/material/sort';
   exports: [
     CdkStepperModule,
     MatAutocompleteModule,
+    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
