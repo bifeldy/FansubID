@@ -101,6 +101,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       `Ubah Berkas`
     );
     if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
       this.berkasId = this.activatedRoute.snapshot.paramMap.get('berkasId');
       this.bs.busy();
       this.subsBerkasDetail = this.berkas.getBerkas(this.berkasId).subscribe(
@@ -216,7 +217,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       dorama_id: [data.dorama_ ? data.dorama_.id : null, Validators.compose([])],
       fansub_list: this.fb.array([]),
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      download_url: this.fb.array([])
+      download_url: this.fb.array([]),
+      private: [data.private, Validators.compose([Validators.required])]
     });
     this.image_url = data.image_url;
     this.image_url_original = this.image_url;

@@ -199,7 +199,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       fansub_list: this.fb.array([this.createFansub()]),
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       attachment_id: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      download_url: this.fb.array([this.createDownloadLink()])
+      download_url: this.fb.array([this.createDownloadLink()]),
+      private: [false, Validators.compose([Validators.required])]
     });
     this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
       debounceTime(500),
@@ -475,7 +476,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       image: this.fg.value.image,
       name: this.fg.value.name,
       description: this.fg.value.description,
-      private: false,
+      private: this.fg.value.private,
       projectType_id: this.fg.value.projectType_id,
       anime_id: this.fg.value.anime_id,
       dorama_id: this.fg.value.dorama_id,
