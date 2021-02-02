@@ -30,7 +30,7 @@ export class NotFoundComponent implements OnInit, OnDestroy {
       if (this.returnUrl) {
         this.timedOut = setTimeout(() => {
           this.router.navigateByUrl(this.returnUrl);
-        }, 3000);
+        }, 5000);
       }
     }
   }

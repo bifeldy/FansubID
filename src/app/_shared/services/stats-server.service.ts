@@ -105,7 +105,7 @@ export class StatsServerService {
         this.latency = Date.now() - start;
         this.gs.log(`[SOCKET_PING-PONG] Latency :: ${this.latency} ms`);
       });
-    }, 1 * 60 * 1000);
+    }, 10000);
   }
 
 }
