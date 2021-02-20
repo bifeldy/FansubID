@@ -26,7 +26,12 @@ export class ApiService {
     if (path.startsWith('http')) {
       return path;
     } else if (!this.gs.isBrowser) {
-      return environment.baseUrl + environment.apiUrl + path;
+      const reqUrl = environment.baseUrl + environment.apiUrl + path;
+      if (reqUrl.includes('?')) {
+        return reqUrl + `&key=${environment.apiKey}`;
+      } else {
+        return reqUrl + `?key=${environment.apiKey}`;
+      }
     } else {
       return environment.apiUrl + path;
     }

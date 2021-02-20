@@ -10,6 +10,7 @@ import { UserRequest } from '../models/UserRequest';
 
 import { environment } from '../../environments/server/environment';
 
+import { ApiKey } from '../entities/ApiKey';
 import { User } from '../entities/User';
 import { SocialMedia } from '../entities/SocialMedia';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
@@ -68,6 +69,43 @@ const imgBB = 'https://api.imgbb.com/1/upload';
 
 // Logging Request Body
 router.use(logger.reqBodyCleanUp);
+
+// Check Api Key
+router.use(async (req: UserRequest, res, next) => {
+  const k = req.query.key || '';
+  let o = req.headers.origin || req.headers.referer || req.header('x-real-ip') || req.connection.remoteAddress || '';
+  if (o.startsWith('http://')) {
+    o = o.slice(7, o.length);
+  } else if (o.startsWith('https://')) {
+    o = o.slice(8, o.length);
+  }
+  if (o.startsWith('www.')) {
+    o = o.slice(4, o.length);
+  }
+  o = o.split('/')[0];
+  o = o.split(':')[0];
+  try {
+    const apiKeyRepo = getRepository(ApiKey);
+    const apiKey = await apiKeyRepo.findOneOrFail({
+      where: [
+        { api_key: Equal(k) }
+      ]
+    });
+    if (o.includes(apiKey.ip_domain)) {
+      next();
+    } else {
+      throw new Error('Api Key Salah / Tidak Terdaftar!');
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(401).json({
+      info: '🙄 401 - API Key :: Kunci Tidak Dapat Digunakan 😪',
+      result: {
+        message: 'Api Key Salah / Tidak Terdaftar!'
+      }
+    });
+  }
+});
 
 // Child route url
 router.use('/anime', animeRouter);

@@ -57,7 +57,7 @@ import { Dorama } from './src/api/entities/Dorama';
 import { Berkas } from './src/api/entities/Berkas';
 import { Attachment } from './src/api/entities/Attachment';
 import { TempAttachment } from './src/api/entities/TempAttachment';
-import { CorsApiKey } from './src/api/entities/CorsApiKey';
+import { ApiKey } from './src/api/entities/ApiKey';
 import { News } from './src/api/entities/News';
 import { SocialMedia } from './src/api/entities/SocialMedia';
 import { Edict } from './src/api/entities/Edict';
@@ -91,7 +91,7 @@ const typeOrmConfig: any = {
     Berkas,
     Attachment,
     TempAttachment,
-    CorsApiKey,
+    ApiKey,
     News,
     SocialMedia,
     Edict,
@@ -117,34 +117,34 @@ const apiLimiter = rateLimit({
 const corsOptions = {
   origin: async (origin, callback) => {
     try {
-      let orig = origin;
-      if (!orig) {
+      let o = origin || '';
+      if (!o) {
         callback(null, true);
       } else {
-        if (orig.startsWith('http://')) {
-          orig = orig.slice(7, orig.length);
-        } else if (orig.startsWith('https://')) {
-          orig = orig.slice(8, orig.length);
+        if (o.startsWith('http://')) {
+          o = o.slice(7, o.length);
+        } else if (o.startsWith('https://')) {
+          o = o.slice(8, o.length);
         }
-        if (orig.startsWith('www.')) {
-          orig = orig.slice(4, orig.length);
+        if (o.startsWith('www.')) {
+          o = o.slice(4, o.length);
         }
-        orig = orig.split(':')[0];
-        const originApiKeyRepo = getRepository(CorsApiKey);
-        const originApiKey = await originApiKeyRepo.findOneOrFail({
+        o = o.split(':')[0];
+        const apiKeyRepo = getRepository(ApiKey);
+        const apiKey = await apiKeyRepo.findOneOrFail({
           where: [
-            { domain: Equal(orig) }
+            { ip_domain: Equal(o) }
           ]
         });
-        if (originApiKey) {
+        if (apiKey) {
           callback(null, true);
         } else {
-          throw new Error('CORS Wheiy~ Siapa Nih ?');
+          throw new Error('Origin, Wheiy~ Siapa Nih ?');
         }
       }
     } catch (error) {
       console.error(error);
-      callback(new Error('CORS Wheiy~ Siapa Nih ?'), false);
+      callback(new Error('Origin, Wheiy~ Siapa Nih ?'), false);
     }
   }
 };
@@ -269,12 +269,14 @@ export function app(): http.Server {
     startDiscordBot();
   }
 
-  // Config
+  // NginX Server Proxy
   expressApp.set('trust proxy', true);
+
+  // CORS
+  expressApp.use(cors(corsOptions));
 
   // Middleware
   expressApp.use(compression());
-  expressApp.use(cors(corsOptions));
   expressApp.use(MorganChalk.morganChalk);
   expressApp.use(express.json({ limit: '512mb' }));
   expressApp.use(express.urlencoded({ extended: false, limit: '512mb' }));

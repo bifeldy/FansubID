@@ -9,6 +9,7 @@ export const environment = {
   sessionName: 'hikki_session',
   baseUrl: 'http://localhost:4000',
   apiUrl: '/api',
+  apiKey: 'hikki_api_key',
   discordClientId: '789831990433153034'
 };
 
