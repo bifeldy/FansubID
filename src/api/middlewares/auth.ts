@@ -93,7 +93,7 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
       throw new Error('Data Tidak Lengkap!');
     }
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     return res.status(400).json({
       info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
       result: {
@@ -150,7 +150,7 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
       throw new Error('Username, Email, atau Password tidak tepat!');
     }
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     return res.status(400).json({
       info: '🙄 400 - Authentication API :: Login Gagal! 😪',
       result: {
@@ -227,7 +227,7 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       req.user = (noPwdSsToken as any);
       return next();
     } catch (error) {
-      // console.error(error);
+      console.error(error);
       return res.status(400).json({
         info: '🙄 400 - Authentication API :: Logout Gagal 😪',
         result: {

@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Response, NextFunction } from 'express';
 
 import { UserRequest } from '../models/UserRequest';
@@ -12,17 +11,9 @@ function log(text, data = null, print = false) {
   }
   if (print) {
     if (data) {
-      fs.appendFile('stdout.log', text + JSON.stringify(data) + ' 🎶\n', (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
+      console.log(text, data);
     } else {
-      fs.appendFile('stdout.log', text + '\n', (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
+      console.log(text);
     }
   }
 }
