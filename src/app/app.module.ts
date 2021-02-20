@@ -1,5 +1,6 @@
-import { BrowserModule, HammerModule, Title, BrowserTransferStateModule } from '@angular/platform-browser';
+import { BrowserModule, HammerModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { TransferHttpCacheModule } from '@nguniversal/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
@@ -20,7 +21,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { MyHammerConfig } from './_shared/helpers/my-hammer.config';
 import { MyTooltipConfig } from './_shared/helpers/my-tooltip.config';
 
-import { BrowserStateInterceptor } from './_shared/interceptors/browser-state.interceptor';
 import { HttpRequestInterceptor } from './_shared/interceptors/http-request.interceptor';
 import { HttpErrorInterceptor } from './_shared/interceptors/http-error.interceptor';
 
@@ -44,7 +44,7 @@ import { MaterialDialogModule } from './_shared/components/material-dialog/mater
     HeaderModule,
     LeftMenuModule,
     FooterModule,
-    BrowserTransferStateModule,
+    TransferHttpCacheModule,
     ReactiveFormsModule,
     HttpClientModule,
     SharedMaterialModule,
@@ -69,7 +69,6 @@ import { MaterialDialogModule } from './_shared/components/material-dialog/mater
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'always' } },
     { provide: DISQUS_SHORTNAME, useValue: 'hikki-bifeldy' },
     Title, CookieService, NgxSpinnerService, LeftMenuService,
-    { provide: HTTP_INTERCEPTORS, useClass: BrowserStateInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
   ],
