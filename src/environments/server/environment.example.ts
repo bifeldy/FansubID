@@ -2,11 +2,59 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// Database Entities
+import { Profile } from '../../api/entities/Profile';
+import { KartuTandaPenduduk } from '../../api/entities/KartuTandaPenduduk';
+import { User } from '../../api/entities/User';
+import { ProjectType } from '../../api/entities/ProjectType';
+import { Fansub } from '../../api/entities/Fansub';
+import { Anime } from '../../api/entities/Anime';
+import { Dorama } from '../../api/entities/Dorama';
+import { Berkas } from '../../api/entities/Berkas';
+import { Attachment } from '../../api/entities/Attachment';
+import { TempAttachment } from '../../api/entities/TempAttachment';
+import { ApiKey } from '../../api/entities/ApiKey';
+import { News } from '../../api/entities/News';
+import { SocialMedia } from '../../api/entities/SocialMedia';
+import { Edict } from '../../api/entities/Edict';
+import { Kanji } from '../../api/entities/Kanji';
+import { Kanjivg } from '../../api/entities/Kanjivg';
+import { Tatoeba } from '../../api/entities/Tatoeba';
+import { Banned } from '../../api/entities/Banned';
+import { Notification } from '../../api/entities/Notification';
+
 export const environment = {
   production: false,
   siteName: 'Hikki',
   jwtSecretKey: '',
   baseUrl: 'http://localhost:4000',
+  dbType: 'mysql',
+  dbHost: 'localhost',
+  dbPort: 3306,
+  dbName: 'hikki',
+  dbUsername: 'root',
+  dbPassword: '',
+  dbEntities: [
+    User,
+    KartuTandaPenduduk,
+    Profile,
+    ProjectType,
+    Fansub,
+    Anime,
+    Dorama,
+    Berkas,
+    Attachment,
+    TempAttachment,
+    ApiKey,
+    News,
+    SocialMedia,
+    Edict,
+    Kanji,
+    Kanjivg,
+    Tatoeba,
+    Banned,
+    Notification
+  ],
   uploadFolder: 'dist/hikki/uploads',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',
   recaptchaApiUrl: 'https://www.google.com/recaptcha/api/siteverify',

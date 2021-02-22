@@ -30,7 +30,7 @@ global.document = win.document;
 global.localStorage = localStorage;
 global.navigator = mock.getNavigator();
 
-import { createConnection, Equal, getRepository, MoreThanOrEqual } from 'typeorm';
+import { createConnection, Equal, getRepository } from 'typeorm';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import express from 'express';
@@ -43,64 +43,31 @@ import { Client, TextChannel, Message } from 'discord.js';
 
 import MorganChalk from './src/api/helpers/morganChalk';
 import { discordBot } from './src/api/helpers/discordBot';
+import { socketBot } from './src/api/helpers/socketBot';
 
 import { environment } from './src/environments/server/environment';
 
 // Model
-import { Profile } from './src/api/entities/Profile';
-import { KartuTandaPenduduk } from './src/api/entities/KartuTandaPenduduk';
-import { User } from './src/api/entities/User';
-import { ProjectType } from './src/api/entities/ProjectType';
-import { Fansub } from './src/api/entities/Fansub';
-import { Anime } from './src/api/entities/Anime';
-import { Dorama } from './src/api/entities/Dorama';
-import { Berkas } from './src/api/entities/Berkas';
-import { Attachment } from './src/api/entities/Attachment';
-import { TempAttachment } from './src/api/entities/TempAttachment';
 import { ApiKey } from './src/api/entities/ApiKey';
-import { News } from './src/api/entities/News';
-import { SocialMedia } from './src/api/entities/SocialMedia';
-import { Edict } from './src/api/entities/Edict';
-import { Kanji } from './src/api/entities/Kanji';
-import { Kanjivg } from './src/api/entities/Kanjivg';
-import { Tatoeba } from './src/api/entities/Tatoeba';
-import { Banned } from './src/api/entities/Banned';
-import { Notification } from './src/api/entities/Notification';
 
-const dbName = process.env.DB_NAME || 'hikki';
-const dbUsername = process.env.DB_USERNAME || 'root';
-const dbPassword = process.env.DB_PASSWORD || '';
+const dbType = process.env.DB_TYPE || environment.dbType;
+const dbHost = process.env.DB_HOST || environment.dbHost;
+const dbPort = process.env.DB_PORT || environment.dbPort;
+const dbName = process.env.DB_NAME || environment.dbName;
+const dbUsername = process.env.DB_USERNAME || environment.dbUsername;
+const dbPassword = process.env.DB_PASSWORD || environment.dbPassword;
+const dbEntities = process.env.DB_ENTITIES || environment.dbEntities;
 
 const typeOrmConfig: any = {
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
+  type: dbType,
+  host: dbHost,
+  port: dbPort,
   username: dbUsername,
   password: dbPassword,
   database: dbName,
   synchronize: true,
   logging: false,
-  entities: [
-    User,
-    KartuTandaPenduduk,
-    Profile,
-    ProjectType,
-    Fansub,
-    Anime,
-    Dorama,
-    Berkas,
-    Attachment,
-    TempAttachment,
-    ApiKey,
-    News,
-    SocialMedia,
-    Edict,
-    Kanji,
-    Kanjivg,
-    Tatoeba,
-    Banned,
-    Notification
-  ]
+  entities: dbEntities
 };
 
 // Express Router
@@ -227,29 +194,7 @@ function startSocketIo(): void {
         cb();
       }
     });
-    try {
-      const notifRepo = getRepository(Notification);
-      const notif = await notifRepo.find({
-        where: [
-          { deadline: MoreThanOrEqual(new Date()) }
-        ],
-        relations: ['user_']
-      });
-      for (const n of notif) {
-        socket.emit('new-notification', {
-          notifCreator: n.user_.username,
-          notifData: {
-            id: n.id,
-            type: n.type,
-            title: n.title,
-            content: n.content,
-            dismissible: n.dismissible
-          }
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    await socketBot(io, socket);
   });
 }
 
