@@ -206,19 +206,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       debounceTime(500),
       distinctUntilChanged(),
       tap(() => this.isLoading = true),
-      switchMap(searchQuery => this.anime.searchAnime(
-        searchQuery,
-        this.fg.get('projectType_id').value ?
-          this.projectList.find(
-            p => parseInt(this.fg.get('projectType_id').value, 10) === p.id
-          ).name.toLowerCase().replace('anime_', '')
-        : null
-      )
-      .pipe(
-        finalize(() => this.isLoading = false),
-        )
-      ),
-      retry(-1)
+      switchMap(searchQuery => this.anime.searchAnime(searchQuery).pipe(finalize(() => this.isLoading = false))), retry(-1)
     ).subscribe(
       res => {
         this.gs.log('[BERKAS_CREATE_SEARCH_ANIME_RESULT]', res);
@@ -229,19 +217,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       debounceTime(500),
       distinctUntilChanged(),
       tap(() => this.isLoading = true),
-      switchMap(searchQuery => this.dorama.searchDorama(
-        searchQuery,
-        this.fg.get('projectType_id').value ?
-          this.projectList.find(
-            p => parseInt(this.fg.get('projectType_id').value, 10) === p.id
-          ).name.toLowerCase().replace('dorama_', '')
-        : null
-      )
-      .pipe(
-        finalize(() => this.isLoading = false),
-        )
-      ),
-      retry(-1)
+      switchMap(searchQuery => this.dorama.searchDorama(searchQuery).pipe(finalize(() => this.isLoading = false))), retry(-1)
     ).subscribe(
       res => {
         this.gs.log('[BERKAS_CREATE_SEARCH_DORAMA_RESULT]', res);
