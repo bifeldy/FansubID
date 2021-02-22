@@ -335,14 +335,12 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
       ],
       relations: ['project_type_', 'fansub_', 'user_', 'anime_', 'dorama_', 'attachment_'],
     });
-    file.view_count++;
-    const resFileSave = await fileRepo.save(file);
-    if ('project_type_' in resFileSave && resFileSave.project_type_) {
-      delete resFileSave.project_type_.created_at;
-      delete resFileSave.project_type_.updated_at;
+    if ('project_type_' in file && file.project_type_) {
+      delete file.project_type_.created_at;
+      delete file.project_type_.updated_at;
     }
-    if ('fansub_' in resFileSave && resFileSave.fansub_) {
-      for (const f of resFileSave.fansub_) {
+    if ('fansub_' in file && file.fansub_) {
+      for (const f of file.fansub_) {
         delete f.description;
         delete f.urls;
         delete f.tags;
@@ -350,32 +348,32 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
         delete f.updated_at;
       }
     }
-    if ('anime_' in resFileSave && resFileSave.anime_) {
-      delete resFileSave.anime_.created_at;
-      delete resFileSave.anime_.updated_at;
+    if ('anime_' in file && file.anime_) {
+      delete file.anime_.created_at;
+      delete file.anime_.updated_at;
     }
-    if ('dorama_' in resFileSave && resFileSave.dorama_) {
-      delete resFileSave.dorama_.created_at;
-      delete resFileSave.dorama_.updated_at;
+    if ('dorama_' in file && file.dorama_) {
+      delete file.dorama_.created_at;
+      delete file.dorama_.updated_at;
     }
-    if ('user_' in resFileSave && resFileSave.user_) {
-      delete resFileSave.user_.role;
-      delete resFileSave.user_.password;
-      delete resFileSave.user_.session_token;
-      delete resFileSave.user_.created_at;
-      delete resFileSave.user_.updated_at;
+    if ('user_' in file && file.user_) {
+      delete file.user_.role;
+      delete file.user_.password;
+      delete file.user_.session_token;
+      delete file.user_.created_at;
+      delete file.user_.updated_at;
     }
     if (req.user) {
-      resFileSave.download_url = JSON.parse(resFileSave.download_url);
+      file.download_url = JSON.parse(file.download_url);
       if (!req.user.verified) {
-        delete resFileSave.attachment_;
+        delete file.attachment_;
       } else {
-        if ('attachment_' in resFileSave && resFileSave.attachment_) {
+        if ('attachment_' in file && file.attachment_) {
           const attachmentRepo = getRepository(Attachment);
           const subtitles = await attachmentRepo.find({
             where: [
-              { ext: Equal('ass'), rootAttachment_: Equal(resFileSave.attachment_.id) },
-              { ext: Equal('srt'), rootAttachment_: Equal(resFileSave.attachment_.id) }
+              { ext: Equal('ass'), rootAttachment_: Equal(file.attachment_.id) },
+              { ext: Equal('srt'), rootAttachment_: Equal(file.attachment_.id) }
             ],
             relations: ['rootAttachment_']
           });
@@ -386,10 +384,10 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
             delete s.updated_at;
             delete s.user_;
           }
-          (resFileSave as any).attachment_.subtitles_ = subtitles;
+          (file as any).attachment_.subtitles_ = subtitles;
           const fonts = await attachmentRepo.find({
             where: [
-              { ext: Equal('ttf'), rootAttachment_: Equal(resFileSave.attachment_.id) }
+              { ext: Equal('ttf'), rootAttachment_: Equal(file.attachment_.id) }
             ],
             relations: ['rootAttachment_']
           });
@@ -400,16 +398,16 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
             delete f.updated_at;
             delete f.user_;
           }
-          (resFileSave as any).attachment_.fonts_ = fonts;
+          (file as any).attachment_.fonts_ = fonts;
         }
       }
     } else {
-      delete resFileSave.download_url;
-      delete resFileSave.attachment_;
+      delete file.download_url;
+      delete file.attachment_;
     }
     return res.status(200).json({
       info: `😅 200 - Berkas API :: Detail ${req.params.id} 🤣`,
-      result: resFileSave
+      result: file
     });
   } catch (error) {
     console.error(error);

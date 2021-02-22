@@ -1,7 +1,8 @@
 import { Server, Socket } from 'socket.io';
-import { getRepository, MoreThanOrEqual } from 'typeorm';
+import { Equal, getRepository, MoreThanOrEqual } from 'typeorm';
 
 import { Notification } from '../entities/Notification';
+import { Berkas } from '../entities/Berkas';
 
 // tslint:disable-next-line: typedef
 export async function socketBot(io: Server, socket: Socket) {
@@ -28,7 +29,7 @@ export async function socketBot(io: Server, socket: Socket) {
   } catch (error) {
     console.error(error);
   }
-  socket.on('track', (data) => {
+  socket.on('track', async (data) => {
     data.ip = socket.request.connection.remoteAddress;
     data.port = socket.request.connection.remotePort;
     if (data.pathUrl.startsWith('http://')) {
@@ -37,7 +38,22 @@ export async function socketBot(io: Server, socket: Socket) {
       data.pathUrl = data.pathUrl.slice(8, data.pathUrl.length);
     }
     if (data.pathUrl.startsWith('/')) {
-      // Url Target Is Hikki API -- e.g '/berkas?q=&page=1&row=10&sort=&order='
+      if (data.pathUrl.startsWith('/berkas/')) {
+        try {
+          const fileRepo = getRepository(Berkas);
+          const file = await fileRepo.findOneOrFail({
+            where: [
+              { id: Equal(data.pathUrl.split('?')[0].split('/').pop()) }
+            ],
+          });
+          file.view_count++;
+          await fileRepo.save(file);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        // Other Url Target In Hikki API -- e.g '/news/:newsId'
+      }
     } else {
       // Url Target Is Other Web API -- e.g 'https://api.github.com/repos/Bifeldy/Hikki/commits'
     }
