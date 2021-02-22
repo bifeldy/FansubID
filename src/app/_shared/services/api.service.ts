@@ -15,7 +15,7 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private gs: GlobalService,
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

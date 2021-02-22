@@ -9,16 +9,22 @@ import { ToastrService } from 'ngx-toastr';
 import { GlobalService } from '../services/global.service';
 import { AuthService } from '../services/auth.service';
 import { BusyService } from '../services/busy.service';
+import { StatsServerService } from '../services/stats-server.service';
+
+import { environment } from '../../../environments/client/environment';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
+
+  currentUser = null;
 
   constructor(
     private gs: GlobalService,
     private router: Router,
     private as: AuthService,
     private toast: ToastrService,
-    private bs: BusyService
+    private bs: BusyService,
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -26,6 +32,11 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    if (this.gs.isBrowser) {
+      this.as.currentUser.subscribe(user => this.currentUser = user);
+    }
+
     return next.handle(request).pipe(
       tap((res) => {
         if (res instanceof HttpResponse && this.gs.isBrowser) {
@@ -47,6 +58,12 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             this.toast.info(okMessage, okTitle);
           } else if ((res as any).status === 200) {
             this.toast.success(okMessage, okTitle);
+          }
+          if (request.method === 'GET') {
+            this.ss.socketEmit('track', {
+              userId: this.currentUser ? this.currentUser.id : null,
+              pathUrl: request.url.startsWith(environment.apiUrl) ? request.url.slice(environment.apiUrl.length) : request.url
+            });
           }
         }
       }),

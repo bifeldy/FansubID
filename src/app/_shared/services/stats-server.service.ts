@@ -31,11 +31,11 @@ export class StatsServerService {
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io(environment.baseUrl);
-      this.socketStart();
+      this.socketListen();
     }
   }
 
-  socketStart(): void {
+  socketListen(): void {
     this.mySocket.on('disconnect', reason => {
       this.gs.log(`[SOCKET_DISCONNECTED] ${reason.replace(/\b[a-zA-Z]/g, str => str.toUpperCase())}`);
       if (reason === 'io server disconnect') {
@@ -106,6 +106,10 @@ export class StatsServerService {
         this.gs.log(`[SOCKET_PING-PONG] Latency :: ${this.latency} ms`);
       });
     }, 10000);
+  }
+
+  socketEmit(name: string, data: any): void {
+    this.mySocket.emit(name, data);
   }
 
 }
