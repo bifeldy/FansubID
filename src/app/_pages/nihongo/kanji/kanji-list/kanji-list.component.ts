@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { GlobalService } from '../../../../_shared/services/global.service';
 import { BusyService } from '../../../../_shared/services/busy.service';
 import { NihongoService } from '../../../../_shared/services/nihongo.service';
+import { DialogService } from '../../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-kanji-list',
@@ -34,7 +35,8 @@ export class KanjiListComponent implements OnInit, OnDestroy {
   constructor(
     private gs: GlobalService,
     private bs: BusyService,
-    private nihon: NihongoService
+    private nihon: NihongoService,
+    private ds: DialogService
   ) {
   }
 
@@ -100,6 +102,32 @@ export class KanjiListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       }
     );
+  }
+
+  openEdict(kana): void {
+    this.gs.log('[HIRAKATA_OPEN_EDICT]', kana);
+    this.ds.openEdictDialog({
+      data: {
+        character: kana.character,
+        context: kana.context,
+        freq: kana.freq,
+        gakken: kana.gakken,
+        harlpern_kkld: kana.harlpern_kkld,
+        harlpern_njecd: kana.harlpern_njecd,
+        jlpt: kana.jlpt,
+        maniette: kana.maniette,
+        nelson_c: kana.nelson_c,
+        nelson_n: kana.nelson_n,
+        remember: kana.remember,
+        school: kana.school,
+        skip: kana.skip,
+        stroke: kana.stroke,
+        translate: kana.translate,
+        v_kunyomi: kana.v_kunyomi,
+        v_onyomi: kana.v_onyomi
+      },
+      disableClose: false
+    });
   }
 
 }

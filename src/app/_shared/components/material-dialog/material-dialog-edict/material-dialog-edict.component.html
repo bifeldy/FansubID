@@ -1,0 +1,63 @@
+<h1 mat-dialog-title>Kamus Dictionary '{{ data.character }}'</h1>
+<div mat-dialog-content class="p-4" class="text-break">
+  <div class="row">
+    <div class="col-md-4 col-xl-3">
+      <div class="row sticky-top p-3">
+        <div class="col-12">
+          <div id="dmakElement" #dmakElement class="text-center"></div>
+        </div>
+        <div class="col-12 mt-3">
+          <p class="text-warning">{{ data.translate }}</p>
+        </div>
+        <div class="col-12">
+          <div class="text-truncate">
+            JLPT Level :: <span class="text-success">N{{ data.jlpt }}</span>
+          </div>
+          <div class="text-truncate">
+            School Level :: <span class="text-success">{{ data.school }}</span>
+          </div>
+          <div class="text-truncate mt-3">
+            Kunyomi ::
+            <ul class="text-success m-0">
+              <li *ngFor="let v of data.v_kunyomi.split(',')">
+                {{ v }} ({{ getRomaji(v) }})
+              </li>
+            </ul>
+          </div>
+          <div class="text-truncate">
+            Onyomi :: 
+            <ul class="text-success m-0">
+              <li *ngFor="let v of data.v_onyomi.split(',')">
+                {{ v }} ({{ getRomaji(v) }})
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8 col-xl-9">
+      <div class="row">
+        <div class="col-12 sticky-top" style="background: #424242">
+          <h2 class="border-bottom-dotted">
+            <b class="text-bifeldy-dark">Kosa Kata</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <mat-selection-list [multiple]="false">
+            <mat-list-option *ngFor="let e of edict">
+              <h4 class="px-3" matLine>{{ e.kanji }}</h4>
+              <h5 class="px-3 text-success" matLine>{{ e.reading }} ({{ getRomaji(e.reading) }})</h5>
+              <p class="px-3 text-warning" matLine>{{ e.meaning }}</p>
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+        <div class="col-12 text-center p-3" *ngIf="!pageFinished">
+          <button mat-button (click)="loadNextPage()">Load More ...</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true" class="ml-auto">Tutup</button>
+</div>
