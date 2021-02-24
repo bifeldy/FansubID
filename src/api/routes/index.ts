@@ -68,7 +68,12 @@ const router = Router();
 const imgBB = 'https://api.imgbb.com/1/upload';
 
 // Logging Request Body
-router.use(logger.reqBodyCleanUp);
+router.use(logger.reqHeaderBodyCleanUp);
+
+// GET `/api`
+router.get('/', (req: UserRequest, res: Response) => {
+  return res.redirect('/');
+});
 
 // Check Api Key
 router.use(async (req: UserRequest, res, next) => {
@@ -119,11 +124,6 @@ router.use('/news', newsRouter);
 router.use('/nihongo', nihongoRouter);
 router.use('/banned', bannedRouter);
 router.use('/notification', notificationRouter);
-
-// GET `/api`
-router.get('/', (req: UserRequest, res: Response) => {
-  return res.redirect('/');
-});
 
 // POST `/api/register`
 router.post('/register', auth.registerModule, async (req: UserRequest, res: Response, next) => {

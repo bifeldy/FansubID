@@ -19,7 +19,7 @@ function log(text, data = null, print = false) {
 }
 
 // tslint:disable-next-line: typedef
-async function reqBodyCleanUp(req: UserRequest, res: Response, next: NextFunction) {
+async function reqHeaderBodyCleanUp(req: UserRequest, res: Response, next: NextFunction) {
   for (const propName in req.body) {
     if (req.body[propName] === null || req.body[propName] === undefined || req.body[propName] === '') {
       delete req.body[propName];
@@ -30,4 +30,4 @@ async function reqBodyCleanUp(req: UserRequest, res: Response, next: NextFunctio
   return next();
 }
 
-export default { log, reqBodyCleanUp };
+export default { log, reqHeaderBodyCleanUp };
