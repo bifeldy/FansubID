@@ -3,7 +3,7 @@
   <div class="row align-items-center h-100 m-0" style="transform: rotateY(180deg);">
     <div class="col-12 col-md-10 m-auto py-3">
       <div class="row border rounded bg-bifeldy-dark">
-        <div class="col-lg-7 col-md-9 mr-auto p-0">
+        <div class="col-lg-7 col-md-9 me-auto p-0">
           <div class="card bg-transparent border-0">
             <div class="card-body">
               <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()" *ngIf="fg">
@@ -13,7 +13,7 @@
                   <p class="text-danger">{{ registerInfo }}</p>
                 </div>
                 <div class="form-group row py-2">
-                  <label for="username" class="col-md-4 col-form-label text-md-right">Nama Pengguna</label>
+                  <label for="username" class="col-md-4 col-form-label text-md-end">Nama Pengguna</label>
                   <div class="col-md-8">
                     <input type="text" id="username" class="text-light form-control {{
                         !fg.get('username').valid && fg.get('username').touched ? 'is-invalid' : ''
@@ -35,7 +35,7 @@
                   </div>
                 </div>
                 <div class="form-group row py-2">
-                  <label for="name" class="col-md-4 col-form-label text-md-right">Nama Lengkap</label>
+                  <label for="name" class="col-md-4 col-form-label text-md-end">Nama Lengkap</label>
                   <div class="col-md-8">
                     <input type="text" id="name" class="text-light form-control {{
                         !fg.get('name').valid && fg.get('name').touched ? 'is-invalid' : ''
@@ -51,7 +51,7 @@
                   </div>
                 </div>
                 <div class="form-group row py-2">
-                  <label for="email" class="col-md-4 col-form-label text-md-right">Alamat Surel</label>
+                  <label for="email" class="col-md-4 col-form-label text-md-end">Alamat Surel</label>
                   <div class="col-md-8">
                     <input type="email" id="email" class="text-light form-control {{
                         !fg.get('email').valid && fg.get('email').touched ? 'is-invalid' : ''
@@ -72,7 +72,7 @@
                   </div>
                 </div>
                 <div class="form-group row py-2">
-                  <label for="password" class="col-md-4 col-form-label text-md-right">Kata Sandi</label>
+                  <label for="password" class="col-md-4 col-form-label text-md-end">Kata Sandi</label>
                   <div class="col-md-8">
                     <input type="password" id="password" class="text-light form-control {{
                         !fg.get('password').valid && fg.get('password').touched ? 'is-invalid' : ''
@@ -109,7 +109,7 @@
                     <div class="row">
                       <div class="col-lg-6 col-12">
                         <button mat-flat-button color="primary" class="w-100" type="submit" [disabled]="submitted || fg.invalid || fg.get('agree').value == false">
-                          Daftar <mat-icon class="ml-1">emoji_people</mat-icon>
+                          Daftar <mat-icon class="ms-1">emoji_people</mat-icon>
                         </button>
                       </div>
                       <div class="col-lg-6 col-12">
@@ -124,7 +124,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-5 col-md-3 ml-auto p-0" [ngStyle]="{
+        <div class="col-lg-5 col-md-3 ms-auto p-0" [ngStyle]="{
           'background-position': 'center',
           'background-size': 'cover',
           'background-image': 'url(' + registerImg + ')'

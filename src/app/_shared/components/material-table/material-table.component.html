@@ -24,9 +24,9 @@
             (tdc == 'Tanggal' || tdc == 'Pelaku' || tdc == 'Judul') ? '#28a745' :
               (tdc == 'Jenis' || tdc == 'Proyek') ? '#7289da' :
         '#acacac'">
-          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pemilik' || tdc == 'Penulis'" />
-          <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Korban'" />
-          <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover;" class="mr-1" *ngIf="tdc == 'Pelaku'" />
+          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc == 'Pemilik' || tdc == 'Penulis'" />
+          <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc == 'Korban'" />
+          <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc == 'Pelaku'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc == 'Logo'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc == 'Image'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc == 'Poster'" />

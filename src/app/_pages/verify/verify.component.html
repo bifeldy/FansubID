@@ -2,12 +2,12 @@
   <div class="row align-items-center h-100 m-0">
     <div class="col-12 col-md-10 m-auto py-3">
       <div class="row border rounded bg-bifeldy-dark">
-        <div class="col-lg-5 col-md-3 ml-auto p-0" [ngStyle]="{
+        <div class="col-lg-5 col-md-3 ms-auto p-0" [ngStyle]="{
           'background-position': 'center',
           'background-size': 'cover',
           'background-image': 'url(' + verifyImg + ')'
         }"></div>
-        <div class="col-lg-7 col-md-9 mr-auto p-0">
+        <div class="col-lg-7 col-md-9 me-auto p-0">
           <div class="card bg-transparent border-0">
             <div class="card-body p-0">
               <div class="text-center p-3">
@@ -21,7 +21,7 @@
                   <ng-template matStepLabel>Cari Tanda Pengenal</ng-template>
                   <form [formGroup]="fg1" class="m-2">
                     <div class="form-group row py-2">
-                      <label for="nik" class="col-md-4 col-form-label text-md-right">NIK KTP</label>
+                      <label for="nik" class="col-md-4 col-form-label text-md-end">NIK KTP</label>
                       <div class="col-md-8">
                         <input type="text" id="nik" class="form-control {{
                             !fg1.get('nik').valid && fg1.get('nik').touched ? 'is-invalid' : ''
@@ -37,7 +37,7 @@
                       </div>
                     </div>
                     <div class="form-group row py-2">
-                      <label for="nama" class="col-md-4 col-form-label text-md-right">Nama Depan</label>
+                      <label for="nama" class="col-md-4 col-form-label text-md-end">Nama Depan</label>
                       <div class="col-md-8">
                         <input type="text" id="nama" class="form-control {{
                             !fg1.get('nama').valid && fg1.get('nama').touched ? 'is-invalid' : ''
@@ -65,7 +65,7 @@
                   <ng-template matStepLabel>Periksa Data Identitas</ng-template>
                   <form [formGroup]="fg2" class="m-2">
                     <!-- <div class="form-group row py-2">
-                      <label for="nik" class="col-md-4 col-form-label text-md-right">NIK</label>
+                      <label for="nik" class="col-md-4 col-form-label text-md-end">NIK</label>
                       <div class="col-md-8">
                         <input type="text" id="nik" class="form-control {{
                             !fg2.get('nik').valid && fg2.get('nik').touched ? 'is-invalid' : ''
@@ -81,7 +81,7 @@
                       </div>
                     </div>
                     <div class="form-group row py-2">
-                      <label for="nama" class="col-md-4 col-form-label text-md-right">Nama Lengkap</label>
+                      <label for="nama" class="col-md-4 col-form-label text-md-end">Nama Lengkap</label>
                       <div class="col-md-8">
                         <input type="text" id="nama" class="form-control {{
                             !fg2.get('nama').valid && fg2.get('nama').touched ? 'is-invalid' : ''
@@ -97,7 +97,7 @@
                       </div>
                     </div>
                     <div class="form-group row py-2">
-                      <label for="tempat_lahir" class="col-md-4 col-form-label text-md-right">Tempat Lahir</label>
+                      <label for="tempat_lahir" class="col-md-4 col-form-label text-md-end">Tempat Lahir</label>
                       <div class="col-md-8">
                         <input type="text" id="tempat_lahir" class="form-control {{
                             !fg2.get('tempat_lahir').valid && fg2.get('tempat_lahir').touched ? 'is-invalid' : ''
@@ -113,7 +113,7 @@
                       </div>
                     </div>
                     <div class="form-group row py-2">
-                      <label for="jenis_kelamin" class="col-md-4 col-form-label text-md-right">Jenis Kelamin</label>
+                      <label for="jenis_kelamin" class="col-md-4 col-form-label text-md-end">Jenis Kelamin</label>
                       <div class="col-md-8">
                         <input type="text" id="jenis_kelamin" class="form-control {{
                             !fg2.get('jenis_kelamin').valid && fg2.get('jenis_kelamin').touched ? 'is-invalid' : ''
@@ -129,7 +129,7 @@
                       </div>
                     </div>
                     <div class="form-group row py-2">
-                      <label for="kelurahan_desa" class="col-md-4 col-form-label text-md-right">Kelurahan / Desa</label>
+                      <label for="kelurahan_desa" class="col-md-4 col-form-label text-md-end">Kelurahan / Desa</label>
                       <div class="col-md-8">
                         <input type="text" id="kelurahan_desa" class="form-control {{
                             !fg2.get('kelurahan_desa').valid && fg2.get('kelurahan_desa').touched ? 'is-invalid' : ''
@@ -145,7 +145,7 @@
                       </div>
                     </div>
                     <div class="form-group row py-2">
-                      <label for="kecamatan" class="col-md-4 col-form-label text-md-right">Kecamatan / Kota</label>
+                      <label for="kecamatan" class="col-md-4 col-form-label text-md-end">Kecamatan / Kota</label>
                       <div class="col-md-8">
                         <input type="text" id="kecamatan / Kota" class="form-control {{
                             !fg2.get('kecamatan').valid && fg2.get('kecamatan').touched ? 'is-invalid' : ''
@@ -164,7 +164,7 @@
                       <div class="col-12">
                         <button mat-flat-button color="primary" class="w-100" type="button"
                           [disabled]="submitted" (click)="submitKTP(stepper)">
-                          Data Saya Diatas Sudah Benar <mat-icon class="ml-1">check_circle_outline</mat-icon>
+                          Data Saya Diatas Sudah Benar <mat-icon class="ms-1">check_circle_outline</mat-icon>
                         </button>
                       </div>
                     </div>

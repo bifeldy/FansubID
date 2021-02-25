@@ -22,7 +22,7 @@
             <mat-option value="{{ i }}" *ngFor="let i of [1,2,3,4,5,6,7,8,9]">Kelas {{ i }}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="ml-auto pt-3 col-4 col-lg-4" [color]="'accent'">
+        <mat-form-field class="ms-auto pt-3 col-4 col-lg-4" [color]="'accent'">
           <mat-label>Cari ...</mat-label>
           <input matInput maxlength="200" placeholder="Ex. 私" (keyup.enter)="applyFilter($event)" [(ngModel)]="q" />
           <mat-icon matSuffix>search</mat-icon>
@@ -49,7 +49,7 @@
                   <h5 class="card-title py-3" style="font-size: 300%;">{{ k.character }}</h5>
                   <div>{{ k.translate }}</div>
                 </div>
-                <div class="position-absolute top-0 right-0" style="margin-right: 3px; font-size: x-small;">
+                <div class="position-absolute top-0 end-0" style="margin-right: 3px; font-size: x-small;">
                   <span class="text-warning">N{{ k.jlpt }}</span>
                   <span> - </span>
                   <span class="text-info">S{{ k.school }}</span>

@@ -3,14 +3,14 @@
   <mat-tab *ngFor="let tab of tabData">
     <div *ngIf="tab.type == 'html'">
       <ng-template mat-tab-label>
-        <mat-icon class="mr-3">{{ tab.icon }}</mat-icon>
+        <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3" [innerHTML]="tab.data"></div>
     </div>
     <div *ngIf="tab.type == 'grid'">
       <ng-template mat-tab-label>
-        <mat-icon class="mr-3">{{ tab.icon }}</mat-icon>
+        <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3" *ngIf="tab.data.length > 0">
@@ -18,7 +18,7 @@
           <mat-grid-list [cols]="gs.gridListBreakpoint" rowHeight="10:2">
             <mat-grid-tile *ngFor="let d of tab.data">
               <mat-list-option (click)="onGridClicked(d)">
-                <img matListAvatar src="{{ d.image }}" class="ml-3" style="border-radius: 0;" />
+                <img matListAvatar src="{{ d.image }}" class="ms-3" style="border-radius: 0;" />
                 <h4 matLine *ngIf="d.description">{{ d.title }}</h4>
                 <h4 *ngIf="!d.description">{{ d.title }}</h4>
                 <p matLine>{{ d.description }}</p>
@@ -40,13 +40,13 @@
     </div>
     <div *ngIf="tab.type == 'list'">
       <ng-template mat-tab-label>
-        <mat-icon class="mr-3">{{ tab.icon }}</mat-icon>
+        <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3" *ngIf="tab.data.length > 0">
         <mat-selection-list [multiple]="false">
           <mat-list-option *ngFor="let d of tab.data" (click)="onListClicked(d)">
-            <img matListAvatar src="{{ d.image }}" class="ml-3" style="border-radius: 0;" />
+            <img matListAvatar src="{{ d.image }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine *ngIf="d.description">{{ d.title }}</h4>
             <h4 *ngIf="!d.description">{{ d.title }}</h4>
             <p matLine>{{ d.description }}</p>
@@ -66,7 +66,7 @@
     </div>
     <div *ngIf="tab.type == 'table'">
       <ng-template mat-tab-label>
-        <mat-icon class="mr-3">{{ tab.icon }}</mat-icon>
+        <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3">
@@ -77,7 +77,7 @@
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon class="mr-3">comment</mat-icon>
+      <mat-icon class="me-3">comment</mat-icon>
       <h3 class="m-0">Komentar</h3>
     </ng-template>
     <ng-template matTabContent>

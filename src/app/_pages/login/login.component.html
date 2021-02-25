@@ -3,12 +3,12 @@
   <div class="row align-items-center h-100 m-0" style="transform: rotateY(180deg);">
     <div class="col-12 col-md-10 m-auto py-3">
       <div class="row border rounded bg-bifeldy-dark">
-        <div class="col-lg-5 col-md-3 ml-auto p-0" [ngStyle]="{
+        <div class="col-lg-5 col-md-3 ms-auto p-0" [ngStyle]="{
           'background-position': 'center',
           'background-size': 'cover',
           'background-image': 'url(' + loginImg + ')'
         }"></div>
-        <div class="col-lg-7 col-md-9 mr-auto p-0">
+        <div class="col-lg-7 col-md-9 me-auto p-0">
           <div class="card bg-transparent border-0">
             <div class="card-body">
               <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()" *ngIf="fg">
@@ -18,7 +18,7 @@
                   <p class="text-danger">{{ loginInfo }}</p>
                 </div>
                 <div class="form-group row py-2">
-                  <label for="userNameOrEmail" class="col-md-4 col-form-label text-md-right">Nama Pengguna</label>
+                  <label for="userNameOrEmail" class="col-md-4 col-form-label text-md-end">Nama Pengguna</label>
                   <div class="col-md-8">
                     <input type="text" id="userNameOrEmail" class="text-light form-control {{
                         !fg.get('userNameOrEmail').valid && fg.get('userNameOrEmail').touched ? 'is-invalid' : ''
@@ -34,7 +34,7 @@
                   </div>
                 </div>
                 <div class="form-group row py-2">
-                  <label for="password" class="col-md-4 col-form-label text-md-right">Kata Sandi</label>
+                  <label for="password" class="col-md-4 col-form-label text-md-end">Kata Sandi</label>
                   <div class="col-md-8">
                     <input type="password" id="password" class="text-light form-control {{
                         !fg.get('password').valid && fg.get('password').touched ? 'is-invalid' : ''
@@ -62,7 +62,7 @@
                     <div class="row">
                       <div class="col-lg-6 col-12">
                         <button mat-flat-button color="primary" class="w-100" type="submit" [disabled]="submitted || fg.invalid">
-                          Masuk <mat-icon class="ml-1">vpn_key</mat-icon>
+                          Masuk <mat-icon class="ms-1">vpn_key</mat-icon>
                         </button>
                       </div>
                       <div class="col-lg-6 col-12">

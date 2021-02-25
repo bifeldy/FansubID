@@ -12,11 +12,11 @@
   )">
   <!-- <div class="row align-items-center h-100">
     <div class="col-9 mx-auto text-light text-center" style="background-color: rgba(0, 0, 0, 0.25);">
-      <button mat-icon-button class="mr-3">
+      <button mat-icon-button class="me-3">
         <mat-icon>arrow_back</mat-icon>
       </button>
       {{ selectedSeasonName.toUpperCase() }}
-      <button mat-icon-button class="ml-3">
+      <button mat-icon-button class="ms-3">
         <mat-icon>arrow_forward</mat-icon>
       </button>
     </div>
@@ -28,9 +28,9 @@
   <div class="row pt-3">
     <div class="col-12" *ngFor="let n of notif.notifications; let i = index">
       <div class="alert alert-{{ n.notifData.type }} alert-dismissible fade show">
-        <strong class="mr-1">{{ n.notifData.title }}</strong>
+        <strong class="me-1">{{ n.notifData.title }}</strong>
         <span [innerHTML]="n.notifData.content"></span>
-        <strong class="ml-1" *ngIf="n.notifCreator">
+        <strong class="ms-1" *ngIf="n.notifCreator">
           --
           <i>
             <a href="/user/{{ n.notifCreator }}" class="text-decoration-none">

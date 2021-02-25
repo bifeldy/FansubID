@@ -16,25 +16,25 @@
         <div class="row py-3 px-0 profile-height-large">
           <h1 class="m-0 mt-auto">
             <b>{{ userData.kartu_tanda_penduduk_.nama }}</b>
-            <mat-icon class="ml-2" matTooltip="Terverifikasi" *ngIf="userData.verified">verified</mat-icon>
-            <mat-icon class="ml-2" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned">lock</mat-icon>
+            <mat-icon class="ms-2" matTooltip="Terverifikasi" *ngIf="userData.verified">verified</mat-icon>
+            <mat-icon class="ms-2" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned">lock</mat-icon>
           </h1>
         </div>
         <div class="row p-3">
           <button mat-stroked-button class="col-12 col-md-4" *ngIf="userData.id" matTooltip="Nomor ID Pengguna" color="accent">
-            <mat-icon class="mr-2">accessibility_new</mat-icon>
+            <mat-icon class="me-2">accessibility_new</mat-icon>
             {{ userData.id }}
           </button>
           <button mat-stroked-button class="col-12 col-md-8" *ngIf="userData.updated_at" matTooltip="Terakhir Login" color="accent">
-            <mat-icon class="mr-2">access_time</mat-icon>
+            <mat-icon class="me-2">access_time</mat-icon>
             {{ userData.updated_at | date:'d/M/yy, h:mm a' }}
           </button>
           <button mat-stroked-button class="col" *ngIf="userData.kartu_tanda_penduduk_.tempat_lahir" matTooltip="Kota Kelahiran" color="accent">
-            <mat-icon class="mr-2">location_on</mat-icon>
+            <mat-icon class="me-2">location_on</mat-icon>
             {{ userData.kartu_tanda_penduduk_.tempat_lahir }}
           </button>
           <button mat-stroked-button class="col" *ngIf="userData.discord" matTooltip="Discord Profile" color="accent" (click)="openDiscordProfile()">
-            <mat-icon class="mr-2">chat</mat-icon>
+            <mat-icon class="me-2">chat</mat-icon>
             {{ userData.discord }}
           </button>
         </div>

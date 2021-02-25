@@ -40,19 +40,19 @@
               <div class="col-12">
                 <mat-selection-list [multiple]="false">
                   <mat-list-option routerLink="/anime/{{ berkasData.anime_.id }}" *ngIf="berkasData.anime_">
-                    <img matListAvatar src="{{ berkasData.anime_.image_url }}" class="ml-3" style="border-radius: 0;" />
+                    <img matListAvatar src="{{ berkasData.anime_.image_url }}" class="ms-3" style="border-radius: 0;" />
                     <h4>{{ berkasData.anime_.name }}</h4>
                   </mat-list-option>
                   <mat-list-option routerLink="/dorama/{{ berkasData.dorama_.slug }}" *ngIf="berkasData.dorama_">
-                    <img matListAvatar src="{{ berkasData.dorama_.image_url }}" class="ml-3" style="border-radius: 0;" />
+                    <img matListAvatar src="{{ berkasData.dorama_.image_url }}" class="ms-3" style="border-radius: 0;" />
                     <h4>{{ berkasData.dorama_.name }}</h4>
                   </mat-list-option>
                   <mat-list-option routerLink="/fansub/{{ fs.slug }}" *ngFor="let fs of berkasData.fansub_">
-                    <img matListAvatar src="{{ fs.image_url }}" class="ml-3" style="border-radius: 0;" />
+                    <img matListAvatar src="{{ fs.image_url }}" class="ms-3" style="border-radius: 0;" />
                     <h4>{{ fs.name }}</h4>
                   </mat-list-option>
                   <mat-list-option routerLink="/user/{{ berkasData.user_.username }}">
-                    <img matListAvatar src="{{ berkasData.user_.image_url }}" class="ml-3" />
+                    <img matListAvatar src="{{ berkasData.user_.image_url }}" class="ms-3" />
                     <h4>{{ berkasData.user_.username }}</h4>
                   </mat-list-option>
                 </mat-selection-list>
@@ -66,13 +66,13 @@
               </div>
               <div class="col-12 text-center" *ngIf="currentUser">
                 <a href="{{ i.url }}" class="m-1" target="_blank" mat-stroked-button color="accent" *ngFor="let i of berkasData.download_url">
-                  <mat-icon class="mr-2">cloud_download</mat-icon>
+                  <mat-icon class="me-2">cloud_download</mat-icon>
                   {{ i.name }}
                 </a>
               </div>
               <div class="col-12 text-center" *ngIf="!currentUser">
                 <button class="m-1" mat-stroked-button color="accent" (click)="login()">
-                  <mat-icon class="mr-2">vpn_key</mat-icon>
+                  <mat-icon class="me-2">vpn_key</mat-icon>
                   Klik Untuk Login
                 </button>
               </div>
@@ -91,17 +91,17 @@
               <div class="col-12 text-center" *ngIf="currentUser.verified">
                 <button class="m-1 w-100" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
                   matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
-                  <mat-icon class="mr-2">movie</mat-icon>
+                  <mat-icon class="me-2">movie</mat-icon>
                   {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
                 </button>
                 <button class="m-1 w-100" mat-stroked-button color="accent" (click)="cancel_dl(berkasData.attachment_.id)"
                   matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
-                  <mat-icon class="mr-2">close</mat-icon>
+                  <mat-icon class="me-2">close</mat-icon>
                   Batal Unduh
                 </button>
                 <button class="m-1 w-100" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
                   matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x">
-                  <mat-icon class="mr-2">save</mat-icon>
+                  <mat-icon class="me-2">save</mat-icon>
                   {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }}
                 </button>
                 <div class="col">
@@ -120,18 +120,18 @@
                 </div>
                 <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
                   (click)="standardDdl(s.id)" matTooltip="{{ s.name }}">
-                  <mat-icon class="mr-2">notes</mat-icon>
+                  <mat-icon class="me-2">notes</mat-icon>
                   {{ s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
                 </button>
                 <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let f of berkasData.attachment_.fonts_"
                   (click)="standardDdl(f.id)" matTooltip="{{ f.name }}">
-                  <mat-icon class="mr-2">font_download</mat-icon>
+                  <mat-icon class="me-2">font_download</mat-icon>
                   {{ f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
                 </button>
               </div>
               <div class="col-12 text-center" *ngIf="!currentUser.verified">
                 <button class="m-1" mat-stroked-button color="accent" (click)="verify()">
-                  <mat-icon class="mr-2">domain_verification</mat-icon>
+                  <mat-icon class="me-2">domain_verification</mat-icon>
                   Klik Untuk Verifikasi
                 </button>
               </div>

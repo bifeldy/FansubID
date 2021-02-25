@@ -34,7 +34,7 @@
                   </div>
                   <div class="col-12" *ngIf="image && !fg.value.image">
                     <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
-                      <mat-icon class="mr-1">add_photo_alternate</mat-icon>
+                      <mat-icon class="me-1">add_photo_alternate</mat-icon>
                       Unggah
                     </button>
                   </div>
@@ -70,14 +70,14 @@
                       <div class="col"></div>
                       <div class="col-12 col-md-3 pb-3">
                         <a mat-stroked-button routerLink="../" class="w-100" [disabled]="submitted">
-                          <mat-icon class="mr-1">undo</mat-icon>
+                          <mat-icon class="me-1">undo</mat-icon>
                           Batal
                         </a>
                       </div>
                       <div class="col-12 col-md-3 pb-3">
                         <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid">
                           Simpan
-                          <mat-icon class="ml-1">save</mat-icon>
+                          <mat-icon class="ms-1">save</mat-icon>
                         </button>
                       </div>
                     </div>
