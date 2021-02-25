@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -69,23 +70,23 @@ export class AdminService {
     }
   }
 
-  getAllNotif(q = '', page = 1, row = 10, sort = '', order = ''): any {
+  getAllNotif(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
     return this.api.getData(`/notification?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  createNotif(notifData): any {
+  createNotif(notifData): Observable<any> {
     return this.api.postData('/notification', notifData);
   }
 
-  deleteNotif(notifId): any {
+  deleteNotif(notifId): Observable<any> {
     return this.api.deleteData(`/notification/${notifId}`);
   }
 
-  getAllBanned(q = '', page = 1, row = 10, sort = '', order = ''): any {
+  getAllBanned(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
     return this.api.getData(`/banned?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  unBan(bannedId): any {
+  unBan(bannedId): Observable<any> {
     return this.api.deleteData(`/banned/${bannedId}`);
   }
 

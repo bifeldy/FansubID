@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -17,15 +18,15 @@ export class ProjectService {
     }
   }
 
-  getProject(): any {
+  getProject(): Observable<any> {
     return this.api.getData(`/project`);
   }
 
-  createProject(notifData): any {
+  createProject(notifData): Observable<any> {
     return this.api.postData('/project', notifData);
   }
 
-  deleteProject(notifId): any {
+  deleteProject(notifId): Observable<any> {
     return this.api.deleteData(`/project/${notifId}`);
   }
 

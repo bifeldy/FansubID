@@ -42,7 +42,7 @@ export class AuthService {
     return this.currentUserSubject ? this.currentUserSubject.value : null;
   }
 
-  verify(token: string): any {
+  verify(token: string): Observable<any> {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.postData(`/verify`, { token }).pipe(map(respVerify => {
       this.currentUserSubject.next(respVerify.result);
@@ -53,7 +53,7 @@ export class AuthService {
     }));
   }
 
-  login(loginData: any): any {
+  login(loginData: any): Observable<any> {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(map(respLogin => {
       localStorage.setItem(environment.tokenName, respLogin.result.token);
@@ -61,7 +61,7 @@ export class AuthService {
     }));
   }
 
-  register(registerData: any): any {
+  register(registerData: any): Observable<any> {
     this.gs.log('[AUTH_REGISTER]', registerData);
     return this.api.postData(`/register`, registerData).pipe(map(respRegister => {
       localStorage.setItem(environment.tokenName, respRegister.result.token);
@@ -69,7 +69,7 @@ export class AuthService {
     }));
   }
 
-  logout(): any {
+  logout(): Observable<any> {
     this.gs.log('[AUTH_LOGOUT]', localStorage.getItem(environment.tokenName));
     return this.api.deleteData(`/logout`).pipe(map(respLogout => {
       this.removeUser();

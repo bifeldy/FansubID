@@ -43,13 +43,25 @@
           </h2>
         </div>
         <div class="col-12">
-          <mat-selection-list [multiple]="false">
-            <mat-list-option *ngFor="let e of edict">
-              <h4 class="px-3" matLine>{{ e.kanji }}</h4>
-              <h5 class="px-3 text-success" matLine>{{ e.reading }} ({{ getRomaji(e.reading) }})</h5>
-              <p class="px-3 text-warning" matLine>{{ e.meaning }}</p>
-            </mat-list-option>
-          </mat-selection-list>
+          <div *ngIf="edict.length > 0">
+            <mat-selection-list [multiple]="false">
+              <mat-list-option *ngFor="let e of edict">
+                <h4 class="px-3" matLine>{{ e.kanji }}</h4>
+                <h5 class="px-3 text-success" matLine>{{ e.reading }} ({{ getRomaji(e.reading) }})</h5>
+                <p class="px-3 text-warning" matLine>{{ e.meaning }}</p>
+              </mat-list-option>
+            </mat-selection-list>
+          </div>
+          <div *ngIf="edict.length <= 0"
+            style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+            <div class="row align-items-center h-100">
+              <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+                <h3 class="m-0">
+                  Tidak Ada Data ¯\_(ツ)_/¯
+                </h3>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-12 text-center p-3" *ngIf="!pageFinished">
           <button mat-button (click)="loadNextPage()">Load More ...</button>

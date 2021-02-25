@@ -13,7 +13,7 @@
         <mat-icon class="mr-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
-      <div class="p-3" *ngIf="tab.data.length >= 0">
+      <div class="p-3" *ngIf="tab.data.length > 0">
         <mat-selection-list [multiple]="false" class="p-0">
           <mat-grid-list [cols]="gs.gridListBreakpoint" rowHeight="10:2">
             <mat-grid-tile *ngFor="let d of tab.data">
@@ -43,7 +43,7 @@
         <mat-icon class="mr-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
-      <div class="p-3" *ngIf="tab.data.length >= 0">
+      <div class="p-3" *ngIf="tab.data.length > 0">
         <mat-selection-list [multiple]="false">
           <mat-list-option *ngFor="let d of tab.data" (click)="onListClicked(d)">
             <img matListAvatar src="{{ d.image }}" class="ml-3" style="border-radius: 0;" />

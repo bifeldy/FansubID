@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -17,35 +18,35 @@ export class UserService {
     }
   }
 
-  checkBanned(userId): any {
+  checkBanned(userId): Observable<any> {
     return this.api.getData(`/banned?id=${userId}`);
   }
 
-  getAllUser(): any {
+  getAllUser(): Observable<any> {
     return this.api.getData('/user');
   }
 
-  getUserData(username): any {
+  getUserData(username): Observable<any> {
     return this.api.getData(`/user/${username}`);
   }
 
-  updateUser(username, userData): any {
+  updateUser(username, userData): Observable<any> {
     return this.api.putData(`/user/${username}`, userData);
   }
 
-  getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): any {
+  getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
     return this.api.getData(`/user/${username}/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  cekNik(userData): any {
+  cekNik(userData): Observable<any> {
     return this.api.postData('/cek-nik', userData);
   }
 
-  verifikasi(userData): any {
+  verifikasi(userData): Observable<any> {
     return this.api.putData('/verify', userData);
   }
 
-  sosmedLogin(data): any {
+  sosmedLogin(data): Observable<any> {
     return this.api.patchData('/verify', data);
   }
 

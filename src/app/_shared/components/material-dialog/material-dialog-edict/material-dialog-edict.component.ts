@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
@@ -15,7 +15,7 @@ declare const Dmak: any;
   templateUrl: './material-dialog-edict.component.html',
   styleUrls: ['./material-dialog-edict.component.css']
 })
-export class MaterialDialogEdictComponent implements OnInit, AfterViewInit {
+export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('dmakElement') dmakElement: ElementRef;
 
@@ -51,6 +51,12 @@ export class MaterialDialogEdictComponent implements OnInit, AfterViewInit {
       this.charToDraw = this.data.character;
     }
     this.loadEdict();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subsEdict) {
+      this.subsEdict.unsubscribe();
+    }
   }
 
   ngAfterViewInit(): void {

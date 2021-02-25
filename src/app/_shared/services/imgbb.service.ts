@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -17,7 +18,7 @@ export class ImgbbService {
     }
   }
 
-  uploadImage(image): any {
+  uploadImage(image): Observable<any> {
     return this.api.postData(`/image`, image, true);
   }
 }
