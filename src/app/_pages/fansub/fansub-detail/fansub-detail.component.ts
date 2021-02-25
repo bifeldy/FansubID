@@ -100,8 +100,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
     this.bs.busy();
-    this.subsFansub = this.fansub.getFansub(this.fansubSlug).subscribe(
-      res => {
+    this.subsFansub = this.fansub.getFansub(this.fansubSlug).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
         this.fansubData = res.result;
         this.pi.updatePageMetaData(
@@ -125,7 +125,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           this.getBerkasFansub();
         }
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_DETAIL_ERROR]', err);
         this.bs.idle();
         this.router.navigate(['/error'], {
@@ -134,7 +134,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           }
         });
       }
-    );
+    });
   }
 
   getUrlByName(name): string {
@@ -150,8 +150,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.subsBerkas = this.fansub.getBerkasFansub(
       [this.fansubData.id], this.q, this.page, this.row, this.sort, this.order
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
         this.berkasFansub = [];
@@ -167,17 +167,17 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.tabData[2].data.row = this.berkasFansub;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[BERKAS_FANSUB_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getAnimeFansub(): void {
     this.bs.busy();
-    this.subsAnime = this.fansub.getAnimeFansub([this.fansubData.id]).subscribe(
-      res => {
+    this.subsAnime = this.fansub.getAnimeFansub([this.fansubData.id]).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         this.animeFansub = [];
         for (const r of res.results[this.fansubData.id]) {
@@ -190,17 +190,17 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.tabData[0].data = this.animeFansub;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getDoramaFansub(): void {
     this.bs.busy();
-    this.subsDorama = this.fansub.getDoramaFansub([this.fansubData.id]).subscribe(
-      res => {
+    this.subsDorama = this.fansub.getDoramaFansub([this.fansubData.id]).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
         this.doramaFansub = [];
         for (const r of res.results[this.fansubData.id]) {
@@ -214,11 +214,11 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.tabData[1].data = this.doramaFansub;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_DORAMA_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   editFansubData(): void {

@@ -102,8 +102,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.username = this.activatedRoute.snapshot.paramMap.get('username');
       this.bs.busy();
-      this.subsUserDetail = this.us.getUserData(this.username).subscribe(
-        res => {
+      this.subsUserDetail = this.us.getUserData(this.username).subscribe({
+        next: res => {
           this.gs.log('[USER_DETAIL_SUCCESS]', res);
           this.bs.idle();
           if (this.as.currentUserValue.id !== res.result.id) {
@@ -115,7 +115,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
             this.initForm(res.result);
           }
         },
-        err => {
+        error: err => {
           this.gs.log('[USER_DETAIL_ERROR]', err);
           this.bs.idle();
           this.router.navigate(['/error'], {
@@ -124,7 +124,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
             }
           });
         }
-      );
+      });
     }
   }
 
@@ -187,20 +187,20 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.subsImgbb1 = this.imgbb.uploadImage({
       file: this.imagePhoto
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[IMAGE_PHOTO_SUCCESS]', res);
         this.fg.controls.image_photo.patchValue(res.result.url);
         this.fg.controls.image_photo.markAsDirty();
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[IMAGE_PHOTO_ERROR]', err);
         this.fg.controls.image_photo.patchValue(null);
         this.fg.controls.image_photo.markAsPristine();
         this.submitted = false;
       }
-    );
+    });
   }
 
   uploadCoverImage(event, coverImage): void {
@@ -241,20 +241,20 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.subsImgbb2 = this.imgbb.uploadImage({
       file: this.imageCover
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[IMAGE_COVER_SUCCESS]', res);
         this.fg.controls.image_cover.patchValue(res.result.url);
         this.fg.controls.image_cover.markAsDirty();
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[IMAGE_COVER_ERROR]', err);
         this.fg.controls.image_cover.patchValue(null);
         this.fg.controls.image_cover.markAsPristine();
         this.submitted = false;
       }
-    );
+    });
   }
 
   onSubmit(): void {
@@ -272,34 +272,34 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }
     this.subsUserUpdate = this.us.updateUser(this.username, {
       ...body
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[USER_EDIT_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
         this.as.removeUser();
         localStorage.setItem(environment.tokenName, res.result.token);
         this.bs.busy();
-        this.subsVerify = this.as.verify(res.result.token).subscribe(
-          success => {
+        this.subsVerify = this.as.verify(res.result.token).subscribe({
+          next: success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();
             this.router.navigateByUrl(`/user/${this.username}`);
           },
-          error => {
+          error: error => {
             this.gs.log('[VERIFY_LOGIN_ERROR]', error);
             this.bs.idle();
             this.as.removeUser();
             this.router.navigateByUrl(`/user/${this.username}`);
           }
-        );
+        });
       },
-      err => {
+      error: err => {
         this.gs.log('[USER_EDIT_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
       }
-    );
+    });
   }
 
 }

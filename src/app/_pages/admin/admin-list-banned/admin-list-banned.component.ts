@@ -59,8 +59,8 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     }
     this.subsBannedGet = this.adm.getAllBanned(
       this.q, this.page, this.row, this.sort, this.order
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[BANNED_LIST_SUCCESS]', res);
         this.count = res.count;
         const bannedDataRow = [];
@@ -85,11 +85,11 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
         this.bannedData.row = bannedDataRow;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[BANNED_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   unBan(data): void {
@@ -102,23 +102,25 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
         cancelText: 'Tidak, Batal'
       },
       disableClose: false
-    }).afterClosed().subscribe(re => {
-      if (re === true) {
-        this.bs.busy();
-        this.subsBannedDelete = this.adm.unBan(data.id).subscribe(
-          res => {
-            this.gs.log('[BANNED_LIST_CLICK_UNBAN_SUCCESS]', res);
-            this.bs.idle();
-            this.getBan();
-          },
-          err => {
-            this.gs.log('[BANNED_LIST_CLICK_UNBAN_ERROR]', err);
-            this.bs.idle();
-            this.getBan();
-          }
-        );
-      } else if (re === false) {
-        this.getBan();
+    }).afterClosed().subscribe({
+      next: re => {
+        if (re === true) {
+          this.bs.busy();
+          this.subsBannedDelete = this.adm.unBan(data.id).subscribe({
+            next: res => {
+              this.gs.log('[BANNED_LIST_CLICK_UNBAN_SUCCESS]', res);
+              this.bs.idle();
+              this.getBan();
+            },
+            error: err => {
+              this.gs.log('[BANNED_LIST_CLICK_UNBAN_ERROR]', err);
+              this.bs.idle();
+              this.getBan();
+            }
+          });
+        } else if (re === false) {
+          this.getBan();
+        }
       }
     });
   }

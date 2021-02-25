@@ -17,17 +17,17 @@ export class GithubService {
     private api: ApiService
   ) {
     if (this.gs.isBrowser) {
-      this.api.getData('https://api.github.com/repos/Bifeldy/Hikki/commits').subscribe(
-        res => {
+      this.api.getData('https://api.github.com/repos/Bifeldy/Hikki/commits').subscribe({
+        next: res => {
           this.gs.log('[GITHUB_API]', res);
           this.portalVer = res[0].sha;
           this.commitUser = res[0].commit.author.name;
           this.commitDate = new Date(res[0].commit.author.date);
         },
-        err => {
+        error: err => {
           this.gs.log('[GITHUB_API]', err);
         }
-      );
+      });
     }
   }
 }

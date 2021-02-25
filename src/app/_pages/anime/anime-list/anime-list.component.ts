@@ -102,24 +102,26 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   }
 
   watchUrlRoute(): void {
-    this.subsParam = this.activatedRoute.queryParams.subscribe(p => {
-      this.bs.busy();
-      this.currentYear = p.year ? (
-        Number.isNaN(parseInt(p.year, 10)) ? this.currentYear : parseInt(p.year, 10)
-      ) : new Date().getFullYear();
-      this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
-      this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
-      this.selectedSeasonName = p.season ? (
-        [
-          Seasons.WINTER,
-          Seasons.SPRING,
-          Seasons.SUMMER,
-          Seasons.FALL
-        ].indexOf(p.season) >= 0 ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth)
-      ) : this.findSeasonNameByMonthNumber(this.currentMonth);
-      this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
-      this.bs.idle();
-      this.getSeasonalAnime(p.year && p.season);
+    this.subsParam = this.activatedRoute.queryParams.subscribe({
+      next: p => {
+        this.bs.busy();
+        this.currentYear = p.year ? (
+          Number.isNaN(parseInt(p.year, 10)) ? this.currentYear : parseInt(p.year, 10)
+        ) : new Date().getFullYear();
+        this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
+        this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
+        this.selectedSeasonName = p.season ? (
+          [
+            Seasons.WINTER,
+            Seasons.SPRING,
+            Seasons.SUMMER,
+            Seasons.FALL
+          ].indexOf(p.season) >= 0 ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth)
+        ) : this.findSeasonNameByMonthNumber(this.currentMonth);
+        this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
+        this.bs.idle();
+        this.getSeasonalAnime(p.year && p.season);
+      }
     });
   }
 
@@ -139,8 +141,8 @@ export class AnimeListComponent implements OnInit, OnDestroy {
 
   getSeasonalAnime(showFab = false): void {
     this.bs.busy();
-    this.subsSeasonalAnime = this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe(
-      res => {
+    this.subsSeasonalAnime = this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe({
+      next: res => {
         this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
         this.seasonalAnime = res.results.filter(a => a.continuing === false && a.kids === false).sort((a, b) => b.score - a.score);
         if (showFab) {
@@ -149,11 +151,11 @@ export class AnimeListComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.getFansubAnime();
       },
-      err => {
+      error: err => {
         this.gs.log('[ANIME_SEASONAL_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getFansubAnime(): void {
@@ -163,8 +165,8 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     for (const sA of this.seasonalAnime) {
       seasonalAnimeListId.push(sA.mal_id);
     }
-    this.subsFansubAnime = this.anime.getFansubAnime(seasonalAnimeListId).subscribe(
-      res => {
+    this.subsFansubAnime = this.anime.getFansubAnime(seasonalAnimeListId).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         let seasonalAnimeWithFansub = [];
         for (const sA of this.seasonalAnime) {
@@ -188,11 +190,11 @@ export class AnimeListComponent implements OnInit, OnDestroy {
         );
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   changeSeasonalAnime(): void {

@@ -110,18 +110,18 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.subsImgbb = this.imgbb.uploadImage({
       file: this.image
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.result.url);
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
         this.submitted = false;
       }
-    );
+    });
   }
 
   onSubmit(): void {
@@ -137,19 +137,19 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
       title: this.fg.value.title,
       content: this.fg.value.content,
       tags: this.fg.value.tags,
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[NEWS_CREATE_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
         this.router.navigateByUrl('/news');
       },
-      err => {
+      error: err => {
         this.gs.log('[NEWS_CREATE_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
       }
-    );
+    });
   }
 
   addTag(event: MatChipInputEvent): void {

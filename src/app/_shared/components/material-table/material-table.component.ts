@@ -75,9 +75,11 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe((data) => {
-      this.paginator.pageIndex = 0;
-      this.onServerSideOrder(data);
+    this.sort.sortChange.subscribe({
+      next: (data) => {
+        this.paginator.pageIndex = 0;
+        this.onServerSideOrder(data);
+      }
     });
   }
 

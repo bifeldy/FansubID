@@ -65,8 +65,8 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.newsId = Number(this.activatedRoute.snapshot.paramMap.get('newsId'));
       this.bs.busy();
-      this.subsNewsDetail = this.news.getNews(this.newsId).subscribe(
-        res => {
+      this.subsNewsDetail = this.news.getNews(this.newsId).subscribe({
+        next: res => {
           this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
           this.bs.idle();
           if (this.as.currentUserValue.id !== res.result.user_.id) {
@@ -78,7 +78,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
             this.initForm(res.result);
           }
         },
-        err => {
+        error: err => {
           this.gs.log('[NEWS_DETAIL_ERROR]', err);
           this.bs.idle();
           this.router.navigate(['/error'], {
@@ -87,7 +87,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
             }
           });
         }
-      );
+      });
     }
   }
 
@@ -155,20 +155,20 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.subsImgbb = this.imgbb.uploadImage({
       file: this.image
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.result.url);
         this.fg.controls.image.markAsDirty();
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
         this.fg.controls.image.markAsPristine();
         this.submitted = false;
       }
-    );
+    });
   }
 
   onSubmit(): void {
@@ -183,19 +183,19 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     }
     this.subsNewsUpdate = this.news.updateNews(this.newsId, {
       ...body
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[NEWS_EDIT_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
         this.router.navigateByUrl(`/news/${this.newsId}`);
       },
-      err => {
+      error: err => {
         this.gs.log('[NEWS_EDIT_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
       }
-    );
+    });
   }
 
   addTag(event: MatChipInputEvent): void {

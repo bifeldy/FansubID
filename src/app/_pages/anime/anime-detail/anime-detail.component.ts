@@ -85,8 +85,8 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.animeId = Number(this.activatedRoute.snapshot.paramMap.get('animeId'));
     this.bs.busy();
-    this.subsAnime = this.anime.getAnime(this.animeId).subscribe(
-      res => {
+    this.subsAnime = this.anime.getAnime(this.animeId).subscribe({
+      next: res => {
         this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
         this.animeData = res.result;
         this.pi.updatePageMetaData(
@@ -111,7 +111,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
           this.getBerkasAnime();
         }
       },
-      err => {
+      error: err => {
         this.gs.log('[ANIME_DETAIL_ERROR]', err);
         this.bs.idle();
         this.router.navigate(['/error'], {
@@ -120,7 +120,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
           }
         });
       }
-    );
+    });
   }
 
   openRank(): void {
@@ -155,8 +155,8 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.subsBerkas = this.anime.getBerkasAnime(
       [this.animeId], this.q, this.page, this.row, this.sort, this.order
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
         this.berkasAnime = [];
@@ -172,17 +172,17 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
         this.tabData[1].data.row = this.berkasAnime;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[BERKAS_ANIME_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getFansubAnime(): void {
     this.bs.busy();
-    this.subsFansub = this.anime.getFansubAnime([this.animeId]).subscribe(
-      res => {
+    this.subsFansub = this.anime.getFansubAnime([this.animeId]).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         this.fansubAnime = [];
         for (const r of res.results[this.animeId]) {
@@ -197,11 +197,11 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
         this.tabData[0].data = this.fansubAnime;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   openGenre(data): void {

@@ -27,8 +27,8 @@ export class VjsService {
           responseType: 'blob',
           observe: 'events',
           reportProgress: true
-        }).subscribe(
-          event => {
+        }).subscribe({
+          next: event => {
             if ((event as any).body) {
               const e = (event as any);
               urls.push(URL.createObjectURL(new Blob([e.body])));
@@ -38,7 +38,7 @@ export class VjsService {
               }
             }
           }
-        );
+        });
       }
     } else {
       callback(urls);
@@ -55,8 +55,8 @@ export class VjsService {
           responseType: 'blob',
           observe: 'events',
           reportProgress: true
-        }).subscribe(
-          event => {
+        }).subscribe({
+          next: event => {
             if ((event as any).body) {
               const e = (event as any);
               urls.push(URL.createObjectURL(new Blob([e.body])));
@@ -66,7 +66,7 @@ export class VjsService {
               }
             }
           }
-        );
+        });
       }
     } else {
       callback(urls);

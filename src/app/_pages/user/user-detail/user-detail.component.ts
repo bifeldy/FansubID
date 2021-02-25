@@ -76,8 +76,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.username = this.activatedRoute.snapshot.paramMap.get('username');
     this.bs.busy();
-    this.subsUser = this.us.getUserData(this.username).subscribe(
-      res => {
+    this.subsUser = this.us.getUserData(this.username).subscribe({
+      next: res => {
         this.gs.log('[USER_DETAIL_SUCCESS]', res);
         this.userData = res.result;
         this.pi.updatePageMetaData(
@@ -95,7 +95,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           this.getUserBerkas();
         }
       },
-      err => {
+      error: err => {
         this.gs.log('[USER_DETAIL_ERROR]', err);
         this.bs.idle();
         this.router.navigate(['/error'], {
@@ -104,32 +104,32 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           }
         });
       }
-    );
+    });
   }
 
   checkBanned(): void {
     this.bs.busy();
-    this.subsBanned = this.us.checkBanned(this.userData.id).subscribe(
-      res => {
+    this.subsBanned = this.us.checkBanned(this.userData.id).subscribe({
+      next: res => {
         this.gs.log('[USER_CHECK_BANNED_SUCCESS]', res);
         if (Object.keys(res.results[this.userData.id]).length > 0) {
           this.userBanned = res.results[this.userData.id];
         }
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[USER_CHECK_BANNED_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getUserBerkas(): void {
     this.bs.busy();
     this.subsBerkas = this.us.getUserBerkas(
       this.username, this.q, this.page, this.row, this.sort, this.order
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[USER_BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
         this.berkasData = [];
@@ -148,11 +148,11 @@ export class UserDetailComponent implements OnInit, OnDestroy {
         this.tabData[0].data.row = this.berkasData;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[USER_BERKAS_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   openBerkas(data): void {

@@ -90,32 +90,32 @@ export class LoginComponent implements OnInit, OnDestroy {
         userNameOrEmail: this.fg.value.userNameOrEmail,
         password: CryptoJS.SHA512(this.fg.value.password).toString(),
         rememberMe: this.fg.value.rememberMe
-      }).subscribe(
-        (res: any) => {
+      }).subscribe({
+        next: (res: any) => {
           this.bs.idle();
           this.loginInfo = res.info;
           this.bs.busy();
-          this.subsVerify = this.as.verify(localStorage.getItem(environment.tokenName)).subscribe(
-            success => {
+          this.subsVerify = this.as.verify(localStorage.getItem(environment.tokenName)).subscribe({
+            next: success => {
               this.loginInfo = success.info;
               this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
               this.bs.idle();
               this.router.navigateByUrl(this.returnUrl);
             },
-            error => {
+            error: error => {
               this.gs.log('[VERIFY_LOGIN_ERROR]', error);
               this.bs.idle();
               this.as.removeUser();
             }
-          );
+          });
         },
-        err => {
+        error: err => {
           this.gs.log('[LOGIN_FORM_ERROR]', err);
           this.loginInfo = err.error.result.message || err.error.info;
           this.submitted = false;
           this.bs.idle();
         }
-      );
+      });
     }
   }
 

@@ -50,8 +50,8 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.newsId = Number(this.activatedRoute.snapshot.paramMap.get('newsId'));
     this.bs.busy();
-    this.subsNews = this.news.getNews(this.newsId).subscribe(
-      res => {
+    this.subsNews = this.news.getNews(this.newsId).subscribe({
+      next: res => {
         this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
         this.newsData = res.result;
         this.pi.updatePageMetaData(
@@ -70,7 +70,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
           this.fs.initializeFab('edit', null, 'Ubah Data Berita', `/news/${this.newsId}/edit`, false);
         }
       },
-      err => {
+      error: err => {
         this.gs.log('[NEWS_DETAIL_ERROR]', err);
         this.bs.idle();
         this.router.navigate(['/error'], {
@@ -79,7 +79,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
           }
         });
       }
-    );
+    });
   }
 
   openTag(data): void {

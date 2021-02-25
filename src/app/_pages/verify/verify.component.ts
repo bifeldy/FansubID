@@ -84,8 +84,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
     this.subsSosmed = this.us.sosmedLogin({
       app: sosmedApp.toUpperCase(),
       code: oAuthCode
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[SOSMED]', res);
         this.bs.idle();
         this.ds.openInfoDialog({
@@ -96,23 +96,25 @@ export class VerifyComponent implements OnInit, OnDestroy {
             cancelText: 'Coba Lagi'
           },
           disableClose: false
-        }).afterClosed().subscribe(re => {
-          if (re === true) {
-            this.as.removeUser();
-            this.router.navigateByUrl('/login');
-          } else if (re === false) {
-            if (sosmedApp.toUpperCase() === SosMed.DISCORD) {
-              window.open(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`, '_self');
+        }).afterClosed().subscribe({
+          next: re => {
+            if (re === true) {
+              this.as.removeUser();
+              this.router.navigateByUrl('/login');
+            } else if (re === false) {
+              if (sosmedApp.toUpperCase() === SosMed.DISCORD) {
+                window.open(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`, '_self');
+              }
+              // TODO :: If Other SosMed
             }
-            // TODO :: If Other SosMed
           }
         });
       },
-      err => {
+      error: err => {
         this.gs.log('[SOSMED]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   initKTP(): void {
@@ -149,8 +151,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
         nik: this.fg1.value.nik,
         nama: this.fg1.value.nama,
         'g-recaptcha-response': this.fg1.value['g-recaptcha-response']
-      }).subscribe(
-        res => {
+      }).subscribe({
+        next: res => {
           this.gs.log('[KPU_RI-CEK_NIK]', res);
           if (res.result.message === 'success') {
             this.kpuRiUserData = { ...res.result.data, nik: this.fg1.value.nik};
@@ -176,7 +178,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
             captchaRef.reset();
           }
         }
-      );
+      });
     }
   }
 
@@ -191,36 +193,36 @@ export class VerifyComponent implements OnInit, OnDestroy {
     }
     this.subsVerify1 = this.us.verifikasi({
       ...body
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[USER_VERIFIKASI_SUCCESS]', res);
         this.bs.idle();
         this.submitted = false;
         this.as.removeUser();
         localStorage.setItem(environment.tokenName, res.result.token);
         this.bs.busy();
-        this.subsVerify2 = this.as.verify(res.result.token).subscribe(
-          success => {
+        this.subsVerify2 = this.as.verify(res.result.token).subscribe({
+          next: success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();
             this.router.navigateByUrl(`/home`);
           },
-          error => {
+          error: error => {
             this.gs.log('[VERIFY_LOGIN_ERROR]', error);
             this.bs.idle();
             this.as.removeUser();
             this.router.navigateByUrl(`/home`);
           }
-        );
+        });
       },
-      err => {
+      error: err => {
         this.gs.log('[USER_VERIFIKASI_ERROR]', err);
         this.bs.idle();
         this.submitted = false;
         this.verifyInfo = err.error.result.message;
         stepper.reset();
       }
-    );
+    });
   }
 
 }

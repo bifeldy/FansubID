@@ -85,8 +85,8 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
     }
     this.subsNotifGet = this.adm.getAllNotif(
       this.q, this.page, this.row, this.sort, this.order
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[NOTIFICATION_LIST_SUCCESS]', res);
         this.count = res.count;
         const notifDataRow = [];
@@ -109,11 +109,11 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
         this.notifData.row = notifDataRow;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[NOTIFICATION_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   onSubmit(): void {
@@ -130,8 +130,8 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
       content: this.fg.value.content,
       dismissible: (this.fg.value.dismissible === '1'),
       deadline: this.fg.value.deadline
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[NOTIFICATION_CREATE_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
@@ -146,13 +146,13 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
         }
         this.getNotif();
       },
-      err => {
+      error: err => {
         this.gs.log('[NOTIFICATION_CREATE_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
         this.getNotif();
       }
-    );
+    });
   }
 
   deleteNotif(data): void {
@@ -165,23 +165,25 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
         cancelText: 'Tidak, Batal'
       },
       disableClose: false
-    }).afterClosed().subscribe(re => {
-      if (re === true) {
-        this.bs.busy();
-        this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe(
-          res => {
-            this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_SUCCESS]', res);
-            this.bs.idle();
-            this.getNotif();
-          },
-          err => {
-            this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_ERROR]', err);
-            this.bs.idle();
-            this.getNotif();
-          }
-        );
-      } else if (re === false) {
-        this.getNotif();
+    }).afterClosed().subscribe({
+      next: re => {
+        if (re === true) {
+          this.bs.busy();
+          this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe(
+            res => {
+              this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_SUCCESS]', res);
+              this.bs.idle();
+              this.getNotif();
+            },
+            err => {
+              this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_ERROR]', err);
+              this.bs.idle();
+              this.getNotif();
+            }
+          );
+        } else if (re === false) {
+          this.getNotif();
+        }
       }
     });
   }

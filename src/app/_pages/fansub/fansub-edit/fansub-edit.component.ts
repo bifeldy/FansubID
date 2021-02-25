@@ -87,13 +87,13 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
       this.bs.busy();
-      this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe(
-        res => {
+      this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe({
+        next: res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
           this.initForm(res.result);
           this.bs.idle();
         },
-        err => {
+        error: err => {
           this.gs.log('[FANSUB_DETAIL_ERROR]', err);
           this.bs.idle();
           this.router.navigate(['/error'], {
@@ -102,7 +102,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
             }
           });
         }
-      );
+      });
     }
   }
 
@@ -132,12 +132,12 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       tap(() => this.slugInfo = 'Mengecek ...'),
       switchMap(slugQuery => this.fansub.cekSlug({ slug: slugQuery })),
       retry(-1)
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_CEK_SLUG_RESULT]', res);
         this.slugInfo = (res as any).result.message;
       }
-    );
+    });
   }
 
   addTag(event: MatChipInputEvent): void {
@@ -198,20 +198,20 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.subsImgbb = this.imgbb.uploadImage({
       file: this.image
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.result.url);
         this.fg.controls.image.markAsDirty();
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
         this.fg.controls.image.markAsPristine();
         this.submitted = false;
       }
-    );
+    });
   }
 
   onSubmit(): void {
@@ -249,19 +249,19 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     }
     this.subsFansubUpdate = this.fansub.updateFansub(this.fansubSlug, {
       ...body
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_EDIT_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
         this.router.navigateByUrl(`/fansub/${res.result.slug}`);
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_EDIT_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
       }
-    );
+    });
   }
 
 }

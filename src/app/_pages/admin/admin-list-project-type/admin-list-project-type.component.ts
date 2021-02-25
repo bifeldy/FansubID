@@ -85,8 +85,8 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
       this.subsProjectGet.unsubscribe();
       this.bs.idle();
     }
-    this.subsProjectGet = this.project.getProject().subscribe(
-      res => {
+    this.subsProjectGet = this.project.getProject().subscribe({
+      next: res => {
         this.gs.log('[PROJECT_LIST_SUCCESS]', res);
         const projectDataRow = [];
         for (const r of res.results) {
@@ -106,11 +106,11 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
         this.projectData.row = projectDataRow;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[PROJECT_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   onSubmit(): void {
@@ -125,8 +125,8 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
       name: this.fg.value.name,
       description: this.fg.value.description,
       image: this.fg.value.image,
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[PROJECT_CREATE_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
@@ -141,13 +141,13 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
         }
         this.getProject();
       },
-      err => {
+      error: err => {
         this.gs.log('[PROJECT_CREATE_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
         this.getProject();
       }
-    );
+    });
   }
 
   deleteProject(data): void {
@@ -160,23 +160,25 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
         cancelText: 'Tidak, Batal'
       },
       disableClose: false
-    }).afterClosed().subscribe(re => {
-      if (re === true) {
-        this.bs.busy();
-        this.subsProjectDelete = this.project.deleteProject(data.id).subscribe(
-          res => {
-            this.gs.log('[PROJECT_LIST_CLICK_DELETE_SUCCESS]', res);
-            this.bs.idle();
-            this.getProject();
-          },
-          err => {
-            this.gs.log('[PROJECT_LIST_CLICK_DELETE_ERROR]', err);
-            this.bs.idle();
-            this.getProject();
-          }
-        );
-      } else if (re === false) {
-        this.getProject();
+    }).afterClosed().subscribe({
+      next: re => {
+        if (re === true) {
+          this.bs.busy();
+          this.subsProjectDelete = this.project.deleteProject(data.id).subscribe(
+            res => {
+              this.gs.log('[PROJECT_LIST_CLICK_DELETE_SUCCESS]', res);
+              this.bs.idle();
+              this.getProject();
+            },
+            err => {
+              this.gs.log('[PROJECT_LIST_CLICK_DELETE_ERROR]', err);
+              this.bs.idle();
+              this.getProject();
+            }
+          );
+        } else if (re === false) {
+          this.getProject();
+        }
       }
     });
   }
@@ -218,18 +220,18 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.subsImgbb = this.imgbb.uploadImage({
       file: this.image
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.result.url);
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
         this.submitted = false;
       }
-    );
+    });
   }
 
 }

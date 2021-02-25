@@ -94,12 +94,12 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       tap(() => this.slugInfo = 'Mengecek ...'),
       switchMap(slugQuery => this.fansub.cekSlug({ slug: slugQuery })),
       retry(-1)
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_CEK_SLUG_RESULT]', res);
         this.slugInfo = (res as any).result.message;
       }
-    );
+    });
   }
 
   addTag(event: MatChipInputEvent): void {
@@ -158,18 +158,18 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.subsImgbb = this.imgbb.uploadImage({
       file: this.image
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.result.url);
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
         this.submitted = false;
       }
-    );
+    });
   }
 
   onSubmit(): void {
@@ -202,19 +202,19 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       tags: this.fg.value.tags,
       slug: this.fg.value.slug,
       urls
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_CREATE_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
         this.router.navigateByUrl('/fansub');
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_CREATE_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
       }
-    );
+    });
   }
 
 }

@@ -94,8 +94,8 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
     const paramDoramaId = this.activatedRoute.snapshot.paramMap.get('doramaId');
     this.doramaId = paramDoramaId.split('-')[0];
     this.bs.busy();
-    this.subsDorama = this.dorama.getDorama(paramDoramaId).subscribe(
-      res => {
+    this.subsDorama = this.dorama.getDorama(paramDoramaId).subscribe({
+      next: res => {
         this.gs.log('[DORAMA_DETAIL_SUCCESS]', res);
         this.doramaData = res.result;
         this.doramaData.image_url = this.doramaData.poster;
@@ -136,7 +136,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
           this.getBerkasDorama();
         }
       },
-      err => {
+      error: err => {
         this.gs.log('[DORAMA_DETAIL_ERROR]', err);
         this.bs.idle();
         this.router.navigate(['/error'], {
@@ -145,7 +145,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
           }
         });
       }
-    );
+    });
   }
 
   openRank(): void {
@@ -199,8 +199,8 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.subsBerkas = this.dorama.getBerkasDorama(
       [this.doramaId], this.q, this.page, this.row, this.sort, this.order
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[BERKAS_DORAMA_SUCCESS]', res);
         this.count = res.count;
         this.berkasDorama = [];
@@ -216,17 +216,17 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
         this.tabData[1].data.row = this.berkasDorama;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[BERKAS_DORAMA_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getFansubDorama(): void {
     this.bs.busy();
-    this.subsFansub = this.dorama.getFansubDorama([this.doramaId]).subscribe(
-      res => {
+    this.subsFansub = this.dorama.getFansubDorama([this.doramaId]).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
         this.fansubDorama = [];
         for (const r of res.results[this.doramaId]) {
@@ -241,11 +241,11 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
         this.tabData[0].data = this.fansubDorama;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_DORAMA_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   openGenre(data): void {

@@ -101,11 +101,11 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       `Ubah Berkas`
     );
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.berkasId = this.activatedRoute.snapshot.paramMap.get('berkasId');
       this.bs.busy();
-      this.subsBerkasDetail = this.berkas.getBerkas(this.berkasId).subscribe(
-        res => {
+      this.subsBerkasDetail = this.berkas.getBerkas(this.berkasId).subscribe({
+        next: res => {
           this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
           this.bs.idle();
           if (this.as.currentUserValue.id !== res.result.user_.id) {
@@ -119,7 +119,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
             this.initForm(res.result);
           }
         },
-        err => {
+        error: err => {
           this.gs.log('[BERKAS_DETAIL_ERROR]', err);
           this.bs.idle();
           this.router.navigate(['/error'], {
@@ -128,7 +128,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
             }
           });
         }
-      );
+      });
     }
   }
 
@@ -167,32 +167,32 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   loadProjectList(): void {
     this.bs.busy();
-    this.subsProject = this.project.getProject().subscribe(
-      res => {
+    this.subsProject = this.project.getProject().subscribe({
+      next: res => {
         this.gs.log('[PROJECT_LOAD_SUCCESS]', res);
         this.projectList = res.results;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[PROJECT_LOAD_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   loadFansubList(): void {
     this.bs.busy();
-    this.subsFansub = this.fansub.getAllFansub().subscribe(
-      res => {
+    this.subsFansub = this.fansub.getAllFansub().subscribe({
+      next: res => {
         this.gs.log('[FANSUB_LOAD_SUCCESS]', res);
         this.fansubs = res.results;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_LOAD_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   initForm(data): void {
@@ -244,19 +244,19 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       tap(() => this.isLoading = true),
       switchMap(searchQuery => this.anime.searchAnime(searchQuery).pipe(finalize(() => this.isLoading = false))), retry(-1)
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[BERKAS_EDIT_SEARCH_ANIME_RESULT]', res);
         this.filteredAnime = (res as any).results;
       }
-    );
+    });
     this.subsDoramaDetail = this.fg.get('dorama_id').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       tap(() => this.isLoading = true),
       switchMap(searchQuery => this.dorama.searchDorama(searchQuery).pipe(finalize(() => this.isLoading = false))), retry(-1)
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[BERKAS_EDIT_SEARCH_DORAMA_RESULT]', res);
         for (const r of (res as any).results) {
           r.mdl_id = r.mdl_id.split('-')[1];
@@ -264,13 +264,13 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         }
         this.filteredDorama = (res as any).results;
       }
-    );
+    });
     this.fg.get('projectType_id').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       retry(-1)
-    ).subscribe(
-      projectId => {
+    ).subscribe({
+      next: projectId => {
         this.gs.log('[BERKAS_EDIT_PROJECT_CHANGE]', projectId);
         const selectedProject = this.projectList.find(p => p.id === projectId);
         this.resetSelectedAnime();
@@ -297,7 +297,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.fg.controls.anime_id.updateValueAndValidity();
         this.fg.controls.dorama_id.updateValueAndValidity();
       }
-    );
+    });
   }
 
   get getDownloadUrlControl(): FormArray {
@@ -378,19 +378,19 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       name: this.selectedFilterAnime.title,
       image_url: this.selectedFilterAnime.image_url,
       type: this.selectedFilterAnime.type
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[ANIME_CHECK_ADD_SUCCESS]', res);
         this.animeCheckOrAddResponse = res.result;
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[ANIME_CHECK_ADD_ERROR]', err);
         this.submitted = false;
         this.resetSelectedAnime();
         this.fg.controls.anime_id.patchValue(null);
       }
-    );
+    });
   }
 
   filterDoramaSelected(data): void {
@@ -403,19 +403,19 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       name: this.selectedFilterDorama.title,
       image_url: this.selectedFilterDorama.image_url,
       type: this.selectedFilterDorama.type
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[DORAMA_CHECK_ADD_SUCCESS]', res);
         this.doramaCheckOrAddResponse = res.result;
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[DORAMA_CHECK_ADD_ERROR]', err);
         this.submitted = false;
         this.resetSelectedDorama();
         this.fg.controls.dorama_id.patchValue(null);
       }
-    );
+    });
   }
 
   filterFansubSelected(data, i: number): void {
@@ -462,20 +462,20 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.subsImgbb = this.imgbb.uploadImage({
       file: this.image
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
         this.fg.controls.image.patchValue(res.result.url);
         this.fg.controls.image.markAsDirty();
         this.submitted = false;
       },
-      err => {
+      error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
         this.fg.controls.image.patchValue(null);
         this.fg.controls.image.markAsPristine();
         this.submitted = false;
       }
-    );
+    });
   }
 
   onSubmit(): void {
@@ -507,19 +507,19 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     }
     this.subsBerkasUpdate = this.berkas.updateBerkas(this.berkasId, {
       ...body
-    }).subscribe(
-      res => {
+    }).subscribe({
+      next: res => {
         this.gs.log('[BERKAS_EDIT_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
         this.router.navigateByUrl(`/berkas/${this.berkasId}`);
       },
-      err => {
+      error: err => {
         this.gs.log('[BERKAS_EDIT_ERROR]', err);
         this.submitted = false;
         this.bs.idle();
       }
-    );
+    });
   }
 
 }

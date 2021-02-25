@@ -69,8 +69,8 @@ export class BerkasListComponent implements OnInit, OnDestroy {
     }
     this.subsBerkas = this.berkas.getAllBerkas(
       this.q, this.page, this.row, this.sort, this.order
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
         this.berkasData = [];
@@ -89,11 +89,11 @@ export class BerkasListComponent implements OnInit, OnDestroy {
         this.fs.initializeFab('add', null, 'Tambah Berkas Baru', `/berkas/create`, false);
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[BERKAS_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   openBerkas(data): void {

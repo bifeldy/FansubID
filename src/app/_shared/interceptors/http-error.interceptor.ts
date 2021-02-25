@@ -34,7 +34,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     if (this.gs.isBrowser) {
-      this.as.currentUser.subscribe(user => this.currentUser = user);
+      this.as.currentUser.subscribe({ next: user => this.currentUser = user });
     }
 
     return next.handle(request).pipe(

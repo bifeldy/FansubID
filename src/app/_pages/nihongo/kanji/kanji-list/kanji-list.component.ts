@@ -90,18 +90,18 @@ export class KanjiListComponent implements OnInit, OnDestroy {
     }
     this.subsKanji = this.nihon.getAllKanji(
       this.jlpt, this.school, this.q, this.page, this.row, 'context', 'asc'
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[KANJI_LIST_SUCCESS]', res);
         this.count = res.count;
         this.kanjiData = res.results;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[KANJI_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   openEdict(kana): void {

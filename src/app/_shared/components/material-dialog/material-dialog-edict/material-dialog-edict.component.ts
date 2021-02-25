@@ -76,18 +76,18 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
   }
 
   loadEdict(): void {
-    this.subsEdict = this.nihon.getAllEdict(this.charToDraw, this.page).subscribe(
-      res => {
+    this.subsEdict = this.nihon.getAllEdict(this.charToDraw, this.page).subscribe({
+      next: res => {
         this.gs.log('[EDICT_LIST_SUCCESS]', res);
         this.edict = [...this.edict, ...res.results];
         if (res.results.length <= 0) {
           this.pageFinished = true;
         }
       },
-      err => {
+      error: err => {
         this.gs.log('[EDICT_LIST_ERROR]', err);
       }
-    );
+    });
   }
 
   loadNextPage(): void {

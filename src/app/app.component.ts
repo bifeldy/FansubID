@@ -70,64 +70,68 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       '「💤 Hikki」, 「🌞 Hikikomori」',
       '/favicon.ico'
     );
-    this.subsRouter = this.router.events.subscribe(e1 => {
-      if (e1 instanceof RouteConfigLoadStart) {
-        if (this.gs.isBrowser) {
-          this.bs.busy();
+    this.subsRouter = this.router.events.subscribe({
+      next: e1 => {
+        if (e1 instanceof RouteConfigLoadStart) {
+          if (this.gs.isBrowser) {
+            this.bs.busy();
+          }
         }
-      }
-      else if (e1 instanceof RouteConfigLoadEnd) {
-        if (this.gs.isBrowser) {
-          this.bs.idle();
+        else if (e1 instanceof RouteConfigLoadEnd) {
+          if (this.gs.isBrowser) {
+            this.bs.idle();
+          }
         }
-      }
-      else if (e1 instanceof NavigationStart) {
-        if (this.gs.isBrowser) {
-          this.bs.busy();
+        else if (e1 instanceof NavigationStart) {
+          if (this.gs.isBrowser) {
+            this.bs.busy();
+          }
         }
-      }
-      else if (e1 instanceof NavigationEnd) {
-        if (e1.url) {
-          const str = e1.url.split('/')[1];
-          if (str) {
-            const stringBadge = `badge${str[0].toUpperCase()}${str.slice(1)}`;
-            let arrBadge = this.ss[stringBadge];
-            if (arrBadge) {
-              arrBadge = [];
-              const mainMenu = this.lms.mainMenus.find(m => m.link === e1.url);
-              const contentMenu = this.lms.contentMenus.find(m => m.link === e1.url);
-              const miscMenu = this.lms.miscMenus.find(m => m.link === e1.url);
-              if (mainMenu) {
-                mainMenu.badge = null;
-              }
-              if (contentMenu) {
-                contentMenu.badge = null;
-              }
-              if (miscMenu) {
-                miscMenu.badge = null;
+        else if (e1 instanceof NavigationEnd) {
+          if (e1.url) {
+            const str = e1.url.split('/')[1];
+            if (str) {
+              const stringBadge = `badge${str[0].toUpperCase()}${str.slice(1)}`;
+              let arrBadge = this.ss[stringBadge];
+              if (arrBadge) {
+                arrBadge = [];
+                const mainMenu = this.lms.mainMenus.find(m => m.link === e1.url);
+                const contentMenu = this.lms.contentMenus.find(m => m.link === e1.url);
+                const miscMenu = this.lms.miscMenus.find(m => m.link === e1.url);
+                if (mainMenu) {
+                  mainMenu.badge = null;
+                }
+                if (contentMenu) {
+                  contentMenu.badge = null;
+                }
+                if (miscMenu) {
+                  miscMenu.badge = null;
+                }
               }
             }
           }
-        }
-        let activatedRouteChild = this.route.firstChild;
-        for (const aRC of activatedRouteChild.children) {
-          activatedRouteChild = aRC;
-        }
-        this.subsRouterChild = activatedRouteChild.data.subscribe(e2 => {
-          this.updateBackgroundImage();
-          this.pi.updatePageMetaData(
-            e2.title,
-            e2.description,
-            e2.keywords,
-            this.selectedBackgroundImage ? this.selectedBackgroundImage : '/favicon.ico'
-          );
-          if (this.gs.isBrowser) {
-            this.bs.idle();
-            this.fs.removeFab();
-            this.checkStorage();
-            this.leftSideNavContent.elementRef.nativeElement.scrollTop = 0;
+          let activatedRouteChild = this.route.firstChild;
+          for (const aRC of activatedRouteChild.children) {
+            activatedRouteChild = aRC;
           }
-        });
+          this.subsRouterChild = activatedRouteChild.data.subscribe({
+            next: e2 => {
+              this.updateBackgroundImage();
+              this.pi.updatePageMetaData(
+                e2.title,
+                e2.description,
+                e2.keywords,
+                this.selectedBackgroundImage ? this.selectedBackgroundImage : '/favicon.ico'
+              );
+              if (this.gs.isBrowser) {
+                this.bs.idle();
+                this.fs.removeFab();
+                this.checkStorage();
+                this.leftSideNavContent.elementRef.nativeElement.scrollTop = 0;
+              }
+            }
+          });
+        }
       }
     });
   }
@@ -150,17 +154,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     const token = localStorage.getItem(environment.tokenName);
     if (token) {
       this.bs.busy();
-      this.subsVerify = this.as.verify(token).subscribe(
-        success => {
+      this.subsVerify = this.as.verify(token).subscribe({
+        next: success => {
           this.gs.log('[VERIFY_SUCCESS]', success);
           this.bs.idle();
         },
-        error => {
+        error: error => {
           this.gs.log('[VERIFY_ERROR]', error);
           this.bs.idle();
           this.as.removeUser();
         }
-      );
+      });
     }
   }
 

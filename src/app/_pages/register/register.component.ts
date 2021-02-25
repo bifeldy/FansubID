@@ -100,28 +100,28 @@ export class RegisterComponent implements OnInit, OnDestroy {
         password: CryptoJS.SHA512(this.fg.value.password).toString(),
         agree: this.fg.value.agree,
         'g-recaptcha-response': this.fg.value['g-recaptcha-response']
-      }).subscribe(
-        (res: any) => {
+      }).subscribe({
+        next: (res: any) => {
           this.bs.idle();
           this.registerInfo = res.info;
           this.bs.busy();
-          this.subsVerify = this.as.verify(localStorage.getItem(environment.tokenName)).subscribe(
-            success => {
+          this.subsVerify = this.as.verify(localStorage.getItem(environment.tokenName)).subscribe({
+            next: success => {
               this.registerInfo = success.info;
               this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);
               this.bs.idle();
               this.captchaRef.reset();
               this.router.navigateByUrl(this.returnUrl);
             },
-            error => {
+            error: error => {
               this.gs.log('[VERIFY_REGISTER_ERROR]', error);
               this.bs.idle();
               this.captchaRef.reset();
               this.router.navigateByUrl('/login');
             }
-          );
+          });
         },
-        err => {
+        error: err => {
           this.gs.log('[REGISTER_FORM_ERROR]', err);
           this.bs.idle();
           this.submitted = false;
@@ -130,7 +130,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.usernameUsed = err.error.result.username || null;
           this.emailUsed = err.error.result.email || null;
         }
-      );
+      });
     }
   }
 

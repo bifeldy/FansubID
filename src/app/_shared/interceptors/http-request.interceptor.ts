@@ -26,7 +26,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.gs.isBrowser && request.url.startsWith(environment.apiUrl)) {
-      this.as.currentUser.subscribe(user => this.currentUser = user);
+      this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       const userToken = localStorage.getItem(environment.tokenName);
       if (this.currentUser && userToken) {
         this.gs.log('[INTERCEPT_REQUEST] Authorization');

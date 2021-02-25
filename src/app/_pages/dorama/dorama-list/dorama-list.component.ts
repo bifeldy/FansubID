@@ -106,24 +106,26 @@ export class DoramaListComponent implements OnInit, OnDestroy {
   }
 
   watchUrlRoute(): void {
-    this.subsParam = this.activatedRoute.queryParams.subscribe(p => {
-      this.bs.busy();
-      this.currentYear = p.year ? (
-        Number.isNaN(parseInt(p.year, 10)) ? this.currentYear : parseInt(p.year, 10)
-      ) : new Date().getFullYear();
-      this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
-      this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
-      this.selectedSeasonName = p.season ? (
-        [
-          Seasons.WINTER,
-          Seasons.SPRING,
-          Seasons.SUMMER,
-          Seasons.FALL
-        ].indexOf(p.season) >= 0 ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth)
-      ) : this.findSeasonNameByMonthNumber(this.currentMonth);
-      this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
-      this.bs.idle();
-      this.getSeasonalDorama(p.year && p.season);
+    this.subsParam = this.activatedRoute.queryParams.subscribe({
+      next: p => {
+        this.bs.busy();
+        this.currentYear = p.year ? (
+          Number.isNaN(parseInt(p.year, 10)) ? this.currentYear : parseInt(p.year, 10)
+        ) : new Date().getFullYear();
+        this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
+        this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
+        this.selectedSeasonName = p.season ? (
+          [
+            Seasons.WINTER,
+            Seasons.SPRING,
+            Seasons.SUMMER,
+            Seasons.FALL
+          ].indexOf(p.season) >= 0 ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth)
+        ) : this.findSeasonNameByMonthNumber(this.currentMonth);
+        this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
+        this.bs.idle();
+        this.getSeasonalDorama(p.year && p.season);
+      }
     });
   }
 
@@ -143,8 +145,8 @@ export class DoramaListComponent implements OnInit, OnDestroy {
 
   getSeasonalDorama(showFab = false): void {
     this.bs.busy();
-    this.subsSeasonalDorama = this.dorama.getSeasonalDorama(this.currentYear, this.selectedSeasonName).subscribe(
-      res => {
+    this.subsSeasonalDorama = this.dorama.getSeasonalDorama(this.currentYear, this.selectedSeasonName).subscribe({
+      next: res => {
         this.gs.log('[DORAMA_SEASONAL_SUCCESS]', res);
         this.seasonalDorama = res.results.sort((a, b) => b.rating - a.rating);
         this.doramaCountry = [];
@@ -160,11 +162,11 @@ export class DoramaListComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.getFansubDorama();
       },
-      err => {
+      error: err => {
         this.gs.log('[DORAMA_SEASONAL_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getFansubDorama(): void {
@@ -174,8 +176,8 @@ export class DoramaListComponent implements OnInit, OnDestroy {
     for (const sD of this.seasonalDorama) {
       seasonalDoramaListId.push(sD.mdl_id);
     }
-    this.subsFansubDorama = this.dorama.getFansubDorama(seasonalDoramaListId).subscribe(
-      res => {
+    this.subsFansubDorama = this.dorama.getFansubDorama(seasonalDoramaListId).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
         this.seasonalDoramaWithFansub = [];
         for (const sD of this.seasonalDorama) {
@@ -197,11 +199,11 @@ export class DoramaListComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.changeCountryDorama();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_DORAMA_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   changeSeasonalDorama(): void {

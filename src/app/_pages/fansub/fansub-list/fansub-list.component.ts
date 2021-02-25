@@ -165,8 +165,8 @@ export class FansubListComponent implements OnInit, OnDestroy {
 
   getFansubData(): void {
     this.bs.busy();
-    this.subsFansub = this.fansub.getAllFansub().subscribe(
-      res => {
+    this.subsFansub = this.fansub.getAllFansub().subscribe({
+      next: res => {
         this.gs.log('[FANSUB_LIST_SUCCESS]', res);
         for (const r of res.results) {
           this.allFansubId.push(r.id);
@@ -203,17 +203,17 @@ export class FansubListComponent implements OnInit, OnDestroy {
         this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/create', false);
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getAnimeFansub(): void {
     this.bs.busy();
-    this.subsAnime = this.fansub.getAnimeFansub(this.allFansubId).subscribe(
-      res => {
+    this.subsAnime = this.fansub.getAnimeFansub(this.allFansubId).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         for (const f of this.fansubData) {
           if (res.results[f.id]) {
@@ -233,17 +233,17 @@ export class FansubListComponent implements OnInit, OnDestroy {
         }
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_ANIME_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   getDoramaFansub(): void {
     this.bs.busy();
-    this.subsDorama = this.fansub.getDoramaFansub(this.allFansubId).subscribe(
-      res => {
+    this.subsDorama = this.fansub.getDoramaFansub(this.allFansubId).subscribe({
+      next: res => {
         this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
         for (const f of this.fansubData) {
           if (res.results[f.id]) {
@@ -263,11 +263,11 @@ export class FansubListComponent implements OnInit, OnDestroy {
         }
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[FANSUB_DORAMA_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   openFansub(data): void {

@@ -59,7 +59,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
     }
   }
 
@@ -81,20 +81,20 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.bs.busy();
-    this.subsLogout = this.as.logout().subscribe(
-      (res: any) => {
+    this.subsLogout = this.as.logout().subscribe({
+      next: (res: any) => {
         this.gs.log('[LOGOUT_SUCCESS]', res);
         this.as.removeUser();
         this.bs.idle();
         this.router.navigateByUrl('/');
       },
-      err => {
+      error: err => {
         this.gs.log('[LOGOUT_ERROR]', err);
         this.as.removeUser();
         this.bs.idle();
         this.router.navigateByUrl('/');
       }
-    );
+    });
   }
 
 }

@@ -69,8 +69,8 @@ export class NewsListComponent implements OnInit, OnDestroy {
     }
     this.subsNews = this.news.getAllNews(
       this.q, this.page, this.row, this.sort, this.order
-    ).subscribe(
-      res => {
+    ).subscribe({
+      next: res => {
         this.gs.log('[NEWS_LIST_SUCCESS]', res);
         this.count = res.count;
         this.newsData = [];
@@ -88,11 +88,11 @@ export class NewsListComponent implements OnInit, OnDestroy {
         this.fs.initializeFab('add', null, 'Tambah Berita Baru', `/news/create`, false);
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[NEWS_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
   openNews(data): void {

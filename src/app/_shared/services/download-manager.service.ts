@@ -63,8 +63,8 @@ export class DownloadManagerService {
         responseType: 'blob',
         observe: 'events',
         reportProgress: true
-      }).subscribe(
-        event => {
+      }).subscribe({
+        next: event => {
           this.gs.log('[DOWNLOAD_EVENTS]', event);
           if ((event as any).loaded) {
             const e = (event as any);
@@ -98,7 +98,7 @@ export class DownloadManagerService {
             this.saveFileAs(attachmentId);
           }
         }
-      );
+      });
     } else {
       this.saveFileAs(attachmentId);
     }

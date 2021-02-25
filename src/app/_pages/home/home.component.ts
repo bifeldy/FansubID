@@ -40,17 +40,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getNews(): void {
     this.bs.busy();
-    this.subsNews = this.news.getAllNews('', 1, 3).subscribe(
-      res => {
+    this.subsNews = this.news.getAllNews('', 1, 3).subscribe({
+      next: res => {
         this.gs.log('[HOME_NEWS_LIST_SUCCESS]', res);
         this.newsData = res.results;
         this.bs.idle();
       },
-      err => {
+      error: err => {
         this.gs.log('[HOME_NEWS_LIST_ERROR]', err);
         this.bs.idle();
       }
-    );
+    });
   }
 
 }

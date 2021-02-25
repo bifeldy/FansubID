@@ -62,8 +62,8 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.berkasId = this.activatedRoute.snapshot.paramMap.get('berkasId');
     this.bs.busy();
-    this.subsBerkas = this.berkas.getBerkas(this.berkasId).subscribe(
-      res => {
+    this.subsBerkas = this.berkas.getBerkas(this.berkasId).subscribe({
+      next: res => {
         this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
         this.berkasData = res.result;
         this.pi.updatePageMetaData(
@@ -74,7 +74,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
         );
         this.bs.idle();
         if (this.gs.isBrowser) {
-          this.subsUser = this.as.currentUser.subscribe(user => this.currentUser = user);
+          this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
           this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
           if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
             if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
@@ -92,7 +92,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           }
         }
       },
-      err => {
+      error: err => {
         this.gs.log('[BERKAS_DETAIL_ERROR]', err);
         this.bs.idle();
         this.router.navigate(['/error'], {
@@ -101,7 +101,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           }
         });
       }
-    );
+    });
   }
 
   login(): void {
