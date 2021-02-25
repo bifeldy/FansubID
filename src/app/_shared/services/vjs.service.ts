@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { ApiService } from './api.service.js';
-import { GlobalService } from './global.service.js';
+import { ApiService } from './api.service';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
