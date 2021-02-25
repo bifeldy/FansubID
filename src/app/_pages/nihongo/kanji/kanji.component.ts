@@ -1,17 +1,17 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 
-import { GlobalService } from '../../../../_shared/services/global.service';
-import { BusyService } from '../../../../_shared/services/busy.service';
-import { NihongoService } from '../../../../_shared/services/nihongo.service';
-import { DialogService } from '../../../../_shared/services/dialog.service';
+import { GlobalService } from '../../../_shared/services/global.service';
+import { BusyService } from '../../../_shared/services/busy.service';
+import { NihongoService } from '../../../_shared/services/nihongo.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
-  selector: 'app-kanji-list',
-  templateUrl: './kanji-list.component.html',
-  styleUrls: ['./kanji-list.component.css']
+  selector: 'app-kanji',
+  templateUrl: './kanji.component.html',
+  styleUrls: ['./kanji.component.css']
 })
-export class KanjiListComponent implements OnInit, OnDestroy {
+export class KanjiComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 

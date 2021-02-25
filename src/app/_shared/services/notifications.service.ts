@@ -19,7 +19,7 @@ export class NotificationsService {
         id: 0,
         type: 'info',
         title: 'Pemberitahuan!',
-        content: 'Website masih dalam tahap pengembangan sehingga belum semua fitur tersedia. Jika Ingin Request Fitur Dapat Menghubungi \'<a href="https://discordapp.com/users/306076547616473089" target="_blank" class="text-decoration-none">Bifeldy#4945</a>\'. Terima kasih. ^_^',
+        content: 'Website masih dalam tahap pengembangan sehingga belum semua fitur tersedia. Jika Ingin Request Fitur Dapat Menghubungi \'<a href="https://discordapp.com/users/306076547616473089" target="_blank" class="text-decoration-none">Bifeldy#0001</a>\'. Terima kasih. ^_^',
         dismissible: true
       }
     }

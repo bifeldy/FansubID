@@ -43,8 +43,8 @@
         </div>
         <div class="col-12" *ngIf="kanjiData.length > 0">
           <div class="row px-3">
-            <div class="col-6 col-md-3 col-lg-2 p-2" style="cursor: pointer;" *ngFor="let k of kanjiData">
-              <div class="card text-center p-3" (click)="openEdict(k)">
+            <div class="col-6 col-md-3 col-lg-2 p-2" *ngFor="let k of kanjiData">
+              <div class="card text-center p-3" (click)="openEdict(k)" style="cursor: pointer;">
                 <div class="card-body p-0">
                   <h5 class="card-title py-3" style="font-size: 300%;">{{ k.character }}</h5>
                   <div>{{ k.translate }}</div>

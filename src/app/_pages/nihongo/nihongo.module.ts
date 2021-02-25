@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import { NihongoListComponent } from './nihongo-list/nihongo-list.component';
 import { HirakataComponent } from './hirakata/hirakata.component';
 import { HiraganaComponent } from './hiragana/hiragana.component';
 import { KatakanaComponent } from './katakana/katakana.component';
 import { AngkaComponent } from './angka/angka.component';
+import { KanjiComponent } from './kanji/kanji.component';
 
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
@@ -59,7 +61,7 @@ const routes: Routes = [
   },
   {
     path: 'kanji',
-    loadChildren: () => import('./kanji/kanji.module').then(m => m.KanjiModule),
+    component: KanjiComponent,
     data: {
       title: 'Huruf Kanji',
       description: 'Mengenal Huruf Kanji Sesuai Rank JLPT & Sekolah',
@@ -74,11 +76,13 @@ const routes: Routes = [
     HirakataComponent,
     HiraganaComponent,
     KatakanaComponent,
-    AngkaComponent
+    AngkaComponent,
+    KanjiComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    FormsModule,
     NotificationsModule,
     BannerDiscordModule,
     BannerNihongoModule,
