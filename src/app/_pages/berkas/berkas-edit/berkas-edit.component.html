@@ -68,7 +68,7 @@
                         </mat-option>
                       </ng-container>
                     </mat-autocomplete>
-                    <small *ngIf="selectedFilterAnime" class="text-primary">{{ selectedFilterAnime.title }}</small>
+                    <small *ngIf="selectedFilterAnime" class="text-warning">{{ selectedFilterAnime.title }}</small>
                     <mat-error>
                       <strong *ngIf="fg.get('anime_id').hasError('required')">ID Anime Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('anime_id').hasError('pattern')">ID Anime Hanya Boleh Angka</strong>
@@ -89,7 +89,7 @@
                         </mat-option>
                       </ng-container>
                     </mat-autocomplete>
-                    <small *ngIf="selectedFilterDorama" class="text-primary">{{ selectedFilterDorama.title }}</small>
+                    <small *ngIf="selectedFilterDorama" class="text-warning">{{ selectedFilterDorama.title }}</small>
                     <mat-error>
                       <strong *ngIf="fg.get('dorama_id').hasError('required')">ID Dorama Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('dorama_id').hasError('pattern')">ID Dorama Hanya Boleh Angka</strong>
@@ -114,7 +114,7 @@
                               <span>{{ f.name }}</span>
                             </mat-option>
                           </mat-autocomplete>
-                          <small class="text-primary">{{ fs.get('fansub_name').value }}</small>
+                          <small class="text-warning">{{ fs.get('fansub_name').value }}</small>
                           <mat-error>
                             <strong *ngIf="fs.get('fansub_id').hasError('required')">ID Fansub Tidak Boleh Kosong</strong>
                             <strong *ngIf="fs.get('fansub_id').hasError('pattern')">ID Fansub Hanya Boleh Angka</strong>
@@ -156,7 +156,7 @@
                 </div>
                 <div class="row" *ngIf="attachmentFile">
                   <mat-list>
-                    <div mat-subheader class="text-primary">Berkas yang terlampir tidak boleh diubah.</div>
+                    <div mat-subheader class="text-warning">Berkas yang terlampir tidak boleh diubah.</div>
                     <mat-list-item>
                       <mat-icon mat-list-icon>attach_file</mat-icon>
                       <div mat-line>{{ attachmentFile.name }}.{{ attachmentFile.ext }}</div>
