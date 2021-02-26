@@ -97,4 +97,8 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
     }
   }
 
+  openVocab(data): void {
+    this.gs.log('[EDICT_LIST_CLICK_VOCAB]', data);
+  }
+
 }
