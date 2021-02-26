@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { LeftMenuComponent } from './left-menu.component';
+import { RightPanelComponent } from './right-panel.component';
 
 import { SharedMaterialModule } from '../../helpers/shared-material.module';
 
 @NgModule({
-  declarations: [LeftMenuComponent],
+  declarations: [RightPanelComponent],
   imports: [
     CommonModule,
     RouterModule,
     SharedMaterialModule
   ],
-  exports: [LeftMenuComponent]
+  exports: [RightPanelComponent]
 })
-export class LeftMenuModule { }
+export class RightPanelModule { }

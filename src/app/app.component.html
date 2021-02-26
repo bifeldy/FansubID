@@ -5,17 +5,24 @@
 <ng-progress [color]="'#ff4081'" [fixed]="false" [meteor]="false" [thick]="true"></ng-progress>
 
 <!-- Side Menu Drawer & Content -->
-<mat-sidenav-container class="sidenav-container" [hasBackdrop]="lms.sideNavExpanded">
+<mat-sidenav-container class="sidenav-container" [hasBackdrop]="lms.sideNavExpanded || rightSidePanel.isOpen">
 
-  <!-- Side Menu -->
-  <mat-sidenav #leftSideNav [mode]="'side'" [opened]="lms.opened" [ngStyle]="{
-    'background-image': 'url(/assets/img/bg-side-menu.png)'
+  <!-- Left Side Menu -->
+  <mat-sidenav #leftSideNav disableClose [mode]="'side'" [opened]="lms.opened" [ngStyle]="{
+    'background-image': 'url(/assets/img/bg-left-menu.png)'
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-left-menu></app-left-menu>
   </mat-sidenav>
 
+  <!-- Right Side Menu -->
+  <mat-sidenav #rightSidePanel [mode]="'over'" [opened]="false" position="end" [ngStyle]="{
+    'background-image': 'url(/assets/img/bg-right-panel.png)'
+  }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
+    <app-right-panel></app-right-panel>
+  </mat-sidenav>
+
   <!-- Main Content -->
-  <mat-sidenav-content #leftSideNavContent
+  <mat-sidenav-content #siteContent
     [style.background-repeat]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? 'repeat' : 'no-repeat'"
     [style.background-size]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? '' : '128px'"
     [style.background-position]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? '' : 'bottom right'"

@@ -31,6 +31,7 @@ import { AppComponent } from './app.component';
 import { SharedMaterialModule } from './_shared/helpers/shared-material.module';
 import { HeaderModule } from './_shared/components/header/header.module';
 import { LeftMenuModule } from './_shared/components/left-menu/left-menu.module';
+import { RightPanelModule } from './_shared/components/right-panel/right-panel.module';
 import { FooterModule } from './_shared/components/footer/footer.module';
 import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
 import { MaterialDialogModule } from './_shared/components/material-dialog/material-dialog.module';
@@ -43,6 +44,7 @@ import { MaterialDialogModule } from './_shared/components/material-dialog/mater
     BrowserAnimationsModule,
     HeaderModule,
     LeftMenuModule,
+    RightPanelModule,
     FooterModule,
     TransferHttpCacheModule,
     ReactiveFormsModule,

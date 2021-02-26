@@ -6,6 +6,7 @@ import { onMainContentChange } from './_shared/animations/anim-side-menu';
 import { environment } from '../environments/client/environment';
 
 import { LeftMenuService } from './_shared/services/left-menu.service';
+import { RightPanelService } from './_shared/services/right-panel.service';
 import { PageInfoService } from './_shared/services/page-info.service';
 import { AuthService } from './_shared/services/auth.service';
 import { FabService } from './_shared/services/fab.service';
@@ -22,7 +23,8 @@ import { StatsServerService } from './_shared/services/stats-server.service';
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('leftSideNav', { static: true }) leftSideNav: ElementRef;
-  @ViewChild('leftSideNavContent', { static: true }) leftSideNavContent;
+  @ViewChild('rightSidePanel', { static: true }) rightSidePanel: ElementRef;
+  @ViewChild('siteContent', { static: true }) siteContent;
 
   selectedBackgroundImage = '';
 
@@ -39,6 +41,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private fs: FabService,
     public gs: GlobalService,
     public lms: LeftMenuService,
+    public rps: RightPanelService,
     public ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
@@ -60,6 +63,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.lms.sideNav = this.leftSideNav;
+    this.rps.sidePanel = this.rightSidePanel;
   }
 
   ngOnInit(): void {
@@ -127,7 +131,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.bs.idle();
                 this.fs.removeFab();
                 this.checkStorage();
-                this.leftSideNavContent.elementRef.nativeElement.scrollTop = 0;
+                this.siteContent.elementRef.nativeElement.scrollTop = 0;
               }
             }
           });
