@@ -8,8 +8,8 @@ import User from '../models/User';
 import { environment } from '../../../environments/client/environment';
 
 import { GlobalService } from './global.service';
-import { CryptoService } from './crypto.service';
 import { ApiService } from './api.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -19,20 +19,11 @@ export class AuthService {
 
   constructor(
     private gs: GlobalService,
-    private crypt: CryptoService,
+    private ls: LocalStorageService,
     private api: ApiService
   ) {
     if (this.gs.isBrowser) {
-      let token = null;
-      let userSession = null;
-      try {
-        token = localStorage.getItem(environment.tokenName);
-        const userEncrypted = localStorage.getItem(environment.sessionName);
-        const userDecrypted = this.crypt.decrypt(userEncrypted, token);
-        userSession = JSON.parse(userDecrypted);
-      } catch (e) {
-        localStorage.removeItem(environment.sessionName);
-      }
+      const userSession = this.ls.getItem(environment.sessionName, true);
       this.currentUserSubject = new BehaviorSubject<User>(userSession);
       this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -46,9 +37,7 @@ export class AuthService {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.postData(`/verify`, { token }).pipe(map(respVerify => {
       this.currentUserSubject.next(respVerify.result);
-      const userSession = JSON.stringify(respVerify.result);
-      const userEncrypted = this.crypt.encrypt(userSession, token);
-      localStorage.setItem(environment.sessionName, userEncrypted);
+      this.ls.setItem(environment.sessionName, respVerify.result);
       return respVerify;
     }));
   }
@@ -56,7 +45,7 @@ export class AuthService {
   login(loginData: any): Observable<any> {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(map(respLogin => {
-      localStorage.setItem(environment.tokenName, respLogin.result.token);
+      this.ls.setItem(environment.tokenName, respLogin.result.token);
       return respLogin;
     }));
   }
@@ -64,13 +53,13 @@ export class AuthService {
   register(registerData: any): Observable<any> {
     this.gs.log('[AUTH_REGISTER]', registerData);
     return this.api.postData(`/register`, registerData).pipe(map(respRegister => {
-      localStorage.setItem(environment.tokenName, respRegister.result.token);
+      this.ls.setItem(environment.tokenName, respRegister.result.token);
       return respRegister;
     }));
   }
 
   logout(): Observable<any> {
-    this.gs.log('[AUTH_LOGOUT]', localStorage.getItem(environment.tokenName));
+    this.gs.log('[AUTH_LOGOUT]', this.ls.getItem(environment.tokenName));
     return this.api.deleteData(`/logout`).pipe(map(respLogout => {
       this.removeUser();
       return respLogout;
@@ -79,7 +68,7 @@ export class AuthService {
 
   removeUser(): void {
     this.currentUserSubject.next(null);
-    localStorage.clear();
+    this.ls.clear();
   }
 
 }

@@ -14,6 +14,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
 import { environment } from '../../../../environments/client/environment';
+import { LocalStorageService } from '../../../_shared/services/local-storage.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -62,6 +63,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private us: UserService,
     private pi: PageInfoService,
     private fb: FormBuilder,
+    private ls: LocalStorageService,
     private imgbb: ImgbbService,
     public gs: GlobalService,
     public as: AuthService
@@ -278,7 +280,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.submitted = false;
         this.bs.idle();
         this.as.removeUser();
-        localStorage.setItem(environment.tokenName, res.result.token);
+        this.ls.setItem(environment.tokenName, res.result.token);
         this.bs.busy();
         this.subsVerify = this.as.verify(res.result.token).subscribe({
           next: success => {

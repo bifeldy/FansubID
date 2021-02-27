@@ -119,7 +119,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       born: [data.born, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z]*$/)])],
       tags: [data.tags, Validators.compose([])],
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       web: [WEB ? WEB.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],

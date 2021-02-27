@@ -29,14 +29,22 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     method: 'GET',
     uri: `${kuryanaApi}/search/q/${searchQuery}`
   }, async (error, result, body) => {
-    return res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
-      results: (
-        'results' in JSON.parse(body)
-          ? JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType))
-          : []
-      )
-    });
+    if (error || !result) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Dorama API :: Search ${searchQuery} 🤣`,
+        results: []
+      });
+    } else {
+      return res.status(result.statusCode).json({
+        info: `😅 ${result.statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
+        results: (
+          'results' in JSON.parse(body)
+            ? JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType))
+            : []
+        )
+      });
+    }
   });
 });
 
@@ -118,14 +126,22 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
       year
     }
   }, async (error, result, body) => {
-    return res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
-      results: (
-        Array.isArray(JSON.parse(body))
-          ? JSON.parse(body)
-          : []
-      )
-    });
+    if (error || !result) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Dorama API :: Seasonal ${season} ${year} 🤣`,
+        results: []
+      });
+    } else {
+      return res.status(result.statusCode).json({
+        info: `😅 ${result.statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
+        results: (
+          Array.isArray(JSON.parse(body))
+            ? JSON.parse(body)
+            : []
+        )
+      });
+    }
   });
 });
 
@@ -274,30 +290,38 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
     method: 'GET',
     uri: `${kuryanaApi}/id/${req.params.mdlSlug}`
   }, async (error, result, body) => {
-    const dramaDetail = JSON.parse(body);
-    let httpStatusCode = result.statusCode;
-    if (httpStatusCode === 200) {
-      try {
-        if ('synopsis' in dramaDetail.data && dramaDetail.data.synopsis) {
-          const translatedDoramaSynopsis = await translate(dramaDetail.data.synopsis, { to: 'id' });
-          dramaDetail.data.synopsis = translatedDoramaSynopsis.text;
-        }
-      } catch (error) {
-        console.error(error);
-        httpStatusCode = 202;
-        dramaDetail.data.message = 'Penerjemah / Alih Bahasa Gagal!';
-      }
+    if (error || !result) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Dorama API :: Detail ${req.params.mdlSlug} 🤣`,
+        result: null
+      });
     } else {
-      httpStatusCode = dramaDetail.status_code;
+      const dramaDetail = JSON.parse(body);
+      let httpStatusCode = result.statusCode;
+      if (httpStatusCode === 200) {
+        try {
+          if ('synopsis' in dramaDetail.data && dramaDetail.data.synopsis) {
+            const translatedDoramaSynopsis = await translate(dramaDetail.data.synopsis, { to: 'id' });
+            dramaDetail.data.synopsis = translatedDoramaSynopsis.text;
+          }
+        } catch (error) {
+          console.error(error);
+          httpStatusCode = 202;
+          dramaDetail.data.message = 'Penerjemah / Alih Bahasa Gagal!';
+        }
+      } else {
+        httpStatusCode = dramaDetail.status_code;
+      }
+      return res.status(httpStatusCode).json({
+        info: `😅 ${httpStatusCode} - Dorama API :: Detail ${req.params.mdlSlug} 🤣`,
+        result: (
+          'data' in dramaDetail
+            ? dramaDetail.data
+            : dramaDetail
+        )
+      });
     }
-    return res.status(httpStatusCode).json({
-      info: `😅 ${httpStatusCode} - Dorama API :: Detail ${req.params.mdlSlug} 🤣`,
-      result: (
-        'data' in dramaDetail
-          ? dramaDetail.data
-          : dramaDetail
-      )
-    });
   });
 });
 

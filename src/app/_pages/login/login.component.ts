@@ -9,6 +9,7 @@ import { environment } from '../../../environments/client/environment';
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { BusyService } from '../../_shared/services/busy.service';
+import { LocalStorageService } from '../../_shared/services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
+    private ls: LocalStorageService,
     public as: AuthService
   ) {
     if (this.gs.isBrowser) {
@@ -95,7 +97,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.loginInfo = res.info;
           this.bs.busy();
-          this.subsVerify = this.as.verify(localStorage.getItem(environment.tokenName)).subscribe({
+          this.subsVerify = this.as.verify(this.ls.getItem(environment.tokenName)).subscribe({
             next: success => {
               this.loginInfo = success.info;
               this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);

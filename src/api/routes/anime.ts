@@ -28,14 +28,22 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     method: 'GET',
     uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`
   }, async (error, result, body) => {
-    return res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - Anime API :: Search ${searchQuery} 🤣`,
-      results: (
-        'results' in JSON.parse(body)
-          ? JSON.parse(body).results
-          : []
-      )
-    });
+    if (error || !result) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Anime API :: Search ${searchQuery} 🤣`,
+        results: []
+      });
+    } else {
+      return res.status(result.statusCode).json({
+        info: `😅 ${result.statusCode} - Anime API :: Search ${searchQuery} 🤣`,
+        results: (
+          'results' in JSON.parse(body)
+            ? JSON.parse(body).results
+            : []
+        )
+      });
+    }
   });
 });
 
@@ -108,14 +116,22 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
     method: 'GET',
     uri: `${jikanV3}/season/${year}/${season}`
   }, async (error, result, body) => {
-    return res.status(result.statusCode).json({
-      info: `😅 ${result.statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
-      results: (
-        'anime' in JSON.parse(body)
-          ? JSON.parse(body).anime
-          : []
-      )
-    });
+    if (error || !result) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Anime API :: Seasonal ${season} ${year} 🤣`,
+        results: []
+      });
+    } else {
+      return res.status(result.statusCode).json({
+        info: `😅 ${result.statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
+        results: (
+          'anime' in JSON.parse(body)
+            ? JSON.parse(body).anime
+            : []
+        )
+      });
+    }
   });
 });
 
@@ -264,31 +280,39 @@ router.get('/:malId', async (req: UserRequest, res: Response, next: NextFunction
     method: 'GET',
     uri: `${jikanV3}/anime/${req.params.malId}`
   }, async (error, result, body) => {
-    const animeDetail = JSON.parse(body);
-    let httpStatusCode = result.statusCode;
-    if ('request_hash' in animeDetail) {
-      delete animeDetail.request_hash;
-    }
-    if ('request_cached' in animeDetail) {
-      delete animeDetail.request_cached;
-    }
-    if ('request_cache_expiry' in animeDetail) {
-      delete animeDetail.request_cache_expiry;
-    }
-    try {
-      if ('synopsis' in animeDetail && animeDetail.synopsis) {
-        const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
-        animeDetail.synopsis = translatedAnimeSynopsis.text;
-      }
-    } catch (error) {
+    if (error || !result) {
       console.error(error);
-      httpStatusCode = 202;
-      animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+      return res.status(200).json({
+        info: `😅 200 - Anime API :: Detail ${req.params.malId} 🤣`,
+        result: null
+      });
+    } else {
+      const animeDetail = JSON.parse(body);
+      let httpStatusCode = result.statusCode;
+      if ('request_hash' in animeDetail) {
+        delete animeDetail.request_hash;
+      }
+      if ('request_cached' in animeDetail) {
+        delete animeDetail.request_cached;
+      }
+      if ('request_cache_expiry' in animeDetail) {
+        delete animeDetail.request_cache_expiry;
+      }
+      try {
+        if ('synopsis' in animeDetail && animeDetail.synopsis) {
+          const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
+          animeDetail.synopsis = translatedAnimeSynopsis.text;
+        }
+      } catch (error) {
+        console.error(error);
+        httpStatusCode = 202;
+        animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+      }
+      return res.status(httpStatusCode).json({
+        info: `😅 ${httpStatusCode} - Anime API :: Detail ${req.params.malId} 🤣`,
+        result: animeDetail
+      });
     }
-    return res.status(httpStatusCode).json({
-      info: `😅 ${httpStatusCode} - Anime API :: Detail ${req.params.malId} 🤣`,
-      result: animeDetail
-    });
   });
 });
 

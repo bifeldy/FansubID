@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { GlobalService } from '../services/global.service';
 import { StatsServerService } from '../services/stats-server.service';
+import { LocalStorageService } from '../services/local-storage.service';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -17,7 +18,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   constructor(
     private gs: GlobalService,
     private as: AuthService,
-    private ss: StatsServerService
+    private ss: StatsServerService,
+    private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -27,7 +29,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.gs.isBrowser && request.url.startsWith(environment.apiUrl)) {
       this.as.currentUser.subscribe({ next: user => this.currentUser = user });
-      const userToken = localStorage.getItem(environment.tokenName);
+      const userToken = this.ls.getItem(environment.tokenName);
       if (this.currentUser && userToken) {
         this.gs.log('[INTERCEPT_REQUEST] Authorization');
         request = request.clone({

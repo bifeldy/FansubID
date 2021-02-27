@@ -40,6 +40,11 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
+    for (const f of fansubs) {
+      delete f.description;
+      f.urls = JSON.parse(f.urls);
+      f.tags = JSON.parse(f.tags);
+    }
     return res.status(200).json({
       info: `😅 200 - Fansub API :: List All 🤣`,
       count,
