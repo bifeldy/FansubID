@@ -92,6 +92,10 @@ re-captcha > div {
   background-color: #303030 !important;
 }
 
+.bg-bifeldy-light {
+  background-color: #424242 !important;
+}
+
 .text-bifeldy-dark {
   color: #acacac !important;
 }

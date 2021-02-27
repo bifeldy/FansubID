@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { PageInfoService } from '../../services/page-info.service';
 import { LeftMenuService } from '../../services/left-menu.service';
 import { GlobalService } from '../../services/global.service';
+import { RightPanelService } from '../../services/right-panel.service';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private lms: LeftMenuService,
-    private router: Router,
+    private rps: RightPanelService,
     public pi: PageInfoService,
     public gs: GlobalService
   ) {
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openSearch(): void {
-    this.router.navigateByUrl('/search');
+    this.rps.toggleSidePanel('SearchAllComponent');
   }
 
 }

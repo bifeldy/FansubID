@@ -15,7 +15,7 @@
   </mat-sidenav>
 
   <!-- Right Side Menu -->
-  <mat-sidenav #rightSidePanel [mode]="'over'" [opened]="false" position="end" [ngStyle]="{
+  <mat-sidenav #rightSidePanel [mode]="'over'" [opened]="false" position="end" (closedStart)="rps.onClose()" [ngStyle]="{
     'background-image': 'url(/assets/img/bg-right-panel.png)'
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-right-panel></app-right-panel>

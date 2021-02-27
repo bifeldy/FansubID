@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
 import { NihongoService } from '../../../../_shared/services/nihongo.service';
+// import { RightPanelService } from '../../../../_shared/services/right-panel.service';
 
 import { DialogEdictData } from '../../../models/Dialog';
 
@@ -34,6 +35,7 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogEdictData,
     private nihon: NihongoService,
+    // private rps: RightPanelService,
     public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
@@ -99,6 +101,7 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
 
   openVocab(data): void {
     this.gs.log('[EDICT_LIST_CLICK_VOCAB]', data);
+    // this.rps.openSidePanel();
   }
 
 }

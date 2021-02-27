@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col-12 sticky-top bg-bifeldy-light">
+    <mat-form-field class="ms-auto pt-3 col-12" [color]="'accent'">
+      <mat-label>Cari Apapun Di Sini ...</mat-label>
+      <input matInput maxlength="200" placeholder="Ex. ばーかー！" (keyup.enter)="applyFilter($event)" [(ngModel)]="q" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="pt-3 border-bottom-dotted">
+          <a class="float-end text-decoration-none text-warning" routerLink="/news" style="font-size: small;">
+            Selengkapnya
+          </a>
+          <b class="text-bifeldy-dark">Berita</b>
+        </h2>
+      </div>
+      <div class="col-12">
+        <p *ngFor="let i of beritaResults">
+          // TODO :: Hasil Pencarian
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2 class="pt-3 border-bottom-dotted">
+          <a class="float-end text-decoration-none text-warning" routerLink="/nihongo/kanji" style="font-size: small;">
+            Selengkapnya
+          </a>
+          <b class="text-bifeldy-dark">Kanji</b>
+        </h2>
+      </div>
+      <div class="col-12">
+        <p *ngFor="let i of kanjiResults">
+          // TODO :: Hasil Pencarian
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2 class="pt-3 border-bottom-dotted">
+          <a class="float-end text-decoration-none text-warning" routerLink="/anime" style="font-size: small;">
+            Selengkapnya
+          </a>
+          <b class="text-bifeldy-dark">Anime</b>
+        </h2>
+      </div>
+      <div class="col-12">
+        <p *ngFor="let i of animeResults">
+          // TODO :: Hasil Pencarian
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2 class="pt-3 border-bottom-dotted">
+          <a class="float-end text-decoration-none text-warning" routerLink="/dorama" style="font-size: small;">
+            Selengkapnya
+          </a>
+          <b class="text-bifeldy-dark">Dorama</b>
+        </h2>
+      </div>
+      <div class="col-12">
+        <p *ngFor="let i of dramaResults">
+          // TODO :: Hasil Pencarian
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2 class="pt-3 border-bottom-dotted">
+          <a class="float-end text-decoration-none text-warning" routerLink="/fansub" style="font-size: small;">
+            Selengkapnya
+          </a>
+          <b class="text-bifeldy-dark">Fansub</b>
+        </h2>
+      </div>
+      <div class="col-12">
+        <p *ngFor="let i of fansubResults">
+          // TODO :: Hasil Pencarian
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2 class="pt-3 border-bottom-dotted">
+          <a class="float-end text-decoration-none text-warning" routerLink="/berkas" style="font-size: small;">
+            Selengkapnya
+          </a>
+          <b class="text-bifeldy-dark">Berkas</b>
+        </h2>
+      </div>
+      <div class="col-12">
+        <p *ngFor="let i of berkasResults">
+          // TODO :: Hasil Pencarian
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2 class="pt-3 border-bottom-dotted">
+          <b class="text-bifeldy-dark">Pengguna</b>
+        </h2>
+      </div>
+      <div class="col-12">
+        <p *ngFor="let i of penggunaResults">
+          // TODO :: Hasil Pencarian
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

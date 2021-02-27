@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-// import { RightPanelService } from '../../services/right-panel.service';
+import { RightPanelService } from '../../services/right-panel.service';
 import { GlobalService } from '../../services/global.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { GlobalService } from '../../services/global.service';
 export class RightPanelComponent implements OnInit {
 
   constructor(
-    // private rps: RightPanelService,
+    public rps: RightPanelService,
     public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
@@ -20,9 +20,6 @@ export class RightPanelComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.rps.sidePanel.toggle();
-    // this.rps.sidePanel.open();
-    // this.rps.sidePanel.close();
   }
 
 }
