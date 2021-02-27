@@ -25,6 +25,67 @@ import { environment } from '../../environments/server/environment';
 
 const router = Router();
 
+// GET `/api/user`
+router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const userRepo = getRepository(User);
+    const [user, count] = await userRepo.findAndCount({
+      where: [
+        { username: Like(`%${req.query.q ? req.query.q : ''}%`) }
+      ],
+      order: {
+        ...((req.query.sort && req.query.order) ? {
+          [req.query.sort]: req.query.order.toUpperCase()
+        } : {
+          created_at: 'DESC'
+        })
+      },
+      relations: ['kartu_tanda_penduduk_', 'profile_'],
+      skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+      take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+    });
+    for (const u of user) {
+      delete u.password;
+      delete u.session_token;
+      if ('kartu_tanda_penduduk_' in u && u.kartu_tanda_penduduk_) {
+        delete u.kartu_tanda_penduduk_.id;
+        delete u.kartu_tanda_penduduk_.agama;
+        delete u.kartu_tanda_penduduk_.alamat;
+        delete u.kartu_tanda_penduduk_.golongan_darah;
+        delete u.kartu_tanda_penduduk_.kecamatan;
+        delete u.kartu_tanda_penduduk_.kelurahan_desa;
+        delete u.kartu_tanda_penduduk_.kewarganegaraan;
+        delete u.kartu_tanda_penduduk_.nik;
+        delete u.kartu_tanda_penduduk_.pekerjaan;
+        delete u.kartu_tanda_penduduk_.rt;
+        delete u.kartu_tanda_penduduk_.rw;
+        delete u.kartu_tanda_penduduk_.status_perkawinan;
+        delete u.kartu_tanda_penduduk_.created_at;
+        delete u.kartu_tanda_penduduk_.updated_at;
+      }
+      if ('profile_' in u && u.profile_) {
+        delete u.profile_.id;
+        delete u.profile_.created_at;
+        delete u.profile_.updated_at;
+      }
+    }
+    return res.status(200).json({
+      info: `😅 200 - User API :: List All 🤣`,
+      count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+      results: user
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      info: `🙄 400 - User API :: Gagal Mendapatkan All User 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
+
 // GET `/api/user/:username`
 router.get('/:username', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {

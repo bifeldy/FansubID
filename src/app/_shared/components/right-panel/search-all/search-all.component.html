@@ -7,106 +7,138 @@
     </mat-form-field>
   </div>
   <div class="col-12">
-    <div class="row">
+    <div class="row" *ngIf="beritaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <a class="float-end text-decoration-none text-warning" routerLink="/news" style="font-size: small;">
-            Selengkapnya
-          </a>
           <b class="text-bifeldy-dark">Berita</b>
         </h2>
       </div>
       <div class="col-12">
-        <p *ngFor="let i of beritaResults">
-          // TODO :: Hasil Pencarian
-        </p>
+        <mat-selection-list class="pt-0" [multiple]="false">
+          <mat-list-option routerLink="/news/{{ b.id }}" *ngFor="let b of beritaResults | slice:0:5">
+            <img matListAvatar src="{{ b.image_url }}" class="ms-3" style="border-radius: 0;" />
+            <h4 matLine>{{ b.title }}</h4>
+            <h5 matLine>
+              <span class="text-warning">{{ b.user_.username }}</span> @
+              <span class="text-success">{{ b.created_at | date:'d-MM-y' }}</span>
+            </h5>
+          </mat-list-option>
+        </mat-selection-list>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="edictResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <a class="float-end text-decoration-none text-warning" routerLink="/nihongo/kanji" style="font-size: small;">
-            Selengkapnya
-          </a>
           <b class="text-bifeldy-dark">Kanji</b>
         </h2>
       </div>
       <div class="col-12">
-        <p *ngFor="let i of kanjiResults">
-          // TODO :: Hasil Pencarian
-        </p>
+        <mat-selection-list class="pt-0" [multiple]="false">
+          <mat-list-option (click)="openEdict(e)" *ngFor="let e of edictResults | slice:0:5">
+            <h4 matLine class="ms-3">
+              {{ e.kanji }} | {{ e.reading }}
+            </h4>
+            <h5 matLine class="ms-3">
+              <span class="text-warning">N{{ e.jlpt }}</span> |
+              <span class="text-success">{{ e.meaning }}</span>
+            </h5>
+          </mat-list-option>
+        </mat-selection-list>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="animeResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <a class="float-end text-decoration-none text-warning" routerLink="/anime" style="font-size: small;">
-            Selengkapnya
-          </a>
           <b class="text-bifeldy-dark">Anime</b>
         </h2>
       </div>
       <div class="col-12">
-        <p *ngFor="let i of animeResults">
-          // TODO :: Hasil Pencarian
-        </p>
+        <mat-selection-list class="pt-0" [multiple]="false">
+          <mat-list-option routerLink="/anime/{{ a.mal_id }}" *ngFor="let a of animeResults | slice:0:5">
+            <img matListAvatar src="{{ a.image_url }}" class="ms-3" style="border-radius: 0;" />
+            <h4 matLine>{{ a.title }}</h4>
+            <h5 matLine>
+              <span class="text-warning">{{ a.mal_id }}</span> |
+              <span class="text-success">{{ a.episodes }} Eps {{ a.type }}</span>
+            </h5>
+          </mat-list-option>
+        </mat-selection-list>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="doramaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <a class="float-end text-decoration-none text-warning" routerLink="/dorama" style="font-size: small;">
-            Selengkapnya
-          </a>
           <b class="text-bifeldy-dark">Dorama</b>
         </h2>
       </div>
       <div class="col-12">
-        <p *ngFor="let i of dramaResults">
-          // TODO :: Hasil Pencarian
-        </p>
+        <mat-selection-list class="pt-0" [multiple]="false">
+          <mat-list-option routerLink="/dorama/{{ d.slug }}" *ngFor="let d of doramaResults | slice:0:5">
+            <img matListAvatar src="{{ d.thumb }}" class="ms-3" style="border-radius: 0;" />
+            <h4 matLine>{{ d.title }}</h4>
+            <h5 matLine>
+              <span class="text-warning">{{ d.mdl_id }}</span> |
+              <span class="text-success">{{ d.type }}</span>
+            </h5>
+          </mat-list-option>
+        </mat-selection-list>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="fansubResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <a class="float-end text-decoration-none text-warning" routerLink="/fansub" style="font-size: small;">
-            Selengkapnya
-          </a>
           <b class="text-bifeldy-dark">Fansub</b>
         </h2>
       </div>
       <div class="col-12">
-        <p *ngFor="let i of fansubResults">
-          // TODO :: Hasil Pencarian
-        </p>
+        <mat-selection-list class="pt-0" [multiple]="false">
+          <mat-list-option routerLink="/fansub/{{ f.slug }}" *ngFor="let f of fansubResults | slice:0:5">
+            <img matListAvatar src="{{ f.image_url }}" class="ms-3" style="border-radius: 0;" />
+            <h4 matLine>{{ f.name }}</h4>
+            <h5 matLine>
+              <span class="text-warning">{{ f.active ? 'Aktif' : 'Tidak Aktif' }}</span> |
+              <span class="text-success">{{ f.born | date:'d-MM-y' }}</span>
+            </h5>
+          </mat-list-option>
+        </mat-selection-list>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="berkasResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <a class="float-end text-decoration-none text-warning" routerLink="/berkas" style="font-size: small;">
-            Selengkapnya
-          </a>
           <b class="text-bifeldy-dark">Berkas</b>
         </h2>
       </div>
       <div class="col-12">
-        <p *ngFor="let i of berkasResults">
-          // TODO :: Hasil Pencarian
-        </p>
+        <mat-selection-list class="pt-0" [multiple]="false">
+          <mat-list-option routerLink="/berkas/{{ b.id }}" *ngFor="let b of berkasResults | slice:0:5">
+            <img matListAvatar src="{{ b.image_url }}" class="ms-3" style="border-radius: 0;" />
+            <h4 matLine>{{ b.name }}</h4>
+            <h5 matLine>
+              <span class="text-warning">{{ b.user_.username }}</span> |
+              <span class="text-success">{{ b.created_at | date:'d-MM-y' }}</span>
+            </h5>
+          </mat-list-option>
+        </mat-selection-list>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="penggunaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
           <b class="text-bifeldy-dark">Pengguna</b>
         </h2>
       </div>
       <div class="col-12">
-        <p *ngFor="let i of penggunaResults">
-          // TODO :: Hasil Pencarian
-        </p>
+        <mat-selection-list class="pt-0" [multiple]="false">
+          <mat-list-option routerLink="/user/{{ p.username }}" *ngFor="let p of penggunaResults | slice:0:5">
+            <img matListAvatar src="{{ p.image_url }}" class="ms-3" style="border-radius: 0;" />
+            <h4 matLine>{{ p.kartu_tanda_penduduk_.nama }}</h4>
+            <h5 matLine>
+              <span class="text-warning">{{ p.id }}</span> |
+              <span class="text-success">{{ p.created_at | date:'d-MM-y' }}</span>
+            </h5>
+          </mat-list-option>
+        </mat-selection-list>
       </div>
     </div>
   </div>

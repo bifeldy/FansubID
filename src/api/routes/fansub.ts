@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Equal } from 'typeorm';
+import { getRepository, Equal, Like } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -22,6 +22,43 @@ const router = Router();
 
 // GET `/api/fansub`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const fansubRepo = getRepository(Fansub);
+    const [fansubs, count] = await fansubRepo.findAndCount({
+      where: [
+        { slug: Like(`%${req.query.q ? req.query.q : ''}%`) },
+        { name: Like(`%${req.query.q ? req.query.q : ''}%`) }
+      ],
+      order: {
+        ...((req.query.sort && req.query.order) ? {
+          [req.query.sort]: req.query.order.toUpperCase()
+        } : {
+          name: 'ASC',
+          active: 'DESC'
+        })
+      },
+      skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+      take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+    });
+    return res.status(200).json({
+      info: `😅 200 - Fansub API :: List All 🤣`,
+      count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+      results: fansubs
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      info: `🙄 400 - Fansub API :: Gagal Mendapatkan All Fansub 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+});
+
+// GET `/api/fansub/list-all`
+router.get('/list-all', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubRepo = getRepository(Fansub);
     const [fansubs, count] = await fansubRepo.findAndCount({
@@ -59,7 +96,7 @@ router.post('/cek-slug', async (req: UserRequest, res: Response, next: NextFunct
       const fansubRepo = getRepository(Fansub);
       const selectedFansub = await fansubRepo.find({
         where: [
-          { slug: Equal(req.body.slug) }
+          { slug: Equal(req.body.slug.replace(/[^a-zA-Z]/g, '')) }
         ]
       });
       if (selectedFansub.length === 0) {
@@ -115,7 +152,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         fansub.user_ = user;
         fansub.name = req.body.name;
         fansub.born = new Date(req.body.born);
-        fansub.slug = req.body.slug.replace(/\s/g, '');
+        fansub.slug = req.body.slug.replace(/[^a-zA-Z]/g, '');
         const filteredUrls = [];
         for (const u of req.body.urls) {
           if ('url' in u && 'name' in u && u.url && u.name) {

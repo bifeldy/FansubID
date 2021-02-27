@@ -19,7 +19,11 @@ export class FansubService {
   }
 
   getAllFansub(): Observable<any> {
-    return this.api.getData(`/fansub`);
+    return this.api.getData(`/fansub/list-all`);
+  }
+
+  searchFansub(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+    return this.api.getData(`/fansub?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   createFansub(fansubData): Observable<any> {

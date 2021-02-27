@@ -22,8 +22,8 @@ export class UserService {
     return this.api.getData(`/banned?id=${userId}`);
   }
 
-  getAllUser(): Observable<any> {
-    return this.api.getData('/user');
+  getAllUser(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+    return this.api.getData(`/user?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   getUserData(username): Observable<any> {
