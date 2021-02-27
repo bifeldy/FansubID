@@ -49,7 +49,7 @@ export async function socketBot(io: Server, socket: Socket) {
           file.view_count++;
           await fileRepo.save(file);
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       } else {
         // Other Url Target In Hikki API -- e.g '/news/:newsId'

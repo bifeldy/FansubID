@@ -21,7 +21,8 @@ function JwtEncode(user: any, rememberMe = false): any {
 
 function JwtDecode(req: Request, res: Response, next: NextFunction): any {
   try {
-    let token = req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
+    // tslint:disable-next-line: max-line-length
+    let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length);
     }
@@ -29,6 +30,7 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
     return { ...decoded, token };
   } catch (err) {
     console.error(err);
+    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
     return res.status(401).json({
       info: '🤧 401 - Authentication API :: Whoops, Akses Ditolak 😷',
       result: err

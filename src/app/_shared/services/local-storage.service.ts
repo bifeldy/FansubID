@@ -10,6 +10,8 @@ import { GlobalService } from './global.service';
 })
 export class LocalStorageService {
 
+  public token = null;
+
   constructor(
     private crypt: CryptoService,
     private gs: GlobalService

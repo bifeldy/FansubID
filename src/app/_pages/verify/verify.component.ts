@@ -201,9 +201,9 @@ export class VerifyComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.submitted = false;
         this.as.removeUser();
-        this.ls.setItem(environment.tokenName, res.result.token);
+        this.ls.token = res.result.token;
         this.bs.busy();
-        this.subsVerify2 = this.as.verify(res.result.token).subscribe({
+        this.subsVerify2 = this.as.verify(this.ls.token).subscribe({
           next: success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();

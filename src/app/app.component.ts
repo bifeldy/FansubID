@@ -76,6 +76,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       '「💤 Hikki」, 「🌞 Hikikomori」',
       '/favicon.ico'
     );
+    if (this.gs.isBrowser) {
+      this.checkStorage();
+    }
     this.subsRouter = this.router.events.subscribe({
       next: e1 => {
         if (e1 instanceof RouteConfigLoadStart) {
@@ -132,7 +135,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.gs.isBrowser) {
                 this.bs.idle();
                 this.fs.removeFab();
-                this.checkStorage();
                 this.siteContent.elementRef.nativeElement.scrollTop = 0;
               }
             }
@@ -157,21 +159,18 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   checkStorage(): void {
-    const token = this.ls.getItem(environment.tokenName);
-    if (token) {
-      this.bs.busy();
-      this.subsVerify = this.as.verify(token).subscribe({
-        next: success => {
-          this.gs.log('[VERIFY_SUCCESS]', success);
-          this.bs.idle();
-        },
-        error: error => {
-          this.gs.log('[VERIFY_ERROR]', error);
-          this.bs.idle();
-          this.as.removeUser();
-        }
-      });
-    }
+    this.bs.busy();
+    this.subsVerify = this.as.verify(this.ls.token).subscribe({
+      next: success => {
+        this.gs.log('[VERIFY_SUCCESS]', success);
+        this.bs.idle();
+      },
+      error: error => {
+        this.gs.log('[VERIFY_ERROR]', error);
+        this.bs.idle();
+        this.as.removeUser();
+      }
+    });
   }
 
 }

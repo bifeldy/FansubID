@@ -4,8 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import CryptoJS from 'crypto-js';
 
-import { environment } from '../../../environments/client/environment';
-
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { BusyService } from '../../_shared/services/busy.service';
@@ -107,7 +105,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.registerInfo = res.info;
           this.bs.busy();
-          this.subsVerify = this.as.verify(this.ls.getItem(environment.tokenName)).subscribe({
+          this.subsVerify = this.as.verify(this.ls.token).subscribe({
             next: success => {
               this.registerInfo = success.info;
               this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);

@@ -27,6 +27,7 @@ export const environment = {
   production: false,
   siteName: 'Hikki',
   jwtSecretKey: '',
+  tokenName: 'hikki_token',
   baseUrl: 'http://localhost:4000',
   dbType: 'mysql',
   dbHost: 'localhost',

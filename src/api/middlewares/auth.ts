@@ -117,6 +117,7 @@ async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
       ],
       relations: ['user_']
     });
+    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
     return res.status(400).json({
       info: `🙄 400 - Banned API :: ${banned.user_.username} Telah Di BAN 😪`,
       result: {
@@ -142,9 +143,16 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
         ]
       });
       const { password, session_token, ...noPwdSsToken } = selectedUser;
-      selectedUser.session_token = jwt.JwtEncode(noPwdSsToken, ('rememberMe' in req.body && JSON.parse(req.body.rememberMe) === true));
+      const rememberMe = ('rememberMe' in req.body && JSON.parse(req.body.rememberMe) === true);
+      selectedUser.session_token = jwt.JwtEncode(noPwdSsToken, rememberMe);
       const resUserSave = await userRepo.save(selectedUser);
       req.user = (resUserSave as any);
+      res.cookie(environment.tokenName, req.user.session_token, {
+        httpOnly: true,
+        secure: environment.production,
+        sameSite: 'strict',
+        maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000
+      });
       checkBan(req, res, next);
     } else {
       throw new Error('Username, Email, atau Password tidak tepat!');
@@ -174,7 +182,6 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
     if (selectedUser.length === 1) {
       const usr = selectedUser[0];
       delete usr.password;
-      delete usr.session_token;
       delete usr.kartu_tanda_penduduk_.id;
       delete usr.kartu_tanda_penduduk_.created_at;
       delete usr.kartu_tanda_penduduk_.updated_at;
@@ -184,6 +191,7 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       req.user = (usr as any);
       checkBan(req, res, next);
     } else {
+      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
       return res.status(401).json({
         info: '🙄 401 - Authentication API :: Authorisasi Sesi Gagal 😪',
         result: {
@@ -225,6 +233,7 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       const resUserSave = await userRepo.save(selectedUser);
       const { password, session_token, ...noPwdSsToken } = resUserSave;
       req.user = (noPwdSsToken as any);
+      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
       return next();
     } catch (error) {
       console.error(error);

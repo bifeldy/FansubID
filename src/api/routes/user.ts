@@ -164,7 +164,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             const resProfileSave = await profileRepo.save(selectedProfile);
             selectedUser.profile_ = resProfileSave;
             let resUserSave = await userRepo.save(selectedUser);
-            await req.bot.send(
+            req.bot.send(
               new MessageEmbed()
               .setColor('#ff4081')
               .setTitle(resUserSave.kartu_tanda_penduduk_.nama)
@@ -184,6 +184,12 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             delete resUserSave.profile_;
             selectedUser.session_token = jwt.JwtEncode(resUserSave, false);
             resUserSave = await userRepo.save(selectedUser);
+            res.cookie(environment.tokenName, resUserSave.session_token, {
+              httpOnly: true,
+              secure: environment.production,
+              sameSite: 'strict',
+              maxAge: 24 * 60 * 60 * 1000
+            });
             return res.status(200).json({
               info: `😅 200 - User API :: Ubah ${req.params.username} 🤣`,
               result: {

@@ -33,6 +33,7 @@ global.navigator = mock.getNavigator();
 import { createConnection, Equal, getRepository } from 'typeorm';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import { join } from 'path';
 
@@ -218,6 +219,7 @@ export function app(): http.Server {
   expressApp.set('trust proxy', true);
 
   // CORS
+  expressApp.use(cookieParser());
   expressApp.use(cors(corsOptions));
 
   // Middleware

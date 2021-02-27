@@ -33,10 +33,11 @@ export class AuthService {
     return this.currentUserSubject ? this.currentUserSubject.value : null;
   }
 
-  verify(token: string): Observable<any> {
+  verify(token: any): Observable<any> {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.postData(`/verify`, { token }).pipe(map(respVerify => {
       this.currentUserSubject.next(respVerify.result);
+      this.ls.token = respVerify.result.session_token;
       this.ls.setItem(environment.sessionName, respVerify.result);
       return respVerify;
     }));
@@ -45,7 +46,7 @@ export class AuthService {
   login(loginData: any): Observable<any> {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(map(respLogin => {
-      this.ls.setItem(environment.tokenName, respLogin.result.token);
+      this.ls.token = respLogin.result.token;
       return respLogin;
     }));
   }
@@ -53,13 +54,13 @@ export class AuthService {
   register(registerData: any): Observable<any> {
     this.gs.log('[AUTH_REGISTER]', registerData);
     return this.api.postData(`/register`, registerData).pipe(map(respRegister => {
-      this.ls.setItem(environment.tokenName, respRegister.result.token);
+      this.ls.token = respRegister.result.token;
       return respRegister;
     }));
   }
 
   logout(): Observable<any> {
-    this.gs.log('[AUTH_LOGOUT]', this.ls.getItem(environment.tokenName));
+    this.gs.log('[AUTH_LOGOUT]', this.ls.token);
     return this.api.deleteData(`/logout`).pipe(map(respLogout => {
       this.removeUser();
       return respLogout;

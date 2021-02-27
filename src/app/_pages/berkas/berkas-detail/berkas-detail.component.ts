@@ -149,7 +149,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   ddlUrlLink(id): string {
     const ddlApi = `${environment.apiUrl}/attachment`;
     const lampiranId = `?id=${id}`;
-    const token = `&token=${this.ls.getItem(environment.tokenName)}`;
+    const token = `&token=${this.ls.token}`;
     const ddlUrl = ddlApi + lampiranId + token;
     return ddlUrl;
   }
