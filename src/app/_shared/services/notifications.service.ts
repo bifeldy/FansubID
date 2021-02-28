@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 import User from '../models/User';
 
-import { AuthService } from './auth.service';
 import { GlobalService } from './global.service';
 
 @Injectable({
@@ -28,46 +27,10 @@ export class NotificationsService {
   dissmissTimeout = {};
 
   constructor(
-    private as: AuthService,
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
-      this.as.currentUser.subscribe({
-        next: user => {
-          this.currentUser = user;
-          if (this.currentUser && !this.currentUser.verified) {
-            const verifyNotifIdx = this.notifications.findIndex(n => n.notifData.id === -1);
-            if (verifyNotifIdx < 0) {
-              this.notifications.splice(0, 0, {
-                notifCreator: null,
-                notifData: {
-                  id: -1,
-                  type: 'warning',
-                  title: 'Verifikasi!',
-                  content: 'Fitur lampiran berkas DDL tidak dapat digunakan, silahkan <a href="/verify-discord" class="text-decoration-none"> verifikasi akun </a> terlebih dahulu. Terima kasih. ^_^',
-                  dismissible: false
-                }
-              });
-            }
-            const pemerintahNotifIdx = this.notifications.findIndex(n => n.notifData.id === -2);
-            if (pemerintahNotifIdx < 0) {
-              this.notifications.splice(0, 0, {
-                notifCreator: null,
-                notifData: {
-                  id: -2,
-                  type: 'danger',
-                  title: 'Verifikasi!',
-                  content: 'Fitur verifikasi KTP tidak dapat digunakan saat ini karena pemerintah telah fixing kebocoran data. Silahkan gunakan metode verifikasi lain seperti Discord. Terima kasih. ^_^',
-                  dismissible: false
-                }
-              });
-            }
-          } else {
-            this.removeNotif(-1);
-            this.removeNotif(-2);
-          }
-        }
-      });
+      //
     }
   }
 
