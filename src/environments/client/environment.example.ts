@@ -5,8 +5,6 @@
 export const environment = {
   production: false,
   siteName: 'Hikki',
-  tokenName: 'hikki_token',
-  sessionName: 'userData',
   baseUrl: 'http://localhost:4000',
   apiUrl: '/api',
   apiKey: 'hikki_api_key',

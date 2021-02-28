@@ -13,7 +13,6 @@ import { FabService } from './_shared/services/fab.service';
 import { BusyService } from './_shared/services/busy.service';
 import { GlobalService } from './_shared/services/global.service';
 import { StatsServerService } from './_shared/services/stats-server.service';
-import { LocalStorageService } from './_shared/services/local-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -40,7 +39,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private pi: PageInfoService,
     private as: AuthService,
     private fs: FabService,
-    private ls: LocalStorageService,
     public gs: GlobalService,
     public lms: LeftMenuService,
     public rps: RightPanelService,
@@ -160,7 +158,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkStorage(): void {
     this.bs.busy();
-    this.subsVerify = this.as.verify(this.ls.token).subscribe({
+    this.subsVerify = this.as.verify('THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?').subscribe({
       next: success => {
         this.gs.log('[VERIFY_SUCCESS]', success);
         this.bs.idle();

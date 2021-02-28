@@ -19,7 +19,7 @@ import { LocalStorageService } from '../../../services/local-storage.service';
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
 
-  localStorageName = 'searchResults';
+  localStorageName = 'hikki_searchResults';
 
   searchResults = {
     q: '',

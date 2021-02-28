@@ -13,8 +13,6 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
-import { LocalStorageService } from '../../../_shared/services/local-storage.service';
-
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
@@ -62,7 +60,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private us: UserService,
     private pi: PageInfoService,
     private fb: FormBuilder,
-    private ls: LocalStorageService,
     private imgbb: ImgbbService,
     public gs: GlobalService,
     public as: AuthService
@@ -279,9 +276,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.submitted = false;
         this.bs.idle();
         this.as.removeUser();
-        this.ls.token = res.result.token;
         this.bs.busy();
-        this.subsVerify = this.as.verify(res.result.token).subscribe({
+        this.subsVerify = this.as.verify('THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?').subscribe({
           next: success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();

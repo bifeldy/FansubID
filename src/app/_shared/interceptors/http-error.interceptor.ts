@@ -10,7 +10,6 @@ import { GlobalService } from '../services/global.service';
 import { AuthService } from '../services/auth.service';
 import { BusyService } from '../services/busy.service';
 import { StatsServerService } from '../services/stats-server.service';
-import { LocalStorageService } from '../services/local-storage.service';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -25,8 +24,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private as: AuthService,
     private toast: ToastrService,
     private bs: BusyService,
-    private ss: StatsServerService,
-    private ls: LocalStorageService
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -89,7 +87,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           this.toast.error(errorMessage, errorTitle);
         }
         if (e.status === 401) {
-          this.ls.token = null;
           this.as.removeUser();
           this.bs.idle();
           this.router.navigate(['/login'], {

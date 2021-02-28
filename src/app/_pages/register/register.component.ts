@@ -7,7 +7,6 @@ import CryptoJS from 'crypto-js';
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { BusyService } from '../../_shared/services/busy.service';
-import { LocalStorageService } from '../../_shared/services/local-storage.service';
 
 @Component({
   selector: 'app-register',
@@ -37,7 +36,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private router: Router,
     private bs: BusyService,
     public route: ActivatedRoute,
-    private ls: LocalStorageService,
     public as: AuthService
   ) {
     if (this.gs.isBrowser) {
@@ -105,7 +103,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.registerInfo = res.info;
           this.bs.busy();
-          this.subsVerify = this.as.verify(this.ls.token).subscribe({
+          this.subsVerify = this.as.verify('THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?').subscribe({
             next: success => {
               this.registerInfo = success.info;
               this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);

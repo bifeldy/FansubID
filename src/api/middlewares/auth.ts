@@ -151,7 +151,7 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
         httpOnly: true,
         secure: environment.production,
         sameSite: 'strict',
-        maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000
+        expires: jwt.JwtView(req.user.session_token).exp
       });
       checkBan(req, res, next);
     } else {
@@ -182,6 +182,7 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
     if (selectedUser.length === 1) {
       const usr = selectedUser[0];
       delete usr.password;
+      delete usr.session_token;
       delete usr.kartu_tanda_penduduk_.id;
       delete usr.kartu_tanda_penduduk_.created_at;
       delete usr.kartu_tanda_penduduk_.updated_at;
@@ -205,7 +206,8 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
 // tslint:disable-next-line: typedef
 async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
   try {
-    const token = req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
+    // tslint:disable-next-line: max-line-length
+    const token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token) {
       isAuthorized(req, res, next);
     } else {

@@ -51,4 +51,8 @@ function JwtDecrypt(token: string): any {
   return JWT.verify(token, jwtSecretKey);
 }
 
-export default { JwtEncode, JwtDecode, JwtEncrypt, JwtDecrypt };
+function JwtView(token: string): any {
+  return JWT.decode(token);
+}
+
+export default { JwtEncode, JwtDecode, JwtEncrypt, JwtDecrypt, JwtView };

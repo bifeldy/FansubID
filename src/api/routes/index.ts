@@ -342,7 +342,7 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res: Response,
         user.session_token = jwt.JwtEncode(resUserSave, false);
         resUserSave = await userRepo.save(user);
         res.cookie(environment.tokenName, resUserSave.session_token, {
-          httpOnly: true, secure: environment.production, maxAge: 24 * 60 * 60 * 1000
+          httpOnly: true, secure: environment.production, expires: jwt.JwtView(resUserSave.session_token).exp
         });
         return res.status(200).json({
           info: `😍 200 - Verifikasi API :: Verifikasi Berhasil 🥰`,

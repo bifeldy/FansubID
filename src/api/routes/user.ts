@@ -188,7 +188,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
               httpOnly: true,
               secure: environment.production,
               sameSite: 'strict',
-              maxAge: 24 * 60 * 60 * 1000
+              expires: jwt.JwtView(resUserSave.session_token).exp
             });
             return res.status(200).json({
               info: `😅 200 - User API :: Ubah ${req.params.username} 🤣`,

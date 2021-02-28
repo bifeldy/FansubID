@@ -11,7 +11,6 @@ import { BusyService } from '../../_shared/services/busy.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 
 import { environment } from '../../../environments/client/environment';
-import { LocalStorageService } from '../../_shared/services/local-storage.service';
 
 @Component({
   selector: 'app-verify',
@@ -41,7 +40,6 @@ export class VerifyComponent implements OnInit, OnDestroy {
     private us: UserService,
     private bs: BusyService,
     private ds: DialogService,
-    private ls: LocalStorageService,
     public gs: GlobalService,
     public route: ActivatedRoute,
     public as: AuthService
@@ -201,9 +199,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.submitted = false;
         this.as.removeUser();
-        this.ls.token = res.result.token;
         this.bs.busy();
-        this.subsVerify2 = this.as.verify(this.ls.token).subscribe({
+        this.subsVerify2 = this.as.verify('THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?').subscribe({
           next: success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();

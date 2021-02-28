@@ -7,8 +7,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
-import { DownloadManagerService } from '../../../_shared/services/download-manager.service'
-import { LocalStorageService } from '../../../_shared/services/local-storage.service';;
+import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
 import { VjsService } from '../../../_shared/services/vjs.service';
 
 import User from '../../../_shared/models/User';
@@ -42,7 +41,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService,
-    private ls: LocalStorageService,
     public vjs: VjsService,
     public as: AuthService,
     public dm: DownloadManagerService
@@ -147,11 +145,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   ddlUrlLink(id): string {
-    const ddlApi = `${environment.apiUrl}/attachment`;
-    const lampiranId = `?id=${id}`;
-    const token = `&token=${this.ls.token}`;
-    const ddlUrl = ddlApi + lampiranId + token;
-    return ddlUrl;
+    return `${environment.apiUrl}/attachment?id=${id}`;
   }
 
   get ddlVideo(): string {

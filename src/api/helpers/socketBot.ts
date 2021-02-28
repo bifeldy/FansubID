@@ -30,8 +30,8 @@ export async function socketBot(io: Server, socket: Socket) {
     console.error(error);
   }
   socket.on('track', async (data) => {
-    data.ip = socket.request.connection.remoteAddress;
-    data.port = socket.request.connection.remotePort;
+    data.ip = socket.request.socket.remoteAddress;
+    data.port = socket.request.socket.remotePort;
     if (data.pathUrl.startsWith('http://')) {
       data.pathUrl = data.pathUrl.slice(7, data.pathUrl.length);
     } else if (data.pathUrl.startsWith('https://')) {
