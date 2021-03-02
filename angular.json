@@ -200,7 +200,10 @@
               "sourceMap": false,
               "optimization": true,
               "externalDependencies": [
-                "discord.js"
+                "@discordjs/opus",
+                "discord.js",
+                "ffmpeg-static",
+                "ytdl-core"
               ]
             }
           }
