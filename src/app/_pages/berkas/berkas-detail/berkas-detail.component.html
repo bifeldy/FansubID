@@ -39,7 +39,7 @@
               </div>
               <div class="col-12">
                 <mat-selection-list [multiple]="false">
-                  <mat-list-option routerLink="/anime/{{ berkasData.anime_.id }}" *ngIf="berkasData.anime_">
+                  <mat-list-option routerLink="/anime/{{ berkasData.anime_.id }}-{{ animeName }}" *ngIf="berkasData.anime_">
                     <img matListAvatar src="{{ berkasData.anime_.image_url }}" class="ms-3" style="border-radius: 0;" />
                     <h4>{{ berkasData.anime_.name }}</h4>
                   </mat-list-option>

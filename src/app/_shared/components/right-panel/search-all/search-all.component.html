@@ -54,7 +54,7 @@
       </div>
       <div class="col-12">
         <mat-selection-list class="pt-0" [multiple]="false">
-          <mat-list-option routerLink="/anime/{{ a.mal_id }}" *ngFor="let a of searchResults.animeResults | slice:0:5">
+          <mat-list-option routerLink="/anime/{{ a.mal_id }}-{{ getAnimeTitle(a.title) }}" *ngFor="let a of searchResults.animeResults | slice:0:5">
             <img matListAvatar src="{{ a.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ a.title }}</h4>
             <h5 matLine>

@@ -208,7 +208,8 @@ export class AnimeListComponent implements OnInit, OnDestroy {
 
   openAnimePage(data): void {
     this.gs.log('[ANIME_SEASONAL_CLICK_ANIME]', data);
-    this.router.navigateByUrl(`/anime/${data.mal_id}`);
+    const judulAnime = data.title.replace(/[^a-zA-Z]/g, '-');
+    this.router.navigateByUrl(`/anime/${data.mal_id}-${judulAnime}`);
   }
 
   openFansub(data): void {

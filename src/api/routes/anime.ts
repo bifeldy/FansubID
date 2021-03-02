@@ -274,16 +274,17 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
   }
 });
 
-// GET `/api/anime/:malId`
-router.get('/:malId', async (req: UserRequest, res: Response, next: NextFunction) => {
+// GET `/api/anime/:malSlug`
+router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
+  const malId = req.params.malSlug.split('-')[0];
   return request({
     method: 'GET',
-    uri: `${jikanV3}/anime/${req.params.malId}`
+    uri: `${jikanV3}/anime/${malId}`
   }, async (error, result, body) => {
     if (error || !result) {
       console.error(error);
       return res.status(200).json({
-        info: `😅 200 - Anime API :: Detail ${req.params.malId} 🤣`,
+        info: `😅 200 - Anime API :: Detail ${malId} 🤣`,
         result: null
       });
     } else {
@@ -309,7 +310,7 @@ router.get('/:malId', async (req: UserRequest, res: Response, next: NextFunction
         animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
       }
       return res.status(httpStatusCode).json({
-        info: `😅 ${httpStatusCode} - Anime API :: Detail ${req.params.malId} 🤣`,
+        info: `😅 ${httpStatusCode} - Anime API :: Detail ${malId} 🤣`,
         result: animeDetail
       });
     }

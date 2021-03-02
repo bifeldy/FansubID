@@ -167,6 +167,10 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     });
   }
 
+  getAnimeTitle(title: string): string {
+    return title.replace(/[^a-zA-Z]/g, '-');
+  }
+
   getAnime(): void {
     if (this.subsAnime) {
       this.subsAnime.unsubscribe();

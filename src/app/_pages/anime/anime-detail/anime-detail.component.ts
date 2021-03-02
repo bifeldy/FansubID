@@ -16,7 +16,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 })
 export class AnimeDetailComponent implements OnInit, OnDestroy {
 
-  animeId = 0;
+  animeId = '';
   animeData = null;
 
   count = 0;
@@ -83,9 +83,10 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.animeId = Number(this.activatedRoute.snapshot.paramMap.get('animeId'));
+    const paramAnimeId = this.activatedRoute.snapshot.paramMap.get('animeId');
+    this.animeId = paramAnimeId.split('-')[0];
     this.bs.busy();
-    this.subsAnime = this.anime.getAnime(this.animeId).subscribe({
+    this.subsAnime = this.anime.getAnime(paramAnimeId).subscribe({
       next: res => {
         this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
         this.animeData = res.result;

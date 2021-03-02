@@ -22,7 +22,7 @@ export class AnimeService {
     return this.api.getData(`/anime?q=${q}&type=${type}`);
   }
 
-  getAnime(animeId: number): Observable<any> {
+  getAnime(animeId: string): Observable<any> {
     return this.api.getData(`/anime/${animeId}`);
   }
 

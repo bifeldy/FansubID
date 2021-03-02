@@ -286,6 +286,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
 
 // GET `/api/dorama/:mdlSlug`
 router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
+  const mdlId = req.params.mdlSlug.split('-')[0];
   return request({
     method: 'GET',
     uri: `${kuryanaApi}/id/${req.params.mdlSlug}`
@@ -293,7 +294,7 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
     if (error || !result) {
       console.error(error);
       return res.status(200).json({
-        info: `😅 200 - Dorama API :: Detail ${req.params.mdlSlug} 🤣`,
+        info: `😅 200 - Dorama API :: Detail ${mdlId} 🤣`,
         result: null
       });
     } else {
@@ -314,7 +315,7 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
         httpStatusCode = dramaDetail.status_code;
       }
       return res.status(httpStatusCode).json({
-        info: `😅 ${httpStatusCode} - Dorama API :: Detail ${req.params.mdlSlug} 🤣`,
+        info: `😅 ${httpStatusCode} - Dorama API :: Detail ${mdlId} 🤣`,
         result: (
           'data' in dramaDetail
             ? dramaDetail.data

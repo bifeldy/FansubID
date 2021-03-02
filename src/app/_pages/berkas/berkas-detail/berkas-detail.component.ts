@@ -120,6 +120,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  get animeName(): string {
+    return this.berkasData.anime_.name.replace(/[^a-zA-Z]/g, '-');
+  }
+
   get lampiran(): any {
     return this.dm.getAttachmentDownloadFile(this.berkasData.attachment_);
   }
