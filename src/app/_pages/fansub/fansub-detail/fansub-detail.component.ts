@@ -64,6 +64,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   subsBerkas = null;
   subsAnime = null;
   subsDorama = null;
+  subsParam = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -95,42 +96,49 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     if (this.subsDorama) {
       this.subsDorama.unsubscribe();
     }
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
-    this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
-    this.bs.busy();
-    this.subsFansub = this.fansub.getFansub(this.fansubSlug).subscribe({
-      next: res => {
-        this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
-        this.fansubData = res.result;
-        this.pi.updatePageMetaData(
-          `${this.fansubData.name}`,
-          `${this.fansubData.description}`,
-          `${Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name}`,
-          this.fansubData.image_url
-        );
-        this.bs.idle();
-        if (this.gs.isBrowser) {
-          if (Array.isArray(this.fansubData.tags)) {
-            for (let i = 0; i < this.fansubData.tags.length; i++) {
-              this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
+    this.subsParam = this.activatedRoute.params.subscribe({
+      next: p => {
+        this.fansubSlug = p.fansubSlug;
+        this.bs.busy();
+        this.subsFansub = this.fansub.getFansub(this.fansubSlug).subscribe({
+          next: res => {
+            this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
+            this.fansubData = res.result;
+            this.pi.updatePageMetaData(
+              `${this.fansubData.name}`,
+              `${this.fansubData.description}`,
+              `${Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name}`,
+              this.fansubData.image_url
+            );
+            this.bs.idle();
+            if (this.gs.isBrowser) {
+              if (Array.isArray(this.fansubData.tags)) {
+                for (let i = 0; i < this.fansubData.tags.length; i++) {
+                  this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
+                }
+              }
+              this.panelData = [];
+              this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
+              this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
+              this.getAnimeFansub();
+              this.getDoramaFansub();
+              this.getBerkasFansub();
             }
-          }
-          this.panelData = [];
-          this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
-          this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
-          this.getAnimeFansub();
-          this.getDoramaFansub();
-          this.getBerkasFansub();
-        }
-      },
-      error: err => {
-        this.gs.log('[FANSUB_DETAIL_ERROR]', err);
-        this.bs.idle();
-        this.router.navigate(['/error'], {
-          queryParams: {
-            returnUrl: '/fansub'
+          },
+          error: err => {
+            this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+            this.bs.idle();
+            this.router.navigate(['/error'], {
+              queryParams: {
+                returnUrl: '/fansub'
+              }
+            });
           }
         });
       }

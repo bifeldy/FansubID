@@ -46,6 +46,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   subsUser = null;
   subsBerkas = null;
   subsBanned = null;
+  subsParam = null;
 
   constructor(
     private router: Router,
@@ -71,36 +72,43 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     if (this.subsBanned) {
       this.subsBanned.unsubscribe();
     }
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
-    this.username = this.activatedRoute.snapshot.paramMap.get('username');
-    this.bs.busy();
-    this.subsUser = this.us.getUserData(this.username).subscribe({
-      next: res => {
-        this.gs.log('[USER_DETAIL_SUCCESS]', res);
-        this.userData = res.result;
-        this.pi.updatePageMetaData(
-          `${this.userData.kartu_tanda_penduduk_.nama}`,
-          `${this.userData.profile_.description}`,
-          `${this.userData.username}`,
-          this.userData.image_url
-        );
-        this.bs.idle();
-        if (this.gs.isBrowser) {
-          this.panelData = [];
-          this.panelData.push({ title: 'Tentang Saya', icon: 'info', text: this.userData.profile_.description });
-          this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
-          this.checkBanned();
-          this.getUserBerkas();
-        }
-      },
-      error: err => {
-        this.gs.log('[USER_DETAIL_ERROR]', err);
-        this.bs.idle();
-        this.router.navigate(['/error'], {
-          queryParams: {
-            returnUrl: '/'
+    this.subsParam = this.activatedRoute.params.subscribe({
+      next: p => {
+        this.username = p.username;
+        this.bs.busy();
+        this.subsUser = this.us.getUserData(this.username).subscribe({
+          next: res => {
+            this.gs.log('[USER_DETAIL_SUCCESS]', res);
+            this.userData = res.result;
+            this.pi.updatePageMetaData(
+              `${this.userData.kartu_tanda_penduduk_.nama}`,
+              `${this.userData.profile_.description}`,
+              `${this.userData.username}`,
+              this.userData.image_url
+            );
+            this.bs.idle();
+            if (this.gs.isBrowser) {
+              this.panelData = [];
+              this.panelData.push({ title: 'Tentang Saya', icon: 'info', text: this.userData.profile_.description });
+              this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
+              this.checkBanned();
+              this.getUserBerkas();
+            }
+          },
+          error: err => {
+            this.gs.log('[USER_DETAIL_ERROR]', err);
+            this.bs.idle();
+            this.router.navigate(['/error'], {
+              queryParams: {
+                returnUrl: '/'
+              }
+            });
           }
         });
       }

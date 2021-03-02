@@ -23,6 +23,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
 
   subsActRoute = null;
   subsNews = null;
+  subsParam = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -45,37 +46,44 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     if (this.subsNews) {
       this.subsNews.unsubscribe();
     }
+    if (this.subsParam) {
+      this.subsParam.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
-    this.newsId = Number(this.activatedRoute.snapshot.paramMap.get('newsId'));
-    this.bs.busy();
-    this.subsNews = this.news.getNews(this.newsId).subscribe({
-      next: res => {
-        this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
-        this.newsData = res.result;
-        this.pi.updatePageMetaData(
-          `${this.newsData.title}`,
-          `${this.newsData.content}`,
-          `${Array.isArray(this.newsData.tags) ? this.newsData.tags.join(', ') : this.newsData.title}`,
-          this.newsData.image_url
-        );
-        this.bs.idle();
-        if (this.gs.isBrowser) {
-          if (Array.isArray(this.newsData.tags)) {
-            for (let i = 0; i < this.newsData.tags.length; i++) {
-              this.chipData.push({ id_tag: i, name: this.newsData.tags[i], color: Warna.PINK, selected: true });
+    this.subsParam = this.activatedRoute.params.subscribe({
+      next: p => {
+        this.newsId = Number(p.newsId);
+        this.bs.busy();
+        this.subsNews = this.news.getNews(this.newsId).subscribe({
+          next: res => {
+            this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
+            this.newsData = res.result;
+            this.pi.updatePageMetaData(
+              `${this.newsData.title}`,
+              `${this.newsData.content}`,
+              `${Array.isArray(this.newsData.tags) ? this.newsData.tags.join(', ') : this.newsData.title}`,
+              this.newsData.image_url
+            );
+            this.bs.idle();
+            if (this.gs.isBrowser) {
+              if (Array.isArray(this.newsData.tags)) {
+                for (let i = 0; i < this.newsData.tags.length; i++) {
+                  this.chipData.push({ id_tag: i, name: this.newsData.tags[i], color: Warna.PINK, selected: true });
+                }
+              }
+              this.fs.initializeFab('edit', null, 'Ubah Data Berita', `/news/${this.newsId}/edit`, false);
             }
-          }
-          this.fs.initializeFab('edit', null, 'Ubah Data Berita', `/news/${this.newsId}/edit`, false);
-        }
-      },
-      error: err => {
-        this.gs.log('[NEWS_DETAIL_ERROR]', err);
-        this.bs.idle();
-        this.router.navigate(['/error'], {
-          queryParams: {
-            returnUrl: '/news'
+          },
+          error: err => {
+            this.gs.log('[NEWS_DETAIL_ERROR]', err);
+            this.bs.idle();
+            this.router.navigate(['/error'], {
+              queryParams: {
+                returnUrl: '/news'
+              }
+            });
           }
         });
       }
