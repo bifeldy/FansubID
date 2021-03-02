@@ -20,7 +20,7 @@
                 <div class="row">
                   <div class="col-12">
                     <img class="w-100 border" [src]="image_url" />
-                    <mat-form-field appearance="outline" class="pt-3 w-100">
+                    <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
                       <mat-label>Gambar</mat-label>
                       <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
@@ -42,7 +42,7 @@
               </div>
               <div class="col-12 col-md-7 col-xl-8 pt-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12">
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Judul</mat-label>
                     <input matInput formControlName="title" placeholder="Berita Terkini Blablabla ..." />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
@@ -51,7 +51,7 @@
                       <strong *ngIf="fg.get('title').hasError('pattern')">Judul Berita Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12">
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Tags & Kategori</mat-label>
                     <mat-chip-list #tag>
                       <mat-chip *ngFor="let t of fg.value.tags" (removed)="removeTag(t)" color="accent" selected [removable]="true">

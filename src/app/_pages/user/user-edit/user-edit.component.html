@@ -8,7 +8,7 @@
           <div class="row sticky-top pt-3">
             <div class="col-12">
               <img class="w-100 border rounded-circle" src="{{ image_photo }}" />
-              <mat-form-field appearance="outline" class="pt-3 w-100">
+              <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
                 <mat-label>Profile Image</mat-label>
                 <ngx-mat-file-input class="w-100" (change)="uploadPhotoImage($event, photoImage)" #photoImage
                   [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
@@ -37,7 +37,7 @@
             </h1>
           </div>
           <div class="row py-3">
-            <mat-form-field appearance="outline" class="pt-3 w-100">
+            <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
               <mat-label>Cover Image</mat-label>
               <ngx-mat-file-input class="w-100" placeholder="Basic Input" (change)="uploadCoverImage($event, coverImage)" #coverImage
                 [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
@@ -55,11 +55,11 @@
               </button>
             </div>
             <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
-            <mat-form-field appearance="outline" class="p-3 w-100" style="display: none;">
+            <mat-form-field appearance="outline" class="p-3 w-100" style="display: none;" [color]="'accent'">
               <mat-label>Username / Email (Optional Autocomplete)</mat-label>
               <input matInput value="{{ userData.username }}" disabled autocomplete="email, username" />
             </mat-form-field>
-            <mat-form-field appearance="outline" class="p-3 w-100">
+            <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
               <mat-label>Konfirmasi Kata Sandi</mat-label>
               <input matInput [type]="passwordHide ? 'password' : 'text'" formControlName="new_password"
                 placeholder="Gunakan Yang Berbeda Untuk Ubah Password" autocomplete="current-password, new-password" />

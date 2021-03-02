@@ -20,7 +20,7 @@
                 <div class="row">
                   <div class="col-12">
                     <img class="w-100 border" [src]="image_url" />
-                    <mat-form-field appearance="outline" class="pt-3 w-100">
+                    <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
                       <mat-label>Gambar</mat-label>
                       <ngx-mat-file-input class="w-100" (change)="uploadImage($event)" #gambar [disabled]="fg.value.image"
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
@@ -53,7 +53,7 @@
                       <strong *ngIf="fg.get('projectType_id').hasError('pattern')">Jenis Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 w-100" *ngIf="berkasType.toLowerCase().includes('anime')">
+                  <mat-form-field appearance="outline" class="p-3 w-100" *ngIf="berkasType.toLowerCase().includes('anime')" [color]="'accent'">
                     <mat-label>Anime Terkait</mat-label>
                     <input matInput formControlName="anime_id" placeholder="Full Metal Alchemist" [matAutocomplete]="autoCompleteAnime" (keyup)="resetSelectedAnime()" />
                     <mat-icon matSuffix>short_text</mat-icon>
@@ -74,7 +74,7 @@
                       <strong *ngIf="fg.get('anime_id').hasError('pattern')">ID Anime Hanya Boleh Angka</strong>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 w-100" *ngIf="berkasType.toLowerCase().includes('dorama')">
+                  <mat-form-field appearance="outline" class="p-3 w-100" *ngIf="berkasType.toLowerCase().includes('dorama')" [color]="'accent'">
                     <mat-label>Dorama Terkait</mat-label>
                     <input matInput formControlName="dorama_id" placeholder="Flying Colors" [matAutocomplete]="autoCompleteDorama" (keyup)="resetSelectedDorama()" />
                     <mat-icon matSuffix>short_text</mat-icon>
@@ -101,7 +101,7 @@
                   <div formArrayName="fansub_list">
                     <div *ngFor="let fs of getFansubControl.controls; let i = index">
                       <div class="row" [formGroupName]="i">
-                        <mat-form-field appearance="outline" class="p-3 w-100">
+                        <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
                           <mat-label>Fansub Terkait</mat-label>
                           <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" (focus)="changeFilterFansub(i)" />
                           <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i == 0">short_text</mat-icon>
@@ -138,7 +138,7 @@
               </div>
               <div class="col-12 col-md-7 col-xl-8 pt-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12">
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Nama Berkas</mat-label>
                     <input matInput formControlName="name" placeholder="[Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32].mkv" />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
@@ -173,7 +173,7 @@
                 <div formArrayName="download_url">
                   <div *ngFor="let dl of getDownloadUrlControl.controls; let i = index">
                     <div class="row" [formGroupName]="i">
-                      <mat-form-field appearance="outline" class="p-3 col-12 col-md-5">
+                      <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'">
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="name" placeholder="Google Drive" />
                         <mat-icon matSuffix *ngIf="dl.get('name').value || i == 0">web</mat-icon>
@@ -185,7 +185,7 @@
                           <strong *ngIf="dl.get('name').hasError('pattern')">Web Hanya Boleh Huruf Standar Papan Ketik</strong>
                         </mat-error>
                       </mat-form-field>
-                      <mat-form-field appearance="outline" class="p-3 col-12 col-md-7">
+                      <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
                         <mat-label>Tautan Luar</mat-label>
                         <input matInput formControlName="url" placeholder="https://drive.google.com/drive/u/2/folders/1KYTJZsmH9dyyHBXnQD4N0SjSBXcs8qD-" />
                         <mat-icon matSuffix *ngIf="dl.get('url').value || i == 0">link</mat-icon>

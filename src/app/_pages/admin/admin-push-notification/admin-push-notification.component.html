@@ -16,7 +16,7 @@
           </div>
           <div class="col-12">
             <div class="row">
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Judul</mat-label>
                 <input matInput formControlName="title" placeholder="Perhatian!" />
                 <mat-icon matSuffix>short_text</mat-icon>
@@ -26,7 +26,7 @@
                   <strong *ngIf="fg.get('title').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</strong>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-8">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-8" [color]="'accent'">
                 <mat-label>Konten / Isi</mat-label>
                 <input matInput formControlName="content" placeholder="Akan Diadakan Maintenance Pada ..." />
                 <mat-icon matSuffix>wysiwyg</mat-icon>
@@ -64,7 +64,7 @@
                   <strong *ngIf="fg.get('dismissible').hasError('pattern')">Dismissible Hanya Boleh Huruf Standar Papan Ketik</strong>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Deadline</mat-label>
                 <input matInput [ngxMatDatetimePicker]="kalender" formControlName="deadline" (focus)="kalender.open()" placeholder="{{ currentDateTime | date:'d MMMM y, h:mm:ss'}}"
                   [min]="currentDateTime" [max]="maxDateTime" />

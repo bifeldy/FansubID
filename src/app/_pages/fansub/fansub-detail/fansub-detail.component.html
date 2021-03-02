@@ -17,19 +17,20 @@
             </button>
           </div>
           <div class="col-12 text-center pt-3" *ngIf="getUrlByName('facebook')">
-            <a [href]="getUrlByName('facebook')" mat-stroked-button class="w-100" matTooltip="Kunjungi Halaman Fanpage">
+            <a [href]="getUrlByName('facebook')" mat-stroked-button class="w-100" matTooltip="Kunjungi Halaman Fanpage" style="color: rgb(114, 137, 218);">
               <mat-icon>facebook</mat-icon>
               Facebook Fanpage
             </a>
           </div>
           <div class="col-12 text-center pt-3" *ngIf="getUrlByName('discord')">
-            <a [href]="getUrlByName('discord')" mat-stroked-button class="w-100 text-warning" color="primary" matTooltip="Kunjungi Ruang Obrolan">
+            <a [href]="getUrlByName('discord')" mat-stroked-button class="w-100" matTooltip="Kunjungi Ruang Obrolan" style="color: rgb(114, 137, 218);">
               <img src="/assets/img/discord-blue.png" width="24px" />
               Ruang Obrolan Discord
             </a>
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-button class="w-100 text-success" matTooltip="{{ fansubData.user_ ? 'Terakhir Di Ubah Oleh :: ' + fansubData.user_.username : 'Perbaharui Data Fansub' }}" (click)="editFansubData()">
+            <button mat-button class="w-100 text-success" (click)="editFansubData()" style="color: rgb(255, 64, 129) !important;"
+              matTooltip="{{ fansubData.user_ ? 'Terakhir Di Ubah Oleh :: ' + fansubData.user_.username : 'Perbaharui Data Fansub' }}">
               <mat-icon>edit</mat-icon>
               Perbaharui Informasi
             </button>

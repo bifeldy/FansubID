@@ -30,8 +30,12 @@ export class GlobalService {
     minHeight: '256px',
     placeholder: 'Deskripsi, Informasi, Atau Keterangan Lainnya ...',
     uploadUrl: `${environment.apiUrl}/image`,
-    uploadWithCredentials: false,
-    defaultParagraphSeparator: 'p',
+    uploadWithCredentials: true,
+    defaultParagraphSeparator: 'div',
+    toolbarHiddenButtons: [
+      [],
+      []
+    ],
     customClasses: [
       {
         name: 'white-space-normal-important',

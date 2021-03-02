@@ -115,3 +115,11 @@ re-captcha > div {
 .text-success {
   color: #69f0ae !important;
 }
+
+#sourceText {
+  background-color: #0000 !important;
+}
+
+.angular-editor-toolbar .angular-editor-toolbar-set .angular-editor-button.active {
+  background: #69f0ae !important;
+}
