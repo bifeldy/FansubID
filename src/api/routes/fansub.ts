@@ -98,24 +98,25 @@ router.get('/list-all', async (req: UserRequest, res: Response, next: NextFuncti
 router.post('/cek-slug', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('slug' in req.body && req.body.slug) {
+      const slug = req.body.slug.replace(/[^a-zA-Z]/g, '');
       const fansubRepo = getRepository(Fansub);
       const selectedFansub = await fansubRepo.find({
         where: [
-          { slug: Equal(req.body.slug.replace(/[^a-zA-Z]/g, '')) }
+          { slug: Equal(slug) }
         ]
       });
       if (selectedFansub.length === 0) {
         return res.status(200).json({
           info: `😅 200 - Fansub API :: Cek Slug Berhasil 🤣`,
           result: {
-            message: `'${req.body.slug}' Dapat Digunakan`
+            message: `'${slug}' Dapat Digunakan`
           }
         });
       } else {
         return res.status(202).json({
           info: '😅 202 - Fansub API :: Cek Fansub Slug Gagal 🥰',
           result: {
-            message: `'${req.body.slug}' Sudah Terpakai`
+            message: `'${slug}' Sudah Terpakai`
           }
         });
       }
@@ -140,10 +141,11 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       'name' in req.body && 'born' in req.body && 'slug' in req.body &&
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
+      const slug = req.body.slug.replace(/[^a-zA-Z]/g, '');
       const fansubRepo = getRepository(Fansub);
       const selectedFansub = await fansubRepo.find({
         where: [
-          { slug: Equal(req.body.slug) }
+          { slug: Equal(slug) }
         ]
       });
       if (selectedFansub.length === 0) {
@@ -157,7 +159,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         fansub.user_ = user;
         fansub.name = req.body.name;
         fansub.born = new Date(req.body.born);
-        fansub.slug = req.body.slug.replace(/[^a-zA-Z]/g, '');
+        fansub.slug = slug;
         const filteredUrls = [];
         for (const u of req.body.urls) {
           if ('url' in u && 'name' in u && u.url && u.name) {
@@ -213,7 +215,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         return res.status(400).json({
           info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
           result: {
-            message: `'${req.body.slug}' Sudah Terpakai`
+            message: `'${slug}' Sudah Terpakai`
           }
         });
       }
@@ -466,6 +468,7 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
       ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) ||
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
+      const newSlug = req.body.slug.replace(/[^a-zA-Z]/g, '');
       const fansubRepo = getRepository(Fansub);
       const fansub = await fansubRepo.findOneOrFail({
         where: [
@@ -473,19 +476,19 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
         ],
         relations: ['user_']
       });
-      if (req.body.slug) {
+      if (newSlug) {
         const selectedFansub = await fansubRepo.find({
           where: [
-            { slug: Equal(req.body.slug) }
+            { slug: Equal(newSlug) }
           ]
         });
         if (selectedFansub.length === 0) {
-          fansub.slug = req.body.slug.replace(/\s/g, '');
+          fansub.slug = newSlug;
         } else {
           return res.status(400).json({
             info: `😅 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.id} 🥰`,
             result: {
-              message: `'${req.body.slug}' Sudah Terpakai`
+              message: `'${newSlug}' Sudah Terpakai`
             }
           });
         }
