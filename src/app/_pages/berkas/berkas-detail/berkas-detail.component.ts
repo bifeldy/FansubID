@@ -129,7 +129,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   get animeName(): string {
-    return this.berkasData.anime_.name.replace(/[^a-zA-Z]/g, '-');
+    return this.berkasData.anime_.name.replace(/[^a-zA-Z0-9]/g, '-');
   }
 
   get lampiran(): any {

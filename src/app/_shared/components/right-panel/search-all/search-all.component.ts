@@ -168,7 +168,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   getAnimeTitle(title: string): string {
-    return title.replace(/[^a-zA-Z]/g, '-');
+    return title.replace(/[^a-zA-Z0-9]/g, '-');
   }
 
   getAnime(): void {

@@ -261,7 +261,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   openAnime(data): void {
     this.gs.log('[FANSUB_DETAIL_OPEN_ANIME]', data);
-    const judulAnime = data.title.replace(/[^a-zA-Z]/g, '-');
+    const judulAnime = data.title.replace(/[^a-zA-Z0-9]/g, '-');
     this.router.navigateByUrl(`/anime/${data.id}-${judulAnime}`);
   }
 
