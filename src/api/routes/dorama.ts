@@ -1,5 +1,6 @@
 import request from 'request';
 import translate from '@k3rn31p4nic/google-translate-api';
+import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, In, Equal } from 'typeorm';
@@ -16,6 +17,8 @@ const router = Router();
 const myDramaListV1 = 'https://mydramalist.com/v1';
 const kuryanaApi = 'https://kuryana.vercel.app';
 
+const cacheTime = 30 * 60 * 1000;
+
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
   { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
@@ -25,27 +28,31 @@ const seasonal = [
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const searchQuery = req.query.q || '';
   const searchType = req.query.type || '';
-  return request({
-    method: 'GET',
-    uri: `${kuryanaApi}/search/q/${searchQuery}`
-  }, async (error, result, body) => {
-    if (error || !result) {
-      console.error(error);
-      return res.status(200).json({
-        info: `😅 200 - Dorama API :: Search ${searchQuery} 🤣`,
-        results: []
-      });
-    } else {
-      return res.status(result.statusCode).json({
-        info: `😅 ${result.statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
-        results: (
-          'results' in JSON.parse(body)
-            ? JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType))
-            : []
-        )
-      });
-    }
-  });
+  const cacheData = cache.get(req.url);
+  if (cacheData) {
+    return res.status(cacheData.status).json(cacheData.body);
+  } else {
+    return request({
+      method: 'GET',
+      uri: `${kuryanaApi}/search/q/${searchQuery}`
+    }, async (error, result, body) => {
+      if (error || !result) {
+        console.error(error);
+        return res.status(200).json({
+          info: `😅 200 - Dorama API :: Search ${searchQuery} 🤣`,
+          results: []
+        });
+      } else {
+        const statusCode = result.statusCode;
+        const responseBody = {
+          info: `😅 ${statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
+          results: ('results' in JSON.parse(body) ? JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType)) : [])
+        };
+        cache.put(req.url, { status: statusCode, body: responseBody }, cacheTime);
+        return res.status(statusCode).json(responseBody);
+      }
+    });
+  }
 });
 
 // POST `/api/dorama`
@@ -118,31 +125,35 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
   const year = req.query.year || currDate.getFullYear();
   const season = req.query.season || seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
   const quarter = seasonal.find(sB => sB.name === season).id || Math.ceil((currDate.getMonth() + 1) / 3);
-  return request({
-    method: 'POST',
-    uri: `${myDramaListV1}/quarter_calendar`,
-    formData: {
-      quarter,
-      year
-    }
-  }, async (error, result, body) => {
-    if (error || !result) {
-      console.error(error);
-      return res.status(200).json({
-        info: `😅 200 - Dorama API :: Seasonal ${season} ${year} 🤣`,
-        results: []
-      });
-    } else {
-      return res.status(result.statusCode).json({
-        info: `😅 ${result.statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
-        results: (
-          Array.isArray(JSON.parse(body))
-            ? JSON.parse(body)
-            : []
-        )
-      });
-    }
-  });
+  const cacheData = cache.get(req.url);
+  if (cacheData) {
+    return res.status(cacheData.status).json(cacheData.body);
+  } else {
+    return request({
+      method: 'POST',
+      uri: `${myDramaListV1}/quarter_calendar`,
+      formData: {
+        quarter,
+        year
+      }
+    }, async (error, result, body) => {
+      if (error || !result) {
+        console.error(error);
+        return res.status(200).json({
+          info: `😅 200 - Dorama API :: Seasonal ${season} ${year} 🤣`,
+          results: []
+        });
+      } else {
+        const statusCode = result.statusCode;
+        const responseBody = {
+          info: `😅 ${statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
+          results: (Array.isArray(JSON.parse(body)) ? JSON.parse(body) : [])
+        };
+        cache.put(req.url, { status: statusCode, body: responseBody }, cacheTime);
+        return res.status(statusCode).json(responseBody);
+      }
+    });
+  }
 });
 
 // GET `/api/dorama/berkas?id=`
@@ -287,43 +298,46 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
 // GET `/api/dorama/:mdlSlug`
 router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
   const mdlId = req.params.mdlSlug.split('-')[0];
-  return request({
-    method: 'GET',
-    uri: `${kuryanaApi}/id/${req.params.mdlSlug}`
-  }, async (error, result, body) => {
-    if (error || !result) {
-      console.error(error);
-      return res.status(200).json({
-        info: `😅 200 - Dorama API :: Detail ${mdlId} 🤣`,
-        result: null
-      });
-    } else {
-      const dramaDetail = JSON.parse(body);
-      let httpStatusCode = result.statusCode;
-      if (httpStatusCode === 200) {
-        try {
-          if ('synopsis' in dramaDetail.data && dramaDetail.data.synopsis) {
-            const translatedDoramaSynopsis = await translate(dramaDetail.data.synopsis, { to: 'id' });
-            dramaDetail.data.synopsis = translatedDoramaSynopsis.text;
-          }
-        } catch (error) {
-          console.error(error);
-          httpStatusCode = 202;
-          dramaDetail.data.message = 'Penerjemah / Alih Bahasa Gagal!';
-        }
+  const cacheData = cache.get(req.url);
+  if (cacheData) {
+    return res.status(cacheData.status).json(cacheData.body);
+  } else {
+    return request({
+      method: 'GET',
+      uri: `${kuryanaApi}/id/${req.params.mdlSlug}`
+    }, async (error, result, body) => {
+      if (error || !result) {
+        console.error(error);
+        return res.status(200).json({
+          info: `😅 200 - Dorama API :: Detail ${mdlId} 🤣`,
+          result: null
+        });
       } else {
-        httpStatusCode = dramaDetail.status_code;
+        const dramaDetail = JSON.parse(body);
+        let httpStatusCode = result.statusCode;
+        if (httpStatusCode === 200) {
+          try {
+            if ('synopsis' in dramaDetail.data && dramaDetail.data.synopsis) {
+              const translatedDoramaSynopsis = await translate(dramaDetail.data.synopsis, { to: 'id' });
+              dramaDetail.data.synopsis = translatedDoramaSynopsis.text;
+            }
+          } catch (error) {
+            console.error(error);
+            httpStatusCode = 202;
+            dramaDetail.data.message = 'Penerjemah / Alih Bahasa Gagal!';
+          }
+        } else {
+          httpStatusCode = dramaDetail.status_code;
+        }
+        const responseBody = {
+          info: `😅 ${httpStatusCode} - Dorama API :: Detail ${mdlId} 🤣`,
+          result: ('data' in dramaDetail ? dramaDetail.data : dramaDetail)
+        };
+        cache.put(req.url, { status: httpStatusCode, body: responseBody }, cacheTime);
+        return res.status(httpStatusCode).json(responseBody);
       }
-      return res.status(httpStatusCode).json({
-        info: `😅 ${httpStatusCode} - Dorama API :: Detail ${mdlId} 🤣`,
-        result: (
-          'data' in dramaDetail
-            ? dramaDetail.data
-            : dramaDetail
-        )
-      });
-    }
-  });
+    });
+  }
 });
 
 export default router;

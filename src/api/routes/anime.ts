@@ -1,5 +1,6 @@
 import request from 'request';
 import translate from '@k3rn31p4nic/google-translate-api';
+import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Like, In, Equal } from 'typeorm';
@@ -15,6 +16,8 @@ const router = Router();
 
 const jikanV3 = 'http://api.jikan.moe/v3';
 
+const cacheTime = 30 * 60 * 1000;
+
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
   { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
@@ -24,27 +27,31 @@ const seasonal = [
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const searchQuery = req.query.q || '';
   const searchType = req.query.type || '';
-  return request({
-    method: 'GET',
-    uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`
-  }, async (error, result, body) => {
-    if (error || !result) {
-      console.error(error);
-      return res.status(200).json({
-        info: `😅 200 - Anime API :: Search ${searchQuery} 🤣`,
-        results: []
-      });
-    } else {
-      return res.status(result.statusCode).json({
-        info: `😅 ${result.statusCode} - Anime API :: Search ${searchQuery} 🤣`,
-        results: (
-          'results' in JSON.parse(body)
-            ? JSON.parse(body).results
-            : []
-        )
-      });
-    }
-  });
+  const cacheData = cache.get(req.url);
+  if (cacheData) {
+    return res.status(cacheData.status).json(cacheData.body);
+  } else {
+    return request({
+      method: 'GET',
+      uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`
+    }, async (error, result, body) => {
+      if (error || !result) {
+        console.error(error);
+        return res.status(200).json({
+          info: `😅 200 - Anime API :: Search ${searchQuery} 🤣`,
+          results: []
+        });
+      } else {
+        const statusCode = result.statusCode;
+        const responseBody = {
+          info: `😅 ${statusCode} - Anime API :: Search ${searchQuery} 🤣`,
+          results: ('results' in JSON.parse(body) ? JSON.parse(body).results : [])
+        };
+        cache.put(req.url, { status: statusCode, body: responseBody }, cacheTime);
+        return res.status(statusCode).json(responseBody);
+      }
+    });
+  }
 });
 
 // POST `/api/anime`
@@ -112,27 +119,31 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
   const currDate = new Date();
   const year = req.query.year || currDate.getFullYear();
   const season = req.query.season || seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
-  return request({
-    method: 'GET',
-    uri: `${jikanV3}/season/${year}/${season}`
-  }, async (error, result, body) => {
-    if (error || !result) {
-      console.error(error);
-      return res.status(200).json({
-        info: `😅 200 - Anime API :: Seasonal ${season} ${year} 🤣`,
-        results: []
-      });
-    } else {
-      return res.status(result.statusCode).json({
-        info: `😅 ${result.statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
-        results: (
-          'anime' in JSON.parse(body)
-            ? JSON.parse(body).anime
-            : []
-        )
-      });
-    }
-  });
+  const cacheData = cache.get(req.url);
+  if (cacheData) {
+    return res.status(cacheData.status).json(cacheData.body);
+  } else {
+    return request({
+      method: 'GET',
+      uri: `${jikanV3}/season/${year}/${season}`
+    }, async (error, result, body) => {
+      if (error || !result) {
+        console.error(error);
+        return res.status(200).json({
+          info: `😅 200 - Anime API :: Seasonal ${season} ${year} 🤣`,
+          results: []
+        });
+      } else {
+        const statusCode = result.statusCode;
+        const responseBody = {
+          info: `😅 ${statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
+          results: ('anime' in JSON.parse(body) ? JSON.parse(body).anime : [])
+        };
+        cache.put(req.url, { status: statusCode, body: responseBody }, cacheTime);
+        return res.status(statusCode).json(responseBody);
+      }
+    });
+  }
 });
 
 // GET `/api/anime/berkas?id=`
@@ -277,44 +288,51 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
 // GET `/api/anime/:malSlug`
 router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
   const malId = req.params.malSlug.split('-')[0];
-  return request({
-    method: 'GET',
-    uri: `${jikanV3}/anime/${malId}`
-  }, async (error, result, body) => {
-    if (error || !result) {
-      console.error(error);
-      return res.status(200).json({
-        info: `😅 200 - Anime API :: Detail ${malId} 🤣`,
-        result: null
-      });
-    } else {
-      const animeDetail = JSON.parse(body);
-      let httpStatusCode = result.statusCode;
-      if ('request_hash' in animeDetail) {
-        delete animeDetail.request_hash;
-      }
-      if ('request_cached' in animeDetail) {
-        delete animeDetail.request_cached;
-      }
-      if ('request_cache_expiry' in animeDetail) {
-        delete animeDetail.request_cache_expiry;
-      }
-      try {
-        if ('synopsis' in animeDetail && animeDetail.synopsis) {
-          const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
-          animeDetail.synopsis = translatedAnimeSynopsis.text;
-        }
-      } catch (error) {
+  const cacheData = cache.get(req.url);
+  if (cacheData) {
+    return res.status(cacheData.status).json(cacheData.body);
+  } else {
+    return request({
+      method: 'GET',
+      uri: `${jikanV3}/anime/${malId}`
+    }, async (error, result, body) => {
+      if (error || !result) {
         console.error(error);
-        httpStatusCode = 202;
-        animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+        return res.status(200).json({
+          info: `😅 200 - Anime API :: Detail ${malId} 🤣`,
+          result: null
+        });
+      } else {
+        const animeDetail = JSON.parse(body);
+        let httpStatusCode = result.statusCode;
+        if ('request_hash' in animeDetail) {
+          delete animeDetail.request_hash;
+        }
+        if ('request_cached' in animeDetail) {
+          delete animeDetail.request_cached;
+        }
+        if ('request_cache_expiry' in animeDetail) {
+          delete animeDetail.request_cache_expiry;
+        }
+        try {
+          if ('synopsis' in animeDetail && animeDetail.synopsis) {
+            const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
+            animeDetail.synopsis = translatedAnimeSynopsis.text;
+          }
+        } catch (error) {
+          console.error(error);
+          httpStatusCode = 202;
+          animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+        }
+        const responseBody = {
+          info: `😅 ${httpStatusCode} - Anime API :: Detail ${malId} 🤣`,
+          result: animeDetail
+        };
+        cache.put(req.url, { status: httpStatusCode, body: responseBody }, cacheTime);
+        return res.status(httpStatusCode).json(responseBody);
       }
-      return res.status(httpStatusCode).json({
-        info: `😅 ${httpStatusCode} - Anime API :: Detail ${malId} 🤣`,
-        result: animeDetail
-      });
-    }
-  });
+    });
+  }
 });
 
 export default router;
