@@ -12,7 +12,7 @@ export const onSideNavChange = trigger('onSideNavChange', [
     })
   ),
   transition('close => open', animate('250ms ease-in')),
-  transition('open => close', animate('250ms ease-in')),
+  transition('open => close', animate('250ms ease-out')),
 ]);
 
 export const onMainContentChange = trigger('onMainContentChange', [
@@ -27,7 +27,7 @@ export const onMainContentChange = trigger('onMainContentChange', [
     })
   ),
   transition('close => open', animate('250ms ease-in')),
-  transition('open => close', animate('250ms ease-in')),
+  transition('open => close', animate('250ms ease-out')),
 ]);
 
 export const animateText = trigger('animateText', [

@@ -294,8 +294,9 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
         .addFields(
           { name: 'Fansub', value: fansubEmbedData.join(', '), inline: true },
-          { name: 'Jenis', value: resFileSave.project_type_.name, inline: true },
-          { name: 'DDL & Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
+          { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
+          { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
+          { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
         )
         .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
         .setTimestamp(resFileSave.updated_at)
@@ -539,8 +540,9 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
             .addFields(
               { name: 'Fansub', value: fansubEmbedData.join(', '), inline: true },
-              { name: 'Jenis', value: resFileSave.project_type_.name, inline: true },
-              { name: 'DDL & Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
+              { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
+              { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
+              { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
             )
             .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
             .setTimestamp(resFileSave.updated_at)

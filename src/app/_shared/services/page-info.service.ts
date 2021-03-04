@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -20,7 +21,8 @@ export class PageInfoService {
   constructor(
     private t: Title,
     private m: Meta,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private router: Router
   ) {
     this.m.updateTag({ property: 'og:site_name', content: this.siteName });
     if (this.gs.isBrowser) {
@@ -51,6 +53,11 @@ export class PageInfoService {
     this.m.updateTag({ property: 'og:title', content: this.title });
     this.m.updateTag({ property: 'og:description', content: this.description });
     this.m.updateTag({ property: 'og:image', content: this.image });
+    if (this.router.url.includes('/berkas/')) {
+      this.m.addTag({ property: 'twitter:card', content: 'summary_large_image' });
+    } else {
+      this.m.removeTag( 'property="twitter:card"');
+    }
   }
 
 }
