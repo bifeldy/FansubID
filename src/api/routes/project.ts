@@ -32,26 +32,40 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 
 // POST `/api/project`
 router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
-  if (
-    'name' in req.body
-  ) {
-    const projectRepo = getRepository(ProjectType);
-    const project = new ProjectType();
-    project.name = req.body.name;
-    if (req.body.image) {
-      project.image_url = req.body.image;
+  try {
+    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      if (
+        'name' in req.body
+      ) {
+        const projectRepo = getRepository(ProjectType);
+        const project = new ProjectType();
+        project.name = req.body.name;
+        if (req.body.image) {
+          project.image_url = req.body.image;
+        } else {
+          project.image_url = '/favicon.ico';
+        }
+        if (req.body.description) {
+          project.description = req.body.description;
+        }
+        const resProjectSave = await projectRepo.save(project);
+        return res.status(200).json({
+          info: `😅 200 - Project API :: Tambah Baru 🤣`,
+          result: resProjectSave
+        });
+      } else {
+        throw new Error('Data Tidak Lengkap!');
+      }
     } else {
-      project.image_url = '/favicon.ico';
+      return res.status(401).json({
+        info: '🙄 401 - Project API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
+        }
+      });
     }
-    if (req.body.description) {
-      project.description = req.body.description;
-    }
-    const resProjectSave = await projectRepo.save(project);
-    return res.status(200).json({
-      info: `😅 200 - Project API :: Tambah Baru 🤣`,
-      result: resProjectSave
-    });
-  } else {
+  } catch (error) {
+    console.error(error);
     return res.status(400).json({
       info: '🙄 400 - Project API :: Gagal Menambah Jenis Project Baru 😪',
       result: {
