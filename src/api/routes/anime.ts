@@ -27,7 +27,7 @@ const seasonal = [
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const searchQuery = req.query.q || '';
   const searchType = req.query.type || '';
-  const cacheData = cache.get(req.url);
+  const cacheData = cache.get(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -47,7 +47,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           info: `😅 ${statusCode} - Anime API :: Search ${searchQuery} 🤣`,
           results: ('results' in JSON.parse(body) ? JSON.parse(body).results : [])
         };
-        cache.put(req.url, { status: statusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -119,7 +119,7 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
   const currDate = new Date();
   const year = req.query.year || currDate.getFullYear();
   const season = req.query.season || seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
-  const cacheData = cache.get(req.url);
+  const cacheData = cache.get(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -139,7 +139,7 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
           info: `😅 ${statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
           results: ('anime' in JSON.parse(body) ? JSON.parse(body).anime : [])
         };
-        cache.put(req.url, { status: statusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -288,7 +288,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
 // GET `/api/anime/:malSlug`
 router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
   const malId = req.params.malSlug.split('-')[0];
-  const cacheData = cache.get(req.url);
+  const cacheData = cache.get(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -328,7 +328,7 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
           info: `😅 ${httpStatusCode} - Anime API :: Detail ${malId} 🤣`,
           result: animeDetail
         };
-        cache.put(req.url, { status: httpStatusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, cacheTime);
         return res.status(httpStatusCode).json(responseBody);
       }
     });
