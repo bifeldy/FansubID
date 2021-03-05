@@ -11,7 +11,7 @@ td.mat-column-star {
 
 .mat-row {
   &:hover {
-    background-color: rgb(56, 56, 56);
+    background-color: rgba(66, 66, 66, 0.875);
   }
   a {
     color: #7289da;
@@ -58,7 +58,7 @@ td.mat-column-star {
       height: auto;
       position: relative;
       clear: both;
-      box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+      background-color: rgba(66, 66, 66, 0.875) !important;
       border-radius: 3px;
       + .mat-row {
         margin-top: 24px;
@@ -84,7 +84,7 @@ td.mat-column-star {
       &.m-card-sub-title {
         margin-top: -8px;
         padding: 0 48px 0 16px;
-        color: rgba(0,0,0,.54);
+        color: rgba(0, 0, 0, .5);
       }
     }
 
