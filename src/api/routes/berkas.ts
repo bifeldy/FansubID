@@ -154,7 +154,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       const fansubRepo = getRepository(Fansub);
       const fansub = await fansubRepo.find({
         where: [
-          { id: In([req.body.fansub_id]) }
+          { id: In(req.body.fansub_id) }
         ]
       });
       file.fansub_ = fansub;

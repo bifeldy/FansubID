@@ -248,7 +248,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
         where: [
           {
             dorama_: {
-              id: In([doramaId])
+              id: In(doramaId)
             }
           }
         ],

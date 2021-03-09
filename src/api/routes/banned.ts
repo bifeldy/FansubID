@@ -50,7 +50,7 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
           where: [
             {
               user_: {
-                id: In([userId])
+                id: In(userId)
               }
             }
           ],

@@ -238,7 +238,7 @@ router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction
         where: [
           {
             anime_: {
-              id: In([animeId])
+              id: In(animeId)
             }
           }
         ],
