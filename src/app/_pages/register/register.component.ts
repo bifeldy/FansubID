@@ -38,6 +38,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public as: AuthService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
     if (this.gs.isBrowser) {
       if (this.as.currentUserValue) {
         this.router.navigateByUrl(this.returnUrl);

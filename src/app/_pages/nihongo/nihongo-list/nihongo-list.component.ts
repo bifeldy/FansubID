@@ -89,6 +89,9 @@ export class NihongoListComponent implements OnInit {
     private router: Router,
     public gs: GlobalService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {

@@ -57,9 +57,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private us: UserService
   ) {
-    if (this.gs.isBrowser) {
-      //
-    }
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnDestroy(): void {

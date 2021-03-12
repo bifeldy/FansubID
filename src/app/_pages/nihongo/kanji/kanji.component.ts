@@ -38,6 +38,9 @@ export class KanjiComponent implements OnInit, OnDestroy {
     private nihon: NihongoService,
     private ds: DialogService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {

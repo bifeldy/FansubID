@@ -16,6 +16,9 @@ export class UserListComponent implements OnInit {
     public as: AuthService,
     public gs: GlobalService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
     if (this.gs.isBrowser) {
       if (this.as.currentUserValue) {
         this.router.navigateByUrl(`/user/${this.as.currentUserValue.username}`);

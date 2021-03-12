@@ -6,7 +6,7 @@
   
   <!-- Detail -->
   <div class="row pb-3 px-0">
-    <div class="col-lg-8 col-xl-9">
+    <div class="col-12">
       <div class="row">
         <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
           <div class="col-12 sticky-top bg-bifeldy-dark">
@@ -110,31 +110,6 @@
         <div class="col-12">
           <app-material-table [tableDataColumn]="notifData.column" [tableDataRow]="notifData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
             (buttonClicked)="deleteNotif($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4 col-xl-3">
-      <div class="row sticky-top bg-bifeldy-dark">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
-          <h2 class="pt-3 border-bottom-dotted">
-            <b class="text-bifeldy-dark">Menu Admin Lainnya</b>
-          </h2>
-        </div>
-        <div class="col-12 px-3">
-          <div class="col-12 p-2" *ngFor="let m of adm.menuList">
-            <mat-card>
-              <mat-card-header routerLink="/admin-mod/{{ m.url }}" style="cursor: pointer;">
-                <div mat-card-avatar style="background-size: cover;"
-                  [style.background-image]="'url(' + (m.image_url ? m.image_url : '') + ')'">
-                  <mat-icon style="font-size: 300%;" *ngIf="m.icon">{{ m.icon }}</mat-icon>
-                </div>
-                <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
-                  <h3 class="mb-0">{{ m.name }}</h3>
-                </mat-card-title>
-                <mat-card-subtitle class="mb-0">{{ m.deskripsi }}</mat-card-subtitle>
-              </mat-card-header>
-            </mat-card>
-          </div>
         </div>
       </div>
     </div>

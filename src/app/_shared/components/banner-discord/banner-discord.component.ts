@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { environment } from '../../../../environments/client/environment';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 
 @Component({
@@ -8,9 +10,6 @@ import { GlobalService } from '../../../_shared/services/global.service';
   styleUrls: ['./banner-discord.component.css']
 })
 export class BannerDiscordComponent implements OnInit {
-
-  discordGuildId = '342220398022098944';
-  discordInviteCode = 'xGWdExk';
 
   constructor(
     public gs: GlobalService
@@ -24,6 +23,14 @@ export class BannerDiscordComponent implements OnInit {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get discordUrl(): string{
+    return environment.discordUrl;
+  }
+
+  get discordGuildId(): string{
+    return environment.discordGuildId;
   }
 
 }

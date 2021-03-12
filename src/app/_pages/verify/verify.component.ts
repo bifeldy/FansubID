@@ -44,9 +44,9 @@ export class VerifyComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public as: AuthService
   ) {
-    if (this.gs.isBrowser) {
-      //
-    }
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnDestroy(): void {

@@ -34,9 +34,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     public as: AuthService
   ) {
-    if (this.gs.isBrowser) {
-      //
-    }
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnDestroy(): void {

@@ -11,8 +11,12 @@
 
   <span class="spacer"></span>
 
-  <button mat-icon-button class="ms-3" (click)="openSearch()">
+  <button mat-icon-button (click)="openSearch()">
     <mat-icon>search</mat-icon>
+  </button>
+
+  <button mat-icon-button (click)="openAdminNavigation()" *ngIf="router.url.includes('/admin-mod/')">
+    <mat-icon>apps</mat-icon>
   </button>
 
 </mat-toolbar>

@@ -501,6 +501,9 @@ export class HirakataComponent implements OnInit {
     private gs: GlobalService,
     private ds: DialogService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {

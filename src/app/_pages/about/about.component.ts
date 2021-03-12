@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { environment } from '../../../environments/client/environment';
+
 import { dependencies } from '../../../../package.json';
 
 import { GlobalService } from '../../_shared/services/global.service';
@@ -60,7 +62,7 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.fs.initializeFab(null, '/assets/img/discord-pink.png', 'Discord Server', 'https://discord.gg/xGWdExk', true);
+      this.fs.initializeFab(null, '/assets/img/discord-pink.png', 'Discord Server', environment.discordUrl, true);
     }
   }
 

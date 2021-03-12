@@ -12,8 +12,6 @@ import { LocalStorageService } from './local-storage.service';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  localStorageName = 'hikki_userData';
-
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
@@ -23,8 +21,7 @@ export class AuthService {
     private api: ApiService
   ) {
     if (this.gs.isBrowser) {
-      const userSession = this.ls.getItem(this.localStorageName, true);
-      this.currentUserSubject = new BehaviorSubject<User>(userSession);
+      this.currentUserSubject = new BehaviorSubject<User>(null);
       this.currentUser = this.currentUserSubject.asObservable();
     }
   }
@@ -37,7 +34,6 @@ export class AuthService {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.postData(`/verify`, { token }).pipe(map(respVerify => {
       this.currentUserSubject.next(respVerify.result);
-      this.ls.setItem(this.localStorageName, respVerify.result);
       return respVerify;
     }));
   }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { GlobalService } from './global.service';
 
 import { SearchAllComponent } from '../components/right-panel/search-all/search-all.component';
+import { AdminNavigationComponent } from '../components/right-panel/admin-navigation/admin-navigation.component';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,8 @@ export class RightPanelService {
       this.componentView = view;
     } else if (view === 'SearchAllComponent') {
       this.componentView = SearchAllComponent;
+    } else if (view === 'AdminNavigationComponent') {
+      this.componentView = AdminNavigationComponent;
     }
     this.sidePanel.open();
   }

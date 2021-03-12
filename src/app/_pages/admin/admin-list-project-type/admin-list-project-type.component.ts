@@ -47,6 +47,9 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private project: ProjectService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {

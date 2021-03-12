@@ -8,6 +8,8 @@ export const environment = {
   baseUrl: 'http://localhost:4000',
   apiUrl: '/api',
   apiKey: 'hikki_api_key',
+  discordUrl: 'https://discord.gg/xGWdExk',
+  discordGuildId: '342220398022098944',
   discordClientId: '789831990433153034'
 };
 

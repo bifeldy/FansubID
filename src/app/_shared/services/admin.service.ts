@@ -29,35 +29,35 @@ export class AdminService {
       name: 'CORS & API Key',
       image_url: null,
       icon: 'privacy_tip',
-      deskripsi: 'Cross-Origin Resource Sharing'
+      deskripsi: 'Cross-Origin API'
     },
     {
       url: 'fansub-member',
       name: 'Fansub Lead & Staff',
       image_url: null,
       icon: 'stars',
-      deskripsi: 'Atur Keanggotaan Fansub'
+      deskripsi: 'Keanggotaan Fansub'
     },
     {
       url: 'project-type',
       name: 'Project Type',
       image_url: null,
       icon: 'loyalty',
-      deskripsi: 'Atur Kategori Garapan'
+      deskripsi: 'Kategori Garapan'
     },
     {
       url: 'push-notification',
       name: 'Push Notification',
       image_url: null,
       icon: 'notifications_active',
-      deskripsi: 'Buat Pengumuman Dadakan'
+      deskripsi: 'Pengumuman Dadakan'
     },
     {
       url: 'user-list',
       name: 'User List',
       image_url: null,
       icon: 'supervisor_account',
-      deskripsi: 'Atur Seluruh Member'
+      deskripsi: 'Seluruh Member'
     }
   ];
 

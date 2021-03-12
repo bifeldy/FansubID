@@ -7,11 +7,13 @@ import { SharedMaterialModule } from '../../helpers/shared-material.module';
 
 import { RightPanelComponent } from './right-panel.component';
 import { SearchAllComponent } from './search-all/search-all.component';
+import { AdminNavigationComponent } from './admin-navigation/admin-navigation.component';
 
 @NgModule({
   declarations: [
     RightPanelComponent,
-    SearchAllComponent
+    SearchAllComponent,
+    AdminNavigationComponent
   ],
   imports: [
     CommonModule,

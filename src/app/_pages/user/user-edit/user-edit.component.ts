@@ -64,9 +64,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
     public gs: GlobalService,
     public as: AuthService
   ) {
-    if (this.gs.isBrowser) {
-      //
-    }
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   togglePassword(): void {

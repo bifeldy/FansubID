@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { environment } from '../../../../environments/client/environment';
 
 import { PageInfoService } from '../../services/page-info.service';
 import { LeftMenuService } from '../../services/left-menu.service';
@@ -12,11 +15,10 @@ import { RightPanelService } from '../../services/right-panel.service';
 })
 export class HeaderComponent implements OnInit {
 
-  discordUrl = 'https://discord.gg/xGWdExk';
-
   constructor(
     private lms: LeftMenuService,
     private rps: RightPanelService,
+    public router: Router,
     public pi: PageInfoService,
     public gs: GlobalService
   ) {
@@ -31,12 +33,20 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  get discordUrl(): string {
+    return environment.discordUrl;
+  }
+
   toggleSideNav(): void {
     this.lms.onSideNavToggleView();
   }
 
   openSearch(): void {
     this.rps.toggleSidePanel('SearchAllComponent');
+  }
+
+  openAdminNavigation(): void {
+    this.rps.toggleSidePanel('AdminNavigationComponent');
   }
 
 }

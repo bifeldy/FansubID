@@ -34,6 +34,9 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     public gs: GlobalService,
     public adm: AdminService
   ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {
