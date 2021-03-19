@@ -72,7 +72,7 @@ const typeOrmConfig: any = {
 };
 
 // Express Router
-import indexRouter from './src/api/routes';
+import indexRouter from './src/api/routes/index';
 
 // Express rest api endpoints
 const apiLimiter = rateLimit({
@@ -123,7 +123,7 @@ let bot = null;
 
 async function updateVisitor(): Promise<any> {
   if (bot && io) {
-    bot.user.setPresence({
+    bot?.user?.setPresence({
       status: 'idle',
       activity: {
         name: `${io.sockets.sockets.size} Pengunjung`,

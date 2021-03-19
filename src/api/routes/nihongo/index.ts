@@ -19,18 +19,19 @@ router.use('/tatoeba', tatoebaRouter);
 
 // GET `/api/nihongo`
 router.get('/', async (req: UserRequest, res: Response) => {
+  console.log('asdasdasdasd');
   try {
     const bookRepo = getRepository(NihongoBook);
     const [book, count] = await bookRepo.findAndCount({
       where: [
-        { title: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        { name: Like(`%${req.query.q ? req.query.q : ''}%`) }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
           [req.query.sort]: req.query.order.toUpperCase()
         } : {
           created_at: 'DESC',
-          title: 'ASC'
+          name: 'ASC'
         })
       },
       relations: ['user_'],

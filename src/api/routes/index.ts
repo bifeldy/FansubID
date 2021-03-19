@@ -22,7 +22,7 @@ import auth from '../middlewares/auth';
 import jwt from '../helpers/jwt';
 import logger from '../helpers/logger';
 
-// Child router
+// Child router file
 import animeRouter from './anime';
 import doramaRouter from './dorama';
 import projectRouter from './project';
@@ -31,9 +31,11 @@ import berkasRouter from './berkas';
 import userRouter from './user';
 import attachmentRouter from './attachment';
 import newsRouter from './news';
-import nihongoRouter from './nihongo';
 import bannedRouter from './banned';
 import notificationRouter from './notification';
+
+// Child router folder
+import nihongoRouter from './nihongo/index';
 
 import { SosMed } from '../../app/_shared/models/SosMed';
 
@@ -72,7 +74,7 @@ router.use(logger.reqHeaderBodyCleanUp);
 
 // GET `/api`
 router.get('/', (req: UserRequest, res: Response) => {
-  return res.redirect('/');
+  return res.redirect('/documentation');
 });
 
 // Check Api Key

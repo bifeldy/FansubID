@@ -129,6 +129,17 @@ const routes: Routes = [
       keywords: 'User'
     }
   },
+  // {
+  //   path: 'documentation',
+  //   loadChildren: () => import('./_pages/documentation/documentation.module').then(m => m.DocumentationModule),
+  //   canActivate: [AuthGuard],
+  //   data: {
+  //     title: 'API Documentation',
+  //     description: 'Request & Response',
+  //     keywords: 'API',
+  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+  //   }
+  // },
   {
     path: 'error',
     loadChildren: () => import('./_pages/not-found/not-found.module').then(m => m.NotFoundModule),
