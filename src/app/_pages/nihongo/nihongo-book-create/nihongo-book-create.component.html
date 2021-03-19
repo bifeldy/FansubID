@@ -1,0 +1,107 @@
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+
+  <!-- Detail -->
+  <div class="row px-3">
+    <div class="col-12">
+      <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
+        <div class="row mt-3 mb-3">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-12 col-md-5 col-xl-4 p-3">
+                <div class="row pb-3">
+                  <div class="col-12">
+                    <img class="w-100 border" [src]="image_url" />
+                    <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
+                      <mat-label>Gambar</mat-label>
+                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
+                        [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+                      <mat-icon matSuffix>image</mat-icon>
+                    </mat-form-field>
+                    <mat-error class="px-3 w-100">
+                      <small>
+                        <strong>{{ imageErrorText }}</strong>
+                      </small>
+                    </mat-error>
+                  </div>
+                  <div class="col-12" *ngIf="image && !fg.value.image">
+                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+                      <mat-icon class="me-1">add_photo_alternate</mat-icon>
+                      Unggah
+                    </button>
+                  </div>
+                </div>
+                <div class="row">
+                  <mat-form-field appearance="outline" class="pt-3 col" [color]="'accent'">
+                    <mat-label>Upload PDF Buku</mat-label>
+                    <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event, ddl)" #ddl [disabled]="attachmentIsUploading || attachmentIsCompleted"
+                      [accept]="'application/pdf'"></ngx-mat-file-input>
+                    <mat-icon matSuffix>attach_file</mat-icon>
+                  </mat-form-field>
+                  <mat-error class="mx-1 px-4 w-100">
+                    <small>
+                      <strong>{{ attachmentErrorText }}</strong>
+                    </small>
+                  </mat-error>
+                </div>
+                <div class="row mb-4" *ngIf="attachment">
+                  <div class="col">
+                    <div class="px-3" *ngIf="attachmentIsUploading || attachmentIsCompleted">
+                      {{ attachmentPercentage >= 100 ? 'Selesai Mengunggah ... '  : 'Sedang Mengunggah ... ' }}
+                      {{ attachmentPercentage }}% @ {{ attachmentSpeed }} KB/s
+                      <br />
+                      <mat-progress-bar [mode]="attachmentMode" [value]="attachmentPercentage"></mat-progress-bar>
+                    </div>
+                  </div>
+                  <div class="col-5" *ngIf="!attachmentIsUploading && !attachmentIsCompleted">
+                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitAttachment()">
+                      <mat-icon class="me-1">attachment</mat-icon>
+                      Unggah
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-7 col-xl-8 pt-3">
+                <div class="row">
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                    <mat-label>Nama</mat-label>
+                    <input matInput formControlName="name" placeholder="Belajar Bahasa Blablabla ..." />
+                    <mat-icon matSuffix>wysiwyg</mat-icon>
+                    <mat-error>
+                      <strong *ngIf="fg.get('name').hasError('required')">Nama Buku Tidak Boleh Kosong</strong>
+                      <strong *ngIf="fg.get('name').hasError('pattern')">Nama Buku Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-12 col-md-3 pb-3">
+                    <a mat-stroked-button routerLink="../" class="w-100" [disabled]="submitted">
+                      <mat-icon class="me-1">undo</mat-icon>
+                      Batal
+                    </a>
+                  </div>
+                  <div class="col-12 col-md-3 pb-3">
+                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid">
+                      Simpan
+                      <mat-icon class="ms-1">save</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

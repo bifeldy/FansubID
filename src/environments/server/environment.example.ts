@@ -22,6 +22,8 @@ import { Kanjivg } from '../../api/entities/Kanjivg';
 import { Tatoeba } from '../../api/entities/Tatoeba';
 import { Banned } from '../../api/entities/Banned';
 import { Notification } from '../../api/entities/Notification';
+import { NihongoBook } from '../../api/entities/NihongoBook';
+import { NihongoChapter } from '../../api/entities/NihongoChapter';
 
 export const environment = {
   production: false,
@@ -48,6 +50,8 @@ export const environment = {
     TempAttachment,
     ApiKey,
     News,
+    NihongoBook,
+    NihongoChapter,
     SocialMedia,
     Edict,
     Kanji,

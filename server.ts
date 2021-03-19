@@ -121,51 +121,27 @@ const corsOptions = {
 let io = null;
 let bot = null;
 
+async function updateVisitor(): Promise<any> {
+  if (bot && io) {
+    bot.user.setPresence({
+      status: 'idle',
+      activity: {
+        name: `${io.sockets.sockets.size} Pengunjung`,
+        type: 'WATCHING',
+        url: 'http://hikki.id'
+      }
+    });
+  }
+}
+
 // Discord Bot
 function startDiscordBot(): void {
-  let botPresenceStatusInterval = null;
   bot.on('disconnect', (event) => {
     logger.log(`[DISCORD] 🎉 DISCONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
-    if (botPresenceStatusInterval) {
-      clearInterval(botPresenceStatusInterval);
-    }
   });
   bot.on('ready', () => {
     logger.log(`[DISCORD] 🎉 CONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
-    botPresenceStatusInterval = setInterval(async () => {
-      try {
-        const presenceStatus: any = [
-          'dnd',
-          'idle',
-          'online'
-        ];
-        const presenceType: any = [
-          'COMPETING',
-          'WATCHING',
-          'LISTENING',
-          'PLAYING',
-          'STREAMING',
-          'CUSTOM_STATUS'
-        ];
-        const presenceName: any = [
-          'http://www.hikki.id',
-          'Anime Database',
-          'Fansub Database',
-          'Nihongo 日本語',
-          `${io.sockets.sockets.size} Pengunjung`
-        ];
-        await bot.user.setPresence({
-          status: presenceStatus[Math.floor(Math.random() * presenceStatus.length)],
-          activity: {
-            name: presenceName[Math.floor(Math.random() * presenceName.length)],
-            type: presenceType[Math.floor(Math.random() * presenceType.length)],
-            url: 'http://hikki.id'
-          }
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }, 15000);
+    updateVisitor();
   });
   bot.on('message', async (msg: Message) => {
     try {
@@ -186,9 +162,11 @@ function startDiscordBot(): void {
 // Socket.io
 function startSocketIo(): void {
   io.on('connection', async (socket: socketIo.Socket) => {
+    updateVisitor();
     io.emit('visitors', io.sockets.sockets.size);
     socket.on('disconnect', () => {
       io.emit('visitors', io.sockets.sockets.size);
+      updateVisitor();
     });
     socket.on('ping-pong', (cb) => {
       if (typeof cb === 'function') {

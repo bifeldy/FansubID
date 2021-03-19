@@ -27,13 +27,23 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length);
     }
-    const decoded: {} = JWT.verify(token, jwtSecretKey);
-    return { ...decoded, token };
+    if (token == 'THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?') {
+      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
+      return res.status(400).json({
+        info: '🤧 400 - JWT API :: JWT Token Tidak Ada 😷',
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      });
+    } else {
+      const decoded: {} = JWT.verify(token, jwtSecretKey);
+      return { ...decoded, token };
+    }
   } catch (err) {
     console.error(err);
     res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
     return res.status(401).json({
-      info: '🤧 401 - Authentication API :: Whoops, Akses Ditolak 😷',
+      info: '🤧 401 - JWT API :: Whoops, Akses Ditolak 😷',
       result: err
     });
   }

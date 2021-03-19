@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
+import { FabService } from '../../../_shared/services/fab.service';
 
 @Component({
   selector: 'app-nihongo-list',
@@ -87,6 +88,7 @@ export class NihongoListComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private fs: FabService,
     public gs: GlobalService
   ) {
     this.gs.bannerImg = null;
@@ -95,6 +97,13 @@ export class NihongoListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      this.getBook();
+    }
+  }
+
+  getBook(): void {
+    this.fs.initializeFab('add', null, 'Tambah Modul Baru', `/nihongo/create`, false);
   }
 
   openModule(data): void {
@@ -106,13 +115,13 @@ export class NihongoListComponent implements OnInit {
     this.gs.log('[NIHONGO_CLICK_PAGINATOR]', data);
     this.page = data.pageIndex + 1;
     this.row = data.pageSize;
-    // this.getBerkas();
+    this.getBook();
   }
 
   onServerSideFilter(data: any): void {
     this.gs.log('[NIHONGO_ENTER_FILTER]', data);
     this.q = data;
-    // this.getBerkas();
+    this.getBook();
   }
 
   onServerSideOrder(data: any): void {
@@ -120,7 +129,7 @@ export class NihongoListComponent implements OnInit {
     this.q = data.q;
     this.sort = data.active;
     this.order = data.direction;
-    // this.getBerkas();
+    this.getBook();
   }
 
 }
