@@ -2,17 +2,17 @@
 
 Proyek ini awalnya dibuat dengan [Angular CLI](https://github.com/angular/angular-cli) versi 10.0.4.
 
-> Ayo gabung di kanal Discord kita! <br />
-[![Chat on Discord](https://discordapp.com/api/guilds/342220398022098944/widget.png "Chat on Discord")](https://discord.gg/xGWdExk)
+> Ayo gabung di saluran kanal Discord kita! <br /> [![Chat on Discord](https://discordapp.com/api/guilds/342220398022098944/widget.png "Chat on Discord")](https://discord.gg/xGWdExk)
 
 ![](src/assets/img/fansub-banner.png)
 
 ----
 
-## *Build* & *Run*
+## *Build & Run*
 
 Jalankan `npm run bifeldy:prod` untuk *build* seluruh proyek (*frontend* & *backend*) dalam *production*. <br /> Hasil akan tersimpan di folder `dist/`.
-* Jalankan `npm run bifeldy:dev` untuk *serve* SSR dalam *development*. <br /> Lalu buka situs di `http://localhost:0000` portnya dapat dilihat pada berkas `stdout.log`
+
+* Jalankan `npm run bifeldy:dev` untuk *serve* SSR dalam *development*. <br /> Lalu buka situs di `http://localhost:0000` portnya dapat dilihat pada terminal.
 
 ## Bantuan lebih lanjut
 
