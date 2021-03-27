@@ -9,6 +9,7 @@ import http from 'http';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import compression from 'compression';
+import request from 'request';
 
 import socketIo from 'socket.io';
 
@@ -58,6 +59,8 @@ const dbName = process.env.DB_NAME || environment.dbName;
 const dbUsername = process.env.DB_USERNAME || environment.dbUsername;
 const dbPassword = process.env.DB_PASSWORD || environment.dbPassword;
 const dbEntities = process.env.DB_ENTITIES || environment.dbEntities;
+const dbSync = process.env.DB_SYNC || environment.dbSync;
+const dbLog = process.env.DB_LOG || environment.dbLog;
 
 const typeOrmConfig: any = {
   type: dbType,
@@ -66,8 +69,8 @@ const typeOrmConfig: any = {
   username: dbUsername,
   password: dbPassword,
   database: dbName,
-  synchronize: true,
-  logging: false,
+  synchronize: dbSync,
+  logging: dbLog,
   entities: dbEntities
 };
 
@@ -118,8 +121,9 @@ const corsOptions = {
 };
 
 // Standard server not serverless
-let io = null;
-let bot = null;
+let io: socketIo.Server = null;
+let bot: Client = null;
+let github = null;
 
 async function updateVisitor(): Promise<any> {
   if (bot && io) {
@@ -142,6 +146,20 @@ function startDiscordBot(): void {
   bot.on('ready', () => {
     logger.log(`[DISCORD] 🎉 CONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
     updateVisitor();
+    request({
+      method: 'GET',
+      uri: `https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`,
+      headers: {
+        'user-agent': 'node.js'
+      }
+    }, async (error, result, body) => {
+      if (error || !result) {
+        console.error(error);
+      } else {
+        github = JSON.parse(body) ? JSON.parse(body)[0] : null;
+        bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(bot.user.id)?.setNickname(`Hikki - ${github?.sha?.slice(0, 7)}`);
+      }
+    });
   });
   bot.on('message', async (msg: Message) => {
     try {
@@ -168,9 +186,11 @@ function startSocketIo(): void {
       io.emit('visitors', io.sockets.sockets.size);
       updateVisitor();
     });
-    socket.on('ping-pong', (cb) => {
-      if (typeof cb === 'function') {
-        cb();
+    socket.on('ping-pong', (callback) => {
+      if (typeof callback === 'function') {
+        callback({
+          github
+        });
       }
     });
     await socketBot(io, socket);

@@ -3,7 +3,7 @@ import find from 'find';
 import fs from 'fs';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, Equal, In } from 'typeorm';
+import { getRepository, ILike, Equal, In } from 'typeorm';
 import { drive_v3 } from 'googleapis';
 
 import { UserRequest } from '../models/UserRequest';
@@ -39,7 +39,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const fileRepo = getRepository(Berkas);
     const [files, count] = await fileRepo.findAndCount({
       where: [
-        { private: false, name: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        { private: false, name: ILike(`%${req.query.q ? req.query.q : ''}%`) }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
@@ -210,7 +210,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
                           const strSplit = f.name.split('.');
                           mkvAttachment.ext = strSplit[strSplit.length - 1];
                           mkvAttachment.user_ = attachment.user_;
-                          mkvAttachment.rootAttachment_ = resAttachmentSave;
+                          mkvAttachment.parent_attachment_ = resAttachmentSave;
                           await attachmentRepo.save(mkvAttachment);
                         } catch (e) {
                           console.error(e);
@@ -373,29 +373,29 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
           const attachmentRepo = getRepository(Attachment);
           const subtitles = await attachmentRepo.find({
             where: [
-              { ext: Equal('ass'), rootAttachment_: Equal(file.attachment_.id) },
-              { ext: Equal('srt'), rootAttachment_: Equal(file.attachment_.id) }
+              { ext: ILike('ass'), parent_attachment_: ILike(file.attachment_.id) },
+              { ext: ILike('srt'), parent_attachment_: ILike(file.attachment_.id) }
             ],
-            relations: ['rootAttachment_']
+            relations: ['parent_attachment_']
           });
           for (const s of subtitles) {
             delete s.created_at;
             delete s.download_count;
-            delete s.rootAttachment_;
+            delete s.parent_attachment_;
             delete s.updated_at;
             delete s.user_;
           }
           (file as any).attachment_.subtitles_ = subtitles;
           const fonts = await attachmentRepo.find({
             where: [
-              { ext: Equal('ttf'), rootAttachment_: Equal(file.attachment_.id) }
+              { ext: ILike('ttf'), parent_attachment_: ILike(file.attachment_.id) }
             ],
-            relations: ['rootAttachment_']
+            relations: ['parent_attachment_']
           });
           for (const f of fonts) {
             delete f.created_at;
             delete f.download_count;
-            delete f.rootAttachment_;
+            delete f.parent_attachment_;
             delete f.updated_at;
             delete f.user_;
           }

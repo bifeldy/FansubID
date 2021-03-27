@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { Equal, getRepository, Like } from 'typeorm';
+import { getRepository, ILike } from 'typeorm';
 
 import { UserRequest } from '../../models/UserRequest';
 
@@ -16,24 +16,24 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const [kanjis, count] = await kanjiRepo.findAndCount({
       where: [
         {
-          character: Like(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
-          school: Like(`%${req.query.school ? req.query.school : ''}%`)
+          character: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
+          school: ILike(`%${req.query.school ? req.query.school : ''}%`)
         },
         {
-          v_onyomi: Like(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
-          school: Like(`%${req.query.school ? req.query.school : ''}%`)
+          v_onyomi: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
+          school: ILike(`%${req.query.school ? req.query.school : ''}%`)
         },
         {
-          v_kunyomi: Like(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
-          school: Like(`%${req.query.school ? req.query.school : ''}%`)
+          v_kunyomi: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
+          school: ILike(`%${req.query.school ? req.query.school : ''}%`)
         },
         {
-          translate: Like(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: Like(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
-          school: Like(`%${req.query.school ? req.query.school : ''}%`)
+          translate: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
+          school: ILike(`%${req.query.school ? req.query.school : ''}%`)
         }
       ],
       order: {
@@ -70,7 +70,7 @@ router.get('/:character', async (req: UserRequest, res: Response, next: NextFunc
     const kanjiRepo = getRepository(Kanji);
     const kanji = await kanjiRepo.findOneOrFail({
       where: [
-        { character: Equal(req.params.character) }
+        { character: ILike(req.params.character) }
       ]
     });
     return res.status(200).json({

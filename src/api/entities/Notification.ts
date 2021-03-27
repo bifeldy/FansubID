@@ -19,7 +19,7 @@ export class Notification {
   @Column({ type: 'boolean' })
   dismissible: boolean;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   // tslint:disable-next-line: variable-name
   deadline: Date;
 

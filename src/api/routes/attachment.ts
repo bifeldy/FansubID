@@ -4,7 +4,7 @@ import fs from 'fs';
 import find from 'find';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Equal, Like } from 'typeorm';
+import { getRepository, Equal, ILike } from 'typeorm';
 import { drive_v3 } from 'googleapis';
 
 import { UserRequest } from '../models/UserRequest';
@@ -117,7 +117,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
       if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
         const [attachments, count] = await attachmentRepo.findAndCount({
           where: [
-            { name: Like(`%${req.query.q ? req.query.q : ''}%`) }
+            { name: ILike(`%${req.query.q ? req.query.q : ''}%`) }
           ],
           order: {
             ...((req.query.sort && req.query.order) ? {
@@ -127,7 +127,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
               name: 'ASC'
             })
           },
-          relations: ['user_', 'rootAttachment_'],
+          relations: ['user_', 'parent_attachment_'],
           skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
           take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
         });
@@ -139,9 +139,9 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
             delete a.user_.created_at;
             delete a.user_.updated_at;
           }
-          if ('rootAttachment_' in a && a.rootAttachment_) {
-            delete a.rootAttachment_.created_at;
-            delete a.rootAttachment_.updated_at;
+          if ('parent_attachment_' in a && a.parent_attachment_) {
+            delete a.parent_attachment_.created_at;
+            delete a.parent_attachment_.updated_at;
           }
         }
         return res.status(200).json({
@@ -200,7 +200,7 @@ router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserReque
           try {
             const attachmentToBeDeleted = await tempAttachmentRepo.findOneOrFail({
               where: [
-                { id: Equal(resAttachmentSave.id), name: Equal(resAttachmentSave.name) }
+                { id: Equal(resAttachmentSave.id), name: ILike(resAttachmentSave.name) }
               ]
             });
             deleteAttachment(attachmentToBeDeleted.name);

@@ -3,7 +3,7 @@ import translate from '@k3rn31p4nic/google-translate-api';
 import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, In, Equal } from 'typeorm';
+import { getRepository, ILike, In, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -33,7 +33,10 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   } else {
     return request({
       method: 'GET',
-      uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`
+      uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`,
+      headers: {
+        'user-agent': 'node.js'
+      }
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);
@@ -125,7 +128,10 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     return request({
       method: 'GET',
-      uri: `${jikanV3}/season/${year}/${season}`
+      uri: `${jikanV3}/season/${year}/${season}`,
+      headers: {
+        'user-agent': 'node.js'
+      }
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);
@@ -155,7 +161,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
       const [files, count] = await fileRepo.findAndCount({
         where: [
           {
-            name: Like(`%${req.query.q ? req.query.q : ''}%`),
+            name: ILike(`%${req.query.q ? req.query.q : ''}%`),
             private: false,
             anime_: {
               id: In(animeId)
@@ -294,7 +300,10 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     return request({
       method: 'GET',
-      uri: `${jikanV3}/anime/${malId}`
+      uri: `${jikanV3}/anime/${malId}`,
+      headers: {
+        'user-agent': 'node.js'
+      }
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);

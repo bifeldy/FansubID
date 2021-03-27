@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, Equal } from 'typeorm';
+import { getRepository, ILike, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -31,7 +31,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const userRepo = getRepository(User);
     const [user, count] = await userRepo.findAndCount({
       where: [
-        { username: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        { username: ILike(`%${req.query.q ? req.query.q : ''}%`) }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
@@ -92,7 +92,7 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: Equal(req.params.username) }
+        { username: ILike(req.params.username) }
       ],
       relations: ['kartu_tanda_penduduk_', 'profile_']
     });
@@ -137,7 +137,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
         const userRepo = getRepository(User);
         const selectedUser = await userRepo.findOneOrFail({
           where: [
-            { username: Equal(req.params.username) }
+            { username: ILike(req.params.username) }
           ],
           relations: ['kartu_tanda_penduduk_', 'profile_']
         });
@@ -230,14 +230,14 @@ router.get('/:username/berkas', async (req: UserRequest, res: Response, next: Ne
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: Equal(req.params.username) }
+        { username: ILike(req.params.username) }
       ]
     });
     const fileRepo = getRepository(Berkas);
     const [files, count] = await fileRepo.findAndCount({
       where: [
         {
-          name: Like(`%${req.query.q ? req.query.q : ''}%`),
+          name: ILike(`%${req.query.q ? req.query.q : ''}%`),
           user_: {
             id: Equal(selectedUser.id)
           }
@@ -305,7 +305,7 @@ router.delete('/:username', auth.isAuthorized, async (req: UserRequest, res: Res
       const userRepo = getRepository(User);
       const user =  await userRepo.findOneOrFail({
         where: [
-          { username: Equal(req.params.username) }
+          { username: ILike(req.params.username) }
         ]
       });
       const ktp = await ktpRepo.findOneOrFail({

@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 
-import { getRepository, Equal, In } from 'typeorm';
+import { getRepository, Equal, ILike, In } from 'typeorm';
 
 import createError from 'http-errors';
 import request from 'request';
@@ -95,7 +95,7 @@ router.use(async (req: UserRequest, res, next) => {
     const apiKeyRepo = getRepository(ApiKey);
     const apiKey = await apiKeyRepo.findOneOrFail({
       where: [
-        { api_key: Equal(k) }
+        { api_key: ILike(k) }
       ]
     });
     if (o.includes(apiKey.ip_domain)) {
@@ -186,6 +186,9 @@ router.post('/image', auth.isAuthorized, upload.single('file'), async (req: User
       key: environment.imgbbKey,
       name: new Date().getTime(),
       image: req.file.buffer.toString('base64')
+    },
+    headers: {
+      'user-agent': 'node.js'
     }
   }, async (error, result, body) => {
     if (!error) {
@@ -232,7 +235,10 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res: Respons
                 nik: req.body.nik,
                 nama: req.body.nama,
                 ck_kpu: environment.apiPemerintahKTPSecretKey
-              })
+              }),
+              headers: {
+                'user-agent': 'node.js'
+              }
             }, (e2, r2, b2) => {
               if (!e2) {
                 const resKPU = JSON.parse(b2);
@@ -398,6 +404,9 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
             code: req.body.code,
             redirect_uri: `${environment.baseUrl}/verify?app=discord`,
             scope: 'identify email guilds.join'
+          },
+          headers: {
+            'user-agent': 'node.js'
           }
         }, async (er, rs, bd) => {
           if (!er) {
@@ -406,7 +415,8 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
               method: 'GET',
               uri: `${environment.discordApiUrl}/users/@me`,
               headers: {
-                Authorization: `${discordAuth.token_type} ${discordAuth.access_token}`
+                Authorization: `${discordAuth.token_type} ${discordAuth.access_token}`,
+                'user-agent': 'node.js'
               }
             }, async (e, r, b) => {
               if (!e) {

@@ -3,17 +3,17 @@ import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn}
 import { User } from './User';
 import { Attachment } from './Attachment';
 
-@Entity({ name: 'nihongo_book' })
-export class NihongoBook {
+@Entity({ name: 'nihongo' })
+export class Nihongo {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column({ type: 'varchar', length: 255 })
-  name: string;
+  title: string;
 
   @Column({ type: 'text' })
-  description: string;
+  content: string;
 
   @Column({ type: 'text', nullable: true })
   // tslint:disable-next-line: variable-name
@@ -35,4 +35,8 @@ export class NihongoBook {
   @ManyToOne(type => User)
   // tslint:disable-next-line: variable-name
   user_: User;
+
+  @ManyToOne(type => Nihongo)
+  // tslint:disable-next-line: variable-name
+  parent_nihongo_: Nihongo;
 }

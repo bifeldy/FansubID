@@ -24,6 +24,10 @@ export class StatsServerService {
   public badgeBerkas = [];
   public badgeFansub = [];
 
+  public portalVer = '0000000';
+  public commitDate = null;
+  public commitUser = null;
+
   constructor(
     private gs: GlobalService,
     private notif: NotificationsService,
@@ -101,9 +105,14 @@ export class StatsServerService {
     });
     this.intervalPingPong = setInterval(() => {
       const start = Date.now();
-      this.mySocket.volatile.emit('ping-pong', () => {
+      this.mySocket.volatile.emit('ping-pong', (response) => {
         this.latency = Date.now() - start;
         this.gs.log(`[SOCKET_PING-PONG] Latency :: ${this.latency} ms`);
+        if ('github' in response && response.github) {
+          this.portalVer = response.github.sha;
+          this.commitUser = response.github.commit.author.name;
+          this.commitDate = new Date(response.github.commit.author.date);
+        }
       });
     }, 10000);
   }

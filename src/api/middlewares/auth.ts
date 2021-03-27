@@ -1,7 +1,7 @@
 
 import request from 'request';
 
-import { getRepository, Equal } from 'typeorm';
+import { getRepository, Equal, ILike } from 'typeorm';
 
 import { Response, NextFunction } from 'express';
 
@@ -38,8 +38,8 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
           const userRepo = getRepository(User);
           const selectedUser = await userRepo.find({
             where: [
-              { username: Equal(req.body.username) },
-              { email: Equal(req.body.email) }
+              { username: ILike(req.body.username) },
+              { email: ILike(req.body.email) }
             ]
           });
           if (selectedUser.length === 0) {
@@ -138,8 +138,8 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
       const userRepo = getRepository(User);
       const selectedUser = await userRepo.findOneOrFail({
         where: [
-          { username: Equal(req.body.userNameOrEmail), password: Equal(reqBodyPassword) },
-          { email: Equal(req.body.userNameOrEmail), password: Equal(reqBodyPassword) }
+          { username: ILike(req.body.userNameOrEmail), password: ILike(reqBodyPassword) },
+          { email: ILike(req.body.userNameOrEmail), password: ILike(reqBodyPassword) }
         ]
       });
       const { password, session_token, ...noPwdSsToken } = selectedUser;

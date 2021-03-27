@@ -44,10 +44,10 @@ export class KartuTandaPenduduk {
   @Column({ type: 'varchar', length: 255, nullable: true })
   alamat: string;
 
-  @Column({ type: 'tinyint', nullable: true })
+  @Column({ type: 'smallint', nullable: true })
   rt: number;
 
-  @Column({ type: 'tinyint', nullable: true })
+  @Column({ type: 'smallint', nullable: true })
   rw: number;
 
   @Column({ type: 'varchar', length: 255, nullable: true })

@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { Equal, getRepository, Like } from 'typeorm';
+import { Equal, getRepository, ILike } from 'typeorm';
 
 import { UserRequest } from '../../models/UserRequest';
 
@@ -15,9 +15,9 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const tatoebaRepo = getRepository(Tatoeba);
     const [tatoebas, count] = await tatoebaRepo.findAndCount({
       where: [
-        { phrase: Like(`%${req.query.q ? req.query.q : ''}%`) },
-        { kanji: Like(`%${req.query.q ? req.query.q : ''}%`) },
-        { translate: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        { phrase: ILike(`%${req.query.q ? req.query.q : ''}%`) },
+        { kanji: ILike(`%${req.query.q ? req.query.q : ''}%`) },
+        { translate: ILike(`%${req.query.q ? req.query.q : ''}%`) }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {

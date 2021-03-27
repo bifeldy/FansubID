@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, Equal } from 'typeorm';
+import { getRepository, ILike, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -22,8 +22,8 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
       const notificationRepo = getRepository(Notification);
       const [notifications, count] = await notificationRepo.findAndCount({
         where: [
-          { title: Like(`%${req.query.q ? req.query.q : ''}%`) },
-          { content: Like(`%${req.query.q ? req.query.q : ''}%`) }
+          { title: ILike(`%${req.query.q ? req.query.q : ''}%`) },
+          { content: ILike(`%${req.query.q ? req.query.q : ''}%`) }
         ],
         order: {
           ...((req.query.sort && req.query.order) ? {

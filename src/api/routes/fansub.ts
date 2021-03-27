@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Equal, Like } from 'typeorm';
+import { getRepository, Equal, ILike } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -26,8 +26,8 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const fansubRepo = getRepository(Fansub);
     const [fansubs, count] = await fansubRepo.findAndCount({
       where: [
-        { slug: Like(`%${req.query.q ? req.query.q : ''}%`) },
-        { name: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        { slug: ILike(`%${req.query.q ? req.query.q : ''}%`) },
+        { name: ILike(`%${req.query.q ? req.query.q : ''}%`) }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
@@ -102,7 +102,7 @@ router.post('/cek-slug', async (req: UserRequest, res: Response, next: NextFunct
       const fansubRepo = getRepository(Fansub);
       const selectedFansub = await fansubRepo.find({
         where: [
-          { slug: Equal(slug) }
+          { slug: ILike(slug) }
         ]
       });
       if (selectedFansub.length === 0) {
@@ -145,7 +145,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       const fansubRepo = getRepository(Fansub);
       const selectedFansub = await fansubRepo.find({
         where: [
-          { slug: Equal(slug) }
+          { slug: ILike(slug) }
         ]
       });
       if (selectedFansub.length === 0) {
@@ -248,7 +248,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
         .leftJoinAndSelect('berkas.fansub_', 'fansub_')
         .where('fansub_.id IN (:...id)', { id: fansubId })
         .andWhere('berkas.private = :isPrivate', { isPrivate: false })
-        .andWhere('berkas.name LIKE :query', { query: `%${req.query.q ? req.query.q : ''}%` });
+        .andWhere('berkas.name ILIKE :query', { query: `%${req.query.q ? req.query.q : ''}%` });
       if (req.query.sort && req.query.order) {
         fileRepoQuery = fileRepoQuery.orderBy(`berkas.${req.query.sort}`, req.query.order.toUpperCase());
       } else {
@@ -436,7 +436,7 @@ router.get('/:slug', async (req: UserRequest, res: Response, next: NextFunction)
     const fansubRepo = getRepository(Fansub);
     const fansub = await fansubRepo.findOneOrFail({
       where: [
-        { slug: Equal(req.params.slug) }
+        { slug: ILike(req.params.slug) }
       ],
       relations: ['user_']
     });
@@ -472,14 +472,14 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
       const fansubRepo = getRepository(Fansub);
       const fansub = await fansubRepo.findOneOrFail({
         where: [
-          { slug: Equal(req.params.slug) }
+          { slug: ILike(req.params.slug) }
         ],
         relations: ['user_']
       });
       if (newSlug) {
         const selectedFansub = await fansubRepo.find({
           where: [
-            { slug: Equal(newSlug) }
+            { slug: ILike(newSlug) }
           ]
         });
         if (selectedFansub.length === 0) {
@@ -577,7 +577,7 @@ router.delete('/:slug', auth.isAuthorized, async (req: UserRequest, res: Respons
       const fansubRepo = getRepository(Fansub);
       const fansub =  await fansubRepo.findOneOrFail({
         where: [
-          { slug: Equal(req.params.slug) }
+          { slug: ILike(req.params.slug) }
         ]
       });
       const deletedFansub = await fansubRepo.remove(fansub);

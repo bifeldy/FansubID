@@ -22,21 +22,23 @@ import { Kanjivg } from '../../api/entities/Kanjivg';
 import { Tatoeba } from '../../api/entities/Tatoeba';
 import { Banned } from '../../api/entities/Banned';
 import { Notification } from '../../api/entities/Notification';
-import { NihongoBook } from '../../api/entities/NihongoBook';
-import { NihongoChapter } from '../../api/entities/NihongoChapter';
+import { Nihongo } from '../../api/entities/Nihongo';
 
 export const environment = {
   production: false,
   siteName: 'Hikki',
+  author: 'Bifeldy',
   jwtSecretKey: '',
   tokenName: 'hikki_token',
   baseUrl: 'http://localhost:4000',
-  dbType: 'mysql',
+  dbType: 'postgres',
   dbHost: 'localhost',
-  dbPort: 3306,
+  dbPort: 5432,
   dbName: 'hikki',
-  dbUsername: 'root',
-  dbPassword: '',
+  dbUsername: 'postgres',
+  dbPassword: 'postgres',
+  dbSync: true,
+  dbLog: true,
   dbEntities: [
     User,
     KartuTandaPenduduk,
@@ -50,8 +52,7 @@ export const environment = {
     TempAttachment,
     ApiKey,
     News,
-    NihongoBook,
-    NihongoChapter,
+    Nihongo,
     SocialMedia,
     Edict,
     Kanji,
@@ -71,6 +72,7 @@ export const environment = {
   driveClientSecret: '',
   driveRefreshToken: '',
   discordApiUrl: 'https://discord.com/api',
+  discordGuildId: '342220398022098944',
   discordClientId: '789831990433153034',
   discordClientSecret: '',
   laboratoryRatsRoleId: '479208130534703108',

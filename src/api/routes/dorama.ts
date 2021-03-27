@@ -3,7 +3,7 @@ import translate from '@k3rn31p4nic/google-translate-api';
 import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, In, Equal } from 'typeorm';
+import { getRepository, ILike, In, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -34,7 +34,10 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   } else {
     return request({
       method: 'GET',
-      uri: `${kuryanaApi}/search/q/${searchQuery}`
+      uri: `${kuryanaApi}/search/q/${searchQuery}`,
+      headers: {
+        'user-agent': 'node.js'
+      }
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);
@@ -135,6 +138,9 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
       formData: {
         quarter,
         year
+      },
+      headers: {
+        'user-agent': 'node.js'
       }
     }, async (error, result, body) => {
       if (error || !result) {
@@ -165,7 +171,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
       const [files, count] = await fileRepo.findAndCount({
         where: [
           {
-            name: Like(`%${req.query.q ? req.query.q : ''}%`),
+            name: ILike(`%${req.query.q ? req.query.q : ''}%`),
             private: false,
             dorama_: {
               id: In(doramaId)
@@ -304,7 +310,10 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     return request({
       method: 'GET',
-      uri: `${kuryanaApi}/id/${req.params.mdlSlug}`
+      uri: `${kuryanaApi}/id/${req.params.mdlSlug}`,
+      headers: {
+        'user-agent': 'node.js'
+      }
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);

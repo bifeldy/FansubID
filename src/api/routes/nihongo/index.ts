@@ -1,9 +1,9 @@
 import { Router, Response } from 'express';
-import { getRepository, Like } from 'typeorm';
+import { Equal, getRepository, ILike } from 'typeorm';
 
 import { UserRequest } from '../../models/UserRequest';
 
-import { NihongoBook } from '../../entities/NihongoBook';
+import { Nihongo } from '../../entities/Nihongo';
 
 import edictRouter from './edict';
 import kanjiRouter from './kanji';
@@ -19,19 +19,21 @@ router.use('/tatoeba', tatoebaRouter);
 
 // GET `/api/nihongo`
 router.get('/', async (req: UserRequest, res: Response) => {
-  console.log('asdasdasdasd');
   try {
-    const bookRepo = getRepository(NihongoBook);
+    const bookRepo = getRepository(Nihongo);
     const [book, count] = await bookRepo.findAndCount({
       where: [
-        { name: Like(`%${req.query.q ? req.query.q : ''}%`) }
+        {
+          title: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          rootNihongo_: Equal(null)
+        }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
           [req.query.sort]: req.query.order.toUpperCase()
         } : {
           created_at: 'DESC',
-          name: 'ASC'
+          title: 'ASC'
         })
       },
       relations: ['user_'],
@@ -39,7 +41,7 @@ router.get('/', async (req: UserRequest, res: Response) => {
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const n of book) {
-      delete n.description;
+      delete n.content;
       if ('user_' in n && n.user_) {
         delete n.user_.role;
         delete n.user_.password;

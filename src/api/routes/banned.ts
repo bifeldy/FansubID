@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, Like, Equal, In } from 'typeorm';
+import { getRepository, ILike, Equal, In } from 'typeorm';
 
 import { MessageEmbed } from 'discord.js';
 
@@ -84,7 +84,7 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
         if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
           const [banneds, count] = await bannedRepo.findAndCount({
             where: [
-              { reason: Like(`%${req.query.q ? req.query.q : ''}%`) }
+              { reason: ILike(`%${req.query.q ? req.query.q : ''}%`) }
             ],
             order: {
               ...((req.query.sort && req.query.order) ? {
@@ -153,8 +153,8 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         const user =  await userRepo.findOneOrFail({
           where: [
             { id: Equal(req.body.id) },
-            { username: Equal(req.body.username) },
-            { email: Equal(req.body.email) }
+            { username: ILike(req.body.username) },
+            { email: ILike(req.body.email) }
           ]
         });
         const bannedBy =  await userRepo.findOneOrFail({
