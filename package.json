@@ -65,7 +65,6 @@
     "moment": "^2.29.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
-    "mysql": "^2.18.1",
     "ng-recaptcha": "^6.1.0",
     "ng2-charts": "^2.4.2",
     "ngx-cookie-service": "^11.0.2",
