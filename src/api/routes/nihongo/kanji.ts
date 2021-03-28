@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, ILike } from 'typeorm';
+import { getRepository, ILike, Raw } from 'typeorm';
 
 import { UserRequest } from '../../models/UserRequest';
 
@@ -16,25 +16,16 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const [kanjis, count] = await kanjiRepo.findAndCount({
       where: [
         {
-          character: ILike(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
-          school: ILike(`%${req.query.school ? req.query.school : ''}%`)
+          character: Raw(column => `
+              (character ILIKE :query OR v_onyomi ILIKE :query OR v_kunyomi ILIKE :query OR translate ILIKE :query)
+              AND jlpt::varchar(255) ILIKE :jlpt AND school::varchar(255) ILIKE :school
+            `, {
+              query: `%${req.query.q ? req.query.q : ''}%`,
+              jlpt: `%${req.query.jlpt ? req.query.jlpt : ''}%`,
+              school: `%${req.query.school ? req.query.school : ''}%`
+            }
+          )
         },
-        {
-          v_onyomi: ILike(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
-          school: ILike(`%${req.query.school ? req.query.school : ''}%`)
-        },
-        {
-          v_kunyomi: ILike(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
-          school: ILike(`%${req.query.school ? req.query.school : ''}%`)
-        },
-        {
-          translate: ILike(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`),
-          school: ILike(`%${req.query.school ? req.query.school : ''}%`)
-        }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {

@@ -37,10 +37,10 @@ export class ApiService {
     }
   }
 
-  getData(path: string, options = {}, timedOut = 10000): Observable<any> {
+  getData(path: string, options = {}, timedOut = 10000, retryCount = 5): Observable<any> {
     return this.http.get(this.HTTP_REQ_URL(path), options).pipe(
       catchError(err => throwError(err)),
-      map(res => res), timeout(timedOut), retry(5)
+      map(res => res), timeout(timedOut), retry(retryCount)
     );
   }
 

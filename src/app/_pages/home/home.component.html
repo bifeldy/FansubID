@@ -30,12 +30,12 @@
             </div>
             <div class="col-12" *ngIf="newsData.length > 0">
               <div class="row px-3">
-                <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let n of newsData | slice:0:6">
+                <div class="col-12 col-md-6 col-xl-3 p-2" *ngFor="let n of newsData">
                   <mat-card>
                     <img mat-card-image [src]="n.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/news/{{ n.id }}" />
                     <mat-card-content routerLink="/news/{{ n.id }}" style="cursor: pointer;">
-                      <h3>
-                        <b>{{ n.title }}</b>
+                      <h3 matLine style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                        {{ n.title }}
                       </h3>
                     </mat-card-content>
                     <mat-card-header>

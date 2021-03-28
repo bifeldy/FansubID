@@ -373,8 +373,8 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
           const attachmentRepo = getRepository(Attachment);
           const subtitles = await attachmentRepo.find({
             where: [
-              { ext: ILike('ass'), parent_attachment_: ILike(file.attachment_.id) },
-              { ext: ILike('srt'), parent_attachment_: ILike(file.attachment_.id) }
+              { ext: Equal('ass'), parent_attachment_: Equal(file.attachment_.id) },
+              { ext: Equal('srt'), parent_attachment_: Equal(file.attachment_.id) }
             ],
             relations: ['parent_attachment_']
           });
@@ -388,7 +388,7 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
           (file as any).attachment_.subtitles_ = subtitles;
           const fonts = await attachmentRepo.find({
             where: [
-              { ext: ILike('ttf'), parent_attachment_: ILike(file.attachment_.id) }
+              { ext: Equal('ttf'), parent_attachment_: Equal(file.attachment_.id) }
             ],
             relations: ['parent_attachment_']
           });

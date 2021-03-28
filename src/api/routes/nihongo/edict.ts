@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { Equal, getRepository, ILike } from 'typeorm';
+import { Equal, getRepository, Raw } from 'typeorm';
 
 import { UserRequest } from '../../models/UserRequest';
 
@@ -16,16 +16,14 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const [edicts, count] = await edictRepo.findAndCount({
       where: [
         {
-          kanji: ILike(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`)
-        },
-        {
-          reading: ILike(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`)
-        },
-        {
-          meaning: ILike(`%${req.query.q ? req.query.q : ''}%`),
-          jlpt: ILike(`%${req.query.jlpt ? req.query.jlpt : ''}%`)
+          kanji: Raw(column => `
+              (kanji ILIKE :query OR reading ILIKE :query OR meaning ILIKE :query)
+              AND jlpt::varchar(255) ILIKE :jlpt
+            `, {
+              query: `%${req.query.q ? req.query.q : ''}%`,
+              jlpt: `%${req.query.jlpt ? req.query.jlpt : ''}%`
+            }
+          )
         }
       ],
       order: {
