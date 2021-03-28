@@ -7,7 +7,6 @@ import { StatsServerModule } from '../../_shared/components/stats-server/stats-s
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
-import { DiscussionModule } from '../../_shared/components/discussion/discussion.module';
 
 import { HomeComponent } from './home.component';
 
@@ -28,8 +27,7 @@ const routes: Routes = [
     BannerNihongoModule,
     StatsServerModule,
     NotificationsModule,
-    SharedMaterialModule,
-    DiscussionModule
+    SharedMaterialModule
   ]
 })
 export class HomeModule { }
