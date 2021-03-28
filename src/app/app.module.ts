@@ -36,6 +36,8 @@ import { FooterModule } from './_shared/components/footer/footer.module';
 import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
 import { MaterialDialogModule } from './_shared/components/material-dialog/material-dialog.module';
 
+import { environment } from '../environments/client/environment';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -69,7 +71,7 @@ import { MaterialDialogModule } from './_shared/components/material-dialog/mater
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: MyTooltipConfig },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'always' } },
-    { provide: DISQUS_SHORTNAME, useValue: 'hikki-bifeldy' },
+    { provide: DISQUS_SHORTNAME, useValue: `${environment.siteName}-${environment.author}`.toLowerCase() },
     Title, CookieService, NgxSpinnerService, LeftMenuService,
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },

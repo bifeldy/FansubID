@@ -15,6 +15,7 @@ import { MaterialTabModule } from '../../_shared/components/material-tab/materia
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
+import { DiscussionModule } from '../../_shared/components/discussion/discussion.module';
 
 import { NewsCreateComponent } from './news-create/news-create.component';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
@@ -75,6 +76,7 @@ const routes: Routes = [
     BannerDiscordModule,
     StatsServerModule,
     MaterialChipModule,
+    DiscussionModule
   ]
 })
 export class NewsModule { }

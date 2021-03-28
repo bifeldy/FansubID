@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
-import { Router } from '@angular/router';
 
 import { GlobalService } from '../../services/global.service';
 
@@ -9,7 +8,7 @@ import { GlobalService } from '../../services/global.service';
   templateUrl: './material-tab.component.html',
   styleUrls: ['./material-tab.component.css']
 })
-export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MaterialTabComponent implements OnInit, AfterViewInit {
 
   @Input() count = 0;
   @Input() serverSide = false;
@@ -22,8 +21,6 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectedIndexTab = 0;
   totalTabsCount = 2;
-
-  urlPath = null;
 
   @Input() tabData: any = [
     // {
@@ -78,7 +75,6 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() paginatorClicked = new EventEmitter();
 
   constructor(
-    private router: Router,
     public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
@@ -87,7 +83,6 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.urlPath = this.router.url;
     if (this.gs.isBrowser) {
       //
     }
@@ -95,10 +90,6 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.totalTabsCount = this.tabData.length;
-  }
-
-  ngOnDestroy(): void {
-    this.urlPath = null;
   }
 
   swipe(eType): void {

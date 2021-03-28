@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DisqusModule } from 'ngx-disqus';
-
 import { SharedMaterialModule } from '../../helpers/shared-material.module';
 import { MaterialTableModule } from '../material-table/material-table.module';
+import { DiscussionModule } from '../discussion/discussion.module';
 
 import { MaterialTabComponent } from './material-tab.component';
 
@@ -14,7 +13,7 @@ import { MaterialTabComponent } from './material-tab.component';
     CommonModule,
     SharedMaterialModule,
     MaterialTableModule,
-    DisqusModule
+    DiscussionModule
   ],
   exports: [MaterialTabComponent]
 })

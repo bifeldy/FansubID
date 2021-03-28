@@ -10,6 +10,7 @@ import { SharedMaterialModule } from '../../_shared/helpers/shared-material.modu
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { VjsPlayerModule } from '../../_shared/components/vjs-player/vjs-player.module';
+import { DiscussionModule } from '../../_shared/components/discussion/discussion.module';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { Role } from '../../_shared/models/Role';
@@ -73,7 +74,8 @@ const routes: Routes = [
     MaterialFileInputModule,
     NotificationsModule,
     AngularEditorModule,
-    VjsPlayerModule
+    VjsPlayerModule,
+    DiscussionModule
   ]
 })
 export class BerkasModule { }
