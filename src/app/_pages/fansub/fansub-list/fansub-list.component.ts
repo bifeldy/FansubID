@@ -41,7 +41,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
       position: 'right'
     },
   };
-  pieChartGarapanOptions: ChartOptions = {
+  doughnutChartGarapanOptions: ChartOptions = {
     title: {
       display: true,
       text: 'Total Garapan Fansub'
@@ -114,14 +114,15 @@ export class FansubListComponent implements OnInit, OnDestroy {
 
   pieChartStatusData: SingleDataSet = [];
   pieChartStatusLabels: Label[] = [];
-  pieChartGarapanData: SingleDataSet = [];
-  pieChartGarapanLabels: Label[] = [];
+  doughnutChartGarapanData: SingleDataSet = [];
+  doughnutChartGarapanLabels: Label[] = [];
   barChartAnimeData: SingleDataSet = [];
   barChartAnimeLabels: Label[] = [];
   barChartDoramaData: SingleDataSet = [];
   barChartDoramaLabels: Label[] = [];
 
   pieChartType: ChartType = 'pie';
+  doughnutChartType: ChartType = 'doughnut';
   barChartType: ChartType = 'horizontalBar';
 
   fansubActive = 0;
@@ -223,8 +224,8 @@ export class FansubListComponent implements OnInit, OnDestroy {
           }
           this.fansubBerkasAnime += f.Anime;
         }
-        this.pieChartGarapanLabels.push('Berkas Anime');
-        this.pieChartGarapanData.push(this.fansubBerkasAnime);
+        this.doughnutChartGarapanLabels.push('Berkas Anime');
+        this.doughnutChartGarapanData.push(this.fansubBerkasAnime);
         this.tabData[0].data.row = this.fansubData;
         const fansubRank = [...this.fansubData].sort((a, b) => b.Anime - a.Anime).slice(0, 10);
         for (const f of fansubRank) {
@@ -253,8 +254,8 @@ export class FansubListComponent implements OnInit, OnDestroy {
           }
           this.fansubBerkasDorama += f.Dorama;
         }
-        this.pieChartGarapanLabels.push('Berkas Dorama');
-        this.pieChartGarapanData.push(this.fansubBerkasDorama);
+        this.doughnutChartGarapanLabels.push('Berkas Dorama');
+        this.doughnutChartGarapanData.push(this.fansubBerkasDorama);
         this.tabData[0].data.row = this.fansubData;
         const fansubRank = [...this.fansubData].sort((a, b) => b.Dorama - a.Dorama).slice(0, 10);
         for (const f of fansubRank) {

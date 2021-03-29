@@ -60,7 +60,7 @@
                     </small>
                     <mat-error>
                       <strong *ngIf="fg.get('slug').hasError('required')">Singkatan Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('slug').hasError('pattern')">Singkatan Hanya Boleh Huruf</strong>
+                      <strong *ngIf="fg.get('slug').hasError('pattern')">Singkatan Hanya Boleh Huruf Dan 一</strong>
                     </mat-error>
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>

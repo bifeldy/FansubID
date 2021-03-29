@@ -21,9 +21,9 @@
         [options]="pieChartStatusOptions" [plugins]="chartPlugins" [legend]="true">
       </canvas>
     </div>
-    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="pieChartGarapanData.length == 2 && pieChartGarapanLabels.length == 2">
-      <canvas baseChart [data]="pieChartGarapanData" [labels]="pieChartGarapanLabels" [chartType]="pieChartType"
-        [options]="pieChartGarapanOptions" [plugins]="chartPlugins" [legend]="true">
+    <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="doughnutChartGarapanData.length == 2 && doughnutChartGarapanLabels.length == 2">
+      <canvas baseChart [data]="doughnutChartGarapanData" [labels]="doughnutChartGarapanLabels" [chartType]="doughnutChartType"
+        [options]="doughnutChartGarapanOptions" [plugins]="chartPlugins" [legend]="true">
       </canvas>
     </div>
   </div>

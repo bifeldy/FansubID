@@ -98,7 +98,7 @@ router.get('/list-all', async (req: UserRequest, res: Response, next: NextFuncti
 router.post('/cek-slug', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('slug' in req.body && req.body.slug) {
-      const slug = req.body.slug.replace(/[^a-zA-Z]/g, '');
+      const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
       const fansubRepo = getRepository(Fansub);
       const selectedFansub = await fansubRepo.find({
         where: [
@@ -141,7 +141,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       'name' in req.body && 'born' in req.body && 'slug' in req.body &&
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
-      const slug = req.body.slug.replace(/[^a-zA-Z]/g, '');
+      const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
       const fansubRepo = getRepository(Fansub);
       const selectedFansub = await fansubRepo.find({
         where: [
@@ -468,7 +468,7 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
       ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) ||
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
-      const newSlug = req.body.slug.replace(/[^a-zA-Z]/g, '');
+      const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
       const fansubRepo = getRepository(Fansub);
       const fansub = await fansubRepo.findOneOrFail({
         where: [
