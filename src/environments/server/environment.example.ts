@@ -23,6 +23,7 @@ import { Tatoeba } from '../../api/entities/Tatoeba';
 import { Banned } from '../../api/entities/Banned';
 import { Notification } from '../../api/entities/Notification';
 import { Nihongo } from '../../api/entities/Nihongo';
+import { Track } from '../../api/entities/Track';
 
 export const environment = {
   production: false,
@@ -59,7 +60,8 @@ export const environment = {
     Kanjivg,
     Tatoeba,
     Banned,
-    Notification
+    Notification,
+    Track
   ],
   uploadFolder: 'dist/hikki/uploads',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',

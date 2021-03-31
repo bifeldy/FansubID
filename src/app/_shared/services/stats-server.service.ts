@@ -62,7 +62,7 @@ export class StatsServerService {
       this.visitor = visitors;
       this.gs.log(`[SOCKET_VISITOR] Total Visitors :: ${this.visitor}`);
     });
-    this.mySocket.on('new-notification', notifObj => {
+    this.mySocket.on('new-notification', (notifObj: any) => {
       this.gs.log(`[SOCKET_NOTIFICATION]`, notifObj);
       this.notif.addNotif(
         notifObj.notifCreator,
@@ -73,7 +73,7 @@ export class StatsServerService {
         notifObj.notifData.dismissible
       );
     });
-    this.mySocket.on('new-berkas', berkasObj => {
+    this.mySocket.on('new-berkas', (berkasObj: any) => {
       this.gs.log(`[SOCKET_BERKAS]`, berkasObj);
       this.badgeBerkas.push(berkasObj);
       const berkas = this.lms.mainMenus.find(m => m.link === '/berkas');
@@ -83,7 +83,7 @@ export class StatsServerService {
         berkas.badge = null;
       }
     });
-    this.mySocket.on('new-fansub', fansubObj => {
+    this.mySocket.on('new-fansub', (fansubObj: any) => {
       this.gs.log(`[SOCKET_FANSUB]`, fansubObj);
       this.badgeFansub.push(fansubObj);
       const fansub = this.lms.mainMenus.find(m => m.link === '/fansub');
@@ -93,7 +93,7 @@ export class StatsServerService {
         fansub.badge = null;
       }
     });
-    this.mySocket.on('new-news', newsObj => {
+    this.mySocket.on('new-news', (newsObj: any) => {
       this.gs.log(`[SOCKET_NEWS]`, newsObj);
       this.badgeNews.push(newsObj);
       const news = this.lms.mainMenus.find(m => m.link === '/news');
@@ -105,7 +105,7 @@ export class StatsServerService {
     });
     this.intervalPingPong = setInterval(() => {
       const start = Date.now();
-      this.mySocket.volatile.emit('ping-pong', (response) => {
+      this.socketEmitVolatile('ping-pong', null, (response: any) => {
         this.latency = Date.now() - start;
         this.gs.log(`[SOCKET_PING-PONG] Latency :: ${this.latency} ms`);
         if ('github' in response && response.github) {
@@ -117,8 +117,20 @@ export class StatsServerService {
     }, 10000);
   }
 
-  socketEmit(name: string, data: any): void {
-    this.mySocket.emit(name, data);
+  socketEmit(eventName: string, eventData: any, callback = null): void {
+    if (callback) {
+      this.mySocket.emit(eventName, eventData, callback);
+    } else {
+      this.mySocket.emit(eventName, eventData);
+    }
+  }
+
+  socketEmitVolatile(eventName: string, eventData: any, callback = null): void {
+    if (callback) {
+      this.mySocket.volatile.emit(eventName, eventData, callback);
+    } else {
+      this.mySocket.volatile.emit(eventName, eventData);
+    }
   }
 
 }

@@ -1,8 +1,10 @@
 import { Server, Socket } from 'socket.io';
-import { Equal, getRepository, MoreThanOrEqual } from 'typeorm';
+import { Equal, getRepository, IsNull, MoreThanOrEqual } from 'typeorm';
 
 import { Notification } from '../entities/Notification';
 import { Berkas } from '../entities/Berkas';
+import { Track } from '../entities/Track';
+import { User } from '../entities/User';
 
 // tslint:disable-next-line: typedef
 export async function socketBot(io: Server, socket: Socket) {
@@ -29,7 +31,7 @@ export async function socketBot(io: Server, socket: Socket) {
   } catch (error) {
     console.error(error);
   }
-  socket.on('track', async (data) => {
+  socket.on('track', async (data: any) => {
     data.ip = socket.request.socket.remoteAddress;
     data.port = socket.request.socket.remotePort;
     if (data.pathUrl.startsWith('http://')) {
@@ -40,14 +42,56 @@ export async function socketBot(io: Server, socket: Socket) {
     if (data.pathUrl.startsWith('/')) {
       if (data.pathUrl.startsWith('/berkas/')) {
         try {
-          const fileRepo = getRepository(Berkas);
-          const file = await fileRepo.findOneOrFail({
+          const trackRepo = getRepository(Track);
+          const tracks = await trackRepo.find({
             where: [
-              { id: Equal(data.pathUrl.split('?')[0].split('/').pop()) }
+              {
+                ...((data.userId) ? {
+                  ip: Equal(data.ip),
+                  user_: {
+                    id: Equal(data.userId)
+                  }
+                } : {
+                  ip: Equal(data.ip),
+                  user_: IsNull()
+                })
+              }
             ],
+            relations: ['user_']
           });
-          file.view_count++;
-          await fileRepo.save(file);
+          if (tracks.length <= 0) {
+            const track = new Track();
+            track.ip = data.ip;
+            const fileRepo = getRepository(Berkas);
+            const selectedFile = await fileRepo.findOneOrFail({
+              where: [
+                { id: Equal(data.pathUrl.split('?')[0].split('/').pop()) }
+              ]
+            });
+            track.berkas_ = selectedFile;
+            if (data.userId) {
+              const userRepo = getRepository(User);
+              const selectedUser = await userRepo.findOneOrFail({
+                where: [
+                  { id: Equal(data.userId) }
+                ]
+              });
+              track.user_ = selectedUser;
+            }
+            await trackRepo.save(track);
+            const visitor = await trackRepo.count({
+              where: [
+                {
+                  berkas_: {
+                    id: Equal(selectedFile.id)
+                  }
+                }
+              ],
+              relations: ['berkas_']
+            });
+            selectedFile.view_count = visitor;
+            await fileRepo.save(selectedFile);
+          }
         } catch (error) {
           console.error(error);
         }

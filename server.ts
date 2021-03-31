@@ -186,11 +186,9 @@ function startSocketIo(): void {
       io.emit('visitors', io.sockets.sockets.size);
       updateVisitor();
     });
-    socket.on('ping-pong', (callback) => {
+    socket.on('ping-pong', (data: any, callback: any) => {
       if (typeof callback === 'function') {
-        callback({
-          github
-        });
+        callback({ github });
       }
     });
     await socketBot(io, socket);

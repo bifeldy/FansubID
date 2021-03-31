@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { Equal, getRepository, ILike } from 'typeorm';
+import { getRepository, ILike, IsNull } from 'typeorm';
 
 import { UserRequest } from '../../models/UserRequest';
 
@@ -25,7 +25,7 @@ router.get('/', async (req: UserRequest, res: Response) => {
       where: [
         {
           title: ILike(`%${req.query.q ? req.query.q : ''}%`),
-          rootNihongo_: Equal(null)
+          rootNihongo_: IsNull()
         }
       ],
       order: {
