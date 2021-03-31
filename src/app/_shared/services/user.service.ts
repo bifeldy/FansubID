@@ -35,7 +35,7 @@ export class UserService {
   }
 
   getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
-    return this.api.getData(`/user/${username}/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.patchData(`/user/${username}/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   cekNik(userData): Observable<any> {

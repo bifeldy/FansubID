@@ -16,6 +16,7 @@ import { MaterialTabModule } from '../../_shared/components/material-tab/materia
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
+import { ReportModule } from '../../_shared/components/report/report.module';
 
 import { FansubListComponent } from './fansub-list/fansub-list.component';
 import { FansubDetailComponent } from './fansub-detail/fansub-detail.component';
@@ -75,7 +76,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MaterialFileInputModule,
-    AngularEditorModule
+    AngularEditorModule,
+    ReportModule
   ]
 })
 export class FansubModule { }

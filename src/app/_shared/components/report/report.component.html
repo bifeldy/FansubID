@@ -6,7 +6,7 @@
   </div>
   <div class="col-12">
     <div class="row p-0">
-      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0">
+      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0 && currentUser">
         <canvas baseChart [data]="doughnutChartKetertarikanData" [labels]="doughnutChartKetertarikanLabels" [chartType]="doughnutChartType"
           [options]="doughnutChartKetertarikanOptions" [plugins]="chartPlugins" [legend]="true">
         </canvas>
@@ -21,7 +21,7 @@
           [options]="barChartUniqueOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>
       </div>
-      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark">
+      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="currentUser">
         <div class="row align-items-center h-100">
           <div class="col-12 mx-auto text-center">
             // Tempat Tombol Like & Dislike

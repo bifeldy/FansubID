@@ -224,8 +224,8 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
   }
 });
 
-// GET `/api/user/:username/berkas`
-router.get('/:username/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
+// PATCH `/api/user/:username/berkas`
+router.patch('/:username/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({

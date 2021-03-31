@@ -62,7 +62,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   }
 });
 
-// GET `/api/fansub/list-all`
+// PATCH `/api/fansub/list-all`
 router.patch('/list-all', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubRepo = getRepository(Fansub);
@@ -233,7 +233,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
   }
 });
 
-// GET `/api/fansub/berkas?id=`
+// PATCH `/api/fansub/berkas?id=`
 router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id.split(',').map(Number) || req.body.id;
@@ -320,7 +320,7 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
   }
 });
 
-// GET `/api/fansub/anime?id=`
+// PATCH `/api/fansub/anime?id=`
 router.patch('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id.split(',').map(Number) || req.body.id;
@@ -375,7 +375,7 @@ router.patch('/anime', async (req: UserRequest, res: Response, next: NextFunctio
   }
 });
 
-// GET `/api/fansub/dorama?id=`
+// PATCH `/api/fansub/dorama?id=`
 router.patch('/dorama', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id.split(',').map(Number) || req.body.id;

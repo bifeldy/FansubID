@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 
+import User from '../../models/User';
+
 import { GlobalService } from '../../../_shared/services/global.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.css']
 })
-export class ReportComponent implements OnInit {
+export class ReportComponent implements OnInit, OnDestroy {
 
   doughnutChartKetertarikanOptions: ChartOptions = {
     title: {
@@ -103,7 +106,12 @@ export class ReportComponent implements OnInit {
   fansubSlug = null;
   username = null;
 
+  currentUser: User = null;
+
+  subsUser = null;
+
   constructor(
+    private as: AuthService,
     private router: Router,
     public gs: GlobalService
   ) {
@@ -113,8 +121,15 @@ export class ReportComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.subsUser) {
+      this.subsUser.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       const url = this.router.url;
       if (url.startsWith('/berkas/')) {
         this.berkasId = url.split('/').pop();

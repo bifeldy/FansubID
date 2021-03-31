@@ -9,6 +9,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { ReportModule } from '../../_shared/components/report/report.module';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { Role } from '../../_shared/models/Role';
@@ -55,7 +56,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MaterialFileInputModule,
-    AngularEditorModule
+    AngularEditorModule,
+    ReportModule
   ]
 })
 export class UserModule { }

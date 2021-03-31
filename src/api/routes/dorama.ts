@@ -122,7 +122,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
   }
 });
 
-// GET `/api/dorama/seasonal`
+// PATCH `/api/dorama/seasonal`
 router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunction) => {
   const currDate = new Date();
   const year = req.query.year || currDate.getFullYear();
@@ -162,7 +162,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   }
 });
 
-// GET `/api/dorama/berkas?id=`
+// PATCH `/api/dorama/berkas?id=`
 router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const doramaId = req.query.id.split(',') || req.body.id;
@@ -244,7 +244,7 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
   }
 });
 
-// GET `/api/dorama/fansubs?id=`
+// PATCH `/api/dorama/fansubs?id=`
 router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const doramaId = req.query.id.split(',') || req.body.id;

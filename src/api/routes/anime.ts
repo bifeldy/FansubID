@@ -117,7 +117,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
   }
 });
 
-// GET `/api/anime/seasonal`
+// PATCH `/api/anime/seasonal`
 router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunction) => {
   const currDate = new Date();
   const year = req.query.year || currDate.getFullYear();
@@ -152,7 +152,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   }
 });
 
-// GET `/api/anime/berkas?id=`
+// PATCH `/api/anime/berkas?id=`
 router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const animeId = req.query.id.split(',').map(Number) || req.body.id;
@@ -234,7 +234,7 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
   }
 });
 
-// GET `/api/anime/fansubs?id=`
+// PATCH `/api/anime/fansubs?id=`
 router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const animeId = req.query.id.split(',').map(Number) || req.body.id;
