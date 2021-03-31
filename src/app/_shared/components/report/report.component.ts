@@ -142,7 +142,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.lineChartVisitorData = [];
         this.lineChartVisitorLabels = [];
         for (const v of response.visitor) {
-          this.lineChartVisitorData.push(v.visitor_count);
+          this.lineChartVisitorData.push(v.visitor_count ? v.visitor_count : 0);
           this.lineChartVisitorLabels.push(v.visitor_date.split('T')[0]);
         }
       });
