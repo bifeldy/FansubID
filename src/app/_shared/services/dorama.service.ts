@@ -31,15 +31,15 @@ export class DoramaService {
   }
 
   getSeasonalDorama(year: number, season: string): Observable<any> {
-    return this.api.getData(`/dorama/seasonal?year=${year}&season=${season}`);
+    return this.api.patchData(`/dorama/seasonal?year=${year}&season=${season}`);
   }
 
   getBerkasDorama(id = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
-    return this.api.getData(`/dorama/berkas?id=${id}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.patchData(`/dorama/berkas?id=${id}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   getFansubDorama(id = []): Observable<any> {
-    return this.api.getData(`/dorama/fansub?id=${id}`);
+    return this.api.patchData(`/dorama/fansub?id=${id}`);
   }
 
 }

@@ -118,7 +118,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // GET `/api/anime/seasonal`
-router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunction) => {
   const currDate = new Date();
   const year = req.query.year || currDate.getFullYear();
   const season = req.query.season || seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
@@ -153,7 +153,7 @@ router.get('/seasonal', async (req: UserRequest, res: Response, next: NextFuncti
 });
 
 // GET `/api/anime/berkas?id=`
-router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const animeId = req.query.id.split(',').map(Number);
     if (Array.isArray(animeId) && animeId.length > 0) {
@@ -235,7 +235,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
 });
 
 // GET `/api/anime/fansubs?id=`
-router.get('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const animeId = req.query.id.split(',').map(Number);
     if (Array.isArray(animeId) && animeId.length > 0) {

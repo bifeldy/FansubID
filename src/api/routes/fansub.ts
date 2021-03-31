@@ -63,7 +63,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // GET `/api/fansub/list-all`
-router.get('/list-all', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/list-all', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubRepo = getRepository(Fansub);
     const [fansubs, count] = await fansubRepo.findAndCount({
@@ -234,7 +234,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // GET `/api/fansub/berkas?id=`
-router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id.split(',').map(Number);
     if (Array.isArray(fansubId) && fansubId.length > 0) {
@@ -321,7 +321,7 @@ router.get('/berkas', async (req: UserRequest, res: Response, next: NextFunction
 });
 
 // GET `/api/fansub/anime?id=`
-router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id.split(',').map(Number);
     if (Array.isArray(fansubId) && fansubId.length > 0) {
@@ -376,7 +376,7 @@ router.get('/anime', async (req: UserRequest, res: Response, next: NextFunction)
 });
 
 // GET `/api/fansub/dorama?id=`
-router.get('/dorama', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/dorama', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id.split(',').map(Number);
     if (Array.isArray(fansubId) && fansubId.length > 0) {

@@ -31,15 +31,15 @@ export class AnimeService {
   }
 
   getSeasonalAnime(year: number, season: string): Observable<any> {
-    return this.api.getData(`/anime/seasonal?year=${year}&season=${season}`);
+    return this.api.patchData(`/anime/seasonal?year=${year}&season=${season}`);
   }
 
   getBerkasAnime(id = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
-    return this.api.getData(`/anime/berkas?id=${id}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.patchData(`/anime/berkas?id=${id}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   getFansubAnime(id = []): Observable<any> {
-    return this.api.getData(`/anime/fansub?id=${id}`);
+    return this.api.patchData(`/anime/fansub?id=${id}`);
   }
 
 }
