@@ -7,6 +7,7 @@ import { environment } from '../../../environments/client/environment';
 import { GlobalService } from './global.service';
 import { NotificationsService } from './notifications.service';
 import { LeftMenuService } from './left-menu.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,7 @@ export class StatsServerService {
   public commitMessage = null;
 
   constructor(
+    private as: AuthService,
     private gs: GlobalService,
     private notif: NotificationsService,
     private lms: LeftMenuService
@@ -120,6 +122,9 @@ export class StatsServerService {
   }
 
   socketEmit(eventName: string, eventData: any, callback = null): void {
+    if (eventData) {
+      eventData.jwtToken = this.as.jwtToken;
+    }
     if (callback) {
       this.mySocket.emit(eventName, eventData, callback);
     } else {
@@ -128,6 +133,9 @@ export class StatsServerService {
   }
 
   socketEmitVolatile(eventName: string, eventData: any, callback = null): void {
+    if (eventData) {
+      eventData.jwtToken = this.as.jwtToken;
+    }
     if (callback) {
       this.mySocket.volatile.emit(eventName, eventData, callback);
     } else {

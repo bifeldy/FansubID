@@ -1,10 +1,15 @@
 import { Server, Socket } from 'socket.io';
-import { Equal, getRepository, IsNull, MoreThanOrEqual } from 'typeorm';
+import { Equal, getRepository, ILike, IsNull, MoreThanOrEqual } from 'typeorm';
+
+// Helper
+import jwt from '../helpers/jwt';
 
 import { Notification } from '../entities/Notification';
 import { Berkas } from '../entities/Berkas';
 import { Track } from '../entities/Track';
 import { User } from '../entities/User';
+import { Fansub } from '../entities/Fansub';
+import { Profile } from '../entities/Profile';
 
 // tslint:disable-next-line: typedef
 export async function socketBot(io: Server, socket: Socket) {
@@ -34,73 +39,139 @@ export async function socketBot(io: Server, socket: Socket) {
   socket.on('track', async (data: any) => {
     data.ip = socket.request.socket.remoteAddress;
     data.port = socket.request.socket.remotePort;
-    if (data.pathUrl.startsWith('http://')) {
-      data.pathUrl = data.pathUrl.slice(7, data.pathUrl.length);
-    } else if (data.pathUrl.startsWith('https://')) {
-      data.pathUrl = data.pathUrl.slice(8, data.pathUrl.length);
+    if (data.jwtToken) {
+      try {
+        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        data.user = decoded.user;
+      } catch (error) {
+        console.error(error);
+        data.user = null;
+      }
+    } else {
+      data.user = null;
     }
-    if (data.pathUrl.startsWith('/')) {
-      if (data.pathUrl.startsWith('/berkas/')) {
-        try {
-          const trackRepo = getRepository(Track);
-          const tracks = await trackRepo.find({
-            where: [
-              {
-                ...((data.userId) ? {
-                  ip: Equal(data.ip),
-                  user_: {
-                    id: Equal(data.userId)
-                  }
-                } : {
-                  ip: Equal(data.ip),
-                  user_: IsNull()
-                })
-              }
-            ],
-            relations: ['user_']
-          });
-          if (tracks.length <= 0) {
-            const track = new Track();
-            track.ip = data.ip;
-            const fileRepo = getRepository(Berkas);
-            const selectedFile = await fileRepo.findOneOrFail({
+    if (data.pathUrl.startsWith('/berkas/') || data.pathUrl.startsWith('/fansub/') || data.pathUrl.startsWith('/user/')) {
+      try {
+        const trackType = data.pathUrl.split('?')[0].split('/')[1];
+        const idSlugUsername = data.pathUrl.split('?')[0].split('/').pop();
+        const trackRepo = getRepository(Track);
+        const tracks = await trackRepo.find({
+          where: [
+            {
+              ...(('id' in data.user && data.user.id) ? {
+                ip: Equal(data.ip),
+                [`${trackType}_`]: {
+                  id: Equal(idSlugUsername)
+                },
+                track_by_: {
+                  id: Equal(data.user.id)
+                }
+              } : {
+                ip: Equal(data.ip),
+                [`${trackType}_`]: {
+                  id: Equal(idSlugUsername)
+                },
+                track_by_: IsNull()
+              })
+            }
+          ],
+          relations: ['berkas_', 'fansub_', 'user_', 'track_by_']
+        });
+        if (tracks.length <= 0) {
+          const track = new Track();
+          track.ip = data.ip;
+          if ('id' in data.user && data.user.id) {
+            const userRepo = getRepository(User);
+            const visitorUser = await userRepo.findOneOrFail({
               where: [
-                { id: Equal(data.pathUrl.split('?')[0].split('/').pop()) }
+                { id: Equal(data.user.id) }
               ]
             });
-            track.berkas_ = selectedFile;
-            if (data.userId) {
-              const userRepo = getRepository(User);
-              const selectedUser = await userRepo.findOneOrFail({
-                where: [
-                  { id: Equal(data.userId) }
-                ]
-              });
-              track.user_ = selectedUser;
-            }
-            await trackRepo.save(track);
-            const visitor = await trackRepo.count({
-              where: [
-                {
-                  berkas_: {
-                    id: Equal(selectedFile.id)
-                  }
-                }
-              ],
-              relations: ['berkas_']
-            });
-            selectedFile.view_count = visitor;
-            await fileRepo.save(selectedFile);
+            track.track_by_ = visitorUser;
           }
-        } catch (error) {
-          console.error(error);
+          let selectedRepo = null;
+          let selected = null;
+          if (trackType === 'berkas') {
+            selectedRepo = getRepository(Berkas);
+            selected = await selectedRepo.findOneOrFail({
+              where: [
+                { id: Equal(idSlugUsername) }
+              ]
+            });
+            track.berkas_ = selected;
+          } else if (trackType === 'fansub') {
+            selectedRepo = getRepository(Fansub);
+            selected = await selectedRepo.findOneOrFail({
+              where: [
+                { slug: ILike(idSlugUsername) }
+              ]
+            });
+            track.fansub_ = selected;
+          } else if (trackType === 'user') {
+            selectedRepo = getRepository(User);
+            selected = await selectedRepo.findOneOrFail({
+              where: [
+                { username: ILike(idSlugUsername) }
+              ]
+            });
+            track.user_ = selected;
+          } else {
+            // Other Url Target In Hikki API -- e.g '/news/:newsId'
+          }
+          const resTrackSave = await trackRepo.save(track);
+          if (trackType === 'user') {
+            selectedRepo = getRepository(Profile);
+            selected = await selectedRepo.findOneOrFail({
+              where: [
+                { id: Equal(resTrackSave.user_.id) }
+              ]
+            });
+          }
+          const visitorCount = await trackRepo.count({
+            where: [
+              {
+                [`${trackType}_`]: {
+                  id: Equal(selected.id)
+                }
+              }
+            ],
+            relations: ['berkas_', 'fansub_', 'user_']
+          });
+          selected.view_count = visitorCount;
+          await selectedRepo.save(selected);
         }
-      } else {
-        // Other Url Target In Hikki API -- e.g '/news/:newsId'
+      } catch (error) {
+        console.error(error);
       }
     } else {
       // Url Target Is Other Web API -- e.g 'https://api.github.com/repos/Bifeldy/Hikki/commits'
     }
-    // console.log(`[${data.ip}:${data.port}] 🖇 ${data.userId} @ ${data.pathUrl}`);
+    // console.log(`[${data.ip}:${data.port}] 🖇 ${data?.user?.id} @ ${data.pathUrl}`);
+  });
+  socket.on('report', async (data: any, callback: any) => {
+    if (data) {
+      if (data.jwtToken) {
+        try {
+          const decoded = jwt.JwtDecrypt(data.jwtToken);
+          data.user = decoded.user;
+        } catch (error) {
+          console.error(error);
+          data.user = null;
+        }
+      } else {
+        data.user = null;
+      }
+      if (data.berkasId) {
+        // Set Report Berkas
+      } else if (data.fansubId) {
+        // Set Report Fansub
+      } else if (data.userId) {
+        // Set Report User
+      }
+    }
+    if (typeof callback === 'function') {
+      // Get Report Statistics
+      callback({ reportStatistics: null, myReport: null });
+    }
   });
 }

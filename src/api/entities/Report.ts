@@ -1,17 +1,19 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 import { Berkas } from './Berkas';
 import { Fansub } from './Fansub';
 import { User } from './User';
 
-@Entity({ name: 'track' })
-export class Track {
+import { LikeAndDislike } from '../../app/_shared/models/LikeAndDislike';
 
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+@Entity({ name: 'like_dislike' })
+export class Report {
 
-  @Column({ type: 'varchar', length: 255 })
-  ip: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ type: 'enum', enum: [LikeAndDislike.LIKE, LikeAndDislike.DISLIKE] })
+  type: LikeAndDislike;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   // tslint:disable-next-line: variable-name
@@ -35,5 +37,5 @@ export class Track {
 
   @ManyToOne(type => User)
   // tslint:disable-next-line: variable-name
-  track_by_: User;
+  report_by_: User;
 }

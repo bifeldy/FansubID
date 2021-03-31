@@ -34,6 +34,10 @@ export class Fansub {
   // tslint:disable-next-line: variable-name
   image_url: string;
 
+  @Column({ type: 'int', default: 0 })
+  // tslint:disable-next-line: variable-name
+  view_count: number;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   // tslint:disable-next-line: variable-name
   created_at: number;

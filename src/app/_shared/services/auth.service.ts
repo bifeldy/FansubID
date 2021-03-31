@@ -15,6 +15,8 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
+  public jwtToken = null;
+
   constructor(
     private gs: GlobalService,
     private ls: LocalStorageService,
@@ -34,6 +36,7 @@ export class AuthService {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.postData(`/verify`, { token }).pipe(map(respVerify => {
       this.currentUserSubject.next(respVerify.result);
+      this.jwtToken = respVerify.jwtToken;
       return respVerify;
     }));
   }
@@ -62,6 +65,7 @@ export class AuthService {
 
   removeUser(): void {
     this.currentUserSubject.next(null);
+    this.jwtToken = null;
     this.ls.clear();
   }
 

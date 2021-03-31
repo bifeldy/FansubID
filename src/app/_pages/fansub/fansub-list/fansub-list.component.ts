@@ -110,6 +110,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
       ]
     }
   };
+
   chartPlugins = [];
 
   pieChartStatusData: SingleDataSet = [];
@@ -145,8 +146,10 @@ export class FansubListComponent implements OnInit, OnDestroy {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
-    monkeyPatchChartJsTooltip();
-    monkeyPatchChartJsLegend();
+    if (this.gs.isBrowser) {
+      monkeyPatchChartJsTooltip();
+      monkeyPatchChartJsLegend();
+    }
   }
 
   ngOnDestroy(): void {

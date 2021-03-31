@@ -61,7 +61,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           }
           if (request.method === 'GET') {
             this.ss.socketEmitVolatile('track', {
-              userId: this.currentUser ? this.currentUser.id : null,
               pathUrl: request.url.startsWith(environment.apiUrl) ? request.url.slice(environment.apiUrl.length) : request.url
             });
           }

@@ -11,6 +11,7 @@ import { MaterialTabModule } from '../../_shared/components/material-tab/materia
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { VjsPlayerModule } from '../../_shared/components/vjs-player/vjs-player.module';
 import { DiscussionModule } from '../../_shared/components/discussion/discussion.module';
+import { ReportModule } from '../../_shared/components/report/report.module';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { Role } from '../../_shared/models/Role';
@@ -75,7 +76,8 @@ const routes: Routes = [
     NotificationsModule,
     AngularEditorModule,
     VjsPlayerModule,
-    DiscussionModule
+    DiscussionModule,
+    ReportModule
   ]
 })
 export class BerkasModule { }

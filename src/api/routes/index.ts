@@ -171,9 +171,15 @@ router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest
 
 // POST `/api/verify` -- Verify Login Session
 router.post('/verify', auth.isAuthorized, (req: UserRequest, res: Response, next) => {
+  // tslint:disable-next-line: max-line-length
+  let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
+  if (token.startsWith('Bearer ')) {
+    token = token.slice(7, token.length);
+  }
   return res.status(200).json({
     info: '😍 200 - Verifikasi API :: Token Selesai Di Verifikasi UwUu 🥰',
-    result: req.user
+    result: req.user,
+    jwtToken: token
   });
 });
 
