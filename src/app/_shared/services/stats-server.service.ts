@@ -27,6 +27,7 @@ export class StatsServerService {
   public portalVer = '0000000';
   public commitDate = null;
   public commitUser = null;
+  public commitMessage = null;
 
   constructor(
     private gs: GlobalService,
@@ -112,6 +113,7 @@ export class StatsServerService {
           this.portalVer = response.github.sha;
           this.commitUser = response.github.commit.author.name;
           this.commitDate = new Date(response.github.commit.author.date);
+          this.commitMessage = response.github.commit.message;
         }
       });
     }, 10000);

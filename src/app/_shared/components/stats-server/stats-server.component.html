@@ -4,20 +4,20 @@
       <b class="text-bifeldy-dark">Statistik Server</b>
     </h2>
   </div>
-  <div class="col-12">
+  <div class="col-12" *ngIf="ss.portalVer">
     <p class="px-2 text-truncate">
       Portal ::
       <span class="text-success">
         {{ ss.portalVer }}
       </span>
     </p>
-    <p class="px-2 text-truncate">
+    <p class="px-2 text-truncate" *ngIf="ss.commitDate">
       Date ::
       <span class="text-success">
         {{ ss.commitDate | date:'d MMM y, h:mm:ss a' }}
       </span>
     </p>
-    <p class="px-2 text-truncate">
+    <p class="px-2 text-truncate" *ngIf="ss.commitUser">
       Commiter ::
       <span class="text-success">
         <a href="https://github.com/{{ ss.commitUser }}" target="_blank" class="text-warning text-decoration-none">
@@ -25,19 +25,25 @@
         </a>
       </span>
     </p>
-    <p class="px-2">
+    <p class="px-2" *ngIf="ss.commitMessage">
       Socket ::
-      <span class="text-success" *ngIf="ss.mySocket">
+      <span class="text-success">
+        {{ ss.commitMessage }}
+      </span>
+    </p>
+    <p class="px-2" *ngIf="ss.mySocket">
+      Socket ::
+      <span class="text-success">
         {{ ss.mySocket.id }}
       </span>
     </p>
-    <p class="px-2">
+    <p class="px-2" *ngIf="ss.latency">
       Latency ::
       <span class="text-success">
         {{ ss.latency }} ms
       </span>
     </p>
-    <p class="px-2">
+    <p class="px-2" *ngIf="ss.visitor">
       Nodes ::
       <span class="text-success">
         {{ ss.visitor }} Koneksi
