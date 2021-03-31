@@ -155,7 +155,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
 // GET `/api/anime/berkas?id=`
 router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const animeId = req.query.id.split(',').map(Number);
+    const animeId = req.query.id.split(',').map(Number) || req.body.id;
     if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
@@ -237,7 +237,7 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
 // GET `/api/anime/fansubs?id=`
 router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const animeId = req.query.id.split(',').map(Number);
+    const animeId = req.query.id.split(',').map(Number) || req.body.id;
     if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({

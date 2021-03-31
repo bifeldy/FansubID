@@ -236,7 +236,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 // GET `/api/fansub/berkas?id=`
 router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const fansubId = req.query.id.split(',').map(Number);
+    const fansubId = req.query.id.split(',').map(Number) || req.body.id;
     if (Array.isArray(fansubId) && fansubId.length > 0) {
       const fileRepo = getRepository(Berkas);
       let fileRepoQuery = fileRepo
@@ -323,7 +323,7 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
 // GET `/api/fansub/anime?id=`
 router.patch('/anime', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const fansubId = req.query.id.split(',').map(Number);
+    const fansubId = req.query.id.split(',').map(Number) || req.body.id;
     if (Array.isArray(fansubId) && fansubId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo
@@ -378,7 +378,7 @@ router.patch('/anime', async (req: UserRequest, res: Response, next: NextFunctio
 // GET `/api/fansub/dorama?id=`
 router.patch('/dorama', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const fansubId = req.query.id.split(',').map(Number);
+    const fansubId = req.query.id.split(',').map(Number) || req.body.id;
     if (Array.isArray(fansubId) && fansubId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo

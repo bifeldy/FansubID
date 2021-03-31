@@ -165,7 +165,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
 // GET `/api/dorama/berkas?id=`
 router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const doramaId = req.query.id.split(',');
+    const doramaId = req.query.id.split(',') || req.body.id;
     if (Array.isArray(doramaId) && doramaId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
@@ -247,7 +247,7 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
 // GET `/api/dorama/fansubs?id=`
 router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const doramaId = req.query.id.split(',');
+    const doramaId = req.query.id.split(',') || req.body.id;
     if (Array.isArray(doramaId) && doramaId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
