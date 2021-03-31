@@ -8,6 +8,7 @@ import User from '../../models/User';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../services/auth.service';
+import { StatsServerService } from '../../services/stats-server.service';
 
 @Component({
   selector: 'app-report',
@@ -102,9 +103,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   lineChartType: ChartType = 'line';
   barChartType: ChartType = 'bar';
 
-  berkasId = null;
-  fansubSlug = null;
-  username = null;
+  trackType = null;
+  idSlugUsername = null;
 
   currentUser: User = null;
 
@@ -113,7 +113,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   constructor(
     private as: AuthService,
     private router: Router,
-    public gs: GlobalService
+    public gs: GlobalService,
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       monkeyPatchChartJsTooltip();
@@ -130,29 +131,55 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
-      const url = this.router.url;
-      if (url.startsWith('/berkas/')) {
-        this.berkasId = url.split('/').pop();
-      } else if (url.startsWith('/fansub/')) {
-        this.fansubSlug = url.split('/').pop();
-      } else if (url.startsWith('/user/')) {
-        this.username = url.split('/').pop();
-      } else {
-        // Other Pages That Need Visitor, Like & Dislike
-      }
-      console.clear();
-      console.log(this.berkasId);
-      console.log(this.fansubSlug);
-      console.log(this.username);
-      setTimeout(() => {
-        this.doughnutChartKetertarikanData = [2, 4];
-        this.doughnutChartKetertarikanLabels = ['Suka', 'Tidak Suka'];
-        this.lineChartVisitorData = [1, 3, 2, 6, 4, 7, 5];
-        this.lineChartVisitorLabels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-        this.barChartUniqueData = [1326, 475];
+      this.trackType = this.router.url.split('/')[1];
+      this.idSlugUsername = this.router.url.split('/')[2];
+      this.ss.socketEmit('track-get', {
+        trackType: this.trackType,
+        idSlugUsername: this.idSlugUsername
+      }, (response: any) => {
         this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna'];
-      }, 1234);
+        this.barChartUniqueData = [response.uniqueIp, response.uniqueUser];
+        this.lineChartVisitorData = [];
+        this.lineChartVisitorLabels = [];
+        for (const v of response.visitor) {
+          this.lineChartVisitorData.push(v.visitor_count);
+          this.lineChartVisitorLabels.push(v.visitor_date.split('T')[0]);
+        }
+      });
+      setTimeout(() => {
+        if (this.currentUser) {
+          // this.ss.socketEmit('report-get', {
+          //   trackType: this.trackType,
+          //   idSlugUsername: this.idSlugUsername
+          // }, (response: any) => {
+          //   // TODO :: Get Report Statistics
+          //   console.log(response);
+            this.doughnutChartKetertarikanData = [2, 4];
+            this.doughnutChartKetertarikanLabels = ['Suka', 'Tidak Suka'];
+          // });
+        }
+      }, 500);
     }
+  }
+
+  like(): void {
+    // this.ss.socketEmit('report-set', {
+    //   trackType: this.trackType,
+    //   idSlugUsername: this.idSlugUsername
+    // }, (response: any) => {
+    //   // TODO :: Get Report Statistics
+    //   console.log(response);
+    // });
+  }
+
+  dislike(): void {
+    // this.ss.socketEmit('report-set', {
+    //   trackType: this.trackType,
+    //   idSlugUsername: this.idSlugUsername
+    // }, (response: any) => {
+    //   // TODO :: Get Report Statistics
+    //   console.log(response);
+    // });
   }
 
 }

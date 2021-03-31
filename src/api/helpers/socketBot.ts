@@ -149,9 +149,79 @@ export async function socketBot(io: Server, socket: Socket) {
     }
   });
   socket.on('track-get', async (data: any, callback: any) => {
-    // Get Visitor Statistics
-    if (typeof callback === 'function') {
-      callback();
+    let selectedRepo = null;
+    let selected = null;
+    try {
+      if (data.trackType === 'berkas') {
+        selectedRepo = getRepository(Berkas);
+        selected = await selectedRepo.findOneOrFail({
+          where: [
+            { id: Equal(data.idSlugUsername) }
+          ]
+        });
+      } else if (data.trackType === 'fansub') {
+        selectedRepo = getRepository(Fansub);
+        selected = await selectedRepo.findOneOrFail({
+          where: [
+            { slug: ILike(data.idSlugUsername) }
+          ]
+        });
+      } else if (data.trackType === 'user') {
+        selectedRepo = getRepository(User);
+        selected = await selectedRepo.findOneOrFail({
+          where: [
+            { username: ILike(data.idSlugUsername) }
+          ]
+        });
+      } else {
+        // Other Url Target In Hikki API -- e.g '/news/:newsId'
+      }
+      let tracks = null;
+      let result: any = {};
+      const trackRepo = getRepository(Track);
+      tracks = await trackRepo.find({
+        where: [
+          {
+            [`${data.trackType}_`]: {
+              id: Equal(selected.id)
+            },
+            // created_at: Raw(column => `${column} >= NOW() - interval '7 day'`)
+          }
+        ],
+        relations: ['berkas_', 'fansub_', 'user_', 'track_by_']
+      });
+      result.uniqueIp = [...new Set(tracks.map(t => t.ip))].length;
+      result.uniqueUser = [...new Set(tracks.map(t => t.track_by_?.id))].length;
+      tracks = await trackRepo.query(`
+        SELECT *
+        FROM (
+          SELECT
+            visitor_date::DATE
+          FROM generate_series(
+            NOW() - INTERVAL '7 DAY',
+            NOW(),
+            INTERVAL '1 DAY'
+          ) visitor_date
+        ) d
+        LEFT JOIN (
+          SELECT
+            DATE_TRUNC('DAY', created_at)::DATE AS visitor_date,
+            COUNT(*) AS visitor_count
+          FROM
+            track
+          WHERE
+            created_at >= NOW() - INTERVAL '7 DAY'
+            AND ${data.trackType}_id = $1
+          GROUP BY 1
+        ) t USING (visitor_date)
+        ORDER BY visitor_date ASC;
+      `, [selected.id]);
+      result.visitor = tracks;
+      if (typeof callback === 'function') {
+        callback(result);
+      }
+    } catch (error) {
+      console.error(error);
     }
   });
   socket.on('report-set', async (data: any, callback: any) => {
@@ -166,6 +236,7 @@ export async function socketBot(io: Server, socket: Socket) {
     } else {
       data.user = null;
     }
+    // TODO ::
     if (data.berkasId) {
       // Set Report Berkas
     } else if (data.fansubId) {
@@ -178,7 +249,18 @@ export async function socketBot(io: Server, socket: Socket) {
     }
   });
   socket.on('report-get', async (data: any, callback: any) => {
-    // Get Report Statistics
+    if (data.jwtToken) {
+      try {
+        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        data.user = decoded.user;
+      } catch (error) {
+        console.error(error);
+        data.user = null;
+      }
+    } else {
+      data.user = null;
+    }
+    // TODO :: Get Report Statistics
     if (typeof callback === 'function') {
       callback();
     }

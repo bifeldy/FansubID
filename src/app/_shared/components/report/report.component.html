@@ -24,7 +24,15 @@
       <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="currentUser">
         <div class="row align-items-center h-100">
           <div class="col-12 mx-auto text-center">
-            // Tempat Tombol Like & Dislike
+            <h2>Ketertarikan Saya</h2>
+            <button mat-stroked-button color="accent" type="button" class="mx-1" (click)="like()">
+              <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
+              Suka
+            </button>
+            <button mat-stroked-button color="accent" type="button" class="mx-1" (click)="dislike()">
+              <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
+              Tidak Suka
+            </button>
           </div>
         </div>
       </div>
