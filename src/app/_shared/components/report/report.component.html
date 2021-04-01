@@ -6,14 +6,9 @@
   </div>
   <div class="col-12">
     <div class="row p-0">
-      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0 && currentUser">
+      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0">
         <canvas baseChart [data]="doughnutChartKetertarikanData" [labels]="doughnutChartKetertarikanLabels" [chartType]="doughnutChartType"
           [options]="doughnutChartKetertarikanOptions" [plugins]="chartPlugins" [legend]="true">
-        </canvas>
-      </div>
-      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="lineChartVisitorData.length > 0 && lineChartVisitorLabels.length > 0">
-        <canvas baseChart [data]="lineChartVisitorData" [labels]="lineChartVisitorLabels" [chartType]="lineChartType"
-          [options]="lineChartVisitorOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>
       </div>
       <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="barChartUniqueData.length > 0 && barChartUniqueLabels.length > 0">
@@ -21,15 +16,32 @@
           [options]="barChartUniqueOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>
       </div>
-      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="currentUser">
+      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark" *ngIf="lineChartVisitorData.length > 0 && lineChartVisitorLabels.length > 0">
+        <canvas baseChart [data]="lineChartVisitorData" [labels]="lineChartVisitorLabels" [chartType]="lineChartType"
+          [options]="lineChartVisitorOptions" [plugins]="chartPlugins" [legend]="false">
+        </canvas>
+      </div>
+      <div class="col-12 col-md-6 py-1 bg-bifeldy-dark">
         <div class="row align-items-center h-100">
           <div class="col-12 mx-auto text-center">
-            <h2>Ketertarikan Saya</h2>
-            <button mat-stroked-button color="accent" type="button" class="mx-1" (click)="like()">
+            <h2>Tanggapan Saya</h2>
+            <button mat-stroked-button color="accent" class="mx-1" (click)="login()" *ngIf="!currentUser">
+              <mat-icon class="me-1">vpn_key</mat-icon>
+              Klik Untuk Login
+            </button>
+            <button mat-flat-button color="accent" class="mx-1" (click)="likeOrDislike(true)" *ngIf="currentUser && myReport == LIKE">
               <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
               Suka
             </button>
-            <button mat-stroked-button color="accent" type="button" class="mx-1" (click)="dislike()">
+            <button mat-stroked-button color="accent" class="mx-1" (click)="likeOrDislike(true)" *ngIf="currentUser && myReport != LIKE">
+              <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
+              Suka
+            </button>
+            <button mat-stroked-button color="accent" class="mx-1" (click)="likeOrDislike(false)" *ngIf="currentUser && myReport != DISLIKE">
+              <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
+              Tidak Suka
+            </button>
+            <button mat-flat-button color="accent" class="mx-1" (click)="likeOrDislike(false)" *ngIf="currentUser && myReport == DISLIKE">
               <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
               Tidak Suka
             </button>

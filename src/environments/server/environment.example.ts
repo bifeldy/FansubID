@@ -24,7 +24,7 @@ import { Banned } from '../../api/entities/Banned';
 import { Notification } from '../../api/entities/Notification';
 import { Nihongo } from '../../api/entities/Nihongo';
 import { Track } from '../../api/entities/Track';
-import { Report } from '../../api/entities/Report';
+import { LikeDislike } from '../../api/entities/LikeDislike';
 
 export const environment = {
   production: false,
@@ -63,7 +63,7 @@ export const environment = {
     Banned,
     Notification,
     Track,
-    Report
+    LikeDislike
   ],
   uploadFolder: 'dist/hikki/uploads',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',

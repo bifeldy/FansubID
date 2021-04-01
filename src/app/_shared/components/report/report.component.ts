@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 
 import User from '../../models/User';
+import { LikeAndDislike } from '../../models/LikeAndDislike';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../services/auth.service';
@@ -16,6 +17,9 @@ import { StatsServerService } from '../../services/stats-server.service';
   styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit, OnDestroy {
+
+  @Input() like = 0;
+  @Input() dislike = 0;
 
   doughnutChartKetertarikanOptions: ChartOptions = {
     title: {
@@ -90,14 +94,14 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   chartPlugins = [];
 
-  doughnutChartKetertarikanData: SingleDataSet = [];
-  doughnutChartKetertarikanLabels: Label[] = [];
+  doughnutChartKetertarikanData: SingleDataSet = [this.like, this.dislike];
+  doughnutChartKetertarikanLabels: Label[] = ['Suka', 'Tidak Suka'];
 
   lineChartVisitorData: SingleDataSet = [];
   lineChartVisitorLabels: Label[] = [];
 
-  barChartUniqueData: SingleDataSet = [];
-  barChartUniqueLabels: Label[] = [];
+  barChartUniqueData: SingleDataSet = [0, 0];
+  barChartUniqueLabels: Label[] = ['Alamat IP', 'Akun Pengguna'];
 
   doughnutChartType: ChartType = 'doughnut';
   lineChartType: ChartType = 'line';
@@ -109,6 +113,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   currentUser: User = null;
 
   subsUser = null;
+
+  myReport = null;
 
   constructor(
     private as: AuthService,
@@ -128,6 +134,14 @@ export class ReportComponent implements OnInit, OnDestroy {
     }
   }
 
+  get LIKE(): string {
+    return LikeAndDislike.LIKE;
+  }
+
+  get DISLIKE(): string {
+    return LikeAndDislike.DISLIKE;
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
@@ -137,7 +151,6 @@ export class ReportComponent implements OnInit, OnDestroy {
         trackType: this.trackType,
         idSlugUsername: this.idSlugUsername
       }, (response: any) => {
-        this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna'];
         this.barChartUniqueData = [response.uniqueIp, response.uniqueUser];
         this.lineChartVisitorData = [];
         this.lineChartVisitorLabels = [];
@@ -146,40 +159,29 @@ export class ReportComponent implements OnInit, OnDestroy {
           this.lineChartVisitorLabels.push(v.visitor_date.split('T')[0]);
         }
       });
+      // TODO :: REPORT
       setTimeout(() => {
-        if (this.currentUser) {
-          // this.ss.socketEmit('report-get', {
-          //   trackType: this.trackType,
-          //   idSlugUsername: this.idSlugUsername
-          // }, (response: any) => {
-          //   // TODO :: Get Report Statistics
-          //   console.log(response);
-            this.doughnutChartKetertarikanData = [2, 4];
-            this.doughnutChartKetertarikanLabels = ['Suka', 'Tidak Suka'];
-          // });
-        }
-      }, 500);
+        this.doughnutChartKetertarikanData = [12, 34];
+      }, 3791);
     }
   }
 
-  like(): void {
-    // this.ss.socketEmit('report-set', {
-    //   trackType: this.trackType,
-    //   idSlugUsername: this.idSlugUsername
-    // }, (response: any) => {
-    //   // TODO :: Get Report Statistics
-    //   console.log(response);
-    // });
+  login(): void {
+    this.router.navigate(['/login'], {
+      queryParams: {
+        returnUrl: `/${this.trackType}/${this.idSlugUsername}`
+      }
+    });
   }
 
-  dislike(): void {
-    // this.ss.socketEmit('report-set', {
-    //   trackType: this.trackType,
-    //   idSlugUsername: this.idSlugUsername
-    // }, (response: any) => {
-    //   // TODO :: Get Report Statistics
-    //   console.log(response);
-    // });
+  likeOrDislike(like = true): void {
+    if (this.currentUser) {
+      if (like) {
+        this.myReport = this.LIKE;
+      } else {
+        this.myReport = this.DISLIKE;
+      }
+    }
   }
 
 }

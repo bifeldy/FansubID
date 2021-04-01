@@ -36,7 +36,7 @@ export async function socketBot(io: Server, socket: Socket) {
   } catch (error) {
     console.error(error);
   }
-  socket.on('track-set', async (data: any, callback: any) => {
+  socket.on('track-set', async (data: any) => {
     data.ip = socket.request.socket.remoteAddress;
     data.port = socket.request.socket.remotePort;
     if (data.jwtToken) {
@@ -144,14 +144,11 @@ export async function socketBot(io: Server, socket: Socket) {
     } else {
       // Url Target Is Other Web API -- e.g 'https://api.github.com/repos/Bifeldy/Hikki/commits'
     }
-    if (typeof callback === 'function') {
-      callback();
-    }
   });
   socket.on('track-get', async (data: any, callback: any) => {
-    let selectedRepo = null;
-    let selected = null;
     try {
+      let selectedRepo = null;
+      let selected = null;
       if (data.trackType === 'berkas') {
         selectedRepo = getRepository(Berkas);
         selected = await selectedRepo.findOneOrFail({
@@ -222,47 +219,16 @@ export async function socketBot(io: Server, socket: Socket) {
       }
     } catch (error) {
       console.error(error);
-    }
-  });
-  socket.on('report-set', async (data: any, callback: any) => {
-    if (data.jwtToken) {
-      try {
-        const decoded = jwt.JwtDecrypt(data.jwtToken);
-        data.user = decoded.user;
-      } catch (error) {
-        console.error(error);
-        data.user = null;
+      if (typeof callback === 'function') {
+        callback({
+          uniqueIp: 0,
+          uniqueUser: 0,
+          visitor: {
+            visitor_date: new Date(),
+            visitor_count: 0
+          }
+        });
       }
-    } else {
-      data.user = null;
-    }
-    // TODO ::
-    if (data.berkasId) {
-      // Set Report Berkas
-    } else if (data.fansubId) {
-      // Set Report Fansub
-    } else if (data.userId) {
-      // Set Report User
-    }
-    if (typeof callback === 'function') {
-      callback();
-    }
-  });
-  socket.on('report-get', async (data: any, callback: any) => {
-    if (data.jwtToken) {
-      try {
-        const decoded = jwt.JwtDecrypt(data.jwtToken);
-        data.user = decoded.user;
-      } catch (error) {
-        console.error(error);
-        data.user = null;
-      }
-    } else {
-      data.user = null;
-    }
-    // TODO :: Get Report Statistics
-    if (typeof callback === 'function') {
-      callback();
     }
   });
 }

@@ -7,7 +7,7 @@ import { User } from './User';
 import { LikeAndDislike } from '../../app/_shared/models/LikeAndDislike';
 
 @Entity({ name: 'like_dislike' })
-export class Report {
+export class LikeDislike {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
