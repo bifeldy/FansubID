@@ -18,8 +18,6 @@ const router = Router();
 
 const kuryanaApi = 'https://bifeldy-kuryana.herokuapp.com';
 
-const cacheTime = 30 * 60 * 1000;
-
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
   { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
@@ -56,7 +54,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           info: `😅 ${statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
           results: data
         };
-        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -160,7 +158,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
           info: `😅 ${statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
           results: data
         };
-        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -345,7 +343,7 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
           info: `😅 ${httpStatusCode} - Dorama API :: Detail ${mdlId} 🤣`,
           result: ('data' in dramaDetail ? dramaDetail.data : dramaDetail)
         };
-        cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
         return res.status(httpStatusCode).json(responseBody);
       }
     });

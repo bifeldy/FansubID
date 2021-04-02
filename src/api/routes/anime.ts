@@ -18,8 +18,6 @@ const router = Router();
 
 const jikanV3 = 'http://api.jikan.moe/v3';
 
-const cacheTime = 30 * 60 * 1000;
-
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
   { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
@@ -56,7 +54,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           info: `😅 ${statusCode} - Anime API :: Search ${searchQuery} 🤣`,
           results: data
         };
-        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -155,7 +153,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
           info: `😅 ${statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
           results: data
         };
-        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -345,7 +343,7 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
           info: `😅 ${httpStatusCode} - Anime API :: Detail ${malId} 🤣`,
           result: animeDetail
         };
-        cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, cacheTime);
+        cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
         return res.status(httpStatusCode).json(responseBody);
       }
     });

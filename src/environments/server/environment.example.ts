@@ -86,7 +86,8 @@ export const environment = {
   nodeJsXhrHeader: {
     'accept': 'application/json',
     'user-agent': 'node.js'
-  }
+  },
+  externalApiCacheTime: 30 * 60 * 1000
 };
 
 /*
