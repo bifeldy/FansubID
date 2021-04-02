@@ -16,8 +16,7 @@ import { Dorama } from '../entities/Dorama';
 
 const router = Router();
 
-const myDramaListV1 = 'https://mydramalist.com/v1';
-const kuryanaApi = 'https://kuryana.vercel.app';
+const kuryanaApi = 'https://bifeldy-kuryana.herokuapp.com';
 
 const cacheTime = 30 * 60 * 1000;
 
@@ -139,12 +138,8 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
     return res.status(cacheData.status).json(cacheData.body);
   } else {
     return request({
-      method: 'POST',
-      uri: `${myDramaListV1}/quarter_calendar`,
-      form: {
-        quarter,
-        year
-      },
+      method: 'GET',
+      uri: `${kuryanaApi}/seasonal/${year}/${quarter}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
