@@ -76,6 +76,7 @@
     "ngx-toastr": "^13.2.0",
     "node-fetch": "^2.6.1",
     "pg": "^8.5.1",
+    "postman-request": "^2.88.1-postman.29",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.2",
     "rxjs": "^6.6.6",

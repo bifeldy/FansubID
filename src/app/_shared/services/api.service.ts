@@ -14,7 +14,7 @@ import { GlobalService } from './global.service';
 export class ApiService {
 
   constructor(
-    private http: HttpClient,
+    public http: HttpClient,
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {

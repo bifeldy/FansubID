@@ -1,9 +1,11 @@
-import request from 'request';
+import request from 'postman-request';
 import translate from '@k3rn31p4nic/google-translate-api';
 import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal } from 'typeorm';
+
+import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -34,9 +36,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     return request({
       method: 'GET',
       uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`,
-      headers: {
-        'user-agent': 'node.js'
-      }
+      headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);
@@ -46,9 +46,15 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         });
       } else {
         const statusCode = result.statusCode;
+        let data = null;
+        try {
+          data = JSON.parse(body).results;
+        } catch (error) {
+          data = [];
+        }
         const responseBody = {
           info: `😅 ${statusCode} - Anime API :: Search ${searchQuery} 🤣`,
-          results: ('results' in JSON.parse(body) ? JSON.parse(body).results : [])
+          results: data
         };
         cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
         return res.status(statusCode).json(responseBody);
@@ -129,9 +135,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
     return request({
       method: 'GET',
       uri: `${jikanV3}/season/${year}/${season}`,
-      headers: {
-        'user-agent': 'node.js'
-      }
+      headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);
@@ -141,9 +145,15 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
         });
       } else {
         const statusCode = result.statusCode;
+        let data = null;
+        try {
+          data = JSON.parse(body).anime;
+        } catch (error) {
+          data = [];
+        }
         const responseBody = {
           info: `😅 ${statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
-          results: ('anime' in JSON.parse(body) ? JSON.parse(body).anime : [])
+          results: data
         };
         cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
         return res.status(statusCode).json(responseBody);
@@ -155,7 +165,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
 // PATCH `/api/anime/berkas?id=`
 router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const animeId = req.query.id.split(',').map(Number) || req.body.id;
+    const animeId = req.query.id ? req.query.id.split(',').map(Number) : req.body.id;
     if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
@@ -237,7 +247,7 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
 // PATCH `/api/anime/fansubs?id=`
 router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const animeId = req.query.id.split(',').map(Number) || req.body.id;
+    const animeId = req.query.id ? req.query.id.split(',').map(Number) : req.body.id;
     if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
@@ -301,9 +311,7 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
     return request({
       method: 'GET',
       uri: `${jikanV3}/anime/${malId}`,
-      headers: {
-        'user-agent': 'node.js'
-      }
+      headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);

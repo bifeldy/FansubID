@@ -3,7 +3,7 @@ import { Router, Response } from 'express';
 import { getRepository, Equal, ILike, In } from 'typeorm';
 
 import createError from 'http-errors';
-import request from 'request';
+import request from 'postman-request';
 import multer from 'multer';
 
 import { UserRequest } from '../models/UserRequest';
@@ -193,9 +193,7 @@ router.post('/image', auth.isAuthorized, upload.single('file'), async (req: User
       name: new Date().getTime(),
       image: req.file.buffer.toString('base64')
     },
-    headers: {
-      'user-agent': 'node.js'
-    }
+      headers: environment.nodeJsXhrHeader
   }, async (error, result, body) => {
     if (!error) {
       const data = JSON.parse(body).data;
@@ -242,9 +240,7 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res: Respons
                 nama: req.body.nama,
                 ck_kpu: environment.apiPemerintahKTPSecretKey
               }),
-              headers: {
-                'user-agent': 'node.js'
-              }
+              headers: environment.nodeJsXhrHeader
             }, (e2, r2, b2) => {
               if (!e2) {
                 const resKPU = JSON.parse(b2);
@@ -411,9 +407,7 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
             redirect_uri: `${environment.baseUrl}/verify?app=discord`,
             scope: 'identify email guilds.join'
           },
-          headers: {
-            'user-agent': 'node.js'
-          }
+          headers: environment.nodeJsXhrHeader
         }, async (er, rs, bd) => {
           if (!er) {
             const discordAuth = JSON.parse(bd);
@@ -422,7 +416,7 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
               uri: `${environment.discordApiUrl}/users/@me`,
               headers: {
                 Authorization: `${discordAuth.token_type} ${discordAuth.access_token}`,
-                'user-agent': 'node.js'
+                ...environment.nodeJsXhrHeader
               }
             }, async (e, r, b) => {
               if (!e) {

@@ -1,5 +1,5 @@
 <div class="container-fluid align-items-center w-100 h-100" [style.background-image]="'url(' + bgLoginImg + ')'"
-  style="background-size: cover; background-repeat: repeat; background-position: center; transform: rotateY(180deg);">
+  style="background-size: cover; background-repeat: repeat; background-position: center; transform: rotateY(180deg);" *ngIf="fg">
   <div class="row align-items-center h-100 m-0" style="transform: rotateY(180deg);">
     <div class="col-12 col-md-10 m-auto py-3">
       <div class="row border rounded bg-bifeldy-dark">
@@ -11,7 +11,7 @@
         <div class="col-lg-7 col-md-9 me-auto p-0">
           <div class="card bg-transparent border-0">
             <div class="card-body">
-              <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()" *ngIf="fg">
+              <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()">
                 <div class="text-center mb-4">
                   <img class="mb-4" src="/favicon.ico" />
                   <h1 class="h3 mb-3 font-weight-normal">Hai, Jumpa Lagi! >_<"</h1>

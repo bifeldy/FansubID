@@ -149,14 +149,16 @@ function startDiscordBot(): void {
     request({
       method: 'GET',
       uri: `https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`,
-      headers: {
-        'user-agent': 'node.js'
-      }
+      headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);
       } else {
-        github = JSON.parse(body) ? JSON.parse(body)[0] : null;
+        try {
+          github = JSON.parse(body)[0];
+        } catch (error) {
+          github = null;
+        }
         bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(bot.user.id)?.setNickname(`Hikki - ${github?.sha?.slice(0, 7)}`);
       }
     });

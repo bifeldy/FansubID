@@ -27,6 +27,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   bgRegisterImg = '/assets/img/bg-loginregister.svg';
   registerInfo = 'Ayo bergabung dan masuk dalam komunitas~';
 
+  subsUser = null;
   subsRegister = null;
   subsVerify = null;
 
@@ -41,11 +42,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
-    if (this.gs.isBrowser) {
-      if (this.as.currentUserValue) {
-        this.router.navigateByUrl(this.returnUrl);
-      }
-    }
   }
 
   ngOnDestroy(): void {
@@ -55,12 +51,23 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (this.subsVerify) {
       this.subsVerify.unsubscribe();
     }
+    if (this.subsUser) {
+      this.subsUser.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
     if (this.gs.isBrowser) {
-      this.initForm();
+      this.subsUser = this.as.currentUser.subscribe({
+        next: user => {
+          if (user) {
+            this.router.navigateByUrl(this.returnUrl);
+          } else {
+            this.initForm();
+          }
+        }
+      });
     }
   }
 

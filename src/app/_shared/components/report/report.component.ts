@@ -18,8 +18,10 @@ import { StatsServerService } from '../../services/stats-server.service';
 })
 export class ReportComponent implements OnInit, OnDestroy {
 
-  @Input() like = 0;
-  @Input() dislike = 0;
+  @Input() report = {
+    like: 0,
+    dislike: 0
+  };
 
   doughnutChartKetertarikanOptions: ChartOptions = {
     title: {
@@ -94,14 +96,14 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   chartPlugins = [];
 
-  doughnutChartKetertarikanData: SingleDataSet = [this.like, this.dislike];
-  doughnutChartKetertarikanLabels: Label[] = ['Suka', 'Tidak Suka'];
+  doughnutChartKetertarikanData: SingleDataSet = [];
+  doughnutChartKetertarikanLabels: Label[] = [];
 
   lineChartVisitorData: SingleDataSet = [];
   lineChartVisitorLabels: Label[] = [];
 
-  barChartUniqueData: SingleDataSet = [0, 0];
-  barChartUniqueLabels: Label[] = ['Alamat IP', 'Akun Pengguna'];
+  barChartUniqueData: SingleDataSet = [];
+  barChartUniqueLabels: Label[] = [];
 
   doughnutChartType: ChartType = 'doughnut';
   lineChartType: ChartType = 'line';
@@ -147,16 +149,23 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.trackType = this.router.url.split('/')[1];
       this.idSlugUsername = this.router.url.split('/')[2];
+      this.doughnutChartKetertarikanLabels = ['Suka', 'Tidak Suka'];
+      this.doughnutChartKetertarikanData = [this.report.like, this.report.dislike];
       this.ss.socketEmit('track-get', {
         trackType: this.trackType,
         idSlugUsername: this.idSlugUsername
       }, (response: any) => {
+        this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna'];
         this.barChartUniqueData = [response.uniqueIp, response.uniqueUser];
         this.lineChartVisitorData = [];
         this.lineChartVisitorLabels = [];
         for (const v of response.visitor) {
           this.lineChartVisitorData.push(v.visitor_count ? v.visitor_count : 0);
-          this.lineChartVisitorLabels.push(v.visitor_date.split('T')[0]);
+          this.lineChartVisitorLabels.push(
+            new Date(
+              new Date(v.visitor_date).getTime() - (new Date(v.visitor_date).getTimezoneOffset() * 60 * 1000)
+            ).toISOString().split('T')[0]
+          );
         }
       });
       // TODO :: REPORT

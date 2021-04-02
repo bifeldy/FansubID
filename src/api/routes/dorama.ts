@@ -1,9 +1,11 @@
-import request from 'request';
+import request from 'postman-request';
 import translate from '@k3rn31p4nic/google-translate-api';
 import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal } from 'typeorm';
+
+import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -35,9 +37,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     return request({
       method: 'GET',
       uri: `${kuryanaApi}/search/q/${searchQuery}`,
-      headers: {
-        'user-agent': 'node.js'
-      }
+      headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);
@@ -47,9 +47,15 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         });
       } else {
         const statusCode = result.statusCode;
+        let data = null;
+        try {
+          data = JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType));
+        } catch (error) {
+          data = [];
+        }
         const responseBody = {
           info: `😅 ${statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
-          results: ('results' in JSON.parse(body) ? JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType)) : [])
+          results: data
         };
         cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
         return res.status(statusCode).json(responseBody);
@@ -135,13 +141,11 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
     return request({
       method: 'POST',
       uri: `${myDramaListV1}/quarter_calendar`,
-      formData: {
+      form: {
         quarter,
         year
       },
-      headers: {
-        'user-agent': 'node.js'
-      }
+      headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);
@@ -151,9 +155,15 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
         });
       } else {
         const statusCode = result.statusCode;
+        let data = null;
+        try {
+          data = JSON.parse(body);
+        } catch (error) {
+          data = [];
+        }
         const responseBody = {
           info: `😅 ${statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
-          results: (Array.isArray(JSON.parse(body)) ? JSON.parse(body) : [])
+          results: data
         };
         cache.put(req.originalUrl, { status: statusCode, body: responseBody }, cacheTime);
         return res.status(statusCode).json(responseBody);
@@ -165,7 +175,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
 // PATCH `/api/dorama/berkas?id=`
 router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const doramaId = req.query.id.split(',') || req.body.id;
+    const doramaId = req.query.id ? req.query.id.split(',') : req.body.id;
     if (Array.isArray(doramaId) && doramaId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
@@ -247,7 +257,7 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
 // PATCH `/api/dorama/fansubs?id=`
 router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const doramaId = req.query.id.split(',') || req.body.id;
+    const doramaId = req.query.id ? req.query.id.split(',') : req.body.id;
     if (Array.isArray(doramaId) && doramaId.length > 0) {
       const fileRepo = getRepository(Berkas);
       const [files, count] = await fileRepo.findAndCount({
@@ -311,9 +321,7 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
     return request({
       method: 'GET',
       uri: `${kuryanaApi}/id/${req.params.mdlSlug}`,
-      headers: {
-        'user-agent': 'node.js'
-      }
+      headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
         console.error(error);

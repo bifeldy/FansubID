@@ -80,22 +80,15 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             );
             this.bs.idle();
             if (this.gs.isBrowser) {
-              this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
+              this.subsUser = this.as.currentUser.subscribe({
+                next: user => {
+                  this.currentUser = user;
+                  if (this.currentUser) {
+                    this.setupVjs();
+                  }
+                }
+              });
               this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
-              if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
-                if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
-                  this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
-                    this.subtitles = data;
-                    this.checkVjs();
-                  });
-                }
-                if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
-                  this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
-                    this.fonts = data;
-                    this.checkVjs();
-                  });
-                }
-              }
             }
           },
           error: err => {
@@ -152,10 +145,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     window.open(this.ddlUrlLink(id), '_blank');
   }
 
-  refreshPage(): void {
-    window.open(`/login?returnUrl=${this.router.url}`, '_self');
-  }
-
   ddlUrlLink(id): string {
     return `${environment.apiUrl}/attachment?id=${id}`;
   }
@@ -170,6 +159,23 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   get ddlFonts(): any[] {
     return (this.fonts.length > 0) ? this.fonts : [];
+  }
+
+  setupVjs(): void {
+    if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
+      if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
+        this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
+          this.subtitles = data;
+          this.checkVjs();
+        });
+      }
+      if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
+        this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
+          this.fonts = data;
+          this.checkVjs();
+        });
+      }
+    }
   }
 
   checkVjs(): void {

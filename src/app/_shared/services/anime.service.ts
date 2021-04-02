@@ -34,12 +34,12 @@ export class AnimeService {
     return this.api.patchData(`/anime/seasonal?year=${year}&season=${season}`);
   }
 
-  getBerkasAnime(id = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
-    return this.api.patchData(`/anime/berkas?id=${id}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  getBerkasAnime(animeId = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+    return this.api.patchData(`/anime/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: animeId });
   }
 
-  getFansubAnime(id = []): Observable<any> {
-    return this.api.patchData(`/anime/fansub?id=${id}`);
+  getFansubAnime(animeId = []): Observable<any> {
+    return this.api.patchData(`/anime/fansub`, { id: animeId });
   }
 
 }

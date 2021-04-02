@@ -1,5 +1,5 @@
 
-import request from 'request';
+import request from 'postman-request';
 
 import { getRepository, Equal, ILike } from 'typeorm';
 

@@ -43,15 +43,15 @@ export class FansubService {
   }
 
   getBerkasFansub(fansubId = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
-    return this.api.patchData(`/fansub/berkas?id=${fansubId}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.patchData(`/fansub/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: fansubId });
   }
 
   getAnimeFansub(fansubId = []): Observable<any> {
-    return this.api.patchData(`/fansub/anime?id=${fansubId}`);
+    return this.api.patchData(`/fansub/anime`, { id: fansubId });
   }
 
   getDoramaFansub(fansubId = []): Observable<any> {
-    return this.api.patchData(`/fansub/dorama?id=${fansubId}`);
+    return this.api.patchData(`/fansub/dorama`, { id: fansubId });
   }
 
 }

@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   bgLoginImg = '/assets/img/bg-loginregister.svg';
   loginInfo = 'Silahkan login terlebih dahulu~';
 
+  subsUser = null;
   subsLogin = null;
   subsVerify = null;
 
@@ -46,16 +47,23 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.subsVerify) {
       this.subsVerify.unsubscribe();
     }
+    if (this.subsUser) {
+      this.subsUser.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
     if (this.gs.isBrowser) {
-      if (this.as.currentUserValue) {
-        this.router.navigateByUrl(this.returnUrl);
-      } else {
-        this.initForm();
-      }
+      this.subsUser = this.as.currentUser.subscribe({
+        next: user => {
+          if (user) {
+            this.router.navigateByUrl(this.returnUrl);
+          } else {
+            this.initForm();
+          }
+        }
+      });
     }
   }
 
