@@ -10,6 +10,8 @@ import { LikeAndDislike } from '../../models/LikeAndDislike';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../services/auth.service';
 import { StatsServerService } from '../../services/stats-server.service';
+import { ReportService } from '../../services/report.service';
+import { BusyService } from '../../services/busy.service';
 
 @Component({
   selector: 'app-report',
@@ -109,12 +111,14 @@ export class ReportComponent implements OnInit, OnDestroy {
   lineChartType: ChartType = 'line';
   barChartType: ChartType = 'bar';
 
-  trackType = null;
+  reportTrackType = null;
   idSlugUsername = null;
 
   currentUser: User = null;
 
   subsUser = null;
+  subsGetReport = null;
+  subsSetReport = null;
 
   myReport = null;
 
@@ -122,7 +126,9 @@ export class ReportComponent implements OnInit, OnDestroy {
     private as: AuthService,
     private router: Router,
     public gs: GlobalService,
-    private ss: StatsServerService
+    private ss: StatsServerService,
+    private rs: ReportService,
+    private bs: BusyService
   ) {
     if (this.gs.isBrowser) {
       monkeyPatchChartJsTooltip();
@@ -133,6 +139,12 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.subsUser) {
       this.subsUser.unsubscribe();
+    }
+    if (this.subsGetReport) {
+      this.subsGetReport.unsubscribe();
+    }
+    if (this.subsSetReport) {
+      this.subsSetReport.unsubscribe();
     }
   }
 
@@ -147,16 +159,14 @@ export class ReportComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
-      this.trackType = this.router.url.split('/')[1];
+      this.reportTrackType = this.router.url.split('/')[1];
       this.idSlugUsername = this.router.url.split('/')[2];
-      this.doughnutChartKetertarikanLabels = ['Suka', 'Tidak Suka'];
-      this.doughnutChartKetertarikanData = [this.report.like, this.report.dislike];
       this.ss.socketEmit('track-get', {
-        trackType: this.trackType,
+        trackType: this.reportTrackType,
         idSlugUsername: this.idSlugUsername
       }, (response: any) => {
-        this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna'];
-        this.barChartUniqueData = [response.uniqueIp, response.uniqueUser];
+        this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna', 'Terverifikasi', 'Belum Verifikasi'];
+        this.barChartUniqueData = [response.uniqueIp, response.uniqueUser, response.verifiedUser, response.unverifiedUser];
         this.lineChartVisitorData = [];
         this.lineChartVisitorLabels = [];
         for (const v of response.visitor) {
@@ -168,29 +178,67 @@ export class ReportComponent implements OnInit, OnDestroy {
           );
         }
       });
-      // TODO :: REPORT
-      setTimeout(() => {
-        this.doughnutChartKetertarikanData = [12, 34];
-      }, 3791);
+      this.getReport();
     }
   }
 
   login(): void {
     this.router.navigate(['/login'], {
       queryParams: {
-        returnUrl: `/${this.trackType}/${this.idSlugUsername}`
+        returnUrl: `/${this.reportTrackType}/${this.idSlugUsername}`
       }
     });
   }
 
-  likeOrDislike(like = true): void {
+  likeOrDislike(like: string): void {
+    let tempReport = null;
     if (this.currentUser) {
-      if (like) {
-        this.myReport = this.LIKE;
+      if (like === this.myReport?.type) {
+        tempReport = null;
       } else {
-        this.myReport = this.DISLIKE;
+        tempReport = like;
       }
+      this.setReport(tempReport, true);
     }
+  }
+
+  setReport(tempReport, refreshReport = false): void {
+    this.bs.busy();
+    this.rs.setReport(this.reportTrackType, this.idSlugUsername, { likedislike: tempReport }).subscribe({
+      next: res => {
+        this.gs.log('[LIKEDISLIKE_SET_REPORT_SUCCESS]', res);
+        this.myReport = res.result;
+        this.bs.idle();
+        if (refreshReport) {
+          this.getReport();
+        }
+      },
+      error: err => {
+        this.gs.log('[LIKEDISLIKE_SET_REPORT_ERROR]', err);
+        this.bs.idle();
+      }
+    });
+  }
+
+  getReport(): void {
+    this.bs.busy();
+    this.rs.getReport(this.reportTrackType, this.idSlugUsername).subscribe({
+      next: res => {
+        this.gs.log('[LIKEDISLIKE_GET_REPORT_SUCCESS]', res);
+        this.doughnutChartKetertarikanLabels = [];
+        this.doughnutChartKetertarikanData = [];
+        for (const s of res.result.statistics) {
+          this.doughnutChartKetertarikanLabels.push(s.type === this.LIKE ? 'Suka' : 'Tidak Suka');
+          this.doughnutChartKetertarikanData.push(s.count);
+        }
+        this.myReport = res.result.myReport;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[LIKEDISLIKE_GET_REPORT_ERROR]', err);
+        this.bs.idle();
+      }
+    });
   }
 
 }

@@ -156,7 +156,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
       }
       return res.status(200).json({
         info: `😅 200 - Notification API :: Berhasil Hapus Notifikasi ${req.params.id} 🤣`,
-        results: deletedNotification
+        result: deletedNotification
       });
     } else {
       return res.status(401).json({

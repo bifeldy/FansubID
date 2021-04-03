@@ -326,7 +326,7 @@ router.delete('/:username', auth.isAuthorized, async (req: UserRequest, res: Res
       delete deletedUser.session_token;
       return res.status(200).json({
         info: `😅 200 - User API :: Berhasil Menghapus User ${req.params.username} 🤣`,
-        results: {
+        result: {
           user: deletedUser,
           ktp: deletedKtp,
           profile: deletedProfile

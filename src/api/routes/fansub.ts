@@ -590,7 +590,7 @@ router.delete('/:slug', auth.isAuthorized, async (req: UserRequest, res: Respons
       }
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Berhasil Menghapus Fansub ${req.params.slug} 🤣`,
-        results: deletedFansub
+        result: deletedFansub
       });
     } else {
       return res.status(401).json({

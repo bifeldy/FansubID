@@ -2,12 +2,12 @@
   <div class="col-12 sticky-top bg-bifeldy-dark">
     <mat-form-field class="ms-auto pt-3 col-12" [color]="'accent'">
       <mat-label>Cari Apapun Di Sini ...</mat-label>
-      <input matInput maxlength="200" placeholder="Ex. ばーかー！" (keyup.enter)="applyFilter($event)" [(ngModel)]="searchResults.q" />
+      <input matInput maxlength="200" placeholder="Ex. ばーかー！" (keyup.enter)="applyFilter($event)" [(ngModel)]="searchResult.q" />
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </div>
   <div class="col-12">
-    <div class="row" *ngIf="searchResults.beritaResults.length > 0">
+    <div class="row" *ngIf="searchResult.beritaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
           <b class="text-bifeldy-dark">Berita</b>
@@ -15,7 +15,7 @@
       </div>
       <div class="col-12">
         <mat-selection-list class="pt-0" [multiple]="false">
-          <mat-list-option routerLink="/news/{{ b.id }}" *ngFor="let b of searchResults.beritaResults | slice:0:5">
+          <mat-list-option routerLink="/news/{{ b.id }}" *ngFor="let b of searchResult.beritaResults | slice:0:5">
             <img matListAvatar src="{{ b.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ b.title }}</h4>
             <h5 matLine>
@@ -26,7 +26,7 @@
         </mat-selection-list>
       </div>
     </div>
-    <div class="row" *ngIf="searchResults.kanjiResults.length > 0">
+    <div class="row" *ngIf="searchResult.kanjiResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
           <b class="text-bifeldy-dark">Kanji</b>
@@ -34,7 +34,7 @@
       </div>
       <div class="col-12">
         <mat-selection-list class="pt-0" [multiple]="false">
-          <mat-list-option (click)="openEdict(k)" *ngFor="let k of searchResults.kanjiResults | slice:0:5">
+          <mat-list-option (click)="openEdict(k)" *ngFor="let k of searchResult.kanjiResults | slice:0:5">
             <h4 matLine class="ms-3">
               {{ k.character }} | {{ k.v_kunyomi }}| {{ k.v_onyomi }}
             </h4>
@@ -46,7 +46,7 @@
         </mat-selection-list>
       </div>
     </div>
-    <div class="row" *ngIf="searchResults.animeResults.length > 0">
+    <div class="row" *ngIf="searchResult.animeResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
           <b class="text-bifeldy-dark">Anime</b>
@@ -54,7 +54,7 @@
       </div>
       <div class="col-12">
         <mat-selection-list class="pt-0" [multiple]="false">
-          <mat-list-option routerLink="/anime/{{ a.mal_id }}-{{ getAnimeTitle(a.title) }}" *ngFor="let a of searchResults.animeResults | slice:0:5">
+          <mat-list-option routerLink="/anime/{{ a.mal_id }}-{{ getAnimeTitle(a.title) }}" *ngFor="let a of searchResult.animeResults | slice:0:5">
             <img matListAvatar src="{{ a.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ a.title }}</h4>
             <h5 matLine>
@@ -65,7 +65,7 @@
         </mat-selection-list>
       </div>
     </div>
-    <div class="row" *ngIf="searchResults.doramaResults.length > 0">
+    <div class="row" *ngIf="searchResult.doramaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
           <b class="text-bifeldy-dark">Dorama</b>
@@ -73,7 +73,7 @@
       </div>
       <div class="col-12">
         <mat-selection-list class="pt-0" [multiple]="false">
-          <mat-list-option routerLink="/dorama/{{ d.slug }}" *ngFor="let d of searchResults.doramaResults | slice:0:5">
+          <mat-list-option routerLink="/dorama/{{ d.slug }}" *ngFor="let d of searchResult.doramaResults | slice:0:5">
             <img matListAvatar src="{{ d.thumb }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ d.title }}</h4>
             <h5 matLine>
@@ -84,7 +84,7 @@
         </mat-selection-list>
       </div>
     </div>
-    <div class="row" *ngIf="searchResults.fansubResults.length > 0">
+    <div class="row" *ngIf="searchResult.fansubResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
           <b class="text-bifeldy-dark">Fansub</b>
@@ -92,7 +92,7 @@
       </div>
       <div class="col-12">
         <mat-selection-list class="pt-0" [multiple]="false">
-          <mat-list-option routerLink="/fansub/{{ f.slug }}" *ngFor="let f of searchResults.fansubResults | slice:0:5">
+          <mat-list-option routerLink="/fansub/{{ f.slug }}" *ngFor="let f of searchResult.fansubResults | slice:0:5">
             <img matListAvatar src="{{ f.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ f.name }}</h4>
             <h5 matLine>
@@ -103,7 +103,7 @@
         </mat-selection-list>
       </div>
     </div>
-    <div class="row" *ngIf="searchResults.berkasResults.length > 0">
+    <div class="row" *ngIf="searchResult.berkasResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
           <b class="text-bifeldy-dark">Berkas</b>
@@ -111,7 +111,7 @@
       </div>
       <div class="col-12">
         <mat-selection-list class="pt-0" [multiple]="false">
-          <mat-list-option routerLink="/berkas/{{ b.id }}" *ngFor="let b of searchResults.berkasResults | slice:0:5">
+          <mat-list-option routerLink="/berkas/{{ b.id }}" *ngFor="let b of searchResult.berkasResults | slice:0:5">
             <img matListAvatar src="{{ b.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ b.name }}</h4>
             <h5 matLine>
@@ -122,7 +122,7 @@
         </mat-selection-list>
       </div>
     </div>
-    <div class="row" *ngIf="searchResults.penggunaResults.length > 0">
+    <div class="row" *ngIf="searchResult.penggunaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
           <b class="text-bifeldy-dark">Pengguna</b>
@@ -130,7 +130,7 @@
       </div>
       <div class="col-12">
         <mat-selection-list class="pt-0" [multiple]="false">
-          <mat-list-option routerLink="/user/{{ p.username }}" *ngFor="let p of searchResults.penggunaResults | slice:0:5">
+          <mat-list-option routerLink="/user/{{ p.username }}" *ngFor="let p of searchResult.penggunaResults | slice:0:5">
             <img matListAvatar src="{{ p.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ p.kartu_tanda_penduduk_.nama }}</h4>
             <h5 matLine>

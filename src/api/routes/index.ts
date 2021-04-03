@@ -33,6 +33,7 @@ import attachmentRouter from './attachment';
 import newsRouter from './news';
 import bannedRouter from './banned';
 import notificationRouter from './notification';
+import likedislikeRouter from './likedislike';
 
 // Child router folder
 import nihongoRouter from './nihongo/index';
@@ -126,6 +127,7 @@ router.use('/news', newsRouter);
 router.use('/nihongo', nihongoRouter);
 router.use('/banned', bannedRouter);
 router.use('/notification', notificationRouter);
+router.use('/likedislike', likedislikeRouter);
 
 // POST `/api/register`
 router.post('/register', auth.registerModule, async (req: UserRequest, res: Response, next) => {
@@ -161,7 +163,7 @@ router.post('/login', auth.loginModule, (req: UserRequest, res: Response, next) 
   });
 });
 
-// DEL `/api/logout`
+// DELETE `/api/logout`
 router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest, res: Response, next) => {
   return res.status(200).json({
     info: '😍 200 - Logout API :: Berhasil Keluar UwUu 🥰',

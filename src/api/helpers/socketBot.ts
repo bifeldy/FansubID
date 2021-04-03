@@ -181,14 +181,15 @@ export async function socketBot(io: Server, socket: Socket) {
           {
             [`${data.trackType}_`]: {
               id: Equal(selected.id)
-            },
-            // created_at: Raw(column => `${column} >= NOW() - interval '7 day'`)
+            }
           }
         ],
         relations: ['berkas_', 'fansub_', 'user_', 'track_by_']
       });
       result.uniqueIp = [...new Set(tracks.map(t => t.ip))].length;
       result.uniqueUser = [...new Set(tracks.map(t => t.track_by_?.id))].length;
+      result.verifiedUser = [...new Set(tracks.map(t => t.track_by_?.verified == true))].length;
+      result.unverifiedUser = [...new Set(tracks.map(t => t.track_by_?.verified == false))].length;
       tracks = await trackRepo.query(`
         SELECT *
         FROM (

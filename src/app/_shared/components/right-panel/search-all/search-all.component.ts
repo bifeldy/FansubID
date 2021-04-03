@@ -21,7 +21,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   localStorageName = 'hikki_searchResults';
 
-  searchResults = {
+  searchResult = {
     q: '',
     beritaResults: [],
     kanjiResults: [],
@@ -59,7 +59,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.searchResults = this.ls.getItem(this.localStorageName, true) || this.searchResults;
+      this.searchResult = this.ls.getItem(this.localStorageName, true) || this.searchResult;
     }
   }
 
@@ -85,20 +85,20 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsPengguna) {
       this.subsPengguna.unsubscribe();
     }
-    this.ls.setItem(this.localStorageName, this.searchResults);
+    this.ls.setItem(this.localStorageName, this.searchResult);
   }
 
   applyFilter(event): void {
     this.gs.log('[SEARCH_VALUE_CHANGED]', event);
-    this.searchResults.q = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.searchResults.beritaResults = [];
-    this.searchResults.kanjiResults = [];
-    this.searchResults.animeResults = [];
-    this.searchResults.doramaResults = [];
-    this.searchResults.fansubResults = [];
-    this.searchResults.berkasResults = [];
-    this.searchResults.penggunaResults = [];
-    if (this.searchResults.q) {
+    this.searchResult.q = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchResult.beritaResults = [];
+    this.searchResult.kanjiResults = [];
+    this.searchResult.animeResults = [];
+    this.searchResult.doramaResults = [];
+    this.searchResult.fansubResults = [];
+    this.searchResult.berkasResults = [];
+    this.searchResult.penggunaResults = [];
+    if (this.searchResult.q) {
       setTimeout(() => { this.getNews(); }, 250);
       setTimeout(() => { this.getKanji(); }, 500);
       setTimeout(() => { this.getAnime(); }, 750);
@@ -139,14 +139,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsBerita) {
       this.subsBerita.unsubscribe();
     }
-    this.subsBerita = this.news.getAllNews(this.searchResults.q, 1, 5).subscribe({
+    this.subsBerita = this.news.getAllNews(this.searchResult.q, 1, 5).subscribe({
       next: res => {
         this.gs.log('[NEWS_SEARCH_SUCCESS]', res);
-        this.searchResults.beritaResults = res.results;
+        this.searchResult.beritaResults = res.results;
       },
       error: err => {
         this.gs.log('[NEWS_SEARCH_ERROR]', err);
-        this.searchResults.beritaResults = [];
+        this.searchResult.beritaResults = [];
       }
     });
   }
@@ -155,14 +155,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsKanji) {
       this.subsKanji.unsubscribe();
     }
-    this.subsKanji = this.nihon.getAllKanji('', '', this.searchResults.q, 1, 5).subscribe({
+    this.subsKanji = this.nihon.getAllKanji('', '', this.searchResult.q, 1, 5).subscribe({
       next: res => {
         this.gs.log('[KANJI_SEARCH_SUCCESS]', res);
-        this.searchResults.kanjiResults = res.results;
+        this.searchResult.kanjiResults = res.results;
       },
       error: err => {
         this.gs.log('[KANJI_SEARCH_ERROR]', err);
-        this.searchResults.kanjiResults = [];
+        this.searchResult.kanjiResults = [];
       }
     });
   }
@@ -175,14 +175,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsAnime) {
       this.subsAnime.unsubscribe();
     }
-    this.subsAnime = this.anime.searchAnime(this.searchResults.q).subscribe({
+    this.subsAnime = this.anime.searchAnime(this.searchResult.q).subscribe({
       next: res => {
         this.gs.log('[ANIME_SEARCH_SUCCESS]', res);
-        this.searchResults.animeResults = res.results;
+        this.searchResult.animeResults = res.results;
       },
       error: err => {
         this.gs.log('[ANIME_SEARCH_ERROR]', err);
-        this.searchResults.animeResults = [];
+        this.searchResult.animeResults = [];
       }
     });
   }
@@ -191,14 +191,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsDorama) {
       this.subsDorama.unsubscribe();
     }
-    this.subsDorama = this.dorama.searchDorama(this.searchResults.q).subscribe({
+    this.subsDorama = this.dorama.searchDorama(this.searchResult.q).subscribe({
       next: res => {
         this.gs.log('[DORAMA_SEARCH_SUCCESS]', res);
-        this.searchResults.doramaResults = res.results;
+        this.searchResult.doramaResults = res.results;
       },
       error: err => {
         this.gs.log('[DORAMA_SEARCH_ERROR]', err);
-        this.searchResults.doramaResults = [];
+        this.searchResult.doramaResults = [];
       }
     });
   }
@@ -207,14 +207,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsFansub) {
       this.subsFansub.unsubscribe();
     }
-    this.subsFansub = this.fansub.searchFansub(this.searchResults.q, 1, 5).subscribe({
+    this.subsFansub = this.fansub.searchFansub(this.searchResult.q, 1, 5).subscribe({
       next: res => {
         this.gs.log('[FANSUB_SEARCH_SUCCESS]', res);
-        this.searchResults.fansubResults = res.results;
+        this.searchResult.fansubResults = res.results;
       },
       error: err => {
         this.gs.log('[FANSUB_SEARCH_ERROR]', err);
-        this.searchResults.fansubResults = [];
+        this.searchResult.fansubResults = [];
       }
     });
   }
@@ -223,14 +223,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsBerkas) {
       this.subsBerkas.unsubscribe();
     }
-    this.subsBerkas = this.berkas.getAllBerkas(this.searchResults.q, 1, 5).subscribe({
+    this.subsBerkas = this.berkas.getAllBerkas(this.searchResult.q, 1, 5).subscribe({
       next: res => {
         this.gs.log('[BERKAS_SEARCH_SUCCESS]', res);
-        this.searchResults.berkasResults = res.results;
+        this.searchResult.berkasResults = res.results;
       },
       error: err => {
         this.gs.log('[BERKAS_SEARCH_ERROR]', err);
-        this.searchResults.berkasResults = [];
+        this.searchResult.berkasResults = [];
       }
     });
   }
@@ -239,14 +239,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsPengguna) {
       this.subsPengguna.unsubscribe();
     }
-    this.subsPengguna = this.user.getAllUser(this.searchResults.q, 1, 5).subscribe({
+    this.subsPengguna = this.user.getAllUser(this.searchResult.q, 1, 5).subscribe({
       next: res => {
         this.gs.log('[PENGGUNA_SEARCH_SUCCESS]', res);
-        this.searchResults.penggunaResults = res.results;
+        this.searchResult.penggunaResults = res.results;
       },
       error: err => {
         this.gs.log('[PENGGUNA_SEARCH_ERROR]', err);
-        this.searchResults.penggunaResults = [];
+        this.searchResult.penggunaResults = [];
       }
     });
   }

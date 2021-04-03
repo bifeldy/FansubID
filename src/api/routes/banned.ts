@@ -136,7 +136,7 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
   } catch (err) {
     console.error(err);
     return res.status(400).json({
-      info: `🙄 400 - Fansub API :: Gagal Mencari Banned ${req.query.id} 😪`,
+      info: `🙄 400 - Banned API :: Gagal Mencari Banned ${req.query.id} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -252,7 +252,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
       }
       return res.status(200).json({
         info: `😅 200 - Banned API :: Berhasil UnBAN User ${req.params.id} 🤣`,
-        results: unBannedUser
+        result: unBannedUser
       });
     } else {
       return res.status(401).json({
