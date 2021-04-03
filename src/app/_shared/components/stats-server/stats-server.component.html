@@ -19,15 +19,15 @@
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.commitUser">
       Commiter ::
-      <span class="text-success">
-        <a href="https://github.com/{{ ss.commitUser }}" target="_blank" class="text-warning text-decoration-none">
+      <span class="text-warning">
+        <a href="https://github.com/{{ ss.commitUser }}" target="_blank" class="text-decoration-none">
           {{ ss.commitUser }}
         </a>
       </span>
     </p>
     <p class="px-2" *ngIf="ss.commitMessage">
-      Socket ::
-      <span class="text-success">
+      Message ::
+      <span class="text-warning">
         {{ ss.commitMessage }}
       </span>
     </p>
