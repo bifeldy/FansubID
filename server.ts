@@ -79,8 +79,8 @@ import indexRouter from './src/api/routes/index';
 
 // Express rest api endpoints
 const apiLimiter = rateLimit({
-  windowMs: 3000, // 3 Second
-  max: 5, // 5 Request
+  windowMs: 5000, // 5 Second
+  max: 10, // 10 Request
   handler: (req, res, next) => {
     return res.status(429).json({
       info: '😡 429 - API SPAM :: Kebanjiran Permintaan 😤',
