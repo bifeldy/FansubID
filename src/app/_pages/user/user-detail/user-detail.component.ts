@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { Role } from '../../../_shared/models/Role';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -75,6 +77,18 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     if (this.subsParam) {
       this.subsParam.unsubscribe();
     }
+  }
+
+  get ADMIN(): string {
+    return Role.ADMIN;
+  }
+
+  get MODERATOR(): string {
+    return Role.MODERATOR;
+  }
+
+  get FANSUBBER(): string {
+    return Role.FANSUBBER;
   }
 
   ngOnInit(): void {
