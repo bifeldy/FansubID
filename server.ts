@@ -79,9 +79,16 @@ import indexRouter from './src/api/routes/index';
 
 // Express rest api endpoints
 const apiLimiter = rateLimit({
-  windowMs: 1000, // 1 Second
+  windowMs: 3000, // 3 Second
   max: 5, // 5 Request
-  message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 💩'
+  handler: (req, res, next) => {
+    return res.status(429).json({
+      info: '😡 429 - API SPAM :: Kebanjiran Permintaan 😤',
+      result: {
+        message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 🤬',
+      }
+    });
+  }
 });
 
 // CORS Options
