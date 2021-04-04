@@ -44,17 +44,19 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         });
       } else {
         const statusCode = result.statusCode;
-        let data = null;
+        let data = [];
         try {
           data = JSON.parse(body).results;
-        } catch (error) {
-          data = [];
+        } catch (e) {
+          console.error(e);
         }
         const responseBody = {
           info: `😅 ${statusCode} - Anime API :: Search ${searchQuery} 🤣`,
           results: data
         };
-        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        if (data.length > 0) {
+          cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        }
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -143,17 +145,19 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
         });
       } else {
         const statusCode = result.statusCode;
-        let data = null;
+        let data = [];
         try {
           data = JSON.parse(body).anime;
-        } catch (error) {
-          data = [];
+        } catch (e) {
+          console.error(e);
         }
         const responseBody = {
           info: `😅 ${statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
           results: data
         };
-        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        if (data.length > 0) {
+          cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        }
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -318,32 +322,40 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
           result: null
         });
       } else {
-        const animeDetail = JSON.parse(body);
-        let httpStatusCode = result.statusCode;
-        if ('request_hash' in animeDetail) {
-          delete animeDetail.request_hash;
-        }
-        if ('request_cached' in animeDetail) {
-          delete animeDetail.request_cached;
-        }
-        if ('request_cache_expiry' in animeDetail) {
-          delete animeDetail.request_cache_expiry;
-        }
+        let animeDetail = null;
+        let httpStatusCode = 404;
         try {
-          if ('synopsis' in animeDetail && animeDetail.synopsis) {
-            const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
-            animeDetail.synopsis = translatedAnimeSynopsis.text;
+          animeDetail = JSON.parse(body);
+          httpStatusCode = result.statusCode;
+          if ('request_hash' in animeDetail) {
+            delete animeDetail.request_hash;
           }
-        } catch (error) {
-          console.error(error);
-          httpStatusCode = 202;
-          animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+          if ('request_cached' in animeDetail) {
+            delete animeDetail.request_cached;
+          }
+          if ('request_cache_expiry' in animeDetail) {
+            delete animeDetail.request_cache_expiry;
+          }
+          try {
+            if ('synopsis' in animeDetail && animeDetail.synopsis) {
+              const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
+              animeDetail.synopsis = translatedAnimeSynopsis.text;
+            }
+          } catch (e2) {
+            console.error(e2);
+            httpStatusCode = 202;
+            animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+          }
+        } catch (e1) {
+          console.error(e1);
         }
         const responseBody = {
           info: `😅 ${httpStatusCode} - Anime API :: Detail ${malId} 🤣`,
           result: animeDetail
         };
-        cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
+        if (animeDetail) {
+          cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
+        }
         return res.status(httpStatusCode).json(responseBody);
       }
     });

@@ -44,17 +44,19 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         });
       } else {
         const statusCode = result.statusCode;
-        let data = null;
+        let data = [];
         try {
           data = JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType));
-        } catch (error) {
-          data = [];
+        } catch (e) {
+          console.error(e);
         }
         const responseBody = {
           info: `😅 ${statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
           results: data
         };
-        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        if (data.length > 0) {
+          cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        }
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -148,17 +150,19 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
         });
       } else {
         const statusCode = result.statusCode;
-        let data = null;
+        let data = [];
         try {
           data = JSON.parse(body);
-        } catch (error) {
-          data = [];
+        } catch (e) {
+          console.error(e);
         }
         const responseBody = {
           info: `😅 ${statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
           results: data
         };
-        cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        if (data.length > 0) {
+          cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        }
         return res.status(statusCode).json(responseBody);
       }
     });
@@ -323,27 +327,36 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
           result: null
         });
       } else {
-        const dramaDetail = JSON.parse(body);
-        let httpStatusCode = result.statusCode;
-        if (httpStatusCode === 200) {
-          try {
-            if ('synopsis' in dramaDetail.data && dramaDetail.data.synopsis) {
-              const translatedDoramaSynopsis = await translate(dramaDetail.data.synopsis, { to: 'id' });
-              dramaDetail.data.synopsis = translatedDoramaSynopsis.text;
+        let dramaDetail = null;
+        let httpStatusCode = 404;
+        try {
+          const dramaDetailResponse = JSON.parse(body);
+          httpStatusCode = result.statusCode;
+          if (httpStatusCode === 200) {
+            try {
+              if ('synopsis' in dramaDetailResponse.data && dramaDetailResponse.data.synopsis) {
+                const translatedDoramaSynopsis = await translate(dramaDetailResponse.data.synopsis, { to: 'id' });
+                dramaDetailResponse.data.synopsis = translatedDoramaSynopsis.text;
+              }
+            } catch (e2) {
+              console.error(e2);
+              httpStatusCode = 202;
+              dramaDetailResponse.data.message = 'Penerjemah / Alih Bahasa Gagal!';
             }
-          } catch (error) {
-            console.error(error);
-            httpStatusCode = 202;
-            dramaDetail.data.message = 'Penerjemah / Alih Bahasa Gagal!';
+          } else {
+            httpStatusCode = dramaDetailResponse.status_code;
           }
-        } else {
-          httpStatusCode = dramaDetail.status_code;
+          dramaDetail = dramaDetailResponse.data;
+        } catch (e1) {
+          console.error(e1);
         }
         const responseBody = {
           info: `😅 ${httpStatusCode} - Dorama API :: Detail ${mdlId} 🤣`,
-          result: ('data' in dramaDetail ? dramaDetail.data : dramaDetail)
+          result: dramaDetail
         };
-        cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
+        if (dramaDetail) {
+          cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
+        }
         return res.status(httpStatusCode).json(responseBody);
       }
     });
