@@ -37,8 +37,7 @@ export async function socketBot(io: Server, socket: Socket) {
     console.error(error);
   }
   socket.on('track-set', async (data: any) => {
-    data.ip = socket.request.socket.remoteAddress;
-    data.port = socket.request.socket.remotePort;
+    data.ip = socket.handshake.headers['x-real-ip'] || socket.handshake.address || socket.request.socket.remoteAddress;
     if (data.jwtToken) {
       try {
         const decoded = jwt.JwtDecrypt(data.jwtToken);

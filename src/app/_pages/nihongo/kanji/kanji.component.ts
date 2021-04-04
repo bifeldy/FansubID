@@ -56,13 +56,13 @@ export class KanjiComponent implements OnInit, OnDestroy {
   }
 
   changeJlpt(data): void {
-    this.gs.log('[JLPT_CHANGE]', data);
+    this.gs.log('[JLPT_CHANGED]', data);
     this.jlpt = data;
     this.resetPaginator();
   }
 
   changeSchool(data): void {
-    this.gs.log('[SCHOOL_CHANGE]', data);
+    this.gs.log('[SCHOOL_CHANGED]', data);
     this.school = data;
     this.resetPaginator();
   }

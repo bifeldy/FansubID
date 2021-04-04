@@ -36,7 +36,7 @@ export class MaterialExpansionPanelComponent implements OnInit {
   }
 
   onResize(event): void {
-    this.gs.log('[ReSize]', event);
+    this.gs.log('[WINDOW_RESIZE]', event);
     if (this.gs.isDesktop) {
       this.accordion.openAll();
     }

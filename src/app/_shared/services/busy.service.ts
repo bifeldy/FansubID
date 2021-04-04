@@ -24,6 +24,7 @@ export class BusyService {
     if (this.gs.isBrowser) {
       this.busyRequestCount++;
       this.spinnerService.show();
+      this.gs.log('[BUSY_STATE_COUNTER]', this.busyRequestCount);
     }
   }
 
@@ -34,6 +35,7 @@ export class BusyService {
         this.busyRequestCount = 0;
         this.spinnerService.hide();
       }
+      this.gs.log('[BUSY_STATE_COUNTER]', this.busyRequestCount);
     }
   }
 

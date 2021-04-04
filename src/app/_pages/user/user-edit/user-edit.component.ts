@@ -155,7 +155,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = e => {
-        this.gs.log('[ImgCoverLoad]', e);
+        this.gs.log('[IMAGE_PHOTO_SELECTED]', e);
         if (file.size < 256 * 1000) {
           const img = document.createElement('img');
           img.onload = () => {
@@ -209,7 +209,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = e => {
-        this.gs.log('[ImgCoverLoad]', e);
+        this.gs.log('[IMAGE_COVER_SELECTED]', e);
         if (file.size < 256 * 1000) {
           const img = document.createElement('img');
           img.onload = () => {

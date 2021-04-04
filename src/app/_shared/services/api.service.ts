@@ -38,6 +38,7 @@ export class ApiService {
   }
 
   getData(path: string, options = {}, timedOut = 10000, retryCount = 3): Observable<any> {
+    this.gs.log('[API_GET]', path);
     return this.http.get(this.HTTP_REQ_URL(path), options).pipe(
       catchError(err => throwError(err)),
       map(res => res), timeout(timedOut), retry(retryCount)
@@ -81,7 +82,7 @@ export class ApiService {
   }
 
   deleteData(path: string, timedOut = 10000): Observable<any> {
-    this.gs.log('[API_DEL]', path);
+    this.gs.log('[API_DELETE]', path);
     return this.http.delete(this.HTTP_REQ_URL(path)).pipe(
       catchError(err => throwError(err)),
       map(res => res), timeout(timedOut)

@@ -206,7 +206,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.rs.setReport(this.reportTrackType, this.idSlugUsername, { likedislike: tempReport }).subscribe({
       next: res => {
-        this.gs.log('[LIKEDISLIKE_SET_REPORT_SUCCESS]', res);
+        this.gs.log('[LIKE-DISLIKE_SET_REPORT_SUCCESS]', res);
         this.myReport = res.result;
         this.bs.idle();
         if (refreshReport) {
@@ -214,7 +214,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.gs.log('[LIKEDISLIKE_SET_REPORT_ERROR]', err);
+        this.gs.log('[LIKE-DISLIKE_SET_REPORT_ERROR]', err);
         this.bs.idle();
       }
     });
@@ -224,7 +224,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.rs.getReport(this.reportTrackType, this.idSlugUsername).subscribe({
       next: res => {
-        this.gs.log('[LIKEDISLIKE_GET_REPORT_SUCCESS]', res);
+        this.gs.log('[LIKE-DISLIKE_GET_REPORT_SUCCESS]', res);
         this.doughnutChartKetertarikanLabels = [];
         this.doughnutChartKetertarikanData = [];
         for (const s of res.result.statistics) {
@@ -235,7 +235,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[LIKEDISLIKE_GET_REPORT_ERROR]', err);
+        this.gs.log('[LIKE-DISLIKE_GET_REPORT_ERROR]', err);
         this.bs.idle();
       }
     });

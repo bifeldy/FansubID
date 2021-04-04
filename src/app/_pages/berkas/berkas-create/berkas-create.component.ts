@@ -234,7 +234,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       retry(-1)
     ).subscribe({
       next: projectId => {
-        this.gs.log('[BERKAS_CREATE_PROJECT_CHANGE]', projectId);
+        this.gs.log('[BERKAS_CREATE_PROJECT_CHANGED]', projectId);
         const selectedProject = this.projectList.find(p => p.id === projectId);
         this.resetSelectedAnime();
         this.resetSelectedDorama();
@@ -388,7 +388,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = e => {
-        this.gs.log('[ImgLoad]', e);
+        this.gs.log('[IMAGE_SELECTED]', e);
         if (file.size < 256 * 1000) {
           const img = document.createElement('img');
           img.onload = () => {
@@ -477,7 +477,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   uploadAttachment(event, ddl): void {
     this.ddl = ddl;
     const file = event.target.files[0];
-    this.gs.log('[AttachmentLoad]', file);
+    this.gs.log('[ATTACHMENT_SELECTED]', file);
     this.fg.controls.attachment_id.patchValue(null);
     try {
       if (file.size <= 256 * 1000 * 1000) {

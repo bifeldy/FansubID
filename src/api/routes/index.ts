@@ -81,7 +81,7 @@ router.get('/', (req: UserRequest, res: Response) => {
 // Check Api Key
 router.use(async (req: UserRequest, res, next) => {
   const k = req.query.key || '';
-  let o = req.headers.origin || req.headers.referer || req.header('x-real-ip') || req.connection.remoteAddress || '';
+  let o = req.headers.origin || req.headers.referer || req.header('x-real-ip') || req.socket.remoteAddress || '';
   if (o.startsWith('http://')) {
     o = o.slice(7, o.length);
   } else if (o.startsWith('https://')) {

@@ -65,6 +65,20 @@
       </a>
     </mat-nav-list>
 
+    <mat-divider style="margin-top: 8px;"></mat-divider>
+
+    <mat-nav-list>
+      <a mat-list-item>
+        <mat-icon style="padding-left: 0.2em;">settings_ethernet</mat-icon>
+        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">
+          Debug Log
+          <span style="right: 1em !important; position: absolute;">
+            <mat-slide-toggle [(ngModel)]="gs.forceEnableDebugLog" (change)="toggleDebugLog($event)"></mat-slide-toggle>
+          </span>
+        </span>
+      </a>
+    </mat-nav-list>
+
     <div style="margin-top: 8px;"></div>
 
   </div>

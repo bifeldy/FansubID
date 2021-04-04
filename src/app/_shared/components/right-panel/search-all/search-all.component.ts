@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { environment } from '../../../../../environments/client/environment';
 
 import { GlobalService } from '../../../services/global.service';
 import { NewsService } from '../../../services/news.service';
@@ -19,7 +20,7 @@ import { LocalStorageService } from '../../../services/local-storage.service';
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
 
-  localStorageName = 'hikki_searchResults';
+  localStorageSearchKeyName = `${environment.siteName}_SearchResults`;
 
   searchResult = {
     q: '',
@@ -59,7 +60,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.searchResult = this.ls.getItem(this.localStorageName, true) || this.searchResult;
+      this.searchResult = this.ls.getItem(this.localStorageSearchKeyName, true) || this.searchResult;
     }
   }
 
@@ -85,7 +86,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsPengguna) {
       this.subsPengguna.unsubscribe();
     }
-    this.ls.setItem(this.localStorageName, this.searchResult);
+    this.ls.setItem(this.localStorageSearchKeyName, this.searchResult);
   }
 
   applyFilter(event): void {

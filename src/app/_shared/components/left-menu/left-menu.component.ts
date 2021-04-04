@@ -7,6 +7,7 @@ import { LeftMenuService } from '../../services/left-menu.service';
 import { AuthService } from '../../services/auth.service';
 import { GlobalService } from '../../services/global.service';
 import { BusyService } from '../../services/busy.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 import User from '../../models/User';
 import { Menu } from '../../models/Menu';
@@ -29,7 +30,8 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     private lms: LeftMenuService,
     private as: AuthService,
     public gs: GlobalService,
-    private bs: BusyService
+    private bs: BusyService,
+    private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -95,6 +97,11 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/');
       }
     });
+  }
+
+  toggleDebugLog($event): void {
+    this.gs.forceEnableDebugLog = $event.checked;
+    this.ls.setItem(this.gs.localStorageLoggingKeyName, JSON.stringify($event.checked));
   }
 
 }

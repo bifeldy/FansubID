@@ -12,6 +12,9 @@ import { environment } from '../../../environments/client/environment';
 })
 export class GlobalService {
 
+  localStorageLoggingKeyName = `${environment.siteName}_DebugLogs`;
+  forceEnableDebugLog = null;
+
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   readonly allKeyboardKeysRegex = /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/;
@@ -53,14 +56,17 @@ export class GlobalService {
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
     if (this.isBrowser) {
-      this.onResize('First Run Checking Window Size');
+      this.onResize(null);
     }
   }
 
   log(message: string, data: any = null, type: string = 'log'): void {
-    if (isDevMode()) {
+    if (this.isBrowser) {
+      this.forceEnableDebugLog = localStorage.getItem(this.localStorageLoggingKeyName) === 'true';
+    }
+    if (isDevMode() || this.forceEnableDebugLog) {
       if (type === 'log') {
-        if (data) {
+        if (data != null) {
           console.log(message, data);
         } else {
           console.log(message);
@@ -88,16 +94,21 @@ export class GlobalService {
   }
 
   onResize(event): void {
-    this.log('[ReSize]', event);
-    if (window.innerWidth >= 1200) {
-      this.isDesktop = true;
-      this.gridListBreakpoint = 3;
-    } else if (window.innerWidth >= 992) {
-      this.isDesktop = true;
-      this.gridListBreakpoint = 2;
-    } else {
-      this.isDesktop = false;
-      this.gridListBreakpoint = 1;
+    if (event) {
+      this.log('[WINDOW_RESIZE]', event);
+    }
+    if (this.isBrowser) {
+      const browserWindow = event?.target?.window || window;
+      if (browserWindow.innerWidth >= 1200) {
+        this.isDesktop = true;
+        this.gridListBreakpoint = 3;
+      } else if (browserWindow.innerWidth >= 992) {
+        this.isDesktop = true;
+        this.gridListBreakpoint = 2;
+      } else {
+        this.isDesktop = false;
+        this.gridListBreakpoint = 1;
+      }
     }
   }
 

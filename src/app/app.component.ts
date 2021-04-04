@@ -91,32 +91,31 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         else if (e1 instanceof NavigationStart) {
           if (this.gs.isBrowser) {
-            this.bs.busy();
-          }
-        }
-        else if (e1 instanceof NavigationEnd) {
-          if (e1.url) {
-            const str = e1.url.split('/')[1];
-            if (str) {
-              const stringBadge = `badge${str[0].toUpperCase()}${str.slice(1)}`;
-              let arrBadge = this.ss[stringBadge];
-              if (arrBadge) {
-                arrBadge = [];
-                const mainMenu = this.lms.mainMenus.find(m => m.link === e1.url);
-                const contentMenu = this.lms.contentMenus.find(m => m.link === e1.url);
-                const miscMenu = this.lms.miscMenus.find(m => m.link === e1.url);
-                if (mainMenu) {
-                  mainMenu.badge = null;
-                }
-                if (contentMenu) {
-                  contentMenu.badge = null;
-                }
-                if (miscMenu) {
-                  miscMenu.badge = null;
+            if (e1.url) {
+              const str = e1.url.split('/')[1];
+              if (str) {
+                const stringBadge = `badge${str[0].toUpperCase()}${str.slice(1)}`;
+                let arrBadge = this.ss[stringBadge];
+                if (arrBadge) {
+                  arrBadge = [];
+                  const mainMenu = this.lms.mainMenus.find(m => m.link === e1.url);
+                  const contentMenu = this.lms.contentMenus.find(m => m.link === e1.url);
+                  const miscMenu = this.lms.miscMenus.find(m => m.link === e1.url);
+                  if (mainMenu) {
+                    mainMenu.badge = null;
+                  }
+                  if (contentMenu) {
+                    contentMenu.badge = null;
+                  }
+                  if (miscMenu) {
+                    miscMenu.badge = null;
+                  }
                 }
               }
             }
           }
+        }
+        else if (e1 instanceof NavigationEnd) {
           let activatedRouteChild = this.route.firstChild;
           for (const aRC of activatedRouteChild.children) {
             activatedRouteChild = aRC;
@@ -130,13 +129,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 e2.keywords,
                 this.selectedBackgroundImage ? this.selectedBackgroundImage : '/favicon.ico'
               );
-              if (this.gs.isBrowser) {
-                this.bs.idle();
-                this.fs.removeFab();
-                this.siteContent.elementRef.nativeElement.scrollTop = 0;
-              }
+              this.fs.removeFab();
             }
           });
+          if (this.gs.isBrowser) {
+            this.siteContent.elementRef.nativeElement.scrollTop = 0;
+          }
         }
       }
     });

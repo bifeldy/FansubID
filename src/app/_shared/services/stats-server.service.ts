@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 })
 export class StatsServerService {
 
-  mySocket = null;
+  mySocket: Socket = null;
 
   public visitor = 0;
   public latency = 0;

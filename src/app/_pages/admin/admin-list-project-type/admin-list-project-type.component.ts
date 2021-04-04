@@ -195,7 +195,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = e => {
-        this.gs.log('[ImgLoad]', e);
+        this.gs.log('[IMAGE_SELECTED]', e);
         if (file.size < 256 * 1000) {
           const img = document.createElement('img');
           img.onload = () => {

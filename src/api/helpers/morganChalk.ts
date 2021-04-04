@@ -4,7 +4,6 @@ import chalk from 'chalk';
 const morganChalk = morgan((tokens, req, res) => {
   const apiUrl = [
     chalk.blue(tokens['remote-addr'](req, res)),
-    chalk.magenta(tokens['remote-user'](req, res)),
     chalk.cyan(tokens.date(req, res)),
     chalk.green(tokens.method(req, res)),
     chalk.red(tokens.status(req, res)),
