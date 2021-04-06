@@ -3,8 +3,8 @@ import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn}
 import { User } from './User';
 import { Attachment } from './Attachment';
 
-@Entity({ name: 'nihongo' })
-export class Nihongo {
+@Entity({ name: 'lesson' })
+export class Lesson {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -36,7 +36,7 @@ export class Nihongo {
   // tslint:disable-next-line: variable-name
   user_: User;
 
-  @ManyToOne(type => Nihongo)
+  @ManyToOne(type => Lesson)
   // tslint:disable-next-line: variable-name
-  parent_nihongo_: Nihongo;
+  parent_lesson_: Lesson;
 }

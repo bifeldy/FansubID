@@ -22,7 +22,7 @@ import { Kanjivg } from '../../api/entities/Kanjivg';
 import { Tatoeba } from '../../api/entities/Tatoeba';
 import { Banned } from '../../api/entities/Banned';
 import { Notification } from '../../api/entities/Notification';
-import { Nihongo } from '../../api/entities/Nihongo';
+import { Lesson } from '../../api/entities/Lesson';
 import { Track } from '../../api/entities/Track';
 import { LikeDislike } from '../../api/entities/LikeDislike';
 
@@ -54,7 +54,7 @@ export const environment = {
     TempAttachment,
     ApiKey,
     News,
-    Nihongo,
+    Lesson,
     SocialMedia,
     Edict,
     Kanji,
