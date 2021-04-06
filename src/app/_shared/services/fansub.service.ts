@@ -39,7 +39,7 @@ export class FansubService {
   }
 
   cekSlug(fansubData): Observable<any> {
-    return this.api.patchData(`/fansub/cek-slug`, fansubData);
+    return this.api.postData(`/fansub/cek-slug`, fansubData);
   }
 
   getBerkasFansub(fansubId = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
