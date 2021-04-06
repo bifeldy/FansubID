@@ -148,8 +148,11 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
       const resUserSave = await userRepo.save(selectedUser);
       req.user = (resUserSave as any);
       res.cookie(environment.tokenName, req.user.session_token, {
-        // tslint:disable-next-line: max-line-length
-        httpOnly: true, secure: environment.production, sameSite: 'strict', expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000)
+        httpOnly: true,
+        secure: environment.production,
+        sameSite: 'strict',
+        expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000),
+        domain: environment.domain
       });
       checkBan(req, res, next);
     } else {

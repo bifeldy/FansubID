@@ -32,6 +32,7 @@ export const environment = {
   author: 'Bifeldy',
   jwtSecretKey: '',
   tokenName: 'hikki_token',
+  domain: 'localhost',
   baseUrl: 'http://localhost:4000',
   dbType: 'postgres',
   dbHost: 'localhost',

@@ -185,8 +185,11 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             selectedUser.session_token = jwt.JwtEncode(resUserSave, false);
             resUserSave = await userRepo.save(selectedUser);
             res.cookie(environment.tokenName, resUserSave.session_token, {
-              // tslint:disable-next-line: max-line-length
-              httpOnly: true, secure: environment.production, sameSite: 'strict', expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000)
+              httpOnly: true,
+              secure: environment.production,
+              sameSite: 'strict',
+              expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000),
+              domain: environment.domain
             });
             return res.status(200).json({
               info: `😅 200 - User API :: Ubah ${req.params.username} 🤣`,
