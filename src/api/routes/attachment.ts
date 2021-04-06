@@ -56,113 +56,58 @@ function deleteAttachment(fileName) {
   });
 }
 
-// GET `/api/attachment?id=`
+// GET `/api/attachment`
 router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const lampiranId = req.query.id || '';
-    const attachmentRepo = getRepository(Attachment);
-    if (lampiranId) {
-      if (req.user.verified) {
-        const attachment =  await attachmentRepo.findOneOrFail({
-          where: [
-            { id: Equal(lampiranId) }
-          ]
-        });
-        if (attachment.google_drive) {
-          return gDrive(async (d: drive_v3.Drive) => {
-            d.files.get(
-              { fileId: attachment.google_drive, alt: 'media' },
-              { responseType: 'stream', headers: { range: req.headers.range } },
-              (e, r: any) => {
-                if (e) {
-                  console.error(e);
-                } else {
-                  res.writeHead(r.status, r.headers);
-                  r.data.on('error', err => {
-                    console.error(err);
-                  }).on('end', async () => {
-                    attachment.download_count++;
-                    await attachmentRepo.save(attachment);
-                  }).pipe(res);
-                }
-              }
-            );
-          });
-        } else {
-          return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
-            const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
-            if (fIdx >= 0) {
-              return res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
-                if (err) {
-                  console.error(err);
-                } else {
-                  attachment.download_count++;
-                  await attachmentRepo.save(attachment);
-                }
-              });
-            } else {
-              return next(createError(404));
-            }
-          });
+    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      const attachmentRepo = getRepository(Attachment);
+      const [attachments, count] = await attachmentRepo.findAndCount({
+        where: [
+          { name: ILike(`%${req.query.q ? req.query.q : ''}%`) }
+        ],
+        order: {
+          ...((req.query.sort && req.query.order) ? {
+            [req.query.sort]: req.query.order.toUpperCase()
+          } : {
+            created_at: 'DESC',
+            name: 'ASC'
+          })
+        },
+        relations: ['user_', 'parent_attachment_'],
+        skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+        take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+      });
+      for (const a of attachments) {
+        if ('user_' in a && a.user_) {
+          delete a.user_.role;
+          delete a.user_.password;
+          delete a.user_.session_token;
+          delete a.user_.created_at;
+          delete a.user_.updated_at;
         }
-      } else {
-        return res.status(400).json({
-          info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
-          result: {
-            message: 'Khusus Pengguna Terverifikasi!'
-          }
-        });
+        if ('parent_attachment_' in a && a.parent_attachment_) {
+          delete a.parent_attachment_.created_at;
+          delete a.parent_attachment_.updated_at;
+        }
       }
+      return res.status(200).json({
+        info: `😅 200 - Attachment API :: List All 🤣`,
+        count,
+        pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+        results: attachments
+      });
     } else {
-      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
-        const [attachments, count] = await attachmentRepo.findAndCount({
-          where: [
-            { name: ILike(`%${req.query.q ? req.query.q : ''}%`) }
-          ],
-          order: {
-            ...((req.query.sort && req.query.order) ? {
-              [req.query.sort]: req.query.order.toUpperCase()
-            } : {
-              created_at: 'DESC',
-              name: 'ASC'
-            })
-          },
-          relations: ['user_', 'parent_attachment_'],
-          skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-          take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
-        });
-        for (const a of attachments) {
-          if ('user_' in a && a.user_) {
-            delete a.user_.role;
-            delete a.user_.password;
-            delete a.user_.session_token;
-            delete a.user_.created_at;
-            delete a.user_.updated_at;
-          }
-          if ('parent_attachment_' in a && a.parent_attachment_) {
-            delete a.parent_attachment_.created_at;
-            delete a.parent_attachment_.updated_at;
-          }
+      return res.status(401).json({
+        info: '🙄 401 - Attachment API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
         }
-        return res.status(200).json({
-          info: `😅 200 - Attachment API :: List All 🤣`,
-          count,
-          pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
-          results: attachments
-        });
-      } else {
-        return res.status(401).json({
-          info: '🙄 401 - Attachment API :: Authorisasi Pengguna Gagal 😪',
-          result: {
-            message: 'Khusus Admin / Moderator!'
-          }
-        });
-      }
+      });
     }
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
+      info: '🙄 400 - Attachment API :: Gagal Mendapatkan All DDL 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -234,6 +179,67 @@ router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserReque
         message: 'Data Tidak Lengkap!'
       }
     });
+  }
+});
+
+// GET `/api/attachment/:id`
+router.get('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.user.verified) {
+      const attachmentRepo = getRepository(Attachment);
+      const attachment =  await attachmentRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.id) }
+        ]
+      });
+      if (attachment.google_drive) {
+        return gDrive(async (d: drive_v3.Drive) => {
+          d.files.get(
+            { fileId: attachment.google_drive, alt: 'media' },
+            { responseType: 'stream', headers: { range: req.headers.range } },
+            (e, r: any) => {
+              if (e) {
+                console.error(e);
+              } else {
+                res.writeHead(r.status, r.headers);
+                r.data.on('error', err => {
+                  console.error(err);
+                }).on('end', async () => {
+                  attachment.download_count++;
+                  await attachmentRepo.save(attachment);
+                }).pipe(res);
+              }
+            }
+          );
+        });
+      } else {
+        return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
+          const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
+          if (fIdx >= 0) {
+            return res.download(files[fIdx], `${attachment.name}.${attachment.ext}`, async (err) => {
+              if (err) {
+                console.error(err);
+              } else {
+                attachment.download_count++;
+                await attachmentRepo.save(attachment);
+              }
+            });
+          } else {
+            return next(createError(404));
+          }
+        });
+      }
+    } else {
+      return res.status(400).json({
+        info: '🙄 400 - Attachment API :: Download DDL Gagal 😪',
+        result: {
+          message: 'Khusus Pengguna Terverifikasi!'
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
   }
 });
 

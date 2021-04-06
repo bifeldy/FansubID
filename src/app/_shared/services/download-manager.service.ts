@@ -59,7 +59,7 @@ export class DownloadManagerService {
     );
     if (!attachment.isCompleted) {
       attachment.isDownloading = true;
-      attachment.handler = this.api.getData(`/attachment?id=${attachmentId}`, {
+      attachment.handler = this.api.getData(`/attachment/${attachmentId}`, {
         responseType: 'blob',
         observe: 'events',
         reportProgress: true

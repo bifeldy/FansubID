@@ -23,7 +23,7 @@ export class VjsService {
     if (subtitleUrls.length > 0) {
       for (const s of subtitleUrls) {
         this.gs.log('[DOWNLOAD_SUBTITLE]', s.id);
-        const handler = this.api.getData(`/attachment?id=${s.id}`, {
+        const handler = this.api.getData(`/attachment/${s.id}`, {
           responseType: 'blob',
           observe: 'events',
           reportProgress: true
@@ -51,7 +51,7 @@ export class VjsService {
     if (fontUrls.length > 0) {
       for (const f of fontUrls) {
         this.gs.log('[DOWNLOAD_SUBTITLE]', f.id);
-        const handler = this.api.getData(`/attachment?id=${f.id}`, {
+        const handler = this.api.getData(`/attachment/${f.id}`, {
           responseType: 'blob',
           observe: 'events',
           reportProgress: true
