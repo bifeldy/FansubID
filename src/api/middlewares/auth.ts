@@ -117,7 +117,13 @@ async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
       ],
       relations: ['user_']
     });
-    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
+    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+      httpOnly: true,
+      secure: environment.production,
+      sameSite: 'strict',
+      maxAge: 0,
+      domain: environment.domain
+    });
     return res.status(400).json({
       info: `🙄 400 - Banned API :: ${banned.user_.username} Telah Di BAN 😪`,
       result: {
@@ -193,7 +199,13 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       req.user = (usr as any);
       checkBan(req, res, next);
     } else {
-      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
+      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+        httpOnly: true,
+        secure: environment.production,
+        sameSite: 'strict',
+        maxAge: 0,
+        domain: environment.domain
+      });
       return res.status(401).json({
         info: '🙄 401 - Authentication API :: Authorisasi Sesi Gagal 😪',
         result: {
@@ -236,7 +248,13 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       const resUserSave = await userRepo.save(selectedUser);
       const { password, session_token, ...noPwdSsToken } = resUserSave;
       req.user = (noPwdSsToken as any);
-      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
+      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+        httpOnly: true,
+        secure: environment.production,
+        sameSite: 'strict',
+        maxAge: 0,
+        domain: environment.domain
+      });
       return next();
     } catch (error) {
       console.error(error);

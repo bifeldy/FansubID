@@ -28,7 +28,13 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
       token = token.slice(7, token.length);
     }
     if (token == 'THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?') {
-      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
+      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+        httpOnly: true,
+        secure: environment.production,
+        sameSite: 'strict',
+        maxAge: 0,
+        domain: environment.domain
+      });
       return res.status(400).json({
         info: '🤧 400 - JWT API :: JWT Token Tidak Ada 😷',
         result: {
@@ -41,7 +47,13 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
     }
   } catch (err) {
     console.error(err);
-    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', { maxAge: 0 });
+    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+      httpOnly: true,
+      secure: environment.production,
+      sameSite: 'strict',
+      maxAge: 0,
+      domain: environment.domain
+    });
     return res.status(401).json({
       info: '🤧 401 - JWT API :: Whoops, Akses Ditolak 😷',
       result: err
