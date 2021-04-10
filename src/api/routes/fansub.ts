@@ -468,7 +468,6 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
       ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) ||
       ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
     ) {
-      const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
       const fansubRepo = getRepository(Fansub);
       const fansub = await fansubRepo.findOneOrFail({
         where: [
@@ -476,7 +475,8 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
         ],
         relations: ['user_']
       });
-      if (newSlug) {
+      if (req.body.slug) {
+        const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
         const selectedFansub = await fansubRepo.find({
           where: [
             { slug: ILike(newSlug) }
