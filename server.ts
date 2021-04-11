@@ -166,6 +166,7 @@ function startDiscordBot(): void {
         } catch (error) {
           github = null;
         }
+        // tslint:disable-next-line: max-line-length
         bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(bot.user.id)?.setNickname(`Hikki - ${github?.sha?.slice(0, 7)}`);
       }
     });

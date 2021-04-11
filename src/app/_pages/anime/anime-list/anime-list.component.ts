@@ -212,7 +212,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     try {
       judulAnime = data.title.replace(/[^a-zA-Z0-9]/g, '-');
     } catch (e) {
-      judulAnime = data["Judul Anime"].replace(/[^a-zA-Z0-9]/g, '-');
+      judulAnime = data['Judul Anime'].replace(/[^a-zA-Z0-9]/g, '-');
     }
     this.router.navigateByUrl(`/anime/${data.mal_id}-${judulAnime}`);
   }

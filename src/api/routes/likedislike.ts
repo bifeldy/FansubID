@@ -132,14 +132,14 @@ router.get('/:type/:idSlugUsername', auth.isLogin, async (req: UserRequest, res:
     if (req.params.type === 'berkas' || req.params.type === 'fansub' || req.params.type === 'user') {
       const likedislikeRepo = getRepository(LikeDislike);
       const likedislike = await likedislikeRepo.query(`
-        SELECT 
+        SELECT
           type, COUNT(*) AS count
         FROM
           public.like_dislike
         WHERE
           ${req.params.type}_id = $1
         GROUP BY type
-        ORDER BY type ASC 
+        ORDER BY type ASC
       `, [selected.id]);
       if (req.user) {
         const myReport = await likedislikeRepo.find({
@@ -163,7 +163,7 @@ router.get('/:type/:idSlugUsername', auth.isLogin, async (req: UserRequest, res:
               myReport: null
             }
           });
-        } else if (myReport.length == 1) {
+        } else if (myReport.length === 1) {
           if ('berkas_' in myReport[0] && myReport[0].berkas_) {
             delete myReport[0].berkas_.description;
             delete myReport[0].berkas_.download_url;
@@ -307,7 +307,7 @@ router.post('/:type/:idSlugUsername', auth.isAuthorized, async (req: UserRequest
         info: `😅 200 - Like Dislike API :: Berhasil Report 🤣`,
         result: resLdlSave
       });
-    } else if (likedislike.length == 1) {
+    } else if (likedislike.length === 1) {
       let auditedLikedislike = null;
       if (!req.body.likedislike) {
         auditedLikedislike = await likedislikeRepo.remove(likedislike[0]);

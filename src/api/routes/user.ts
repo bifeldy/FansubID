@@ -177,7 +177,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
                 resUserSave.username,
                 req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
               )
-            );
+            ).catch(console.log);
             delete resUserSave.password;
             delete resUserSave.session_token;
             delete resUserSave.kartu_tanda_penduduk_;

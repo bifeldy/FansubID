@@ -292,11 +292,9 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         .setAuthor('Hikki - Penambahan Berkas Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
         .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
         .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
+        .addField('Fansub', fansubEmbedData.join(', '), false)
         .addFields(
-          { name: 'Fansub', value: fansubEmbedData.join(', '), inline: true },
-          { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true }
-        )
-        .addFields(
+          { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
           { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
           { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
         )
@@ -306,7 +304,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           resFileSave.user_.username,
           resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
         )
-      );
+      ).catch(console.log);
       if (!resFileSave.private) {
         req.io.volatile.emit('new-berkas', resFileSave);
       }
@@ -555,8 +553,8 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
             // tslint:disable-next-line: max-line-length
             .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
+            .addField('Fansub', fansubEmbedData.join(', '), false)
             .addFields(
-              { name: 'Fansub', value: fansubEmbedData.join(', '), inline: true },
               { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
               { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
               { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
@@ -567,7 +565,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               resFileSave.user_.username,
               resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
             )
-          );
+          ).catch(console.log);
           return res.status(200).json({
             info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
             result: resFileSave

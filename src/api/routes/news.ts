@@ -113,7 +113,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             resNewsSave.user_.username,
             resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
           )
-        );
+        ).catch(console.log);
         req.io.volatile.emit('new-news', resNewsSave);
         return res.status(200).json({
           info: `😅 200 - News API :: Tambah Baru 🤣`,
@@ -221,7 +221,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
                 // tslint:disable-next-line: max-line-length
                 resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
               )
-            );
+            ).catch(console.log);
             return res.status(200).json({
               info: `😅 200 - News API :: Ubah ${req.params.id} 🤣`,
               result: resNewsSave

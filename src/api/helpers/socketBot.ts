@@ -173,7 +173,7 @@ export async function socketBot(io: Server, socket: Socket) {
         // Other Url Target In Hikki API -- e.g '/news/:newsId'
       }
       let tracks = null;
-      let result: any = {};
+      const result: any = {};
       const trackRepo = getRepository(Track);
       tracks = await trackRepo.find({
         where: [
@@ -187,8 +187,8 @@ export async function socketBot(io: Server, socket: Socket) {
       });
       result.uniqueIp = [...new Set(tracks.map(t => t.ip))].length;
       result.uniqueUser = [...new Set(tracks.map(t => t.track_by_?.id))].length;
-      result.verifiedUser = [...new Set(tracks.map(t => t.track_by_?.verified == true))].length;
-      result.unverifiedUser = [...new Set(tracks.map(t => t.track_by_?.verified == false))].length;
+      result.verifiedUser = [...new Set(tracks.map(t => t.track_by_?.verified === true))].length;
+      result.unverifiedUser = [...new Set(tracks.map(t => t.track_by_?.verified === false))].length;
       tracks = await trackRepo.query(`
         SELECT *
         FROM (

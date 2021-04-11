@@ -30,8 +30,9 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
       'agree' in req.body && (JSON.parse(req.body.agree) === true) &&
       'g-recaptcha-response' in req.body
     ) {
+      const userIp = req.header('x-real-ip') || req.socket.remoteAddress || '';
       return request(`
-        ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${req.connection.remoteAddress}
+        ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${userIp}
       `.trim(), async (e1, r1, b1) => {
         b1 = JSON.parse(b1);
         if (b1 && b1.success) {

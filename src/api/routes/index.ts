@@ -144,7 +144,7 @@ router.post('/register', auth.registerModule, async (req: UserRequest, res: Resp
       req.user.username,
       req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
     )
-  );
+  ).catch(console.log);
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {
@@ -228,8 +228,9 @@ router.post('/image', auth.isAuthorized, upload.single('file'), async (req: User
 router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if ('nik' in req.body && 'nama' in req.body && 'g-recaptcha-response' in req.body) {
+      const userIp = req.header('x-real-ip') || req.socket.remoteAddress || '';
       return request(`
-        ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${req.connection.remoteAddress}
+        ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${userIp}
       `.trim(), (e1, r1, b1) => {
         if (!e1) {
           b1 = JSON.parse(b1);

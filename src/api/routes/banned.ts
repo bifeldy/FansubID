@@ -197,7 +197,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             // tslint:disable-next-line: max-line-length
             (banned.banned_by_ ? (banned.banned_by_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
           )
-        );
+        ).catch(console.log);
         return res.status(200).json({
           info: `😅 200 - Banned API :: Berhasil BAN User 🤣`,
           results: bannedUser
