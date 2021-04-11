@@ -64,6 +64,13 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
             newUser.session_token = jwt.JwtEncode(noPwdSsToken, false);
             resUserSave = await userRepo.save(newUser);
             req.user = (resUserSave as any);
+            res.cookie(environment.tokenName, req.user.session_token, {
+              httpOnly: true,
+              secure: environment.production,
+              sameSite: 'strict',
+              expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000),
+              domain: environment.domain
+            });
             return next();
           } else {
             const result: any = {};
