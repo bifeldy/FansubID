@@ -38,6 +38,7 @@ export class NotFoundComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.timedOut) {
       clearTimeout(this.timedOut);
+      this.timedOut = null;
     }
   }
 

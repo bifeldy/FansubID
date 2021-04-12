@@ -169,4 +169,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  resetLoading(): void {
+    this.bs.clear();
+  }
+
 }

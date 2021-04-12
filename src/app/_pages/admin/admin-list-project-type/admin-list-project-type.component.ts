@@ -24,6 +24,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
   subsProjectCreate = null;
   subsProjectDelete = null;
   subsImgbb = null;
+  subsDialog = null;
 
   gambar = null;
 
@@ -71,6 +72,9 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     }
     if (this.subsImgbb) {
       this.subsImgbb.unsubscribe();
+    }
+    if (this.subsDialog) {
+      this.subsDialog.unsubscribe();
     }
   }
 
@@ -155,7 +159,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
 
   deleteProject(data): void {
     this.gs.log('[PROJECT_LIST_CLICK_DELETE]', data);
-    this.ds.openInfoDialog({
+    this.subsDialog = this.ds.openInfoDialog({
       data: {
         title: `Hapus Proyek -- '${data.id}' :: '${data.nama}'`,
         htmlMessage: 'Menghapus Dapat Membuat Error Berkas Yang Menunjuk Ke Tipe Ini !',

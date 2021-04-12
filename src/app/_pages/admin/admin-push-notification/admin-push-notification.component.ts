@@ -21,6 +21,7 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
   subsNotifGet = null;
   subsNotifCreate = null;
   subsNotifDelete = null;
+  subsDialog = null;
 
   count = 0;
   page = 1;
@@ -67,6 +68,9 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
     }
     if (this.subsNotifDelete) {
       this.subsNotifDelete.unsubscribe();
+    }
+    if (this.subsDialog) {
+      this.subsDialog.unsubscribe();
     }
   }
 
@@ -160,7 +164,7 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
 
   deleteNotif(data): void {
     this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE]', data);
-    this.ds.openInfoDialog({
+    this.subsDialog = this.ds.openInfoDialog({
       data: {
         title: `Hapus Notif -- '${data.id}' :: '${data.title}'`,
         htmlMessage: 'Yakin Akan Menghapus Notifikasi Ini ?',

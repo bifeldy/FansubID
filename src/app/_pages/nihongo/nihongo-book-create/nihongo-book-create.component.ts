@@ -102,6 +102,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
     }
     if (this.timerTimeout) {
       clearTimeout(this.timerTimeout);
+      this.timerTimeout = null;
     }
   }
 

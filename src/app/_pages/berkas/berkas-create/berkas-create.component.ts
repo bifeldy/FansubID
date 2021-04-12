@@ -132,6 +132,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     }
     if (this.timerTimeout) {
       clearTimeout(this.timerTimeout);
+      this.timerTimeout = null;
     }
     if (this.subsProject) {
       this.subsProject.unsubscribe();

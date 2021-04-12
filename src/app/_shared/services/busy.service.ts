@@ -39,4 +39,12 @@ export class BusyService {
     }
   }
 
+  public clear(): void {
+    if (this.gs.isBrowser) {
+      this.busyRequestCount = 0;
+      this.spinnerService.hide();
+      this.gs.log('[BUSY_STATE_COUNTER]', this.busyRequestCount);
+    }
+  }
+
 }

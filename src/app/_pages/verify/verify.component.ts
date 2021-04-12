@@ -33,6 +33,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   subsVerify1 = null;
   subsVerify2 = null;
   subsSosmed = null;
+  subsDialog = null;
 
   constructor(
     private fb: FormBuilder,
@@ -62,6 +63,9 @@ export class VerifyComponent implements OnInit, OnDestroy {
     if (this.subsSosmed) {
       this.subsSosmed.unsubscribe();
     }
+    if (this.subsDialog) {
+      this.subsDialog.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -88,7 +92,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[SOSMED]', res);
         this.bs.idle();
-        this.ds.openInfoDialog({
+        this.subsDialog = this.ds.openInfoDialog({
           data: {
             title: res.result.title,
             htmlMessage: res.result.message,

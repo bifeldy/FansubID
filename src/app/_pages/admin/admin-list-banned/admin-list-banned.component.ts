@@ -14,6 +14,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
 
   subsBannedGet = null;
   subsBannedDelete = null;
+  subsDialog = null;
 
   count = 0;
   page = 1;
@@ -51,6 +52,9 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     }
     if (this.subsBannedDelete) {
       this.subsBannedDelete.unsubscribe();
+    }
+    if (this.subsDialog) {
+      this.subsDialog.unsubscribe();
     }
   }
 
@@ -97,7 +101,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
 
   unBan(data): void {
     this.gs.log('[BANNED_LIST_CLICK_UNBAN]', data);
-    this.ds.openInfoDialog({
+    this.subsDialog = this.ds.openInfoDialog({
       data: {
         title: `UnBAN Akun -- '${data.username}' :: '${data.email}'`,
         htmlMessage: 'Apakah Yakin Dan Akun Telah Direview Sebelum UnBAN ?',
