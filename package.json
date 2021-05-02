@@ -38,7 +38,7 @@
     "@angular/platform-server": "^11.2.11",
     "@angular/router": "^11.2.11",
     "@discordjs/opus": "^0.3.3",
-    "@k3rn31p4nic/google-translate-api": "^1.1.1",
+    "@iamtraction/google-translate": "^1.1.2",
     "@kolkov/angular-editor": "^1.1.5",
     "@nguniversal/express-engine": "^11.2.1",
     "bootstrap": "^5.0.0-beta3",

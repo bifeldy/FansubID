@@ -1,5 +1,5 @@
 import request from 'postman-request';
-import translate from '@k3rn31p4nic/google-translate-api';
+import translate from '@iamtraction/google-translate';
 import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
