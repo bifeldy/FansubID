@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev:ssr": "ng run hikki:serve-ssr",
+    "dev:ssr": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng run hikki:serve-ssr",
     "serve:ssr": "node dist/hikki/server/main.js",
     "build:ssr": "ng build --prod && ng run hikki:server:production",
     "prerender": "ng run hikki:prerender",
