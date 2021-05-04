@@ -27,7 +27,7 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length);
     }
-    if (token === 'THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?') {
+    if (!token) {
       res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
         httpOnly: true,
         secure: environment.production,

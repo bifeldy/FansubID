@@ -156,7 +156,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkStorage(): void {
     this.bs.busy();
-    this.subsVerify = this.as.verify('THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?').subscribe({
+    this.subsVerify = this.as.verify(this.as.jwtToken).subscribe({
       next: success => {
         this.gs.log('[VERIFY_SUCCESS]', success);
         this.bs.idle();

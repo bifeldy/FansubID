@@ -56,7 +56,7 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    this.gs.log('[AUTH_LOGOUT]', 'THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?');
+    this.gs.log('[AUTH_LOGOUT]', this.jwtToken);
     return this.api.deleteData(`/logout`).pipe(map(respLogout => {
       this.removeUser();
       return respLogout;

@@ -204,7 +204,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         this.submitted = false;
         this.as.removeUser();
         this.bs.busy();
-        this.subsVerify2 = this.as.verify('THE_TOKEN_ALREADY_IN_COOKIE_RIGHT_?').subscribe({
+        this.subsVerify2 = this.as.verify(this.as.jwtToken).subscribe({
           next: success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();
