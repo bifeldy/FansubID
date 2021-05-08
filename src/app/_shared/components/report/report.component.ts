@@ -166,7 +166,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         idSlugUsername: this.idSlugUsername
       }, (response: any) => {
         this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna', 'Terverifikasi', 'Belum Verifikasi'];
-        this.barChartUniqueData = [response.uniqueIp, response.uniqueUser, response.verifiedUser, response.unverifiedUser];
+        this.barChartUniqueData = [response.unique_ip, response.unique_user, response.verified_user, response.un_verified_user];
         this.lineChartVisitorData = [];
         this.lineChartVisitorLabels = [];
         for (const v of response.visitor) {

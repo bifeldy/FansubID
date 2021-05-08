@@ -210,10 +210,10 @@ export async function socketBot(io: Server, socket: Socket) {
         ],
         relations: ['berkas_', 'fansub_', 'user_', 'track_by_']
       });
-      result.uniqueIp = [...new Set(tracks.map(t => t.ip))].length;
-      result.uniqueUser = [...new Set(tracks.map(t => t.track_by_?.id))].length;
-      result.verifiedUser = [...new Set(tracks.map(t => t.track_by_?.verified === true))].length;
-      result.unverifiedUser = [...new Set(tracks.map(t => t.track_by_?.verified === false))].length;
+      result.unique_ip = [...new Set(tracks.map(t => t.ip))].length;
+      result.unique_user = [...new Set(tracks.map(t => t.track_by_?.id))].length;
+      result.verified_user = [...new Set(tracks.map(t => t.track_by_?.verified === true))].length;
+      result.un_verified_user = [...new Set(tracks.map(t => t.track_by_?.verified === false))].length;
       tracks = await trackRepo.query(`
         SELECT *
         FROM (
@@ -246,10 +246,12 @@ export async function socketBot(io: Server, socket: Socket) {
       console.error(error);
       if (typeof callback === 'function') {
         callback({
-          uniqueIp: 0,
-          uniqueUser: 0,
+          unique_ip: 0,
+          unique_user: 0,
+          verified_user: 0,
+          un_verified_user: 0,
           visitor: {
-            visitor_date: new Date(),
+            visitor_date: new Date(0),
             visitor_count: 0
           }
         });
