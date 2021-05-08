@@ -11,6 +11,31 @@ import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Profile } from '../entities/Profile';
 
+// Quiz Room
+const room = {};
+
+export async function disconnectRoom(socket: Socket) {
+  for (const roomId of Object.keys(room)) {
+    delete room[roomId][socket.id];
+  }
+}
+
+export async function leaveRoom(io: Server, socket: Socket, data: any) {
+  if (!room[data.oldRoom]) {
+    room[data.oldRoom] = {};
+  }
+  delete room[data.oldRoom][socket.id];
+  return socket.leave(data.oldRoom);
+}
+
+export async function joinRoom(io: Server, socket: Socket, data: any) {
+  if (!room[data.newRoom]) {
+    room[data.newRoom] = {};
+  }
+  room[data.newRoom][socket.id] = data.user;
+  return socket.join(data.newRoom);
+}
+
 // tslint:disable-next-line: typedef
 export async function socketBot(io: Server, socket: Socket) {
   try {
@@ -229,6 +254,36 @@ export async function socketBot(io: Server, socket: Socket) {
           }
         });
       }
+    }
+  });
+  socket.on('leave-join-room', async (data: any) => {
+    try {
+      if (data.jwtToken) {
+        try {
+          const decoded = jwt.JwtDecrypt(data.jwtToken);
+          data.user = decoded.user;
+        } catch (err) {
+          console.error(err);
+          data.user = null;
+        }
+      } else {
+        data.user = null;
+      }
+      leaveRoom(io, socket, data);
+      joinRoom(io, socket, data);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  socket.on('get-room-member', async (data: any, callback: any) => {
+    try {
+      callback({
+        room_id: data.roomId,
+        member_list: room[data.roomId],
+        socket_count: io.sockets.adapter.rooms.get(data.roomId).size
+      });
+    } catch (error) {
+      console.error(error);
     }
   });
 }

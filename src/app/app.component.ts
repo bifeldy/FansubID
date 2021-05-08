@@ -27,9 +27,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('siteContent', { static: true }) siteContent;
 
   selectedBackgroundImage = '';
+  previousUrl = null;
 
   subsRouter = null;
   subsRouterChild = null;
+  subsUrl = null;
   subsVerify = null;
 
   constructor(
@@ -55,6 +57,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.subsRouterChild) {
       this.subsRouterChild.unsubscribe();
+    }
+    if (this.subsUrl) {
+      this.subsUrl.unsubscribe();
     }
     if (this.subsVerify) {
       this.subsVerify.unsubscribe();
@@ -130,11 +135,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.selectedBackgroundImage ? this.selectedBackgroundImage : '/favicon.ico'
               );
               this.fs.removeFab();
+              if (this.gs.isBrowser) {
+                this.siteContent.elementRef.nativeElement.scrollTop = 0;
+                const nextUrl = e1.url.split('?')[0];
+                this.ss.socketLeaveAndJoinNewRoom(this.previousUrl, nextUrl);
+                this.previousUrl = nextUrl;
+              }
             }
           });
-          if (this.gs.isBrowser) {
-            this.siteContent.elementRef.nativeElement.scrollTop = 0;
-          }
         }
       }
     });

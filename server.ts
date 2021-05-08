@@ -45,7 +45,7 @@ import { Client, TextChannel, Message } from 'discord.js';
 
 import MorganChalk from './src/api/helpers/morganChalk';
 import { discordBot } from './src/api/helpers/discordBot';
-import { socketBot } from './src/api/helpers/socketBot';
+import { disconnectRoom, socketBot } from './src/api/helpers/socketBot';
 
 import { environment } from './src/environments/server/environment';
 
@@ -194,6 +194,7 @@ function startSocketIo(): void {
     io.emit('visitors', io.sockets.sockets.size);
     socket.on('disconnect', () => {
       io.emit('visitors', io.sockets.sockets.size);
+      disconnectRoom(socket);
       updateVisitor();
     });
     socket.on('ping-pong', (data: any, callback: any) => {

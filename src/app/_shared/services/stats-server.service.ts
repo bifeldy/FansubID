@@ -143,4 +143,11 @@ export class StatsServerService {
     }
   }
 
+  socketLeaveAndJoinNewRoom(previousUrl: string, currentNewUrl: string): void {
+    this.gs.log(`[SOCKET_LEAVE-JOIN-ROOM] ${previousUrl} => ${currentNewUrl}`);
+    this.socketEmit('leave-join-room', {
+      oldRoom: previousUrl, newRoom: currentNewUrl
+    });
+  }
+
 }
