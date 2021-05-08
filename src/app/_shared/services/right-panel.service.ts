@@ -4,6 +4,7 @@ import { GlobalService } from './global.service';
 
 import { SearchAllComponent } from '../components/right-panel/search-all/search-all.component';
 import { AdminNavigationComponent } from '../components/right-panel/admin-navigation/admin-navigation.component';
+import { LiveChatComponent } from '../components/right-panel/live-chat/live-chat.component';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,8 @@ export class RightPanelService {
       this.componentView = SearchAllComponent;
     } else if (view === 'AdminNavigationComponent') {
       this.componentView = AdminNavigationComponent;
+    } else if (view === 'LiveChatComponent') {
+      this.componentView = LiveChatComponent;
     }
     this.sidePanel.open();
   }

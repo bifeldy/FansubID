@@ -138,6 +138,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.gs.isBrowser) {
                 this.siteContent.elementRef.nativeElement.scrollTop = 0;
                 const nextUrl = e1.url.split('?')[0];
+                this.ss.currentChatRoom = [];
                 this.ss.socketLeaveAndJoinNewRoom(this.previousUrl, nextUrl);
                 this.previousUrl = nextUrl;
               }

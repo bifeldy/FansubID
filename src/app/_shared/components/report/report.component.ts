@@ -165,6 +165,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         trackType: this.reportTrackType,
         idSlugUsername: this.idSlugUsername
       }, (response: any) => {
+        this.gs.log(`[SOCKET_TRACK-GET]`, response);
         this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna', 'Terverifikasi', 'Belum Verifikasi'];
         this.barChartUniqueData = [response.unique_ip, response.unique_user, response.verified_user, response.un_verified_user];
         this.lineChartVisitorData = [];

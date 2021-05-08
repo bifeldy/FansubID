@@ -1,0 +1,17 @@
+.card {
+  position: inherit;
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: rgba(0,0,0,0) !important;
+  background-clip: border-box;
+  border: none;
+  border-radius: .25rem;
+  color: #69f0ae;
+  cursor: pointer;
+}
+
+.card:hover {
+  color: #ffc107;
+}

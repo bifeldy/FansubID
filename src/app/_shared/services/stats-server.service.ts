@@ -30,6 +30,12 @@ export class StatsServerService {
   public commitUser = null;
   public commitMessage = null;
 
+  public currentRoom = null;
+  public currentChatRoom = [];
+
+  public globalRoom = null;
+  public globalChatRoom = [];
+
   constructor(
     private as: AuthService,
     private gs: GlobalService,
@@ -62,8 +68,8 @@ export class StatsServerService {
       this.gs.log(`[SOCKET_ERROR]`, error);
     });
     this.mySocket.on('visitors', visitors => {
-      this.visitor = visitors;
       this.gs.log(`[SOCKET_VISITOR] Total Visitors :: ${this.visitor}`);
+      this.visitor = visitors;
     });
     this.mySocket.on('new-notification', (notifObj: any) => {
       this.gs.log(`[SOCKET_NOTIFICATION]`, notifObj);
@@ -104,6 +110,24 @@ export class StatsServerService {
         news.badge = this.badgeNews.length;
       } else {
         news.badge = null;
+      }
+    });
+    this.mySocket.on('receive-chat', msg => {
+      this.gs.log(`[SOCKET_RECEIVE-CHAT]`, msg);
+      if (msg.room_id == 'GLOBAL_PUBLIK') {
+        this.globalChatRoom.push(msg);
+      } else {
+        this.currentChatRoom.push(msg);
+      }
+    });
+    this.mySocket.on('room-info', roomInfo => {
+      this.gs.log(`[SOCKET_ROOM-INFO]`, roomInfo);
+      if (roomInfo.room_id == 'GLOBAL_PUBLIK') {
+        this.globalRoom = roomInfo;
+        this.gs.cleanObject(this.globalRoom.member_list);
+      } else {
+        this.currentRoom = roomInfo;
+        this.gs.cleanObject(this.currentRoom.member_list);
       }
     });
     this.intervalPingPong = setInterval(() => {

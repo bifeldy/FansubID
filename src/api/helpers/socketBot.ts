@@ -11,7 +11,7 @@ import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Profile } from '../entities/Profile';
 
-// Quiz Room
+// Room Chat List
 const room = {};
 
 export async function disconnectRoom(socket: Socket) {
@@ -20,20 +20,42 @@ export async function disconnectRoom(socket: Socket) {
   }
 }
 
-export async function leaveRoom(io: Server, socket: Socket, data: any) {
-  if (!room[data.oldRoom]) {
-    room[data.oldRoom] = {};
+export function leaveRoom(io: Server, socket: Socket, data: any) {
+  if (data.oldRoom) {
+    if (!room[data.oldRoom]) {
+      room[data.oldRoom] = {};
+    }
+    delete room[data.oldRoom][socket.id];
+    socket.leave(data.oldRoom);
+    io.to(data.oldRoom).emit('room-info', getRoomInfo(io, data.oldRoom));
   }
-  delete room[data.oldRoom][socket.id];
-  return socket.leave(data.oldRoom);
 }
 
-export async function joinRoom(io: Server, socket: Socket, data: any) {
-  if (!room[data.newRoom]) {
-    room[data.newRoom] = {};
+export function joinOrUpdateRoom(io: Server, socket: Socket, data: any) {
+  if (data.newRoom) {
+    if (!room[data.newRoom]) {
+      room[data.newRoom] = {};
+    }
+    room[data.newRoom][socket.id] = data.user;
+    socket.join(data.newRoom);
+    io.to(data.newRoom).emit('room-info', getRoomInfo(io, data.newRoom));
   }
-  room[data.newRoom][socket.id] = data.user;
-  return socket.join(data.newRoom);
+}
+
+function getRoomInfo(io: Server, roomId: string) {
+  return {
+    room_id: roomId,
+    member_list: room[roomId],
+    socket_count: io.sockets.adapter.rooms.get(roomId)?.size || 0
+  };
+}
+
+function sendChat(data: any) {
+  return {
+    room_id: data.roomId,
+    sender: data.user,
+    message: data.message
+  };
 }
 
 // tslint:disable-next-line: typedef
@@ -261,29 +283,34 @@ export async function socketBot(io: Server, socket: Socket) {
   socket.on('leave-join-room', async (data: any) => {
     try {
       if (data.jwtToken) {
-        try {
-          const decoded = jwt.JwtDecrypt(data.jwtToken);
-          data.user = decoded.user;
-        } catch (err) {
-          console.error(err);
-          data.user = null;
-        }
+        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        data.user = decoded.user;
       } else {
         data.user = null;
       }
       leaveRoom(io, socket, data);
-      joinRoom(io, socket, data);
+      joinOrUpdateRoom(io, socket, data);
+      joinOrUpdateRoom(io, socket, { user: data.user, newRoom: 'GLOBAL_PUBLIK' });
     } catch (error) {
       console.error(error);
     }
   });
-  socket.on('get-room-member', async (data: any, callback: any) => {
+  socket.on('room-info', async (data: any, callback: any) => {
+    if (data.roomId) {
+      callback(getRoomInfo(io, data.roomId));
+    }
+  });
+  socket.on('send-chat', async (data: any) => {
     try {
-      callback({
-        room_id: data.roomId,
-        member_list: room[data.roomId],
-        socket_count: io.sockets.adapter.rooms.get(data.roomId).size
-      });
+      if (data.jwtToken) {
+        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        data.user = decoded.user;
+        if (data.roomId == 'GLOBAL_PUBLIK') {
+          io.emit('receive-chat', sendChat(data));
+        } else {
+          io.to(data.roomId).emit('receive-chat', sendChat(data));
+        }
+      }
     } catch (error) {
       console.error(error);
     }

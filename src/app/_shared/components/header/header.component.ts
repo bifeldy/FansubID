@@ -7,6 +7,7 @@ import { PageInfoService } from '../../services/page-info.service';
 import { LeftMenuService } from '../../services/left-menu.service';
 import { GlobalService } from '../../services/global.service';
 import { RightPanelService } from '../../services/right-panel.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private lms: LeftMenuService,
     private rps: RightPanelService,
+    private as: AuthService,
     public router: Router,
     public pi: PageInfoService,
     public gs: GlobalService
@@ -43,6 +45,18 @@ export class HeaderComponent implements OnInit {
 
   openSearch(): void {
     this.rps.toggleSidePanel('SearchAllComponent');
+  }
+
+  openLiveChat(): void {
+    if (this.as.currentUserValue) {
+      this.rps.toggleSidePanel('LiveChatComponent');
+    } else {
+      this.router.navigate(['/login'], {
+        queryParams: {
+          returnUrl: this.router.url
+        }
+      });
+    }
   }
 
   openAdminNavigation(): void {

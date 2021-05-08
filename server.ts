@@ -45,7 +45,7 @@ import { Client, TextChannel, Message } from 'discord.js';
 
 import MorganChalk from './src/api/helpers/morganChalk';
 import { discordBot } from './src/api/helpers/discordBot';
-import { disconnectRoom, socketBot } from './src/api/helpers/socketBot';
+import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/helpers/socketBot';
 
 import { environment } from './src/environments/server/environment';
 
@@ -190,6 +190,7 @@ function startDiscordBot(): void {
 // Socket.io
 function startSocketIo(): void {
   io.on('connection', async (socket: socketIo.Socket) => {
+    joinOrUpdateRoom(io, socket, { user: null, newRoom: 'GLOBAL_PUBLIK' });
     updateVisitor();
     io.emit('visitors', io.sockets.sockets.size);
     socket.on('disconnect', () => {
