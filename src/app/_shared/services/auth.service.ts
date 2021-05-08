@@ -44,6 +44,7 @@ export class AuthService {
   login(loginData: any): Observable<any> {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(map(respLogin => {
+      this.jwtToken = respLogin.result.jwtToken;
       return respLogin;
     }));
   }

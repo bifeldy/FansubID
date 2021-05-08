@@ -158,7 +158,7 @@ router.post('/login', auth.loginModule, (req: UserRequest, res: Response, next) 
   return res.status(200).json({
     info: '😚 200 - Login API :: Berhasil Login Yeay 🤩',
     result: {
-      token: req.user.session_token
+      jwtToken: req.user.session_token
     }
   });
 });
