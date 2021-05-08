@@ -14,9 +14,10 @@ import { Profile } from '../entities/Profile';
 // Room Chat List
 const room = {};
 
-export async function disconnectRoom(socket: Socket) {
+export async function disconnectRoom(io: Server, socket: Socket) {
   for (const roomId of Object.keys(room)) {
     delete room[roomId][socket.id];
+    io.to(roomId).emit('room-info', getRoomInfo(io, roomId));
   }
 }
 

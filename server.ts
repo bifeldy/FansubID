@@ -195,7 +195,7 @@ function startSocketIo(): void {
     io.emit('visitors', io.sockets.sockets.size);
     socket.on('disconnect', () => {
       io.emit('visitors', io.sockets.sockets.size);
-      disconnectRoom(socket);
+      disconnectRoom(io, socket);
       updateVisitor();
     });
     socket.on('ping-pong', (data: any, callback: any) => {
