@@ -130,4 +130,12 @@ export class GlobalService {
     return array;
   }
 
+  cleanObject(objData: any): any {
+    for (var o in objData) {
+      if (!objData[o]) {
+        delete objData[o];
+      }
+    }
+  }
+
 }
