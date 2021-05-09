@@ -1,6 +1,8 @@
 import { Server, Socket } from 'socket.io';
 import { Equal, getRepository, ILike, IsNull, MoreThanOrEqual } from 'typeorm';
 
+import { RoomInfoInOut, RoomInfoResponse } from '../../app/_shared/models/RoomInfo';
+
 // Helper
 import jwt from '../helpers/jwt';
 
@@ -21,7 +23,7 @@ export async function disconnectRoom(io: Server, socket: Socket) {
   }
 }
 
-export function leaveRoom(io: Server, socket: Socket, data: any) {
+export function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
   if (data.oldRoom) {
     if (!room[data.oldRoom]) {
       room[data.oldRoom] = {};
@@ -32,7 +34,7 @@ export function leaveRoom(io: Server, socket: Socket, data: any) {
   }
 }
 
-export function joinOrUpdateRoom(io: Server, socket: Socket, data: any) {
+export function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
   if (data.newRoom) {
     if (!room[data.newRoom]) {
       room[data.newRoom] = {};
@@ -43,7 +45,7 @@ export function joinOrUpdateRoom(io: Server, socket: Socket, data: any) {
   }
 }
 
-function getRoomInfo(io: Server, roomId: string) {
+function getRoomInfo(io: Server, roomId: string): RoomInfoResponse {
   return {
     room_id: roomId,
     member_list: room[roomId],

@@ -5,6 +5,8 @@ import { io, Socket } from 'socket.io-client';
 
 import { environment } from '../../../environments/client/environment';
 
+import { RoomInfoResponse } from '../models/RoomInfo';
+
 import { GlobalService } from './global.service';
 import { NotificationsService } from './notifications.service';
 import { LeftMenuService } from './left-menu.service';
@@ -31,12 +33,12 @@ export class StatsServerService {
   public commitUser = null;
   public commitMessage = null;
 
-  private currentRoomSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  public currentRoom: Observable<any> = this.currentRoomSubject.asObservable();
+  private currentRoomSubject: BehaviorSubject<RoomInfoResponse> = new BehaviorSubject<RoomInfoResponse>(null);
+  public currentRoom: Observable<RoomInfoResponse> = this.currentRoomSubject.asObservable();
   public currentChatRoom = [];
 
-  private globalRoomSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  public globalRoom: Observable<any> = this.globalRoomSubject.asObservable();
+  private globalRoomSubject: BehaviorSubject<RoomInfoResponse> = new BehaviorSubject<RoomInfoResponse>(null);
+  public globalRoom: Observable<RoomInfoResponse> = this.globalRoomSubject.asObservable();
   public globalChatRoom = [];
 
   constructor(
