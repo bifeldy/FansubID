@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { environment } from '../../../../../environments/client/environment';
 
@@ -15,12 +15,22 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   localStorageLiveChatKeyName = `${environment.siteName}_LiveChatResults`;
 
+  @Input() chatOnly = false;
+  @Input() forcedCurrentRoom = null;
+
   @ViewChild('liveChatScroll') private liveChatScroll: ElementRef;
 
   liveChatResult = {
     messageToSend: '',
     isGlobalRoom: false
   };
+
+  globalRoom = null;
+  currentRoom = null;
+  messageHistory = [];
+
+  subsCurrentRoom = null;
+  subsGlobalRoom = null;
 
   constructor(
     private gs: GlobalService,
@@ -35,23 +45,39 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.liveChatResult = this.ls.getItem(this.localStorageLiveChatKeyName, true) || this.liveChatResult;
+      if (this.forcedCurrentRoom) {
+        this.liveChatResult.isGlobalRoom = !this.forcedCurrentRoom;
+        this.liveChatResult.messageToSend = '';
+      }
+      this.subsCurrentRoom = this.ss.currentRoom.subscribe({
+        next: current => {
+          this.currentRoom = current;
+        }
+      });
+      this.subsGlobalRoom = this.ss.globalRoom.subscribe({
+        next: global => {
+          this.globalRoom = global;
+        }
+      });
     }
   }
 
   get roomCurrentOrGlobal(): any {
     if (this.liveChatResult.isGlobalRoom) {
-      return this.ss.globalRoom;
+      return this.globalRoom;
     } else {
-      return this.ss.currentRoom;
+      return this.currentRoom;
     }
   }
 
   get chatCurrentOrGlobal(): any {
     if (this.liveChatResult.isGlobalRoom) {
-      return this.ss.globalChatRoom;
+      this.messageHistory = this.ss.globalChatRoom;
     } else {
-      return this.ss.currentChatRoom;
+      this.messageHistory = this.ss.currentChatRoom;
     }
+    this.scrollMessage();
+    return this.messageHistory;
   }
 
   ngAfterViewInit(): void {
@@ -62,10 +88,18 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.ls.setItem(this.localStorageLiveChatKeyName, this.liveChatResult);
+    if (this.subsCurrentRoom) {
+      this.subsCurrentRoom.unsubscribe();
+    }
+    if (this.subsGlobalRoom) {
+      this.subsGlobalRoom.unsubscribe();
+    }
   }
 
   scrollMessage(): void {
-    this.liveChatScroll.nativeElement.scrollTop = this.liveChatScroll.nativeElement.scrollHeight;
+    if (this.liveChatScroll) {
+      this.liveChatScroll.nativeElement.scrollTop = this.liveChatScroll.nativeElement.scrollHeight || 0;
+    }
   }
 
   sendMessage(): void {
@@ -74,7 +108,6 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
       message: this.liveChatResult.messageToSend
     });
     this.liveChatResult.messageToSend = null;
-    this.scrollMessage();
   }
 
   applyFilter(event): void {
@@ -88,6 +121,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   changeRoom(data): void {
     this.gs.log('[MESSAGE_ROOM_CHANGED]', data);
     this.liveChatResult.isGlobalRoom = data;
+    this.scrollMessage();
   }
 
 }

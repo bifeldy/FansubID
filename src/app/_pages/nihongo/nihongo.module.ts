@@ -26,6 +26,7 @@ import { StatsServerModule } from '../../_shared/components/stats-server/stats-s
 import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { RightPanelModule } from '../../_shared/components/right-panel/right-panel.module';
 
 const routes: Routes = [
   {
@@ -157,7 +158,8 @@ const routes: Routes = [
     SharedMaterialModule,
     MaterialFileInputModule,
     AngularEditorModule,
-    StatsServerModule
+    StatsServerModule,
+    RightPanelModule
   ]
 })
 export class NihongoModule { }

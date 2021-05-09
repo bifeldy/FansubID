@@ -1,6 +1,6 @@
-<div class="row" style="height: calc(100vh - 120px);">
+<div class="row" [ngStyle]="{ 'height': (chatOnly ? '' : 'calc(100vh - 120px)') }">
   <div class="col-12 h-100">
-    <div class="row" style="height: 40%!important;">
+    <div class="row" style="height: 40%!important;" *ngIf="!chatOnly">
       <div class="col-12 sticky-top bg-bifeldy-dark">
         <h3 class="border-bottom-dotted row">
           <mat-form-field class="pt-3 col-12" [color]="'accent'">
@@ -29,13 +29,14 @@
         </div>
       </div>
     </div>
-    <div class="row" style="height: 60%!important;">
+    <div class="row" [ngStyle]="{ 'height': (chatOnly ? '100%!important' : '60%!important') }">
       <div class="col-12 sticky-top bg-bifeldy-dark">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Riwayat Obrolan</b>
+          <b class="text-bifeldy-dark">Obrolan</b>
         </h2>
       </div>
-      <div class="col-12" style="height: calc(100% - 139px); overflow-y: auto;" #liveChatScroll>
+      <div class="col-12" style="overflow-y: auto;" #liveChatScroll
+        [ngStyle]="{ 'height': (chatOnly ? '256px' : 'calc(50vh - 139px)') }">
         <div class="d-flex py-1" *ngFor="let c of chatCurrentOrGlobal">
           <div class="flex-shrink-0">
             <img height="24" width="24" src="{{ c.sender.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />

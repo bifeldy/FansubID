@@ -79,9 +79,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       '「💤 Hikki」, 「🌞 Hikikomori」',
       '/favicon.ico'
     );
-    if (this.gs.isBrowser) {
-      this.checkStorage();
-    }
     this.subsRouter = this.router.events.subscribe({
       next: e1 => {
         if (e1 instanceof RouteConfigLoadStart) {
@@ -147,6 +144,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     });
+    if (this.gs.isBrowser) {
+      this.checkStorage();
+    }
   }
 
   updateBackgroundImage(): void {
@@ -168,6 +168,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subsVerify = this.as.verify(this.as.jwtToken).subscribe({
       next: success => {
         this.gs.log('[VERIFY_SUCCESS]', success);
+        this.ss.socketLeaveAndJoinNewRoom(this.previousUrl, this.router.url);
         this.bs.idle();
       },
       error: error => {

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { io, Socket } from 'socket.io-client';
 
@@ -30,10 +31,12 @@ export class StatsServerService {
   public commitUser = null;
   public commitMessage = null;
 
-  public currentRoom = null;
+  private currentRoomSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public currentRoom: Observable<any> = this.currentRoomSubject.asObservable();
   public currentChatRoom = [];
 
-  public globalRoom = null;
+  private globalRoomSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public globalRoom: Observable<any> = this.globalRoomSubject.asObservable();
   public globalChatRoom = [];
 
   constructor(
@@ -46,6 +49,14 @@ export class StatsServerService {
       this.mySocket = io(environment.baseUrl);
       this.socketListen();
     }
+  }
+
+  public get currentRoomValue(): any {
+    return this.currentRoomSubject ? this.currentRoomSubject.value : null;
+  }
+
+  public get globalRoomValue(): any {
+    return this.globalRoomSubject ? this.globalRoomSubject.value : null;
   }
 
   socketListen(): void {
@@ -122,12 +133,11 @@ export class StatsServerService {
     });
     this.mySocket.on('room-info', roomInfo => {
       this.gs.log(`[SOCKET_ROOM-INFO]`, roomInfo);
+      this.gs.cleanObject(roomInfo.member_list)
       if (roomInfo.room_id == 'GLOBAL_PUBLIK') {
-        this.globalRoom = roomInfo;
-        this.gs.cleanObject(this.globalRoom.member_list);
+        this.globalRoomSubject.next(roomInfo);
       } else {
-        this.currentRoom = roomInfo;
-        this.gs.cleanObject(this.currentRoom.member_list);
+        this.currentRoomSubject.next(roomInfo);
       }
     });
     this.intervalPingPong = setInterval(() => {
