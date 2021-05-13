@@ -28,6 +28,8 @@ export class GlobalService {
   public gridListBreakpoint = 1;
   public isDesktop = true;
 
+  public isDevMode = true;
+
   public angularEditorConfig: AngularEditorConfig = {
     editable: true,
     minHeight: '256px',
@@ -55,6 +57,7 @@ export class GlobalService {
     @Inject(PLATFORM_ID) platformId: string
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+    this.isDevMode = isDevMode();
     if (this.isBrowser) {
       this.onResize(null);
     }
@@ -64,7 +67,7 @@ export class GlobalService {
     if (this.isBrowser) {
       this.forceEnableDebugLog = localStorage.getItem(this.localStorageLoggingKeyName) === 'true';
     }
-    if (isDevMode() || this.forceEnableDebugLog) {
+    if (this.isDevMode || this.forceEnableDebugLog) {
       if (type === 'log') {
         if (data != null) {
           console.log(message, data);

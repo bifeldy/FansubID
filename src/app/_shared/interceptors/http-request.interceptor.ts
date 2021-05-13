@@ -22,7 +22,9 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.gs.isBrowser && request.url.startsWith(environment.apiUrl)) {
-      request = request.clone({ withCredentials: true });
+      if (!this.gs.isDevMode) {
+        request = request.clone({ withCredentials: true });
+      }
       if (this.ss.mySocket && this.ss.mySocket.id) {
         this.gs.log('[INTERCEPT_REQUEST] Socket', this.ss.mySocket.id);
         request = request.clone({
