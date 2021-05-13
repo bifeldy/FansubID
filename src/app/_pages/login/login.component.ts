@@ -101,7 +101,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.loginInfo = res.info;
           this.bs.busy();
-          this.subsVerify = this.as.verify(this.as.jwtToken).subscribe({
+          this.subsVerify = this.as.verify(res.result.jwtToken).subscribe({
             next: success => {
               this.loginInfo = success.info;
               this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);

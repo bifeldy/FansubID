@@ -44,7 +44,6 @@ export class AuthService {
   login(loginData: any): Observable<any> {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(map(respLogin => {
-      this.jwtToken = respLogin.result.jwtToken;
       return respLogin;
     }));
   }
@@ -52,7 +51,6 @@ export class AuthService {
   register(registerData: any): Observable<any> {
     this.gs.log('[AUTH_REGISTER]', registerData);
     return this.api.postData(`/register`, registerData).pipe(map(respRegister => {
-      this.jwtToken = respRegister.result.jwtToken;
       return respRegister;
     }));
   }

@@ -113,7 +113,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.registerInfo = res.info;
           this.bs.busy();
-          this.subsVerify = this.as.verify(this.as.jwtToken).subscribe({
+          this.subsVerify = this.as.verify(res.result.jwtToken).subscribe({
             next: success => {
               this.registerInfo = success.info;
               this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);
