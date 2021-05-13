@@ -148,7 +148,7 @@ router.post('/register', auth.registerModule, async (req: UserRequest, res: Resp
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {
-      token: req.user.session_token
+      jwtToken: req.user.session_token
     }
   });
 });
@@ -167,7 +167,9 @@ router.post('/login', auth.loginModule, (req: UserRequest, res: Response, next) 
 router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest, res: Response, next) => {
   return res.status(200).json({
     info: '😍 200 - Logout API :: Berhasil Keluar UwUu 🥰',
-    result: req.user
+    result: {
+      message: `Sampai Jumpa ${req.user.username}! (｡>﹏<｡)`
+    }
   });
 });
 
