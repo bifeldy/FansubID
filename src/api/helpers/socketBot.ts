@@ -16,6 +16,24 @@ import { Profile } from '../entities/Profile';
 // Room Chat List
 const room = {};
 
+export async function checkMultipleConnection(io: Server, socket: Socket, data: RoomInfoInOut) {
+  if (data.user) {
+    const multipleSocketId = [];
+    for (const socketId of Object.keys(room['GLOBAL_PUBLIK'])) {
+      if (
+        socketId != socket.id && room['GLOBAL_PUBLIK'][socketId] &&
+        room['GLOBAL_PUBLIK'][socketId].username === data.user.username
+      ) {
+        multipleSocketId.push(socketId);
+      }
+    }
+    for (const id of multipleSocketId) {
+      io.sockets.sockets.get(id).emit('multiple-connection', [...multipleSocketId, socket.id]);
+      io.sockets.sockets.get(id).disconnect(true);
+    }
+  }
+}
+
 export async function disconnectRoom(io: Server, socket: Socket) {
   for (const roomId of Object.keys(room)) {
     delete room[roomId][socket.id];
@@ -294,6 +312,7 @@ export async function socketBot(io: Server, socket: Socket) {
       leaveRoom(io, socket, data);
       joinOrUpdateRoom(io, socket, data);
       joinOrUpdateRoom(io, socket, { user: data.user, newRoom: 'GLOBAL_PUBLIK' });
+      checkMultipleConnection(io, socket, data);
     } catch (error) {
       console.error(error);
     }

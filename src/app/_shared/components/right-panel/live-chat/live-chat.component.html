@@ -35,7 +35,7 @@
           <b class="text-bifeldy-dark">Obrolan</b>
         </h2>
       </div>
-      <div class="col-12" style="overflow-y: auto;" #liveChatScroll
+      <div class="col-12" style="overflow-y: auto;" *ngIf="currentUser" #liveChatScroll
         [ngStyle]="{ 'height': (chatOnly ? '256px' : 'calc(50vh - 139px)') }">
         <div class="d-flex py-1" *ngFor="let c of chatCurrentOrGlobal">
           <div class="flex-shrink-0">
@@ -49,12 +49,19 @@
           </div>
         </div>
       </div>
-      <div class="col-12 mt-auto bg-bifeldy-dark">
+      <div class="col-12 mt-auto bg-bifeldy-dark" *ngIf="currentUser">
         <mat-form-field class="ms-auto pt-3 col-12" [color]="'accent'">
           <mat-label>Kirim Pesan Obrolan Disini ...</mat-label>
-          <input matInput maxlength="200" placeholder="Ex. Hello 世界！" (keyup.enter)="applyFilter($event)" [(ngModel)]="liveChatResult.messageToSend" />
+          <input matInput maxlength="200" placeholder="Ex. Hello 世界！" (keyup.enter)="applyFilter($event)"
+            [(ngModel)]="liveChatResult.messageToSend" [disabled]="!currentUser" />
           <mat-icon matSuffix>send</mat-icon>
         </mat-form-field>
+      </div>
+      <div class="col-12 mt-auto bg-bifeldy-dark text-center" *ngIf="!currentUser">
+        <button class="m-1" mat-stroked-button color="accent" (click)="login()">
+          <mat-icon class="me-1">vpn_key</mat-icon>
+          Login Untuk Bisa Mengobrol
+        </button>
       </div>
     </div>
   </div>

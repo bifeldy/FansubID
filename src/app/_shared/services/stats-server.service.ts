@@ -6,6 +6,7 @@ import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../environments/client/environment';
 
 import { RoomInfoResponse } from '../models/RoomInfo';
+import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from './global.service';
 import { NotificationsService } from './notifications.service';
@@ -21,6 +22,8 @@ export class StatsServerService {
 
   public visitor = 0;
   public latency = 0;
+
+  public messageChatCount = 0;
 
   intervalPingPong = null;
 
@@ -45,7 +48,8 @@ export class StatsServerService {
     private as: AuthService,
     private gs: GlobalService,
     private notif: NotificationsService,
-    private lms: LeftMenuService
+    private lms: LeftMenuService,
+    private toast: ToastrService
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io(environment.baseUrl);
@@ -62,30 +66,18 @@ export class StatsServerService {
   }
 
   socketListen(): void {
+    this.mySocket.on('connect', () => {
+      this.gs.log('[SOCKET_CONNECTED]', this.mySocket.id);
+    });
     this.mySocket.on('disconnect', reason => {
-      this.gs.log(`[SOCKET_DISCONNECTED] ${reason.replace(/\b[a-zA-Z]/g, str => str.toUpperCase())}`);
-      if (reason === 'io server disconnect') {
-        this.mySocket.connect();
-      }
-    });
-    this.mySocket.on('reconnect', attemptNumber => {
-      this.gs.log(`[SOCKET_RECONNECTED] Reconnected After ${attemptNumber} Attempts`);
-    });
-    this.mySocket.on('reconnect_attempt', attemptNumber => {
-      this.gs.log(`[SOCKET_RECONNECTING] Reconnecting.. ${attemptNumber} Attempts`);
-    });
-    this.mySocket.on('reconnect_failed', attemptNumber => {
-      this.gs.log(`[SOCKET_RECONNEC-FAILED] Reconnect Failed ${attemptNumber} Attempts`);
-    });
-    this.mySocket.on('error', error => {
-      this.gs.log(`[SOCKET_ERROR]`, error);
+      this.gs.log('[SOCKET_DISCONNECTED]', reason);
     });
     this.mySocket.on('visitors', visitors => {
-      this.gs.log(`[SOCKET_VISITOR] Total Visitors :: ${this.visitor}`);
+      this.gs.log('[SOCKET_VISITOR]', this.visitor);
       this.visitor = visitors;
     });
     this.mySocket.on('new-notification', (notifObj: any) => {
-      this.gs.log(`[SOCKET_NOTIFICATION]`, notifObj);
+      this.gs.log('[SOCKET_NOTIFICATION]', notifObj);
       this.notif.addNotif(
         notifObj.notifCreator,
         notifObj.notifData.id,
@@ -96,7 +88,7 @@ export class StatsServerService {
       );
     });
     this.mySocket.on('new-berkas', (berkasObj: any) => {
-      this.gs.log(`[SOCKET_BERKAS]`, berkasObj);
+      this.gs.log('[SOCKET_BERKAS]', berkasObj);
       this.badgeBerkas.push(berkasObj);
       const berkas = this.lms.mainMenus.find(m => m.link === '/berkas');
       if (this.badgeBerkas.length > 0) {
@@ -106,7 +98,7 @@ export class StatsServerService {
       }
     });
     this.mySocket.on('new-fansub', (fansubObj: any) => {
-      this.gs.log(`[SOCKET_FANSUB]`, fansubObj);
+      this.gs.log('[SOCKET_FANSUB]', fansubObj);
       this.badgeFansub.push(fansubObj);
       const fansub = this.lms.mainMenus.find(m => m.link === '/fansub');
       if (this.badgeFansub.length > 0) {
@@ -116,7 +108,7 @@ export class StatsServerService {
       }
     });
     this.mySocket.on('new-news', (newsObj: any) => {
-      this.gs.log(`[SOCKET_NEWS]`, newsObj);
+      this.gs.log('[SOCKET_NEWS]', newsObj);
       this.badgeNews.push(newsObj);
       const news = this.lms.mainMenus.find(m => m.link === '/news');
       if (this.badgeNews.length > 0) {
@@ -126,15 +118,16 @@ export class StatsServerService {
       }
     });
     this.mySocket.on('receive-chat', msg => {
-      this.gs.log(`[SOCKET_RECEIVE-CHAT]`, msg);
+      this.gs.log('[SOCKET_RECEIVE-CHAT]', msg);
       if (msg.room_id == 'GLOBAL_PUBLIK') {
         this.globalChatRoom.push(msg);
       } else {
         this.currentChatRoom.push(msg);
       }
+      this.messageChatCount++;
     });
     this.mySocket.on('room-info', roomInfo => {
-      this.gs.log(`[SOCKET_ROOM-INFO]`, roomInfo);
+      this.gs.log('[SOCKET_ROOM-INFO]', roomInfo);
       this.gs.cleanObject(roomInfo.member_list)
       if (roomInfo.room_id == 'GLOBAL_PUBLIK') {
         this.globalRoomSubject.next(roomInfo);
@@ -142,11 +135,23 @@ export class StatsServerService {
         this.currentRoomSubject.next(roomInfo);
       }
     });
+    this.mySocket.on('multiple-connection', multipleConnection => {
+      this.gs.log('[SOCKET_MULTIPLE-CONNECTION]', multipleConnection);
+      this.toast.warning('Sesi lain telah aktif!', 'Koneksi Duplikat');
+      this.notif.addNotif(
+        null,
+        -1,
+        'warning',
+        'Sambungan Diputus',
+        'Tidak dapat terhubung <i>peer-to-peer</i> dan menggunakan fitur obrolan!',
+        false
+      );
+    });
     this.intervalPingPong = setInterval(() => {
       const start = Date.now();
       this.socketEmitVolatile('ping-pong', null, (response: any) => {
         this.latency = Date.now() - start;
-        this.gs.log(`[SOCKET_PING-PONG] Latency :: ${this.latency} ms`);
+        this.gs.log('[SOCKET_PING-PONG]', this.latency);
         if ('github' in response && response.github) {
           this.portalVer = response.github.sha;
           this.commitUser = response.github.commit.author.name;

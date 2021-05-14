@@ -12,7 +12,9 @@
   <span class="spacer"></span>
 
   <button mat-icon-button (click)="openLiveChat()">
-    <mat-icon>forum</mat-icon>
+    <mat-icon [matBadge]="ss.messageChatCount" matBadgePosition="before" [matBadgeColor]="'accent'">
+      forum
+    </mat-icon>
   </button>
 
   <button mat-icon-button (click)="openAdminNavigation()" *ngIf="router.url.includes('/admin-mod/')">

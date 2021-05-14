@@ -1,10 +1,14 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { environment } from '../../../../../environments/client/environment';
 
 import { GlobalService } from '../../../services/global.service';
+import { AuthService } from '../../../services/auth.service';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { StatsServerService } from '../../../services/stats-server.service';
+
+import User from '../../../models/User';
 
 @Component({
   selector: 'app-live-chat',
@@ -14,6 +18,8 @@ import { StatsServerService } from '../../../services/stats-server.service';
 export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   localStorageLiveChatKeyName = `${environment.siteName}_LiveChatResults`;
+
+  currentUser: User = null;
 
   @Input() chatOnly = false;
   @Input() forcedCurrentRoom = null;
@@ -29,13 +35,16 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   currentRoom = null;
   messageHistory = [];
 
+  subsUser = null;
   subsCurrentRoom = null;
   subsGlobalRoom = null;
 
   constructor(
+    public as: AuthService,
     private gs: GlobalService,
     public ss: StatsServerService,
-    private ls: LocalStorageService
+    private ls: LocalStorageService,
+    private router: Router
   ) {
     if (this.gs.isBrowser) {
       //
@@ -44,6 +53,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.liveChatResult = this.ls.getItem(this.localStorageLiveChatKeyName, true) || this.liveChatResult;
       if (this.forcedCurrentRoom) {
         this.liveChatResult.isGlobalRoom = !this.forcedCurrentRoom;
@@ -83,11 +93,17 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (this.gs.isBrowser) {
       this.scrollMessage();
+      if (this.currentUser) {
+        this.ss.messageChatCount = 0;
+      }
     }
   }
 
   ngOnDestroy(): void {
     this.ls.setItem(this.localStorageLiveChatKeyName, this.liveChatResult);
+    if (this.subsUser) {
+      this.subsUser.unsubscribe();
+    }
     if (this.subsCurrentRoom) {
       this.subsCurrentRoom.unsubscribe();
     }
@@ -122,6 +138,14 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     this.gs.log('[MESSAGE_ROOM_CHANGED]', data);
     this.liveChatResult.isGlobalRoom = data;
     this.scrollMessage();
+  }
+
+  login(): void {
+    this.router.navigate(['/login'], {
+      queryParams: {
+        returnUrl: this.router.url
+      }
+    });
   }
 
 }
