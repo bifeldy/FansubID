@@ -128,6 +128,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
         } else if (re === false) {
           this.getBan();
         }
+        this.subsDialog.unsubscribe();
       }
     });
   }

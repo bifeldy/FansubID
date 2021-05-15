@@ -6,6 +6,7 @@ import { dependencies } from '../../../../package.json';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { FabService } from '../../_shared/services/fab.service';
+import { WinboxService } from '../../_shared/services/winbox.service';
 
 @Component({
   selector: 'app-about',
@@ -45,7 +46,7 @@ export class AboutComponent implements OnInit {
       name: 'MySQL',
       version: 'v8.0',
       description: 'The world\'s most popular open source database',
-      site_url: 'https://www.mysql.com/'
+      site_url: 'https://www.mysql.com'
     },
   ];
 
@@ -53,7 +54,8 @@ export class AboutComponent implements OnInit {
 
   constructor(
     public gs: GlobalService,
-    private fs: FabService
+    private fs: FabService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -64,6 +66,10 @@ export class AboutComponent implements OnInit {
     if (this.gs.isBrowser) {
       this.fs.initializeFab(null, '/assets/img/discord-pink.png', 'Discord Server', environment.discordUrl, true);
     }
+  }
+
+  openWebsite(url: string): void {
+    this.wb.winboxOpenUri(url);
   }
 
 }

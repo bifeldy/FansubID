@@ -186,6 +186,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
         } else if (re === false) {
           this.getProject();
         }
+        this.subsDialog.unsubscribe();
       }
     });
   }

@@ -113,6 +113,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
               }
               // TODO :: If Other SosMed
             }
+            this.subsDialog.unsubscribe();
           }
         });
       },

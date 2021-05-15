@@ -42,10 +42,10 @@
               <p>{{ p.description }}</p>
             </mat-card-content>
             <mat-card-actions>
-              <a mat-button href="{{ p.site_url }}" target="_blank" color="accent">
+              <button mat-button color="accent" (click)="openWebsite(p.site_url)">
                 <mat-icon class="me-1">web</mat-icon>
                 Website
-              </a>
+              </button>
             </mat-card-actions>
           </mat-card>
         </div>

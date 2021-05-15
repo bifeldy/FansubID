@@ -191,6 +191,7 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
         } else if (re === false) {
           this.getNotif();
         }
+        this.subsDialog.unsubscribe();
       }
     });
   }

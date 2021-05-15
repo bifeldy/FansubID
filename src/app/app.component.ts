@@ -189,11 +189,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onDocumentClicked(ev): boolean {
+    this.gs.log('[MOUSE_CLICK]', ev);
     const e = ev || window.event;
     const el = e.target || e.srcElement;
     if (el.tagName === 'A' || el.tagName === 'a') {
       const externalUri: string = el.getAttribute('href');
-      this.gs.log('[CLICK_INTERCEPTOR]', externalUri);
       if (this.gs.gridListBreakpoint >= 2 && externalUri.startsWith('http')) {
         this.winboxOpenUri(externalUri);
         ev.preventDefault();

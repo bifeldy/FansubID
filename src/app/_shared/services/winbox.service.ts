@@ -4,14 +4,20 @@ import WinBox from 'winbox/src/js/winbox';
 import { environment } from '../../../environments/client/environment';
 
 import { GlobalService } from './global.service';
+import { DialogService } from './dialog.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WinboxService {
 
+  openedWindow = {};
+
+  subsDialog = null;
+
   constructor(
-    private gs: GlobalService
+    private gs: GlobalService,
+    private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -22,6 +28,7 @@ export class WinboxService {
     if (
       uriUrl.toLowerCase().startsWith(environment.apiUrl) ||
       uriUrl.toLowerCase().startsWith('/') ||
+      uriUrl.toLowerCase().includes('mysql.com') ||
       uriUrl.toLowerCase().includes('myanimelist.net') ||
       uriUrl.toLowerCase().includes('mydramalist.com') ||
       uriUrl.toLowerCase().includes('discord.gg') ||
@@ -30,18 +37,37 @@ export class WinboxService {
     ) {
       window.open(uriUrl, windowTarget);
     } else {
-      new WinBox({
-        id: new Date().getTime(),
+      const currentDateTime = new Date().getTime();
+      this.openedWindow[currentDateTime] = new WinBox({
+        id: currentDateTime,
         title: uriUrl,
         url: uriUrl,
+        class: 'no-full no-shadow no-max',
         background: '#7b1fa2',
         x: 'center',
         y: 'center',
-        max: false,
         top: 56,
         right: 0,
         bottom: 32,
-        left: 64
+        left: 64,
+        onclose: (force) => {
+          this.subsDialog = this.ds.openInfoDialog({
+            data: {
+              title: 'Ingin Membuka Di Tab Baru?',
+              htmlMessage: uriUrl,
+              confirmText: 'Ya',
+              cancelText: 'Tidak'
+            },
+            disableClose: false
+          }).afterClosed().subscribe({
+            next: re => {
+              if (re === true) {
+                window.open(uriUrl, windowTarget);
+              }
+              this.subsDialog.unsubscribe();
+            }
+          });
+        }
       });
     }
   }
