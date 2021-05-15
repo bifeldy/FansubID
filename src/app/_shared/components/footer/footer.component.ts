@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/client/environment';
 
 import { GlobalService } from '../../services/global.service';
 import { StatsServerService } from '../../services/stats-server.service';
+import { WinboxService } from '../../services/winbox.service';
 
 @Component({
   selector: 'app-footer',
@@ -14,7 +15,8 @@ export class FooterComponent implements OnInit {
 
   constructor(
     public gs: GlobalService,
-    public ss: StatsServerService
+    public ss: StatsServerService,
+    private wb: WinboxService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -37,6 +39,10 @@ export class FooterComponent implements OnInit {
 
   get siteName(): string {
     return environment.siteName;
+  }
+
+  openGithub(): void {
+    this.wb.winboxOpenUri(`https://github.com/${this.author}/${this.siteName}`);
   }
 
 }

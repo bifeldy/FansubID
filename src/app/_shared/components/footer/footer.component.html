@@ -1,10 +1,10 @@
 <!-- Bottom Toolbar -->
 <mat-toolbar color="primary" style="height: 32px; padding: 0 12px;">
   <span style="font-size: small;">
-    <a href="https://github.com/{{ author }}/{{ siteName }}" target="_blank" style="text-decoration: none; color: whitesmoke;">
+    <div style="text-decoration: none; color: whitesmoke; cursor: pointer;" (click)="openGithub()">
       <div style="display: inline-block; transform: rotateY(180deg);">&copy;</div>
       <div style="display: inline-block;">&nbsp; 2013 | {{ ss.portalVer | slice:0:7 }}</div>
-    </a>
+    </div>
   </span>
   <span class="spacer"></span>
   <span style="font-size: small;">

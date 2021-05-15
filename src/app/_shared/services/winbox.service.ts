@@ -24,6 +24,9 @@ export class WinboxService {
   }
 
   winboxOpenUri(uriUrl: string, windowTarget = '_blank'): void {
+    if (uriUrl.startsWith('http://')) {
+      uriUrl = 'https://' + uriUrl.slice(7, uriUrl.length);
+    }
     const currentDateTime = new Date().getTime();
     this.openedWindow[currentDateTime] = new WinBox({
       id: currentDateTime,
