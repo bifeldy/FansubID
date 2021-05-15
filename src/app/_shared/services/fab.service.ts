@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GlobalService } from './global.service';
+import { WinboxService } from './winbox.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class FabService {
 
   constructor(
     private router: Router,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private wb: WinboxService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -76,7 +78,7 @@ export class FabService {
 
   buttonClicked(): void {
     if (this.newTab) {
-      window.open(this.targetUrl, '_blank');
+      this.wb.winboxOpenUri(this.targetUrl);
     }
     else {
       this.router.navigateByUrl(this.targetUrl);

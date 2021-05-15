@@ -126,3 +126,7 @@ re-captcha > div {
 .angular-editor-toolbar .angular-editor-toolbar-set .angular-editor-button.active {
   background: #69f0ae !important;
 }
+
+.winbox {
+  box-shadow: none !important;
+}

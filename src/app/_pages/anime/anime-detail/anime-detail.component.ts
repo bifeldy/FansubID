@@ -8,6 +8,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { WinboxService } from '../../../_shared/services/winbox.service';
 
 @Component({
   selector: 'app-anime-detail',
@@ -64,7 +65,8 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private pi: PageInfoService,
     private anime: AnimeService,
-    private fs: FabService
+    private fs: FabService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = '/assets/img/season/winter.png';
     this.gs.bgRepeat = true;
@@ -133,7 +135,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   openRank(): void {
-    window.open(`https://myanimelist.net/topanime.php?limit=${this.animeData.rank - 1}`, '_blank');
+    this.wb.winboxOpenUri(`https://myanimelist.net/topanime.php?limit=${this.animeData.rank - 1}`);
   }
 
   openSeasonalAnime(): void {
@@ -215,7 +217,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
 
   openGenre(data): void {
     this.gs.log('[ANIME_DETAIL_CLICK_GENRE]', data);
-    window.open(data.url, '_blank');
+    this.wb.winboxOpenUri(data.url);
   }
 
   openFansub(data): void {

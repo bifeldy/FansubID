@@ -87,6 +87,7 @@
     "typeorm": "^0.2.32",
     "video.js": "^7.11.8",
     "wanakana": "^4.0.2",
+    "winbox": "^0.1.92",
     "ytdl-core": "^4.5.0",
     "zone.js": "^0.11.4"
   },
@@ -114,6 +115,7 @@
     "@types/node-fetch": "^2.5.10",
     "@types/request": "^2.48.5",
     "@types/socket.io-client": "^1.4.36",
+    "@types/winbox": "^0.1.0",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "^6.0.0",

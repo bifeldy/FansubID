@@ -8,6 +8,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
+import { WinboxService } from '../../../_shared/services/winbox.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -57,7 +58,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private fs: FabService,
     private pi: PageInfoService,
-    private us: UserService
+    private us: UserService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -204,7 +206,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   openDiscordProfile(): void {
-    window.open(`https://discordapp.com/users/${this.userData.discord}`, '_blank');
+    this.wb.winboxOpenUri(`https://discordapp.com/users/${this.userData.discord}`);
   }
 
 }

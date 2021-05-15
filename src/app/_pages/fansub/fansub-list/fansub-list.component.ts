@@ -8,6 +8,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { WinboxService } from '../../../_shared/services/winbox.service';
 
 @Component({
   selector: 'app-fansub-list',
@@ -141,7 +142,8 @@ export class FansubListComponent implements OnInit, OnDestroy {
     public gs: GlobalService,
     private bs: BusyService,
     private fs: FabService,
-    private fansub: FansubService
+    private fansub: FansubService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;
@@ -281,7 +283,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
 
   openUrl(data): void {
     this.gs.log('[FANSUB_LIST_OPEN_URL]', data);
-    window.open(data.url, '_blank');
+    this.wb.winboxOpenUri(data.url);
   }
 
 }

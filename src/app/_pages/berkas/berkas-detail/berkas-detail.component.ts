@@ -9,6 +9,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
 import { VjsService } from '../../../_shared/services/vjs.service';
+import { WinboxService } from '../../../_shared/services/winbox.service';
 
 import User from '../../../_shared/models/User';
 import { environment } from '../../../../environments/client/environment';
@@ -44,7 +45,8 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     private fs: FabService,
     public vjs: VjsService,
     public as: AuthService,
-    public dm: DownloadManagerService
+    public dm: DownloadManagerService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -142,7 +144,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   standardDdl(id): void {
-    window.open(this.ddlUrlLink(id), '_blank');
+    this.wb.winboxOpenUri(this.ddlUrlLink(id));
   }
 
   ddlUrlLink(id): string {

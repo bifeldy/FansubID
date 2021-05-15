@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationStart } from '@angular/router';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
@@ -13,6 +13,7 @@ import { FabService } from './_shared/services/fab.service';
 import { BusyService } from './_shared/services/busy.service';
 import { GlobalService } from './_shared/services/global.service';
 import { StatsServerService } from './_shared/services/stats-server.service';
+import { WinboxService } from './_shared/services/winbox.service';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,8 @@ import { StatsServerService } from './_shared/services/stats-server.service';
   animations: [ onMainContentChange ]
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  @HostListener('document:click', ['$event']) documentClicked;
 
   @ViewChild('leftSideNav', { static: true }) leftSideNav: ElementRef;
   @ViewChild('rightSidePanel', { static: true }) rightSidePanel: ElementRef;
@@ -44,7 +47,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     public gs: GlobalService,
     public lms: LeftMenuService,
     public rps: RightPanelService,
-    public ss: StatsServerService
+    public ss: StatsServerService,
+    private wb: WinboxService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -146,6 +150,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     if (this.gs.isBrowser) {
       this.checkStorage();
+      this.documentClicked = this.onDocumentClicked;
     }
   }
 
@@ -181,6 +186,27 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   resetLoading(): void {
     this.bs.clear();
+  }
+
+  onDocumentClicked(ev): boolean {
+    const e = ev || window.event;
+    const el = e.target || e.srcElement;
+    if (el.tagName === 'A' || el.tagName === 'a') {
+      const externalUri: string = el.getAttribute('href');
+      this.gs.log('[CLICK_INTERCEPTOR]', externalUri);
+      if (this.gs.gridListBreakpoint >= 2 && externalUri.startsWith('http')) {
+        this.winboxOpenUri(externalUri);
+        ev.preventDefault();
+        ev.stopPropagation();
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  winboxOpenUri(uri: string): void {
+    this.wb.winboxOpenUri(uri);
   }
 
 }

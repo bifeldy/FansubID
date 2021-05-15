@@ -9,6 +9,7 @@ import { GlobalService } from '../../_shared/services/global.service';
 import { UserService } from '../../_shared/services/user.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { DialogService } from '../../_shared/services/dialog.service';
+import { WinboxService } from '../../_shared/services/winbox.service';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -43,7 +44,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
     private ds: DialogService,
     public gs: GlobalService,
     public route: ActivatedRoute,
-    public as: AuthService
+    public as: AuthService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -107,7 +109,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
               this.router.navigateByUrl('/login');
             } else if (re === false) {
               if (sosmedApp.toUpperCase() === SosMed.DISCORD) {
-                window.open(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`, '_self');
+                this.wb.winboxOpenUri(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`, '_self');
               }
               // TODO :: If Other SosMed
             }
