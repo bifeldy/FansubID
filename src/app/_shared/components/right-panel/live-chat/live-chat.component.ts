@@ -41,7 +41,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     public as: AuthService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     public ss: StatsServerService,
     private ls: LocalStorageService,
     private router: Router
@@ -121,7 +121,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   sendMessage(): void {
     this.ss.socketEmit('send-chat', {
       roomId: this.roomCurrentOrGlobal.room_id,
-      message: this.liveChatResult.messageToSend
+      message: this.gs.htmlToText(this.liveChatResult.messageToSend)
     });
     this.liveChatResult.messageToSend = null;
   }
