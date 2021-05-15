@@ -33,7 +33,6 @@ export class GlobalService {
 
   public gambarUploadSizeLimit = 256 * 1000;
   public berkasUploadSizeLimit = 256 * 1000 * 1000;
-  public bukuUploadSizeLimit = 32 * 1000 * 1000;
 
   public angularEditorConfig: AngularEditorConfig = {
     editable: true,
