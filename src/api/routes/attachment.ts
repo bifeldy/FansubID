@@ -26,8 +26,8 @@ function fileLampiranFilter(req, file, cb) {
   const typeArray = file.mimetype.split('/');
   const fileType = typeArray[0];
   const fileExt = typeArray[1];
-  if (fileType === 'video' && file) {
-    if (fileExt === 'mp4' || fileExt === 'x-matroska') {
+  if ((fileType === 'video' || fileType === 'application') && file) {
+    if (fileExt === 'mp4' || fileExt === 'x-matroska' || fileExt === 'pdf') {
       cb(null, true);
     } else {
       cb(null, false);
