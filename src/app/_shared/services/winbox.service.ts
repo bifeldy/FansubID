@@ -26,6 +26,9 @@ export class WinboxService {
   winboxOpenUri(uriUrl: string, windowTarget = '_blank'): void {
     if (uriUrl.startsWith('http://')) {
       uriUrl = 'https://' + uriUrl.slice(7, uriUrl.length);
+    } else if (uriUrl.startsWith('ftp://') || uriUrl.startsWith('mailto:')) {
+      window.open(uriUrl, windowTarget);
+      return;
     }
     const currentDateTime = new Date().getTime();
     this.openedWindow[currentDateTime] = new WinBox({
@@ -43,7 +46,7 @@ export class WinboxService {
       onclose: (force) => {
         this.subsDialog = this.ds.openInfoDialog({
           data: {
-            title: 'Ingin Membuka Di Tab Baru?',
+            title: 'Ingin Buka Di Tab Baru?',
             htmlMessage: uriUrl,
             confirmText: 'Ya',
             cancelText: 'Tidak'
