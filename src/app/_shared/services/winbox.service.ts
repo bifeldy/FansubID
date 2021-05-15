@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import WinBox from 'winbox/src/js/winbox';
-import { environment } from '../../../environments/client/environment';
 
 import { GlobalService } from './global.service';
 import { DialogService } from './dialog.service';
@@ -25,51 +24,38 @@ export class WinboxService {
   }
 
   winboxOpenUri(uriUrl: string, windowTarget = '_blank'): void {
-    if (
-      uriUrl.toLowerCase().startsWith(environment.apiUrl) ||
-      uriUrl.toLowerCase().startsWith('/') ||
-      uriUrl.toLowerCase().includes('mysql.com') ||
-      uriUrl.toLowerCase().includes('myanimelist.net') ||
-      uriUrl.toLowerCase().includes('mydramalist.com') ||
-      uriUrl.toLowerCase().includes('discord.gg') ||
-      uriUrl.toLowerCase().includes('discord.com') ||
-      uriUrl.toLowerCase().includes('facebook.com')
-    ) {
-      window.open(uriUrl, windowTarget);
-    } else {
-      const currentDateTime = new Date().getTime();
-      this.openedWindow[currentDateTime] = new WinBox({
-        id: currentDateTime,
-        title: uriUrl,
-        url: uriUrl,
-        class: 'no-full no-shadow no-max',
-        background: '#7b1fa2',
-        x: 'center',
-        y: 'center',
-        top: 56,
-        right: 0,
-        bottom: 32,
-        left: 64,
-        onclose: (force) => {
-          this.subsDialog = this.ds.openInfoDialog({
-            data: {
-              title: 'Ingin Membuka Di Tab Baru?',
-              htmlMessage: uriUrl,
-              confirmText: 'Ya',
-              cancelText: 'Tidak'
-            },
-            disableClose: false
-          }).afterClosed().subscribe({
-            next: re => {
-              if (re === true) {
-                window.open(uriUrl, windowTarget);
-              }
-              this.subsDialog.unsubscribe();
+    const currentDateTime = new Date().getTime();
+    this.openedWindow[currentDateTime] = new WinBox({
+      id: currentDateTime,
+      title: uriUrl,
+      url: uriUrl,
+      class: 'no-full no-shadow no-max',
+      background: '#7b1fa2',
+      x: 'center',
+      y: 'center',
+      top: 56,
+      right: 0,
+      bottom: 32,
+      left: 64,
+      onclose: (force) => {
+        this.subsDialog = this.ds.openInfoDialog({
+          data: {
+            title: 'Ingin Membuka Di Tab Baru?',
+            htmlMessage: uriUrl,
+            confirmText: 'Ya',
+            cancelText: 'Tidak'
+          },
+          disableClose: false
+        }).afterClosed().subscribe({
+          next: re => {
+            if (re === true) {
+              window.open(uriUrl, windowTarget);
             }
-          });
-        }
-      });
-    }
+            this.subsDialog.unsubscribe();
+          }
+        });
+      }
+    });
   }
 
 }
