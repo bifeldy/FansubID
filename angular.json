@@ -62,7 +62,8 @@
               "src/assets/lib/dmak.js",
               "src/assets/lib/dmakLoader.js",
               "src/assets/lib/subtitles-octopus.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "./node_modules/winbox/dist/winbox.bundle.js"
             ],
             "allowedCommonJsDependencies": [
               "hammerjs",
@@ -149,7 +150,8 @@
               "src/assets/lib/dmak.js",
               "src/assets/lib/dmakLoader.js",
               "src/assets/lib/subtitles-octopus.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "./node_modules/winbox/dist/winbox.bundle.js"
             ]
           }
         },

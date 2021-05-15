@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import WinBox from 'winbox/src/js/winbox';
+declare var WinBox: any;
 
 import { GlobalService } from './global.service';
 import { DialogService } from './dialog.service';

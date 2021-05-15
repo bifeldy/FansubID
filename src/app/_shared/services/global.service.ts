@@ -1,6 +1,6 @@
 import { Injectable, isDevMode, Inject, PLATFORM_ID } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { AngularEditorConfig } from '@kolkov/angular-editor';
@@ -24,11 +24,16 @@ export class GlobalService {
   public bgRepeat = false;
 
   public isBrowser = null;
+  public document: Document = null;
 
   public gridListBreakpoint = 1;
   public isDesktop = true;
 
   public isDevMode = true;
+
+  public gambarUploadSizeLimit = 256 * 1000;
+  public berkasUploadSizeLimit = 256 * 1000 * 1000;
+  public bukuUploadSizeLimit = 32 * 1000 * 1000;
 
   public angularEditorConfig: AngularEditorConfig = {
     editable: true,
@@ -54,9 +59,11 @@ export class GlobalService {
   };
 
   constructor(
-    @Inject(PLATFORM_ID) platformId: string
+    @Inject(PLATFORM_ID) platformId: string,
+    @Inject(DOCUMENT) document: Document
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+    this.document = document;
     this.isDevMode = isDevMode();
     if (this.isBrowser) {
       this.onResize(null);

@@ -83,8 +83,8 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(file);
       reader.onload = e => {
         this.gs.log('[IMAGE_SELECTED]', e);
-        if (file.size < 256 * 1000) {
-          const img = document.createElement('img');
+        if (file.size < this.gs.gambarUploadSizeLimit) {
+          const img = this.gs.document.createElement('img');
           img.onload = () => {
             this.image = file;
             this.image_url = reader.result.toString();
