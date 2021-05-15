@@ -548,18 +548,28 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
             }
           );
           this.timerTimeout = setTimeout(() => {
+            this.gs.log('[UPLOAD_TIMEOUT]', timer);
             this.attachmentMode = 'determinate';
-            this.attachmentIsUploading = false;
-            this.attachmentIsCompleted = false;
-            this.attachment = null;
-            this.attachmentErrorText = '';
-            this.fg.controls.attachment_id.patchValue(null);
-            this.toast.remove(this.uploadToast.toastId);
-            this.ddl.clear();
+            this.failOrCancelUpload();
           }, timer);
         }
+      },
+      error: err => {
+        this.gs.log('[UPLOAD_ERROR]', err);
+        this.attachmentMode = 'indeterminate';
+        this.failOrCancelUpload(err);
       }
     });
+  }
+
+  failOrCancelUpload(err = null): void {
+    this.attachmentIsUploading = false;
+    this.attachmentIsCompleted = false;
+    this.attachment = null;
+    this.attachmentErrorText = err?.error?.result?.message || err?.error?.info || '';
+    this.fg.controls.attachment_id.patchValue(null);
+    this.toast.remove(this.uploadToast.toastId);
+    this.ddl.clear();
   }
 
 }
