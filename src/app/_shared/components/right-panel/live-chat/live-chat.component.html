@@ -36,9 +36,9 @@
         </h2>
       </div>
       <div class="col-12" style="overflow-y: auto;" *ngIf="currentUser" #liveChatScroll
-        [ngStyle]="{ 'height': (chatOnly ? '256px' : 'calc(50vh - 139px)') }">
+        [ngStyle]="{ 'height': (chatOnly ? '320px' : 'calc(50vh - 139px)') }">
         <div class="d-flex py-1" *ngFor="let c of chatCurrentOrGlobal">
-          <div class="flex-shrink-0">
+          <div class="flex-shrink-0" *ngIf="c.sender.image_url">
             <img height="24" width="24" src="{{ c.sender.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
           </div>
           <div class="flex-grow-1 mx-1 my-auto">

@@ -44,6 +44,8 @@ export class StatsServerService {
   public globalRoom: Observable<RoomInfoResponse> = this.globalRoomSubject.asObservable();
   public globalChatRoom = [];
 
+  public quizRoom = {};
+
   constructor(
     private as: AuthService,
     private gs: GlobalService,
@@ -146,6 +148,12 @@ export class StatsServerService {
         'Tidak dapat terhubung <i>peer-to-peer</i> dan menggunakan fitur obrolan!',
         false
       );
+    });
+    this.mySocket.on('quiz-question', quizQuestion => {
+      this.gs.log('[SOCKET_QUIZ]', quizQuestion);
+      const { room_id, ...quiz } = quizQuestion;
+      this.quizRoom[room_id] = quiz;
+      this.quizRoom[room_id].options = this.gs.shuffle(this.quizRoom[room_id].options);
     });
     this.intervalPingPong = setInterval(() => {
       const start = Date.now();

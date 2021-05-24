@@ -44,39 +44,56 @@ const routes: Routes = [
     }
   },
   {
-    path: 'hiragana',
-    component: HiraganaComponent,
-    data: {
-      title: 'Tes Huruf Hiragana',
-      description: 'Uji Kemampuan Huruf Hiragana',
-      keywords: 'Hiragana'
-    }
-  },
-  {
-    path: 'katakana',
-    component: KatakanaComponent,
-    data: {
-      title: 'Tes Huruf Katakana',
-      description: 'Uji Kemampuan Huruf Katakana',
-      keywords: 'Katakana'
-    }
-  },
-  {
-    path: 'angka',
-    component: AngkaComponent,
-    data: {
-      title: 'Tes Angka',
-      description: 'Uji Kemampuan Angka',
-      keywords: 'Angka'
-    }
-  },
-  {
     path: 'kanji',
     component: KanjiComponent,
     data: {
       title: 'Huruf Kanji',
       description: 'Mengenal Huruf Kanji Sesuai Rank JLPT & Sekolah',
       keywords: 'Kanji'
+    }
+  },
+  {
+    path: 'hiragana',
+    component: HiraganaComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Hiragana',
+      description: 'Uji Kemampuan Huruf Hiragana',
+      keywords: 'Hiragana',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+    }
+  },
+  {
+    path: 'katakana',
+    component: KatakanaComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Katakana',
+      description: 'Uji Kemampuan Huruf Katakana',
+      keywords: 'Katakana',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+    }
+  },
+  {
+    path: 'angka',
+    component: AngkaComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Angka',
+      description: 'Uji Kemampuan Angka',
+      keywords: 'Angka',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+    }
+  },
+  {
+    path: 'jlpt',
+    component: KanjiComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Kanji',
+      description: 'Uji Kemampuan Huruf Kanji',
+      keywords: 'Kanji',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
     }
   },
   {

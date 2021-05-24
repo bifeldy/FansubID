@@ -1,10 +1,11 @@
 import { Server, Socket } from 'socket.io';
 import { Equal, getRepository, ILike, IsNull, MoreThanOrEqual } from 'typeorm';
 
-import { RoomInfoInOut, RoomInfoResponse } from '../../app/_shared/models/RoomInfo';
+import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/models/RoomInfo';
 
 // Helper
 import jwt from '../helpers/jwt';
+import { getQuizHirakata } from '../helpers/quizRoom';
 
 import { Notification } from '../entities/Notification';
 import { Berkas } from '../entities/Berkas';
@@ -13,8 +14,59 @@ import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Profile } from '../entities/Profile';
 
+// Generate Question
+function getQuestion(roomId: string) {
+  switch (roomId) {
+    case '/nihongo/hiragana':
+    case '/nihongo/katakana':
+      return getQuizHirakata();
+    case '/nihongo/jlpt-n5':
+    case '/nihongo/jlpt-n4':
+    case '/nihongo/jlpt-n3':
+    case '/nihongo/jlpt-n2':
+    case '/nihongo/jlpt-n1':
+    default:
+      return null;
+  }
+}
+
 // Room Chat List
 const room = {};
+
+// Questions Each Room
+const quiz = {
+  '/nihongo/hiragana': getQuestion('/nihongo/hiragana'),
+  '/nihongo/katakana': getQuestion('/nihongo/katakana'),
+  '/nihongo/jlpt-n5': getQuestion('/nihongo/jlpt-n5'),
+  '/nihongo/jlpt-n4': getQuestion('/nihongo/jlpt-n4'),
+  '/nihongo/jlpt-n3': getQuestion('/nihongo/jlpt-n3'),
+  '/nihongo/jlpt-n2': getQuestion('/nihongo/jlpt-n2'),
+  '/nihongo/jlpt-n1': getQuestion('/nihongo/jlpt-n1')
+};
+
+function sendChat(data: RoomChat) {
+  return {
+    room_id: data.roomId,
+    sender: data.user,
+    message: data.message
+  };
+}
+
+function getRoomInfo(io: Server, roomId: string): RoomInfoResponse {
+  return {
+    room_id: roomId,
+    member_list: room[roomId],
+    socket_count: io.sockets.adapter.rooms.get(roomId)?.size || 0
+  };
+}
+
+function increasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut) {
+  room[data.roomId][socket.id].quiz.score++;
+}
+
+function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut) {
+  room[data.roomId][socket.id].quiz.score--;
+}
 
 export async function checkMultipleConnection(io: Server, socket: Socket, data: RoomInfoInOut) {
   if (data.user) {
@@ -59,24 +111,17 @@ export function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut
     }
     room[data.newRoom][socket.id] = data.user;
     socket.join(data.newRoom);
+    if (data.user && data.newRoom.startsWith('/nihongo/')) {
+      room[data.newRoom][socket.id].quiz = {
+        score: 0
+      };
+      socket.emit('quiz-question', {
+        room_id: data.newRoom,
+        ...quiz[data.newRoom]
+      });
+    }
     io.to(data.newRoom).emit('room-info', getRoomInfo(io, data.newRoom));
   }
-}
-
-function getRoomInfo(io: Server, roomId: string): RoomInfoResponse {
-  return {
-    room_id: roomId,
-    member_list: room[roomId],
-    socket_count: io.sockets.adapter.rooms.get(roomId)?.size || 0
-  };
-}
-
-function sendChat(data: any) {
-  return {
-    room_id: data.roomId,
-    sender: data.user,
-    message: data.message
-  };
 }
 
 // tslint:disable-next-line: typedef
@@ -301,7 +346,7 @@ export async function socketBot(io: Server, socket: Socket) {
       }
     }
   });
-  socket.on('leave-join-room', async (data: any) => {
+  socket.on('leave-join-room', async (data: RoomInfoInOut) => {
     try {
       if (data.jwtToken) {
         const decoded = jwt.JwtDecrypt(data.jwtToken);
@@ -317,12 +362,12 @@ export async function socketBot(io: Server, socket: Socket) {
       console.error(error);
     }
   });
-  socket.on('room-info', async (data: any, callback: any) => {
+  socket.on('room-info', async (data: RoomInfoInOut, callback: any) => {
     if (data.roomId) {
       callback(getRoomInfo(io, data.roomId));
     }
   });
-  socket.on('send-chat', async (data: any) => {
+  socket.on('send-chat', async (data: RoomInfoInOut) => {
     try {
       if (data.jwtToken) {
         const decoded = jwt.JwtDecrypt(data.jwtToken);
@@ -331,6 +376,38 @@ export async function socketBot(io: Server, socket: Socket) {
           io.emit('receive-chat', sendChat(data));
         } else {
           io.to(data.roomId).emit('receive-chat', sendChat(data));
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  socket.on('quiz-answer', async (data: RoomInfoInOut) => {
+    try {
+      if (data.jwtToken) {
+        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        data.user = decoded.user;
+        if (quiz[data.roomId].randomInteger === data.randomInteger) {
+          let correctAnswer = false;
+          if (Object.entries(quiz[data.roomId].question).toString() === Object.entries(data.answer).toString()) {
+            increasePlayerPoint(io, socket, data);
+            correctAnswer = true;
+          } else {
+            decreasePlayerPoint(io, socket, data);
+          }
+          quiz[data.roomId] = getQuestion(data.roomId);
+          io.to(data.roomId).emit('room-info', getRoomInfo(io, data.roomId));
+          io.to(data.roomId).emit('receive-chat', {
+            room_id: data.roomId,
+            sender: {
+              username: `[📢-LOG]`
+            },
+            message: `'${data.user.username}' Menjawab ${correctAnswer ? 'Benar (+1)' : 'Salah (-1)'}`
+          });
+          io.to(data.roomId).emit('quiz-question', {
+            room_id: data.roomId,
+            ...quiz[data.roomId]
+          });
         }
       }
     } catch (error) {

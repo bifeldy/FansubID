@@ -29,12 +29,12 @@ export class LeftMenuService {
       icon: 'receipt_long',
       badge: null
     },
-    // {
-    //   name: 'Nihongo 日本語',
-    //   link: '/nihongo',
-    //   icon: 'translate',
-    //   badge: null
-    // },
+    {
+      name: 'Nihongo 日本語',
+      link: '/nihongo',
+      icon: 'translate',
+      badge: null
+    },
     // {
     //   name: 'RSS Feed',
     //   link: '/rss',

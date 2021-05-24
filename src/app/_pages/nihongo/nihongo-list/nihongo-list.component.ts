@@ -17,28 +17,231 @@ export class NihongoListComponent implements OnInit {
       name: 'Huruf Hiragana',
       image_url: '/assets/img/nihongo/hiragana.png',
       icon: null,
-      letter: '46 Karakter'
+      letter: '~46 Ragam'
     },
     {
       url: 'katakana',
       name: 'Huruf Katakana',
       image_url: '/assets/img/nihongo/katakana.png',
       icon: null,
-      letter: '46 Karakter'
+      letter: '~46 Ragam'
     },
     {
       url: 'angka',
       name: 'Angka Numerik',
       image_url: null,
       icon: 'plus_one',
-      letter: '0 Karakter'
+      letter: '~0 Ragam'
     },
     {
-      url: 'kanji',
-      name: 'Huruf Kanji',
+      url: 'warna',
+      name: 'Warna',
+      image_url: null,
+      icon: null,
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'binatang',
+      name: 'Binatang',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'buah',
+      name: 'Buah',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'sayur',
+      name: 'Sayur',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'daging',
+      name: 'Daging',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'minuman',
+      name: 'minuman',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'pakaian',
+      name: 'Pakaian',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'cuaca',
+      name: 'Cuaca',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'transportasi',
+      name: 'Transportasi',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'tempat',
+      name: 'Tempat',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'pekerjaan',
+      name: 'Pekerjaan',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'olah-raga',
+      name: 'Olah Raga',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'perkakas',
+      name: 'Perkakas',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'mebel',
+      name: 'Mebel',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'dapur',
+      name: 'Dapur',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'negara',
+      name: 'Negara',
+      image_url: null,
+      icon: 'plus_one',
+      letter: '~0 Ragam'
+    },
+    {
+      url: 'jlpt-n5',
+      name: 'JLPT N5',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
-      letter: '4050 Karakter'
+      letter: '~79 Ragam'
+    },
+    {
+      url: 'jlpt-n4',
+      name: 'JLPT N4',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~166 Ragam'
+    },
+    {
+      url: 'jlpt-n3',
+      name: 'JLPT N3',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~367 Ragam'
+    },
+    {
+      url: 'jlpt-n2',
+      name: 'JLPT N2',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~367 Ragam'
+    },
+    {
+      url: 'jlpt-n1',
+      name: 'JLPT N1',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~1231 Ragam'
+    },
+    {
+      url: 'school-1',
+      name: 'Kelas 1',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~80 Ragam'
+    },
+    {
+      url: 'school-2',
+      name: 'Kelas 2',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~160 Ragam'
+    },
+    {
+      url: 'school-3',
+      name: 'Kelas 3',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~200 Ragam'
+    },
+    {
+      url: 'school-4',
+      name: 'Kelas 4',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~200 Ragam'
+    },
+    {
+      url: 'school-5',
+      name: 'Kelas 5',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~185 Ragam'
+    },
+    {
+      url: 'school-6',
+      name: 'Kelas 6',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~181 Ragam'
+    },
+    {
+      url: 'school-lanjutan-1',
+      name: 'Kelas Lanjutan 1',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~1139 Ragam'
+    },
+    {
+      url: 'school-lanjutan-2',
+      name: 'Kelas Lanjutan 2',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~349 Ragam'
+    },
+    {
+      url: 'kanji-semua',
+      name: 'Semua Kanji',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~2494 Ragam'
     }
   ];
 
