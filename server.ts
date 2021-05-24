@@ -3,7 +3,6 @@ import 'localstorage-polyfill';
 import 'reflect-metadata';
 
 import fs from 'fs';
-import path from 'path';
 import http from 'http';
 
 import rateLimit from 'express-rate-limit';
@@ -18,18 +17,6 @@ import { UserRequest } from './src/api/models/UserRequest';
 const currentWorkingDir = process.cwd();
 
 import logger from './src/api/helpers/logger';
-
-const domino = require('domino');
-const ssrPage = fs.readFileSync(path.join(currentWorkingDir, 'dist/hikki/browser', 'index.html')).toString();
-const win = domino.createWindow(ssrPage);
-
-const MockBrowser = require('mock-browser').mocks.MockBrowser;
-const mock = new MockBrowser();
-
-global.window = win;
-global.document = win.document;
-global.localStorage = localStorage;
-global.navigator = mock.getNavigator();
 
 import { createConnection, Equal, getRepository } from 'typeorm';
 
