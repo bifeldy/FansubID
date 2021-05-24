@@ -18,7 +18,8 @@ import { News } from '../../api/entities/News';
 import { SocialMedia } from '../../api/entities/SocialMedia';
 import { Edict } from '../../api/entities/Edict';
 import { Kanji } from '../../api/entities/Kanji';
-import { Kanjivg } from '../../api/entities/Kanjivg';
+import { KanjiVg } from '../../api/entities/Kanjivg';
+import { KanjiStats } from '../../api/entities/KanjiStats';
 import { Tatoeba } from '../../api/entities/Tatoeba';
 import { Banned } from '../../api/entities/Banned';
 import { Notification } from '../../api/entities/Notification';
@@ -59,7 +60,8 @@ export const environment = {
     SocialMedia,
     Edict,
     Kanji,
-    Kanjivg,
+    KanjiVg,
+    KanjiStats,
     Tatoeba,
     Banned,
     Notification,

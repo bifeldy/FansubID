@@ -5,14 +5,14 @@ import { Equal, getRepository, ILike } from 'typeorm';
 
 import { UserRequest } from '../../models/UserRequest';
 
-import { Kanjivg } from '../../entities/Kanjivg';
+import { KanjiVg } from '../../entities/KanjiVg';
 
 const router = Router();
 
 // GET `/api/nihongo/kanjivg`
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const kanjivgRepo = getRepository(Kanjivg);
+    const kanjivgRepo = getRepository(KanjiVg);
     const [kanjivgs, count] = await kanjivgRepo.findAndCount({
       where: [
         { kanji: ILike(`%${req.query.q ? req.query.q : ''}%`) },
@@ -49,7 +49,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 // GET `/api/nihongo/kanjivg/:id`
 router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const kanjivgRepo = getRepository(Kanjivg);
+    const kanjivgRepo = getRepository(KanjiVg);
     const kanjivg = await kanjivgRepo.findOneOrFail({
       where: [
         { id: Equal(req.params.id) }
