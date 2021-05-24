@@ -10,7 +10,7 @@
       <div class="row w-100 ps-3" style="display: inline-flex; flex-wrap: nowrap; overflow-x: hidden;">
         <div class="p-2" style="width: auto;" *ngFor="let p of participants | keyvalue: scoreOrder; let idx = index">
           <div class="card text-center bg-bifeldy-dark border-0" style="width: 64px;">
-            <div class="card-body p-0">
+            <div class="card-body p-0" (click)="openProfile(p.value.username)" style="cursor: pointer;">
               <div [matBadge]="p?.value?.quiz?.score" matBadgePosition="below" [matBadgeColor]="(idx == 0 ? 'warn' : (idx == 1 ? 'primary' : 'accent'))"
                 class="rounded-3" style="
                   background-image: url('{{ p.value.image_url }}');
@@ -19,13 +19,13 @@
                   background-size: cover;
                   background-position: center;
               "></div>
-              <div class="pt-1">Username #{{ p.value.username }}</div>
+              <div class="pt-1">{{ p.value.username }}</div>
             </div>
           </div>
         </div>
         <div class="ms-auto p-2" style="width: auto; position: sticky; right: 0; background-color: #303030 !important">
           <div class="card text-center bg-bifeldy-dark border-0" style="width: 64px;">
-            <div class="card-body p-0">
+            <div class="card-body p-0" (click)="openLiveChat()" style="cursor: pointer;">
               <div class="rounded-3" style="
                   background-image: url('/favicon.ico');
                   width: 64px;
@@ -58,14 +58,14 @@
             <div class="col-12 p-4">
               <div class="row mx-auto px-5 text-center">
                 <div class="col-6 col-md-4 col-xl-2 p-2" *ngFor="let o of getQuiz.options">
-                  <div class="card p-3 m-1" (click)="selectAnswer(o)">
+                  <div class="card p-3 m-1" (click)="selectAnswer(o)" style="cursor: pointer;">
                     <div class="card-body px-0" style="font-size: 250%;">
                       {{ showOptionRomaji ? o.romaji : o.hiragana }}
                     </div>
                   </div>
                 </div>
                 <div class="col-6 col-md-4 col-xl-2 p-2">
-                  <div class="card p-3 m-1" matTooltip="Tukar Huruf" (click)="swapCharacter()">
+                  <div class="card p-3 m-1" matTooltip="Tukar Huruf" (click)="swapCharacter()" style="cursor: pointer;">
                     <div class="card-body px-0" style="font-size: 250%;">🎌</div>
                   </div>
                 </div>

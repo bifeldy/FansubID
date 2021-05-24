@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { QuizService } from '../../../_shared/services/quiz.service';
+import { RightPanelService } from '../../../_shared/services/right-panel.service';
 
 @Component({
   selector: 'app-katakana',
@@ -27,6 +28,7 @@ export class KatakanaComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private gs: GlobalService,
+    private rps: RightPanelService,
     private quiz: QuizService
   ) {
     if (this.gs.isBrowser) {
@@ -64,6 +66,14 @@ export class KatakanaComponent implements OnInit, OnDestroy {
 
   swapCharacter(): void {
     this.showOptionRomaji = !this.showOptionRomaji;
+  }
+
+  openLiveChat(): void {
+    this.rps.toggleSidePanel('LiveChatComponent');
+  }
+
+  openProfile(username: string): void {
+    this.router.navigateByUrl(`/user/${username}`);
   }
 
 }
