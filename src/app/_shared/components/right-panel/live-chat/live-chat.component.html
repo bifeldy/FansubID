@@ -12,17 +12,19 @@
           </mat-form-field>
         </h3>
       </div>
-      <div class="col-12" style="height: calc(100% - 67px); overflow-y: auto;">
-        <div class="row px-3">
-          <div class="col-6" *ngFor="let u of roomCurrentOrGlobal.member_list | keyvalue">
-            <div class="card d-flex py-1 align-items-center p-1" routerLink="/user/Bifeldy" *ngIf="u.value">
-              <div class="flex-shrink-0">
-                <img height="24" width="24" src="{{ u.value.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
-              </div>
-              <div class="flex-grow-1 ms-1">
-                <h4 matLine class="m-0">
-                  <span>{{ u.value.username }}</span>
-                </h4>
+      <div class="col-12" style="height: calc(100% - 105px);">
+        <div class="h-100" style="overflow-y: auto;">
+          <div class="row m-0">
+            <div class="col-6 p-0" *ngFor="let u of roomCurrentOrGlobal.member_list | keyvalue">
+              <div class="card d-flex py-1 align-items-center p-1" routerLink="/user/Bifeldy" *ngIf="u.value">
+                <div class="flex-shrink-0">
+                  <img height="24" width="24" src="{{ u.value.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
+                </div>
+                <div class="flex-grow-1 ms-1">
+                  <h4 matLine class="m-0">
+                    <span>{{ u.value.username }}</span>
+                  </h4>
+                </div>
               </div>
             </div>
           </div>
@@ -35,17 +37,18 @@
           <b class="text-bifeldy-dark">Obrolan</b>
         </h2>
       </div>
-      <div class="col-12" style="overflow-y: auto;" *ngIf="currentUser" #liveChatScroll
-        [ngStyle]="{ 'height': (chatOnly ? '320px' : 'calc(50vh - 139px)') }">
-        <div class="d-flex py-1" *ngFor="let c of chatCurrentOrGlobal">
-          <div class="flex-shrink-0" *ngIf="c.sender.image_url">
-            <img height="24" width="24" src="{{ c.sender.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
-          </div>
-          <div class="flex-grow-1 mx-1 my-auto">
-            <h5 matLine class="m-0">
-              <span class="text-success">{{ c.sender.username }}: </span>
-              <span class="text-warning" style="word-break: break-word;" [innerHtml]="gs.htmlToText(c.message).linkify()"></span>
-            </h5>
+      <div class="col-12" *ngIf="currentUser">
+        <div style="overflow-y: auto;" #liveChatScroll [ngStyle]="{ 'height': (chatOnly ? '320px' : 'calc(50vh - 139px)') }">
+          <div class="d-flex py-1" *ngFor="let c of chatCurrentOrGlobal">
+            <div class="flex-shrink-0" *ngIf="c.sender.image_url">
+              <img height="24" width="24" src="{{ c.sender.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
+            </div>
+            <div class="flex-grow-1 mx-1 my-auto">
+              <h5 matLine class="m-0">
+                <span class="text-success">{{ c.sender.username }}: </span>
+                <span class="text-warning" style="word-break: break-word;" [innerHtml]="gs.htmlToText(c.message).linkify()"></span>
+              </h5>
+            </div>
           </div>
         </div>
       </div>
