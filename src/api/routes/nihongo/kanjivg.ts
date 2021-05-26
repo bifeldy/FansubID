@@ -30,7 +30,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     return res.status(200).json({
-      info: `😅 200 - Kanjivg API :: List All 🤣`,
+      info: `😅 200 - KanjiVg API :: List All 🤣`,
       count,
       pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: kanjivgs
@@ -38,7 +38,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Kanjivg API :: Gagal Mendapatkan All Kanjivgs 😪`,
+      info: `🙄 400 - KanjiVg API :: Gagal Mendapatkan All KanjiVgs 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -56,7 +56,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       ]
     });
     return res.status(200).json({
-      info: `😅 200 - Kanjivg API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - KanjiVg API :: Detail ${req.params.id} 🤣`,
       result: kanjivg
     });
   } catch (error) {

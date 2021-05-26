@@ -18,7 +18,7 @@ import { News } from '../../api/entities/News';
 import { SocialMedia } from '../../api/entities/SocialMedia';
 import { Edict } from '../../api/entities/Edict';
 import { Kanji } from '../../api/entities/Kanji';
-import { KanjiVg } from '../../api/entities/Kanjivg';
+import { KanjiVg } from '../../api/entities/KanjiVg';
 import { KanjiStats } from '../../api/entities/KanjiStats';
 import { Tatoeba } from '../../api/entities/Tatoeba';
 import { Banned } from '../../api/entities/Banned';
