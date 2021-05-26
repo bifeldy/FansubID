@@ -1,0 +1,123 @@
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+  
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-lg-8 col-xl-9">
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy-dark pb-3">
+          <h3 class="m-0 border-bottom border-primary row">
+            <mat-form-field class="pt-3 col-6 col-lg-4" [color]="'accent'">
+              <mat-label>Huruf Jepang</mat-label>
+              <mat-select [(value)]="modeTampilan" (valueChange)="changeModeTampilan($event)">
+                <mat-option value="hiragana">Hiragana</mat-option>
+                <mat-option value="katakana">Katakana</mat-option>
+                <mat-option value="angka">Angka</mat-option>
+                <mat-option value="warna">Warna</mat-option>
+                <mat-option value="binatang">Binatang</mat-option>
+                <mat-option value="buah">Buah</mat-option>
+                <mat-option value="sayur">Sayur</mat-option>
+                <mat-option value="daging">Daging</mat-option>
+                <mat-option value="minuman">Minuman</mat-option>
+                <mat-option value="pakaian">Pakaian</mat-option>
+                <mat-option value="cuaca">Cuaca</mat-option>
+                <mat-option value="transportasi">Transportasi</mat-option>
+                <mat-option value="tempat">Tempat</mat-option>
+                <mat-option value="pekerjaan">Pekerjaan</mat-option>
+                <mat-option value="olah">Olah Raga</mat-option>
+                <mat-option value="perkakas">Perkakas</mat-option>
+                <mat-option value="mebel">Mebel</mat-option>
+                <mat-option value="dapur">Dapur</mat-option>
+                <mat-option value="negara">Negara</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </h3>
+        </div>
+        <div *ngIf="modeTampilan == 'hiragana' || modeTampilan == 'katakana'; then hirakata; else kataBendaLainnya;"></div>
+        <ng-template #hirakata>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="row">
+                  <div class="col-12">
+                    <h2 class="pt-3 border-bottom-dotted">
+                      <b class="text-bifeldy-dark">Standar</b>
+                    </h2>
+                  </div>
+                  <div class="col-12">
+                    <div class="row text-center px-3" *ngFor="let hs of quiz.daftarHuruf.standard | keyvalue">
+                      <div class="col p-1" *ngFor="let char of hs.value">
+                        <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="row">
+                  <div class="col-12">
+                    <h2 class="pt-3 border-bottom-dotted">
+                      <b class="text-bifeldy-dark">Dakuon</b>
+                    </h2>
+                  </div>
+                  <div class="col-12">
+                    <div class="row text-center px-3" *ngFor="let hs of quiz.daftarHuruf.dakuon | keyvalue">
+                      <div class="col p-1" *ngFor="let char of hs.value">
+                        <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <h2 class="pt-3 border-bottom-dotted">
+                      <b class="text-bifeldy-dark">Handakuon</b>
+                    </h2>
+                  </div>
+                  <div class="col-12">
+                    <div class="row text-center px-3" *ngFor="let hs of quiz.daftarHuruf.handakuon | keyvalue">
+                      <div class="col p-1" *ngFor="let char of hs.value">
+                        <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <h2 class="pt-3 border-bottom-dotted">
+                      <b class="text-bifeldy-dark">Yuon</b>
+                    </h2>
+                  </div>
+                  <div class="col-12">
+                    <div class="row text-center px-3" *ngFor="let hs of quiz.daftarHuruf.yuon | keyvalue">
+                      <div class="col p-1" *ngFor="let char of hs.value">
+                        <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #kataBendaLainnya>
+          <div class="col-12">
+            // TODO :: Fitur Belum / Tidak Dapat Di Realisasikan
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xl-3">
+      <div class="row sticky-top">
+        <div class="col-12">
+          <app-banner-discord></app-banner-discord>
+          <app-stats-server></app-stats-server>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

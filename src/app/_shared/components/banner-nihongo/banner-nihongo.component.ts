@@ -9,7 +9,7 @@ export class BannerNihongoComponent implements OnInit {
 
   nihongoMenu = [
     {
-      url: 'hirakata',
+      url: 'belajar',
       title: 'Mengenal Huruf Hiragana & Katakana',
       image_url: '/assets/img/nihongo/hirakata.png'
     },

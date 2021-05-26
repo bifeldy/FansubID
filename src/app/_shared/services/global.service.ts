@@ -19,6 +19,8 @@ export class GlobalService {
 
   readonly allKeyboardKeysRegex = /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/;
 
+  public routerData = null;
+
   public bannerImg = null;
   public sizeContain = false;
   public bgRepeat = false;

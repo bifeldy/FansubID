@@ -129,6 +129,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           this.subsRouterChild = activatedRouteChild.data.subscribe({
             next: e2 => {
               this.updateBackgroundImage();
+              this.gs.routerData = e2;
               this.pi.updatePageMetaData(
                 e2.title,
                 e2.description,

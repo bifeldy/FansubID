@@ -181,56 +181,56 @@ export class NihongoListComponent implements OnInit {
       letter: '~1231 Unik'
     },
     {
-      url: 'school-1',
+      url: 'kelas-1',
       name: 'Kelas 1',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
       letter: '~80 Unik'
     },
     {
-      url: 'school-2',
+      url: 'kelas-2',
       name: 'Kelas 2',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
       letter: '~160 Unik'
     },
     {
-      url: 'school-3',
+      url: 'kelas-3',
       name: 'Kelas 3',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
       letter: '~200 Unik'
     },
     {
-      url: 'school-4',
+      url: 'kelas-4',
       name: 'Kelas 4',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
       letter: '~200 Unik'
     },
     {
-      url: 'school-5',
+      url: 'kelas-5',
       name: 'Kelas 5',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
       letter: '~185 Unik'
     },
     {
-      url: 'school-6',
+      url: 'kelas-6',
       name: 'Kelas 6',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
       letter: '~181 Unik'
     },
     {
-      url: 'school-lanjutan-1',
+      url: 'lanjutan-1',
       name: 'Lanjutan 1',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
       letter: '~1139 Unik'
     },
     {
-      url: 'school-lanjutan-2',
+      url: 'lanjutan-2',
       name: 'Lanjutan 2',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,

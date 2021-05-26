@@ -8,10 +8,10 @@ import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-kanji',
-  templateUrl: './kanji.component.html',
-  styleUrls: ['./kanji.component.css']
+  templateUrl: './nihongo-jlpt-school.component.html',
+  styleUrls: ['./nihongo-jlpt-school.component.css']
 })
-export class KanjiComponent implements OnInit, OnDestroy {
+export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 

@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -7,13 +7,16 @@ import { QuizService } from '../../../_shared/services/quiz.service';
 import { RightPanelService } from '../../../_shared/services/right-panel.service';
 
 @Component({
-  selector: 'app-katakana',
-  templateUrl: './katakana.component.html',
-  styleUrls: ['./katakana.component.css']
+  selector: 'app-quiz',
+  templateUrl: './quiz.component.html',
+  styleUrls: ['./quiz.component.css']
 })
-export class KatakanaComponent implements OnInit, OnDestroy {
+export class QuizComponent implements OnInit, OnDestroy {
 
-  showOptionRomaji = true;
+  @Input() question: string = 'hiragana';
+  @Input() options: string = 'romaji';
+
+  swapOptions = true;
 
   participants = null;
 
@@ -65,7 +68,7 @@ export class KatakanaComponent implements OnInit, OnDestroy {
   }
 
   swapCharacter(): void {
-    this.showOptionRomaji = !this.showOptionRomaji;
+    this.swapOptions = !this.swapOptions;
   }
 
   openLiveChat(): void {
