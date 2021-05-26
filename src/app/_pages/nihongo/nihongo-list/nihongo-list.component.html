@@ -27,7 +27,7 @@
           <div class="row px-3">
             <div class="col-12 col-md-6 col-xl-3 p-2" *ngFor="let t of testNihongo">
               <mat-card>
-                <mat-card-header routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
+                <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
                   <div mat-card-avatar style="background-size: cover; background-color: whitesmoke"
                     [style.background-image]="'url(' + (t.image_url ? t.image_url : '') + ')'">
                     <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>

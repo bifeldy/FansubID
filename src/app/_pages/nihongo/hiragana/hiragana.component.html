@@ -47,7 +47,7 @@
         <div class="col-lg-8 col-xl-9 p-3 text-center">
           <div class="row">
             <div class="col-12 p-4">
-              <div class="mx-auto card p-3" style="width: fit-content;">
+              <div class="mx-auto card p-3">
                 <div class="card-body p-3 py-5" style="font-size: 500%;">
                   {{ showOptionRomaji ? getQuiz.question.hiragana : getQuiz.question.romaji }}
                 </div>
@@ -56,15 +56,15 @@
           </div>
           <div class="row">
             <div class="col-12 p-4">
-              <div class="row mx-auto px-5 text-center">
-                <div class="col-6 col-md-4 col-xl-2 p-2" *ngFor="let o of getQuiz.options">
+              <div class="row text-center">
+                <div class="col-6 col-md-4 p-2" *ngFor="let o of getQuiz.options">
                   <div class="card p-3 m-1" (click)="selectAnswer(o)" style="cursor: pointer;">
                     <div class="card-body px-0" style="font-size: 250%;">
                       {{ showOptionRomaji ? o.romaji : o.hiragana }}
                     </div>
                   </div>
                 </div>
-                <div class="col-6 col-md-4 col-xl-2 p-2">
+                <div class="col-6 col-md-4 p-2">
                   <div class="card p-3 m-1" matTooltip="Tukar Huruf" (click)="swapCharacter()" style="cursor: pointer;">
                     <div class="card-body px-0" style="font-size: 250%;">🎌</div>
                   </div>
