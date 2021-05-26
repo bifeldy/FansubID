@@ -16,7 +16,7 @@ import { Dorama } from '../entities/Dorama';
 
 const router = Router();
 
-const kuryanaApi = 'https://bifeldy-kuryana.herokuapp.com/';
+const kuryanaApi = 'https://bifeldy-kuryana.herokuapp.com';
 
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
