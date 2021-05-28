@@ -53,21 +53,11 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsCekNik) {
-      this.subsCekNik.unsubscribe();
-    }
-    if (this.subsVerify1) {
-      this.subsVerify1.unsubscribe();
-    }
-    if (this.subsVerify2) {
-      this.subsVerify2.unsubscribe();
-    }
-    if (this.subsSosmed) {
-      this.subsSosmed.unsubscribe();
-    }
-    if (this.subsDialog) {
-      this.subsDialog.unsubscribe();
-    }
+    this.subsCekNik?.unsubscribe();
+    this.subsVerify1?.unsubscribe();
+    this.subsVerify2?.unsubscribe();
+    this.subsSosmed?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {

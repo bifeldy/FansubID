@@ -51,12 +51,8 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsUser) {
-      this.subsUser.unsubscribe();
-    }
-    if (this.subsLogout) {
-      this.subsLogout.unsubscribe();
-    }
+    this.subsUser?.unsubscribe();
+    this.subsLogout?.unsubscribe();
   }
 
   ngOnInit(): void {

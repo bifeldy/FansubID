@@ -65,28 +65,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsBerita) {
-      this.subsBerita.unsubscribe();
-    }
-    if (this.subsKanji) {
-      this.subsKanji.unsubscribe();
-    }
-    if (this.subsAnime) {
-      this.subsAnime.unsubscribe();
-    }
-    if (this.subsDorama) {
-      this.subsDorama.unsubscribe();
-    }
-    if (this.subsFansub) {
-      this.subsFansub.unsubscribe();
-    }
-    if (this.subsBerkas) {
-      this.subsBerkas.unsubscribe();
-    }
-    if (this.subsPengguna) {
-      this.subsPengguna.unsubscribe();
-    }
     this.ls.setItem(this.localStorageSearchKeyName, this.searchResult);
+    this.subsBerita?.unsubscribe();
+    this.subsKanji?.unsubscribe();
+    this.subsAnime?.unsubscribe();
+    this.subsDorama?.unsubscribe();
+    this.subsFansub?.unsubscribe();
+    this.subsBerkas?.unsubscribe();
+    this.subsPengguna?.unsubscribe();
   }
 
   applyFilter(event): void {

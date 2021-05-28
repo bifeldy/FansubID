@@ -50,9 +50,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsBerkas) {
-      this.subsBerkas.unsubscribe();
-    }
+    this.subsBerkas?.unsubscribe();
   }
 
   ngOnInit(): void {

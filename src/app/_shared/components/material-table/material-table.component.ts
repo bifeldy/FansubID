@@ -67,11 +67,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   ngOnDestroy(): void {
-    if (this.sort) {
-      if (this.sort.sortChange) {
-        this.sort.sortChange.unsubscribe();
-      }
-    }
+    this.sort?.sortChange?.unsubscribe();
   }
 
   ngAfterViewInit(): void {

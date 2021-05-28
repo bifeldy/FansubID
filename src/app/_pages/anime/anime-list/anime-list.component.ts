@@ -77,15 +77,9 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
-    if (this.subsSeasonalAnime) {
-      this.subsSeasonalAnime.unsubscribe();
-    }
-    if (this.subsFansubAnime) {
-      this.subsFansubAnime.unsubscribe();
-    }
+    this.subsParam?.unsubscribe();
+    this.subsSeasonalAnime?.unsubscribe();
+    this.subsFansubAnime?.unsubscribe();
   }
 
   ngOnInit(): void {

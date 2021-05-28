@@ -101,15 +101,9 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.ls.setItem(this.localStorageLiveChatKeyName, this.liveChatResult);
-    if (this.subsUser) {
-      this.subsUser.unsubscribe();
-    }
-    if (this.subsCurrentRoom) {
-      this.subsCurrentRoom.unsubscribe();
-    }
-    if (this.subsGlobalRoom) {
-      this.subsGlobalRoom.unsubscribe();
-    }
+    this.subsUser?.unsubscribe();
+    this.subsCurrentRoom?.unsubscribe();
+    this.subsGlobalRoom?.unsubscribe();
   }
 
   scrollMessage(): void {

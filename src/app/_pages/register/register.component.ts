@@ -45,15 +45,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsRegister) {
-      this.subsRegister.unsubscribe();
-    }
-    if (this.subsVerify) {
-      this.subsVerify.unsubscribe();
-    }
-    if (this.subsUser) {
-      this.subsUser.unsubscribe();
-    }
+    this.subsRegister?.unsubscribe();
+    this.subsVerify?.unsubscribe();
+    this.subsUser?.unsubscribe();
   }
 
   ngOnInit(): void {

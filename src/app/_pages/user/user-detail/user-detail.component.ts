@@ -67,18 +67,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsUser) {
-      this.subsUser.unsubscribe();
-    }
-    if (this.subsBerkas) {
-      this.subsBerkas.unsubscribe();
-    }
-    if (this.subsBanned) {
-      this.subsBanned.unsubscribe();
-    }
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
+    this.subsUser?.unsubscribe();
+    this.subsBerkas?.unsubscribe();
+    this.subsBanned?.unsubscribe();
+    this.subsParam?.unsubscribe();
   }
 
   get ADMIN(): string {

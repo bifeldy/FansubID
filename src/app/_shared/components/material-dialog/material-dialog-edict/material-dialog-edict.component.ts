@@ -56,9 +56,7 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngOnDestroy(): void {
-    if (this.subsEdict) {
-      this.subsEdict.unsubscribe();
-    }
+    this.subsEdict?.unsubscribe();
   }
 
   ngAfterViewInit(): void {

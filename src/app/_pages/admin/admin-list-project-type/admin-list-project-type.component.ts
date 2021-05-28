@@ -61,21 +61,11 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsProjectCreate) {
-      this.subsProjectCreate.unsubscribe();
-    }
-    if (this.subsProjectGet) {
-      this.subsProjectGet.unsubscribe();
-    }
-    if (this.subsProjectDelete) {
-      this.subsProjectDelete.unsubscribe();
-    }
-    if (this.subsImgbb) {
-      this.subsImgbb.unsubscribe();
-    }
-    if (this.subsDialog) {
-      this.subsDialog.unsubscribe();
-    }
+    this.subsProjectCreate?.unsubscribe();
+    this.subsProjectGet?.unsubscribe();
+    this.subsProjectDelete?.unsubscribe();
+    this.subsImgbb?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   initForm(): void {

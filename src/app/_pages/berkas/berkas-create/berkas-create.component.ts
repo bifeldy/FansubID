@@ -116,11 +116,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsUser) {
-      this.subsUser.unsubscribe();
-    }
     if (this.uploadHandler) {
-      this.uploadHandler.unsubscribe();
       this.attachmentMode = 'indeterminate';
       this.attachmentPercentage = 0;
       this.attachmentSpeed = 0;
@@ -134,30 +130,16 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       clearTimeout(this.timerTimeout);
       this.timerTimeout = null;
     }
-    if (this.subsProject) {
-      this.subsProject.unsubscribe();
-    }
-    if (this.subsFansub) {
-      this.subsFansub.unsubscribe();
-    }
-    if (this.subsAnimeDetail) {
-      this.subsAnimeDetail.unsubscribe();
-    }
-    if (this.subsDoramaDetail) {
-      this.subsDoramaDetail.unsubscribe();
-    }
-    if (this.subsAnimeNew) {
-      this.subsAnimeNew.unsubscribe();
-    }
-    if (this.subsDoramaNew) {
-      this.subsDoramaNew.unsubscribe();
-    }
-    if (this.subsImgbb) {
-      this.subsImgbb.unsubscribe();
-    }
-    if (this.subsBerkasCreate) {
-      this.subsBerkasCreate.unsubscribe();
-    }
+    this.subsUser?.unsubscribe();
+    this.uploadHandler?.unsubscribe();
+    this.subsProject?.unsubscribe();
+    this.subsFansub?.unsubscribe();
+    this.subsAnimeDetail?.unsubscribe();
+    this.subsDoramaDetail?.unsubscribe();
+    this.subsAnimeNew?.unsubscribe();
+    this.subsDoramaNew?.unsubscribe();
+    this.subsImgbb?.unsubscribe();
+    this.subsBerkasCreate?.unsubscribe();
   }
 
   loadProjectList(): void {

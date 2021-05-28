@@ -48,7 +48,7 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
           }],
           poster: this.poster
         }, () => {
-          this.gs.log('[VIDEO-JS_INIT]', this);
+          this.gs.log('[VIDEO-JS_INIT]', this.player);
           if (this.subtitleUrl) {
             this.subtitlesOctopus = new SubtitlesOctopus({
               video: this.target.nativeElement,
@@ -65,14 +65,8 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subtitlesOctopus) {
-      this.gs.log('[SUBTITLE_DESTROY]', this.subtitlesOctopus);
-      this.subtitlesOctopus.dispose();
-    }
-    if (this.player) {
-      this.gs.log('[VIDEO-JS_DESTROY]', this.player);
-      this.player.dispose();
-    }
+    this.subtitlesOctopus?.dispose();
+    this.player?.dispose();
   }
 
 }

@@ -131,36 +131,16 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsUser) {
-      this.subsUser.unsubscribe();
-    }
-    if (this.subsProject) {
-      this.subsProject.unsubscribe();
-    }
-    if (this.subsFansub) {
-      this.subsFansub.unsubscribe();
-    }
-    if (this.subsAnimeDetail) {
-      this.subsAnimeDetail.unsubscribe();
-    }
-    if (this.subsDoramaDetail) {
-      this.subsDoramaDetail.unsubscribe();
-    }
-    if (this.subsAnimeNew) {
-      this.subsAnimeNew.unsubscribe();
-    }
-    if (this.subsDoramaNew) {
-      this.subsDoramaNew.unsubscribe();
-    }
-    if (this.subsImgbb) {
-      this.subsImgbb.unsubscribe();
-    }
-    if (this.subsBerkasDetail) {
-      this.subsBerkasDetail.unsubscribe();
-    }
-    if (this.subsBerkasUpdate) {
-      this.subsBerkasUpdate.unsubscribe();
-    }
+    this.subsUser?.unsubscribe();
+    this.subsProject?.unsubscribe();
+    this.subsFansub?.unsubscribe();
+    this.subsAnimeDetail?.unsubscribe();
+    this.subsDoramaDetail?.unsubscribe();
+    this.subsAnimeNew?.unsubscribe();
+    this.subsDoramaNew?.unsubscribe();
+    this.subsImgbb?.unsubscribe();
+    this.subsBerkasDetail?.unsubscribe();
+    this.subsBerkasUpdate?.unsubscribe();
   }
 
   loadProjectList(): void {

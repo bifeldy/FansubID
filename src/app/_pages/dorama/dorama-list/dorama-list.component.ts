@@ -81,15 +81,9 @@ export class DoramaListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
-    if (this.subsSeasonalDorama) {
-      this.subsSeasonalDorama.unsubscribe();
-    }
-    if (this.subsFansubDorama) {
-      this.subsFansubDorama.unsubscribe();
-    }
+    this.subsParam?.unsubscribe();
+    this.subsSeasonalDorama?.unsubscribe();
+    this.subsFansubDorama?.unsubscribe();
   }
 
   ngOnInit(): void {

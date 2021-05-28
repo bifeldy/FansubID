@@ -56,12 +56,8 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsImgbb) {
-      this.subsImgbb.unsubscribe();
-    }
-    if (this.subsFansub) {
-      this.subsFansub.unsubscribe();
-    }
+    this.subsImgbb?.unsubscribe();
+    this.subsFansub?.unsubscribe();
   }
 
   ngOnInit(): void {

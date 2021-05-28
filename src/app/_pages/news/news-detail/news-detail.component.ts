@@ -40,15 +40,9 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsActRoute) {
-      this.subsActRoute.unsubscribe();
-    }
-    if (this.subsNews) {
-      this.subsNews.unsubscribe();
-    }
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
+    this.subsActRoute?.unsubscribe();
+    this.subsNews?.unsubscribe();
+    this.subsParam?.unsubscribe();
   }
 
   ngOnInit(): void {

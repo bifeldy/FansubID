@@ -50,9 +50,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsNews) {
-      this.subsNews.unsubscribe();
-    }
+    this.subsNews?.unsubscribe();
   }
 
   ngOnInit(): void {

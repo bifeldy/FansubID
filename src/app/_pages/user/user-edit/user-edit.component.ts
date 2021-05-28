@@ -74,21 +74,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsUserDetail) {
-      this.subsUserDetail.unsubscribe();
-    }
-    if (this.subsImgbb1) {
-      this.subsImgbb1.unsubscribe();
-    }
-    if (this.subsImgbb2) {
-      this.subsImgbb2.unsubscribe();
-    }
-    if (this.subsUserUpdate) {
-      this.subsUserUpdate.unsubscribe();
-    }
-    if (this.subsVerify) {
-      this.subsVerify.unsubscribe();
-    }
+    this.subsUserDetail?.unsubscribe();
+    this.subsImgbb1?.unsubscribe();
+    this.subsImgbb2?.unsubscribe();
+    this.subsUserUpdate?.unsubscribe();
+    this.subsVerify?.unsubscribe();
   }
 
   ngOnInit(): void {

@@ -90,18 +90,10 @@ export class NewsEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsActRoute) {
-      this.subsActRoute.unsubscribe();
-    }
-    if (this.subsNewsUpdate) {
-      this.subsNewsUpdate.unsubscribe();
-    }
-    if (this.subsNewsDetail) {
-      this.subsNewsDetail.unsubscribe();
-    }
-    if (this.subsImgbb) {
-      this.subsImgbb.unsubscribe();
-    }
+    this.subsActRoute?.unsubscribe();
+    this.subsNewsUpdate?.unsubscribe();
+    this.subsNewsDetail?.unsubscribe();
+    this.subsImgbb?.unsubscribe();
   }
 
   initForm(data): void {

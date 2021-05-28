@@ -83,14 +83,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsImgbb) {
-      this.subsImgbb.unsubscribe();
-    }
-    if (this.subsBook) {
-      this.subsBook.unsubscribe();
-    }
     if (this.uploadHandler) {
-      this.uploadHandler.unsubscribe();
       this.attachmentMode = 'indeterminate';
       this.attachmentPercentage = 0;
       this.attachmentSpeed = 0;
@@ -104,6 +97,9 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
       clearTimeout(this.timerTimeout);
       this.timerTimeout = null;
     }
+    this.subsImgbb?.unsubscribe();
+    this.subsBook?.unsubscribe();
+    this.uploadHandler?.unsubscribe();
   }
 
   initForm(): void {

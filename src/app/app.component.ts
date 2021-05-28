@@ -56,18 +56,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsRouter) {
-      this.subsRouter.unsubscribe();
-    }
-    if (this.subsRouterChild) {
-      this.subsRouterChild.unsubscribe();
-    }
-    if (this.subsUrl) {
-      this.subsUrl.unsubscribe();
-    }
-    if (this.subsVerify) {
-      this.subsVerify.unsubscribe();
-    }
+    this.subsRouter?.unsubscribe();
+    this.subsRouterChild?.unsubscribe();
+    this.subsUrl?.unsubscribe();
+    this.subsVerify?.unsubscribe();
   }
 
   ngAfterViewInit(): void {

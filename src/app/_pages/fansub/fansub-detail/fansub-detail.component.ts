@@ -81,24 +81,12 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsActRoute) {
-      this.subsActRoute.unsubscribe();
-    }
-    if (this.subsFansub) {
-      this.subsFansub.unsubscribe();
-    }
-    if (this.subsBerkas) {
-      this.subsBerkas.unsubscribe();
-    }
-    if (this.subsAnime) {
-      this.subsAnime.unsubscribe();
-    }
-    if (this.subsDorama) {
-      this.subsDorama.unsubscribe();
-    }
-    if (this.subsParam) {
-      this.subsParam.unsubscribe();
-    }
+    this.subsActRoute?.unsubscribe();
+    this.subsFansub?.unsubscribe();
+    this.subsBerkas?.unsubscribe();
+    this.subsAnime?.unsubscribe();
+    this.subsDorama?.unsubscribe();
+    this.subsParam?.unsubscribe();
   }
 
   ngOnInit(): void {

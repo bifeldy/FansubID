@@ -47,15 +47,9 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsBannedGet) {
-      this.subsBannedGet.unsubscribe();
-    }
-    if (this.subsBannedDelete) {
-      this.subsBannedDelete.unsubscribe();
-    }
-    if (this.subsDialog) {
-      this.subsDialog.unsubscribe();
-    }
+    this.subsBannedGet?.unsubscribe();
+    this.subsBannedDelete?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   getBan(): void {

@@ -60,18 +60,10 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsNotifCreate) {
-      this.subsNotifCreate.unsubscribe();
-    }
-    if (this.subsNotifGet) {
-      this.subsNotifGet.unsubscribe();
-    }
-    if (this.subsNotifDelete) {
-      this.subsNotifDelete.unsubscribe();
-    }
-    if (this.subsDialog) {
-      this.subsDialog.unsubscribe();
-    }
+    this.subsNotifCreate?.unsubscribe();
+    this.subsNotifGet?.unsubscribe();
+    this.subsNotifDelete?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   initForm(): void {

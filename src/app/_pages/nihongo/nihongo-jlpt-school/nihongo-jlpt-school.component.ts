@@ -50,9 +50,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsKanji) {
-      this.subsKanji.unsubscribe();
-    }
+    this.subsKanji?.unsubscribe();
   }
 
   changeJlpt(data): void {

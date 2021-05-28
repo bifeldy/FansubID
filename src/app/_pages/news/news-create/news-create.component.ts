@@ -56,12 +56,8 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsImgbb) {
-      this.subsImgbb.unsubscribe();
-    }
-    if (this.subsNews) {
-      this.subsNews.unsubscribe();
-    }
+    this.subsImgbb?.unsubscribe();
+    this.subsNews?.unsubscribe();
   }
 
   initForm(): void {

@@ -64,18 +64,10 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsActRoute) {
-      this.subsActRoute.unsubscribe();
-    }
-    if (this.subsFansubUpdate) {
-      this.subsFansubUpdate.unsubscribe();
-    }
-    if (this.subsFansubDetail) {
-      this.subsFansubDetail.unsubscribe();
-    }
-    if (this.subsImgbb) {
-      this.subsImgbb.unsubscribe();
-    }
+    this.subsActRoute?.unsubscribe();
+    this.subsFansubUpdate?.unsubscribe();
+    this.subsFansubDetail?.unsubscribe();
+    this.subsImgbb?.unsubscribe();
   }
 
   ngOnInit(): void {

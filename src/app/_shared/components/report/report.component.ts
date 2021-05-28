@@ -137,15 +137,9 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subsUser) {
-      this.subsUser.unsubscribe();
-    }
-    if (this.subsGetReport) {
-      this.subsGetReport.unsubscribe();
-    }
-    if (this.subsSetReport) {
-      this.subsSetReport.unsubscribe();
-    }
+    this.subsUser?.unsubscribe();
+    this.subsGetReport?.unsubscribe();
+    this.subsSetReport?.unsubscribe();
   }
 
   get LIKE(): string {
