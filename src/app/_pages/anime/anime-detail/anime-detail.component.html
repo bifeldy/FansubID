@@ -7,7 +7,7 @@
       <div class="col-md-8 col-xl-9 pt-3 order-2 order-md-1">
         <div class="row py-3 px-0 mt-auto">
           <h1 class="m-0">
-            <b>{{ animeData.title }}</b>
+            <b>{{ animeData.title_japanese || animeData.title }}</b>
           </h1>
         </div>
         <div class="row py-3">
@@ -36,17 +36,17 @@
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="accent" (click)="openSeasonalAnime()"
               matTooltip="Lihat Semua Anime Pada Musim '{{ animeData.premiered }}'">
-              <mat-icon>dynamic_feed</mat-icon> {{ animeData.episodes ? animeData.episodes : '?' }} Eps &nbsp;
-              <mat-icon>star_half</mat-icon> {{ animeData.score ? animeData.score : '?' }} <br />
-              <mat-icon>date_range</mat-icon> {{ animeData.aired.string ? animeData.aired.string : '?' }}
+              <mat-icon>dynamic_feed</mat-icon> {{ animeData.episodes || '?' }} Eps &nbsp;
+              <mat-icon>star_half</mat-icon> {{ animeData.score || '?' }} <br />
+              <mat-icon>date_range</mat-icon> {{ animeData.aired?.string || '?' }}
             </button>
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyAnimeList"
               (click)="openRank()">
-              <mat-icon>timeline</mat-icon> {{ animeData.rank ? animeData.rank : '?' }} &nbsp;
-              <mat-icon>local_fire_department</mat-icon> {{ animeData.popularity ? animeData.popularity : '?' }} <br />
-              <mat-icon>label</mat-icon> {{ animeData.status ? animeData.status : '?' }} - {{ animeData.type }}
+              <mat-icon>timeline</mat-icon> {{ animeData.rank || '?' }} &nbsp;
+              <mat-icon>local_fire_department</mat-icon> {{ animeData.popularity || '?' }} <br />
+              <mat-icon>label</mat-icon> {{ animeData.status || '?' }} - {{ animeData.type }}
             </button>
           </div>
         </div>

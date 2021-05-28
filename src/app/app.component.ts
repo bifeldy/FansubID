@@ -134,7 +134,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 e2.title,
                 e2.description,
                 e2.keywords,
-                this.selectedBackgroundImage ? this.selectedBackgroundImage : '/favicon.ico'
+                (this.selectedBackgroundImage || '/favicon.ico')
               );
               this.fs.removeFab();
               if (this.gs.isBrowser) {

@@ -60,19 +60,35 @@ export class StatsServerService {
   }
 
   public get currentRoomValue(): any {
-    return this.currentRoomSubject ? this.currentRoomSubject.value : null;
+    return this.currentRoomSubject?.value || null;
   }
 
   public get globalRoomValue(): any {
-    return this.globalRoomSubject ? this.globalRoomSubject.value : null;
+    return this.globalRoomSubject?.value || null;
   }
 
   socketListen(): void {
     this.mySocket.on('connect', () => {
       this.gs.log('[SOCKET_CONNECTED]', this.mySocket.id);
+      this.intervalPingPong = setInterval(() => {
+        const start = Date.now();
+        this.socketEmitVolatile('ping-pong', null, (response: any) => {
+          this.latency = Date.now() - start;
+          this.gs.log('[SOCKET_PING-PONG]', this.latency);
+          if ('github' in response && response.github) {
+            this.portalVer = response.github.sha;
+            this.commitUser = response.github.commit.author.name;
+            this.commitDate = new Date(response.github.commit.author.date);
+            this.commitMessage = response.github.commit.message;
+          }
+        });
+      }, 10000);
     });
     this.mySocket.on('disconnect', reason => {
       this.gs.log('[SOCKET_DISCONNECTED]', reason);
+      if (this.intervalPingPong) {
+        clearInterval(this.intervalPingPong);
+      }
     });
     this.mySocket.on('visitors', visitors => {
       this.gs.log('[SOCKET_VISITOR]', this.visitor);
@@ -157,19 +173,6 @@ export class StatsServerService {
         this.quizRoom[room_id].options = this.gs.shuffle(this.quizRoom[room_id].options);
       }
     });
-    this.intervalPingPong = setInterval(() => {
-      const start = Date.now();
-      this.socketEmitVolatile('ping-pong', null, (response: any) => {
-        this.latency = Date.now() - start;
-        this.gs.log('[SOCKET_PING-PONG]', this.latency);
-        if ('github' in response && response.github) {
-          this.portalVer = response.github.sha;
-          this.commitUser = response.github.commit.author.name;
-          this.commitDate = new Date(response.github.commit.author.date);
-          this.commitMessage = response.github.commit.message;
-        }
-      });
-    }, 10000);
   }
 
   socketEmit(eventName: string, eventData: any, callback = null): void {

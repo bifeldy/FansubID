@@ -75,9 +75,9 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
           bannedDataRow.push({
             Id: r.id,
             foto_korban: r.user_.image_url,
-            foto_pelaku: (r.banned_by_ ? r.banned_by_.image_url : '/favicon.ico'),
+            foto_pelaku: (r.banned_by_?.image_url || '/favicon.ico'),
             Korban: r.user_.username,
-            Pelaku: (r.banned_by_ ? r.banned_by_.username : 'AUTO_BANNED'),
+            Pelaku: (r.banned_by_?.username || 'AUTO_BANNED'),
             Alasan: r.reason,
             Aksi: [{
               type: 'button',

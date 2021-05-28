@@ -108,7 +108,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
             this.pi.updatePageMetaData(
               `${this.doramaData.title}`,
               `${this.doramaData.synopsis}`,
-              `${this.doramaData.others ? this.doramaData.others.tags : this.doramaData.title}`,
+              `${this.doramaData?.others?.tags || this.doramaData?.title}`,
               this.doramaData.image_url
             );
             this.bs.idle();

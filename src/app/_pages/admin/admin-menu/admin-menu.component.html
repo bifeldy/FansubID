@@ -30,7 +30,7 @@
           <mat-card>
             <mat-card-header routerLink="/admin-mod/{{ m.url }}" style="cursor: pointer;">
               <div mat-card-avatar style="background-size: cover;"
-                [style.background-image]="'url(' + (m.image_url ? m.image_url : '') + ')'">
+                [style.background-image]="'url(' + (m.image_url || '') + ')'">
                 <mat-icon style="font-size: 300%;" *ngIf="m.icon">{{ m.icon }}</mat-icon>
               </div>
               <mat-card-title class="text-warning mb-1" style="cursor: pointer;">

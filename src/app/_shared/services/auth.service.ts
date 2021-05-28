@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   public get currentUserValue(): User {
-    return this.currentUserSubject ? this.currentUserSubject.value : null;
+    return this.currentUserSubject?.value || null;
   }
 
   verify(token: any): Observable<any> {

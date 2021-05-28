@@ -122,9 +122,9 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [data.tags, Validators.compose([])],
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      web: [WEB ? WEB.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      facebook: [FACEBOOK ? FACEBOOK.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      discord: [DISCORD ? DISCORD.url : null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      web: [(WEB?.url || null), Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),

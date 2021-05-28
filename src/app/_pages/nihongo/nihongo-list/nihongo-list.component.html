@@ -29,7 +29,7 @@
               <mat-card>
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
                   <div mat-card-avatar style="background-size: cover; background-color: whitesmoke"
-                    [style.background-image]="'url(' + (t.image_url ? t.image_url : '') + ')'">
+                    [style.background-image]="'url(' + (t.image_url || '') + ')'">
                     <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
                   </div>
                   <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
