@@ -367,7 +367,9 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
     if (req.user) {
       file.download_url = JSON.parse(file.download_url);
       if (!req.user.verified) {
-        (file as any).attachment_ = 'Harap Verifikasi Akun!';
+        if (file.attachment_) {
+          (file as any).attachment_ = 'Harap Verifikasi Akun!';
+        }
       } else {
         if ('attachment_' in file && file.attachment_) {
           const attachmentRepo = getRepository(Attachment);
@@ -418,8 +420,8 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
         }
       }
     } else {
-      delete file.download_url;
-      delete file.attachment_;
+      file.download_url = null;
+      file.attachment_ = null;
     }
     return res.status(200).json({
       info: `😅 200 - Berkas API :: Detail ${req.params.id} 🤣`,

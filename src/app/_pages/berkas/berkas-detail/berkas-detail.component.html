@@ -125,8 +125,8 @@
                 </button>
               </div>
               <div class="col-12 text-center" *ngIf="!isHaveDDL">
-                <button class="m-1" mat-stroked-button color="accent" (click)="verify()">
-                  <mat-icon class="me-1">domain_verification</mat-icon>
+                <button class="m-1" mat-stroked-button color="accent" (click)="verify()" matTooltip="Direct Download Link Berkas">
+                  <mat-icon class="me-1">enhanced_encryption</mat-icon>
                   {{ berkasData.attachment_ }}
                 </button>
               </div>
@@ -151,8 +151,8 @@
                   [subtitleFonts]="ddlFonts"
                   [poster]="'/favicon.ico'">
                 </app-vjs-player>
-                <button class="m-1 w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">
-                  <mat-icon class="me-1">warning</mat-icon>
+                <button class="w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">
+                  <mat-icon class="me-1">enhanced_encryption</mat-icon>
                   {{ berkasData.attachment_ }}
                 </button>
               </div>
