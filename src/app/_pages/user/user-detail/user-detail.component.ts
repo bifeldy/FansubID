@@ -85,6 +85,12 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     return Role.FANSUBBER;
   }
 
+  get accountAge(): number {
+    return Math.abs(new Date(
+      new Date().getTime() - new Date(this.userData.created_at).getTime()
+    ).getUTCFullYear() - 1970);
+  }
+
   ngOnInit(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {

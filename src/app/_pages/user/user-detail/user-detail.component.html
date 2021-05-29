@@ -8,6 +8,15 @@
           <div class="col-12">
             <img class="w-100 rounded-circle" src="{{ userData.image_url }}" />
           </div>
+          <div class="col-12 my-3">
+            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role == ADMIN" style="cursor: pointer;">handyman</mat-icon>
+            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role == MODERATOR" style="cursor: pointer;">security</mat-icon>
+            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role == FANSUBBER" style="cursor: pointer;">rate_review</mat-icon>
+            <mat-icon class="mx-1" matTooltip="Terverifikasi" *ngIf="userData.verified" style="cursor: pointer;">verified</mat-icon>
+            <mat-icon class="mx-1" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned" style="cursor: pointer;">lock</mat-icon>
+            <mat-icon class="mx-1" matTooltip="{{ accountAge }} Years of Service" *ngIf="accountAge > 0" style="cursor: pointer;">military_tech</mat-icon>
+            <mat-icon class="mx-1" matTooltip="Sharing is Caring" *ngIf="count > 0" style="cursor: pointer;">volunteer_activism</mat-icon>
+          </div>
         </div>
       </div>
 
@@ -16,9 +25,6 @@
         <div class="row py-3 px-0 profile-height-large">
           <h1 class="m-0 mt-auto">
             <b>{{ userData.kartu_tanda_penduduk_.nama }}</b>
-            <mat-icon class="ms-2" matTooltip="{{ userData.role }}" *ngIf="userData.role == ADMIN || userData.role == MODERATOR" style="cursor: pointer;">security</mat-icon>
-            <mat-icon class="ms-2" matTooltip="Terverifikasi" *ngIf="userData.verified" style="cursor: pointer;">verified</mat-icon>
-            <mat-icon class="ms-2" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned" style="cursor: pointer;">lock</mat-icon>
           </h1>
         </div>
         <div class="row p-3">
@@ -26,9 +32,9 @@
             <mat-icon class="me-1">accessibility_new</mat-icon>
             {{ userData.id }}
           </button>
-          <button mat-stroked-button matLine class="col-12 col-md-8 text-truncate" *ngIf="userData.updated_at" matTooltip="Terakhir Login" color="accent" style="overflow: hidden;">
+          <button mat-stroked-button matLine class="col-12 col-md-8 text-truncate" *ngIf="userData.created_at" matTooltip="Tanggal Bergabung" color="accent" style="overflow: hidden;">
             <mat-icon class="me-1">access_time</mat-icon>
-            {{ userData.updated_at | date:'d/M/yy, h:mm a' }}
+            {{ userData.created_at | date:'d/M/yyyy, h:mm a' }}
           </button>
           <button mat-stroked-button matLine class="col text-truncate" *ngIf="userData.kartu_tanda_penduduk_.tempat_lahir" matTooltip="Kota Kelahiran" color="accent" style="overflow: hidden;">
             <mat-icon class="me-1">location_on</mat-icon>
