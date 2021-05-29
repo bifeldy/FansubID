@@ -157,19 +157,25 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return (this.fonts.length > 0) ? this.fonts : [];
   }
 
+  get isHaveDDL(): boolean {
+    return typeof (this.berkasData.attachment_) != 'string';
+  }
+
   setupVjs(): void {
     if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
-      if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
-        this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
-          this.subtitles = data;
-          this.checkVjs();
-        });
-      }
-      if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
-        this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
-          this.fonts = data;
-          this.checkVjs();
-        });
+      if (this.isHaveDDL) {
+        if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
+          this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
+            this.subtitles = data;
+            this.checkVjs();
+          });
+        }
+        if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
+          this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
+            this.fonts = data;
+            this.checkVjs();
+          });
+        }
       }
     }
   }

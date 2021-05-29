@@ -367,7 +367,7 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
     if (req.user) {
       file.download_url = JSON.parse(file.download_url);
       if (!req.user.verified) {
-        delete file.attachment_;
+        (file as any).attachment_ = 'Harap Verifikasi Akun!';
       } else {
         if ('attachment_' in file && file.attachment_) {
           const attachmentRepo = getRepository(Attachment);
