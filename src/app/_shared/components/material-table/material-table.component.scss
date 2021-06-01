@@ -68,11 +68,10 @@ td.mat-column-star {
     .mat-cell {
       display: block;
       width: 100%;
-      padding: 0 16px;
-      margin: 16px 0;
+      padding: 8px 16px;
+      margin: 0;
       border: 0 none;
-      &:first-child {
-        padding: 0 48px 0 16px;
+      &:first-child, &:last-child {
         a {
           font-size: 20px;
           color: inherit;
@@ -80,6 +79,12 @@ td.mat-column-star {
         &:before {
           display: none;
         }
+      }
+      &:first-child {
+        padding: 16px 48px 8px 16px;
+      }
+      &:last-child {
+        padding: 8px 48px 16px 16px;
       }
       &.m-card-sub-title {
         margin-top: -8px;

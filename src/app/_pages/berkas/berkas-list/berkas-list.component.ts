@@ -75,6 +75,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
         for (const r of res.results) {
           this.berkasData.push({
             id: r.id,
+            private: r.private,
             foto: r.user_.image_url,
             Proyek: r.project_type_.name,
             Image: r.image_url,

@@ -170,7 +170,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
 });
 
 // PATCH `/api/dorama/berkas?id=`
-router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/berkas', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const doramaId = req.query.id ? req.query.id.split(',') : req.body.id;
     if (Array.isArray(doramaId) && doramaId.length > 0) {
@@ -178,8 +178,12 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
       const [files, count] = await fileRepo.findAndCount({
         where: [
           {
+            ...((req.user?.verified) ? {
+              // Verified User Can See Private Berkas
+            } : {
+              private: false
+            }),
             name: ILike(`%${req.query.q ? req.query.q : ''}%`),
-            private: false,
             dorama_: {
               id: In(doramaId)
             }
@@ -202,7 +206,6 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
         results[i] = [];
       }
       for (const f of files) {
-        delete f.private;
         delete f.download_url;
         delete f.description;
         if ('project_type_' in f && f.project_type_) {

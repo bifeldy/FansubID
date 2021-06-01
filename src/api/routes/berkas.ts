@@ -41,7 +41,7 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
       where: [
         {
           ...((req.user?.verified) ? {
-            //
+            // Verified User Can See Private Berkas
           } : {
             private: false
           }),
@@ -61,7 +61,6 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const f of files) {
-      delete f.private;
       delete f.download_url;
       delete f.description;
       if ('project_type_' in f && f.project_type_) {

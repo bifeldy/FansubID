@@ -17,7 +17,7 @@
     ">
       <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
     </th>
-    <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;">
+    <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;" [style.background-color]="row.private ? '#42424280' : ''">
       <div *ngIf="checkIsArray(row[tdc]) == false">
         <h3 class="m-0" [style.color]="
           (tdc == 'Pemilik' || tdc == 'Penulis' || tdc == 'Status' || tdc == 'Korban') ? '#ffc107' :

@@ -166,6 +166,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
         for (const r of res.results[this.animeId]) {
           this.berkasAnime.push({
             id: r.id,
+            private: r.private,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Tanggal: r.created_at,

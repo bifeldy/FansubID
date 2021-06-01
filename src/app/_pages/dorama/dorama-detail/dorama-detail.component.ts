@@ -207,6 +207,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
         for (const r of res.results[this.doramaId]) {
           this.berkasDorama.push({
             id: r.id,
+            private: r.private,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Tanggal: r.created_at,
