@@ -34,12 +34,19 @@ import { MessageEmbed } from 'discord.js';
 const router = Router();
 
 // GET `/api/berkas`
-router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fileRepo = getRepository(Berkas);
     const [files, count] = await fileRepo.findAndCount({
       where: [
-        { private: false, name: ILike(`%${req.query.q ? req.query.q : ''}%`) }
+        {
+          ...((req.user?.verified) ? {
+            //
+          } : {
+            private: false
+          }),
+          name: ILike(`%${req.query.q ? req.query.q : ''}%`)
+        }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
