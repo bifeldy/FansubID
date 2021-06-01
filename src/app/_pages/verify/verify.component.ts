@@ -88,10 +88,10 @@ export class VerifyComponent implements OnInit, OnDestroy {
           data: {
             title: res.result.title,
             htmlMessage: res.result.message,
-            confirmText: 'Berhasil',
-            cancelText: 'Coba Lagi'
+            confirmText: 'Tutup',
+            cancelText: 'Ulangi'
           },
-          disableClose: false
+          disableClose: true
         }).afterClosed().subscribe({
           next: re => {
             if (re === true) {
