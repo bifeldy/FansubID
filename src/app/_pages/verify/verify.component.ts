@@ -67,10 +67,10 @@ export class VerifyComponent implements OnInit, OnDestroy {
       const code = this.route.snapshot.queryParamMap.get('code');
       if (app && code) {
         this.sosmedVerify(app, code);
+      } else if (this.as.currentUserValue && this.as.currentUserValue.verified) {
+        this.router.navigateByUrl('/home');
       } else {
-        if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-          this.router.navigateByUrl('/home');
-        }
+        this.verifyByKtpDisabled();
       }
     }
   }
@@ -99,7 +99,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
               this.router.navigateByUrl('/login');
             } else if (re === false) {
               if (sosmedApp.toUpperCase() === SosMed.DISCORD) {
-                this.wb.winboxOpenUri(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`, '_self');
+                this.openVerifyDiscordUrl();
               }
               // TODO :: If Other SosMed
             }
@@ -112,6 +112,39 @@ export class VerifyComponent implements OnInit, OnDestroy {
         this.bs.idle();
       }
     });
+  }
+
+  verifyByKtpDisabled(): void {
+    this.subsDialog = this.ds.openInfoDialog({
+      data: {
+        title: 'Dalam Perbaikan',
+        htmlMessage: `
+          <div class="text-center p-3">
+            <img src="/favicon.ico" class="mb-4">
+            <p class="text-warning">
+              Karena masalah kebocoran data pemerintah kemarin terungkap, <br />
+              Verifikasi dengan menggunakan KTP ditutup untuk sementara!
+            </p>
+          </div>
+        `,
+        confirmText: 'Via Discord',
+        cancelText: 'Batal'
+      },
+      disableClose: true
+    }).afterClosed().subscribe({
+      next: re => {
+        if (re === true) {
+          this.openVerifyDiscordUrl();
+        } else if (re === false) {
+          this.router.navigateByUrl('/home');
+        }
+        this.subsDialog.unsubscribe();
+      }
+    });
+  }
+
+  openVerifyDiscordUrl(): void {
+    this.wb.winboxOpenUri(`${environment.baseUrl}/verify-discord`, '_self');
   }
 
   initKTP(): void {
