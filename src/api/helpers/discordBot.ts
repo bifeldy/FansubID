@@ -34,8 +34,7 @@ export async function discordBot(io: Server, msg: Message) {
         });
         if (user.verified) {
           await msg.channel.send(`<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰`);
-        }
-        if (args[1] === SosMed.DISCORD) {
+        } else if (args[1] === SosMed.DISCORD) {
           if (decoded && 'id' in decoded.discord) {
             if (decoded.discord.id === msg.author.id) {
               user.verified = true;
@@ -65,8 +64,10 @@ export async function discordBot(io: Server, msg: Message) {
           } else {
             throw new Error('Format Data Salah / Token Expired!');
           }
+        } else {
+          // TODO :: Else If Other SosMed
+          await msg.channel.send(`<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔`);
         }
-        // TODO :: If Other SosMed
       } catch (error) {
         console.error(error);
         return msg.channel.send(`<@${msg.author.id}> Format data salah atau token expired 🤔`);
