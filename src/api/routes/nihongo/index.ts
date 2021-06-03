@@ -7,6 +7,7 @@ import kanjiRouter from './kanji';
 import kanjivgRouter from './kanjivg';
 import lessonRouter from './lesson';
 import tatoebaRouter from './tatoeba';
+import hirakataRouter from './hirakata';
 
 const router = Router();
 
@@ -15,6 +16,7 @@ router.use('/kanji', kanjiRouter);
 router.use('/kanjivg', kanjivgRouter);
 router.use('/lesson', lessonRouter);
 router.use('/tatoeba', tatoebaRouter);
+router.use('/hirakata', hirakataRouter);
 
 // GET `/api/nihongo`
 router.get('/', (req: UserRequest, res: Response) => {

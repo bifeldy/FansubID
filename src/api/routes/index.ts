@@ -36,7 +36,7 @@ import notificationRouter from './notification';
 import likedislikeRouter from './likedislike';
 
 // Child router folder
-import nihongoRouter from './nihongo/index';
+import nihongoRouter from './nihongo';
 
 import { SosMed } from '../../app/_shared/models/SosMed';
 
