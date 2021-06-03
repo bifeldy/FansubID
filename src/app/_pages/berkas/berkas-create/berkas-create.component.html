@@ -149,7 +149,7 @@
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="currentUser && currentUser.verified">
                   <div class="col-12 p-3">
                     <mat-divider></mat-divider>
                   </div>
@@ -166,14 +166,6 @@
                       <strong>{{ attachmentErrorText }}</strong>
                     </small>
                   </mat-error>
-                </div>
-                <div class="row" *ngIf="currentUser && !currentUser.verified">
-                  <div class="col-12 p-3">
-                    <button class="w-100" mat-stroked-button color="accent" (click)="verify()" matTooltip="Direct Download Link Berkas">
-                      <mat-icon class="me-1">enhanced_encryption</mat-icon>
-                      Upload Butuh Verifikasi!
-                    </button>
-                  </div>
                 </div>
                 <div class="row mb-4" *ngIf="attachment">
                   <div class="col">

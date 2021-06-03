@@ -250,14 +250,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     return (this.fg.get('download_url') as FormArray);
   }
 
-  verify(): void {
-    this.router.navigate(['/verify'], {
-      queryParams: {
-        returnUrl: this.router.url
-      }
-    });
-  }
-
   createDownloadLink(): any {
     return this.fb.group({
       name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],

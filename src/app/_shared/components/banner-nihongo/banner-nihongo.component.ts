@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { GlobalService } from '../../services/global.service';
+
 @Component({
   selector: 'app-banner-nihongo',
   templateUrl: './banner-nihongo.component.html',
@@ -10,20 +12,28 @@ export class BannerNihongoComponent implements OnInit {
   nihongoMenu = [
     {
       url: 'belajar',
-      title: 'Mengenal Huruf Hiragana & Katakana',
+      title: 'Mengenal Huruf Dan Lingkungan Sekitar',
       image_url: '/assets/img/nihongo/hirakata.png'
     },
     {
       url: 'kanji',
-      title: 'Daftar Huruf Kanji JLPT N5 - N1',
+      title: 'Daftar Huruf Kanji Sekolah & JLPT',
       image_url: '/assets/img/nihongo/jlpt.png'
     }
   ];
 
-  constructor() {
+  constructor(
+    public gs: GlobalService
+  ) {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
   ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      //
+    }
   }
 
 }
