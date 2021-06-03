@@ -36,7 +36,7 @@
             </mat-form-field>
           </h3>
         </div>
-        <div *ngIf="modeTampilan == 'hiragana' || modeTampilan == 'katakana'; then hirakata; else kataBendaLainnya;"></div>
+        <div *ngIf="(modeTampilan == 'hiragana' || modeTampilan == 'katakana') && daftarHuruf; then hirakata; else kataBendaLainnya;"></div>
         <ng-template #hirakata>
           <div class="col-12">
             <div class="row">
@@ -48,9 +48,23 @@
                     </h2>
                   </div>
                   <div class="col-12">
-                    <div class="row text-center px-3" *ngFor="let hs of quiz.daftarHuruf.standard | keyvalue">
-                      <div class="col p-1" *ngFor="let char of hs.value">
-                        <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                    <div class="row text-center px-3" *ngFor="let huruf of daftarHuruf.standard | keyvalue">
+                      <div class="col p-1" *ngFor="let char of huruf.value">
+                        <img *ngIf="char.hiragana && char.katakana" src="/assets/{{ modeTampilan }}/{{ char.romaji }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <h2 class="pt-3 border-bottom-dotted">
+                      <b class="text-bifeldy-dark">Lainnya</b>
+                    </h2>
+                  </div>
+                  <div class="col-12">
+                    <div class="row text-center px-3" *ngFor="let huruf of daftarHuruf.other | keyvalue">
+                      <div class="col p-1" *ngFor="let char of huruf.value">
+                        <img *ngIf="char.hiragana && char.katakana" src="/assets/{{ modeTampilan }}/{{ char.romaji }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
                       </div>
                     </div>
                   </div>
@@ -64,9 +78,9 @@
                     </h2>
                   </div>
                   <div class="col-12">
-                    <div class="row text-center px-3" *ngFor="let hs of quiz.daftarHuruf.dakuon | keyvalue">
-                      <div class="col p-1" *ngFor="let char of hs.value">
-                        <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                    <div class="row text-center px-3" *ngFor="let huruf of daftarHuruf.dakuon | keyvalue">
+                      <div class="col p-1" *ngFor="let char of huruf.value">
+                        <img *ngIf="char.hiragana && char.katakana" src="/assets/{{ modeTampilan }}/{{ char.romaji }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
                       </div>
                     </div>
                   </div>
@@ -78,9 +92,9 @@
                     </h2>
                   </div>
                   <div class="col-12">
-                    <div class="row text-center px-3" *ngFor="let hs of quiz.daftarHuruf.handakuon | keyvalue">
-                      <div class="col p-1" *ngFor="let char of hs.value">
-                        <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                    <div class="row text-center px-3" *ngFor="let huruf of daftarHuruf.handakuon | keyvalue">
+                      <div class="col p-1" *ngFor="let char of huruf.value">
+                        <img *ngIf="char.hiragana && char.katakana" src="/assets/{{ modeTampilan }}/{{ char.romaji }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
                       </div>
                     </div>
                   </div>
@@ -92,9 +106,9 @@
                     </h2>
                   </div>
                   <div class="col-12">
-                    <div class="row text-center px-3" *ngFor="let hs of quiz.daftarHuruf.yuon | keyvalue">
-                      <div class="col p-1" *ngFor="let char of hs.value">
-                        <img *ngIf="char" src="/assets/{{ modeTampilan }}/{{ char.path }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
+                    <div class="row text-center px-3" *ngFor="let huruf of daftarHuruf.yuon | keyvalue">
+                      <div class="col p-1" *ngFor="let char of huruf.value">
+                        <img *ngIf="char.hiragana && char.katakana" src="/assets/{{ modeTampilan }}/{{ char.romaji }}.png" class="rounded img-thumbnail" (click)="openDmak(char)" style="cursor: pointer;" />
                       </div>
                     </div>
                   </div>

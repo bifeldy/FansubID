@@ -1,19 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 
-@Entity({ name: 'kanjivg' })
-export class KanjiVg {
+@Entity({ name: 'hirakata' })
+export class Hirakata {
 
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @Column({ primary: true, type: 'varchar', length: 255 })
+  romaji: string;
 
   @Column({ type: 'text' })
-  kanji: string;
+  hiragana: string;
 
-  @Column({ type: 'text', nullable: true })
-  level: string;
+  @Column({ type: 'text' })
+  katakana: string;
 
-  @Column({ type: 'text', nullable: true })
-  path: string;
+  @Column({ type: 'text' })
+  category: string;
+
+  @Column({ type: 'text' })
+  segment: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   // tslint:disable-next-line: variable-name

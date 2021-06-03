@@ -26,6 +26,8 @@ import { Notification } from '../../api/entities/Notification';
 import { Lesson } from '../../api/entities/Lesson';
 import { Track } from '../../api/entities/Track';
 import { LikeDislike } from '../../api/entities/LikeDislike';
+import { Hirakata } from '../../api/entities/Hirakata';
+import { HirakataStats } from '../../api/entities/HirakataStats';
 
 export const environment = {
   production: false,
@@ -66,7 +68,9 @@ export const environment = {
     Banned,
     Notification,
     Track,
-    LikeDislike
+    LikeDislike,
+    Hirakata,
+    HirakataStats
   ],
   uploadFolder: 'dist/hikki/uploads',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',

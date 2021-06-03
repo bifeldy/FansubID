@@ -5,6 +5,10 @@
 <div class="container">
 
   <!-- Quiz Game -->
-  <app-quiz [question]="gs.routerData.question" [options]="gs.routerData.options"></app-quiz>
+  <app-quiz
+    *ngIf="gs.routerData.question && gs.routerData.options"
+    [question]="gs.routerData.question"
+    [options]="gs.routerData.options">
+  </app-quiz>
 
 </div>

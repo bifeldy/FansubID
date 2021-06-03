@@ -5,7 +5,7 @@ import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/mod
 
 // Helper
 import jwt from '../helpers/jwt';
-import { getQuizHirakata } from '../helpers/quizRoom';
+import { getQuizHirakata, initializeQuizHirakata } from '../helpers/quizRoom';
 
 import { Notification } from '../entities/Notification';
 import { Berkas } from '../entities/Berkas';
@@ -14,35 +14,33 @@ import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Profile } from '../entities/Profile';
 
+// Room Chat List
+const room = {};
+
+// Questions Each Room
+const quiz = {};
+
+// Initialize Quiz
+function initializeQuiz() {
+  initializeQuizHirakata();
+}
+
 // Generate Question
-function getQuestion(roomId: string) {
+function getNewQuestion(roomId: string): void {
   switch (roomId) {
     case '/nihongo/hiragana':
     case '/nihongo/katakana':
-      return getQuizHirakata();
+      quiz[roomId] = getQuizHirakata();
+      return;
     case '/nihongo/jlpt-n5':
     case '/nihongo/jlpt-n4':
     case '/nihongo/jlpt-n3':
     case '/nihongo/jlpt-n2':
     case '/nihongo/jlpt-n1':
     default:
-      return null;
+      return;
   }
 }
-
-// Room Chat List
-const room = {};
-
-// Questions Each Room
-const quiz = {
-  '/nihongo/hiragana': getQuestion('/nihongo/hiragana'),
-  '/nihongo/katakana': getQuestion('/nihongo/katakana'),
-  '/nihongo/jlpt-n5': getQuestion('/nihongo/jlpt-n5'),
-  '/nihongo/jlpt-n4': getQuestion('/nihongo/jlpt-n4'),
-  '/nihongo/jlpt-n3': getQuestion('/nihongo/jlpt-n3'),
-  '/nihongo/jlpt-n2': getQuestion('/nihongo/jlpt-n2'),
-  '/nihongo/jlpt-n1': getQuestion('/nihongo/jlpt-n1')
-};
 
 function sendChat(data: RoomChat) {
   return {
@@ -115,6 +113,9 @@ export function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut
       room[data.newRoom][socket.id].quiz = {
         score: 0
       };
+      if (!quiz[data.newRoom]) {
+        getNewQuestion(data.newRoom);
+      }
       socket.emit('quiz-question', {
         room_id: data.newRoom,
         ...quiz[data.newRoom]
@@ -126,6 +127,7 @@ export function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut
 
 // tslint:disable-next-line: typedef
 export async function socketBot(io: Server, socket: Socket) {
+  initializeQuiz();
   try {
     const notifRepo = getRepository(Notification);
     const notif = await notifRepo.find({
@@ -395,7 +397,7 @@ export async function socketBot(io: Server, socket: Socket) {
           } else {
             decreasePlayerPoint(io, socket, data);
           }
-          quiz[data.roomId] = getQuestion(data.roomId);
+          getNewQuestion(data.roomId);
           io.to(data.roomId).emit('room-info', getRoomInfo(io, data.roomId));
           io.to(data.roomId).emit('receive-chat', {
             room_id: data.roomId,
