@@ -199,7 +199,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
           let mimeType = 'video/';
           if (fIdx >= 0) {
-            if (attachment.ext === 'mkv') {
+            if (attachment.ext.toString().toLowerCase() === 'mkv') {
               mkvExtract(attachment.name.toString().toLowerCase(), files[fIdx], async (error, extractedFiles) => {
                 if (error) {
                   console.error(error);
