@@ -42,7 +42,7 @@ export class NihongoBelajarComponent implements OnInit {
     this.gs.log('[HIRAKATA_OPEN_DMAK]', kana);
     this.ds.openDmakDialog({
       data: {
-        romaji: kana.path,
+        romaji: kana.romaji,
         hiragana_katakana_kanji: (
           this.modeTampilan === 'hiragana' ?　kana.hiragana :　kana.katakana
         )
