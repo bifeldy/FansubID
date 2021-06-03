@@ -382,13 +382,13 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
           const subtitles = await attachmentRepo.find({
             where: [
               {
-                ext: Equal('ass'),
+                ext: ILike('ass'),
                 parent_attachment_: {
                   id: Equal(file.attachment_.id)
                 }
               },
               {
-                ext: Equal('srt'),
+                ext: ILike('srt'),
                 parent_attachment_: {
                   id: Equal(file.attachment_.id)
                 }
@@ -407,7 +407,13 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
           const fonts = await attachmentRepo.find({
             where: [
               {
-                ext: Equal('ttf'),
+                ext: ILike('ttf'),
+                parent_attachment_: {
+                  id: Equal(file.attachment_.id)
+                }
+              },
+              {
+                ext: ILike('otf'),
                 parent_attachment_: {
                   id: Equal(file.attachment_.id)
                 }
