@@ -209,4 +209,8 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
     this.getNotif();
   }
 
+  openNotif(data): void {
+    this.gs.log('[NOTIFICATION_LIST_CLICK_NOTIFICATION]', data);
+  }
+
 }

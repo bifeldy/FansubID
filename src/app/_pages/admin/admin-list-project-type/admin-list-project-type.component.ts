@@ -232,4 +232,8 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     });
   }
 
+  openProject(data): void {
+    this.gs.log('[PROJECT_LIST_CLICK_PROJECT]', data);
+  }
+
 }

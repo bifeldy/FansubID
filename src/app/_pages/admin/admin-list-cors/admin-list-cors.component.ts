@@ -148,4 +148,8 @@ export class AdminListCorsComponent implements OnInit {
     this.getCors();
   }
 
+  openCors(data): void {
+    this.gs.log('[CORS_LIST_CLICK_CORS]', data);
+  }
+
 }
