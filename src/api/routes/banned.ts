@@ -19,7 +19,7 @@ import auth from '../middlewares/auth';
 
 const router = Router();
 
-// GET `/api/banned`
+// GET `/api/banned?id=`
 router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const bannedRepo = getRepository(Banned);
@@ -73,14 +73,21 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
         return res.status(200).json({
           info: `😅 200 - Banned API :: User 🤣`,
           count,
-          pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+          pages: 1,
           results
         });
       } else {
         throw new Error('Data Tidak Lengkap!');
       }
     } else {
-      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      if (!req.user) {
+        return res.status(401).json({
+          info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
+          result: {
+            message: 'Harap Login Terlebih Dahulu!'
+          }
+        });
+      } else if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
         const [banneds, count] = await bannedRepo.findAndCount({
           where: [
             { reason: ILike(`%${req.query.q ? req.query.q : ''}%`) }
