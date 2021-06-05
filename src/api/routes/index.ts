@@ -107,6 +107,13 @@ router.use(async (req: UserRequest, res, next) => {
     }
   } catch (error) {
     console.error(error);
+    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+      httpOnly: true,
+      secure: environment.production,
+      sameSite: 'strict',
+      maxAge: 0,
+      domain: environment.domain
+    });
     return res.status(401).json({
       info: '🙄 401 - API Key :: Kunci Tidak Dapat Digunakan 😪',
       result: {

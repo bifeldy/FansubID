@@ -93,6 +93,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             queryParams: {
               returnUrl: this.router.url
             }
+          }).finally(() => {
+            this.gs.document.location.reload();
           });
         }
         return throwError(e);
