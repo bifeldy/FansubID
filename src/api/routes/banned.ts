@@ -80,51 +80,46 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
         throw new Error('Data Tidak Lengkap!');
       }
     } else {
-      try {
-        if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
-          const [banneds, count] = await bannedRepo.findAndCount({
-            where: [
-              { reason: ILike(`%${req.query.q ? req.query.q : ''}%`) }
-            ],
-            order: {
-              ...((req.query.sort && req.query.order) ? {
-                [req.query.sort]: req.query.order.toUpperCase()
-              } : {
-                created_at: 'DESC',
-                reason: 'ASC'
-              })
-            },
-            relations: ['user_', 'banned_by_'],
-            skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-            take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
-          });
-          for (const b of banneds) {
-            if ('user_' in b && b.user_) {
-              delete b.user_.role;
-              delete b.user_.password;
-              delete b.user_.session_token;
-              delete b.user_.created_at;
-              delete b.user_.updated_at;
-            }
-            if ('banned_by_' in b && b.banned_by_) {
-              delete b.banned_by_.role;
-              delete b.banned_by_.password;
-              delete b.banned_by_.session_token;
-              delete b.banned_by_.created_at;
-              delete b.banned_by_.updated_at;
-            }
+      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+        const [banneds, count] = await bannedRepo.findAndCount({
+          where: [
+            { reason: ILike(`%${req.query.q ? req.query.q : ''}%`) }
+          ],
+          order: {
+            ...((req.query.sort && req.query.order) ? {
+              [req.query.sort]: req.query.order.toUpperCase()
+            } : {
+              created_at: 'DESC',
+              reason: 'ASC'
+            })
+          },
+          relations: ['user_', 'banned_by_'],
+          skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+          take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+        });
+        for (const b of banneds) {
+          if ('user_' in b && b.user_) {
+            delete b.user_.role;
+            delete b.user_.password;
+            delete b.user_.session_token;
+            delete b.user_.created_at;
+            delete b.user_.updated_at;
           }
-          return res.status(200).json({
-            info: `😅 200 - Banned API :: List All 🤣`,
-            count,
-            pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
-            results: banneds
-          });
-        } else {
-          throw new Error('Khusus Admin / Moderator!');
+          if ('banned_by_' in b && b.banned_by_) {
+            delete b.banned_by_.role;
+            delete b.banned_by_.password;
+            delete b.banned_by_.session_token;
+            delete b.banned_by_.created_at;
+            delete b.banned_by_.updated_at;
+          }
         }
-      } catch (error) {
-        console.error(error);
+        return res.status(200).json({
+          info: `😅 200 - Banned API :: List All 🤣`,
+          count,
+          pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+          results: banneds
+        });
+      } else {
         return res.status(401).json({
           info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
           result: {

@@ -53,14 +53,19 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
         results: notifications
       });
     } else {
-      throw new Error('Khusus Admin / Moderator!');
+      return res.status(401).json({
+        info: '🙄 401 - Notification API :: Authorisasi Pengguna Gagal 😪',
+        result: {
+          message: 'Khusus Admin / Moderator!'
+        }
+      });
     }
   } catch (error) {
     console.error(error);
-    return res.status(401).json({
-      info: '🙄 401 - Notification API :: Authorisasi Pengguna Gagal 😪',
+    return res.status(400).json({
+      info: `🙄 400 - Notification API :: Gagal Mendapatkan All Notif 😪`,
       result: {
-        message: 'Khusus Admin / Moderator!'
+        message: 'Data Tidak Lengkap!'
       }
     });
   }
