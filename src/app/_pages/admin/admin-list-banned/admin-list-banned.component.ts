@@ -148,4 +148,8 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     this.getBan();
   }
 
+  openBan(data): void {
+    this.gs.log('[BANNED_LIST_CLICK_BANNED]', data);
+  }
+
 }

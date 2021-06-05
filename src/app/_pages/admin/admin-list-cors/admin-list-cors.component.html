@@ -15,7 +15,7 @@
         </div>
         <div class="col-12">
           <app-material-table [tableDataColumn]="corsData.column" [tableDataRow]="corsData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
-            (buttonClicked)="revokeCors($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (tableRowClicked)="openCors($event)"></app-material-table>
+            (buttonClicked)="revokeCors($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (rowClicked)="openCors($event)"></app-material-table>
         </div>
       </div>
     </div>

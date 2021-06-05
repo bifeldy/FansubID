@@ -97,7 +97,7 @@ export class AdminListCorsComponent implements OnInit {
     this.gs.log('[CORS_LIST_CLICK_REVOKE]', data);
     this.subsDialog = this.ds.openInfoDialog({
       data: {
-        title: `Revoke Kunci -- '${data.username}' :: '${data.email}'`,
+        title: `Revoke Kunci -- '${data.id}' :: '${data.ip_domain}'`,
         htmlMessage: 'Apakah Yakin Untuk Menonaktifkan Kunci Ini ?',
         confirmText: 'Ya, Revoke',
         cancelText: 'Tidak, Batal'

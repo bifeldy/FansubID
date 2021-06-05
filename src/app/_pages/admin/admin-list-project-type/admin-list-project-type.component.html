@@ -96,7 +96,7 @@
         </div>
         <div class="col-12">
           <app-material-table [tableDataColumn]="projectData.column" [tableDataRow]="projectData.row"
-            (tableRowClicked)="openProject($event)" (buttonClicked)="deleteProject($event)"></app-material-table>
+            (rowClicked)="openProject($event)" (buttonClicked)="deleteProject($event)"></app-material-table>
         </div>
       </div>
     </div>

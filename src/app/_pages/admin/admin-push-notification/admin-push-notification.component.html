@@ -109,7 +109,7 @@
         </div>
         <div class="col-12">
           <app-material-table [tableDataColumn]="notifData.column" [tableDataRow]="notifData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
-            (buttonClicked)="deleteNotif($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (tableRowClicked)="openNotif($event)"></app-material-table>
+            (buttonClicked)="deleteNotif($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (rowClicked)="openNotif($event)"></app-material-table>
         </div>
       </div>
     </div>

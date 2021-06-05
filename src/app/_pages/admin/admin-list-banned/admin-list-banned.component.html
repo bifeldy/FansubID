@@ -15,7 +15,7 @@
         </div>
         <div class="col-12">
           <app-material-table [tableDataColumn]="bannedData.column" [tableDataRow]="bannedData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
-            (buttonClicked)="unBan($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
+            (buttonClicked)="unBan($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (rowClicked)="openBan($event)"></app-material-table>
         </div>
       </div>
     </div>
