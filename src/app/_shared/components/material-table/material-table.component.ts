@@ -95,7 +95,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
     if (!data.direction) {
       data.active = '';
     } else {
-      if (data.active.toUpperCase() === 'NAMA BERKAS') {
+      if (data.active.toUpperCase() === 'NAMA BERKAS' || data.active.toUpperCase() === 'NAMA API') {
         data.active = 'name';
       } else if (data.active.toUpperCase() === 'TANGGAL') {
         data.active = 'created_at';
@@ -109,6 +109,10 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
         data.active = 'id';
       } else if (data.active.toUpperCase() === 'ALASAN') {
         data.active = 'reason';
+      } else if (data.active.toUpperCase() === 'IP DOMAIN') {
+        data.active = 'ip_domain';
+      } else if (data.active.toUpperCase() === 'API KEY') {
+        data.active = 'api_key';
       } else {
         data.active = '';
         data.direction = '';

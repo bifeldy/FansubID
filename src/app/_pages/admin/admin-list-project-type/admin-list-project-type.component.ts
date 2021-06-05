@@ -93,7 +93,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
             Deskripsi: r.description,
             Aksi: [{
               type: 'button',
-              icon: 'close',
+              icon: 'delete_forever',
               name: 'Hapus',
               id: r.id,
               nama: r.name
@@ -152,7 +152,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     this.subsDialog = this.ds.openInfoDialog({
       data: {
         title: `Hapus Proyek -- '${data.id}' :: '${data.nama}'`,
-        htmlMessage: 'Menghapus Dapat Membuat Error Berkas Yang Menunjuk Ke Tipe Ini !',
+        htmlMessage: 'Menghapus Dapat Membuat Error / Menghapus Berkas Yang Menunjuk Ke Tipe Ini !',
         confirmText: 'Ya, Hapus',
         cancelText: 'Tidak, Batal'
       },
