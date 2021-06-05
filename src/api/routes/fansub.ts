@@ -205,7 +205,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             // tslint:disable-next-line: max-line-length
             resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
           )
-        ).catch(console.log);
+        ).catch(console.error);
         req.io.volatile.emit('new-fansub', resFansubSave);
         return res.status(200).json({
           info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
@@ -551,7 +551,7 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
           // tslint:disable-next-line: max-line-length
           resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
         )
-      ).catch(console.log);
+      ).catch(console.error);
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
         result: resFansubSave

@@ -144,7 +144,7 @@ router.post('/register', auth.registerModule, async (req: UserRequest, res: Resp
       req.user.username,
       req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
     )
-  ).catch(console.log);
+  ).catch(console.error);
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {

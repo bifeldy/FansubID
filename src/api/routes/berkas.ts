@@ -310,7 +310,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           resFileSave.user_.username,
           resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
         )
-      ).catch(console.log);
+      ).catch(console.error);
       if (!resFileSave.private) {
         req.io.volatile.emit('new-berkas', resFileSave);
       }
@@ -579,7 +579,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               resFileSave.user_.username,
               resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
             )
-          ).catch(console.log);
+          ).catch(console.error);
           return res.status(200).json({
             info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
             result: resFileSave
