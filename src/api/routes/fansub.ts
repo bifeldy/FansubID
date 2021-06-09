@@ -260,7 +260,7 @@ router.patch('/berkas', auth.isLogin, async (req: UserRequest, res: Response, ne
       if (req.user?.verified) {
         // Verified User Can See Private Berkas
       } else {
-        fileRepoQuery.andWhere('berkas.private = :isPrivate', { isPrivate: false });
+        fileRepoQuery = fileRepoQuery.andWhere('berkas.private = :isPrivate', { isPrivate: false });
       }
       if (req.query.sort && req.query.order) {
         fileRepoQuery = fileRepoQuery.orderBy(`berkas.${req.query.sort}`, req.query.order.toUpperCase());
