@@ -137,90 +137,99 @@ router.post('/cek-slug', async (req: UserRequest, res: Response, next: NextFunct
 // POST `/api/fansub`
 router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (
-      'name' in req.body && 'born' in req.body && 'slug' in req.body &&
-      ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
-    ) {
-      const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
-      const fansubRepo = getRepository(Fansub);
-      const selectedFansub = await fansubRepo.find({
-        where: [
-          { slug: ILike(slug) }
-        ]
-      });
-      if (selectedFansub.length === 0) {
-        const userRepo = getRepository(User);
-        const user = await userRepo.findOneOrFail({
+    if (req.user.verified) {
+      if (
+        'name' in req.body && 'born' in req.body && 'slug' in req.body &&
+        ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
+      ) {
+        const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
+        const fansubRepo = getRepository(Fansub);
+        const selectedFansub = await fansubRepo.find({
           where: [
-            { id: Equal(req.user.id) }
+            { slug: ILike(slug) }
           ]
         });
-        const fansub = new Fansub();
-        fansub.user_ = user;
-        fansub.name = req.body.name;
-        fansub.born = new Date(req.body.born);
-        fansub.slug = slug;
-        const filteredUrls = [];
-        for (const u of req.body.urls) {
-          if ('url' in u && 'name' in u && u.url && u.name) {
-            filteredUrls.push(u);
+        if (selectedFansub.length === 0) {
+          const userRepo = getRepository(User);
+          const user = await userRepo.findOneOrFail({
+            where: [
+              { id: Equal(req.user.id) }
+            ]
+          });
+          const fansub = new Fansub();
+          fansub.user_ = user;
+          fansub.name = req.body.name;
+          fansub.born = new Date(req.body.born);
+          fansub.slug = slug;
+          const filteredUrls = [];
+          for (const u of req.body.urls) {
+            if ('url' in u && 'name' in u && u.url && u.name) {
+              filteredUrls.push(u);
+            }
           }
-        }
-        fansub.urls = JSON.stringify(filteredUrls);
-        if (req.body.image) {
-          fansub.image_url = req.body.image;
-        } else {
-          fansub.image_url = '/favicon.ico';
-        }
-        if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
-          const filteredTagsUnique = [...new Set(req.body.tags)];
-          fansub.tags = JSON.stringify(filteredTagsUnique);
-        }
-        if (req.body.description) {
-          fansub.description = req.body.description;
-        }
-        if (req.body.active) {
-          fansub.active = req.body.active;
-        }
-        const resFansubSave = await fansubRepo.save(fansub);
-        if ('user_' in resFansubSave && resFansubSave.user_) {
-          delete resFansubSave.user_.role;
-          delete resFansubSave.user_.password;
-          delete resFansubSave.user_.session_token;
-          delete resFansubSave.user_.created_at;
-          delete resFansubSave.user_.updated_at;
-        }
-        req.bot.send(
-          new MessageEmbed()
-          .setColor('#0099ff')
-          .setTitle(resFansubSave.name)
-          .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
-          .setAuthor('Hikki - Penambahan Fansub Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-          .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
-          // tslint:disable-next-line: max-line-length
-          .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
-          .setTimestamp(resFansubSave.updated_at)
-          .setFooter(
-            resFansubSave.user_.username,
+          fansub.urls = JSON.stringify(filteredUrls);
+          if (req.body.image) {
+            fansub.image_url = req.body.image;
+          } else {
+            fansub.image_url = '/favicon.ico';
+          }
+          if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
+            const filteredTagsUnique = [...new Set(req.body.tags)];
+            fansub.tags = JSON.stringify(filteredTagsUnique);
+          }
+          if (req.body.description) {
+            fansub.description = req.body.description;
+          }
+          if (req.body.active) {
+            fansub.active = req.body.active;
+          }
+          const resFansubSave = await fansubRepo.save(fansub);
+          if ('user_' in resFansubSave && resFansubSave.user_) {
+            delete resFansubSave.user_.role;
+            delete resFansubSave.user_.password;
+            delete resFansubSave.user_.session_token;
+            delete resFansubSave.user_.created_at;
+            delete resFansubSave.user_.updated_at;
+          }
+          req.bot.send(
+            new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle(resFansubSave.name)
+            .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
+            .setAuthor('Hikki - Penambahan Fansub Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+            .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
             // tslint:disable-next-line: max-line-length
-            resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
-          )
-        ).catch(console.error);
-        req.io.volatile.emit('new-fansub', resFansubSave);
-        return res.status(200).json({
-          info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
-          result: resFansubSave
-        });
+            .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
+            .setTimestamp(resFansubSave.updated_at)
+            .setFooter(
+              resFansubSave.user_.username,
+              // tslint:disable-next-line: max-line-length
+              resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
+            )
+          ).catch(console.error);
+          req.io.volatile.emit('new-fansub', resFansubSave);
+          return res.status(200).json({
+            info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
+            result: resFansubSave
+          });
+        } else {
+          return res.status(400).json({
+            info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
+            result: {
+              message: `'${slug}' Sudah Terpakai`
+            }
+          });
+        }
       } else {
-        return res.status(400).json({
-          info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
-          result: {
-            message: `'${slug}' Sudah Terpakai`
-          }
-        });
+        throw new Error('Data Tidak Lengkap!');
       }
     } else {
-      throw new Error('Data Tidak Lengkap!');
+      return res.status(400).json({
+        info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
+        result: {
+          message: 'Khusus Pengguna Terverifikasi!'
+        }
+      });
     }
   } catch (error) {
     console.error(error);
@@ -462,102 +471,111 @@ router.get('/:slug', async (req: UserRequest, res: Response, next: NextFunction)
 // PUT `/api/fansub/:slug`
 router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (
-      'name' in req.body || 'born' in req.body || 'description' in req.body ||
-      'slug' in req.body || 'active' in req.body || 'image' in req.body ||
-      ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) ||
-      ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
-    ) {
-      const fansubRepo = getRepository(Fansub);
-      const fansub = await fansubRepo.findOneOrFail({
-        where: [
-          { slug: ILike(req.params.slug) }
-        ],
-        relations: ['user_']
-      });
-      if (req.body.slug) {
-        const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
-        const selectedFansub = await fansubRepo.find({
+    if (req.user.verified) {
+      if (
+        'name' in req.body || 'born' in req.body || 'description' in req.body ||
+        'slug' in req.body || 'active' in req.body || 'image' in req.body ||
+        ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) ||
+        ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
+      ) {
+        const fansubRepo = getRepository(Fansub);
+        const fansub = await fansubRepo.findOneOrFail({
           where: [
-            { slug: ILike(newSlug) }
-          ]
+            { slug: ILike(req.params.slug) }
+          ],
+          relations: ['user_']
         });
-        if (selectedFansub.length === 0) {
-          fansub.slug = newSlug;
-        } else {
-          return res.status(400).json({
-            info: `😅 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.id} 🥰`,
-            result: {
-              message: `'${newSlug}' Sudah Terpakai`
-            }
+        if (req.body.slug) {
+          const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
+          const selectedFansub = await fansubRepo.find({
+            where: [
+              { slug: ILike(newSlug) }
+            ]
           });
-        }
-      }
-      if (req.body.name) {
-        fansub.name = req.body.name;
-      }
-      if (req.body.born) {
-        fansub.born = req.body.born;
-      }
-      if (req.body.description) {
-        fansub.description = req.body.description;
-      }
-      if (req.body.active) {
-        fansub.active = req.body.active;
-      }
-      if (req.body.image) {
-        fansub.image_url = req.body.image;
-      }
-      if (req.body.tags) {
-        const filteredTagsUnique = [...new Set(req.body.tags)];
-        fansub.tags = JSON.stringify(filteredTagsUnique);
-      }
-      if (req.body.urls) {
-        const filteredUrls = [];
-        for (const u of req.body.urls) {
-          if ('url' in u && 'name' in u && u.url && u.name) {
-            filteredUrls.push(u);
+          if (selectedFansub.length === 0) {
+            fansub.slug = newSlug;
+          } else {
+            return res.status(400).json({
+              info: `😅 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.id} 🥰`,
+              result: {
+                message: `'${newSlug}' Sudah Terpakai`
+              }
+            });
           }
         }
-        fansub.urls = JSON.stringify(filteredUrls);
-      }
-      const userRepo = getRepository(User);
-      const user = await userRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.user.id) }
-        ]
-      });
-      fansub.user_ = user;
-      const resFansubSave = await fansubRepo.save(fansub);
-      if ('user_' in resFansubSave && resFansubSave.user_) {
-        delete resFansubSave.user_.role;
-        delete resFansubSave.user_.password;
-        delete resFansubSave.user_.session_token;
-        delete resFansubSave.user_.created_at;
-        delete resFansubSave.user_.updated_at;
-      }
-      req.bot.send(
-        new MessageEmbed()
-        .setColor('#ff4081')
-        .setTitle(resFansubSave.name)
-        .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
-        .setAuthor('Hikki - Pembaharuan Data Fansub', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-        .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
-        // tslint:disable-next-line: max-line-length
-        .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
-        .setTimestamp(resFansubSave.updated_at)
-        .setFooter(
-          resFansubSave.user_.username,
+        if (req.body.name) {
+          fansub.name = req.body.name;
+        }
+        if (req.body.born) {
+          fansub.born = req.body.born;
+        }
+        if (req.body.description) {
+          fansub.description = req.body.description;
+        }
+        if (req.body.active) {
+          fansub.active = req.body.active;
+        }
+        if (req.body.image) {
+          fansub.image_url = req.body.image;
+        }
+        if (req.body.tags) {
+          const filteredTagsUnique = [...new Set(req.body.tags)];
+          fansub.tags = JSON.stringify(filteredTagsUnique);
+        }
+        if (req.body.urls) {
+          const filteredUrls = [];
+          for (const u of req.body.urls) {
+            if ('url' in u && 'name' in u && u.url && u.name) {
+              filteredUrls.push(u);
+            }
+          }
+          fansub.urls = JSON.stringify(filteredUrls);
+        }
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.user.id) }
+          ]
+        });
+        fansub.user_ = user;
+        const resFansubSave = await fansubRepo.save(fansub);
+        if ('user_' in resFansubSave && resFansubSave.user_) {
+          delete resFansubSave.user_.role;
+          delete resFansubSave.user_.password;
+          delete resFansubSave.user_.session_token;
+          delete resFansubSave.user_.created_at;
+          delete resFansubSave.user_.updated_at;
+        }
+        req.bot.send(
+          new MessageEmbed()
+          .setColor('#ff4081')
+          .setTitle(resFansubSave.name)
+          .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
+          .setAuthor('Hikki - Pembaharuan Data Fansub', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+          .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
           // tslint:disable-next-line: max-line-length
-          resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
-        )
-      ).catch(console.error);
-      return res.status(200).json({
-        info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
-        result: resFansubSave
-      });
+          .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
+          .setTimestamp(resFansubSave.updated_at)
+          .setFooter(
+            resFansubSave.user_.username,
+            // tslint:disable-next-line: max-line-length
+            resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
+          )
+        ).catch(console.error);
+        return res.status(200).json({
+          info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
+          result: resFansubSave
+        });
+      } else {
+        throw new Error('Data Tidak Lengkap!');
+      }
     } else {
-      throw new Error('Data Tidak Lengkap!');
+      return res.status(400).json({
+        info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.slug} 😪`,
+        result: {
+          message: 'Khusus Pengguna Terverifikasi!'
+        }
+      });
     }
   } catch (error) {
     console.error(error);

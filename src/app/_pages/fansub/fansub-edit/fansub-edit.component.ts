@@ -12,6 +12,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 
 @Component({
   selector: 'app-fansub-edit',
@@ -56,6 +57,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private fansub: FansubService,
     private toast: ToastrService,
+    public as: AuthService,
     public gs: GlobalService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
@@ -77,24 +79,29 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       `Ubah Fansub`
     );
     if (this.gs.isBrowser) {
-      this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
-      this.bs.busy();
-      this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe({
-        next: res => {
-          this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
-          this.initForm(res.result);
-          this.bs.idle();
-        },
-        error: err => {
-          this.gs.log('[FANSUB_DETAIL_ERROR]', err);
-          this.bs.idle();
-          this.router.navigate(['/error'], {
-            queryParams: {
-              returnUrl: `/fansub/${this.fansubSlug}`
-            }
-          });
-        }
-      });
+      if (this.as.currentUserValue && this.as.currentUserValue.verified) {
+        this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
+        this.bs.busy();
+        this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe({
+          next: res => {
+            this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
+            this.initForm(res.result);
+            this.bs.idle();
+          },
+          error: err => {
+            this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+            this.bs.idle();
+            this.router.navigate(['/error'], {
+              queryParams: {
+                returnUrl: `/fansub/${this.fansubSlug}`
+              }
+            });
+          }
+        });
+      } else {
+        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
+        this.router.navigateByUrl('/home');
+      }
     }
   }
 

@@ -12,6 +12,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 
 @Component({
   selector: 'app-fansub-create',
@@ -48,6 +49,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private fansub: FansubService,
     private toast: ToastrService,
+    public as: AuthService,
     public gs: GlobalService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
@@ -67,7 +69,12 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       `Create Fansub`
     );
     if (this.gs.isBrowser) {
-      this.initForm();
+      if (this.as.currentUserValue && this.as.currentUserValue.verified) {
+        this.initForm();
+      } else {
+        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
+        this.router.navigateByUrl('/home');
+      }
     }
   }
 
