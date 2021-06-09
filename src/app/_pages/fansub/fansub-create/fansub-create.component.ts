@@ -73,7 +73,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
         this.initForm();
       } else {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl('/fansub');
       }
     }
   }

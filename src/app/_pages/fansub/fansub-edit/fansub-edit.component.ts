@@ -79,8 +79,8 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       `Ubah Fansub`
     );
     if (this.gs.isBrowser) {
+      this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
       if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-        this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
         this.bs.busy();
         this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe({
           next: res => {
@@ -100,7 +100,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         });
       } else {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
       }
     }
   }
