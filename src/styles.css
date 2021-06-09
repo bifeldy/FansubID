@@ -130,3 +130,86 @@ re-captcha > div {
 .wb-body {
   background: #424242 !important;
 }
+
+.gradient-border {
+  background: #424242;
+  position: relative;
+}
+
+.gradient-border:after {
+  content: '';
+  position: absolute;
+  top: calc(-1 * 1px);
+  left: calc(-1 * 1px);
+  height: calc(100% + 1px * 2);
+  width: calc(100% + 1px * 2);
+  background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+  z-index: -1;
+  animation: animatedgradientborder 3s ease alternate infinite;
+  background-size: 300% 300%;
+}
+
+@keyframes animatedgradientborder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-text {
+  animation: animatedgradientfont 3s ease alternate infinite;
+}
+
+@keyframes animatedgradientfont {
+  0% {
+    color: #f79533;
+  }
+  15% {
+    color: #f37055;
+  }
+  30% {
+    color: #ef4e7b;
+  }
+  45% {
+    color: #a166ab;
+  }
+  60% {
+    color: #5073b8;
+  }
+  75% {
+    color: #1098ad;
+  }
+  90% {
+    color: #07b39b;
+  }
+  100% {
+    color: #6fba82;
+  }
+}
+
+.rgb-border {
+  --angle: 0deg;
+  border: 1px solid;
+  border-image: conic-gradient(
+    from var(--angle),
+    #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #2e2b5f, #8b00ff
+  ) 1;
+  animation: 3s animatedrgbborder linear infinite;
+}
+
+@keyframes animatedrgbborder {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}

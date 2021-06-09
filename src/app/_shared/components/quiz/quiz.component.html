@@ -12,7 +12,7 @@
                 background-size: cover;
                 background-position: center;
             "></div>
-            <div class="pt-1">{{ p.value.username }}</div>
+            <div class="pt-1 {{ idx == 0 ? 'gradient-text' : '' }}">{{ p.value.username }}</div>
           </div>
         </div>
       </div>
