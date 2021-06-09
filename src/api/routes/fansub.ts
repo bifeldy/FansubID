@@ -278,7 +278,6 @@ router.patch('/berkas', auth.isLogin, async (req: UserRequest, res: Response, ne
         results[i] = [];
       }
       for (const f of files) {
-        delete f.private;
         delete f.download_url;
         delete f.description;
         if ('project_type_' in f && f.project_type_) {
