@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -12,9 +13,43 @@ import { NihongoService } from '../../../_shared/services/nihongo.service';
 })
 export class NihongoBelajarComponent implements OnInit {
 
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+  pageSizeOptions = [50, 75, 100, 125, 150];
+
+  kategori = [
+    { id: 'hiragana', name: 'Huruf Hiragana' },
+    { id: 'katakana', name: 'Huruf Katakana' },
+    { id: 'angka', name: 'Angka' },
+    { id: 'warna', name: 'Warna' },
+    { id: 'binatang', name: 'Binatang' },
+    { id: 'buah', name: 'Buah' },
+    { id: 'sayur', name: 'Sayur' },
+    { id: 'daging', name: 'Daging' },
+    { id: 'minuman', name: 'Minuman' },
+    { id: 'pakaian', name: 'Pakaian' },
+    { id: 'cuaca', name: 'Cuaca' },
+    { id: 'transportasi', name: 'Transportasi' },
+    { id: 'tempat', name: 'Tempat' },
+    { id: 'pekerjaan', name: 'Pekerjaan' },
+    { id: 'olahraga', name: 'Olah Raga' },
+    { id: 'perkakas', name: 'Perkakas' },
+    { id: 'mebel', name: 'Mebel' },
+    { id: 'dapur', name: 'Dapur' },
+    { id: 'negara', name: 'Negara' }
+  ];
+
   modeTampilan = 'hiragana';
 
   daftarHuruf = null;
+
+  count = 0;
+  page = 1;
+  row = 50;
+
+  q = '';
+  sort = '';
+  order = '';
 
   constructor(
     private gs: GlobalService,
@@ -36,6 +71,28 @@ export class NihongoBelajarComponent implements OnInit {
   changeModeTampilan(data): void {
     this.gs.log('[HIRAKATA_CHANGE_KANA]', data);
     this.modeTampilan = data;
+    this.q = '';
+    this.resetPaginator();
+  }
+
+  applyFilter(event): void {
+    this.gs.log('[SEARCH_VALUE_CHANGED]', event);
+    this.q = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.resetPaginator();
+  }
+
+  paginatorChanged(data): void {
+    this.gs.log('[PAGINATOR_VALUE_CHANGED]', data);
+    this.page = data.pageIndex + 1;
+    this.row = data.pageSize;
+    if (this.modeTampilan != 'hiragana' && this.modeTampilan != 'katakana' && this.modeTampilan != 'angka') {
+      this.getData();
+    }
+  }
+
+  resetPaginator(): void {
+    this.paginator._changePageSize(this.pageSizeOptions[0]);
+    this.paginator.firstPage();
   }
 
   openDmak(kana): void {
@@ -78,6 +135,10 @@ export class NihongoBelajarComponent implements OnInit {
         this.bs.idle();
       }
     });
+  }
+
+  getData(): void {
+    //
   }
 
 }

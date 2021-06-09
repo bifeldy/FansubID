@@ -13,26 +13,13 @@
             <mat-form-field class="pt-3 col-6 col-lg-4" [color]="'accent'">
               <mat-label>Pilih Kategori</mat-label>
               <mat-select [(value)]="modeTampilan" (valueChange)="changeModeTampilan($event)">
-                <mat-option value="hiragana">Huruf Hiragana</mat-option>
-                <mat-option value="katakana">Huruf Katakana</mat-option>
-                <mat-option value="angka">Angka</mat-option>
-                <mat-option value="warna">Warna</mat-option>
-                <mat-option value="binatang">Binatang</mat-option>
-                <mat-option value="buah">Buah</mat-option>
-                <mat-option value="sayur">Sayur</mat-option>
-                <mat-option value="daging">Daging</mat-option>
-                <mat-option value="minuman">Minuman</mat-option>
-                <mat-option value="pakaian">Pakaian</mat-option>
-                <mat-option value="cuaca">Cuaca</mat-option>
-                <mat-option value="transportasi">Transportasi</mat-option>
-                <mat-option value="tempat">Tempat</mat-option>
-                <mat-option value="pekerjaan">Pekerjaan</mat-option>
-                <mat-option value="olah">Olah Raga</mat-option>
-                <mat-option value="perkakas">Perkakas</mat-option>
-                <mat-option value="mebel">Mebel</mat-option>
-                <mat-option value="dapur">Dapur</mat-option>
-                <mat-option value="negara">Negara</mat-option>
+                <mat-option value="{{ k.id }}" *ngFor="let k of kategori">{{ k.name }}</mat-option>
               </mat-select>
+            </mat-form-field>
+            <mat-form-field class="ms-auto pt-3 col-6 col-lg-4" [color]="'accent'" *ngIf="modeTampilan != 'hiragana' && modeTampilan != 'katakana' && modeTampilan != 'angka'">
+              <mat-label>Cari ...</mat-label>
+              <input matInput maxlength="200" placeholder="Ex. 自転車、ママチャリ" (keyup.enter)="applyFilter($event)" [(ngModel)]="q" />
+              <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
           </h3>
         </div>
@@ -118,10 +105,21 @@
           </div>
         </ng-template>
         <ng-template #kataBendaLainnya>
-          <div class="col-12">
-            // TODO :: Fitur Belum / Tidak Dapat Di Realisasikan
-          </div>
+          <div *ngIf="modeTampilan == 'angka'; then angka; else selainAngka;"></div>
+          <ng-template #angka>
+            <div class="col-12">
+              // TODO :: Fitur Belum / Tidak Dapat Di Realisasikan
+            </div>
+          </ng-template>
+          <ng-template #selainAngka>
+            <div class="col-12">
+              // TODO :: Fitur Belum / Tidak Dapat Di Realisasikan
+            </div>
+          </ng-template>
         </ng-template>
+      </div>
+      <div class="position-sticky bottom-0" *ngIf="modeTampilan != 'hiragana' && modeTampilan != 'katakana' && modeTampilan != 'angka'">
+        <mat-paginator class="bg-bifeldy-dark" showFirstLastButtons [color]="'accent'" [length]="count" [pageSizeOptions]="pageSizeOptions" (page)="paginatorChanged($event)"></mat-paginator>
       </div>
     </div>
     <div class="col-lg-4 col-xl-3">

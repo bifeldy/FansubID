@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { FabService } from '../../../_shared/services/fab.service';
+// import { FabService } from '../../../_shared/services/fab.service';
 
 @Component({
   selector: 'app-nihongo-list',
@@ -246,15 +246,15 @@ export class NihongoListComponent implements OnInit {
   ];
 
   tabData: any = [
-    {
-      name: 'Modul Pendukung',
-      icon: 'file_copy',
-      type: 'table',
-      data: {
-        column: ['Tanggal', 'Nama Modul', 'Pemilik'],
-        row: []
-      }
-    },
+    // {
+    //   name: 'Modul Pendukung',
+    //   icon: 'file_copy',
+    //   type: 'table',
+    //   data: {
+    //     column: ['Tanggal', 'Nama Modul', 'Pemilik'],
+    //     row: []
+    //   }
+    // },
     {
       name: 'JLPT Roadmap',
       icon: 'pin_drop',
@@ -291,7 +291,7 @@ export class NihongoListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private fs: FabService,
+    // private fs: FabService,
     public gs: GlobalService
   ) {
     this.gs.bannerImg = null;
@@ -301,12 +301,13 @@ export class NihongoListComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.getBook();
+      // this.fs.initializeFab('add', null, 'Tambah Modul Baru', `/nihongo/create`, false);
+      // this.getBook();
     }
   }
 
   getBook(): void {
-    this.fs.initializeFab('add', null, 'Tambah Modul Baru', `/nihongo/create`, false);
+    //
   }
 
   openModule(data): void {
