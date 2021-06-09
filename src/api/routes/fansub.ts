@@ -243,7 +243,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // PATCH `/api/fansub/berkas?id=`
-router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/berkas', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id ? req.query.id.split(',').map(Number) : req.body.id;
     if (Array.isArray(fansubId) && fansubId.length > 0) {
@@ -256,8 +256,12 @@ router.patch('/berkas', async (req: UserRequest, res: Response, next: NextFuncti
         .leftJoinAndSelect('berkas.user_', 'user_')
         .leftJoinAndSelect('berkas.fansub_', 'fansub_')
         .where('fansub_.id IN (:...id)', { id: fansubId })
-        .andWhere('berkas.private = :isPrivate', { isPrivate: false })
         .andWhere('berkas.name ILIKE :query', { query: `%${req.query.q ? req.query.q : ''}%` });
+      if (req.user?.verified) {
+        // Verified User Can See Private Berkas
+      } else {
+        fileRepoQuery.andWhere('berkas.private = :isPrivate', { isPrivate: false });
+      }
       if (req.query.sort && req.query.order) {
         fileRepoQuery = fileRepoQuery.orderBy(`berkas.${req.query.sort}`, req.query.order.toUpperCase());
       } else {
