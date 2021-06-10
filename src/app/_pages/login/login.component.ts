@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   returnUrl = '/';
   loginImg = '/assets/img/loginregister.png';
-  bgLoginImg = '/assets/img/bg-loginregister.svg';
   loginInfo = 'Silahkan login terlebih dahulu~';
 
   subsUser = null;

@@ -22,11 +22,10 @@
   </mat-sidenav>
 
   <!-- Main Content -->
-  <mat-sidenav-content #siteContent
-    [style.background-repeat]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? 'repeat' : 'no-repeat'"
-    [style.background-size]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? '' : '128px'"
-    [style.background-position]="router.url.startsWith('/verify') || router.url.startsWith('/about') ? '' : 'bottom right'"
-    [style.background-image]="'url(' + selectedBackgroundImage + ')'">
+  <mat-sidenav-content #siteContent [style.background-repeat]="'no-repeat'"
+    [style.background-size]="'128px' + (router.url == '/login' || router.url == '/register' || router.url == '/about' || router.url == '/verify' ? ', cover' : '')"
+    [style.background-position]="'bottom right' + (router.url == '/login' || router.url == '/register' || router.url == '/about' || router.url == '/verify' ? ', center' : '')"
+    [style.background-image]="'url(' + gs.bgImgUrl + ')' + (router.url == '/login' || router.url == '/register' || router.url == '/about' || router.url == '/verify' ? ', url(/assets/img/bg-paint.svg)' : '')">
 
     <!-- Routing Content -->
     <div class="main_content" (window:resize)="gs.onResize($event)">

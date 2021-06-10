@@ -29,7 +29,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('rightSidePanel', { static: true }) rightSidePanel: ElementRef;
   @ViewChild('siteContent', { static: true }) siteContent;
 
-  selectedBackgroundImage = '';
   previousUrl = null;
 
   subsRouter = null;
@@ -126,7 +125,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 e2.title,
                 e2.description,
                 e2.keywords,
-                (this.selectedBackgroundImage || '/favicon.ico')
+                (this.gs.bgImgUrl || '/favicon.ico')
               );
               this.fs.removeFab();
               if (this.gs.isBrowser) {
@@ -148,17 +147,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateBackgroundImage(): void {
-    switch (this.router.url.substr(1).split('/').length) {
-      case 1:
-        if (this.router.url.startsWith('/verify') || this.router.url.startsWith('/about')) {
-          this.selectedBackgroundImage = `/assets/img/bg-aboutverify.svg`;
-        } else {
-          this.selectedBackgroundImage = `/assets/img/router/bg-${this.router.url.substr(1).split('/')[0].split('?')[0]}.png`;
-        }
-        break;
-      default:
-        this.selectedBackgroundImage = ``;
-    }
+    const urlPath = this.router.url.substr(1).split('/')[0].split('?')[0];
+    this.gs.bgImgUrl = urlPath ? `/assets/img/router/bg-${urlPath}.png` : '';
   }
 
   checkStorage(): void {

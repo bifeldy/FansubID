@@ -21,6 +21,7 @@ export class GlobalService {
 
   public routerData = null;
 
+  public bgImgUrl = null;
   public bannerImg = null;
   public sizeContain = false;
   public bgRepeat = false;
