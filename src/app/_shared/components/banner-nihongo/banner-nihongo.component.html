@@ -2,7 +2,7 @@
   <div class="col-12">
     <div class="row px-3">
       <div class="col-12 col-md-6 p-2" *ngFor="let n of nihongoMenu">
-        <mat-card class="gradient-border">
+        <mat-card class="gradient-border rgb-border">
           <img mat-card-image [src]="n.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/nihongo/{{ n.url }}" />
           <mat-card-content routerLink="/nihongo/{{ n.url }}" style="cursor: pointer;">
             <h3>
