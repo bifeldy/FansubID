@@ -107,16 +107,19 @@ router.use(interceptor((req: UserRequest, res: Response) => {
   return {
     isInterceptable: () => {
       logger.log('[INTERCEPT-STATUS] 💠', res.statusCode);
-      if (res.statusCode === 401) {
-        res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
-          httpOnly: true,
-          secure: environment.production,
-          sameSite: 'strict',
-          maxAge: 0,
-          domain: environment.domain
-        });
+      switch (res.statusCode) {
+        case 401:
+          res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+            httpOnly: true,
+            secure: environment.production,
+            sameSite: 'strict',
+            maxAge: 0,
+            domain: environment.domain
+          });
+          return true;
+        default:
+          return false;
       }
-      return true;
     },
     intercept: (body: any, send: any) => {
       logger.log('[INTERCEPT-BODY] 💠', body);
