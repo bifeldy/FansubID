@@ -5,11 +5,11 @@ import { UserRequest } from '../models/UserRequest';
 import { environment } from '../../environments/server/environment';
 
 // tslint:disable-next-line: typedef
-function log(text, data = null, print = false) {
+function log(text, data = null, forcePrint = false) {
   if (!environment.production) {
-    print = true;
+    forcePrint = true;
   }
-  if (print) {
+  if (forcePrint) {
     if (data) {
       console.log(text, data);
     } else {
