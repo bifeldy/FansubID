@@ -168,6 +168,7 @@ export async function socketBot(io: Server, socket: Socket) {
             if (data.isMaintenance) {
               serverSetMaintenance(data.isMaintenance);
             }
+            // Other Server Config Here
           }
         }
       }
