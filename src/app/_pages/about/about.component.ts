@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { environment } from '../../../environments/client/environment';
 
-import { dependencies } from '../../../../package.json';
+import pkg from '../../../../package.json';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { FabService } from '../../_shared/services/fab.service';
@@ -50,7 +50,7 @@ export class AboutComponent implements OnInit {
     },
   ];
 
-  library = dependencies;
+  library = pkg.dependencies;
 
   constructor(
     public gs: GlobalService,

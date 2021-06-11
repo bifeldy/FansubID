@@ -1,4 +1,4 @@
-import 'zone.js/dist/zone-node';
+import 'zone.js/node';
 import 'localstorage-polyfill';
 import 'reflect-metadata';
 
@@ -10,7 +10,7 @@ import cors from 'cors';
 import compression from 'compression';
 import request from 'request';
 
-import socketIo from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 import { UserRequest } from './src/api/models/UserRequest';
 
@@ -118,7 +118,7 @@ const corsOptions = {
 };
 
 // Standard server not serverless
-let io: socketIo.Server = null;
+let io: Server = null;
 let bot: Client = null;
 let github = null;
 
@@ -179,7 +179,7 @@ function startDiscordBot(): void {
 
 // Socket.io
 function startSocketIo(): void {
-  io.on('connection', async (socket: socketIo.Socket) => {
+  io.on('connection', async (socket: Socket) => {
     joinOrUpdateRoom(io, socket, { user: null, newRoom: 'GLOBAL_PUBLIK' });
     updateVisitor();
     io.emit('visitors', io.sockets.sockets.size);
@@ -203,7 +203,7 @@ export function app(): http.Server {
   const expressApp = express();
   const httpApp = http.createServer(expressApp);
   if (!io) {
-    io = new socketIo.Server(httpApp, {
+    io = new Server(httpApp, {
       cors: corsOptions
     });
     startSocketIo();
