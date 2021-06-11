@@ -6,7 +6,7 @@ import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/mod
 import { Role } from '../../app/_shared/models/Role';
 
 // Server Settings
-import { serverSetMaintenance } from '../settings';
+import { serverSet, serverSetMaintenance } from '../settings';
 
 // Helper
 import jwt from '../helpers/jwt';
@@ -161,9 +161,13 @@ export async function socketBot(io: Server, socket: Socket) {
       if (data.jwtToken) {
         const decoded = jwt.JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
-        if (data.user.role === Role.ADMIN && data.user.role === Role.MODERATOR) {
-          if (data.isMaintenance) {
-            serverSetMaintenance(data.isMaintenance);
+        if (data.user.role === Role.ADMIN || data.user.role === Role.MODERATOR) {
+          if (data.server) {
+            serverSet(data.server);
+          } else {
+            if (data.isMaintenance) {
+              serverSetMaintenance(data.isMaintenance);
+            }
           }
         }
       }
