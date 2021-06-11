@@ -125,15 +125,8 @@ async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
       ],
       relations: ['user_']
     });
-    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
-      httpOnly: true,
-      secure: environment.production,
-      sameSite: 'strict',
-      maxAge: 0,
-      domain: environment.domain
-    });
-    return res.status(400).json({
-      info: `🙄 400 - Banned API :: ${banned.user_.username} Telah Di BAN 😪`,
+    return res.status(401).json({
+      info: `🙄 401 - Banned API :: ${banned.user_.username} Telah Di BAN 😪`,
       result: {
         message: `Akun Tidak Dapat Digunakan :: ${banned.reason}`
       }
@@ -207,13 +200,6 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
       req.user = (usr as any);
       checkBan(req, res, next);
     } else {
-      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
-        httpOnly: true,
-        secure: environment.production,
-        sameSite: 'strict',
-        maxAge: 0,
-        domain: environment.domain
-      });
       return res.status(401).json({
         info: '🙄 401 - Authentication API :: Authorisasi Sesi Gagal 😪',
         result: {
@@ -266,8 +252,8 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       return next();
     } catch (error) {
       console.error(error);
-      return res.status(400).json({
-        info: '🙄 400 - Authentication API :: Logout Gagal 😪',
+      return res.status(401).json({
+        info: '🙄 401 - Authentication API :: Logout Gagal 😪',
         result: {
           message: 'Sesi Anda Tidak Dapat Dicocokkan!'
         }

@@ -5,6 +5,7 @@ import { getRepository, Equal, ILike, In } from 'typeorm';
 import createError from 'http-errors';
 import request from 'postman-request';
 import multer from 'multer';
+import interceptor from 'express-interceptor';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -79,6 +80,29 @@ router.get('/', (req: UserRequest, res: Response) => {
   return res.redirect('/documentation');
 });
 
+// Intercept Status Response
+router.use(interceptor((req: UserRequest, res: Response) => {
+  return {
+    isInterceptable: () => {
+      logger.log('[INTERCEPT-STATUS] 💠', res.statusCode);
+      if (res.statusCode === 401) {
+        res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+          httpOnly: true,
+          secure: environment.production,
+          sameSite: 'strict',
+          maxAge: 0,
+          domain: environment.domain
+        });
+      }
+      return true;
+    },
+    intercept: (body: any, send: any) => {
+      logger.log('[INTERCEPT-BODY] 💠', body);
+      return send(body);
+    }
+  };
+}));
+
 // Check Api Key
 router.use(async (req: UserRequest, res, next) => {
   const k = req.query.key || '';
@@ -107,13 +131,6 @@ router.use(async (req: UserRequest, res, next) => {
     }
   } catch (error) {
     console.error(error);
-    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
-      httpOnly: true,
-      secure: environment.production,
-      sameSite: 'strict',
-      maxAge: 0,
-      domain: environment.domain
-    });
     return res.status(401).json({
       info: '🙄 401 - API Key :: Kunci Tidak Dapat Digunakan 😪',
       result: {
