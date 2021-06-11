@@ -31,10 +31,8 @@ export class StatsServerService {
   public badgeBerkas = [];
   public badgeFansub = [];
 
-  public portalVer = '0000000';
-  public commitDate = null;
-  public commitUser = null;
-  public commitMessage = null;
+  public github = null;
+  public server = null;
 
   private currentRoomSubject: BehaviorSubject<RoomInfoResponse> = new BehaviorSubject<RoomInfoResponse>(null);
   public currentRoom: Observable<RoomInfoResponse> = this.currentRoomSubject.asObservable();
@@ -67,21 +65,26 @@ export class StatsServerService {
     return this.globalRoomSubject?.value || null;
   }
 
+  pingPong(): void {
+    const start = Date.now();
+    this.socketEmitVolatile('ping-pong', null, (response: any) => {
+      this.latency = Date.now() - start;
+      this.gs.log('[SOCKET_PING-PONG]', this.latency);
+      if ('github' in response && response.github) {
+        this.github = response.github;
+      }
+      if ('server' in response && response.server) {
+        this.server = response.server;
+      }
+    });
+  }
+
   socketListen(): void {
     this.mySocket.on('connect', () => {
       this.gs.log('[SOCKET_CONNECTED]', this.mySocket.id);
+      this.pingPong();
       this.intervalPingPong = setInterval(() => {
-        const start = Date.now();
-        this.socketEmitVolatile('ping-pong', null, (response: any) => {
-          this.latency = Date.now() - start;
-          this.gs.log('[SOCKET_PING-PONG]', this.latency);
-          if ('github' in response && response.github) {
-            this.portalVer = response.github.sha;
-            this.commitUser = response.github.commit.author.name;
-            this.commitDate = new Date(response.github.commit.author.date);
-            this.commitMessage = response.github.commit.message;
-          }
-        });
+        this.pingPong();
       }, 10000);
     });
     this.mySocket.on('disconnect', reason => {

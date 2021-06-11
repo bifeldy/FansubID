@@ -4,31 +4,37 @@
       <b class="text-bifeldy-dark">Statistik Server</b>
     </h2>
   </div>
-  <div class="col-12" *ngIf="ss.portalVer">
-    <p class="px-2 text-truncate">
+  <div class="col-12">
+    <p class="px-2 text-truncate" *ngIf="ss.github?.sha">
       Portal ::
       <span class="text-success">
-        {{ ss.portalVer }}
+        {{ ss.github?.sha }}
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.commitDate">
+    <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.author?.date">
       Date ::
       <span class="text-success">
-        {{ ss.commitDate | date:'d MMM y, h:mm:ss a' }}
+        {{ ss.github?.commit?.author?.date | date:'d MMM y, h:mm:ss a' }}
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.commitUser">
+    <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.author?.name">
       Commiter ::
       <span class="text-warning">
-        <a href="https://github.com/{{ ss.commitUser }}" target="_blank" class="text-warning text-decoration-none">
-          {{ ss.commitUser }}
+        <a href="https://github.com/{{ ss.github?.commit?.author?.name }}" target="_blank" class="text-warning text-decoration-none">
+          {{ ss.github?.commit?.author?.name }}
         </a>
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.commitMessage">
+    <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.message">
       Message ::
       <span class="text-warning">
-        {{ ss.commitMessage }}
+        {{ ss.github?.commit?.message }}
+      </span>
+    </p>
+    <p class="px-2 text-truncate" *ngIf="ss.server?.isMaintenance != null || ss.server?.isMaintenance != undefined">
+      Status ::
+      <span class="text-warning">
+        {{ ss.server?.isMaintenance ? 'Under Maintenance' : 'Up & Running' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.mySocket">

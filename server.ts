@@ -36,6 +36,9 @@ import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/helpers/s
 
 import { environment } from './src/environments/server/environment';
 
+// Server Settings
+import { serverGet } from './src/api/settings';
+
 // Model
 import { ApiKey } from './src/api/entities/ApiKey';
 
@@ -187,7 +190,7 @@ function startSocketIo(): void {
     });
     socket.on('ping-pong', (data: any, callback: any) => {
       if (typeof callback === 'function') {
-        callback({ github });
+        callback({ github, server: serverGet() });
       }
     });
     await socketBot(io, socket);

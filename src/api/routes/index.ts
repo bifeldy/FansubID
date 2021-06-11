@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Response, NextFunction } from 'express';
 
 import { getRepository, Equal, ILike, In } from 'typeorm';
 
@@ -22,6 +22,9 @@ import auth from '../middlewares/auth';
 // Helper
 import jwt from '../helpers/jwt';
 import logger from '../helpers/logger';
+
+// Server Settings
+import { serverGetMaintenance } from '../settings';
 
 // Child router file
 import animeRouter from './anime';
@@ -67,6 +70,25 @@ const upload = multer({
     fileSize: 256 * 1000
   },
 });
+
+function checkServerSetting(req: UserRequest, res: Response, next: NextFunction) {
+  switch (req.method) {
+    case 'POST':
+    case 'PUT':
+    case 'PATCH':
+    case 'DELETE':
+      if (serverGetMaintenance()) {
+        return res.status(400).json({
+          info: '🤧 400 - Settings API :: Server Maintenance 😷',
+          result: {
+            message: 'Server Sedang Dalam Tahap Perawatan!'
+          }
+        });
+      }
+    default:
+      return next();
+  }
+}
 
 const router = Router();
 
@@ -139,6 +161,8 @@ router.use(async (req: UserRequest, res, next) => {
     });
   }
 });
+
+router.use(checkServerSetting);
 
 // Child route url
 router.use('/anime', animeRouter);

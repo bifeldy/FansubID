@@ -3,6 +3,11 @@ import { Equal, getRepository, ILike, IsNull, MoreThanOrEqual } from 'typeorm';
 
 import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/models/RoomInfo';
 
+import { Role } from '../../app/_shared/models/Role';
+
+// Server Settings
+import { serverSetMaintenance } from '../settings';
+
 // Helper
 import jwt from '../helpers/jwt';
 import { getQuizHirakata, initializeQuizHirakata } from '../helpers/quizRoom';
@@ -151,6 +156,21 @@ export async function socketBot(io: Server, socket: Socket) {
   } catch (error) {
     console.error(error);
   }
+  socket.on('server-set', async (data: any) => {
+    try {
+      if (data.jwtToken) {
+        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        data.user = decoded.user;
+        if (data.user.role === Role.ADMIN && data.user.role === Role.MODERATOR) {
+          if (data.isMaintenance) {
+            serverSetMaintenance(data.isMaintenance);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
   socket.on('track-set', async (data: any) => {
     data.ip = socket.handshake.headers['x-real-ip'] || socket.handshake.address || socket.request.socket.remoteAddress;
     if (data.jwtToken) {
