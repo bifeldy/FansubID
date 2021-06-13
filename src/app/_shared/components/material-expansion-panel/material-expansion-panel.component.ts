@@ -39,8 +39,7 @@ export class MaterialExpansionPanelComponent implements OnInit {
     this.gs.log('[WINDOW_RESIZE]', event);
     if (this.gs.isDesktop) {
       this.accordion.openAll();
-    }
-    else {
+    } else {
       this.accordion.closeAll();
     }
   }

@@ -12,12 +12,12 @@ export class BannerNihongoComponent implements OnInit {
   nihongoMenu = [
     {
       url: 'belajar',
-      title: 'Mengenal Huruf Dan Lingkungan Sekitar',
+      title: 'Mengenal Aksara Jepang',
       image_url: '/assets/img/nihongo/hirakata.png'
     },
     {
       url: 'kanji',
-      title: 'Daftar Huruf Kanji Sekolah & JLPT',
+      title: 'Huruf Kanji Di Sekolah & JLPT',
       image_url: '/assets/img/nihongo/jlpt.png'
     }
   ];

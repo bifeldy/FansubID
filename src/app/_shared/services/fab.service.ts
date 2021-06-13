@@ -45,14 +45,16 @@ export class FabService {
     this.tooltipText = null;
     this.backgroundIcon = null;
     this.backgroundImage = null;
+    this.targetUrl = null;
+    this.newTab = null;
   }
 
-  initializeFab(icon = null, image = null, text = null, url = null, tab = true): void {
+  initializeFab(icon = null, image = null, text = null, url = null, openInNewTab = null): void {
     this.backgroundIcon = icon;
     this.backgroundImage = image;
     this.tooltipText = text;
     this.targetUrl = url;
-    this.newTab = tab;
+    this.newTab = openInNewTab;
     this.isHidden = false;
   }
 
@@ -60,8 +62,8 @@ export class FabService {
     this.tooltipText = text;
   }
 
-  setNewTab(tab: boolean): void {
-    this.newTab = tab;
+  setNewTab(openInNewTab: boolean): void {
+    this.newTab = openInNewTab;
   }
 
   setTargetUrl(url: boolean): void {
@@ -77,11 +79,12 @@ export class FabService {
   }
 
   buttonClicked(): void {
-    if (this.newTab) {
-      this.wb.winboxOpenUri(this.targetUrl);
-    }
-    else {
-      this.router.navigateByUrl(this.targetUrl);
+    if (this.targetUrl && this.newTab) {
+      if (this.newTab) {
+        this.wb.winboxOpenUri(this.targetUrl);
+      } else {
+        this.router.navigateByUrl(this.targetUrl);
+      }
     }
   }
 

@@ -6,12 +6,14 @@ import { SharedMaterialModule } from '../../helpers/shared-material.module';
 import { MaterialDialogInfoComponent } from './material-dialog-info/material-dialog-info.component';
 import { MaterialDialogDmakComponent } from './material-dialog-dmak/material-dialog-dmak.component';
 import { MaterialDialogEdictComponent } from './material-dialog-edict/material-dialog-edict.component';
+import { MaterialDialogBelajarComponent } from './material-dialog-belajar/material-dialog-belajar.component';
 
 @NgModule({
   declarations: [
     MaterialDialogInfoComponent,
     MaterialDialogDmakComponent,
-    MaterialDialogEdictComponent
+    MaterialDialogEdictComponent,
+    MaterialDialogBelajarComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { MaterialDialogEdictComponent } from './material-dialog-edict/material-d
   exports: [
     MaterialDialogInfoComponent,
     MaterialDialogDmakComponent,
-    MaterialDialogEdictComponent
+    MaterialDialogEdictComponent,
+    MaterialDialogBelajarComponent
   ]
 })
 export class MaterialDialogModule { }

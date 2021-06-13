@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -11,7 +11,7 @@ import { NihongoService } from '../../../_shared/services/nihongo.service';
   templateUrl: './nihongo-belajar.component.html',
   styleUrls: ['./nihongo-belajar.component.css']
 })
-export class NihongoBelajarComponent implements OnInit {
+export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -42,20 +42,22 @@ export class NihongoBelajarComponent implements OnInit {
   modeTampilan = 'hiragana';
 
   daftarHuruf = null;
+  daftarAngka = [];
+  daftarNihongo = [];
 
   count = 0;
   page = 1;
   row = 50;
 
   q = '';
-  sort = '';
-  order = '';
+
+  subsDialog = null;
 
   constructor(
     private gs: GlobalService,
     private bs: BusyService,
     private ds: DialogService,
-    private nihon: NihongoService,
+    private nihon: NihongoService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -65,12 +67,20 @@ export class NihongoBelajarComponent implements OnInit {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.getHirakata();
+      this.getAngka();
     }
   }
 
+  ngOnDestroy(): void {
+    this.subsDialog?.unsubscribe();
+  }
+
   changeModeTampilan(data): void {
-    this.gs.log('[HIRAKATA_CHANGE_KANA]', data);
+    this.gs.log('[BELAJAR_CHANGE_KANA]', data);
     this.modeTampilan = data;
+    this.count = 0;
+    this.page = 1;
+    this.row = 50;
     this.q = '';
     this.resetPaginator();
   }
@@ -91,13 +101,13 @@ export class NihongoBelajarComponent implements OnInit {
   }
 
   resetPaginator(): void {
-    this.paginator._changePageSize(this.pageSizeOptions[0]);
-    this.paginator.firstPage();
+    this.paginator?._changePageSize(this.pageSizeOptions[0]);
+    this.paginator?.firstPage();
   }
 
   openDmak(kana): void {
-    this.gs.log('[HIRAKATA_OPEN_DMAK]', kana);
-    this.ds.openDmakDialog({
+    this.gs.log('[BELAJAR_OPEN_DMAK]', kana);
+    this.subsDialog = this.ds.openDmakDialog({
       data: {
         romaji: kana.romaji,
         hiragana_katakana_kanji: (
@@ -131,14 +141,51 @@ export class NihongoBelajarComponent implements OnInit {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[NEWS_DETAIL_ERROR]', err);
+        this.gs.log('[HIRAKATA_ERROR]', err);
         this.bs.idle();
       }
     });
   }
 
+  getAngka(): void {
+    console.log('getAngka');
+  }
+
   getData(): void {
-    //
+    console.log('getData');
+  }
+
+  addOrEditDataset(): void {
+    this.subsDialog = this.ds.openInfoDialog({
+      data: {
+        title: `Dataset`,
+        confirmText: 'Simpan',
+        cancelText: 'Tutup'
+      },
+      disableClose: true
+    }).afterClosed().subscribe({
+      next: re => {
+        console.log(re);
+        if (re === true) {
+          // this.bs.busy();
+          // this.subsBannedDelete = this.adm.unBan(data.id).subscribe({
+          //   next: res => {
+          //     this.gs.log('[BANNED_LIST_CLICK_UNBAN_SUCCESS]', res);
+          //     this.bs.idle();
+          //     this.getData();
+          //   },
+          //   error: err => {
+          //     this.gs.log('[BANNED_LIST_CLICK_UNBAN_ERROR]', err);
+          //     this.bs.idle();
+          //     this.getData();
+          //   }
+          // });
+        } else if (re === false) {
+          this.getData();
+        }
+        this.subsDialog.unsubscribe();
+      }
+    });
   }
 
 }

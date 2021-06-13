@@ -107,19 +107,48 @@
         <ng-template #kataBendaLainnya>
           <div *ngIf="modeTampilan == 'angka'; then angka; else selainAngka;"></div>
           <ng-template #angka>
-            <div class="col-12">
-              // TODO :: Fitur Belum / Tidak Dapat Di Realisasikan
+            <div class="col-12" *ngIf="daftarNihongo.length > 0; else noData;">
+              <div class="row px-3">
+                <div class="col-12 col-md-6 col-xl-3 p-2" *ngFor="let i of daftarAngka">
+                  <mat-card>
+                    <mat-card-header class="me-0" style="cursor: pointer;">
+                      <div mat-card-avatar style="background-size: cover; border-radius: 0;"
+                        [style.background-image]="'url(/assets/img/nihongo/katakana.png)'">
+                      </div>
+                      <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
+                        <h3 class="mb-0">{{ i }}</h3>
+                      </mat-card-title>
+                      <mat-card-subtitle class="mb-0">{{ i }}</mat-card-subtitle>
+                    </mat-card-header>
+                  </mat-card>
+                </div>
+              </div>
             </div>
           </ng-template>
           <ng-template #selainAngka>
-            <div class="col-12">
-              // TODO :: Fitur Belum / Tidak Dapat Di Realisasikan
+            <div class="col-12" *ngIf="daftarNihongo.length > 0; else noData;">
+              <div class="row px-3">
+                <div class="col-12 col-md-6 col-xl-3 p-2" *ngFor="let i of daftarNihongo">
+                  <mat-card>
+                    <mat-card-header class="me-0" style="cursor: pointer;">
+                      <div mat-card-avatar style="background-size: cover; border-radius: 0;"
+                        [style.background-image]="'url(/assets/img/nihongo/katakana.png)'">
+                      </div>
+                      <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
+                        <h3 class="mb-0">{{ i }}</h3>
+                      </mat-card-title>
+                      <mat-card-subtitle class="mb-0">{{ i }}</mat-card-subtitle>
+                    </mat-card-header>
+                  </mat-card>
+                </div>
+              </div>
             </div>
           </ng-template>
         </ng-template>
       </div>
-      <div class="position-sticky bottom-0" *ngIf="modeTampilan != 'hiragana' && modeTampilan != 'katakana' && modeTampilan != 'angka'">
-        <mat-paginator class="bg-bifeldy-dark" showFirstLastButtons [color]="'accent'" [length]="count" [pageSizeOptions]="pageSizeOptions" (page)="paginatorChanged($event)"></mat-paginator>
+      <div class="position-sticky bottom-0" [style.display]="(modeTampilan != 'hiragana' && modeTampilan != 'katakana' && modeTampilan != 'angka') ? 'block' : 'none'">
+        <mat-paginator class="bg-bifeldy-dark" showFirstLastButtons [color]="'accent'" [length]="count"
+          [pageSizeOptions]="pageSizeOptions" (page)="paginatorChanged($event)"></mat-paginator>
       </div>
     </div>
     <div class="col-lg-4 col-xl-3">
@@ -133,3 +162,22 @@
   </div>
 
 </div>
+
+<ng-template #noData>
+  <div class="col-12 p-3" *ngIf="daftarNihongo.length <= 0"
+    style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+    <div class="row align-items-center h-100">
+      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+        <h3 class="m-0">
+          Tidak Ada Data ¯\_(ツ)_/¯
+        </h3>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<button (click)="addOrEditDataset()" mat-fab class="me-3 mb-5 fab-button" matTooltip="Tambah Dataset"
+  *ngIf="modeTampilan != 'hiragana' && modeTampilan != 'katakana' && modeTampilan != 'angka'"
+  style="position: fixed; bottom: 0; right: 0;">
+  <mat-icon>add</mat-icon>
+</button>

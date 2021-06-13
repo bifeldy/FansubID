@@ -40,6 +40,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   subsFansub = null;
   subsBerkas = null;
   subsPengguna = null;
+  subsDialog = null;
 
   constructor(
     private gs: GlobalService,
@@ -73,6 +74,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.subsFansub?.unsubscribe();
     this.subsBerkas?.unsubscribe();
     this.subsPengguna?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   applyFilter(event): void {
@@ -98,7 +100,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   openEdict(kana): void {
     this.gs.log('[HIRAKATA_OPEN_EDICT]', kana);
-    this.ds.openEdictDialog({
+    this.subsDialog = this.ds.openEdictDialog({
       data: {
         character: kana.character,
         context: kana.context,
@@ -119,6 +121,10 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         v_onyomi: kana.v_onyomi
       },
       disableClose: false
+    }).afterClosed().subscribe({
+      next: re => {
+        this.subsDialog.unsubscribe();
+      }
     });
   }
 

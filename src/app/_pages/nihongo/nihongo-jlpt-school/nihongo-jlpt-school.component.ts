@@ -31,6 +31,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
   kanjiData = [];
 
   subsKanji = null;
+  subsDialog = null;
 
   constructor(
     private gs: GlobalService,
@@ -51,6 +52,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsKanji?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   changeJlpt(data): void {
@@ -107,7 +109,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
 
   openEdict(kana): void {
     this.gs.log('[HIRAKATA_OPEN_EDICT]', kana);
-    this.ds.openEdictDialog({
+    this.subsDialog = this.ds.openEdictDialog({
       data: {
         character: kana.character,
         context: kana.context,
@@ -128,6 +130,10 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
         v_onyomi: kana.v_onyomi
       },
       disableClose: false
+    }).afterClosed().subscribe({
+      next: re => {
+        this.subsDialog.unsubscribe();
+      }
     });
   }
 

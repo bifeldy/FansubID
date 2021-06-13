@@ -6,6 +6,7 @@ import { GlobalService } from './global.service';
 import { MaterialDialogInfoComponent } from '../components/material-dialog/material-dialog-info/material-dialog-info.component';
 import { MaterialDialogDmakComponent } from '../components/material-dialog/material-dialog-dmak/material-dialog-dmak.component';
 import { MaterialDialogEdictComponent } from '../components/material-dialog/material-dialog-edict/material-dialog-edict.component';
+import { MaterialDialogBelajarComponent } from '../components/material-dialog/material-dialog-belajar/material-dialog-belajar.component';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,13 @@ export class DialogService {
       dataInfo.disableClose = true;
     }
     return this.dialog.open(MaterialDialogEdictComponent, dataInfo);
+  }
+
+  openBelajarDialog(dataInfo: MatDialogConfig): MatDialogRef<MaterialDialogBelajarComponent> {
+    if (!('disableClose' in dataInfo)) {
+      dataInfo.disableClose = true;
+    }
+    return this.dialog.open(MaterialDialogBelajarComponent, dataInfo);
   }
 
 }
