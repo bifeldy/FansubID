@@ -132,6 +132,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
       disableClose: false
     }).afterClosed().subscribe({
       next: re => {
+        console.log('[EDICT_DIALOG_CLOSED]', re);
         this.subsDialog.unsubscribe();
       }
     });

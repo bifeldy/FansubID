@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
 
@@ -13,6 +13,7 @@ import { DialogInfoData } from '../../../models/Dialog';
 export class MaterialDialogBelajarComponent implements OnInit {
 
   constructor(
+    public dialogRef: MatDialogRef<MaterialDialogBelajarComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogInfoData,
     public gs: GlobalService
   ) {
@@ -22,7 +23,13 @@ export class MaterialDialogBelajarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gs.log('[DIALOG_DATA]', this.data);
+    this.gs.log('[DIALOG_DATA_IN]', this.data);
+  }
+
+  saveData(): void {
+    // TODO :: POST PUT API BELAJAR
+    this.gs.log('[DIALOG_DATA_OUT]', this.data);
+    this.dialogRef.close(this.data);
   }
 
 }

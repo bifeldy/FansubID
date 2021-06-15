@@ -105,6 +105,7 @@ export class AdminListCorsComponent implements OnInit {
       disableClose: false
     }).afterClosed().subscribe({
       next: re => {
+        console.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
           this.subsCorsDelete = this.adm.revokeCors(data.id).subscribe({

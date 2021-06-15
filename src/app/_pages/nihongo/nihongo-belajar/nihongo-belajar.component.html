@@ -107,37 +107,26 @@
         <ng-template #kataBendaLainnya>
           <div *ngIf="modeTampilan == 'angka'; then angka; else selainAngka;"></div>
           <ng-template #angka>
-            <div class="col-12" *ngIf="daftarNihongo.length > 0; else noData;">
-              <div class="row px-3">
-                <div class="col-12 col-md-6 col-xl-3 p-2" *ngFor="let i of daftarAngka">
-                  <mat-card>
-                    <mat-card-header class="me-0" style="cursor: pointer;">
-                      <div mat-card-avatar style="background-size: cover; border-radius: 0;"
-                        [style.background-image]="'url(/assets/img/nihongo/katakana.png)'">
-                      </div>
-                      <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
-                        <h3 class="mb-0">{{ i }}</h3>
-                      </mat-card-title>
-                      <mat-card-subtitle class="mb-0">{{ i }}</mat-card-subtitle>
-                    </mat-card-header>
-                  </mat-card>
-                </div>
-              </div>
+            <div class="p-3">
+              <app-material-table [tableDataColumn]="daftarAngka.column" [tableDataRow]="daftarAngka.row"></app-material-table>
             </div>
           </ng-template>
           <ng-template #selainAngka>
             <div class="col-12" *ngIf="daftarNihongo.length > 0; else noData;">
               <div class="row px-3">
-                <div class="col-12 col-md-6 col-xl-3 p-2" *ngFor="let i of daftarNihongo">
-                  <mat-card>
+                <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let d of daftarNihongo">
+                  <mat-card class="card" (click)="addOrEditDataset(d)">
                     <mat-card-header class="me-0" style="cursor: pointer;">
                       <div mat-card-avatar style="background-size: cover; border-radius: 0;"
-                        [style.background-image]="'url(/assets/img/nihongo/katakana.png)'">
+                        [style.background-image]="'url(' + d.image_url + ')'">
                       </div>
                       <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
-                        <h3 class="mb-0">{{ i }}</h3>
+                        <h3 matLine class="mb-0">{{ d.kana }}</h3>
                       </mat-card-title>
-                      <mat-card-subtitle class="mb-0">{{ i }}</mat-card-subtitle>
+                      <mat-card-subtitle class="mb-0">
+                        <p matLine class="m-0 text-success">{{ d.romaji }}</p>
+                        <p matLine class="m-0">{{ d.meaning }}</p>
+                      </mat-card-subtitle>
                     </mat-card-header>
                   </mat-card>
                 </div>
@@ -176,7 +165,7 @@
   </div>
 </ng-template>
 
-<button (click)="addOrEditDataset()" mat-fab class="me-3 mb-5 fab-button" matTooltip="Tambah Dataset"
+<button (click)="addOrEditDataset(null)" mat-fab class="me-3 mb-5 fab-button" matTooltip="Tambah Dataset"
   *ngIf="modeTampilan != 'hiragana' && modeTampilan != 'katakana' && modeTampilan != 'angka'"
   style="position: fixed; bottom: 0; right: 0;">
   <mat-icon>add</mat-icon>

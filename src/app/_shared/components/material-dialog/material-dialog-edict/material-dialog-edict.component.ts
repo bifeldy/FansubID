@@ -48,7 +48,7 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngOnInit(): void {
-    this.gs.log('[DIALOG_DATA]', this.data);
+    this.gs.log('[DIALOG_DATA_IN]', this.data);
     if ('character' in this.data && this.data.character) {
       this.charToDraw = this.data.character;
     }

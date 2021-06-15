@@ -57,6 +57,7 @@ export class WinboxService {
             disableClose: false
           }).afterClosed().subscribe({
             next: re => {
+              console.log('[INFO_DIALOG_CLOSED]', re);
               if (re === true) {
                 window.open(uriUrl, windowTarget);
               }

@@ -35,7 +35,7 @@ export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.gs.log('[DIALOG_DATA]', this.data);
+    this.gs.log('[DIALOG_DATA_IN]', this.data);
     if ('hiragana_katakana_kanji' in this.data && this.data.hiragana_katakana_kanji) {
       this.charToDraw = this.data.hiragana_katakana_kanji;
     }
