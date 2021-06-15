@@ -26,6 +26,7 @@ import { MaterialTabModule } from '../../_shared/components/material-tab/materia
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { RightPanelModule } from '../../_shared/components/right-panel/right-panel.module';
 import { QuizModule } from '../../_shared/components/quiz/quiz.module';
+import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
 
 const routes: Routes = [
   {
@@ -484,19 +485,19 @@ const routes: Routes = [
   //     options: 
   //   }
   // },
-  {
-    path: 'create',
-    component: NihongoBookCreateComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Buku Pendukung - Buat Baru',
-      description: 'Halaman Menambahkan Pendukung Belajar',
-      keywords: 'Create Book',
-      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-      question: null,
-      options: null
-    }
-  },
+  // {
+  //   path: 'create',
+  //   component: NihongoBookCreateComponent,
+  //   canActivate: [AuthGuard],
+  //   data: {
+  //     title: 'Buku Pendukung - Buat Baru',
+  //     description: 'Halaman Menambahkan Pendukung Belajar',
+  //     keywords: 'Create Book',
+  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+  //     question: null,
+  //     options: null
+  //   }
+  // },
   // {
   //   path: ':bookId/edit',
   //   component: NihongoBookEditComponent,
@@ -510,19 +511,19 @@ const routes: Routes = [
   //     options: null
   //   }
   // },
-  {
-    path: ':bookId/create',
-    component: NihongoChapterCreateComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Bagian Buku - Buat Baru',
-      description: 'Halaman Menambahkan Bagian Dalam Buku',
-      keywords: 'Create Chapter',
-      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-      question: null,
-      options: null
-    }
-  },
+  // {
+  //   path: ':bookId/create',
+  //   component: NihongoChapterCreateComponent,
+  //   canActivate: [AuthGuard],
+  //   data: {
+  //     title: 'Bagian Buku - Buat Baru',
+  //     description: 'Halaman Menambahkan Bagian Dalam Buku',
+  //     keywords: 'Create Chapter',
+  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+  //     question: null,
+  //     options: null
+  //   }
+  // },
   // {
   //   path: ':bookId/:chapterId/edit',
   //   component: NihongoChapterEditComponent,
@@ -536,22 +537,22 @@ const routes: Routes = [
   //     options: null
   //   }
   // },
-  {
-    path: ':bookId/:chapterId',
-    component: NihongoChapterDetailComponent,
-    data: {
-      question: null,
-      options: null
-    }
-  },
-  {
-    path: ':bookId',
-    component: NihongoBookDetailComponent,
-    data: {
-      question: null,
-      options: null
-    }
-  },
+  // {
+  //   path: ':bookId/:chapterId',
+  //   component: NihongoChapterDetailComponent,
+  //   data: {
+  //     question: null,
+  //     options: null
+  //   }
+  // },
+  // {
+  //   path: ':bookId',
+  //   component: NihongoBookDetailComponent,
+  //   data: {
+  //     question: null,
+  //     options: null
+  //   }
+  // },
 ];
 
 @NgModule({
@@ -579,7 +580,8 @@ const routes: Routes = [
     AngularEditorModule,
     StatsServerModule,
     RightPanelModule,
-    QuizModule
+    QuizModule,
+    MaterialTableModule
   ]
 })
 export class NihongoModule { }
