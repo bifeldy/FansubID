@@ -37,6 +37,7 @@ import { MaterialFabModule } from './_shared/components/material-fab/material-fa
 import { MaterialDialogModule } from './_shared/components/material-dialog/material-dialog.module';
 
 import { environment } from '../environments/client/environment';
+
 import { ExternalLinkDirective } from './_shared/directives/external-link.directive';
 
 @NgModule({

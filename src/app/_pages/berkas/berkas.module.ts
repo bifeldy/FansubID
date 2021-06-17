@@ -12,11 +12,10 @@ import { NotificationsModule } from '../../_shared/components/notifications/noti
 import { VjsPlayerModule } from '../../_shared/components/vjs-player/vjs-player.module';
 import { DiscussionModule } from '../../_shared/components/discussion/discussion.module';
 import { ReportModule } from '../../_shared/components/report/report.module';
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { Role } from '../../_shared/models/Role';
-
-import { BytesPipe } from '../../_shared/pipes/bytes.pipe';
 
 import { BerkasCreateComponent } from './berkas-create/berkas-create.component';
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';
@@ -62,8 +61,7 @@ const routes: Routes = [
     BerkasCreateComponent,
     BerkasDetailComponent,
     BerkasEditComponent,
-    BerkasListComponent,
-    BytesPipe
+    BerkasListComponent
   ],
   imports: [
     CommonModule,
@@ -77,7 +75,8 @@ const routes: Routes = [
     AngularEditorModule,
     VjsPlayerModule,
     DiscussionModule,
-    ReportModule
+    ReportModule,
+    CustomPipeModule
   ]
 })
 export class BerkasModule { }
