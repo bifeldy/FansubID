@@ -81,7 +81,9 @@
       <h3 class="m-0">Komentar</h3>
     </ng-template>
     <ng-template matTabContent>
-      <app-discussion></app-discussion>
+      <div class="p-3">
+        <app-discussion [rootCommentBox]="true"></app-discussion>
+      </div>
     </ng-template>
   </mat-tab>
 </mat-tab-group>

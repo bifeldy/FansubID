@@ -39,6 +39,7 @@ import bannedRouter from './banned';
 import notificationRouter from './notification';
 import likedislikeRouter from './likedislike';
 import corsRouter from './cors';
+import commentRouter from './comment';
 
 // Child router folder
 import nihongoRouter from './nihongo';
@@ -181,6 +182,7 @@ router.use('/banned', bannedRouter);
 router.use('/notification', notificationRouter);
 router.use('/likedislike', likedislikeRouter);
 router.use('/cors', corsRouter);
+router.use('/comment', commentRouter);
 
 // POST `/api/register`
 router.post('/register', auth.registerModule, async (req: UserRequest, res: Response, next) => {

@@ -29,6 +29,7 @@ import { LikeDislike } from '../../api/entities/LikeDislike';
 import { Hirakata } from '../../api/entities/Hirakata';
 import { HirakataStats } from '../../api/entities/HirakataStats';
 import { Nihongo } from '../../api/entities/Nihongo';
+import { Komentar } from '../../api/entities/Komentar';
 
 export const environment = {
   production: false,
@@ -72,7 +73,8 @@ export const environment = {
     LikeDislike,
     Hirakata,
     HirakataStats,
-    Nihongo
+    Nihongo,
+    Komentar
   ],
   uploadFolder: 'dist/hikki/uploads',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',

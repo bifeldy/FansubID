@@ -173,8 +173,15 @@
               </div>
             </div>
             <div class="row py-3">
+              <div class="col-12 sticky-top bg-bifeldy-dark">
+                <h2 class="pt-3 border-bottom-dotted">
+                  <b class="text-bifeldy-dark">Komentar</b>
+                </h2>
+              </div>
               <div class="col-12">
-                <app-discussion></app-discussion>
+                <div class="p-3">
+                  <app-discussion [rootCommentBox]="true"></app-discussion>
+                </div>
               </div>
             </div>
           </div>

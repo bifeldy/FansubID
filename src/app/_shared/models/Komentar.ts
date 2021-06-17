@@ -6,8 +6,13 @@ export interface Komentar {
   comment?: string;
   created_at?: number;
   updated_at?: number;
+  reply?: Komentar[];
+  user_?: User;
+  parent_komentar_?: Komentar;
+  show_reply?: boolean;
   reply_count?: number;
   reply_page?: number;
-  user?: User;
-  reply?: Komentar[];
+  reply_page_finised: boolean;
+  reply_mode?: boolean;
+  reply_to_send?: string;
 };
