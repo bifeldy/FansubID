@@ -9,7 +9,6 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
-import { DISQUS_SHORTNAME } from 'ngx-disqus';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
@@ -35,8 +34,6 @@ import { RightPanelModule } from './_shared/components/right-panel/right-panel.m
 import { FooterModule } from './_shared/components/footer/footer.module';
 import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
 import { MaterialDialogModule } from './_shared/components/material-dialog/material-dialog.module';
-
-import { environment } from '../environments/client/environment';
 
 import { ExternalLinkDirective } from './_shared/directives/external-link.directive';
 
@@ -76,7 +73,6 @@ import { ExternalLinkDirective } from './_shared/directives/external-link.direct
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: MyTooltipConfig },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'always' } },
-    { provide: DISQUS_SHORTNAME, useValue: `${environment.siteName}-${environment.author}`.toLowerCase() },
     Title, CookieService, NgxSpinnerService, LeftMenuService,
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },

@@ -12,7 +12,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="d-flex my-3" *ngFor="let k of komentar">
+  <div class="d-flex my-1" *ngFor="let k of komentar">
     <div class="flex-shrink-0">
       <img height="40" src="{{ k.user_.image_url }}" />
     </div>
@@ -22,7 +22,7 @@
           <b class="text-warning">{{ k.user_.username }}</b>
           <small class="ms-3 text-bifeldy-dark">{{ k.created_at | dateAgo }}</small>
         </p>
-        <p style="line-height: normal;">{{ k.comment }}</p>
+        <p class="mb-1" style="line-height: normal;">{{ k.comment }}</p>
       </div>
       <mat-form-field appearance="outline" class="col-12" [color]="'accent'" *ngIf="k.reply_mode && currentUser">
         <mat-label>Balas / Tanggapi</mat-label>
@@ -66,5 +66,3 @@
     </div>
   </div>
 </div>
-
-<!-- <disqus [identifier]="urlPath" *ngIf="urlPath"></disqus> -->
