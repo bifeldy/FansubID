@@ -14,7 +14,7 @@
       </div>
       <div class="col-12" style="height: calc(100% - 105px);">
         <div class="h-100" style="overflow-y: auto;">
-          <div class="row m-0">
+          <div class="row m-0" *ngIf="roomCurrentOrGlobal">
             <div class="col-6 p-0" *ngFor="let u of roomCurrentOrGlobal.member_list | keyvalue">
               <div class="card d-flex py-1 align-items-center p-1" routerLink="/user/Bifeldy" *ngIf="u.value">
                 <div class="flex-shrink-0">

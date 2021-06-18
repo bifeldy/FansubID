@@ -149,7 +149,7 @@ export class StatsServerService {
     });
     this.mySocket.on('room-info', roomInfo => {
       this.gs.log('[SOCKET_ROOM-INFO]', roomInfo);
-      this.gs.cleanObject(roomInfo.member_list)
+      this.gs.cleanObject(roomInfo?.member_list)
       if (roomInfo.room_id == 'GLOBAL_PUBLIK') {
         this.globalRoomSubject.next(roomInfo);
       } else {
