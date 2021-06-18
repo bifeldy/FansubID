@@ -125,7 +125,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
         } else {
           k.reply = [...k.reply, ...res.results];
         }
-        k.reply_count = k.reply.length;
+        k.reply_count = res.count;
         if (res.results.length <= 0) {
           k.reply_page_finised = true;
         }
