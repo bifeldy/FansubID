@@ -100,7 +100,6 @@ export class DiscussionComponent implements OnInit, OnDestroy {
           } else {
             this.komentar = [...this.komentar, ...res.results];
           }
-          this.komentar.reply_count = this.komentar.length;
           if (res.results.length <= 0) {
             this.pageFinished = true;
           }
