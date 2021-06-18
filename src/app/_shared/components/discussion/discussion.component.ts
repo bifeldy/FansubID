@@ -58,7 +58,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
   }
 
   sendComment(k: Komentar): void {
-    console.log(k);
+    this.gs.log('[KOMENTAR_PARENT_CREATE_REPLY]', k);
     const commentData = (k) ? {
       path: this.urlPath,
       comment: k.reply_to_send,
@@ -69,7 +69,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     };
     this.komen.sendComment(commentData).subscribe({
       next: res => {
-        this.gs.log('[KOMENTAR_CREATE_SUCCESS]', res);
+        this.gs.log('[KOMENTAR_CREATE_REPLY_SUCCESS]', res);
         if (k) {
           k.reply_to_send = null;
           k.reply_mode = false;
@@ -80,7 +80,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.gs.log('[KOMENTAR_CREATE_ERROR]', err);
+        this.gs.log('[KOMENTAR_CREATE_REPLY_ERROR]', err);
       }
     });
   }
@@ -100,6 +100,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
           } else {
             this.komentar = [...this.komentar, ...res.results];
           }
+          this.komentar.reply_count = this.komentar.length;
           if (res.results.length <= 0) {
             this.pageFinished = true;
           }
@@ -112,6 +113,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
   }
 
   getReply(k: Komentar, fresh = false): void {
+    this.gs.log('[KOMENTAR_PARENT_LOAD_REPLY]', k);
     if (fresh) {
       k.reply_page = 1;
       k.reply_page_finised = false;
@@ -124,6 +126,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
         } else {
           k.reply = [...k.reply, ...res.results];
         }
+        k.reply_count = k.reply.length;
         if (res.results.length <= 0) {
           k.reply_page_finised = true;
         }
