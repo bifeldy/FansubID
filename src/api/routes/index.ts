@@ -541,7 +541,7 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
                 return res.status(r.statusCode).json({
                   info: `🙄 ${r.statusCode} - Discord API :: Gagal Verify 😪`,
                   result: {
-                    message: 'Data Tidak Lengkap / Discord API Down!'
+                    message: 'Error koneksi ke api discord resmi!'
                   }
                 });
               }
@@ -550,7 +550,7 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
             return res.status(rs.statusCode).json({
               info: `🙄 ${rs.statusCode} - Discord API :: Gagal Masuk 😪`,
               result: {
-                message: 'Data Tidak Lengkap / Discord API Down!'
+                message: 'Kode token salah / tidak valid!'
               }
             });
           }
