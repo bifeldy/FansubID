@@ -67,10 +67,10 @@ const typeOrmConfig: any = {
 // Express Router
 import indexRouter from './src/api/routes/index';
 
-// Express rest api endpoints ~ 2 HttpReq/s
+// Express rest api endpoints ~ 1 req/4s
 const apiLimiter = rateLimit({
   windowMs: 60000, // 60 Seconds / 1 Minute
-  max: 120, // 120 Request
+  max: 15, // 15 Request
   handler: (req, res, next) => {
     return res.status(429).json({
       info: '😡 429 - API SPAM :: Kebanjiran Permintaan 😤',
