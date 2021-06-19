@@ -45,7 +45,9 @@
             </div>
             <div class="flex-grow-1 mx-1 my-auto">
               <h5 matLine class="m-0">
-                <span class="text-success">{{ c.sender.username }}: </span>
+                <span class="me-1 text-success" style="cursor: pointer;" (click)="openUserProfile(c.sender.username)">
+                  {{ c.sender.username }}
+                </span>
                 <span class="text-warning" style="word-break: break-word;" [innerHtml]="gs.htmlToText(c.message).linkify()"></span>
               </h5>
             </div>

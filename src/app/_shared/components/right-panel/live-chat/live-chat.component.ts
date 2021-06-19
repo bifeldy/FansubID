@@ -142,4 +142,8 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  openUserProfile(username): void {
+    this.router.navigateByUrl(`/user/${username}`);
+  }
+
 }
