@@ -212,7 +212,6 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   }
 
   getAngka(): void {
-    // TODO :: GET API BELAJAR
     const dataAngka = [];
     for (const d of this.dummyDataset) {
       dataAngka.push({
