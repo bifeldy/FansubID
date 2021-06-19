@@ -14,7 +14,7 @@
 <div class="row">
   <div class="d-flex my-1" *ngFor="let k of komentar">
     <div class="flex-shrink-0">
-      <img width="40" height="40" src="{{ k.user_.image_url }}" style="object-fit: cover;" />
+      <img width="40" height="40" src="{{ k.user_.image_url }}" style="object-fit: cover; object-position: center;" />
     </div>
     <div class="flex-grow-1 ms-3">
       <div (click)="showHideCommentBox(k)">

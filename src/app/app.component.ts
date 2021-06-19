@@ -177,15 +177,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     const el = e.target || e.srcElement;
     if (el.tagName === 'A' || el.tagName === 'a') {
       const externalUri: string = el.getAttribute('href');
-      if (this.gs.gridListBreakpoint >= 2 && externalUri.startsWith('http')) {
-        this.winboxOpenUri(externalUri);
-        ev.preventDefault();
-        ev.stopPropagation();
-        return false;
-      } else {
-        return true;
+      if (externalUri) {
+        if (this.gs.gridListBreakpoint >= 2 && externalUri.startsWith('http')) {
+          this.winboxOpenUri(externalUri);
+          ev.preventDefault();
+          ev.stopPropagation();
+          return false;
+        }
       }
     }
+    return true;
   }
 
   winboxOpenUri(uri: string): void {
