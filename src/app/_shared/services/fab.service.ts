@@ -49,7 +49,7 @@ export class FabService {
     this.newTab = null;
   }
 
-  initializeFab(icon = null, image = null, text = null, url = null, openInNewTab = null): void {
+  initializeFab(icon: string, image: string, text: string, url: string, openInNewTab: boolean): void {
     this.backgroundIcon = icon;
     this.backgroundImage = image;
     this.tooltipText = text;
@@ -79,12 +79,10 @@ export class FabService {
   }
 
   buttonClicked(): void {
-    if (this.targetUrl && this.newTab) {
-      if (this.newTab) {
-        this.wb.winboxOpenUri(this.targetUrl);
-      } else {
-        this.router.navigateByUrl(this.targetUrl);
-      }
+    if (this.newTab) {
+      this.wb.winboxOpenUri(this.targetUrl);
+    } else {
+      this.router.navigateByUrl(this.targetUrl);
     }
   }
 
