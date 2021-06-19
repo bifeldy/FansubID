@@ -19,8 +19,12 @@
     <div class="flex-grow-1 ms-3">
       <div (click)="showHideCommentBox(k)">
         <p class="m-0">
-          <b class="text-warning">{{ k.user_.username }}</b>
-          <small class="ms-3 text-bifeldy-dark">{{ k.created_at | dateAgo }}</small>
+          <b class="text-warning" style="cursor: pointer;" (click)="openUserProfile(k); $event.stopPropagation()">
+            {{ k.user_.username }}
+          </b>
+          <small class="ms-3 text-bifeldy-dark" matTooltip="{{ k.created_at | date:'d MMMM y, h:mm:ss a z' }}">
+            {{ k.created_at | dateAgo }}
+          </small>
         </p>
         <p class="mb-1" style="line-height: normal;">{{ k.comment }}</p>
       </div>

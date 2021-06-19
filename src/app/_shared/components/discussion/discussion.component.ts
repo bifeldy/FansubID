@@ -181,4 +181,8 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     }
   }
 
+  openUserProfile(k: Komentar): void {
+    this.router.navigateByUrl(`/user/${k.user_.username}`);
+  }
+
 }
