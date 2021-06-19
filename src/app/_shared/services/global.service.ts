@@ -162,9 +162,9 @@ export class GlobalService {
         // Email addresses
         var emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
         return this
-          .replace(urlPattern, '<a href="$&">$&</a>')
-          .replace(pseudoUrlPattern, '$1<a href="http://$2">$2</a>')
-          .replace(emailAddressPattern, '<a href="mailto:$&">$&</a>');
+          .replace(urlPattern, '<a style="text-decoration: none;" href="$&">$&</a>')
+          .replace(pseudoUrlPattern, '$1<a style="text-decoration: none;" href="http://$2">$2</a>')
+          .replace(emailAddressPattern, '<a style="text-decoration: none;" href="mailto:$&">$&</a>');
       };
     }
   }
