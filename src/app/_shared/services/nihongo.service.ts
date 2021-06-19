@@ -18,6 +18,18 @@ export class NihongoService {
     }
   }
 
+  getAllNihongo(category = '', q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+    return this.api.getData(`/nihongo?category=${category}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  }
+
+  createNihongo(nihongoData): Observable<any> {
+    return this.api.postData(`/nihongo`, nihongoData);
+  }
+
+  updateNihongo(nihongoId, nihongoData): Observable<any> {
+    return this.api.putData(`/nihongo/${nihongoId}`, nihongoData);
+  }
+
   getHirakata(): Observable<any> {
     return this.api.patchData(`/nihongo/hirakata/list-all`);
   }
@@ -31,30 +43,30 @@ export class NihongoService {
   }
 
   getAllBook(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
-    return this.api.getData(`/nihongo?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.getData(`/nihongo/books?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   createBook(bookData): Observable<any> {
-    return this.api.postData(`/nihongo`, bookData);
+    return this.api.postData(`/nihongo/books`, bookData);
   }
 
   getBookDetailAndChapterList(bookId): Observable<any> {
-    return this.api.getData(`/nihongo/${bookId}`);
+    return this.api.getData(`/nihongo/books/${bookId}`);
   }
 
   updateBook(bookId, bookData): Observable<any> {
-    return this.api.putData(`/nihongo/${bookId}`, bookData);
+    return this.api.putData(`/nihongo/books/${bookId}`, bookData);
   }
 
   createChapter(bookId, chapterData): Observable<any> {
-    return this.api.postData(`/nihongo/${bookId}`, chapterData);
+    return this.api.postData(`/nihongo/books/${bookId}`, chapterData);
   }
 
   getChapterDetail(bookId, chapterId): Observable<any> {
-    return this.api.getData(`/nihongo/${bookId}/${chapterId}`);
+    return this.api.getData(`/nihongo/books/${bookId}/${chapterId}`);
   }
 
   updateChapter(bookId, chapterId, chapterData): Observable<any> {
-    return this.api.putData(`/nihongo/${bookId}/${chapterId}`, chapterData);
+    return this.api.putData(`/nihongo/books/${bookId}/${chapterId}`, chapterData);
   }
 }

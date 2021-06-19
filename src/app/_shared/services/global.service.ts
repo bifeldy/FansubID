@@ -17,6 +17,7 @@ export class GlobalService {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
+  readonly japaneseKeyboardKeysRegex = /[一-龠ぁ-ゔァ-ヴーａ-ｚＡ-Ｚ０-９々〆〤、。]+/u;
   readonly allKeyboardKeysRegex = /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/;
 
   public routerData = null;

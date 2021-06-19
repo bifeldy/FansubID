@@ -159,6 +159,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     this.page = data.pageIndex + 1;
     this.row = data.pageSize;
     if (this.modeTampilan != 'hiragana' && this.modeTampilan != 'katakana' && this.modeTampilan != 'angka') {
+      this.daftarNihongo = [];
       this.getData();
     }
   }
@@ -224,17 +225,19 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   }
 
   getData(): void {
-    // TODO :: GET API BELAJAR
-    const dataNihongo = [];
-    for (const d of this.dummyDataset) {
-      dataNihongo.push({
-        meaning: d.meaning,
-        kana: d.kana,
-        romaji: d.romaji,
-        image_url: '/favicon.ico'
-      });
-    }
-    this.daftarNihongo = dataNihongo;
+    this.bs.busy();
+    this.nihon.getAllNihongo(this.modeTampilan, this.q, this.page, this.row).subscribe({
+      next: res => {
+        this.gs.log('[BELAJAR_KANA_LIST_SUCCESS]', res);
+        this.count = res.count;
+        this.daftarNihongo = res.results;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[BELAJAR_KANA_LIST_ERROR]', err);
+        this.bs.idle();
+      },
+    });
   }
 
   addOrEditDataset(dataset): void {
@@ -242,7 +245,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     if (this.currentUser && this.currentUser.verified) {
       this.subsDialog = this.ds.openBelajarDialog({
         data: {
-          title: (dataset ? `Edit Data ${dataset.kana}` : `Tambah Dataset '${this.modeTampilan}'`),
+          title: (dataset ? `Edit Data` : `Tambah Dataset`),
+          modeTampilan: this.modeTampilan,
           dataset,
           confirmText: 'Simpan',
           cancelText: 'Tutup'
@@ -250,7 +254,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         disableClose: true
       }).afterClosed().subscribe({
         next: re => {
-          console.log('[BELAJAR_DIALOG_CLOSED]', re);
+          console.log('[BELAJAR_DATASET_DIALOG_CLOSED]', re);
           this.getData();
           this.subsDialog.unsubscribe();
         }

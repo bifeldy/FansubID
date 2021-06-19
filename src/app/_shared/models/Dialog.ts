@@ -1,3 +1,20 @@
+export interface DialogNihongoData {
+  title?: string;
+  modeTampilan: string;
+  dataset?: {
+    id?: number;
+    kana?: string;
+    romaji?: string;
+    meaning?: string;
+    audio?: string;
+    category?: string;
+    image_url?: string;
+  };
+  htmlMessage?: string;
+  confirmText?: string;
+  cancelText?: string;
+}
+
 export interface DialogInfoData {
   title?: string;
   htmlMessage?: string;

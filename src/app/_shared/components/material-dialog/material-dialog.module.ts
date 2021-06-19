@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
+import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { SharedMaterialModule } from '../../helpers/shared-material.module';
 
@@ -17,7 +21,11 @@ import { MaterialDialogBelajarComponent } from './material-dialog-belajar/materi
   ],
   imports: [
     CommonModule,
-    SharedMaterialModule
+    RouterModule,
+    SharedMaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialFileInputModule
   ],
   exports: [
     MaterialDialogInfoComponent,

@@ -1,8 +1,77 @@
-<h1 mat-dialog-title>{{ data.title }}</h1>
+<h1 mat-dialog-title>{{ data.title }} '{{ data.dataset ? data.dataset.kana : data.modeTampilan }}'</h1>
 <div mat-dialog-content class="p-4" class="text-break text-warning">
-  // TODO :: Form Tambah Ganti Dataset Belajar --
+  <form [formGroup]="fg" *ngIf="fg">
+    <div class="row">
+      <div class="col-12 col-md-5 col-xl-4 p-3">
+        <div class="row">
+          <div class="col-12">
+            <img class="w-100 border" [src]="image_url" />
+            <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
+              <mat-label>Gambar</mat-label>
+              <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
+                [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+              <mat-icon matSuffix>image</mat-icon>
+            </mat-form-field>
+            <mat-error class="px-3 pb-3 w-100">
+              <small>
+                <strong>{{ imageErrorText }}</strong> <br *ngIf="imageErrorText" />
+                <strong *ngIf="fg.get('image').hasError('required')">Gambar Wajib Ada!</strong>
+              </small>
+            </mat-error>
+          </div>
+          <div class="col-12" *ngIf="image && !fg.value.image">
+            <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+              <mat-icon class="me-1">add_photo_alternate</mat-icon>
+              Unggah
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-7 col-xl-8 pt-3">
+        <div class="row">
+          <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+            <mat-label>Kana</mat-label>
+            <input matInput formControlName="kana" placeholder="褐色" />
+            <mat-icon matSuffix>translate</mat-icon>
+            <mat-error>
+              <strong *ngIf="fg.get('kana').hasError('required')">Kana Tidak Boleh Kosong</strong>
+              <strong *ngIf="fg.get('kana').hasError('pattern')">Kana Hanya Boleh Huruf Jepang</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+            <mat-label>Romaji</mat-label>
+            <input matInput formControlName="romaji" placeholder="Kasshoku" />
+            <mat-icon matSuffix>text_fields</mat-icon>
+            <mat-error>
+              <strong *ngIf="fg.get('romaji').hasError('required')">Romaji Tidak Boleh Kosong</strong>
+              <strong *ngIf="fg.get('romaji').hasError('pattern')">Romaji Hanya Boleh Huruf Standar Papan Ketik</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+            <mat-label>Arti Terjemahan</mat-label>
+            <input matInput formControlName="meaning" placeholder="Coklat" />
+            <mat-icon matSuffix>g_translate</mat-icon>
+            <mat-error>
+              <strong *ngIf="fg.get('meaning').hasError('required')">Arti Tidak Boleh Kosong</strong>
+              <strong *ngIf="fg.get('meaning').hasError('pattern')">Arti Hanya Boleh Huruf Standar Papan Ketik</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row" *ngIf="data.dataset?.user_">
+          <div class="col text-end">
+            Last Edit By ::
+            <a routerLink="/user/{{ data.dataset?.user_?.username }}" class="text-success" style="text-decoration: none;">
+              {{ data.dataset?.user_?.username }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="saveData()" class="ms-auto text-success">{{ data.confirmText }}</button>
+<div mat-dialog-actions *ngIf="fg">
+  <button mat-button (click)="saveData()" class="ms-auto text-success" [disabled]="submitted || fg.invalid || !fg.dirty">
+    {{ data.confirmText }}
+  </button>
   <button mat-button [mat-dialog-close]="null" *ngIf="data.cancelText">{{ data.cancelText }}</button>
 </div>

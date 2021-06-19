@@ -35,9 +35,18 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const kanaRepo = getRepository(Nihongo);
     const [kanas, count] = await kanaRepo.findAndCount({
       where: [
-        { romaji: ILike(`%${req.query.q ? req.query.q : ''}%`) },
-        { kana: ILike(`%${req.query.q ? req.query.q : ''}%`) },
-        { meaning: ILike(`%${req.query.q ? req.query.q : ''}%`) }
+        { 
+          romaji: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          category: ILike(`%${req.query.category ? req.query.category : ''}%`)
+        },
+        {
+          kana: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          category: ILike(`%${req.query.category ? req.query.category : ''}%`)
+        },
+        {
+          meaning: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          category: ILike(`%${req.query.category ? req.query.category : ''}%`)
+        }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
@@ -47,11 +56,21 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           romaji: 'ASC'
         })
       },
+      relations: ['user_'],
       skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
+    for (const k of kanas) {
+      if ('user_' in k && k.user_) {
+        delete k.user_.role;
+        delete k.user_.password;
+        delete k.user_.session_token;
+        delete k.user_.created_at;
+        delete k.user_.updated_at;
+      }
+    }
     return res.status(200).json({
-      info: `😅 200 - Nihongo Kana API :: List All 🤣`,
+      info: `😅 200 - Nihongo Kana API :: List All '${req.query.category ? req.query.category : ''}' 🤣`,
       count,
       pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: kanas
@@ -76,7 +95,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         'kana' in req.body &&
         'meaning' in req.body &&
         'category' in req.body &&
-        'image_url' in req.body
+        'image' in req.body
       ) {
         const kanaRepo = getRepository(Nihongo);
         const kana = new Nihongo();
@@ -84,7 +103,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         kana.kana = req.body.kana;
         kana.meaning = req.body.meaning;
         kana.category = req.body.category;
-        kana.image_url = req.body.image_url;
+        kana.image_url = req.body.image;
         if (req.body.audio) {
           kana.audio = req.body.audio;
         }
@@ -153,6 +172,83 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
   } catch (error) {
     console.error(error);
     return next(createError(404));
+  }
+});
+
+// PUT `/api/nihongo/:id`
+router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.user.verified) {
+      if (
+        'romaji' in req.body ||
+        'kana' in req.body ||
+        'meaning' in req.body ||
+        'category' in req.body ||
+        'image' in req.body
+      ) {
+        const kanaRepo = getRepository(Nihongo);
+        const kana = await kanaRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.params.id) }
+          ],
+          relations: ['user_']
+        });
+        if (req.body.romaji) {
+          kana.romaji = req.body.romaji;
+        }
+        if (req.body.kana) {
+          kana.kana = req.body.kana;
+        }
+        if (req.body.meaning) {
+          kana.meaning = req.body.meaning;
+        }
+        if (req.body.category) {
+          kana.category = req.body.category;
+        }
+        if (req.body.image) {
+          kana.image_url = req.body.image;
+        }
+        if (req.body.audio) {
+          kana.audio = req.body.audio;
+        }
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOneOrFail({
+          where: [
+            { id: Equal(req.user.id) }
+          ]
+        });
+        kana.user_ = user;
+        const resKanaSave = await kanaRepo.save(kana);
+        if ('user_' in resKanaSave && resKanaSave.user_) {
+          delete resKanaSave.user_.role;
+          delete resKanaSave.user_.password;
+          delete resKanaSave.user_.session_token;
+          delete resKanaSave.user_.created_at;
+          delete resKanaSave.user_.updated_at;
+        }
+        return res.status(200).json({
+          info: `😅 200 - Nihongo Kana API :: Ubah ${req.params.id} 🤣`,
+          result: resKanaSave
+        });
+      } else {
+        throw new Error('Data Tidak Lengkap!');
+      }
+    } else {
+      return res.status(400).json({
+        info: `🙄 400 - Nihongo Kana API :: Gagal Mengubah Kana ${req.params.slug} 😪`,
+        result: {
+          message: 'Khusus Pengguna Terverifikasi!'
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      info: `🙄 400 - Nihongo Kana API :: Gagal Mengubah Kana ${req.params.slug} 😪`,
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
   }
 });
 

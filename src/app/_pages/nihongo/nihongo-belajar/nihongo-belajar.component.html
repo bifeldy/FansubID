@@ -114,10 +114,10 @@
           <ng-template #selainAngka>
             <div class="col-12" *ngIf="daftarNihongo.length > 0; else noData;">
               <div class="row px-3">
-                <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let d of daftarNihongo">
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3 p-2" *ngFor="let d of daftarNihongo">
                   <mat-card class="card" (click)="addOrEditDataset(d)">
                     <mat-card-header class="me-0" style="cursor: pointer;">
-                      <div mat-card-avatar style="background-size: cover; border-radius: 0;"
+                      <div mat-card-avatar style="background-size: cover; border-radius: 0; background-position: center;"
                         [style.background-image]="'url(' + d.image_url + ')'">
                       </div>
                       <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
