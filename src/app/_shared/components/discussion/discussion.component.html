@@ -22,9 +22,9 @@
           <b class="text-warning">{{ k.user_.username }}</b>
           <small class="ms-3 text-bifeldy-dark">{{ k.created_at | dateAgo }}</small>
         </p>
-        <p class="mb-3" style="line-height: normal;">{{ k.comment }}</p>
+        <p class="mb-1" style="line-height: normal;">{{ k.comment }}</p>
       </div>
-      <mat-form-field appearance="outline" class="col-12" [color]="'accent'" *ngIf="k.reply_mode && currentUser">
+      <mat-form-field appearance="outline" class="mt-2 col-12" [color]="'accent'" *ngIf="k.reply_mode && currentUser">
         <mat-label>Balas / Tanggapi</mat-label>
         <input matInput placeholder="Balas ..." [(ngModel)]="k.reply_to_send" />
         <mat-icon matSuffix>quickreply</mat-icon>
