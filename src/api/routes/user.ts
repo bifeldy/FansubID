@@ -171,11 +171,11 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
               .setURL(`${environment.baseUrl}/user/${resUserSave.username}`)
               .setAuthor('Hikki - Pembaharuan Data Pengguna', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
               .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, ' ').trim())
-              .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
+              .setThumbnail(resUserSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resUserSave.image_url)
               .setTimestamp(resUserSave.updated_at)
               .setFooter(
                 resUserSave.username,
-                req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
+                resUserSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resUserSave.image_url
               )
             ).catch(console.error);
             delete resUserSave.password;
@@ -188,7 +188,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
               httpOnly: true,
               secure: environment.production,
               sameSite: 'strict',
-              expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000),
+              expires: new Date(jwt.JwtView(resUserSave.session_token).exp * 1000),
               domain: environment.domain
             });
             return res.status(200).json({
