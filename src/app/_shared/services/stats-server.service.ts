@@ -2,16 +2,18 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { io, Socket } from 'socket.io-client';
+import { ToastrService } from 'ngx-toastr';
 
 import { environment } from '../../../environments/client/environment';
 
 import { RoomInfoResponse } from '../models/RoomInfo';
-import { ToastrService } from 'ngx-toastr';
+import { ServerInfo } from '../models/ServerInfo';
 
 import { GlobalService } from './global.service';
 import { NotificationsService } from './notifications.service';
 import { LeftMenuService } from './left-menu.service';
 import { AuthService } from './auth.service';
+import { DialogService } from './dialog.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +34,10 @@ export class StatsServerService {
   public badgeFansub = [];
 
   public github = null;
-  public server = null;
+
+  private currentServerSubject: BehaviorSubject<ServerInfo> = new BehaviorSubject<ServerInfo>(null);
+  public currentServer: Observable<ServerInfo> = this.currentServerSubject.asObservable();
+  public currentServerValue: ServerInfo = null;
 
   private currentRoomSubject: BehaviorSubject<RoomInfoResponse> = new BehaviorSubject<RoomInfoResponse>(null);
   public currentRoom: Observable<RoomInfoResponse> = this.currentRoomSubject.asObservable();
@@ -44,16 +49,21 @@ export class StatsServerService {
 
   public quizRoom = {};
 
+  subsServer = null;
+  subsDialog = null;
+
   constructor(
     private as: AuthService,
     private gs: GlobalService,
     private notif: NotificationsService,
     private lms: LeftMenuService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io(environment.baseUrl);
       this.socketListen();
+      this.checkServerMaintenance();
     }
   }
 
@@ -65,6 +75,38 @@ export class StatsServerService {
     return this.globalRoomSubject?.value || null;
   }
 
+  checkServerMaintenance(): void {
+    this.subsServer = this.currentServer.subscribe({
+      next: server => {
+        if (
+          server && server.isMaintenance &&
+          (this.currentServerValue?.isMaintenance != server.isMaintenance)
+        ) {
+          this.subsDialog = this.ds.openInfoDialog({
+            data: {
+              title: `Informasi Perbaikan Web & Server`,
+              htmlMessage: `
+                Saat Ini Sedang Dalam Tahap Perbaikan. <br />
+                Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
+                Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
+                Silahkan Tunggu Hingga Perbaikan Selesai, Terima Kasih.
+              `,
+              confirmText: 'Ok',
+              cancelText: null
+            },
+            disableClose: true
+          }).afterClosed().subscribe({
+            next: re => {
+              console.log('[INFO_DIALOG_CLOSED]', re);
+              this.subsDialog.unsubscribe();
+            }
+          });
+        }
+        this.currentServerValue = server;
+      }
+    });
+  }
+
   pingPong(): void {
     const start = Date.now();
     this.socketEmitVolatile('ping-pong', null, (response: any) => {
@@ -74,7 +116,7 @@ export class StatsServerService {
         this.github = response.github;
       }
       if ('server' in response && response.server) {
-        this.server = response.server;
+        this.currentServerSubject.next(response.server);
       }
     });
   }

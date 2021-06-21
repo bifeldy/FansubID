@@ -31,10 +31,10 @@
         {{ ss.github?.commit?.message }}
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.server?.isMaintenance != null || ss.server?.isMaintenance != undefined">
+    <p class="px-2 text-truncate" *ngIf="currentServer">
       Status ::
       <span class="text-warning">
-        {{ ss.server?.isMaintenance ? 'Under Maintenance' : 'Up & Running' }}
+        {{ currentServer?.isMaintenance ? 'Under Maintenance' : 'Up & Running' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.mySocket">

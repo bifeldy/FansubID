@@ -76,7 +76,6 @@ function checkServerSetting(req: UserRequest, res: Response, next: NextFunction)
   switch (req.method) {
     case 'POST':
     case 'PUT':
-    case 'PATCH':
     case 'DELETE':
       if (serverGetMaintenance()) {
         return res.status(400).json({
@@ -86,6 +85,8 @@ function checkServerSetting(req: UserRequest, res: Response, next: NextFunction)
           }
         });
       }
+    case 'GET':
+    case 'PATCH':
     default:
       return next();
   }
