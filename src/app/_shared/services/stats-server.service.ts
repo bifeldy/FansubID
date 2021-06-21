@@ -61,7 +61,9 @@ export class StatsServerService {
     private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
-      this.mySocket = io(environment.baseUrl);
+      this.mySocket = io(environment.baseUrl, {
+        reconnection: false
+      });
       this.socketListen();
       this.checkServerMaintenance();
     }
@@ -86,12 +88,19 @@ export class StatsServerService {
             data: {
               title: `Informasi Perbaikan Web & Server`,
               htmlMessage: `
-                Saat Ini Sedang Dalam Tahap Perbaikan. <br />
-                Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
-                Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
-                Silahkan Tunggu Hingga Perbaikan Selesai, Terima Kasih.
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <img src="/favicon.ico" />
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    Saat Ini Sedang Dalam Tahap Perbaikan. <br />
+                    Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
+                    Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
+                    Silahkan Tunggu Hingga Perbaikan Selesai, Terima Kasih.
+                  </div>
+                </div>
               `,
-              confirmText: 'Ok',
+              confirmText: 'Ok, Saya Mengerti!',
               cancelText: null
             },
             disableClose: true
@@ -131,6 +140,14 @@ export class StatsServerService {
     });
     this.mySocket.on('disconnect', reason => {
       this.gs.log('[SOCKET_DISCONNECTED]', reason);
+      this.notif.addNotif(
+        null,
+        -1,
+        'warning',
+        'Sambungan Diputus',
+        'Tidak dapat terhubung <i>peer-to-peer</i> dan menggunakan fitur obrolan!',
+        false
+      );
       if (this.intervalPingPong) {
         clearInterval(this.intervalPingPong);
       }
@@ -201,14 +218,6 @@ export class StatsServerService {
     this.mySocket.on('multiple-connection', multipleConnection => {
       this.gs.log('[SOCKET_MULTIPLE-CONNECTION]', multipleConnection);
       this.toast.warning('Sesi lain telah aktif!', 'Koneksi Duplikat');
-      this.notif.addNotif(
-        null,
-        -1,
-        'warning',
-        'Sambungan Diputus',
-        'Tidak dapat terhubung <i>peer-to-peer</i> dan menggunakan fitur obrolan!',
-        false
-      );
     });
     this.mySocket.on('quiz-question', quizQuestion => {
       this.gs.log('[SOCKET_QUIZ]', quizQuestion);

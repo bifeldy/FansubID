@@ -229,8 +229,8 @@ router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest
   });
 });
 
-// POST `/api/verify` -- Verify Login Session
-router.post('/verify', auth.isAuthorized, (req: UserRequest, res: Response, next) => {
+// PATCH `/api/verify` -- Verify Login Session
+router.patch('/verify', auth.isAuthorized, (req: UserRequest, res: Response, next) => {
   // tslint:disable-next-line: max-line-length
   let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
   if (token.startsWith('Bearer ')) {

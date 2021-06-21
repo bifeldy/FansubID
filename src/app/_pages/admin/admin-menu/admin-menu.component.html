@@ -41,6 +41,21 @@
           </mat-card>
         </div>
       </div>
+      <div class="row" *ngIf="settings">
+        <div class="col-12 sticky-top bg-bifeldy-dark">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-bifeldy-dark">Web & Server Configuration</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <div class="row px-3">
+            <mat-slide-toggle class="col-12 col-md-6 col-xl-3"
+             *ngFor="let s of settings | keyvalue" [(ngModel)]="settings[s.key]" (change)="toggleSetting(s.key, $event.checked)">
+              {{ s.key }} - {{ s.value }}
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

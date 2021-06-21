@@ -6,7 +6,7 @@ import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/mod
 import { Role } from '../../app/_shared/models/Role';
 
 // Server Settings
-import { serverSet, serverSetMaintenance } from '../settings';
+import { serverGet, serverSet, serverSetMaintenance } from '../settings';
 
 // Helper
 import jwt from '../helpers/jwt';
@@ -156,26 +156,28 @@ export async function socketBot(io: Server, socket: Socket) {
   } catch (error) {
     console.error(error);
   }
-  socket.on('server-set', async (data: any) => {
+  socket.on('server-set', async (data: any, callback: any) => {
     try {
       if (data.jwtToken) {
         const decoded = jwt.JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
         if (data.user.role === Role.ADMIN || data.user.role === Role.MODERATOR) {
-          if (data.server) {
+          if (data.server != null || data.server != undefined) {
             serverSet(data.server);
           } else {
-            if (data.isMaintenance) {
+            if (data.isMaintenance != null || data.isMaintenance != undefined) {
               serverSetMaintenance(data.isMaintenance);
             }
             // Other Server Config Here
           }
+          callback(serverGet());
         }
       }
     } catch (error) {
       console.error(error);
     }
   });
+  socket.on('server-get', async (data: any, callback: any) => { callback(serverGet()); });
   socket.on('track-set', async (data: any) => {
     data.ip = socket.handshake.headers['x-real-ip'] || socket.handshake.address || socket.request.socket.remoteAddress;
     if (data.jwtToken) {

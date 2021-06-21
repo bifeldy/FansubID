@@ -1,7 +1,7 @@
 import { ServerInfo } from "../app/_shared/models/ServerInfo";
 
 let settings: ServerInfo = {
-  isMaintenance: false
+  isMaintenance: true
 };
 
 export function serverGet() {

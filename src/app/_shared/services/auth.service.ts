@@ -34,7 +34,7 @@ export class AuthService {
 
   verify(token: any): Observable<any> {
     this.gs.log('[AUTH_VERIFY]', token);
-    return this.api.postData(`/verify`, { token }).pipe(map(respVerify => {
+    return this.api.patchData(`/verify`, { token }).pipe(map(respVerify => {
       this.currentUserSubject.next(respVerify.result);
       this.jwtToken = respVerify.jwtToken;
       return respVerify;
