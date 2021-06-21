@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { GlobalService } from './global.service';
+import { StatsServerService } from './stats-server.service';
 
 import { SearchAllComponent } from '../components/right-panel/search-all/search-all.component';
 import { AdminNavigationComponent } from '../components/right-panel/admin-navigation/admin-navigation.component';
@@ -16,7 +17,8 @@ export class RightPanelService {
   componentView = null;
 
   constructor(
-    private gs: GlobalService
+    private gs: GlobalService,
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -47,6 +49,9 @@ export class RightPanelService {
     } else if (view === 'AdminNavigationComponent') {
       this.componentView = AdminNavigationComponent;
     } else if (view === 'LiveChatComponent') {
+      if (!this.ss.mySocket.id) {
+        return;
+      }
       this.componentView = LiveChatComponent;
     }
     this.sidePanel.open();
