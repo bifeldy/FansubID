@@ -36,7 +36,7 @@ export class NotificationsService {
 
   addNotif(notifCreator, notifId, notifType, notifTitle, notifContent, dismissible = true): void {
     if (dismissible) {
-      this.dissmissTimeout[notifId] = setTimeout(() => this.removeNotif(notifId), 5000);
+      this.dissmissTimeout[notifId] = setTimeout(() => this.removeNotif(notifId), 10000);
     }
     this.notifications.splice(0, 0, {
       notifCreator,
