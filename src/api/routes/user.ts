@@ -194,7 +194,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             return res.status(200).json({
               info: `😅 200 - User API :: Ubah ${req.params.username} 🤣`,
               result: {
-                token: resUserSave.session_token
+                jwtToken: resUserSave.session_token
               }
             });
           } catch (e) {

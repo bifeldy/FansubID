@@ -14,6 +14,7 @@ import { BusyService } from './_shared/services/busy.service';
 import { GlobalService } from './_shared/services/global.service';
 import { StatsServerService } from './_shared/services/stats-server.service';
 import { WinboxService } from './_shared/services/winbox.service';
+import { LocalStorageService } from './_shared/services/local-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ import { WinboxService } from './_shared/services/winbox.service';
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('document:click', ['$event']) documentClicked;
+  @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
 
   @ViewChild('leftSideNav', { static: true }) leftSideNav: ElementRef;
   @ViewChild('rightSidePanel', { static: true }) rightSidePanel: ElementRef;
@@ -43,6 +45,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private pi: PageInfoService,
     private as: AuthService,
     private fs: FabService,
+    private ls: LocalStorageService,
     public gs: GlobalService,
     public lms: LeftMenuService,
     public rps: RightPanelService,
@@ -143,6 +146,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.checkStorage();
       this.documentClicked = this.onDocumentClicked;
+      this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
     }
   }
 
@@ -187,6 +191,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     return true;
+  }
+
+  onWindowBeforeUnloaded(ev): any {
+    this.gs.log('[BROWSER_EXIT_CLOSE_SAVE_JWT]', this.as.jwtToken);
+    this.ls.setItem(this.gs.localStorageTokenKeyName, this.as.jwtToken);
   }
 
   winboxOpenUri(uri: string): void {

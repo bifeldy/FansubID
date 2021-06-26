@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 import { GlobalService } from './global.service';
 
 @Injectable({
@@ -11,6 +14,7 @@ export class UserService {
 
   constructor(
     private api: ApiService,
+    private as: AuthService,
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
@@ -31,7 +35,10 @@ export class UserService {
   }
 
   updateUser(username, userData): Observable<any> {
-    return this.api.putData(`/user/${username}`, userData);
+    return this.api.putData(`/user/${username}`, userData).pipe(map(respUpdateUser => {
+      this.as.jwtToken = respUpdateUser.result.jwtToken;
+      return respUpdateUser;
+    }));
   }
 
   getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
@@ -42,8 +49,11 @@ export class UserService {
     return this.api.postData('/cek-nik', userData);
   }
 
-  verifikasi(userData): Observable<any> {
-    return this.api.putData('/verify', userData);
+  verifyKTP(userData): Observable<any> {
+    return this.api.putData('/verify', userData).pipe(map(respVerifyKTP => {
+      this.as.jwtToken = respVerifyKTP.result.jwtToken;
+      return respVerifyKTP;
+    }));
   }
 
   sosmedLogin(data): Observable<any> {

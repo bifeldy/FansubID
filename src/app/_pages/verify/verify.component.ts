@@ -223,7 +223,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         delete body[propName];
       }
     }
-    this.subsVerify1 = this.us.verifikasi({
+    this.subsVerify1 = this.us.verifyKTP({
       ...body
     }).subscribe({
       next: res => {

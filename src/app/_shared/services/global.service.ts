@@ -12,7 +12,9 @@ import { environment } from '../../../environments/client/environment';
 })
 export class GlobalService {
 
+  localStorageTokenKeyName = `${environment.siteName}_JwtToken`;
   localStorageLoggingKeyName = `${environment.siteName}_DebugLogs`;
+
   forceEnableDebugLog = null;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];

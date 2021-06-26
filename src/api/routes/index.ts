@@ -422,7 +422,7 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res: Response,
         return res.status(200).json({
           info: `😍 200 - Verifikasi API :: Verifikasi Berhasil 🥰`,
           result: {
-            token: resUserSave.session_token
+            jwtToken: resUserSave.session_token
           }
         });
       }

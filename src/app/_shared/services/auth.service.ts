@@ -25,6 +25,8 @@ export class AuthService {
     if (this.gs.isBrowser) {
       this.currentUserSubject = new BehaviorSubject<User>(null);
       this.currentUser = this.currentUserSubject.asObservable();
+      this.jwtToken = this.ls.getItem(this.gs.localStorageTokenKeyName);
+      this.ls.removeItem(this.gs.localStorageTokenKeyName);
     }
   }
 
@@ -44,6 +46,7 @@ export class AuthService {
   login(loginData: any): Observable<any> {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(map(respLogin => {
+      this.jwtToken = respLogin.result.jwtToken;
       return respLogin;
     }));
   }
