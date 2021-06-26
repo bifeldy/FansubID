@@ -194,8 +194,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onWindowBeforeUnloaded(ev): any {
-    this.gs.log('[BROWSER_EXIT_CLOSE_SAVE_JWT]', this.as.jwtToken);
-    this.ls.setItem(this.gs.localStorageTokenKeyName, this.as.jwtToken);
+    if (this.as.jwtToken) {
+      this.gs.log('[BROWSER_EXIT_CLOSE_SAVE_JWT]', this.as.jwtToken);
+      this.ls.setItem(this.gs.localStorageTokenKeyName, this.as.jwtToken);
+    }
   }
 
   winboxOpenUri(uri: string): void {
