@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { Router } from '@angular/router';
+
+import { ToastrService } from 'ngx-toastr';
 
 import { AuthService } from '../../../_shared/services/auth.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -110,6 +113,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
+    private router: Router,
+    private toast: ToastrService,
     public as: AuthService,
     private gs: GlobalService,
     private bs: BusyService,
@@ -241,24 +246,35 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   addOrEditDataset(dataset): void {
     this.gs.log('[BELAJAR_DATASET_ADD_OR_EDIT_CLICK]', dataset);
-    if (this.currentUser && this.currentUser.verified) {
-      this.subsDialog = this.ds.openBelajarDialog({
-        data: {
-          title: (dataset ? `Edit Data` : `Tambah Dataset`),
-          modeTampilan: this.modeTampilan,
-          dataset,
-          confirmText: 'Simpan',
-          cancelText: 'Tutup'
-        },
-        disableClose: true
-      }).afterClosed().subscribe({
-        next: re => {
-          console.log('[BELAJAR_DATASET_DIALOG_CLOSED]', re);
-          this.getData();
-          this.subsDialog.unsubscribe();
+    if (this.currentUser) {
+      if (this.currentUser.verified) {
+        this.subsDialog = this.ds.openBelajarDialog({
+          data: {
+            title: (dataset ? `Edit Data` : `Tambah Dataset`),
+            modeTampilan: this.modeTampilan,
+            dataset,
+            confirmText: 'Simpan',
+            cancelText: 'Tutup'
+          },
+          disableClose: true
+        }).afterClosed().subscribe({
+          next: re => {
+            console.log('[BELAJAR_DATASET_DIALOG_CLOSED]', re);
+            this.getData();
+            this.subsDialog.unsubscribe();
+          }
+        });
+      } else {
+        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
+      }
+    } else {
+      this.router.navigate(['/login'], {
+        queryParams: {
+          returnUrl: '/nihongo/belajar'
         }
       });
     }
+
   }
 
 }
