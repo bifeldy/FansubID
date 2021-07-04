@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from '../../../_shared/services/global.service';
+import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
 @Component({
   selector: 'app-tes',
@@ -10,7 +14,10 @@ import { GlobalService } from '../../../_shared/services/global.service';
 export class NihongoTesComponent implements OnInit {
 
   constructor(
+    private router: Router,
+    private toast: ToastrService,
     public gs: GlobalService,
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -19,7 +26,10 @@ export class NihongoTesComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      //
+      if (!this.ss.mySocket?.id) {
+        this.toast.warning('Tidak dapat terhubung melalui socket', 'Whoops!');
+        this.router.navigateByUrl('/nihongo');
+      }
     }
   }
 
