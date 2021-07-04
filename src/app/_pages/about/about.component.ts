@@ -52,6 +52,8 @@ export class AboutComponent implements OnInit {
 
   library = pkg.dependencies;
 
+  siteName = environment.siteName;
+
   constructor(
     public gs: GlobalService,
     private fs: FabService,
