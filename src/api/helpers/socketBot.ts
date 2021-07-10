@@ -10,7 +10,7 @@ import { serverGet, serverSet, serverSetMaintenance } from '../settings';
 
 // Helper
 import jwt from '../helpers/jwt';
-import { getQuizHirakata, initializeQuizHirakata } from '../helpers/quizRoom';
+import { getQuizHirakata } from '../helpers/quizRoom';
 
 import { Notification } from '../entities/Notification';
 import { Berkas } from '../entities/Berkas';
@@ -25,25 +25,24 @@ const room = {};
 // Questions Each Room
 const quiz = {};
 
-// Initialize Quiz
-function initializeQuiz() {
-  initializeQuizHirakata();
-}
-
 // Generate Question
-function getNewQuestion(roomId: string): void {
-  switch (roomId) {
-    case '/nihongo/hiragana':
-    case '/nihongo/katakana':
-      quiz[roomId] = getQuizHirakata();
-      return;
-    case '/nihongo/jlpt-n5':
-    case '/nihongo/jlpt-n4':
-    case '/nihongo/jlpt-n3':
-    case '/nihongo/jlpt-n2':
-    case '/nihongo/jlpt-n1':
-    default:
-      return;
+async function getNewQuestion(roomId: string) {
+  try {
+    switch (roomId) {
+      case '/nihongo/hiragana':
+      case '/nihongo/katakana':
+        quiz[roomId] = await getQuizHirakata();
+        return;
+      case '/nihongo/jlpt-n5':
+      case '/nihongo/jlpt-n4':
+      case '/nihongo/jlpt-n3':
+      case '/nihongo/jlpt-n2':
+      case '/nihongo/jlpt-n1':
+      default:
+        return;
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -107,32 +106,35 @@ export function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
   }
 }
 
-export function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
-  if (data.newRoom) {
-    if (!room[data.newRoom]) {
-      room[data.newRoom] = {};
-    }
-    room[data.newRoom][socket.id] = data.user;
-    socket.join(data.newRoom);
-    if (data.user && data.newRoom.startsWith('/nihongo/')) {
-      room[data.newRoom][socket.id].quiz = {
-        score: 0
-      };
-      if (!quiz[data.newRoom]) {
-        getNewQuestion(data.newRoom);
+export async function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
+  try {
+    if (data.newRoom) {
+      if (!room[data.newRoom]) {
+        room[data.newRoom] = {};
       }
-      socket.emit('quiz-question', {
-        room_id: data.newRoom,
-        ...quiz[data.newRoom]
-      });
+      room[data.newRoom][socket.id] = data.user;
+      socket.join(data.newRoom);
+      if (data.user && data.newRoom.startsWith('/nihongo/')) {
+        room[data.newRoom][socket.id].quiz = {
+          score: 0
+        };
+        if (!quiz[data.newRoom]) {
+          await getNewQuestion(data.newRoom);
+        }
+        socket.emit('quiz-question', {
+          room_id: data.newRoom,
+          ...quiz[data.newRoom]
+        });
+      }
+      io.to(data.newRoom).emit('room-info', getRoomInfo(io, data.newRoom));
     }
-    io.to(data.newRoom).emit('room-info', getRoomInfo(io, data.newRoom));
+  } catch (error) {
+    console.error(error);
   }
 }
 
 // tslint:disable-next-line: typedef
 export async function socketBot(io: Server, socket: Socket) {
-  initializeQuiz();
   try {
     const notifRepo = getRepository(Notification);
     const notif = await notifRepo.find({
@@ -384,8 +386,8 @@ export async function socketBot(io: Server, socket: Socket) {
         data.user = null;
       }
       leaveRoom(io, socket, data);
-      joinOrUpdateRoom(io, socket, data);
-      joinOrUpdateRoom(io, socket, { user: data.user, newRoom: 'GLOBAL_PUBLIK' });
+      await joinOrUpdateRoom(io, socket, data);
+      await joinOrUpdateRoom(io, socket, { user: data.user, newRoom: 'GLOBAL_PUBLIK' });
       checkMultipleConnection(io, socket, data);
     } catch (error) {
       console.error(error);
@@ -424,7 +426,7 @@ export async function socketBot(io: Server, socket: Socket) {
           } else {
             decreasePlayerPoint(io, socket, data);
           }
-          getNewQuestion(data.roomId);
+          await getNewQuestion(data.roomId);
           io.to(data.roomId).emit('room-info', getRoomInfo(io, data.roomId));
           io.to(data.roomId).emit('receive-chat', {
             room_id: data.roomId,

@@ -180,20 +180,24 @@ function startDiscordBot(): void {
 // Socket.io
 function startSocketIo(): void {
   io.on('connection', async (socket: Socket) => {
-    joinOrUpdateRoom(io, socket, { user: null, newRoom: 'GLOBAL_PUBLIK' });
-    updateVisitor();
-    io.emit('visitors', io.sockets.sockets.size);
-    socket.on('disconnect', () => {
-      io.emit('visitors', io.sockets.sockets.size);
-      disconnectRoom(io, socket);
+    try {
+      await joinOrUpdateRoom(io, socket, { user: null, newRoom: 'GLOBAL_PUBLIK' });
       updateVisitor();
-    });
-    socket.on('ping-pong', (data: any, callback: any) => {
-      if (typeof callback === 'function') {
-        callback({ github, server: serverGet() });
-      }
-    });
-    await socketBot(io, socket);
+      io.emit('visitors', io.sockets.sockets.size);
+      socket.on('disconnect', () => {
+        io.emit('visitors', io.sockets.sockets.size);
+        disconnectRoom(io, socket);
+        updateVisitor();
+      });
+      socket.on('ping-pong', (data: any, callback: any) => {
+        if (typeof callback === 'function') {
+          callback({ github, server: serverGet() });
+        }
+      });
+      await socketBot(io, socket);
+    } catch (error) {
+      console.error(error);
+    }
   });
 }
 
