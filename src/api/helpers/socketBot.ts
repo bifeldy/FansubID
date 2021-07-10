@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { Equal, getRepository, ILike, IsNull, MoreThanOrEqual } from 'typeorm';
+import { Equal, getConnection, getRepository, ILike, IsNull, MoreThanOrEqual } from 'typeorm';
 
 import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/models/RoomInfo';
 
@@ -333,6 +333,8 @@ export async function socketBot(io: Server, socket: Socket) {
       result.unique_user = [...new Set(tracks.map(t => t.track_by_?.id))].length;
       result.verified_user = [...new Set(tracks.map(t => t.track_by_?.verified === true))].length;
       result.un_verified_user = [...new Set(tracks.map(t => t.track_by_?.verified === false))].length;
+      const trackColumns = getConnection().getMetadata(Track).columns;
+      const trackColumnName = trackColumns.find(column => column.propertyName.startsWith(`${data.trackType}_`)).propertyName;
       tracks = await trackRepo.query(`
         SELECT *
         FROM (
@@ -352,7 +354,7 @@ export async function socketBot(io: Server, socket: Socket) {
             track
           WHERE
             created_at >= NOW() - INTERVAL '7 DAY'
-            AND ${data.trackType}_id = $1
+            AND ${trackColumnName}id = $1
           GROUP BY 1
         ) t USING (visitor_date)
         ORDER BY visitor_date ASC;
