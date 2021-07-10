@@ -303,188 +303,188 @@ const routes: Routes = [
   //     options: 
   //   }
   // },
-  // {
-  //   path: 'jlpt-n5',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf N5',
-  //     description: 'Uji Kemampuan Huruf N5',
-  //     keywords: 'N5',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'jlpt-n4',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf N4',
-  //     description: 'Uji Kemampuan Huruf N4',
-  //     keywords: 'N4',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'jlpt-n3',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf N3',
-  //     description: 'Uji Kemampuan Huruf N3',
-  //     keywords: 'N3',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'jlpt-n2',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf N2',
-  //     description: 'Uji Kemampuan Huruf N2',
-  //     keywords: 'N2',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'jlpt-n1',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf N1',
-  //     description: 'Uji Kemampuan Huruf N1',
-  //     keywords: 'N1',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'kelas-1',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Kelas 1',
-  //     description: 'Uji Kemampuan Huruf Kelas 1',
-  //     keywords: 'Kelas 1',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'kelas-2',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Kelas 2',
-  //     description: 'Uji Kemampuan Huruf Kelas 2',
-  //     keywords: 'Kelas 2',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'kelas-3',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Kelas 3',
-  //     description: 'Uji Kemampuan Huruf Kelas 3',
-  //     keywords: 'Kelas 3',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'kelas-4',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Kelas 4',
-  //     description: 'Uji Kemampuan Huruf Kelas 4',
-  //     keywords: 'Kelas 4',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'kelas-5',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Kelas 5',
-  //     description: 'Uji Kemampuan Huruf Kelas 5',
-  //     keywords: 'Kelas 5',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'kelas-6',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Kelas 6',
-  //     description: 'Uji Kemampuan Huruf Kelas 6',
-  //     keywords: 'Kelas 6',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'lanjutan-1',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Lanjutan 1',
-  //     description: 'Uji Kemampuan Huruf Lanjutan 1',
-  //     keywords: 'Lanjutan 1',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'lanjutan-2',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Lanjutan 2',
-  //     description: 'Uji Kemampuan Huruf Lanjutan 2',
-  //     keywords: 'Lanjutan 2',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'semua-kanji',
-  //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Tes Huruf Semua Kanji',
-  //     description: 'Uji Kemampuan Huruf Semua Kanji',
-  //     keywords: 'Semua Kanji',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
+  {
+    path: 'jlpt-n5',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf N5',
+      description: 'Uji Kemampuan Huruf N5',
+      keywords: 'N5',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'jlpt-n4',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf N4',
+      description: 'Uji Kemampuan Huruf N4',
+      keywords: 'N4',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'jlpt-n3',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf N3',
+      description: 'Uji Kemampuan Huruf N3',
+      keywords: 'N3',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'jlpt-n2',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf N2',
+      description: 'Uji Kemampuan Huruf N2',
+      keywords: 'N2',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'jlpt-n1',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf N1',
+      description: 'Uji Kemampuan Huruf N1',
+      keywords: 'N1',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'kelas-1',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Kelas 1',
+      description: 'Uji Kemampuan Huruf Kelas 1',
+      keywords: 'Kelas 1',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'kelas-2',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Kelas 2',
+      description: 'Uji Kemampuan Huruf Kelas 2',
+      keywords: 'Kelas 2',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'kelas-3',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Kelas 3',
+      description: 'Uji Kemampuan Huruf Kelas 3',
+      keywords: 'Kelas 3',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'kelas-4',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Kelas 4',
+      description: 'Uji Kemampuan Huruf Kelas 4',
+      keywords: 'Kelas 4',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'kelas-5',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Kelas 5',
+      description: 'Uji Kemampuan Huruf Kelas 5',
+      keywords: 'Kelas 5',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'kelas-6',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Kelas 6',
+      description: 'Uji Kemampuan Huruf Kelas 6',
+      keywords: 'Kelas 6',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'kelas-lanjutan-1',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Lanjutan 1',
+      description: 'Uji Kemampuan Huruf Lanjutan 1',
+      keywords: 'Lanjutan 1',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'kelas-lanjutan-2',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Lanjutan 2',
+      description: 'Uji Kemampuan Huruf Lanjutan 2',
+      keywords: 'Lanjutan 2',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
+  {
+    path: 'semua-kanji',
+    component: NihongoTesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Tes Huruf Semua Kanji',
+      description: 'Uji Kemampuan Huruf Semua Kanji',
+      keywords: 'Semua Kanji',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER],
+      question: 'character',
+      options: 'translate'
+    }
+  },
   // {
   //   path: 'create',
   //   component: NihongoBookCreateComponent,

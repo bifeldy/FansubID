@@ -10,7 +10,7 @@ import { serverGet, serverSet, serverSetMaintenance } from '../settings';
 
 // Helper
 import jwt from '../helpers/jwt';
-import { getQuizHirakata } from '../helpers/quizRoom';
+import { getQuizHirakata, getQuizKanji } from '../helpers/quizRoom';
 
 import { Notification } from '../entities/Notification';
 import { Berkas } from '../entities/Berkas';
@@ -33,11 +33,32 @@ async function getNewQuestion(roomId: string) {
       case '/nihongo/katakana':
         quiz[roomId] = await getQuizHirakata();
         return;
+      case '/nihongo/kelas-lanjutan-2':
+        quiz[roomId] = await getQuizKanji('9', null);
+        return;
+      case '/nihongo/kelas-lanjutan-1':
+        quiz[roomId] = await getQuizKanji('8', null);
+        return;
+      case '/nihongo/kelas-6':
+      case '/nihongo/kelas-5':
+      case '/nihongo/kelas-4':
+      case '/nihongo/kelas-3':
+      case '/nihongo/kelas-2':
+      case '/nihongo/kelas-1':
+        const schoolLevel = roomId.split('-').pop()[0];
+        quiz[roomId] = await getQuizKanji(schoolLevel, null);
+        return;
       case '/nihongo/jlpt-n5':
       case '/nihongo/jlpt-n4':
       case '/nihongo/jlpt-n3':
       case '/nihongo/jlpt-n2':
       case '/nihongo/jlpt-n1':
+        const jlptLevel = roomId.split('-').pop()[1];
+        quiz[roomId] = await getQuizKanji(null, jlptLevel);
+        return;
+      case '/nihongo/kanji-semua':
+        quiz[roomId] = await getQuizKanji('', '');
+        return;
       default:
         return;
     }
@@ -420,27 +441,29 @@ export async function socketBot(io: Server, socket: Socket) {
       if (data.jwtToken) {
         const decoded = jwt.JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
-        if (quiz[data.roomId].randomInteger === data.randomInteger) {
-          let correctAnswer = false;
-          if (Object.entries(quiz[data.roomId].question).toString() === Object.entries(data.answer).toString()) {
-            increasePlayerPoint(io, socket, data);
-            correctAnswer = true;
-          } else {
-            decreasePlayerPoint(io, socket, data);
+        if (quiz[data.roomId]) {
+          if (quiz[data.roomId].randomInteger === data.randomInteger) {
+            let correctAnswer = false;
+            if (Object.entries(quiz[data.roomId].question).toString() === Object.entries(data.answer).toString()) {
+              increasePlayerPoint(io, socket, data);
+              correctAnswer = true;
+            } else {
+              decreasePlayerPoint(io, socket, data);
+            }
+            await getNewQuestion(data.roomId);
+            io.to(data.roomId).emit('room-info', getRoomInfo(io, data.roomId));
+            io.to(data.roomId).emit('receive-chat', {
+              room_id: data.roomId,
+              sender: {
+                username: `[📢-LOG]`
+              },
+              message: `'${data.user.username}' Menjawab ${correctAnswer ? 'Benar (+1)' : 'Salah (-1)'}`
+            });
+            io.to(data.roomId).emit('quiz-question', {
+              room_id: data.roomId,
+              ...quiz[data.roomId]
+            });
           }
-          await getNewQuestion(data.roomId);
-          io.to(data.roomId).emit('room-info', getRoomInfo(io, data.roomId));
-          io.to(data.roomId).emit('receive-chat', {
-            room_id: data.roomId,
-            sender: {
-              username: `[📢-LOG]`
-            },
-            message: `'${data.user.username}' Menjawab ${correctAnswer ? 'Benar (+1)' : 'Salah (-1)'}`
-          });
-          io.to(data.roomId).emit('quiz-question', {
-            room_id: data.roomId,
-            ...quiz[data.roomId]
-          });
         }
       }
     } catch (error) {

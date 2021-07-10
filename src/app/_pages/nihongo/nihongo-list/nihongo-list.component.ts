@@ -31,7 +31,7 @@ export class NihongoListComponent implements OnInit {
       name: 'Angka',
       image_url: null,
       icon: 'plus_one',
-      letter: '~0 Unik'
+      letter: '~∞ Unik'
     },
     // {
     //   url: 'warna',
@@ -145,97 +145,97 @@ export class NihongoListComponent implements OnInit {
     //   icon: 'plus_one',
     //   letter: '~0 Unik'
     // },
-    // {
-    //   url: 'jlpt-n5',
-    //   name: 'JLPT N5',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~79 Unik'
-    // },
-    // {
-    //   url: 'jlpt-n4',
-    //   name: 'JLPT N4',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~166 Unik'
-    // },
-    // {
-    //   url: 'jlpt-n3',
-    //   name: 'JLPT N3',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~367 Unik'
-    // },
-    // {
-    //   url: 'jlpt-n2',
-    //   name: 'JLPT N2',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~367 Unik'
-    // },
-    // {
-    //   url: 'jlpt-n1',
-    //   name: 'JLPT N1',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~1231 Unik'
-    // },
-    // {
-    //   url: 'kelas-1',
-    //   name: 'Kelas 1',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~80 Unik'
-    // },
-    // {
-    //   url: 'kelas-2',
-    //   name: 'Kelas 2',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~160 Unik'
-    // },
-    // {
-    //   url: 'kelas-3',
-    //   name: 'Kelas 3',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~200 Unik'
-    // },
-    // {
-    //   url: 'kelas-4',
-    //   name: 'Kelas 4',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~200 Unik'
-    // },
-    // {
-    //   url: 'kelas-5',
-    //   name: 'Kelas 5',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~185 Unik'
-    // },
-    // {
-    //   url: 'kelas-6',
-    //   name: 'Kelas 6',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~181 Unik'
-    // },
-    // {
-    //   url: 'lanjutan-1',
-    //   name: 'Lanjutan 1',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~1139 Unik'
-    // },
-    // {
-    //   url: 'lanjutan-2',
-    //   name: 'Lanjutan 2',
-    //   image_url: '/assets/img/nihongo/kanji.png',
-    //   icon: null,
-    //   letter: '~349 Unik'
-    // },
+    {
+      url: 'jlpt-n5',
+      name: 'JLPT N5',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~79 Unik'
+    },
+    {
+      url: 'jlpt-n4',
+      name: 'JLPT N4',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~166 Unik'
+    },
+    {
+      url: 'jlpt-n3',
+      name: 'JLPT N3',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~367 Unik'
+    },
+    {
+      url: 'jlpt-n2',
+      name: 'JLPT N2',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~367 Unik'
+    },
+    {
+      url: 'jlpt-n1',
+      name: 'JLPT N1',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~1231 Unik'
+    },
+    {
+      url: 'kelas-1',
+      name: 'Kelas 1',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~80 Unik'
+    },
+    {
+      url: 'kelas-2',
+      name: 'Kelas 2',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~160 Unik'
+    },
+    {
+      url: 'kelas-3',
+      name: 'Kelas 3',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~200 Unik'
+    },
+    {
+      url: 'kelas-4',
+      name: 'Kelas 4',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~200 Unik'
+    },
+    {
+      url: 'kelas-5',
+      name: 'Kelas 5',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~185 Unik'
+    },
+    {
+      url: 'kelas-6',
+      name: 'Kelas 6',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~181 Unik'
+    },
+    {
+      url: 'kelas-lanjutan-1',
+      name: 'Lanjutan 1',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~1139 Unik'
+    },
+    {
+      url: 'kelas-lanjutan-2',
+      name: 'Lanjutan 2',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~349 Unik'
+    },
     {
       url: 'kanji-semua',
       name: 'All Kanji',
