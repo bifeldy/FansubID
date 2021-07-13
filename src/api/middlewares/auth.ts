@@ -18,6 +18,7 @@ import { environment } from '../../environments/server/environment';
 
 // Helper
 import jwt from '../helpers/jwt';
+import { disconnectRoom } from '../helpers/socketBot';
 
 // tslint:disable-next-line: typedef
 async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
@@ -242,6 +243,10 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       const resUserSave = await userRepo.save(selectedUser);
       const { password, session_token, ...noPwdSsToken } = resUserSave;
       req.user = (noPwdSsToken as any);
+      const socketId = req.headers.socket || '';
+      if (socketId) {
+        disconnectRoom(req.io, req.io.sockets.sockets.get(socketId));
+      }
       res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
         httpOnly: true,
         secure: environment.production,
