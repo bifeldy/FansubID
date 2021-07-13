@@ -230,7 +230,7 @@ export class StatsServerService {
   }
 
   socketEmit(eventName: string, eventData: any, callback = null): void {
-    if (eventData) {
+    if (this.as.jwtToken) {
       eventData.jwtToken = this.as.jwtToken;
     }
     if (callback) {
@@ -241,7 +241,7 @@ export class StatsServerService {
   }
 
   socketEmitVolatile(eventName: string, eventData: any, callback = null): void {
-    if (eventData) {
+    if (this.as.jwtToken) {
       eventData.jwtToken = this.as.jwtToken;
     }
     if (callback) {
