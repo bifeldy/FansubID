@@ -245,7 +245,7 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
       req.user = (noPwdSsToken as any);
       const socketId = req.headers.socket || '';
       if (socketId) {
-        disconnectRoom(req.io, req.io.sockets.sockets.get(socketId));
+        disconnectRoom(req.io, req.io.sockets.sockets.get(socketId as string));
       }
       res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
         httpOnly: true,
