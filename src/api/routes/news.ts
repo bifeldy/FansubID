@@ -100,7 +100,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete resNewsSave.user_.created_at;
           delete resNewsSave.user_.updated_at;
         }
-        req.bot.send(
+        req.bot?.send(
           new MessageEmbed()
           .setColor('#0099ff')
           .setTitle(resNewsSave.title)
@@ -207,7 +207,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               delete resNewsSave.user_.created_at;
               delete resNewsSave.user_.updated_at;
             }
-            req.bot.send(
+            req.bot?.send(
               new MessageEmbed()
               .setColor('#ff4081')
               .setTitle(resNewsSave.title)

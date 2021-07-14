@@ -290,7 +290,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         delete resFileSave.user_.created_at;
         delete resFileSave.user_.updated_at;
       }
-      req.bot.send(
+      req.bot?.send(
         new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(resFileSave.name)
@@ -558,7 +558,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             delete resFileSave.user_.created_at;
             delete resFileSave.user_.updated_at;
           }
-          req.bot.send(
+          req.bot?.send(
             new MessageEmbed()
             .setColor('#ff4081')
             .setTitle(resFileSave.name)

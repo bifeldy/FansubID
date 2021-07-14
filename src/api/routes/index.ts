@@ -187,7 +187,7 @@ router.use('/comment', commentRouter);
 
 // POST `/api/register`
 router.post('/register', auth.registerModule, async (req: UserRequest, res: Response, next) => {
-  req.bot.send(
+  req.bot?.send(
     new MessageEmbed()
     .setColor('#0099ff')
     .setTitle(req.user.kartu_tanda_penduduk_.nama)

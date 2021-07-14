@@ -184,7 +184,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete bannedUser.banned_by_.created_at;
           delete bannedUser.banned_by_.updated_at;
         }
-        req.bot.send(
+        req.bot?.send(
           new MessageEmbed()
           .setColor('#c5e510')
           .setTitle(banned.user_.username)

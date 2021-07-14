@@ -191,7 +191,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             delete resFansubSave.user_.created_at;
             delete resFansubSave.user_.updated_at;
           }
-          req.bot.send(
+          req.bot?.send(
             new MessageEmbed()
             .setColor('#0099ff')
             .setTitle(resFansubSave.name)
@@ -549,7 +549,7 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
           delete resFansubSave.user_.created_at;
           delete resFansubSave.user_.updated_at;
         }
-        req.bot.send(
+        req.bot?.send(
           new MessageEmbed()
           .setColor('#ff4081')
           .setTitle(resFansubSave.name)

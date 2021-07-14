@@ -232,7 +232,7 @@ export function app(): http.Server {
 
   expressApp.use(async (req: UserRequest, res, next) => {
     req.io = io;
-    req.bot = (bot.channels.cache.get(environment.discordBotChannelEventId) as TextChannel);
+    req.bot = environment.production ? (bot.channels.cache.get(environment.discordBotChannelEventId) as TextChannel) : null;
     next();
   });
 

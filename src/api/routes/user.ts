@@ -164,7 +164,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             const resProfileSave = await profileRepo.save(selectedProfile);
             selectedUser.profile_ = resProfileSave;
             let resUserSave = await userRepo.save(selectedUser);
-            req.bot.send(
+            req.bot?.send(
               new MessageEmbed()
               .setColor('#ff4081')
               .setTitle(resUserSave.kartu_tanda_penduduk_.nama)
