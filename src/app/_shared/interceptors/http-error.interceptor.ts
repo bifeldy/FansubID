@@ -58,6 +58,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             this.toast.info(okMessage, okTitle);
           } else if ((res as any).status === 200) {
             this.toast.success(okMessage, okTitle);
+          } else {
+            this.toast.warning(okMessage, okTitle);
           }
           if (request.method === 'GET') {
             this.gs.log(`[SOCKET_TRACK-SET]`, request.url);
