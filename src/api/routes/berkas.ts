@@ -21,13 +21,14 @@ import { TempAttachment } from '../entities/TempAttachment';
 
 import { Role } from '../../app/_shared/models/Role';
 
-import { gDrive } from '../helpers/gDrive';
+// Programs
+import { gDrive } from '../programs/gDrive';
 
 // Middleware
 import auth from '../middlewares/auth';
 
 // Helper
-import mkvExtract from '../helpers/mkvExtract';
+import mkvExtract from '../programs/mkvExtract';
 
 import { MessageEmbed } from 'discord.js';
 

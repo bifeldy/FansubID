@@ -1,4 +1,4 @@
-import { getManager } from "typeorm";
+import { getManager } from 'typeorm';
 
 const hirakataQuizOptionsCount = 5;
 const kanjiQuizOptionsCount = 6;

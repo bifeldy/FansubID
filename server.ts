@@ -31,8 +31,10 @@ import { APP_BASE_HREF } from '@angular/common';
 import { Client, TextChannel, Message } from 'discord.js';
 
 import MorganChalk from './src/api/helpers/morganChalk';
-import { discordBot } from './src/api/helpers/discordBot';
-import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/helpers/socketBot';
+
+// Programs
+import { discordBot } from './src/api/programs/discordBot';
+import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/programs/socketBot';
 
 import { environment } from './src/environments/server/environment';
 

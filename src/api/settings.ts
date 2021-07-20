@@ -1,4 +1,4 @@
-import { ServerInfo } from "../app/_shared/models/ServerInfo";
+import { ServerInfo } from '../app/_shared/models/ServerInfo';
 
 let settings: ServerInfo = {
   isMaintenance: false

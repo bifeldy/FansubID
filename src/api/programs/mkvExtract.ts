@@ -3,7 +3,8 @@
 import { Decoder, tools } from 'ebml';
 import fs from 'fs';
 
-import logger from './logger';
+// Helpers
+import logger from '../helpers/logger';
 
 function mkvExtract(fileName, filePath, callback): any {
   const startTime = new Date().getTime();

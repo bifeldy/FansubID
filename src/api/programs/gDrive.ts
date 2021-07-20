@@ -1,10 +1,11 @@
 import fetch from 'node-fetch';
 
-import logger from './logger';
-
 import { environment } from '../../environments/server/environment';
 
 import { google } from 'googleapis';
+
+// Helpers
+import logger from '../helpers/logger';
 
 // tslint:disable-next-line: variable-name
 const refresh_url = 'https://oauth2.googleapis.com/token';
