@@ -8,7 +8,7 @@ import logger from '../helpers/logger';
 
 function mkvExtract(fileName, filePath, callback): any {
   const startTime = new Date().getTime();
-  logger.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`, null, true);
+  logger.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`);
 
   const fileStream = fs.createReadStream(filePath);
   const decoder = new Decoder();
@@ -95,7 +95,7 @@ function mkvExtract(fileName, filePath, callback): any {
 
   fileStream.on('end', () => {
     const endTime = new Date().getTime();
-    logger.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`, null, true);
+    logger.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`);
     trackData.forEach((entries, index) => {
       const heading = entries[0];
       const isASS = heading.includes('Format:');
