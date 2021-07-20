@@ -20,7 +20,7 @@ import { environment } from '../../environments/server/environment';
 import jwt from '../helpers/jwt';
 
 // Programs
-import { disconnectRoom } from '../programs/socketBot';
+import { disconnectRoom } from '../programs/socketWeb';
 
 // tslint:disable-next-line: typedef
 async function registerModule(req: UserRequest, res: Response, next: NextFunction) {

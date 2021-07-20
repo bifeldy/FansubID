@@ -34,7 +34,7 @@ import MorganChalk from './src/api/helpers/morganChalk';
 
 // Programs
 import { discordBot } from './src/api/programs/discordBot';
-import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/programs/socketBot';
+import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/programs/socketWeb';
 
 import { environment } from './src/environments/server/environment';
 
