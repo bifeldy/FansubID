@@ -118,7 +118,7 @@ export class StatsServerService {
 
   pingPong(): void {
     const start = Date.now();
-    this.socketEmitVolatile('ping-pong', null, (response: any) => {
+    this.socketEmitVolatile('ping-pong', {}, (response: any) => {
       this.latency = Date.now() - start;
       this.gs.log('[SOCKET_PING-PONG]', this.latency);
       if ('github' in response && response.github) {
@@ -229,7 +229,7 @@ export class StatsServerService {
     });
   }
 
-  socketEmit(eventName: string, eventData: any, callback = null): void {
+  socketEmit(eventName: string, eventData: any = {}, callback = null): void {
     if (this.as.jwtToken) {
       eventData.jwtToken = this.as.jwtToken;
     }
@@ -240,7 +240,7 @@ export class StatsServerService {
     }
   }
 
-  socketEmitVolatile(eventName: string, eventData: any, callback = null): void {
+  socketEmitVolatile(eventName: string, eventData: any = {}, callback = null): void {
     if (this.as.jwtToken) {
       eventData.jwtToken = this.as.jwtToken;
     }
