@@ -32,15 +32,15 @@
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="currentServer">
-      Status ::
+      Server ::
       <span class="text-warning">
-        {{ currentServer?.isMaintenance ? 'Under Maintenance' : 'Up & Running' }}
+        {{ currentServer?.isMaintenance ? 'Dalam Perbaikan' : 'Berjalan Normal' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.mySocket">
       Socket ::
       <span class="text-success">
-        {{ ss.mySocket.id }}
+        {{ ss.mySocket?.id ? ss.mySocket.id : 'Sambungan Terputus' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.latency">
