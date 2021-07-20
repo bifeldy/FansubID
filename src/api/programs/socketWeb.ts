@@ -200,7 +200,9 @@ export async function socketBot(io: Server, socket: Socket) {
       console.error(error);
     }
   });
-  socket.on('server-get', async (data: any, callback: any) => { callback(serverGet()); });
+  socket.on('server-get', async (data: any, callback: any) => {
+    callback(serverGet());
+  });
   socket.on('track-set', async (data: any) => {
     data.ip = socket.handshake.headers['x-real-ip'] || socket.handshake.address || socket.request.socket.remoteAddress;
     if (data.jwtToken) {
@@ -381,23 +383,19 @@ export async function socketBot(io: Server, socket: Socket) {
         ORDER BY visitor_date ASC;
       `, [selected.id]);
       result.visitor = tracks;
-      if (typeof callback === 'function') {
-        callback(result);
-      }
+      callback(result);
     } catch (error) {
       console.error(error);
-      if (typeof callback === 'function') {
-        callback({
-          unique_ip: 0,
-          unique_user: 0,
-          verified_user: 0,
-          un_verified_user: 0,
-          visitor: {
-            visitor_date: new Date(0),
-            visitor_count: 0
-          }
-        });
-      }
+      callback({
+        unique_ip: 0,
+        unique_user: 0,
+        verified_user: 0,
+        un_verified_user: 0,
+        visitor: {
+          visitor_date: new Date(0),
+          visitor_count: 0
+        }
+      });
     }
   });
   socket.on('leave-join-room', async (data: RoomInfoInOut) => {

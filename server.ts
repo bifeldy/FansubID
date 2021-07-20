@@ -192,9 +192,7 @@ function startSocketIo(): void {
         updateVisitor();
       });
       socket.on('ping-pong', (data: any, callback: any) => {
-        if (typeof callback === 'function') {
-          callback({ github, server: serverGet() });
-        }
+        callback({ github, server: serverGet() });
       });
       await socketBot(io, socket);
     } catch (error) {

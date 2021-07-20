@@ -24,8 +24,8 @@ function mkvExtract(fileName, filePath, callback): any {
   let trackIndex = 0;
 
   decoder.on('error', error => {
-    callback(error, null);
     fileStream.destroy();
+    callback(error, null);
   });
 
   decoder.on('data', chunk => {
