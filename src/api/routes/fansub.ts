@@ -370,7 +370,7 @@ router.patch('/anime', async (req: UserRequest, res: Response, next: NextFunctio
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Anime 🤣`,
         count,
-        pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+        pages: 1,
         results
       });
     } else {
@@ -425,7 +425,7 @@ router.patch('/dorama', async (req: UserRequest, res: Response, next: NextFuncti
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Dorama 🤣`,
         count,
-        pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+        pages: 1,
         results
       });
     } else {

@@ -130,9 +130,6 @@ export class FansubListComponent implements OnInit, OnDestroy {
   fansubActive = 0;
   fansubInActive = 0;
 
-  fansubBerkasAnime = 0;
-  fansubBerkasDorama = 0;
-
   subsFansub = null;
   subsAnime = null;
   subsDorama = null;
@@ -218,15 +215,10 @@ export class FansubListComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         for (const f of this.fansubData) {
-          if (res.results[f.id]) {
-            f.Anime = res.results[f.id].length;
-          } else {
-            f.Anime = 0;
-          }
-          this.fansubBerkasAnime += f.Anime;
+          f.Anime = res.results[f.id].length;
         }
         this.doughnutChartGarapanLabels.push('Berkas Anime');
-        this.doughnutChartGarapanData.push(this.fansubBerkasAnime);
+        this.doughnutChartGarapanData.push(res.count);
         this.tabData[0].data.row = this.fansubData;
         const fansubRank = [...this.fansubData].sort((a, b) => b.Anime - a.Anime).slice(0, 10);
         for (const f of fansubRank) {
@@ -248,15 +240,10 @@ export class FansubListComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
         for (const f of this.fansubData) {
-          if (res.results[f.id]) {
-            f.Dorama = res.results[f.id].length;
-          } else {
-            f.Dorama = 0;
-          }
-          this.fansubBerkasDorama += f.Dorama;
+          f.Dorama = res.results[f.id].length;
         }
         this.doughnutChartGarapanLabels.push('Berkas Dorama');
-        this.doughnutChartGarapanData.push(this.fansubBerkasDorama);
+        this.doughnutChartGarapanData.push(res.count);
         this.tabData[0].data.row = this.fansubData;
         const fansubRank = [...this.fansubData].sort((a, b) => b.Dorama - a.Dorama).slice(0, 10);
         for (const f of fansubRank) {
