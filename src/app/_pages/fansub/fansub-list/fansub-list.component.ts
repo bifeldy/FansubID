@@ -215,7 +215,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         for (const f of this.fansubData) {
-          f.Anime = res.results[f.id].length;
+          f.Anime = res.results[f.id];
         }
         this.doughnutChartGarapanLabels.push('Berkas Anime');
         this.doughnutChartGarapanData.push(res.count);
@@ -240,7 +240,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
         for (const f of this.fansubData) {
-          f.Dorama = res.results[f.id].length;
+          f.Dorama = res.results[f.id];
         }
         this.doughnutChartGarapanLabels.push('Berkas Dorama');
         this.doughnutChartGarapanData.push(res.count);

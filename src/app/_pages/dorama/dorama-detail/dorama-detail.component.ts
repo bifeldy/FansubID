@@ -38,6 +38,10 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   fansubDorama = [];
   berkasDorama = [];
 
+  fansubPageFinished = false;
+
+  fansubPage = 1;
+
   chipData = [];
 
   panelData = [];
@@ -226,10 +230,9 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
 
   getFansubDorama(): void {
     this.bs.busy();
-    this.subsFansub = this.dorama.getFansubDorama([this.doramaId]).subscribe({
+    this.subsFansub = this.dorama.getFansubDorama([this.doramaId], this.fansubPage).subscribe({
       next: res => {
         this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
-        this.fansubDorama = [];
         for (const r of res.results[this.doramaId]) {
           this.fansubDorama.push({
             id: r.id,
@@ -240,6 +243,9 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[0].data = this.fansubDorama;
+        if (res.results[this.doramaId].length <= 0) {
+          this.fansubPageFinished = true;
+        }
         this.bs.idle();
       },
       error: err => {
@@ -269,6 +275,14 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   openFile(data): void {
     this.gs.log('[DORAMA_DETAIL_CLICK_BERKAS]', data);
     this.router.navigateByUrl(`/berkas/${data.id}`);
+  }
+
+  onFansubLoadNextPage(): void {
+    this.gs.log('[DORAMA_DETAIL_LOAD_MORE_FANSUB]');
+    if (!this.fansubPageFinished) {
+      this.fansubPage++;
+      this.getFansubDorama();
+    }
   }
 
 }

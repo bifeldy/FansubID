@@ -3,7 +3,7 @@ import translate from '@iamtraction/google-translate';
 import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, ILike, In, Equal } from 'typeorm';
+import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
 
 import { environment } from '../../environments/server/environment';
 
@@ -255,7 +255,7 @@ router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFuncti
     const animeId = req.query.id ? req.query.id.split(',').map(Number) : req.body.id;
     if (Array.isArray(animeId) && animeId.length > 0) {
       const fileRepo = getRepository(Berkas);
-      const [files, count] = await fileRepo.findAndCount({
+      const findOpt: FindManyOptions<Berkas> = {
         where: [
           {
             anime_: {
@@ -264,7 +264,12 @@ router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFuncti
           }
         ],
         relations: ['fansub_', 'anime_']
-      });
+      };
+      if (animeId.length === 1) {
+        findOpt.skip = req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+        findOpt.take = (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+      }
+      const files = await fileRepo.find(findOpt);
       const results: any = {};
       for (const i of animeId) {
         results[i] = [];
@@ -286,10 +291,14 @@ router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFuncti
           .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
           .sort((a, b) => (a.name > b.name) ? 1 : -1);
       }
+      let count = 0;
+      for (const i of animeId) {
+        count += results[i].length;
+      }
       return res.status(200).json({
         info: `😅 200 - Anime API :: Fansub 🤣`,
         count,
-        pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+        pages: (animeId.length > 1 ? 1 : Math.ceil(count / (req.query.row ? req.query.row : 10))),
         results
       });
     } else {

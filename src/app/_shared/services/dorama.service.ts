@@ -38,8 +38,8 @@ export class DoramaService {
     return this.api.patchData(`/dorama/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: doramaId });
   }
 
-  getFansubDorama(doramaId = []): Observable<any> {
-    return this.api.patchData(`/dorama/fansub`, { id: doramaId });
+  getFansubDorama(doramaId = [], page = 1, row = 10): Observable<any> {
+    return this.api.patchData(`/dorama/fansub?page=${page}&row=${row}`, { id: doramaId });
   }
 
 }

@@ -67,10 +67,15 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
     // }
   ];
 
+  @Input() gridPageFinished = false;
+  @Input() listPageFinished = false;
+
   @Output() chipClicked = new EventEmitter();
   @Output() buttonClicked = new EventEmitter();
   @Output() gridClicked = new EventEmitter();
   @Output() listClicked = new EventEmitter();
+  @Output() gridLoadNextPage = new EventEmitter();
+  @Output() listLoadNextPage = new EventEmitter();
   @Output() tableRowClicked = new EventEmitter();
   @Output() paginatorClicked = new EventEmitter();
 
@@ -107,6 +112,14 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
 
   onListClicked(data: any): void {
     this.listClicked.emit(data);
+  }
+
+  onGridLoadNextPage(): void {
+    this.gridLoadNextPage.emit();
+  }
+
+  onListLoadNextPage(): void {
+    this.listLoadNextPage.emit();
   }
 
   onTableRowClicked(data: any): void {

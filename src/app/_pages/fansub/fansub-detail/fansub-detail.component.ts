@@ -31,6 +31,12 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   doramaFansub = [];
   berkasFansub = [];
 
+  animePageFinished = false;
+  doramaPageFinished = false;
+
+  animePage = 1;
+  doramaPage = 1;
+
   chipData = [];
 
   panelData = [];
@@ -173,10 +179,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   getAnimeFansub(): void {
     this.bs.busy();
-    this.subsAnime = this.fansub.getAnimeFansub([this.fansubData.id]).subscribe({
+    this.subsAnime = this.fansub.getAnimeFansub([this.fansubData.id], this.animePage).subscribe({
       next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
-        this.animeFansub = [];
         for (const r of res.results[this.fansubData.id]) {
           this.animeFansub.push({
             id: r.id,
@@ -185,6 +190,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[0].data = this.animeFansub;
+        if (res.results[this.fansubData.id].length <= 0) {
+          this.animePageFinished = true;
+        }
         this.bs.idle();
       },
       error: err => {
@@ -196,10 +204,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   getDoramaFansub(): void {
     this.bs.busy();
-    this.subsDorama = this.fansub.getDoramaFansub([this.fansubData.id]).subscribe({
+    this.subsDorama = this.fansub.getDoramaFansub([this.fansubData.id], this.doramaPage).subscribe({
       next: res => {
         this.gs.log('[FANSUB_DORAMA_SUCCESS]', res);
-        this.doramaFansub = [];
         for (const r of res.results[this.fansubData.id]) {
           this.doramaFansub.push({
             id: r.id,
@@ -209,6 +216,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[1].data = this.doramaFansub;
+        if (res.results[this.fansubData.id].length <= 0) {
+          this.doramaPageFinished = true;
+        }
         this.bs.idle();
       },
       error: err => {
@@ -261,6 +271,22 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   openTag(data): void {
     this.gs.log('[FANSUB_DETAIL_OPEN_TAG]', data);
+  }
+
+  onAnimeLoadNextPage(): void {
+    this.gs.log('[FANSUB_DETAIL_LOAD_MORE_ANIME]');
+    if (!this.animePageFinished) {
+      this.animePage++;
+      this.getAnimeFansub();
+    }
+  }
+
+  onDoramaLoadNextPage(): void {
+    this.gs.log('[FANSUB_DETAIL_LOAD_MORE_DORAMA]');
+    if (!this.doramaPageFinished) {
+      this.doramaPage++;
+      this.getDoramaFansub();
+    }
   }
 
 }

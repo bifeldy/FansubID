@@ -338,13 +338,18 @@ router.patch('/anime', async (req: UserRequest, res: Response, next: NextFunctio
     const fansubId = req.query.id ? req.query.id.split(',').map(Number) : req.body.id;
     if (Array.isArray(fansubId) && fansubId.length > 0) {
       const fileRepo = getRepository(Berkas);
-      const [files, count] = await fileRepo
+      let fileRepoQuery = fileRepo
         .createQueryBuilder('berkas')
         .leftJoinAndSelect('berkas.anime_', 'anime_')
         .leftJoinAndSelect('berkas.fansub_', 'fansub_')
         .where('fansub_.id IN (:...id)', { id: fansubId })
-        .andWhere('berkas.anime_ IS NOT NULL')
-        .getManyAndCount();
+        .andWhere('berkas.anime_ IS NOT NULL');
+      if (fansubId.length === 1) {
+        fileRepoQuery = fileRepoQuery
+          .skip(req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0)
+          .take((req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10);
+      }
+      const [files, count] = await fileRepoQuery.getManyAndCount();
       const results: any = {};
       for (const i of fansubId) {
         results[i] = [];
@@ -367,10 +372,15 @@ router.patch('/anime', async (req: UserRequest, res: Response, next: NextFunctio
           .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
           .sort((a, b) => (a.name > b.name) ? 1 : -1);
       }
+      if (fansubId.length > 1) {
+        for (const i of fansubId) {
+          results[i] = results[i].length;
+        }
+      }
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Anime 🤣`,
         count,
-        pages: 1,
+        pages: (fansubId.length > 1 ? 1 : Math.ceil(count / (req.query.row ? req.query.row : 10))),
         results
       });
     } else {
@@ -393,13 +403,18 @@ router.patch('/dorama', async (req: UserRequest, res: Response, next: NextFuncti
     const fansubId = req.query.id ? req.query.id.split(',').map(Number) : req.body.id;
     if (Array.isArray(fansubId) && fansubId.length > 0) {
       const fileRepo = getRepository(Berkas);
-      const [files, count] = await fileRepo
+      let fileRepoQuery = fileRepo
         .createQueryBuilder('berkas')
         .leftJoinAndSelect('berkas.dorama_', 'dorama_')
         .leftJoinAndSelect('berkas.fansub_', 'fansub_')
         .where('fansub_.id IN (:...id)', { id: fansubId })
-        .andWhere('berkas.dorama_ IS NOT NULL')
-        .getManyAndCount();
+        .andWhere('berkas.dorama_ IS NOT NULL');
+      if (fansubId.length === 1) {
+        fileRepoQuery = fileRepoQuery
+          .skip(req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0)
+          .take((req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10);
+      }
+      const [files, count] = await fileRepoQuery.getManyAndCount();
       const results: any = {};
       for (const i of fansubId) {
         results[i] = [];
@@ -422,10 +437,15 @@ router.patch('/dorama', async (req: UserRequest, res: Response, next: NextFuncti
           .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
           .sort((a, b) => (a.name > b.name) ? 1 : -1);
       }
+      if (fansubId.length > 1) {
+        for (const i of fansubId) {
+          results[i] = results[i].length;
+        }
+      }
       return res.status(200).json({
         info: `😅 200 - Fansub API :: Dorama 🤣`,
         count,
-        pages: 1,
+        pages: (fansubId.length > 1 ? 1 : Math.ceil(count / (req.query.row ? req.query.row : 10))),
         results
       });
     } else {

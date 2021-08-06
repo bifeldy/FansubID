@@ -26,6 +26,9 @@
             </mat-grid-tile>
           </mat-grid-list>
         </mat-selection-list>
+        <div class="col-12 text-center p-3" *ngIf="!gridPageFinished">
+          <button mat-button (click)="onGridLoadNextPage()">Load More ...</button>
+        </div>
       </div>
       <div class="p-3" *ngIf="tab.data.length <= 0"
         style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
@@ -52,6 +55,9 @@
             <p matLine>{{ d.description }}</p>
           </mat-list-option>
         </mat-selection-list>
+        <div class="col-12 text-center p-3" *ngIf="!listPageFinished">
+          <button mat-button (click)="onListLoadNextPage()">Load More ...</button>
+        </div>
       </div>
       <div class="p-3" *ngIf="tab.data.length <= 0"
         style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">

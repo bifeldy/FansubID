@@ -62,7 +62,9 @@
         <div class="row py-3">
           <div class="col-12">
             <app-material-tab (listClicked)="openAnime($event)" (gridClicked)="openDorama($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
-              [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-tab>
+              [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
+              [gridPageFinished]="doramaPageFinished" (gridLoadNextPage)="onDoramaLoadNextPage($event)"
+              [listPageFinished]="animePageFinished" (listLoadNextPage)="onAnimeLoadNextPage($event)"></app-material-tab>
           </div>
         </div>
       </div>

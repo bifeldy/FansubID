@@ -31,6 +31,10 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   fansubAnime = [];
   berkasAnime = [];
 
+  fansubPageFinished = false;
+
+  fansubPage = 1;
+
   chipData = [];
 
   panelData = [];
@@ -185,10 +189,9 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
 
   getFansubAnime(): void {
     this.bs.busy();
-    this.subsFansub = this.anime.getFansubAnime([this.animeId]).subscribe({
+    this.subsFansub = this.anime.getFansubAnime([this.animeId], this.fansubPage).subscribe({
       next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
-        this.fansubAnime = [];
         for (const r of res.results[this.animeId]) {
           this.fansubAnime.push({
             id: r.id,
@@ -199,6 +202,9 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[0].data = this.fansubAnime;
+        if (res.results[this.animeId].length <= 0) {
+          this.fansubPageFinished = true;
+        }
         this.bs.idle();
       },
       error: err => {
@@ -228,6 +234,14 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   openFile(data): void {
     this.gs.log('[ANIME_DETAIL_CLICK_BERKAS]', data);
     this.router.navigateByUrl(`/berkas/${data.id}`);
+  }
+
+  onFansubLoadNextPage(): void {
+    this.gs.log('[ANIME_DETAIL_LOAD_MORE_FANSUB]');
+    if (!this.fansubPageFinished) {
+      this.fansubPage++;
+      this.getFansubAnime();
+    }
   }
 
 }

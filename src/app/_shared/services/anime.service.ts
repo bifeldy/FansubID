@@ -38,8 +38,8 @@ export class AnimeService {
     return this.api.patchData(`/anime/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: animeId });
   }
 
-  getFansubAnime(animeId = []): Observable<any> {
-    return this.api.patchData(`/anime/fansub`, { id: animeId });
+  getFansubAnime(animeId = [], page = 1, row = 10): Observable<any> {
+    return this.api.patchData(`/anime/fansub?page=${page}&row=${row}`, { id: animeId });
   }
 
 }
