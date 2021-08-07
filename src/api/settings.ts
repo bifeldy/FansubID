@@ -1,7 +1,8 @@
 import { ServerInfo } from '../app/_shared/models/ServerInfo';
 
 let settings: ServerInfo = {
-  isMaintenance: false
+  isMaintenance: false,
+  winboxOpenLink: true
 };
 
 export function serverGet() {
@@ -18,4 +19,12 @@ export function serverGetMaintenance() {
 
 export function serverSetMaintenance(isMaintenance: boolean) {
   settings.isMaintenance = isMaintenance;
+}
+
+export function serverGetWinboxOpenLink() {
+  return settings.winboxOpenLink;
+}
+
+export function serverSetWinboxOpenLink(winboxOpenLink: boolean) {
+  settings.winboxOpenLink = winboxOpenLink;
 }

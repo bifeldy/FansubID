@@ -1,3 +1,4 @@
 export interface ServerInfo {
-  isMaintenance: boolean
+  isMaintenance: boolean;
+  winboxOpenLink: boolean;
 }

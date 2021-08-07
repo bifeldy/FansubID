@@ -6,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { environment } from '../../../environments/client/environment';
 
+import { serverGet } from '../../../../src/api/settings';
+
 import { RoomInfoResponse } from '../models/RoomInfo';
 import { ServerInfo } from '../models/ServerInfo';
 
@@ -35,9 +37,9 @@ export class StatsServerService {
 
   public github = null;
 
-  private currentServerSubject: BehaviorSubject<ServerInfo> = new BehaviorSubject<ServerInfo>(null);
+  private currentServerSubject: BehaviorSubject<ServerInfo> = new BehaviorSubject<ServerInfo>(serverGet());
   public currentServer: Observable<ServerInfo> = this.currentServerSubject.asObservable();
-  public currentServerValue: ServerInfo = null;
+  public currentServerValue: ServerInfo = serverGet();
 
   private currentRoomSubject: BehaviorSubject<RoomInfoResponse> = new BehaviorSubject<RoomInfoResponse>(null);
   public currentRoom: Observable<RoomInfoResponse> = this.currentRoomSubject.asObservable();
