@@ -54,7 +54,7 @@ export class WinboxService {
     if (uriUrl.startsWith('http://')) {
       uriUrl = 'https://' + uriUrl.slice(7, uriUrl.length);
     } else if (uriUrl.startsWith('ftp://') || uriUrl.startsWith('mailto:')) {
-      window.open(uriUrl, windowTarget);
+      this.confirmationOpenUrl(uriUrl, windowTarget);
       return;
     }
     if (windowTarget == '_self' || this.currentServer?.winboxOpenLink === false) {

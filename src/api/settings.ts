@@ -2,7 +2,7 @@ import { ServerInfo } from '../app/_shared/models/ServerInfo';
 
 let settings: ServerInfo = {
   isMaintenance: false,
-  winboxOpenLink: true
+  winboxOpenLink: false
 };
 
 export function serverGet() {
