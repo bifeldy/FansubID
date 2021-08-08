@@ -18,6 +18,7 @@
     "bifeldy:dev": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng run hikki:serve-ssr",
     "bifeldy:prod": "ng build --configuration production && ng run hikki:server:production",
     "bifeldy:start": "node dist/hikki/server/main.js",
+    "bifeldy:lint": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng lint",
     "postinstall": "ngcc"
   },
   "private": true,
