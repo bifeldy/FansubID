@@ -38,6 +38,7 @@ export const environment = {
   jwtSecretKey: '',
   tokenName: 'hikki_token',
   domain: 'localhost',
+  ip: '127.0.0.1',
   baseUrl: 'http://localhost:4000',
   dbType: 'postgres',
   dbHost: 'localhost',

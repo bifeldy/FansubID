@@ -74,12 +74,16 @@ const apiLimiter = rateLimit({
   windowMs: 60000, // 60 Seconds / 1 Minute
   max: 15, // 15 Request
   handler: (req, res, next) => {
-    return res.status(429).json({
-      info: '😡 429 - API SPAM :: Kebanjiran Permintaan 😤',
-      result: {
-        message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 🤬',
-      }
-    });
+    if (req.ip !== '127.0.0.1' && req.ip !== environment.ip) {
+      return res.status(429).json({
+        info: '😡 429 - API SPAM :: Kebanjiran Permintaan 😤',
+        result: {
+          message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 🤬',
+        }
+      });
+    } else {
+      return next();
+    }
   }
 });
 
