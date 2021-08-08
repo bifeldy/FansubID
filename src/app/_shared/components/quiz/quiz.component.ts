@@ -13,8 +13,8 @@ import { RightPanelService } from '../../../_shared/services/right-panel.service
 })
 export class QuizComponent implements OnInit, OnDestroy {
 
-  @Input() question: string = 'hiragana';
-  @Input() options: string = 'romaji';
+  @Input() question = 'hiragana';
+  @Input() options = 'romaji';
 
   swapOptions = true;
 

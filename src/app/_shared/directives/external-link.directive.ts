@@ -1,11 +1,11 @@
-import { Directive, HostBinding, Input, ElementRef } from '@angular/core';
+import { Directive, HostBinding, Input, ElementRef, OnChanges } from '@angular/core';
 
 import { GlobalService } from '../services/global.service';
 
 @Directive({
   selector: 'a[href]'
 })
-export class ExternalLinkDirective {
+export class ExternalLinkDirective implements OnChanges {
 
   @HostBinding('attr.rel') relAttr = '';
   @HostBinding('attr.target') targetAttr = '';
@@ -22,7 +22,7 @@ export class ExternalLinkDirective {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.hrefAttr = this.href;
     if (this.isLinkExternal()) {
       this.relAttr = 'noopener';
@@ -30,6 +30,7 @@ export class ExternalLinkDirective {
     }
   }
 
+  // tslint:disable-next-line: typedef
   private isLinkExternal() {
     return this.gs.isBrowser && !this.elementRef.nativeElement.hostname.includes(location.hostname);
   }

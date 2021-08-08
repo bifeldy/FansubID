@@ -26,6 +26,7 @@ const room = {};
 const quiz = {};
 
 // Generate Question
+// tslint:disable-next-line: typedef
 async function getNewQuestion(roomId: string) {
   try {
     switch (roomId) {
@@ -67,6 +68,7 @@ async function getNewQuestion(roomId: string) {
   }
 }
 
+// tslint:disable-next-line: typedef
 function sendChat(data: RoomChat) {
   return {
     room_id: data.roomId,
@@ -83,20 +85,21 @@ function getRoomInfo(io: Server, roomId: string): RoomInfoResponse {
   };
 }
 
-function increasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut) {
+function increasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut): void {
   room[data.roomId][socket.id].quiz.score++;
 }
 
-function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut) {
+function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut): void {
   room[data.roomId][socket.id].quiz.score--;
 }
 
+// tslint:disable-next-line: typedef
 export async function checkMultipleConnection(io: Server, socket: Socket, data: RoomInfoInOut) {
   if (data.user) {
     const multipleSocketId = [];
     for (const socketId of Object.keys(room['GLOBAL_PUBLIK'])) {
       if (
-        socketId != socket.id && room['GLOBAL_PUBLIK'][socketId] &&
+        socketId !== socket.id && room['GLOBAL_PUBLIK'][socketId] &&
         room['GLOBAL_PUBLIK'][socketId].username === data.user.username
       ) {
         multipleSocketId.push(socketId);
@@ -109,6 +112,7 @@ export async function checkMultipleConnection(io: Server, socket: Socket, data: 
   }
 }
 
+// tslint:disable-next-line: typedef
 export async function disconnectRoom(io: Server, socket: Socket) {
   for (const roomId of Object.keys(room)) {
     delete room[roomId][socket.id];
@@ -116,7 +120,7 @@ export async function disconnectRoom(io: Server, socket: Socket) {
   }
 }
 
-export function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
+export function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut): void {
   if (data.oldRoom) {
     if (!room[data.oldRoom]) {
       room[data.oldRoom] = {};
@@ -127,6 +131,7 @@ export function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
   }
 }
 
+// tslint:disable-next-line: typedef
 export async function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
   try {
     if (data.newRoom) {
@@ -185,13 +190,13 @@ export async function socketBot(io: Server, socket: Socket) {
         const decoded = jwt.JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
         if (data.user.role === Role.ADMIN || data.user.role === Role.MODERATOR) {
-          if (data.server != null || data.server != undefined) {
+          if (data.server !== null || data.server !== undefined) {
             serverSet(data.server);
           } else {
-            if (data.isMaintenance != null || data.isMaintenance != undefined) {
+            if (data.isMaintenance !== null || data.isMaintenance !== undefined) {
               serverSetMaintenance(data.isMaintenance);
             }
-            if (data.winboxOpenLink != null || data.winboxOpenLink != undefined) {
+            if (data.winboxOpenLink !== null || data.winboxOpenLink !== undefined) {
               serverSetWinboxOpenLink(data.winboxOpenLink);
             }
             // Other Server Config Here
@@ -427,7 +432,7 @@ export async function socketBot(io: Server, socket: Socket) {
       if (data.jwtToken) {
         const decoded = jwt.JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
-        if (data.roomId == 'GLOBAL_PUBLIK') {
+        if (data.roomId === 'GLOBAL_PUBLIK') {
           io.emit('receive-chat', sendChat(data));
         } else {
           io.to(data.roomId).emit('receive-chat', sendChat(data));

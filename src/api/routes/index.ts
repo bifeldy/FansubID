@@ -72,6 +72,7 @@ const upload = multer({
   },
 });
 
+// tslint:disable-next-line: typedef
 function checkServerSetting(req: UserRequest, res: Response, next: NextFunction) {
   switch (req.method) {
     case 'POST':

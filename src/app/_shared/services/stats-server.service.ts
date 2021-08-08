@@ -84,7 +84,7 @@ export class StatsServerService {
       next: server => {
         if (
           server && server.isMaintenance &&
-          (this.currentServerValue?.isMaintenance != server.isMaintenance)
+          (this.currentServerValue?.isMaintenance !== server.isMaintenance)
         ) {
           this.subsDialog = this.ds.openInfoDialog({
             data: {
@@ -201,7 +201,7 @@ export class StatsServerService {
     });
     this.mySocket.on('receive-chat', msg => {
       this.gs.log('[SOCKET_RECEIVE-CHAT]', msg);
-      if (msg.room_id == 'GLOBAL_PUBLIK') {
+      if (msg.room_id === 'GLOBAL_PUBLIK') {
         this.globalChatRoom.push(msg);
       } else {
         this.currentChatRoom.push(msg);
@@ -210,8 +210,8 @@ export class StatsServerService {
     });
     this.mySocket.on('room-info', roomInfo => {
       this.gs.log('[SOCKET_ROOM-INFO]', roomInfo);
-      this.gs.cleanObject(roomInfo?.member_list)
-      if (roomInfo.room_id == 'GLOBAL_PUBLIK') {
+      this.gs.cleanObject(roomInfo?.member_list);
+      if (roomInfo.room_id === 'GLOBAL_PUBLIK') {
         this.globalRoomSubject.next(roomInfo);
       } else {
         this.currentRoomSubject.next(roomInfo);

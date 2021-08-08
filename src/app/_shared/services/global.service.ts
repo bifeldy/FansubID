@@ -148,7 +148,7 @@ export class GlobalService {
   }
 
   cleanObject(objData: any): any {
-    for (var o in objData) {
+    for (const o in objData) {
       if (!objData[o]) {
         delete objData[o];
       }
@@ -157,21 +157,21 @@ export class GlobalService {
 
   setupStringArrayIncludes(): void {
     if (!String['includesOneOf']) {
-      String.prototype['includesOneOf'] = function(arrayOfStrings: string[]) {
+      String.prototype['includesOneOf'] = function(arrayOfStrings: string[]): boolean {
         return arrayOfStrings.some(str => this.includes(str));
-      }
+      };
     }
   }
 
   setupLinkify(): void {
-    if(!String['linkify']) {
-      String.prototype['linkify'] = function() {
+    if (!String['linkify']) {
+      String.prototype['linkify'] = function(): void {
         // http://, https://, ftp://
-        var urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+        const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
         // www. sans http:// or https://
-        var pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+        const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
         // Email addresses
-        var emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
+        const emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
         return this
           .replace(urlPattern, '<a class="text-decoration-none" href="$&" target="_blank">$&</a>')
           .replace(pseudoUrlPattern, '$1<a class="text-decoration-none" href="http://$2" target="_blank">$2</a>')

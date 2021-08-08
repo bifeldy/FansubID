@@ -35,7 +35,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
     const kanaRepo = getRepository(Nihongo);
     const [kanas, count] = await kanaRepo.findAndCount({
       where: [
-        { 
+        {
           romaji: ILike(`%${req.query.q ? req.query.q : ''}%`),
           category: ILike(`%${req.query.category ? req.query.category : ''}%`)
         },

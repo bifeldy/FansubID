@@ -25,7 +25,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
   pageFinished = false;
 
   @Input() rootCommentBox = false;
-  comment_to_send = null;
+  commentToSend = null;
 
   @Input() parent = null;
 
@@ -65,7 +65,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
       parent: k.id
     } : {
       path: this.urlPath,
-      comment: this.comment_to_send
+      comment: this.commentToSend
     };
     this.komen.sendComment(commentData).subscribe({
       next: res => {
@@ -75,7 +75,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
           k.reply_mode = false;
           this.getReply(k, true);
         } else {
-          this.comment_to_send = null;
+          this.commentToSend = null;
           this.getComment(true);
         }
       },
@@ -138,7 +138,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
   }
 
   showHideComment(k: Komentar): void {
-    if (k.show_reply == undefined || k.show_reply == null) {
+    if (k.show_reply === undefined || k.show_reply === null) {
       k.show_reply = true;
     } else {
       k.show_reply = !k.show_reply;
@@ -149,7 +149,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
   }
 
   showHideCommentBox(k: Komentar): void {
-    if (k.reply_mode == undefined || k.reply_mode == null) {
+    if (k.reply_mode === undefined || k.reply_mode === null) {
       k.reply_mode = true;
     } else {
       k.reply_mode = !k.reply_mode;

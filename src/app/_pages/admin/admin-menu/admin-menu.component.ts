@@ -31,7 +31,7 @@ export class AdminMenuComponent implements OnInit {
     }
   }
 
-  getServerSettings():void {
+  getServerSettings(): void {
     this.ss.socketEmit('server-get', {}, (response: any) => {
       this.gs.log(`[SOCKET_SERVER-GET]`, response);
       this.settings = response;

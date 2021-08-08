@@ -158,7 +158,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   get isHaveDDL(): boolean {
-    return typeof (this.berkasData.attachment_) != 'string';
+    return typeof (this.berkasData.attachment_) !== 'string';
   }
 
   setupVjs(): void {

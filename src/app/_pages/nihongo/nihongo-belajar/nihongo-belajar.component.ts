@@ -146,7 +146,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     this.gs.log('[BELAJAR_PAGINATOR_VALUE_CHANGED]', data);
     this.page = data.pageIndex + 1;
     this.row = data.pageSize;
-    if (this.modeTampilan != 'hiragana' && this.modeTampilan != 'katakana' && this.modeTampilan != 'angka') {
+    if (!(this.modeTampilan as any).includesOneOf(['hiragana', 'katakana', 'angka'])) {
       this.daftarNihongo = [];
       this.getData();
     }

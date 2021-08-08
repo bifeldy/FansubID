@@ -15,4 +15,4 @@ export interface Komentar {
   reply_page_finised: boolean;
   reply_mode?: boolean;
   reply_to_send?: string;
-};
+}

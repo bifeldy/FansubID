@@ -27,7 +27,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
       const userId = queryId.split(',').map(Number);
       if (Array.isArray(userId) && userId.length > 0) {
         if (
-          (userId.length > 1) || (userId.length === 1 && userId[0] != req.user.id) &&
+          (userId.length > 1) || (userId.length === 1 && userId[0] !== req.user.id) &&
           req.user.role !== Role.ADMIN && req.user.role !== Role.MODERATOR
         ) {
           return res.status(401).json({
@@ -143,9 +143,9 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         });
         if (
           corss.length >= 1 &&
-          req.user.role != Role.ADMIN &&
-          req.user.role != Role.MODERATOR &&
-          req.user.role != Role.FANSUBBER
+          req.user.role !== Role.ADMIN &&
+          req.user.role !== Role.MODERATOR &&
+          req.user.role !== Role.FANSUBBER
         ) {
           return res.status(400).json({
             info: '🙄 400 - Cors API :: Gagal Menambah Cors Baru 😪',

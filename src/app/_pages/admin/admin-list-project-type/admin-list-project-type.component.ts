@@ -162,18 +162,18 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
         console.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsProjectDelete = this.project.deleteProject(data.id).subscribe(
-            res => {
+          this.subsProjectDelete = this.project.deleteProject(data.id).subscribe({
+            next: res => {
               this.gs.log('[PROJECT_LIST_CLICK_DELETE_SUCCESS]', res);
               this.bs.idle();
               this.getProject();
             },
-            err => {
+            error: err => {
               this.gs.log('[PROJECT_LIST_CLICK_DELETE_ERROR]', err);
               this.bs.idle();
               this.getProject();
             }
-          );
+          });
         } else if (re === false) {
           this.getProject();
         }

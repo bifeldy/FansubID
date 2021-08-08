@@ -271,8 +271,8 @@ router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFuncti
         relations: ['fansub_', 'dorama_']
       };
       if (doramaId.length === 1) {
-        findOpt.skip = req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-        findOpt.take = (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+        findOpt.skip = req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0;
+        findOpt.take = (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10;
       }
       const files = await fileRepo.find(findOpt);
       const results: any = {};

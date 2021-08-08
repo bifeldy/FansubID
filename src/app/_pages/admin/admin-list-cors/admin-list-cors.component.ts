@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
@@ -10,7 +10,7 @@ import { DialogService } from '../../../_shared/services/dialog.service';
   templateUrl: './admin-list-cors.component.html',
   styleUrls: ['./admin-list-cors.component.css']
 })
-export class AdminListCorsComponent implements OnInit {
+export class AdminListCorsComponent implements OnInit, OnDestroy {
 
   subsCorsGet = null;
   subsCorsDelete = null;

@@ -62,6 +62,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
       kana: [data?.kana, Validators.compose([Validators.required, Validators.pattern(this.gs.japaneseKeyboardKeysRegex)])],
       romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      // tslint:disable-next-line: max-line-length
       category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
     });

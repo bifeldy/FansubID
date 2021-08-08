@@ -169,18 +169,18 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
         console.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe(
-            res => {
+          this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe({
+            next: res => {
               this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_SUCCESS]', res);
               this.bs.idle();
               this.getNotif();
             },
-            err => {
+            error: err => {
               this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_ERROR]', err);
               this.bs.idle();
               this.getNotif();
             }
-          );
+          });
         } else if (re === false) {
           this.getNotif();
         }
