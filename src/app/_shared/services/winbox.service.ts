@@ -53,13 +53,8 @@ export class WinboxService {
   winboxOpenUri(uriUrl: string, windowTarget = '_blank'): void {
     if (uriUrl.startsWith('http://')) {
       uriUrl = 'https://' + uriUrl.slice(7, uriUrl.length);
-    } else if (uriUrl.startsWith('ftp://') || uriUrl.startsWith('mailto:')) {
-      this.confirmationOpenUrl(uriUrl, windowTarget);
-      return;
     }
-    if (windowTarget == '_self' || this.currentServer?.winboxOpenLink === false) {
-      this.confirmationOpenUrl(uriUrl, windowTarget);
-    } else {
+    if (this.currentServer?.winboxOpenLink && !((uriUrl as any).includesOneOf(['ftp://', 'mailto:']))) {
       const currentDateTime = new Date().getTime();
       this.openedWindow[currentDateTime] = new WinBox({
         id: currentDateTime,
@@ -77,6 +72,8 @@ export class WinboxService {
           this.confirmationOpenUrl(uriUrl, windowTarget);
         }
       });
+    } else {
+      this.confirmationOpenUrl(uriUrl, windowTarget);
     }
   }
 

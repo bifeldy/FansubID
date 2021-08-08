@@ -72,6 +72,7 @@ export class GlobalService {
     this.isDevMode = isDevMode();
     if (this.isBrowser) {
       this.onResize(null);
+      this.setupStringArrayIncludes();
       this.setupLinkify();
     }
   }
@@ -154,6 +155,14 @@ export class GlobalService {
     }
   }
 
+  setupStringArrayIncludes(): void {
+    if (!String['includesOneOf']) {
+      String.prototype['includesOneOf'] = function(arrayOfStrings: string[]) {
+        return arrayOfStrings.some(str => this.includes(str));
+      }
+    }
+  }
+
   setupLinkify(): void {
     if(!String['linkify']) {
       String.prototype['linkify'] = function() {
@@ -164,9 +173,9 @@ export class GlobalService {
         // Email addresses
         var emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
         return this
-          .replace(urlPattern, '<a class="text-decoration-none" href="$&">$&</a>')
-          .replace(pseudoUrlPattern, '$1<a class="text-decoration-none" href="http://$2">$2</a>')
-          .replace(emailAddressPattern, '<a class="text-decoration-none" href="mailto:$&">$&</a>');
+          .replace(urlPattern, '<a class="text-decoration-none" href="$&" target="_blank">$&</a>')
+          .replace(pseudoUrlPattern, '$1<a class="text-decoration-none" href="http://$2" target="_blank">$2</a>')
+          .replace(emailAddressPattern, '<a class="text-decoration-none" href="mailto:$&" target="_blank">$&</a>');
       };
     }
   }
