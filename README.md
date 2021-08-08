@@ -15,9 +15,9 @@ Jalankan `npm run bifeldy:prod` untuk *build* seluruh proyek (*frontend* & *back
 Hasil akan tersimpan di folder `dist/`.
 
 * Jalankan `npm run bifeldy:dev` untuk *serve* SSR dalam *development*. <br />
-  Lalu buka situs di `http://localhost:0000` portnya dapat dilihat pada terminal.
+  Lalu buka situs di `http://localhost:4000` portnya dapat dilihat pada terminal.
   
-* Untuk perintah lainnya, misalnya `npm run bifeldy:lint` dapar dilihat pada berkas [package.json](package.json)
+* Untuk perintah lainnya, misalnya `npm run bifeldy:lint` dapat dilihat pada berkas [package.json](package.json)
 
 ## Bantuan lebih lanjut
 
