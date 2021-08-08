@@ -146,7 +146,7 @@ export class StatsServerService {
         null,
         -1,
         'warning',
-        'Sambungan Diputus',
+        'Sambungan Terputus',
         'Tidak dapat terhubung <i>peer-to-peer</i> dan menggunakan fitur obrolan!',
         false
       );
