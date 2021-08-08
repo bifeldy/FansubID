@@ -17,7 +17,7 @@ export class VjsService {
     }
   }
 
-  // eslint-disable-next-line 
+  // eslint-disable-next-line
   async loadSubtitle(subtitleUrls, callback) {
     const urls: any = [];
     if (subtitleUrls.length > 0) {
