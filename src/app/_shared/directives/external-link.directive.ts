@@ -30,7 +30,7 @@ export class ExternalLinkDirective implements OnChanges {
     }
   }
 
-  // tslint:disable-next-line: typedef
+  // eslint-disable-next-line
   private isLinkExternal() {
     return this.gs.isBrowser && !this.elementRef.nativeElement.hostname.includes(location.hostname);
   }

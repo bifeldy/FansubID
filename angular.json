@@ -21,8 +21,7 @@
         "@schematics/angular:interceptor": {
           "skipTests": true
         },
-        "@schematics/angular:module": {
-        },
+        "@schematics/angular:module": {},
         "@schematics/angular:pipe": {
           "skipTests": true
         },
@@ -161,16 +160,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json",
-              "tsconfig.server.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         },
@@ -260,6 +254,7 @@
   },
   "defaultProject": "hikki",
   "cli": {
-    "analytics": "40d13892-a1c0-49a6-a8f5-6321c5883a2a"
+    "analytics": "40d13892-a1c0-49a6-a8f5-6321c5883a2a",
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

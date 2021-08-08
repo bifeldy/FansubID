@@ -22,7 +22,7 @@ import { gDrive } from '../programs/gDrive';
 // Middleware
 import auth from '../middlewares/auth';
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 function fileLampiranFilter(req, file, cb) {
   const typeArray = file.mimetype.split('/');
   const fileType = typeArray[0];
@@ -48,7 +48,7 @@ const upload = multer({
 
 const router = Router();
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line
 function deleteAttachment(fileName) {
   fs.unlink(`${environment.uploadFolder}/${fileName}`, (err) => {
     if (err) {

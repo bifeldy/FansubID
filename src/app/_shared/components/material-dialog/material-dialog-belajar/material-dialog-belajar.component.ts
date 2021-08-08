@@ -21,9 +21,9 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
-  // tslint:disable-next-line: variable-name
+  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   image_url = '/assets/img/form-no-image.png';
-  // tslint:disable-next-line: variable-name
+  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   image_url_original = null;
 
   gambar = null;
@@ -62,7 +62,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
       kana: [data?.kana, Validators.compose([Validators.required, Validators.pattern(this.gs.japaneseKeyboardKeysRegex)])],
       romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      // tslint:disable-next-line: max-line-length
+      // eslint-disable-next-line max-len
       category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
       image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
     });

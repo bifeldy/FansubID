@@ -566,7 +566,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
             .setAuthor('Hikki - Pembaharuan Data Berkas', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
             .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
             .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
             .addField('Fansub', fansubEmbedData.join(', '), false)
             .addFields(

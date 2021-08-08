@@ -7,16 +7,16 @@ import { google } from 'googleapis';
 // Helpers
 import logger from '../helpers/logger';
 
-// tslint:disable-next-line: variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 const refresh_url = 'https://oauth2.googleapis.com/token';
-// tslint:disable-next-line: variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 const client_id = environment.driveClientId;
-// tslint:disable-next-line: variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 const client_secret = environment.driveClientSecret;
-// tslint:disable-next-line: variable-name
+// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
 const refresh_token = environment.driveRefreshToken;
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line
 export async function gDrive(callback) {
   const googleClient = new google.auth.OAuth2(client_id, client_secret);
   const res = await fetch(refresh_url, {
@@ -26,7 +26,7 @@ export async function gDrive(callback) {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   });
-  // tslint:disable-next-line: variable-name
+  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   const res_json = await res.json();
   logger.log(`[gDrive] 📎`, res_json);
   googleClient.setCredentials(res_json);

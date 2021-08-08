@@ -5,7 +5,7 @@ let settings: ServerInfo = {
   winboxOpenLink: false
 };
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 export function serverGet() {
   return settings;
 }
@@ -14,7 +14,7 @@ export function serverSet(server): void {
   settings = server;
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 export function serverGetMaintenance() {
   return settings.isMaintenance;
 }
@@ -23,7 +23,7 @@ export function serverSetMaintenance(isMaintenance: boolean): void {
   settings.isMaintenance = isMaintenance;
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line
 export function serverGetWinboxOpenLink() {
   return settings.winboxOpenLink;
 }

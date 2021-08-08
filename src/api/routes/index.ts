@@ -48,7 +48,7 @@ import { SosMed } from '../../app/_shared/models/SosMed';
 
 import { MessageEmbed } from 'discord.js';
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 function fileGambarFilter(req, file, cb) {
   const typeArray = file.mimetype.split('/');
   const fileType = typeArray[0];
@@ -72,7 +72,7 @@ const upload = multer({
   },
 });
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line
 function checkServerSetting(req: UserRequest, res: Response, next: NextFunction) {
   switch (req.method) {
     case 'POST':
@@ -232,7 +232,7 @@ router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest
 
 // PATCH `/api/verify` -- Verify Login Session
 router.patch('/verify', auth.isAuthorized, (req: UserRequest, res: Response, next) => {
-  // tslint:disable-next-line: max-line-length
+  // eslint-disable-next-line max-len
   let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
   if (token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);

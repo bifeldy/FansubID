@@ -22,7 +22,7 @@ import jwt from '../helpers/jwt';
 // Programs
 import { disconnectRoom } from '../programs/socketWeb';
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
     if (
@@ -114,7 +114,7 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
   try {
     const bannedRepo = getRepository(Banned);
@@ -140,7 +140,7 @@ async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 async function loginModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
     if ('userNameOrEmail' in req.body && 'password' in req.body) {
@@ -179,7 +179,7 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 async function isAuthorized(req: UserRequest, res: Response, next: NextFunction) {
   const decoded = jwt.JwtDecode(req, res, next);
   if (decoded && 'token' in decoded && 'id' in decoded.user) {
@@ -213,10 +213,10 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
   try {
-    // tslint:disable-next-line: max-line-length
+    // eslint-disable-next-line max-len
     const token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token) {
       isAuthorized(req, res, next);
@@ -230,7 +230,7 @@ async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line
 async function logoutModule(req: UserRequest, res: Response, next: NextFunction) {
   const decoded = jwt.JwtDecode(req, res, next);
   if (decoded && 'token' in decoded && 'id' in decoded.user) {

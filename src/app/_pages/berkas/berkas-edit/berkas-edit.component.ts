@@ -38,9 +38,9 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
-  // tslint:disable-next-line: variable-name
+  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   image_url = '/assets/img/form-no-image.png';
-  // tslint:disable-next-line: variable-name
+  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   image_url_original = null;
 
   filteredAnime = [];

@@ -218,7 +218,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               .setTimestamp(resNewsSave.updated_at)
               .setFooter(
                 resNewsSave.user_.username,
-                // tslint:disable-next-line: max-line-length
+                // eslint-disable-next-line max-len
                 resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
               )
             ).catch(console.error);

@@ -26,7 +26,7 @@ const room = {};
 const quiz = {};
 
 // Generate Question
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 async function getNewQuestion(roomId: string) {
   try {
     switch (roomId) {
@@ -68,7 +68,7 @@ async function getNewQuestion(roomId: string) {
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 function sendChat(data: RoomChat) {
   return {
     room_id: data.roomId,
@@ -93,7 +93,7 @@ function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut): v
   room[data.roomId][socket.id].quiz.score--;
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 export async function checkMultipleConnection(io: Server, socket: Socket, data: RoomInfoInOut) {
   if (data.user) {
     const multipleSocketId = [];
@@ -112,7 +112,7 @@ export async function checkMultipleConnection(io: Server, socket: Socket, data: 
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 export async function disconnectRoom(io: Server, socket: Socket) {
   for (const roomId of Object.keys(room)) {
     delete room[roomId][socket.id];
@@ -131,7 +131,7 @@ export function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut): void
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line 
 export async function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
   try {
     if (data.newRoom) {
@@ -159,7 +159,7 @@ export async function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInf
   }
 }
 
-// tslint:disable-next-line: typedef
+// eslint-disable-next-line
 export async function socketBot(io: Server, socket: Socket) {
   try {
     const notifRepo = getRepository(Notification);
