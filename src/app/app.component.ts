@@ -182,7 +182,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     if (el.tagName === 'A' || el.tagName === 'a') {
       const externalUri: string = el.getAttribute('href');
       if (externalUri) {
-        if (this.gs.gridListBreakpoint >= 2 && (externalUri as any).includesOneOf(['http', 'ftp', 'mailto'])) {
+        if (
+          this.gs.gridListBreakpoint >= 2 &&
+          (externalUri as any).includesOneOf(['http', 'ftp', 'mailto']) &&
+          !externalUri.includes(environment.baseUrl)
+        ) {
           this.winboxOpenUri(externalUri);
           ev.preventDefault();
           ev.stopPropagation();
