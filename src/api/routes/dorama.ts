@@ -16,8 +16,6 @@ import { Dorama } from '../entities/Dorama';
 
 const router = Router();
 
-const kuryanaApi = 'https://bifeldy-kuryana.herokuapp.com';
-
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
   { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
@@ -33,7 +31,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   } else {
     return request({
       method: 'GET',
-      uri: `${kuryanaApi}/search/q/${searchQuery}`,
+      uri: `${environment.externalApiDorama}/search/q/${searchQuery}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
@@ -139,7 +137,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   } else {
     return request({
       method: 'GET',
-      uri: `${kuryanaApi}/seasonal/${year}/${quarter}`,
+      uri: `${environment.externalApiDorama}/seasonal/${year}/${quarter}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
@@ -329,7 +327,7 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     return request({
       method: 'GET',
-      uri: `${kuryanaApi}/id/${req.params.mdlSlug}`,
+      uri: `${environment.externalApiDorama}/id/${req.params.mdlSlug}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {

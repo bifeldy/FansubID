@@ -99,7 +99,9 @@ export const environment = {
     'accept': 'application/json',
     'user-agent': 'node.js'
   },
-  externalApiCacheTime: 30 * 60 * 1000
+  externalApiCacheTime: 30 * 60 * 1000,
+  externalApiAnime: 'http://api.jikan.moe/v3',
+  externalApiDorama: 'https://bifeldy-kuryana.vercel.app'
 };
 
 /*

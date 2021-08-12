@@ -16,8 +16,6 @@ import { Anime } from '../entities/Anime';
 
 const router = Router();
 
-const jikanV3 = 'http://api.jikan.moe/v3';
-
 const seasonal = [
   { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
   { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
@@ -33,7 +31,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   } else {
     return request({
       method: 'GET',
-      uri: `${jikanV3}/search/anime?q=${searchQuery}&type=${searchType}`,
+      uri: `${environment.externalApiAnime}/search/anime?q=${searchQuery}&type=${searchType}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
@@ -134,7 +132,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   } else {
     return request({
       method: 'GET',
-      uri: `${jikanV3}/season/${year}/${season}`,
+      uri: `${environment.externalApiAnime}/season/${year}/${season}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
@@ -324,7 +322,7 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     return request({
       method: 'GET',
-      uri: `${jikanV3}/anime/${malId}`,
+      uri: `${environment.externalApiAnime}/anime/${malId}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
