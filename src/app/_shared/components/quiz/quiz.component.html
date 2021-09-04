@@ -41,7 +41,7 @@
         <div class="row">
           <div class="col-12 p-4">
             <div class="mx-auto card p-3">
-              <div class="card-body p-3 py-5" style="font-size: 500%;">
+              <div class="card-body p-3 py-5" (click)="openEdict()" style="cursor: pointer; font-size: 500%;">
                 {{ swapOptions ? getQuiz.question[question] : getQuiz.question[options] }}
               </div>
             </div>

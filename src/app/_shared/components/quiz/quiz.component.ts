@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { QuizService } from '../../../_shared/services/quiz.service';
 import { RightPanelService } from '../../../_shared/services/right-panel.service';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
   selector: 'app-quiz',
@@ -21,6 +22,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   participants = null;
 
   subsParticipant = null;
+  subsDialog = null;
 
   scoreOrder = (a: KeyValue<number, any>, b: KeyValue<number, any>): number => {
     return a.value.quiz.score > b.value.quiz.score ? -1 : (
@@ -32,7 +34,8 @@ export class QuizComponent implements OnInit, OnDestroy {
     private router: Router,
     private gs: GlobalService,
     private rps: RightPanelService,
-    private quiz: QuizService
+    private quiz: QuizService,
+    private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -45,6 +48,7 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsParticipant?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -75,6 +79,21 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   openProfile(username: string): void {
     this.router.navigateByUrl(`/user/${username}`);
+  }
+
+  openEdict(): void {
+    this.gs.log('[QUIZ_OPEN_EDICT]', this.getQuiz);
+    if (this.getQuiz.question.character) {
+      this.subsDialog = this.ds.openEdictDialog({
+        data: this.getQuiz.question,
+        disableClose: false
+      }).afterClosed().subscribe({
+        next: re => {
+          console.log('[EDICT_DIALOG_CLOSED]', re);
+          this.subsDialog.unsubscribe();
+        }
+      });
+    }
   }
 
 }
