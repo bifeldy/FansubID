@@ -33,7 +33,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
   order = '';
 
   userData = {
-    column: ['Id', 'Image', 'Username', 'Email', 'Aksi'],
+    column: ['Id', 'Image', 'Username', 'Nama', 'Email', 'Aksi'],
     row: []
   };
 
@@ -89,6 +89,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 Id: r.id,
                 Image: r.image_url,
                 Username: r.username,
+                Nama: r.kartu_tanda_penduduk_.nama,
                 Email: r.email,
                 banned: (Object.keys(result.results[r.id]).length > 0),
                 Aksi: (Object.keys(result.results[r.id]).length > 0) || (r.id == this.currentUser.id) ? [] : [{
