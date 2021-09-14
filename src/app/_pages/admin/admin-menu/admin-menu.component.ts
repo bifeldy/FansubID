@@ -1,22 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ServerInfo } from '../../../_shared/models/ServerInfo';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
+import { AuthService } from '../../../_shared/services/auth.service';
+
+import User from '../../../_shared/models/User';
 
 @Component({
   selector: 'app-admin-menu',
   templateUrl: './admin-menu.component.html',
   styleUrls: ['./admin-menu.component.css']
 })
-export class AdminMenuComponent implements OnInit {
+export class AdminMenuComponent implements OnInit, OnDestroy {
 
+  currentUser: User = null;
   settings: ServerInfo = null;
+
+  subsUser = null;
 
   constructor(
     public gs: GlobalService,
+    public as: AuthService,
     public adm: AdminService,
     private ss: StatsServerService
   ) {
@@ -27,8 +34,13 @@ export class AdminMenuComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.getServerSettings();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subsUser?.unsubscribe();
   }
 
   getServerSettings(): void {
