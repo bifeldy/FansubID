@@ -39,13 +39,19 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
     const userRepo = getRepository(User);
     const [user, count] = await userRepo.findAndCount({
       where: [
-        { username: ILike(`%${req.query.q ? req.query.q : ''}%`) }
+        { username: ILike(`%${req.query.q ? req.query.q : ''}%`) },
+        { email: ILike(`%${req.query.q ? req.query.q : ''}%`) },
+        {
+          kartu_tanda_penduduk_: {
+            nama: ILike(`%${req.query.q ? req.query.q : ''}%`)
+          }
+        }
       ],
       order: {
         ...((req.query.sort && req.query.order) ? {
           [req.query.sort]: req.query.order.toUpperCase()
         } : {
-          created_at: 'DESC'
+          id: 'DESC'
         })
       },
       relations: ['kartu_tanda_penduduk_', 'profile_'],

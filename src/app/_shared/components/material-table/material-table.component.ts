@@ -113,6 +113,10 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
         data.active = 'ip_domain';
       } else if (data.active.toUpperCase() === 'API KEY') {
         data.active = 'api_key';
+      } else if (data.active.toUpperCase() === 'USERNAME') {
+        data.active = 'username';
+      } else if (data.active.toUpperCase() === 'EMAIL') {
+        data.active = 'email';
       } else {
         data.active = '';
         data.direction = '';
