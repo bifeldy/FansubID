@@ -33,6 +33,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   subtitles = [];
   fonts = [];
 
+  vjsInit = false;
   vjsReady = false;
 
   constructor(
@@ -76,14 +77,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             );
             this.bs.idle();
             if (this.gs.isBrowser) {
-              this.subsUser = this.as.currentUser.subscribe({
-                next: user => {
-                  this.currentUser = user;
-                  if (this.currentUser) {
-                    this.setupVjs();
-                  }
-                }
-              });
+              this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
               this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
             }
           },
@@ -99,6 +93,11 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  watchDdl(): void {
+    this.vjsInit = true;
+    this.setupVjs();
   }
 
   login(): void {

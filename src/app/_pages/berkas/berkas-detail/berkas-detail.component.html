@@ -84,51 +84,55 @@
                 </h2>
               </div>
               <div class="col-12 text-center" *ngIf="isHaveDDL">
-                <button class="m-1 w-100" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
-                  matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
-                  <mat-icon class="me-1">movie</mat-icon>
-                  {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
-                </button>
-                <button class="m-1 w-100" mat-stroked-button color="accent" (click)="cancel_dl(berkasData.attachment_.id)"
-                  matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
-                  <mat-icon class="me-1">close</mat-icon>
-                  Batal Unduh
-                </button>
-                <button class="m-1 w-100" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
-                  matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x">
-                  <mat-icon class="me-1">save</mat-icon>
-                  {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }}
-                </button>
-                <div class="col">
-                  <div class="px-3" *ngIf="lampiran.isDownloading && !lampiran.isCompleted">
-                    {{ lampiran.percentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }}
-                    {{ lampiran.loaded }} Bytes <br />
-                    {{ lampiran.percentage }}% @ {{ lampiran.speed }} KB/s
-                    <br />
-                    <mat-progress-bar [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
+                <div class="px-3">
+                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
+                    matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
+                    <mat-icon class="me-1">movie</mat-icon>
+                    {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
+                  </button>
+                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="cancel_dl(berkasData.attachment_.id)"
+                    matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
+                    <mat-icon class="me-1">close</mat-icon>
+                    Batal Unduh
+                  </button>
+                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
+                    matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x">
+                    <mat-icon class="me-1">save</mat-icon>
+                    {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }}
+                  </button>
+                  <div class="col">
+                    <div class="px-3" *ngIf="lampiran.isDownloading && !lampiran.isCompleted">
+                      {{ lampiran.percentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }}
+                      {{ lampiran.loaded }} Bytes <br />
+                      {{ lampiran.percentage }}% @ {{ lampiran.speed }} KB/s
+                      <br />
+                      <mat-progress-bar color="accent" [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
+                    </div>
                   </div>
-                </div>
-                <div class="col">
-                  <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdl(berkasData.attachment_.id)" style="cursor: pointer;">
-                    Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
+                  <div class="col">
+                    <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdl(berkasData.attachment_.id)" style="cursor: pointer;">
+                      Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
+                    </div>
                   </div>
+                  <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
+                    (click)="standardDdl(s.id)" matTooltip="{{ s.name }}">
+                    <mat-icon class="me-1">notes</mat-icon>
+                    {{ s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
+                  </button>
+                  <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let f of berkasData.attachment_.fonts_"
+                    (click)="standardDdl(f.id)" matTooltip="{{ f.name }}">
+                    <mat-icon class="me-1">font_download</mat-icon>
+                    {{ f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
+                  </button>
                 </div>
-                <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
-                  (click)="standardDdl(s.id)" matTooltip="{{ s.name }}">
-                  <mat-icon class="me-1">notes</mat-icon>
-                  {{ s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
-                </button>
-                <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let f of berkasData.attachment_.fonts_"
-                  (click)="standardDdl(f.id)" matTooltip="{{ f.name }}">
-                  <mat-icon class="me-1">font_download</mat-icon>
-                  {{ f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
-                </button>
               </div>
               <div class="col-12 text-center" *ngIf="!isHaveDDL">
-                <button class="m-1" mat-stroked-button color="accent" (click)="verify()" matTooltip="Direct Download Link Berkas">
-                  <mat-icon class="me-1">enhanced_encryption</mat-icon>
-                  {{ berkasData.attachment_ }}
-                </button>
+                <div class="px-3">
+                  <button class="m-1" mat-stroked-button color="accent" (click)="verify()" matTooltip="Direct Download Link Berkas">
+                    <mat-icon class="me-1">enhanced_encryption</mat-icon>
+                    {{ berkasData.attachment_ }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -144,17 +148,24 @@
                 </h2>
               </div>
               <div class="col-12">
-                <div class="py-2">Dapat Digunakan Sebagai Referensi Untuk Pratinjau, Namun Kemungkinan Jenis Huruf Tulisan Gagal Dimuat Sehingga Nantinya Akan Muncul Huruf Dengan Gambar 🔳 Misalnya Kanji, Lalu Juga Memungkinkan Terjadinya Gerakan Patah - Patah Jika Browser Tidak Kuat Untuk Render .ASS Subtitle Dengan Efek Yang Terlalu Banyak.</div>
-                <app-vjs-player *ngIf="isHaveDDL && vjsReady"
-                  [videoUrl]="ddlVideo"
-                  [subtitleUrl]="ddlSubtitles"
-                  [subtitleFonts]="ddlFonts"
-                  [poster]="'/favicon.ico'">
-                </app-vjs-player>
-                <button class="w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">
-                  <mat-icon class="me-1">enhanced_encryption</mat-icon>
-                  {{ berkasData.attachment_ }}
-                </button>
+                <div class="py-2 px-3">Dapat Digunakan Sebagai Referensi Untuk Pratinjau, Namun Kemungkinan Jenis Huruf Tulisan Gagal Dimuat Sehingga Nantinya Akan Muncul Huruf Dengan Gambar 🔳 Misalnya Kanji, Lalu Juga Memungkinkan Terjadinya Gerakan Patah - Patah Jika Browser Tidak Kuat Untuk Render .ASS Subtitle Dengan Efek Yang Terlalu Banyak.</div>
+                <div class="px-3">
+                  <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isHaveDDL && !vjsInit && !vjsReady">
+                    <mat-icon class="me-1">play_arrow</mat-icon>
+                    Mulai Streaming Video
+                  </button>
+                  <mat-progress-bar color="accent" mode="buffer" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
+                  <app-vjs-player *ngIf="isHaveDDL && vjsInit && vjsReady"
+                    [videoUrl]="ddlVideo"
+                    [subtitleUrl]="ddlSubtitles"
+                    [subtitleFonts]="ddlFonts"
+                    [poster]="'/favicon.ico'">
+                  </app-vjs-player>
+                  <button class="w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">
+                    <mat-icon class="me-1">enhanced_encryption</mat-icon>
+                    {{ berkasData.attachment_ }}
+                  </button>
+                </div>
               </div>
             </div>
             <div class="row py-3">
@@ -164,7 +175,7 @@
                 </h2>
               </div>
               <div class="col-12">
-                <div class="p-2" style="white-space: pre-line !important;" [innerHTML]="berkasData.description"></div>
+                <div class="py-2 px-3" style="white-space: pre-line !important;" [innerHTML]="berkasData.description"></div>
               </div>
             </div>
             <div class="row py-3">
