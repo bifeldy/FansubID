@@ -6,6 +6,7 @@ import createError from 'http-errors';
 import request from 'postman-request';
 import multer from 'multer';
 import interceptor from 'express-interceptor';
+import rateLimit from 'express-rate-limit';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -47,6 +48,20 @@ import nihongoRouter from './nihongo';
 import { SosMed } from '../../app/_shared/models/SosMed';
 
 import { MessageEmbed } from 'discord.js';
+
+// Express rest api endpoints ~ 1 req/4s
+const apiLimiter = rateLimit({
+  windowMs: 60000, // 60 Seconds / 1 Minute
+  max: 15, // 15 Request
+  handler: (req, res, next) => {
+    return res.status(429).json({
+      info: '😡 429 - API SPAM :: Kebanjiran Permintaan 😤',
+      result: {
+        message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 🤬',
+      }
+    });
+  }
+});
 
 // eslint-disable-next-line 
 function fileGambarFilter(req, file, cb) {
@@ -153,7 +168,11 @@ router.use(async (req: UserRequest, res, next) => {
       ]
     });
     if (o.includes(apiKey.ip_domain)) {
-      next();
+      if (o == environment.domain || o == environment.ip || o == '127.0.0.1' || o == '::1') {
+        return next();
+      } else {
+        return apiLimiter(req, res, next);
+      }
     } else {
       throw new Error('Api Key Salah / Tidak Terdaftar!');
     }

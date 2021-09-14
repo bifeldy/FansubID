@@ -5,7 +5,6 @@ import 'reflect-metadata';
 import fs from 'fs';
 import http from 'http';
 
-import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import compression from 'compression';
 import request from 'request';
@@ -68,24 +67,6 @@ const typeOrmConfig: any = {
 
 // Express Router
 import indexRouter from './src/api/routes/index';
-
-// Express rest api endpoints ~ 1 req/4s
-const apiLimiter = rateLimit({
-  windowMs: 60000, // 60 Seconds / 1 Minute
-  max: 15, // 15 Request
-  handler: (req, res, next) => {
-    if (req.ip !== '127.0.0.1' && req.ip !== '::1' && req.ip !== environment.ip) {
-      return res.status(429).json({
-        info: '😡 429 - API SPAM :: Kebanjiran Permintaan 😤',
-        result: {
-          message: '💩 Sabar Wheiy, Jangan Nge-SPAM! 🤬',
-        }
-      });
-    } else {
-      return next();
-    }
-  }
-});
 
 // CORS Options
 const corsOptions = {
@@ -237,7 +218,7 @@ export function app(): http.Server {
   expressApp.use(async (req: UserRequest, res, next) => {
     req.io = io;
     req.bot = environment.production ? (bot.channels.cache.get(environment.discordBotChannelEventId) as TextChannel) : null;
-    next();
+    return next();
   });
 
   // GET `/verify-discord`
@@ -245,7 +226,7 @@ export function app(): http.Server {
     return res.redirect(`https://discord.com/api/oauth2/authorize?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord&client_id=${environment.discordClientId}&response_type=code&scope=identify%20email`);
   });
 
-  expressApp.use('/api', apiLimiter, indexRouter);
+  expressApp.use('/api', indexRouter);
 
   logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
 
