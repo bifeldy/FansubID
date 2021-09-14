@@ -9,7 +9,6 @@ export class Attachment {
   id: string;
 
   @Column({ type: 'text', nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   name: string;
 
   @Column({ type: 'varchar', length: 255 })

@@ -20,7 +20,6 @@ export class Notification {
   dismissible: boolean;
 
   @Column({ type: 'timestamp' })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   deadline: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
