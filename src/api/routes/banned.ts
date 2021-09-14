@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
-import { getRepository, ILike, Equal, In } from 'typeorm';
+import { getRepository, ILike, Equal, In, Not } from 'typeorm';
 
 import { MessageEmbed } from 'discord.js';
 
@@ -154,9 +154,18 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         const userRepo = getRepository(User);
         const user =  await userRepo.findOneOrFail({
           where: [
-            { id: Equal(req.body.id) },
-            { username: ILike(req.body.username) },
-            { email: ILike(req.body.email) }
+            {
+              id: Equal(req.body.id),
+              role: Not(In([Role.ADMIN, Role.MODERATOR]))
+            },
+            {
+              username: ILike(req.body.username),
+              role: Not(In([Role.ADMIN, Role.MODERATOR]))
+            },
+            {
+              email: ILike(req.body.email),
+              role: Not(In([Role.ADMIN, Role.MODERATOR]))
+            }
           ]
         });
         const bannedBy =  await userRepo.findOneOrFail({
@@ -216,13 +225,18 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
       return res.status(400).json({
         info: `🙄 400 - Banned API :: Gagal BAN User 😪`,
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'Data Tidak Lengkap'
         }
       });
     }
   } catch (error) {
     console.error(error);
-    return next(createError(404));
+    return res.status(400).json({
+      info: `🙄 400 - Banned API :: Gagal BAN User 😪`,
+      result: {
+        message: 'Pengguna Tidak Ditemukan!'
+      }
+    });
   }
 });
 

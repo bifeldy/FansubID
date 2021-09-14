@@ -7,6 +7,7 @@ import { MaterialDialogInfoComponent } from '../components/material-dialog/mater
 import { MaterialDialogDmakComponent } from '../components/material-dialog/material-dialog-dmak/material-dialog-dmak.component';
 import { MaterialDialogEdictComponent } from '../components/material-dialog/material-dialog-edict/material-dialog-edict.component';
 import { MaterialDialogBelajarComponent } from '../components/material-dialog/material-dialog-belajar/material-dialog-belajar.component';
+import { MaterialDialogBanComponent } from '../components/material-dialog/material-dialog-ban/material-dialog-ban.component';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,13 @@ export class DialogService {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  openBanDialog(dataInfo: MatDialogConfig): MatDialogRef<MaterialDialogBanComponent> {
+    if (!('disableClose' in dataInfo)) {
+      dataInfo.disableClose = true;
+    }
+    return this.dialog.open(MaterialDialogBanComponent, dataInfo);
   }
 
   openInfoDialog(dataInfo: MatDialogConfig): MatDialogRef<MaterialDialogInfoComponent> {

@@ -15,6 +15,13 @@ export interface DialogNihongoData {
   cancelText?: string;
 }
 
+export interface DialogBanData {
+  title?: string;
+  reason?: string;
+  confirmText?: string;
+  cancelText?: string;
+}
+
 export interface DialogInfoData {
   title?: string;
   htmlMessage?: string;

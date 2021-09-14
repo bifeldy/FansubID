@@ -26,8 +26,16 @@ import { environment } from '../../environments/server/environment';
 const router = Router();
 
 // GET `/api/user`
-router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
+    let maxPage = 0;
+    let maxRow = 10;
+    if (req.user) {
+      if (req.user.role == Role.ADMIN || req.user.role == Role.MODERATOR) {
+        maxPage = req.query.page || 0;
+        maxRow = req.query.row || 10;
+      }
+    }
     const userRepo = getRepository(User);
     const [user, count] = await userRepo.findAndCount({
       where: [
@@ -41,8 +49,8 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         })
       },
       relations: ['kartu_tanda_penduduk_', 'profile_'],
-      skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
-      take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+      skip: maxPage > 0 ? (maxPage * maxRow - maxRow) : 0,
+      take: (maxRow > 0 && maxRow <= 500) ? maxRow : 10
     });
     for (const u of user) {
       delete u.password;
