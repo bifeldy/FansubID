@@ -8,6 +8,7 @@ import { UserService } from '../../../_shared/services/user.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 
 import User from '../../../_shared/models/User';
+import { Role } from '../../../_shared/models/Role';
 
 @Component({
   selector: 'app-admin-list-user',
@@ -33,7 +34,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
   order = '';
 
   userData = {
-    column: ['Id', 'Image', 'Username', 'Nama Lengkap', 'Email', 'Aksi'],
+    column: ['Id', 'Role', 'Image', 'Username', 'Nama Lengkap', 'Email', 'Aksi'],
     row: []
   };
 
@@ -87,12 +88,17 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
             for (const r of res.results) {
               userDataRow.push({
                 Id: r.id,
+                Role: r.role,
                 Image: r.image_url,
                 Username: r.username,
                 Email: r.email,
                 'Nama Lengkap': r.kartu_tanda_penduduk_.nama,
                 banned: (Object.keys(result.results[r.id]).length > 0),
-                Aksi: (Object.keys(result.results[r.id]).length > 0) || (r.id == this.currentUser.id) ? [] : [{
+                Aksi: (
+                  (Object.keys(result.results[r.id]).length > 0) ||
+                  (r.id == this.currentUser.id) ||
+                  (r.role.includesOneOf([Role.ADMIN, Role.MODERATOR]))
+                ) ? [] : [{
                   type: 'button',
                   icon: 'lock',
                   name: 'BAN',
