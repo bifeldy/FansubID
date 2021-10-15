@@ -92,7 +92,7 @@ export const environment = {
   discordClientId: '789831990433153034',
   discordClientSecret: '',
   laboratoryRatsRoleId: '479208130534703108',
-  discordBotChannelEventId: '859977432282824714',
+  discordBotChannelEventId: '790158935045701652',
   discordBotChannelBotId: '426384107795251206',
   discordBotLoginToken: '',
   nodeJsXhrHeader: {
