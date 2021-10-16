@@ -72,6 +72,12 @@ export class LeftMenuService {
 
   public miscMenus: Menu[] = [
     {
+      name: 'Web Torrent',
+      link: '/torrent',
+      icon: 'sailing',
+      badge: null
+    },
+    {
       name: 'Admin & Mod Panel',
       link: '/admin-mod',
       icon: 'admin_panel_settings',

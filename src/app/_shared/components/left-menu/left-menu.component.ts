@@ -95,6 +95,11 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     });
   }
 
+  openDocumentation(): void {
+    this.onMouseHoverOut();
+    this.router.navigateByUrl('/documentation');
+  }
+
   toggleDebugLog($event): void {
     this.gs.forceEnableDebugLog = $event.checked;
     this.ls.setItem(this.gs.localStorageLoggingKeyName, JSON.stringify($event.checked));
