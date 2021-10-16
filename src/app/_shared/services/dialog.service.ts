@@ -63,11 +63,11 @@ export class DialogService {
       data: {
         title: `Informasi Perbaikan Web & Server`,
         htmlMessage: `
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <img src="/favicon.ico" />
+          <div class="row align-items-center">
+            <div class="col-12 text-center">
+              <img class="w-50" src="/assets/img/dialog.png">
             </div>
-            <div class="flex-grow-1 ms-3">
+            <div class="col-12 my-3 text-center">
               Saat Ini Sedang Dalam Tahap Perbaikan. <br />
               Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
               Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
@@ -78,7 +78,8 @@ export class DialogService {
         confirmText: 'Ok, Saya Mengerti!',
         cancelText: null
       },
-      disableClose: true
+      disableClose: true,
+      maxWidth: (this.gs.gridListBreakpoint == 3) ? '40vw' : ((this.gs.gridListBreakpoint == 2) ? '60vw' : '80vw')
     });
   }
 
@@ -87,22 +88,42 @@ export class DialogService {
       data: {
         title: `Aturan Dan Tata Tertib Komunitas`,
         htmlMessage: `
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <img src="/favicon.ico" />
+          <div class="row align-items-center">
+            <div class="col-12 text-center">
+              <img class="w-50" src="/assets/img/dialog.png">
             </div>
-            <div class="flex-grow-1 ms-3">
-              Saat Ini Sedang Dalam Tahap Perbaikan. <br />
-              Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
-              Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
-              Silahkan Tunggu Hingga Perbaikan Selesai, Terima Kasih.
+            <div class="col-12 my-3">
+              <h3 class="text-success mb-0">KEWAJIBAN</h3>
+              <ol class="list-group list-group-numbered">
+                <li>Dilarang berkata yang senonoh, jika terpaksa setidaknya mohon diplesetkan.</li>
+                <li>Jangan menyinggung hal-hal berbau <b>SARA</b>, <b>RASIS</b>, dan hal-hal serupa lainnya.</li>
+                <li>Jagalah ketertiban dan kerukunan antar pengguna.</li>
+                <li>Dilarang melakukan <i>SPAM</i> / menyampah.</li>
+                <li>Unggah berkas yang berbau <b>NSFW</b> harap mengaktifkan fitur <i>private</i>.</li>
+              </ol>
+              <br />
+              <h3 class="text-success mb-0">NORMA UMUM</h3>
+              <ul class="list-group list-group-numbered">
+                <li>Kami beranggapan bahwa anda sudah cukup umur (13+).</li>
+                <li>Silahkan beradaptasi secara mandiri.</li>
+                <li>Untuk pembuatan entri data baru silahkan menyesuaikan.</li>
+                <li>Mohon Kerjasamanya.</li>
+                <li>Terima kasih dan semoga harimu menyenangkan!</li>
+              </ul>
+              <br />
+              <h3 class="text-success mb-0">AKIBAT</h3>
+              <ul class="list-group list-group-numbered">
+                <li>Mengingkari kewajiban = <i>Manual BAN</i> dengan peringatan berupa teguran.</li>
+                <li>Mendapat banyak <i>Report</i> = <i>Auto BAN</i>.</li>
+              </ul>
             </div>
           </div>
         `,
         confirmText,
         cancelText
       },
-      disableClose: false
+      disableClose: false,
+      maxWidth: (this.gs.gridListBreakpoint == 3) ? '40vw' : ((this.gs.gridListBreakpoint == 2) ? '60vw' : '80vw')
     });
   }
 
