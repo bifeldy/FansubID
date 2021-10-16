@@ -190,13 +190,13 @@ export async function socketBot(io: Server, socket: Socket) {
         const decoded = jwt.JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
         if (data.user.role === Role.ADMIN || data.user.role === Role.MODERATOR) {
-          if (data.server !== null || data.server !== undefined) {
+          if (data.server !== null && data.server !== undefined) {
             serverSet(data.server);
           } else {
-            if (data.isMaintenance !== null || data.isMaintenance !== undefined) {
+            if (data.isMaintenance !== null && data.isMaintenance !== undefined) {
               serverSetMaintenance(data.isMaintenance);
             }
-            if (data.winboxOpenLink !== null || data.winboxOpenLink !== undefined) {
+            if (data.winboxOpenLink !== null && data.winboxOpenLink !== undefined) {
               serverSetWinboxOpenLink(data.winboxOpenLink);
             }
             // Other Server Config Here

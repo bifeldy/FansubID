@@ -1,33 +1,34 @@
 import { ServerInfo } from '../app/_shared/models/ServerInfo';
+import logger from './helpers/logger';
 
 let settings: ServerInfo = {
   isMaintenance: false,
   winboxOpenLink: false
 };
 
-// eslint-disable-next-line 
-export function serverGet() {
+export function serverGet(): ServerInfo {
   return settings;
 }
 
 export function serverSet(server): void {
+  logger.log('[SERVER_SET]', server);
   settings = server;
 }
 
-// eslint-disable-next-line 
-export function serverGetMaintenance() {
+export function serverGetMaintenance(): boolean {
   return settings.isMaintenance;
 }
 
 export function serverSetMaintenance(isMaintenance: boolean): void {
+  logger.log('[SERVER_SET_MAINTENANCE]', isMaintenance);
   settings.isMaintenance = isMaintenance;
 }
 
-// eslint-disable-next-line
-export function serverGetWinboxOpenLink() {
+export function serverGetWinboxOpenLink(): boolean {
   return settings.winboxOpenLink;
 }
 
 export function serverSetWinboxOpenLink(winboxOpenLink: boolean): void {
+  logger.log('[SERVER_SET_WINBOX]', winboxOpenLink);
   settings.winboxOpenLink = winboxOpenLink;
 }
