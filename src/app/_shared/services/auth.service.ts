@@ -60,6 +60,7 @@ export class AuthService {
 
   logout(): Observable<any> {
     this.gs.log('[AUTH_LOGOUT]', this.jwtToken);
+    this.ls.clear();
     return this.api.deleteData(`/logout`).pipe(map(respLogout => {
       this.removeUser();
       return respLogout;
@@ -69,7 +70,6 @@ export class AuthService {
   removeUser(): void {
     this.currentUserSubject.next(null);
     this.jwtToken = null;
-    this.ls.clear();
   }
 
 }
