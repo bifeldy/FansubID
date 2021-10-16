@@ -58,4 +58,52 @@ export class DialogService {
     return this.dialog.open(MaterialDialogBelajarComponent, dataInfo);
   }
 
+  openMaintenanceDialog(): MatDialogRef<MaterialDialogInfoComponent> {
+    return this.openInfoDialog({
+      data: {
+        title: `Informasi Perbaikan Web & Server`,
+        htmlMessage: `
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <img src="/favicon.ico" />
+            </div>
+            <div class="flex-grow-1 ms-3">
+              Saat Ini Sedang Dalam Tahap Perbaikan. <br />
+              Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
+              Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
+              Silahkan Tunggu Hingga Perbaikan Selesai, Terima Kasih.
+            </div>
+          </div>
+        `,
+        confirmText: 'Ok, Saya Mengerti!',
+        cancelText: null
+      },
+      disableClose: true
+    });
+  }
+
+  openAturanTatibDialog(confirmText = 'OK', cancelText = null): MatDialogRef<MaterialDialogInfoComponent> {
+    return this.openInfoDialog({
+      data: {
+        title: `Aturan Dan Tata Tertib Komunitas`,
+        htmlMessage: `
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <img src="/favicon.ico" />
+            </div>
+            <div class="flex-grow-1 ms-3">
+              Saat Ini Sedang Dalam Tahap Perbaikan. <br />
+              Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
+              Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
+              Silahkan Tunggu Hingga Perbaikan Selesai, Terima Kasih.
+            </div>
+          </div>
+        `,
+        confirmText,
+        cancelText
+      },
+      disableClose: false
+    });
+  }
+
 }

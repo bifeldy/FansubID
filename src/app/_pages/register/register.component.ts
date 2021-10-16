@@ -7,6 +7,7 @@ import CryptoJS from 'crypto-js';
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { BusyService } from '../../_shared/services/busy.service';
+import { DialogService } from '../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-register',
@@ -29,6 +30,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   subsUser = null;
   subsRegister = null;
   subsVerify = null;
+  subsDialog = null;
 
   constructor(
     private fb: FormBuilder,
@@ -36,7 +38,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private router: Router,
     private bs: BusyService,
     public route: ActivatedRoute,
-    public as: AuthService
+    public as: AuthService,
+    private ds: DialogService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -47,6 +50,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.subsRegister?.unsubscribe();
     this.subsVerify?.unsubscribe();
     this.subsUser?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -140,6 +144,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.captchaRef = captchaRef;
     if (captchaResponse) {
       this.fg.controls['g-recaptcha-response'].patchValue(captchaResponse);
+    }
+  }
+
+  openAturanTatib(): void {
+    if (this.fg.value.agree) {
+      this.subsDialog = this.ds.openAturanTatibDialog('Setuju', 'Tolak').afterClosed().subscribe({
+        next: re => {
+          console.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
+          this.fg.controls.agree.patchValue(re);
+          this.subsDialog.unsubscribe();
+        }
+      });
     }
   }
 

@@ -86,27 +86,7 @@ export class StatsServerService {
           server && server.isMaintenance &&
           (this.currentServerValue?.isMaintenance !== server.isMaintenance)
         ) {
-          this.subsDialog = this.ds.openInfoDialog({
-            data: {
-              title: `Informasi Perbaikan Web & Server`,
-              htmlMessage: `
-                <div class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <img src="/favicon.ico" />
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    Saat Ini Sedang Dalam Tahap Perbaikan. <br />
-                    Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
-                    Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
-                    Silahkan Tunggu Hingga Perbaikan Selesai, Terima Kasih.
-                  </div>
-                </div>
-              `,
-              confirmText: 'Ok, Saya Mengerti!',
-              cancelText: null
-            },
-            disableClose: true
-          }).afterClosed().subscribe({
+          this.subsDialog = this.ds.openMaintenanceDialog().afterClosed().subscribe({
             next: re => {
               console.log('[INFO_DIALOG_CLOSED]', re);
               this.subsDialog.unsubscribe();

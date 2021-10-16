@@ -93,8 +93,13 @@
                 <div class="form-group row py-2">
                   <div class="col offset-md-4">
                     <div class="form-check">
-                      <input id="agree" class="form-check-input" type="checkbox" formControlName="agree" />
-                      <label class="form-check-label" for="agree">Saya Sadar Dengan Apa Yang Saya Lakukan</label>
+                      <input id="agree" class="form-check-input" type="checkbox" formControlName="agree" (change)="openAturanTatib()" />
+                      <label class="form-check-label" for="agree">
+                        Saya Telah Membaca
+                        <u class="text-warning" style="cursor: pointer;">
+                          Aturan & Tata Tertib
+                        </u>
+                      </label>
                     </div>
                   </div>
                 </div>

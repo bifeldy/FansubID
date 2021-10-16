@@ -15,6 +15,7 @@ import { GlobalService } from './_shared/services/global.service';
 import { StatsServerService } from './_shared/services/stats-server.service';
 import { WinboxService } from './_shared/services/winbox.service';
 import { LocalStorageService } from './_shared/services/local-storage.service';
+import { DialogService } from './_shared/services/dialog.service';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,8 @@ import { LocalStorageService } from './_shared/services/local-storage.service';
   animations: [ onMainContentChange ]
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  localStorageAturanTatib = `${environment.siteName}_AturanTatib`;
 
   @HostListener('document:click', ['$event']) documentClicked;
   @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
@@ -37,6 +40,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   subsRouterChild = null;
   subsUrl = null;
   subsVerify = null;
+  subsDialog = null;
 
   constructor(
     public router: Router,
@@ -50,7 +54,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     public lms: LeftMenuService,
     public rps: RightPanelService,
     public ss: StatsServerService,
-    private wb: WinboxService
+    private wb: WinboxService,
+    private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -147,6 +152,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.checkStorage();
       this.documentClicked = this.onDocumentClicked;
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
+      const aturanTatib = this.ls.getItem(this.localStorageAturanTatib) === 'true';
+      if (!aturanTatib) {
+        setTimeout(() => {
+          this.subsDialog = this.ds.openAturanTatibDialog().afterClosed().subscribe({
+            next: re => {
+              console.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
+              if (typeof re === 'boolean') {
+                this.ls.setItem(this.localStorageAturanTatib, JSON.stringify(re));
+              }
+              this.subsDialog.unsubscribe();
+            }
+          });
+        }, 2000);
+      }
     }
   }
 
