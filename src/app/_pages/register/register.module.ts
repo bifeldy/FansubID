@@ -12,6 +12,7 @@ import { RegisterComponent } from './register.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: RegisterComponent
   }
 ];
