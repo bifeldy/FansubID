@@ -134,9 +134,9 @@ const routes: Routes = [
     loadChildren: () => import('./_pages/torrent/torrent.module').then(m => m.TorrentModule),
     canActivate: [AuthGuard],
     data: {
-      title: 'Web Torrent',
+      title: 'Web-SocketRTC Torrent',
       description: 'Halaman Peer-to-Peer Berbagi Berkas',
-      keywords: 'Torrent',
+      keywords: 'Web Torrent',
       roles: [Role.ADMIN, Role.FANSUBBER, Role.MODERATOR, Role.USER]
     }
   },

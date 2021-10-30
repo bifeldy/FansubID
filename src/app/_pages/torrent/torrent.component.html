@@ -1,1 +1,94 @@
-<p>// TODO :: Fitur Belum / Tidak Dapat Di Realisasikan</p>
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+  
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy-dark">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-bifeldy-dark">Web-SocketRTC Torrent</b>
+          </h2>
+        </div>
+        <div class="col-12">
+
+          <!-- Input Form Filter -->
+          <mat-form-field hintLabel="Isi Lalu Tekan 'Enter' Untuk Mencari Torrent ..." class="col-12 col-md-6 col-lg-4 px-3 mb-3" [color]="'accent'">
+            <mat-label>Unduh Dari Info Hash</mat-label>
+            <input matInput #input placeholder="Ex. 123qwe...!@#" (keyup.enter)="searchTorrent($event)" [(ngModel)]="searchQuery" />
+            <mat-icon matSuffix>cloud_download</mat-icon>
+          </mat-form-field>
+
+          <!-- Table -->
+          <div class="row mx-2">
+            <div class="col-12" style="overflow-x: auto;">
+              <table mat-table matSort multiTemplateDataRows [dataSource]="dataSource" class="bg-transparent">
+
+                <!-- Content Row -->
+                <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of torrent.tableDataColumn">
+                  <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header>
+                    <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
+                  </th>
+                  <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;">
+                    <div>
+                      <h3 class="m-0">
+                        <span>{{ row[tdc] }}</span>
+                      </h3>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- Expanded Content Row -->
+                <ng-container matColumnDef="expandedDetail">
+                  <td mat-cell *matCellDef="let row" [attr.colspan]="torrent.tableDataColumn.length">
+                    <div class="element-detail" [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+                      <div class="element-diagram">
+                        <div class="element-position">{{ row.position }}</div>
+                        <div class="element-symbol">{{ row.symbol }}</div>
+                        <div class="element-name">{{ row.name }}</div>
+                        <div class="element-weight">{{ row.weight }}</div>
+                      </div>
+                      <div class="element-description">
+                        {{ row.description }}
+                        <span class="element-description-attribution"> -- Wikipedia </span>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="torrent.tableDataColumn"></tr>
+                <tr mat-row *matRowDef="let row; columns: torrent.tableDataColumn;"
+                  class="element-row" [class.expanded-row]="expandedElement === row"
+                  (click)="expandedElement = expandedElement === row ? null : row"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center align-items-center p-0" [attr.colspan]="torrent.tableDataColumn.length"
+                    style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+                    <div class="row align-items-center h-100">
+                      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+                        <h3 class="m-0">
+                          Tidak Ada Data ¯\_(ツ)_/¯
+                        </h3>
+                        <h3 class="m-0">{{ input.value ? '"' + input.value + '"' : ''  }}</h3>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<button (click)="startSeed()" mat-fab color="warn" class="me-3 mb-5 fab-button" matTooltip="Seed Berkas"
+  style="position: fixed; bottom: 0; right: 0;">
+  <mat-icon>cloud_upload</mat-icon>
+</button>

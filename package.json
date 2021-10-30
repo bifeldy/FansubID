@@ -87,6 +87,7 @@
     "typeorm": "^0.2.38",
     "video.js": "^7.15.4",
     "wanakana": "^4.0.2",
+    "webtorrent": "^1.5.8",
     "winbox": "^0.2.0",
     "ytdl-core": "^4.9.1",
     "zone.js": "~0.11.4"
