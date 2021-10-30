@@ -3,7 +3,8 @@ import logger from './helpers/logger';
 
 let settings: ServerInfo = {
   isMaintenance: false,
-  winboxOpenLink: false
+  winboxOpenLink: false,
+  discordNotification: true
 };
 
 export function serverGet(): ServerInfo {
@@ -11,7 +12,7 @@ export function serverGet(): ServerInfo {
 }
 
 export function serverSet(server): void {
-  logger.log('[SERVER_SET]', server);
+  logger.log('[SERVER_SET] 👀', server);
   settings = server;
 }
 
@@ -20,7 +21,7 @@ export function serverGetMaintenance(): boolean {
 }
 
 export function serverSetMaintenance(isMaintenance: boolean): void {
-  logger.log('[SERVER_SET_MAINTENANCE]', isMaintenance);
+  logger.log('[SERVER_SET_MAINTENANCE] 👀', isMaintenance);
   settings.isMaintenance = isMaintenance;
 }
 
@@ -29,6 +30,15 @@ export function serverGetWinboxOpenLink(): boolean {
 }
 
 export function serverSetWinboxOpenLink(winboxOpenLink: boolean): void {
-  logger.log('[SERVER_SET_WINBOX]', winboxOpenLink);
+  logger.log('[SERVER_SET_WINBOX] 👀', winboxOpenLink);
   settings.winboxOpenLink = winboxOpenLink;
+}
+
+export function serverGetDiscordNotification(): boolean {
+  return settings.discordNotification;
+}
+
+export function serverSetDiscordNotification(discordNotification: boolean): void {
+  logger.log('[SERVER_SET_DISCORD] 👀', discordNotification);
+  settings.discordNotification = discordNotification;
 }

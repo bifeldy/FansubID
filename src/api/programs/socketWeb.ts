@@ -6,7 +6,7 @@ import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/mod
 import { Role } from '../../app/_shared/models/Role';
 
 // Server Settings
-import { serverGet, serverSet, serverSetMaintenance, serverSetWinboxOpenLink } from '../settings';
+import { serverGet, serverSet, serverSetDiscordNotification, serverSetMaintenance, serverSetWinboxOpenLink } from '../settings';
 
 // Helper
 import jwt from '../helpers/jwt';
@@ -198,6 +198,9 @@ export async function socketBot(io: Server, socket: Socket) {
             }
             if (data.winboxOpenLink !== null && data.winboxOpenLink !== undefined) {
               serverSetWinboxOpenLink(data.winboxOpenLink);
+            }
+            if (data.discordNotification !== null && data.discordNotification !== undefined) {
+              serverSetDiscordNotification(data.discordNotification);
             }
             // Other Server Config Here
           }

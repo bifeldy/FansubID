@@ -38,7 +38,7 @@ import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/programs/
 import { environment } from './src/environments/server/environment';
 
 // Server Settings
-import { serverGet } from './src/api/settings';
+import { serverGet, serverGetDiscordNotification } from './src/api/settings';
 
 // Model
 import { ApiKey } from './src/api/entities/ApiKey';
@@ -218,6 +218,18 @@ export function app(): http.Server {
   expressApp.use(async (req: UserRequest, res, next) => {
     req.io = io;
     req.bot = environment.production ? (bot.channels.cache.get(environment.discordBotChannelEventId) as TextChannel) : null;
+    if (req.bot) {
+      const botStatus = serverGetDiscordNotification();
+      let oldFunction = req.bot.send;
+      req.bot.send = function () {
+        if (botStatus) {
+          return oldFunction.apply(oldFunction, arguments);
+        }
+        return new Promise((resolve, reject) => {
+          reject(`[DISCORD_BOT_STATUS] 💢 ${botStatus}`);
+        });
+      }
+    }
     return next();
   });
 
