@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
@@ -30,6 +31,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
   };
 
   constructor(
+    private router: Router,
     private bs: BusyService,
     private ds: DialogService,
     public gs: GlobalService,
@@ -151,6 +153,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
 
   openBan(data): void {
     this.gs.log('[BANNED_LIST_CLICK_BANNED]', data);
+    this.router.navigateByUrl(`/user/${data.Korban}`);
   }
 
 }

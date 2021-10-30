@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
@@ -39,6 +40,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
   };
 
   constructor(
+    private router: Router,
     private bs: BusyService,
     private ds: DialogService,
     public as: AuthService,
@@ -186,6 +188,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
 
   openUser(data): void {
     this.gs.log('[USER_LIST_CLICK_USER]', data);
+    this.router.navigateByUrl(`/user/${data.Username}`);
   }
 
 }
