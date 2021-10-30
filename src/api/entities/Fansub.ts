@@ -48,4 +48,10 @@ export class Fansub {
   @ManyToOne(type => User)
   // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   user_: User;
+
+  // TODO :: Fansub Members
+  // @ManyToMany(type => User)
+  // @JoinTable()
+  // // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
+  // members_: User[];
 }

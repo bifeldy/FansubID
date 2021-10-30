@@ -33,7 +33,7 @@ export class AdminService {
     },
     {
       url: 'fansub-member',
-      name: 'Fansub Lead & Staff',
+      name: 'Fansub Members',
       image_url: null,
       icon: 'stars',
       deskripsi: 'Keanggotaan Fansub'
