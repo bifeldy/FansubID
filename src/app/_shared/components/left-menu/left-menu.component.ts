@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { GlobalService } from '../../services/global.service';
 import { BusyService } from '../../services/busy.service';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { DialogService } from '../../services/dialog.service';
 
 import User from '../../models/User';
 import { Menu } from '../../models/Menu';
@@ -24,12 +25,14 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   subsUser = null;
   subsLogout = null;
+  subsDialog = null;
 
   constructor(
     private router: Router,
     private lms: LeftMenuService,
     private as: AuthService,
     public gs: GlobalService,
+    private ds: DialogService,
     private bs: BusyService,
     private ls: LocalStorageService
   ) {
@@ -53,6 +56,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsUser?.unsubscribe();
     this.subsLogout?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -98,6 +102,31 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   openDocumentation(): void {
     this.onMouseHoverOut();
     this.router.navigateByUrl('/documentation');
+  }
+
+  openWebTorrent(): void {
+    this.onMouseHoverOut();
+    if (!this.gs.isDesktop) {
+      this.subsDialog = this.ds.openInfoDialog({
+        data: {
+          title: `.: Web-Torrent :.`,
+          htmlMessage: 'Fitur ini tergolong cukup berat karena dikhususkan untuk pengguna desktop, akan ada kemungkinan juga tampilan menjadi berantakan, yakin ingin melanjutkan ?',
+          confirmText: 'Ya, Lanjutkan',
+          cancelText: 'Tidak, Batal'
+        },
+        disableClose: false
+      }).afterClosed().subscribe({
+        next: re => {
+          this.gs.log('[INFO_DIALOG_CLOSED]', re);
+          if (re === true) {
+            this.router.navigateByUrl('/torrent');
+          }
+          this.subsDialog.unsubscribe();
+        }
+      });
+    } else {
+      this.router.navigateByUrl('/torrent');
+    }
   }
 
   toggleDebugLog($event): void {

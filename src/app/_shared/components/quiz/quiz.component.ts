@@ -89,7 +89,7 @@ export class QuizComponent implements OnInit, OnDestroy {
         disableClose: false
       }).afterClosed().subscribe({
         next: re => {
-          console.log('[EDICT_DIALOG_CLOSED]', re);
+          this.gs.log('[EDICT_DIALOG_CLOSED]', re);
           this.subsDialog.unsubscribe();
         }
       });

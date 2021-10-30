@@ -88,7 +88,7 @@ export class StatsServerService {
         ) {
           this.subsDialog = this.ds.openMaintenanceDialog().afterClosed().subscribe({
             next: re => {
-              console.log('[INFO_DIALOG_CLOSED]', re);
+              this.gs.log('[INFO_DIALOG_CLOSED]', re);
               this.subsDialog.unsubscribe();
             }
           });

@@ -107,7 +107,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
       disableClose: false
     }).afterClosed().subscribe({
       next: re => {
-        console.log('[INFO_DIALOG_CLOSED]', re);
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
           this.subsBannedDelete = this.adm.unBan(data.id).subscribe({

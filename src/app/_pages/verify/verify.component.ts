@@ -94,7 +94,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
           disableClose: true
         }).afterClosed().subscribe({
           next: re => {
-            console.log('[INFO_DIALOG_CLOSED]', re);
+            this.gs.log('[INFO_DIALOG_CLOSED]', re);
             if (re === true) {
               this.as.removeUser();
               this.router.navigateByUrl('/login');
@@ -134,7 +134,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
       disableClose: true
     }).afterClosed().subscribe({
       next: re => {
-        console.log('[INFO_DIALOG_CLOSED]', re);
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.openVerifyDiscordUrl();
         } else if (re === false) {

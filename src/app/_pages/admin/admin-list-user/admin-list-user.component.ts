@@ -139,7 +139,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
       disableClose: false
     }).afterClosed().subscribe({
       next: re => {
-        console.log('[BAN_DIALOG_CLOSED]', re);
+        this.gs.log('[BAN_DIALOG_CLOSED]', re);
         if (re) {
           this.bs.busy();
           this.subsUserDelete = this.adm.ban({

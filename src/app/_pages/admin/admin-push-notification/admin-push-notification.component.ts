@@ -166,7 +166,7 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
       disableClose: false
     }).afterClosed().subscribe({
       next: re => {
-        console.log('[INFO_DIALOG_CLOSED]', re);
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
           this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe({

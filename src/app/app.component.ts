@@ -67,6 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subsRouterChild?.unsubscribe();
     this.subsUrl?.unsubscribe();
     this.subsVerify?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -157,7 +158,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         setTimeout(() => {
           this.subsDialog = this.ds.openAturanTatibDialog().afterClosed().subscribe({
             next: re => {
-              console.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
+              this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
               if (typeof re === 'boolean') {
                 this.ls.setItem(this.localStorageAturanTatib, JSON.stringify(re));
               }

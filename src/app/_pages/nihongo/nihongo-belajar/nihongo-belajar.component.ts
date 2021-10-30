@@ -167,6 +167,11 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         )
       },
       disableClose: false
+    }).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[BELAJAR_DMAK_DIALOG_CLOSED]', re);
+        this.subsDialog.unsubscribe();
+      }
     });
   }
 
@@ -242,7 +247,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
           disableClose: true
         }).afterClosed().subscribe({
           next: re => {
-            console.log('[BELAJAR_DATASET_DIALOG_CLOSED]', re);
+            this.gs.log('[BELAJAR_DATASET_DIALOG_CLOSED]', re);
             this.getData();
             this.subsDialog.unsubscribe();
           }
