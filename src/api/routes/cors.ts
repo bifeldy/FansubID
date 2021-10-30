@@ -192,7 +192,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Cors API :: Gagal Mendapatkan All Cors 😪`,
+      info: '🙄 400 - Cors API :: Gagal Menambah Cors Baru 😪',
       result: {
         message: 'Data Tidak Lengkap!'
       }
