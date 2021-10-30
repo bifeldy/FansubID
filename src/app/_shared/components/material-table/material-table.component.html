@@ -52,7 +52,7 @@
       </div>
     </td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>  
+  <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>
   <tr mat-row matRipple [matRippleDisabled]="gs.isDesktop"
     *matRowDef="let row; columns: tableDataColumn;" (click)="onRowClicked(this.row)"></tr>
   <tr class="mat-row" *matNoDataRow matRipple [matRippleDisabled]="gs.isDesktop">
