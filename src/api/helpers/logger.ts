@@ -25,8 +25,8 @@ async function reqHeaderBodyCleanUp(req: UserRequest, res: Response, next: NextF
       delete req.body[propName];
     }
   }
-  log('[REQUEST_HEADER] 🏹 ', req.headers);
-  log('[REQUEST_BODY] 🏹 ', req.body);
+  log('[REQUEST_HEADER] 🏹', req.headers);
+  log('[REQUEST_BODY] 🏹', req.body);
   return next();
 }
 
