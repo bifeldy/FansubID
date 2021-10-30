@@ -22,6 +22,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
 
   subsUserGet = null;
   subsUserDelete = null;
+  subsPromote = null;
   subsDialog = null;
   subsBannedGet = null;
   subsUser = null;
@@ -63,6 +64,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsUserGet?.unsubscribe();
     this.subsUserDelete?.unsubscribe();
+    this.subsPromote?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsBannedGet?.unsubscribe();
     this.subsUser?.unsubscribe();
@@ -87,6 +89,13 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
           next: result => {
             this.gs.log('[BANNED_LIST_SUCCESS]', res);
             const userDataRow = [];
+            let excludedRole = [];
+            if (this.currentUser.role === Role.ADMIN) {
+              excludedRole = [Role.ADMIN];
+            }
+            if (this.currentUser.role === Role.MODERATOR) {
+              excludedRole = [Role.ADMIN, Role.MODERATOR];
+            }
             for (const r of res.results) {
               userDataRow.push({
                 Id: r.id,
@@ -99,15 +108,14 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 Aksi: (
                   (Object.keys(result.results[r.id]).length > 0) ||
                   (r.id == this.currentUser.id) ||
-                  (r.role.includesOneOf([Role.ADMIN, Role.MODERATOR]))
-                ) ? [] : [{
-                  type: 'button',
-                  icon: 'lock',
-                  name: 'BAN',
-                  id: r.id,
-                  username: r.username,
-                  email: r.email
-                }]
+                  (r.role.includesOneOf(excludedRole))
+                ) ? [] : [
+                  { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username, email: r.email },
+                  { type: 'button', icon: 'handyman', name: 'ADMIN', id: r.id, username: r.username, email: r.email },
+                  { type: 'button', icon: 'security', name: 'MODERATOR', id: r.id, username: r.username, email: r.email },
+                  { type: 'button', icon: 'rate_review', name: 'FANSUBBER', id: r.id, username: r.username, email: r.email },
+                  { type: 'button', icon: 'person', name: 'USER', id: r.id, username: r.username, email: r.email }
+                ]
               });
             }
             this.userData.row = userDataRow;
@@ -127,12 +135,21 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     });
   }
 
+  action(data): void {
+    this.gs.log('[USER_LIST_CLICK_AKSI]', data);
+    if (data.name === 'BAN') {
+      this.ban(data);
+    } else {
+      this.promote(data);
+    }
+  }
+
   ban(data): void {
     this.gs.log('[USER_LIST_CLICK_BAN]', data);
     this.subsDialog = this.ds.openBanDialog({
       data: {
         title: `BAN Akun -- '${data.username}' :: '${data.email}'`,
-        reason: 'Manually Banned By Admin / Moderator',
+        reason: `Manually Banned By ${this.currentUser.role}`,
         confirmText: 'Ya, BAN Akun',
         cancelText: 'Tidak, Batal'
       },
@@ -153,6 +170,44 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
             },
             error: err => {
               this.gs.log('[USER_LIST_CLICK_BAN_ERROR]', err);
+              this.bs.idle();
+              this.getUser();
+            }
+          });
+        } else if (re === false) {
+          this.getUser();
+        }
+        this.subsDialog.unsubscribe();
+      }
+    });
+  }
+
+  promote(data): void {
+    this.gs.log('[USER_LIST_CLICK_PROMOTE]', data);
+    this.subsDialog = this.ds.openInfoDialog({
+      data: {
+        title: `Promosikan Akun -- '${data.username}' :: '${data.email}'`,
+        htmlMessage: 'Apakah Yakin Dan Akun Telah Direview Sebelum Dipromosikan ?',
+        confirmText: `Ya, Jadikan ${data.name}`,
+        cancelText: 'Tidak, Batal'
+      },
+      disableClose: false
+    }).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.bs.busy();
+          this.subsPromote = this.adm.promote({
+            id: data.id,
+            role: data.name
+          }).subscribe({
+            next: res => {
+              this.gs.log('[USER_LIST_CLICK_PROMOTE_SUCCESS]', res);
+              this.bs.idle();
+              this.getUser();
+            },
+            error: err => {
+              this.gs.log('[USER_LIST_CLICK_PROMOTE_ERROR]', err);
               this.bs.idle();
               this.getUser();
             }

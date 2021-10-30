@@ -106,14 +106,12 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
         });
         for (const b of banneds) {
           if ('user_' in b && b.user_) {
-            delete b.user_.role;
             delete b.user_.password;
             delete b.user_.session_token;
             delete b.user_.created_at;
             delete b.user_.updated_at;
           }
           if ('banned_by_' in b && b.banned_by_) {
-            delete b.banned_by_.role;
             delete b.banned_by_.password;
             delete b.banned_by_.session_token;
             delete b.banned_by_.created_at;
@@ -151,20 +149,26 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
   try {
     if ('reason' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
       if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+        let excludedRole = [req.user.role];
+        if (req.user.role === Role.ADMIN) {
+          excludedRole = [Role.ADMIN];
+        } else {
+          excludedRole = [Role.ADMIN, Role.MODERATOR];
+        }
         const userRepo = getRepository(User);
         const user =  await userRepo.findOneOrFail({
           where: [
             {
               id: Equal(req.body.id),
-              role: Not(In([Role.ADMIN, Role.MODERATOR]))
+              role: Not(In(excludedRole))
             },
             {
               username: ILike(req.body.username),
-              role: Not(In([Role.ADMIN, Role.MODERATOR]))
+              role: Not(In(excludedRole))
             },
             {
               email: ILike(req.body.email),
-              role: Not(In([Role.ADMIN, Role.MODERATOR]))
+              role: Not(In(excludedRole))
             }
           ]
         });
@@ -231,12 +235,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
     }
   } catch (error) {
     console.error(error);
-    return res.status(400).json({
-      info: `🙄 400 - Banned API :: Gagal BAN User 😪`,
-      result: {
-        message: 'Pengguna Tidak Ditemukan!'
-      }
-    });
+    return next(createError(404));
   }
 });
 
@@ -244,10 +243,19 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      let excludedRole = [req.user.role];
+      if (req.user.role === Role.MODERATOR) {
+        excludedRole = [Role.ADMIN, Role.MODERATOR];
+      }
       const bannedRepo = getRepository(Banned);
       const banned = await bannedRepo.findOneOrFail({
         where: [
-          { id: req.params.id }
+          {
+            id: req.params.id,
+            user_: {
+              role: Not(In(excludedRole))
+            }
+          }
         ],
         relations: ['user_', 'banned_by_']
       });
@@ -274,7 +282,7 @@ router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response,
       return res.status(401).json({
         info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
         result: {
-          message: 'Khusus Admin / Moderator!'
+          message: 'Membutuhkan Role Yang Lebih Tinggi'
         }
       });
     }

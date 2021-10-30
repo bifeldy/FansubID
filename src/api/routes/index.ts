@@ -1,6 +1,6 @@
 import { Router, Response, NextFunction } from 'express';
 
-import { getRepository, Equal, ILike, In } from 'typeorm';
+import { getRepository, Equal, ILike, In, Not } from 'typeorm';
 
 import createError from 'http-errors';
 import request from 'postman-request';
@@ -8,6 +8,7 @@ import multer from 'multer';
 import interceptor from 'express-interceptor';
 import rateLimit from 'express-rate-limit';
 
+import { Role } from '../../app/_shared/models/Role';
 import { UserRequest } from '../models/UserRequest';
 
 import { environment } from '../../environments/server/environment';
@@ -249,6 +250,16 @@ router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest
   });
 });
 
+// // TODO :: POST `/api/reset-password`
+// router.post('/reset-password', auth.resetPasswordModule, (req: UserRequest, res: Response, next) => {
+//   return res.status(200).json({
+//     info: '😚 200 - Reset Password API :: Berhasil Reset Password Yeay 🤩',
+//     result: {
+//       jwtToken: req.user.session_token
+//     }
+//   });
+// });
+
 // PATCH `/api/verify` -- Verify Login Session
 router.patch('/verify', auth.isAuthorized, (req: UserRequest, res: Response, next) => {
   // eslint-disable-next-line max-len
@@ -261,6 +272,98 @@ router.patch('/verify', auth.isAuthorized, (req: UserRequest, res: Response, nex
     result: req.user,
     jwtToken: token
   });
+});
+
+// POST `/api/promote`
+router.post('/promote', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
+  try {
+    if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
+      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+        let excludedRole = [];
+        if (req.user.role === Role.ADMIN) {
+          excludedRole = [Role.ADMIN];
+        } else {
+          excludedRole = [Role.ADMIN, Role.MODERATOR];
+        }
+        if (req.user.role != Role.ADMIN && excludedRole.includes(req.body.role)) {
+          return res.status(400).json({
+            info: '🙄 400 - Promote API :: Authorisasi Pengguna Gagal 😪',
+            result: {
+              message: 'Membutuhkan Role Yang Lebih Tinggi'
+            }
+          });
+        }
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOneOrFail({
+          where: [
+            {
+              id: Equal(req.body.id),
+              role: Not(In(excludedRole))
+            },
+            {
+              username: ILike(req.body.username),
+              role: Not(In(excludedRole))
+            },
+            {
+              email: ILike(req.body.email),
+              role: Not(In(excludedRole))
+            }
+          ],
+          relations: ['kartu_tanda_penduduk_', 'profile_']
+        });
+        if (user.verified) {
+          user.role = req.body.role;
+          const resUserSave = await userRepo.save(user);
+          req.bot?.send(
+            new MessageEmbed()
+            .setColor('#69f0ae')
+            .setTitle(resUserSave.kartu_tanda_penduduk_.nama)
+            .setURL(`${environment.baseUrl}/user/${resUserSave.username}`)
+            .setAuthor(`Hikki - Promosi Menjadi ${resUserSave.role}`, `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+            .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, ' ').trim())
+            .setThumbnail(resUserSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resUserSave.image_url)
+            .setTimestamp(resUserSave.updated_at)
+            .setFooter(
+              `Diangkat promosi oleh :: ${req.user.username}`,
+              req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
+            )
+          ).catch(console.error);
+          delete resUserSave.password;
+          delete resUserSave.session_token;
+          delete resUserSave.kartu_tanda_penduduk_;
+          delete resUserSave.profile_;
+          return res.status(200).json({
+            info: `😅 200 - Promote API :: Berhasil Mempromosikan User 🤣`,
+            result: resUserSave
+          });
+        } else {
+          return res.status(400).json({
+            info: `🙄 400 - Promote API :: Gagal Mempromosikan User 😪`,
+            result: {
+              message: 'Akun Pengguna Belum Diverifikasi!'
+            }
+          });
+        }
+      } else {
+        return res.status(401).json({
+          info: '🙄 401 - Promote API :: Authorisasi Pengguna Gagal 😪',
+          result: {
+            message: 'Khusus Admin / Moderator!'
+          }
+        });
+      }
+    } else {
+      throw new Error('Data Tidak Lengkap');
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({
+      info: `🙄 400 - Promote API :: Gagal Mempromosikan User 😪`,
+      result: {
+        message: 'Data Tidak Lengkap'
+      }
+    });
+  }
 });
 
 // POST `/api/image`
