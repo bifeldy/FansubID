@@ -19,8 +19,8 @@
 
             <!-- Input Form Filter -->
             <mat-form-field hintLabel="Isi Lalu Tekan 'Enter' Untuk Mencari Torrent ..." class="col-12 col-md-6 col-lg-4 px-3 mb-3" [color]="'accent'">
-              <mat-label>Unduh Dari Info Hash</mat-label>
-              <input matInput #input placeholder="Ex. 123qwe...!@#" (keyup.enter)="downloadFiles($event)" [(ngModel)]="magnetHash" [disabled]="isProcessing" />
+              <mat-label>Unduh Dari Info Hash / Magnet URI</mat-label>
+              <input matInput #input placeholder="Ex. magnet:123qwe...!@#" (keyup.enter)="downloadFiles($event)" [(ngModel)]="magnetHash" [disabled]="isProcessing" />
               <mat-icon matSuffix>cloud_download</mat-icon>
               <mat-progress-bar color="warn" mode="indeterminate" *ngIf="isProcessing"></mat-progress-bar>
             </mat-form-field>

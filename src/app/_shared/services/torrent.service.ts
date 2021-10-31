@@ -39,7 +39,7 @@ export class TorrentService {
 
   torrentOptions: TorrentOptions = {
     announce: this.trackerAnnounce,
-    maxWebConns: 8
+    maxWebConns: 16
   };
 
   public client: Instance = null;
@@ -49,7 +49,7 @@ export class TorrentService {
 
   error = null;
   errorTimeoutId = null;
-  errorTimeoutCooldown = 12345;
+  errorTimeoutCooldown = 180000;                      // 3 Minutes
 
   constructor(
     public gs: GlobalService,
