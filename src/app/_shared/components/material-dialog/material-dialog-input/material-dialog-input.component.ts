@@ -3,17 +3,17 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
 
-import { DialogBanData } from '../../../models/Dialog';
+import { DialogInputData } from '../../../models/Dialog';
 
 @Component({
-  selector: 'app-material-dialog-ban',
-  templateUrl: './material-dialog-ban.component.html',
-  styleUrls: ['./material-dialog-ban.component.css']
+  selector: 'app-material-dialog-input',
+  templateUrl: './material-dialog-input.component.html',
+  styleUrls: ['./material-dialog-input.component.css']
 })
-export class MaterialDialogBanComponent implements OnInit {
+export class MaterialDialogInputComponent implements OnInit {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogBanData,
+    @Inject(MAT_DIALOG_DATA) public data: DialogInputData,
     public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {

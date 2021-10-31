@@ -11,7 +11,7 @@ import { MaterialDialogInfoComponent } from './material-dialog-info/material-dia
 import { MaterialDialogDmakComponent } from './material-dialog-dmak/material-dialog-dmak.component';
 import { MaterialDialogEdictComponent } from './material-dialog-edict/material-dialog-edict.component';
 import { MaterialDialogBelajarComponent } from './material-dialog-belajar/material-dialog-belajar.component';
-import { MaterialDialogBanComponent } from './material-dialog-ban/material-dialog-ban.component';
+import { MaterialDialogInputComponent } from './material-dialog-input/material-dialog-input.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { MaterialDialogBanComponent } from './material-dialog-ban/material-dialo
     MaterialDialogDmakComponent,
     MaterialDialogEdictComponent,
     MaterialDialogBelajarComponent,
-    MaterialDialogBanComponent
+    MaterialDialogInputComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +33,8 @@ import { MaterialDialogBanComponent } from './material-dialog-ban/material-dialo
     MaterialDialogInfoComponent,
     MaterialDialogDmakComponent,
     MaterialDialogEdictComponent,
-    MaterialDialogBelajarComponent
+    MaterialDialogBelajarComponent,
+    MaterialDialogInputComponent
   ]
 })
 export class MaterialDialogModule { }

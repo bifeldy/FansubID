@@ -15,9 +15,9 @@ export interface DialogNihongoData {
   cancelText?: string;
 }
 
-export interface DialogBanData {
+export interface DialogInputData {
   title?: string;
-  reason?: string;
+  input: any;
   confirmText?: string;
   cancelText?: string;
 }

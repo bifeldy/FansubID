@@ -35,12 +35,11 @@ import { FooterModule } from './_shared/components/footer/footer.module';
 import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
 import { MaterialDialogModule } from './_shared/components/material-dialog/material-dialog.module';
 
-import { ExternalLinkDirective } from './_shared/directives/external-link.directive';
+import { CustomDirectivesModule } from './_shared/directives/custom-directive.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ExternalLinkDirective
+    AppComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -52,6 +51,7 @@ import { ExternalLinkDirective } from './_shared/directives/external-link.direct
     FooterModule,
     TransferHttpCacheModule,
     ReactiveFormsModule,
+    CustomDirectivesModule,
     HttpClientModule,
     SharedMaterialModule,
     MaterialDialogModule,

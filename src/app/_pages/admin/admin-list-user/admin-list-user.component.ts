@@ -146,22 +146,27 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
 
   ban(data): void {
     this.gs.log('[USER_LIST_CLICK_BAN]', data);
-    this.subsDialog = this.ds.openBanDialog({
+    this.subsDialog = this.ds.openInputDialog({
       data: {
         title: `BAN Akun -- '${data.username}' :: '${data.email}'`,
-        reason: `Manually Banned By ${this.currentUser.role}`,
+        input: {
+          reason: {
+            inputLabel: 'Alasan',
+            inputText: `Manually Banned By ${this.currentUser.role}`,
+          }
+        },
         confirmText: 'Ya, BAN Akun',
         cancelText: 'Tidak, Batal'
       },
       disableClose: false
     }).afterClosed().subscribe({
       next: re => {
-        this.gs.log('[BAN_DIALOG_CLOSED]', re);
+        this.gs.log('[INPUT_DIALOG_CLOSED]', re);
         if (re) {
           this.bs.busy();
           this.subsUserDelete = this.adm.ban({
             id: data.id,
-            reason: re
+            reason: re.reason.inputText
           }).subscribe({
             next: res => {
               this.gs.log('[USER_LIST_CLICK_BAN_SUCCESS]', res);
@@ -174,7 +179,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
               this.getUser();
             }
           });
-        } else if (re === false) {
+        } else {
           this.getUser();
         }
         this.subsDialog.unsubscribe();

@@ -7,7 +7,7 @@ import { MaterialDialogInfoComponent } from '../components/material-dialog/mater
 import { MaterialDialogDmakComponent } from '../components/material-dialog/material-dialog-dmak/material-dialog-dmak.component';
 import { MaterialDialogEdictComponent } from '../components/material-dialog/material-dialog-edict/material-dialog-edict.component';
 import { MaterialDialogBelajarComponent } from '../components/material-dialog/material-dialog-belajar/material-dialog-belajar.component';
-import { MaterialDialogBanComponent } from '../components/material-dialog/material-dialog-ban/material-dialog-ban.component';
+import { MaterialDialogInputComponent } from '../components/material-dialog/material-dialog-input/material-dialog-input.component';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +23,11 @@ export class DialogService {
     }
   }
 
-  openBanDialog(dataInfo: MatDialogConfig): MatDialogRef<MaterialDialogBanComponent> {
+  openInputDialog(dataInfo: MatDialogConfig): MatDialogRef<MaterialDialogInputComponent> {
     if (!('disableClose' in dataInfo)) {
       dataInfo.disableClose = true;
     }
-    return this.dialog.open(MaterialDialogBanComponent, dataInfo);
+    return this.dialog.open(MaterialDialogInputComponent, dataInfo);
   }
 
   openInfoDialog(dataInfo: MatDialogConfig): MatDialogRef<MaterialDialogInfoComponent> {
