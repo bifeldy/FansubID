@@ -23,6 +23,7 @@ export class TorrentService {
   ];
 
   clientOptions: Options = {
+    maxConns: 64,
     tracker: {
       announce: this.trackerAnnounce,
       rtcConfig: {
@@ -51,7 +52,7 @@ export class TorrentService {
 
   torrentOptions: TorrentOptions = {
     announce: this.trackerAnnounce,
-    maxWebConns: 16
+    maxWebConns: 8
   };
 
   public client: Instance = null;
