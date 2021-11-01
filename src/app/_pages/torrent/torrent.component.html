@@ -68,11 +68,13 @@
                       <div class="element-detail" [@detailExpand]="row == torrent.expandedRow ? 'expanded' : 'collapsed'">
                         <div class="py-3 row">
                           <div class="col-2">
-                            <div class="py-3 text-center">
-                              // TODO :: Peers Graph
-                              <br />
-                              // TODO :: Pause & Resume
-                            </div>
+                            <!-- 
+                              <div class="py-3 text-center">
+                                // TODO :: Peers Graph
+                                <br />
+                                // TODO :: Pause & Resume
+                              </div>
+                            -->
                             <button class="w-100" mat-stroked-button color="accent" (click)="removeTorrent(row.infoHash)">
                               <mat-icon class="me-1">delete_outline</mat-icon>
                               Delete / Remove Torrent

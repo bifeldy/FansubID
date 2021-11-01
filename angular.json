@@ -65,7 +65,8 @@
               "chart.js",
               "lodash",
               "file-saver",
-              "socket.io-client"
+              "socket.io-client",
+              "webtorrent"
             ],
             "vendorChunk": true,
             "extractLicenses": false,
