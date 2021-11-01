@@ -22,17 +22,29 @@ export class TorrentService {
     'wss://tracker.hikki.id'
   ];
 
-  rtcIceServers = [
-    { urls: 'stun:23.21.150.121' },                 // PeerJS default stun server
-    { urls: 'stun:stun.l.google.com:19305' },       // Google public stun server
-    { urls: 'stun:stun1.l.google.com:19305' }       // Google public stun server
-  ];
-
   clientOptions: Options = {
     tracker: {
       announce: this.trackerAnnounce,
       rtcConfig: {
-        iceServers: this.rtcIceServers
+        iceServers: [
+          {
+            urls: [
+              'stun:relay.socket.dev:443',
+              'stun:stun.l.google.com:19302',
+              'stun:stun.l.google.com:19305',
+            ]
+          },
+          {
+            urls: [
+              'turn:relay.socket.dev:443?transport=udp',
+              'turn:relay.socket.dev:443?transport=tcp',
+              'turns:relay.socket.dev:443?transport=udp',
+              'turns:relay.socket.dev:443?transport=tcp',
+            ],
+            username: "relay.socket.dev",
+            credential: "tears-whiplash-overall-diction"
+          }
+        ]
       }
     }
   };
@@ -49,7 +61,7 @@ export class TorrentService {
 
   error = null;
   errorTimeoutId = null;
-  errorTimeoutCooldown = 180000;                      // 3 Minutes
+  errorTimeoutCooldown = 60000;
 
   constructor(
     public gs: GlobalService,
@@ -60,7 +72,7 @@ export class TorrentService {
       this.handleClient();
     }
   }
-  
+
   handleClient(): void {
     this.client.on('torrent', torrent => {
       this.gs.log('[TORRENT_CLIENT_ADD_TORRENT_FILE]', torrent);
