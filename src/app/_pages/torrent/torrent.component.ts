@@ -3,6 +3,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
+import { ToastrService } from 'ngx-toastr';
 import { saveAs } from 'file-saver';
 
 import User from '../../_shared/models/User';
@@ -57,6 +58,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
     public gs: GlobalService,
     public as: AuthService,
     public torrent: TorrentService,
+    private toast: ToastrService,
     private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
@@ -99,7 +101,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.gs.log('[TORRENT_FILE_STILL_DOWNLOADING]');
+      this.toast.info('Berkas Sedang Dalam Proses Unduhan!', 'Yah, File Belum Siap!');
     }
   }
 

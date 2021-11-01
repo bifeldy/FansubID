@@ -278,7 +278,6 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   }
 
   onFansubLoadNextPage(): void {
-    this.gs.log('[DORAMA_DETAIL_LOAD_MORE_FANSUB]');
     if (!this.fansubPageFinished) {
       this.fansubPage++;
       this.getFansubDorama();

@@ -237,7 +237,6 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   onFansubLoadNextPage(): void {
-    this.gs.log('[ANIME_DETAIL_LOAD_MORE_FANSUB]');
     if (!this.fansubPageFinished) {
       this.fansubPage++;
       this.getFansubAnime();

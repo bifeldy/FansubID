@@ -274,7 +274,6 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   onAnimeLoadNextPage(): void {
-    this.gs.log('[FANSUB_DETAIL_LOAD_MORE_ANIME]');
     if (!this.animePageFinished) {
       this.animePage++;
       this.getAnimeFansub();
@@ -282,7 +281,6 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   onDoramaLoadNextPage(): void {
-    this.gs.log('[FANSUB_DETAIL_LOAD_MORE_DORAMA]');
     if (!this.doramaPageFinished) {
       this.doramaPage++;
       this.getDoramaFansub();
