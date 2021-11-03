@@ -267,7 +267,7 @@ export class TorrentService {
     });
   }
 
-  removeTorrent(torrentId, callback): void {
+  removeTorrent(torrentId, callback, saveLocalStorage = true): void {
     this.tableDataRow = this.tableDataRow.filter(el => el.infoHash !== torrentId);
     this.client.remove(torrentId, {
       destroyStore: true
@@ -277,7 +277,9 @@ export class TorrentService {
       }
       delete this.torrentsQueue[torrentId];
       delete this.torrentsGraph[torrentId];
-      this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+      if (saveLocalStorage) {
+        this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+      }
       if (callback) {
         callback(err);
       }
@@ -309,6 +311,16 @@ export class TorrentService {
           callback(torrent);
         }
       }
+    }
+  }
+
+  removeAll(): void {
+    for (const t of this.client.torrents) {
+      this.removeTorrent(t.infoHash, error => {
+        if (!error) {
+          this.gs.log('[TORRENT_FILE_REMOVE_SUCCESS]', t.infoHash);
+        }
+      }, false);
     }
   }
 

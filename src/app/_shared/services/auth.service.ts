@@ -8,6 +8,7 @@ import User from '../models/User';
 import { GlobalService } from './global.service';
 import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
+// import { TorrentService } from './torrent.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -20,7 +21,8 @@ export class AuthService {
   constructor(
     private gs: GlobalService,
     private ls: LocalStorageService,
-    private api: ApiService
+    private api: ApiService,
+    // private torrent: TorrentService
   ) {
     if (this.gs.isBrowser) {
       this.currentUserSubject = new BehaviorSubject<User>(null);
@@ -60,6 +62,7 @@ export class AuthService {
 
   logout(): Observable<any> {
     this.gs.log('[AUTH_LOGOUT]', this.jwtToken);
+    // this.torrent.removeAll();
     this.ls.clear();
     return this.api.deleteData(`/logout`).pipe(map(respLogout => {
       this.removeUser();
