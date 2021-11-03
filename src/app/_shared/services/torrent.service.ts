@@ -16,10 +16,12 @@ import { GlobalService } from './global.service';
 import { LocalStorageService } from './local-storage.service';
 
 interface Queue {
+  completed?: boolean;
   indexedDb?: string;
   infoHash?: string;
-  isDownloadAndSeed?: boolean;
-  name?: string
+  isDownloadAndSeed?: boolean,
+  name?: string;
+  files?: any[];
 };
 
 @Injectable({
@@ -154,13 +156,23 @@ export class TorrentService {
         idb.openDB(this.torrentsQueue[key].indexedDb, 1).then(async db => {
             const trx = db.transaction('chunks', 'readonly');
             const store = trx.objectStore('chunks');
-            const uint8Array2D: Uint8Array[] = await store.getAll();
-            const buffer: Buffer = Buffer.concat(uint8Array2D);
+            const uint8Array: Uint8Array[] = await store.getAll();
+            const buffer: Buffer = Buffer.concat(uint8Array);
+            const files: File[] = [];
+            for (const file of this.torrentsQueue[key].files) {
+              const tf: any = file;
+              files.push(
+                new File(
+                  [buffer.slice(tf.offset, tf.offset + tf.length)],
+                  tf.name
+                )
+              );
+            }
             this.uploadFiles({
               torrentBerkasName: {
                 inputText: this.torrentsQueue[key].name
               }
-            }, buffer, callback);
+            }, files, callback);
           }
         );
       }
@@ -172,21 +184,31 @@ export class TorrentService {
     this.refCallback = callback;
     this.client.add(magnetHash, opts, torrent => {
       this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
+      this.toast.info('Memulai Download ...', 'Download!');
       torrent.on('wire', wire => this.handleWire(wire));
       this.torrentsQueue[torrent.infoHash] = {
         completed: false,
         indexedDb: torrent.name + ' - ' + torrent.infoHash.slice(0, 8),
         infoHash: torrent.infoHash,
         isDownloadAndSeed: true,
-        name: torrent.name
+        name: torrent.name,
+        files: []
       };
+      for (const file of torrent.files) {
+        const tf: any = file;
+        this.torrentsQueue[torrent.infoHash].files.push({
+          name: tf.name,
+          offset: tf.offset,
+          length: tf.length
+        });
+      }
       this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
       this.handleTorent(torrent, callback);
       this.gs.log('[TORRENT_CLIENT_QUEUE]', this.torrentsQueue);
     });
   }
 
-  uploadFiles(userInput: any, files: Array<File> | Buffer, callback): void {
+  uploadFiles(userInput: any, files: Array<File>, callback): void {
     this.gs.log('[TORRENT_CLIENT_QUEUE_UPLOAD]', files);
     this.gs.log('[TORRENT_CLIENT_QUEUE_UPLOAD]', userInput);
     this.refCallback = callback;
@@ -195,14 +217,24 @@ export class TorrentService {
       name: userInput.torrentBerkasName.inputText
     } as any), torrent => {
       this.gs.log('[TORRENT_FILE_SEED_READY]', torrent);
+      this.toast.info('Memulai Seeding ...', 'Seeding');
       torrent.on('wire', wire => this.handleWire(wire));
       this.torrentsQueue[torrent.infoHash] = {
         completed: true,
         indexedDb: torrent.name + ' - ' + torrent.infoHash.slice(0, 8),
         infoHash: torrent.infoHash,
         isDownloadAndSeed: true,
-        name: torrent.name
+        name: torrent.name,
+        files: []
       };
+      for (const file of torrent.files) {
+        const tf: any = file;
+        this.torrentsQueue[torrent.infoHash].files.push({
+          name: tf.name,
+          offset: tf.offset,
+          length: tf.length
+        });
+      }
       this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
       this.handleTorent(torrent, callback);
       this.gs.log('[TORRENT_CLIENT_QUEUE]', this.torrentsQueue);
