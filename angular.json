@@ -60,12 +60,19 @@
               "./node_modules/webtorrent/webtorrent.min.js"
             ],
             "allowedCommonJsDependencies": [
+              "@videojs/xhr",
+              "buffer/",
+              "debug",
               "hammerjs",
               "crypto-js",
               "chart.js",
-              "lodash",
               "file-saver",
+              "global/document",
+              "idb-chunk-store",
+              "lodash",
+              "sha.js",
               "socket.io-client",
+              "videojs-vtt.js",
               "webtorrent"
             ],
             "vendorChunk": true,

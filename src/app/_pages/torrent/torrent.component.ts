@@ -71,6 +71,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.dataSource.sort = this.sort;
+      setTimeout(() => { this.refreshTable(); }, 10000);
+      this.reviveTorrent();
     }
   }
 
@@ -105,9 +107,15 @@ export class TorrentComponent implements OnInit, OnDestroy {
     }
   }
 
+  reviveTorrent(): void {
+    this.torrent.resurrectFiles(() => {
+      this.refreshTable();
+    })
+  }
+
   removeTorrent(torrentId): void {
-    this.torrent.removeTorrent(torrentId, err => {
-      if (!err) {
+    this.torrent.removeTorrent(torrentId, error => {
+      if (!error) {
         this.gs.log('[TORRENT_FILE_REMOVE_SUCCESS]', torrentId);
       }
       this.refreshTable();
@@ -126,7 +134,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
   uploadFiles(userInput: any): void {
     this.gs.log('[TORRENT_SEED_USER_INFORMATION]', userInput);
     this.isProcessing = true;
-    this.torrent.uploadFiles(userInput, this.files, () => {
+    this.torrent.uploadFiles(userInput, this.files, (error, torrent) => {
       this.refreshTable();
       this.isProcessing = false;
     });
