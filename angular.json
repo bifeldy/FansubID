@@ -70,6 +70,7 @@
               "global/document",
               "idb-chunk-store",
               "lodash",
+              "p2p-graph",
               "sha.js",
               "socket.io-client",
               "videojs-vtt.js",

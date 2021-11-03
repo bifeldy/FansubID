@@ -189,4 +189,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
     this.prepareFilesList(berkas);
   }
 
+  refreshGraph(infoHash: string): void {
+    this.torrent.refreshGraph(infoHash);
+  }
+
 }

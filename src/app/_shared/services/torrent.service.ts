@@ -7,6 +7,7 @@ import { Wire } from 'bittorrent-protocol';
 
 import idbChunkStore from 'idb-chunk-store';
 import * as idb from 'idb';
+import Graph from 'p2p-graph';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -14,15 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from './global.service';
 import { LocalStorageService } from './local-storage.service';
-
-interface Queue {
-  completed?: boolean;
-  indexedDb?: string;
-  infoHash?: string;
-  isDownloadAndSeed?: boolean,
-  name?: string;
-  files?: any[];
-};
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +57,19 @@ export class TorrentService {
     }
   };
 
-  torrentsQueue: Queue = {};
+  torrentsQueue: any = {
+    // 'magnet:!@#123...zxc': {
+    //   completed?: boolean;
+    //   indexedDb?: string;
+    //   infoHash?: string;
+    //   isDownloadAndSeed?: boolean,
+    //   name?: string;
+    //   files?: any[];
+    // }
+  };
+  torrentsGraph: any = {
+    // 'magnet:!@#123...zxc': new Graph('magnet:!@#123...zxc')
+  };
 
   torrentOptions: TorrentOptions = {
     announce: this.trackerAnnounce,
@@ -89,6 +93,7 @@ export class TorrentService {
     if (this.gs.isBrowser) {
       this.torrentsQueue = this.ls.getItem(this.localStorageSearchKeyName, true) || this.torrentsQueue;
       this.client = new WebTorrent(this.clientOptions);
+      this.gs.log('[TORRENT_CLIENT_INITIALIZED]', this.client);
       this.handleClient();
     }
   }
@@ -134,13 +139,49 @@ export class TorrentService {
     }
   }
 
-  handleWire(wire: Wire): any {
-    //
-    // TODO :: Buat Graph Sambungan Peer
-    //
-    this.gs.log('[TORRENT_WIRE_CONNECT]', wire.peerId);
+  initGraph(infoHash: string): void {
+    setTimeout(() => {
+      if (!this.torrentsGraph[infoHash]) {
+        this.torrentsGraph[infoHash] = new Graph(`.graphP2p-${infoHash}`);
+        this.torrentsGraph[infoHash].add({
+          id: (this.client as any).peerId,
+          me: true,
+          name: `Kamu (${(this.client as any).peerId})`
+        });
+      }
+    }, 1000);
+  }
+
+  refreshGraph(torrentId: string): void {
+    const torrent: any = this.client.get(torrentId);
+    if (this.torrentsGraph[torrent.infoHash]) {
+      for (const t of torrent.wires) {
+        try {
+          this.torrentsGraph[torrent.infoHash].disconnect((this.client as any).peerId, t.peerId);
+          this.torrentsGraph[torrent.infoHash].remove(t.peerId);
+        } catch (error) {
+          this.gs.log('[TORRENT_FILE_REFRESH_GRAPH_ERROR]', error);
+        }
+      }
+      for (const t of torrent.wires) {
+        this.torrentsGraph[torrent.infoHash].add({ id: t.peerId, name: t.remoteAddress || t.peerId || 'Unknown!' });
+        this.torrentsGraph[torrent.infoHash].connect((this.client as any).peerId, t.peerId);
+      }
+    }
+  }
+
+  handleWire(wire: Wire, infoHash: string): any {
+    this.gs.log('[TORRENT_WIRE_CONNECT]', wire);
+    if (this.torrentsGraph[infoHash]) {
+      this.torrentsGraph[infoHash].add({ id: wire.peerId, name: wire.remoteAddress || wire.peerId || 'Unknown!' });
+      this.torrentsGraph[infoHash].connect((this.client as any).peerId, wire.peerId);
+    }
     wire.once('close', () => {
       this.gs.log('[TORRENT_WIRE_DISCONNECT]', wire.peerId);
+      if (this.torrentsGraph[infoHash]) {
+        this.torrentsGraph[infoHash].disconnect((this.client as any).peerId, wire.peerId);
+        this.torrentsGraph[infoHash].remove(wire.peerId);
+      }
     });
   }
 
@@ -179,32 +220,36 @@ export class TorrentService {
     }
   }
 
+  processTorrent(torrent: Torrent, completed, callback): void {
+    torrent.on('wire', wire => this.handleWire(wire, torrent.infoHash));
+    this.torrentsQueue[torrent.infoHash] = {
+      completed: completed,
+      indexedDb: torrent.name + ' - ' + torrent.infoHash.slice(0, 8),
+      infoHash: torrent.infoHash,
+      isDownloadAndSeed: true,
+      name: torrent.name,
+      files: []
+    };
+    for (const file of torrent.files) {
+      const tf: any = file;
+      this.torrentsQueue[torrent.infoHash].files.push({
+        name: tf.name,
+        offset: tf.offset,
+        length: tf.length
+      });
+    }
+    this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+    this.handleTorent(torrent, callback);
+    this.initGraph(torrent.infoHash);
+  }
+
   downloadFiles(magnetHash: string, callback, opts = this.torrentOptions): void {
     this.gs.log('[TORRENT_CLIENT_QUEUE_DOWNLOAD]', magnetHash);
     this.refCallback = callback;
     this.client.add(magnetHash, opts, torrent => {
       this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
       this.toast.info('Memulai Download ...', 'Download!');
-      torrent.on('wire', wire => this.handleWire(wire));
-      this.torrentsQueue[torrent.infoHash] = {
-        completed: false,
-        indexedDb: torrent.name + ' - ' + torrent.infoHash.slice(0, 8),
-        infoHash: torrent.infoHash,
-        isDownloadAndSeed: true,
-        name: torrent.name,
-        files: []
-      };
-      for (const file of torrent.files) {
-        const tf: any = file;
-        this.torrentsQueue[torrent.infoHash].files.push({
-          name: tf.name,
-          offset: tf.offset,
-          length: tf.length
-        });
-      }
-      this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
-      this.handleTorent(torrent, callback);
-      this.gs.log('[TORRENT_CLIENT_QUEUE]', this.torrentsQueue);
+      this.processTorrent(torrent, false, callback);
     });
   }
 
@@ -218,45 +263,25 @@ export class TorrentService {
     } as any), torrent => {
       this.gs.log('[TORRENT_FILE_SEED_READY]', torrent);
       this.toast.info('Memulai Seeding ...', 'Seeding');
-      torrent.on('wire', wire => this.handleWire(wire));
-      this.torrentsQueue[torrent.infoHash] = {
-        completed: true,
-        indexedDb: torrent.name + ' - ' + torrent.infoHash.slice(0, 8),
-        infoHash: torrent.infoHash,
-        isDownloadAndSeed: true,
-        name: torrent.name,
-        files: []
-      };
-      for (const file of torrent.files) {
-        const tf: any = file;
-        this.torrentsQueue[torrent.infoHash].files.push({
-          name: tf.name,
-          offset: tf.offset,
-          length: tf.length
-        });
-      }
-      this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
-      this.handleTorent(torrent, callback);
-      this.gs.log('[TORRENT_CLIENT_QUEUE]', this.torrentsQueue);
+      this.processTorrent(torrent, true, callback);
     });
   }
 
   removeTorrent(torrentId, callback): void {
-    if (torrentId && this.client.get(torrentId)) {
-      this.tableDataRow = this.tableDataRow.filter(el => el.infoHash !== torrentId);
-      this.client.remove(torrentId, {
-        destroyStore: true
-      }, err => {
-        if (err) {
-          this.gs.log('[TORRENT_FILE_REMOVE_ERROR]', err);
-        }
-        delete this.torrentsQueue[torrentId];
-        this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
-        if (callback) {
-          callback(err);
-        }
-      });
-    }
+    this.tableDataRow = this.tableDataRow.filter(el => el.infoHash !== torrentId);
+    this.client.remove(torrentId, {
+      destroyStore: true
+    }, err => {
+      if (err) {
+        this.gs.log('[TORRENT_FILE_REMOVE_ERROR]', err);
+      }
+      delete this.torrentsQueue[torrentId];
+      delete this.torrentsGraph[torrentId];
+      this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+      if (callback) {
+        callback(err);
+      }
+    });
   }
 
   pauseTorrent(torrentId, callback): void {

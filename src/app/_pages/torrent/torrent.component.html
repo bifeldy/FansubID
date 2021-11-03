@@ -67,14 +67,17 @@
                     <td mat-cell *matCellDef="let row" [attr.colspan]="tableDataColumn.length">
                       <div class="element-detail" [@detailExpand]="row == torrent.expandedRow ? 'expanded' : 'collapsed'">
                         <div class="py-3 row">
-                          <div class="col-2">
+                          <div class="col-3">
+                            <div class="p2p-graph graphP2p-{{ row.infoHash }}"></div>
                             <!-- 
                               <div class="py-3 text-center">
-                                // TODO :: Peers Graph
-                                <br />
                                 // TODO :: Pause & Resume
                               </div>
                             -->
+                            <button class="w-100" mat-stroked-button color="accent" (click)="refreshGraph(row.infoHash)">
+                              <mat-icon class="me-1">refresh</mat-icon>
+                              Refresh Graph
+                            </button>
                             <button class="w-100" mat-stroked-button color="accent" (click)="removeTorrent(row.infoHash)">
                               <mat-icon class="me-1">delete_outline</mat-icon>
                               Delete / Remove Torrent
@@ -99,24 +102,6 @@
                                 {{ row.maxWebConns }}
                               </span>
                             </p>
-                            <p class="px-2 text-truncate" *ngIf="row.comment">
-                              Comment ::
-                              <span class="text-success">
-                                {{ row.comment }}
-                              </span>
-                            </p>
-                            <p class="px-2 text-truncate" *ngIf="row.created">
-                              Created On ::
-                              <span class="text-success">
-                                {{ row.created }}
-                              </span>
-                            </p>
-                            <p class="px-2 text-truncate" *ngIf="row.createdBy">
-                              Created By ::
-                              <span class="text-success">
-                                {{ row.createdBy }}
-                              </span>
-                            </p>
                             <div class="px-2 text-truncate">
                               Announce Trackers ::
                               <ul class="text-success m-0">
@@ -126,7 +111,7 @@
                               </ul>
                             </div>
                           </div>
-                          <div class="col-6">
+                          <div class="col-5">
                             <div class="px-2">
                               Content Files ✨ Klik Untuk Download ::
                               <ul class="m-0">
