@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { ToastrService } from 'ngx-toastr';
 import { saveAs } from 'file-saver';
+import Graph from 'p2p-graph';
 
 import User from '../../_shared/models/User';
 
@@ -35,6 +36,10 @@ export class TorrentComponent implements OnInit, OnDestroy {
 
   isProcessing = false;
   magnetHash = null;
+
+  torrentsGraph: any = {
+    // 'magnet:!@#123...zxc': new Graph('magnet:!@#123...zxc')
+  };
 
   tableDataColumn: string[] = [
     'name',
@@ -71,7 +76,6 @@ export class TorrentComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.dataSource.sort = this.sort;
-      setTimeout(() => { this.refreshTable(); }, 10000);
       this.reviveTorrent();
     }
   }
@@ -86,6 +90,11 @@ export class TorrentComponent implements OnInit, OnDestroy {
     if (this.dataSource) {
       this.dataSource.data = this.torrent.tableDataRow;
     }
+    setTimeout(() => {
+      for (const t of this.dataSource.data) {
+        this.refreshGraph(t);
+      }
+    }, 1234);
   }
 
   toggleExpanded(row: any): void {
@@ -108,23 +117,24 @@ export class TorrentComponent implements OnInit, OnDestroy {
   }
 
   reviveTorrent(): void {
-    this.torrent.resurrectFiles(() => {
+    this.torrent.resurrectFiles((error, result) => {
       this.refreshTable();
-    })
+    });
   }
 
-  removeTorrent(torrentId): void {
-    this.torrent.removeTorrent(torrentId, error => {
+  removeTorrent(torrent: any): void {
+    this.torrent.removeTorrent(torrent.infoHash, error => {
       if (!error) {
-        this.gs.log('[TORRENT_FILE_REMOVE_SUCCESS]', torrentId);
+        this.gs.log('[TORRENT_FILE_REMOVE_SUCCESS]', torrent.infoHash);
       }
+      delete this.torrentsGraph[torrent.infoHash];
       this.refreshTable();
     });
   }
 
   downloadFiles(event: Event): void {
     this.isProcessing = true;
-    this.torrent.downloadFiles(this.magnetHash, (error, torrent) => {
+    this.torrent.downloadFiles(this.magnetHash, (error, result) => {
       this.refreshTable();
       this.magnetHash = null;
       this.isProcessing = false;
@@ -134,7 +144,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
   uploadFiles(userInput: any): void {
     this.gs.log('[TORRENT_SEED_USER_INFORMATION]', userInput);
     this.isProcessing = true;
-    this.torrent.uploadFiles(userInput, this.files, (error, torrent) => {
+    this.torrent.uploadFiles(userInput, this.files, (error, result) => {
       this.refreshTable();
       this.isProcessing = false;
     });
@@ -189,8 +199,47 @@ export class TorrentComponent implements OnInit, OnDestroy {
     this.prepareFilesList(berkas);
   }
 
-  refreshGraph(infoHash: string): void {
-    this.torrent.refreshGraph(infoHash);
+  initGraph(torrent: any): void {
+    if (!this.torrentsGraph[torrent.infoHash] && this.dataSource.data.length > 0) {
+      this.gs.log('[TORRENT_WIRE_INIT_GRAPH]', torrent);
+      this.torrentsGraph[torrent.infoHash] = new Graph(`.graphP2p-${torrent.infoHash}`);
+      this.torrentsGraph[torrent.infoHash].add({
+        id: (this.torrent.client as any).peerId,
+        me: true,
+        name: 'Kamu!'
+      });
+    }
+  }
+
+  addAllGraph(torrent: any): void {
+    this.gs.log('[TORRENT_WIRE_RELOAD_GRAPH]', torrent);
+    for (const w of torrent.wires) {
+      let wireName = w.peerId || 'Anonim!';
+      if (w.remoteAddress && w.remotePort) {
+        wireName = `${w.remoteAddress}:${w.remotePort}`;
+      }
+      this.torrentsGraph[torrent.infoHash].add({ id: w.peerId, name: wireName });
+      this.torrentsGraph[torrent.infoHash].connect((this.torrent.client as any).peerId, w.peerId);
+    }
+  }
+
+  deleteAllGraph(torrent: any): void {
+    this.gs.log('[TORRENT_WIRE_DELETE_GRAPH]', torrent);
+    const torrentWireList = this.torrentsGraph[torrent.infoHash].list().filter(w => w.id !== (this.torrent.client as any).peerId);
+    for (const w of torrentWireList) {
+      this.torrentsGraph[torrent.infoHash].disconnect((this.torrent.client as any).peerId, w.id);
+      this.torrentsGraph[torrent.infoHash].remove(w.id);
+    }
+  }
+
+  refreshGraph(torrent: any): void {
+    this.gs.log('[TORRENT_WIRE_REFRESH_GRAPH]', torrent);
+    if (this.torrentsGraph[torrent.infoHash]) {
+      this.deleteAllGraph(torrent);
+      this.addAllGraph(torrent);
+    } else {
+      this.initGraph(torrent);
+    }
   }
 
 }

@@ -7,7 +7,6 @@ import { Wire } from 'bittorrent-protocol';
 
 import idbChunkStore from 'idb-chunk-store';
 import * as idb from 'idb';
-import Graph from 'p2p-graph';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -67,9 +66,6 @@ export class TorrentService {
     //   files?: any[];
     // }
   };
-  torrentsGraph: any = {
-    // 'magnet:!@#123...zxc': new Graph('magnet:!@#123...zxc')
-  };
 
   torrentOptions: TorrentOptions = {
     announce: this.trackerAnnounce,
@@ -80,10 +76,12 @@ export class TorrentService {
   public client: Instance = null;
   public expandedRow: Torrent = null;
 
-  public tableDataRow: any[] = [];
+  public tableDataRow: Torrent[] = [];
 
   error = null;
   refCallback = null;
+
+  flagResurrected = false;
 
   constructor(
     public gs: GlobalService,
@@ -139,89 +137,64 @@ export class TorrentService {
     }
   }
 
-  initGraph(infoHash: string): void {
-    setTimeout(() => {
-      if (!this.torrentsGraph[infoHash]) {
-        this.torrentsGraph[infoHash] = new Graph(`.graphP2p-${infoHash}`);
-        this.torrentsGraph[infoHash].add({
-          id: (this.client as any).peerId,
-          me: true,
-          name: `Kamu (${(this.client as any).peerId})`
-        });
-      }
-    }, 1000);
-  }
-
-  refreshGraph(torrentId: string): void {
-    const torrent: any = this.client.get(torrentId);
-    if (this.torrentsGraph[torrent.infoHash]) {
-      for (const t of torrent.wires) {
-        try {
-          this.torrentsGraph[torrent.infoHash].disconnect((this.client as any).peerId, t.peerId);
-          this.torrentsGraph[torrent.infoHash].remove(t.peerId);
-        } catch (error) {
-          this.gs.log('[TORRENT_FILE_REFRESH_GRAPH_ERROR]', error);
-        }
-      }
-      for (const t of torrent.wires) {
-        this.torrentsGraph[torrent.infoHash].add({ id: t.peerId, name: t.remoteAddress || t.peerId || 'Unknown!' });
-        this.torrentsGraph[torrent.infoHash].connect((this.client as any).peerId, t.peerId);
-      }
-    }
-  }
-
-  handleWire(wire: Wire, infoHash: string): any {
+  handleWire(wire: Wire, callback): any {
     this.gs.log('[TORRENT_WIRE_CONNECT]', wire);
-    if (this.torrentsGraph[infoHash]) {
-      this.torrentsGraph[infoHash].add({ id: wire.peerId, name: wire.remoteAddress || wire.peerId || 'Unknown!' });
-      this.torrentsGraph[infoHash].connect((this.client as any).peerId, wire.peerId);
+    let wireName = wire.peerId || 'Unknown!';
+    if (wire.remoteAddress && wire.remotePort) {
+      wireName = `${wire.remoteAddress}:${wire.remotePort}`;
     }
     wire.once('close', () => {
-      this.gs.log('[TORRENT_WIRE_DISCONNECT]', wire.peerId);
-      if (this.torrentsGraph[infoHash]) {
-        this.torrentsGraph[infoHash].disconnect((this.client as any).peerId, wire.peerId);
-        this.torrentsGraph[infoHash].remove(wire.peerId);
+      this.gs.log('[TORRENT_WIRE_DISCONNECT]', wireName);
+      if (callback) {
+        callback(null, wire);
       }
     });
+    if (callback) {
+      callback(null, wire);
+    }
   }
 
   resurrectFiles(callback): void {
-    for (const key in this.torrentsQueue) {
-      this.gs.log('[TORRENT_CLIENT_QUEUE_RESURRECT]', this.torrentsQueue[key]);
-      if (!this.torrentsQueue[key].completed) {
-        this.downloadFiles(this.torrentsQueue[key].infoHash, callback, ({
-          ...this.torrentOptions,
-          name: this.torrentsQueue[key].name
-        } as any));
-      } else {
-        idb.openDB(this.torrentsQueue[key].indexedDb, 1).then(async db => {
-            const trx = db.transaction('chunks', 'readonly');
-            const store = trx.objectStore('chunks');
-            const uint8Array: Uint8Array[] = await store.getAll();
-            const buffer: Buffer = Buffer.concat(uint8Array);
-            const files: File[] = [];
-            for (const file of this.torrentsQueue[key].files) {
-              const tf: any = file;
-              files.push(
-                new File(
-                  [buffer.slice(tf.offset, tf.offset + tf.length)],
-                  tf.name
-                )
-              );
-            }
-            this.uploadFiles({
-              torrentBerkasName: {
-                inputText: this.torrentsQueue[key].name
+    if (!this.flagResurrected) {
+      this.flagResurrected = true;
+      for (const key in this.torrentsQueue) {
+        this.gs.log('[TORRENT_CLIENT_QUEUE_RESURRECT]', this.torrentsQueue[key]);
+        if (!this.torrentsQueue[key].completed) {
+          this.downloadFiles(this.torrentsQueue[key].infoHash, callback, ({
+            ...this.torrentOptions,
+            name: this.torrentsQueue[key].name
+          } as any));
+        } else {
+          idb.openDB(this.torrentsQueue[key].indexedDb, 1).then(async db => {
+              const trx = db.transaction('chunks', 'readonly');
+              const store = trx.objectStore('chunks');
+              const uint8Array: Uint8Array[] = await store.getAll();
+              const buffer: Buffer = Buffer.concat(uint8Array);
+              const files: File[] = [];
+              for (const file of this.torrentsQueue[key].files) {
+                const tf: any = file;
+                files.push(
+                  new File(
+                    [buffer.slice(tf.offset, tf.offset + tf.length)],
+                    tf.name
+                  )
+                );
               }
-            }, files, callback);
-          }
-        );
+              this.uploadFiles({
+                torrentBerkasName: {
+                  inputText: this.torrentsQueue[key].name
+                }
+              }, files, callback);
+            }
+          );
+        }
       }
     }
+    callback(null, null);
   }
 
-  processTorrent(torrent: Torrent, completed, callback): void {
-    torrent.on('wire', wire => this.handleWire(wire, torrent.infoHash));
+  processTorrent(torrent: Torrent, completed: boolean, callback): void {
+    torrent.on('wire', wire => this.handleWire(wire, callback));
     this.torrentsQueue[torrent.infoHash] = {
       completed: completed,
       indexedDb: torrent.name + ' - ' + torrent.infoHash.slice(0, 8),
@@ -240,7 +213,6 @@ export class TorrentService {
     }
     this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
     this.handleTorent(torrent, callback);
-    this.initGraph(torrent.infoHash);
   }
 
   downloadFiles(magnetHash: string, callback, opts = this.torrentOptions): void {
@@ -276,7 +248,6 @@ export class TorrentService {
         this.gs.log('[TORRENT_FILE_REMOVE_ERROR]', err);
       }
       delete this.torrentsQueue[torrentId];
-      delete this.torrentsGraph[torrentId];
       if (saveLocalStorage) {
         this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
       }
