@@ -69,7 +69,7 @@ export class TorrentService {
 
   torrentOptions: TorrentOptions = {
     announce: this.trackerAnnounce,
-    maxWebConns: 8,
+    maxWebConns: 16,
     store: idbChunkStore
   };
 

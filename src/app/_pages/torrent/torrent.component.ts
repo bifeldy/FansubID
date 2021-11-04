@@ -159,10 +159,6 @@ export class TorrentComponent implements OnInit, OnDestroy {
       torrentBerkasName: {
         inputLabel: 'Nama Torrent',
         inputText: `Torrent Dari ${this.currentUser.username}`,
-      },
-      torrentKomentar: {
-        inputLabel: 'Komentar / Deskripsi',
-        inputText: 'Didistribusikan menggunakan Hikki WebTorrent!',
       }
     };
     if (this.files.length == 1) {
