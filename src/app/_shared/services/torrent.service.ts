@@ -20,7 +20,7 @@ import { LocalStorageService } from './local-storage.service';
 })
 export class TorrentService {
 
-  localStorageSearchKeyName = `${environment.siteName}_Torrents`;
+  localStorageTorrentKeyName = `${environment.siteName}_Torrents`;
 
   trackerAnnounce = [
     'wss://tracker.openwebtorrent.com',
@@ -37,19 +37,22 @@ export class TorrentService {
           {
             urls: [
               'stun:relay.socket.dev:443',
-              'stun:stun.l.google.com:19302',
-              'stun:stun.l.google.com:19305',
+              'stun:stun-turn.hikki.id:5349'
             ]
           },
           {
             urls: [
-              'turn:relay.socket.dev:443?transport=udp',
-              'turn:relay.socket.dev:443?transport=tcp',
-              'turns:relay.socket.dev:443?transport=udp',
-              'turns:relay.socket.dev:443?transport=tcp',
+              'turn:relay.socket.dev:443'
             ],
             username: "relay.socket.dev",
             credential: "tears-whiplash-overall-diction"
+          },
+          {
+            urls: [
+              'turn:stun-turn.hikki.id:5349'
+            ],
+            username: "turn",
+            credential: "hikki.id"
           }
         ]
       }
@@ -89,7 +92,7 @@ export class TorrentService {
     private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
-      this.torrentsQueue = this.ls.getItem(this.localStorageSearchKeyName, true) || this.torrentsQueue;
+      this.torrentsQueue = this.ls.getItem(this.localStorageTorrentKeyName, true) || this.torrentsQueue;
       this.client = new WebTorrent(this.clientOptions);
       this.gs.log('[TORRENT_CLIENT_INITIALIZED]', this.client);
       this.handleClient();
@@ -119,7 +122,7 @@ export class TorrentService {
     torrent.on('done', () => {
       this.toast.success(`Ada Torrent Yang Sudah Selesai Di Download`, 'Yeay, Selesai!');
       this.torrentsQueue[torrent.infoHash].completed = true;
-      this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+      this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
     });
     torrent.on('warning', err => {
       this.gs.log('[TORRENT_FILE_WARNING]', err);
@@ -166,27 +169,26 @@ export class TorrentService {
           } as any));
         } else {
           idb.openDB(this.torrentsQueue[key].indexedDb, 1).then(async db => {
-              const trx = db.transaction('chunks', 'readonly');
-              const store = trx.objectStore('chunks');
-              const uint8Array: Uint8Array[] = await store.getAll();
-              const buffer: Buffer = Buffer.concat(uint8Array);
-              const files: File[] = [];
-              for (const file of this.torrentsQueue[key].files) {
-                const tf: any = file;
-                files.push(
-                  new File(
-                    [buffer.slice(tf.offset, tf.offset + tf.length)],
-                    tf.name
-                  )
-                );
-              }
-              this.uploadFiles({
-                torrentBerkasName: {
-                  inputText: this.torrentsQueue[key].name
-                }
-              }, files, callback);
+            const trx = db.transaction('chunks', 'readonly');
+            const store = trx.objectStore('chunks');
+            const uint8Array: Uint8Array[] = await store.getAll();
+            const buffer: Buffer = Buffer.concat(uint8Array);
+            const files: File[] = [];
+            for (const file of this.torrentsQueue[key].files) {
+              const tf: any = file;
+              files.push(
+                new File(
+                  [buffer.slice(tf.offset, tf.offset + tf.length)],
+                  tf.name
+                )
+              );
             }
-          );
+            this.uploadFiles({
+              torrentBerkasName: {
+                inputText: this.torrentsQueue[key].name
+              }
+            }, files, callback);
+          });
         }
       }
     }
@@ -211,7 +213,7 @@ export class TorrentService {
         length: tf.length
       });
     }
-    this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+    this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
     this.handleTorent(torrent, callback);
   }
 
@@ -249,7 +251,7 @@ export class TorrentService {
       }
       delete this.torrentsQueue[torrentId];
       if (saveLocalStorage) {
-        this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+        this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
       }
       if (callback) {
         callback(err);
@@ -263,7 +265,7 @@ export class TorrentService {
       if (torrent) {
         torrent.pause();
         this.torrentsQueue[torrentId].isDownloadAndSeed = false;
-        this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+        this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
         if (callback) {
           callback(torrent);
         }
@@ -277,7 +279,7 @@ export class TorrentService {
       if (torrent) {
         torrent.resume();
         this.torrentsQueue[torrentId].isDownloadAndSeed = true;
-        this.ls.setItem(this.localStorageSearchKeyName, this.torrentsQueue);
+        this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
         if (callback) {
           callback(torrent);
         }

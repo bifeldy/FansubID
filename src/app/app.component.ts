@@ -25,7 +25,7 @@ import { DialogService } from './_shared/services/dialog.service';
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  localStorageAturanTatib = `${environment.siteName}_AturanTatib`;
+  localStorageAturanTatibKeyName = `${environment.siteName}_AturanTatib`;
 
   @HostListener('document:click', ['$event']) documentClicked;
   @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
@@ -153,14 +153,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.checkStorage();
       this.documentClicked = this.onDocumentClicked;
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
-      const aturanTatib = this.ls.getItem(this.localStorageAturanTatib) === 'true';
+      const aturanTatib = this.ls.getItem(this.localStorageAturanTatibKeyName) === 'true';
       if (!aturanTatib) {
         setTimeout(() => {
           this.subsDialog = this.ds.openAturanTatibDialog().afterClosed().subscribe({
             next: re => {
               this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
               if (typeof re === 'boolean') {
-                this.ls.setItem(this.localStorageAturanTatib, JSON.stringify(re));
+                this.ls.setItem(this.localStorageAturanTatibKeyName, JSON.stringify(re));
               }
               this.subsDialog.unsubscribe();
             }

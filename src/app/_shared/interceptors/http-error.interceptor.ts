@@ -11,7 +11,6 @@ import { AuthService } from '../services/auth.service';
 import { BusyService } from '../services/busy.service';
 import { StatsServerService } from '../services/stats-server.service';
 import { LocalStorageService } from '../services/local-storage.service';
-// import { TorrentService } from '../services/torrent.service';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -27,8 +26,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private toast: ToastrService,
     private bs: BusyService,
     private ss: StatsServerService,
-    private ls: LocalStorageService,
-    // private torrent: TorrentService
+    private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -94,7 +92,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
         if (e.status === 401) {
           this.as.removeUser();
-          // this.torrent.removeAll();
           this.ls.clear();
           this.bs.idle();
           this.router.navigate(['/login'], {
