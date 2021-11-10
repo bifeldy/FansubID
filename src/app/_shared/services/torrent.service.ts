@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 declare var WebTorrent: any;
 
@@ -14,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from './global.service';
 import { LocalStorageService } from './local-storage.service';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +25,9 @@ export class TorrentService {
   localStorageTorrentKeyName = `${environment.siteName}_Torrents`;
 
   trackerAnnounce = [
-    'wss://tracker.openwebtorrent.com',
+    'wss://tracker.hikki.id',
     'wss://tracker.btorrent.xyz',
-    'wss://tracker.hikki.id'
+    'wss://tracker.openwebtorrent.com'
   ];
 
   clientOptions: Options = {
@@ -36,16 +38,9 @@ export class TorrentService {
         iceServers: [
           {
             urls: [
-              'stun:relay.socket.dev:443',
-              'stun:stun-turn.hikki.id:5349'
+              'stun:stun-turn.hikki.id:5349',
+              'stun:relay.socket.dev:443'
             ]
-          },
-          {
-            urls: [
-              'turn:relay.socket.dev:443'
-            ],
-            username: "relay.socket.dev",
-            credential: "tears-whiplash-overall-diction"
           },
           {
             urls: [
@@ -53,6 +48,13 @@ export class TorrentService {
             ],
             username: "turn",
             credential: "hikki.id"
+          },
+          {
+            urls: [
+              'turn:relay.socket.dev:443'
+            ],
+            username: "relay.socket.dev",
+            credential: "tears-whiplash-overall-diction"
           }
         ]
       }
@@ -88,6 +90,7 @@ export class TorrentService {
 
   constructor(
     public gs: GlobalService,
+    private api: ApiService,
     private toast: ToastrService,
     private ls: LocalStorageService
   ) {
@@ -97,6 +100,10 @@ export class TorrentService {
       this.gs.log('[TORRENT_CLIENT_INITIALIZED]', this.client);
       this.handleClient();
     }
+  }
+
+  checkHealthOnHikkiTracker(torrentInfo: any): Observable<any> {
+    return this.api.postData(`/torrent`, torrentInfo);
   }
 
   handleClient(): void {
@@ -220,10 +227,31 @@ export class TorrentService {
   downloadFiles(magnetHash: string, callback, opts = this.torrentOptions): void {
     this.gs.log('[TORRENT_CLIENT_QUEUE_DOWNLOAD]', magnetHash);
     this.refCallback = callback;
-    this.client.add(magnetHash, opts, torrent => {
-      this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
-      this.toast.info('Memulai Download ...', 'Download!');
-      this.processTorrent(torrent, false, callback);
+    this.checkHealthOnHikkiTracker({
+      magnetHash,
+      trackTimeout: 1234
+    }).subscribe({
+      next: (res: any) => {
+        this.gs.log('[TORRENT_CLIENT_HEALTH_SUCCESS]', res.result);
+        if (res.result.seeds <= 0) {
+          this.toast.warning('Tidak Ada Seeder!', 'Whoops! Error.');
+          if (callback) {
+            callback(null, res.result);
+          }
+        } else {
+          this.client.add(magnetHash, opts, torrent => {
+            this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
+            this.toast.info('Memulai Download ...', 'Download!');
+            this.processTorrent(torrent, false, callback);
+          });
+        }
+      },
+      error: (err: any) => {
+        this.gs.log('[TORRENT_CLIENT_HEALTH_ERROR]', err);
+        if (callback) {
+          callback(err, null);
+        }
+      }
     });
   }
 
