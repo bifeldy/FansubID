@@ -37,6 +37,9 @@ import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/programs/
 
 import { environment } from './src/environments/server/environment';
 
+// Helper
+import jwt from './src/api/helpers/jwt';
+
 // Server Settings
 import { serverGet, serverGetDiscordNotification } from './src/api/settings';
 
@@ -164,8 +167,24 @@ function startDiscordBot(): void {
   }
 }
 
+function socketGenerateId(token: string): string {
+  let user = null;
+  try {
+    const decoded = jwt.JwtDecrypt(token);
+    user = decoded.user;
+  } catch (error) {
+    console.error(error);
+  }
+  return user ? `Weeb-${user.username}` : `Neet-${new Date().getTime()}`;
+}
+
 // Socket.io
 function startSocketIo(): void {
+  io.engine.generateId = (req: any) => socketGenerateId(req.headers.token);
+  io.use((socket: any, next) => {
+    socket.id = socketGenerateId(socket.handshake.headers.token);
+    return next();
+  });
   io.on('connection', async (socket: Socket) => {
     try {
       await joinOrUpdateRoom(io, socket, { user: null, newRoom: 'GLOBAL_PUBLIK' });

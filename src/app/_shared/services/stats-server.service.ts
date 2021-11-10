@@ -64,7 +64,10 @@ export class StatsServerService {
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io(environment.baseUrl, {
-        reconnection: false
+        reconnection: false,
+        extraHeaders: {
+          token: this.as.jwtToken
+        }
       });
       this.socketListen();
       this.checkServerMaintenance();
@@ -137,6 +140,11 @@ export class StatsServerService {
     this.mySocket.on('visitors', visitors => {
       this.gs.log('[SOCKET_VISITOR]', this.visitor);
       this.visitor = visitors;
+    });
+    this.mySocket.on('receive-logout', reason => {
+      this.gs.log('[SOCKET_EXIT]', reason);
+      this.toast.info(reason, 'Keluar Paksa!');
+      this.as.logout();
     });
     this.mySocket.on('new-notification', (notifObj: any) => {
       this.gs.log('[SOCKET_NOTIFICATION]', notifObj);

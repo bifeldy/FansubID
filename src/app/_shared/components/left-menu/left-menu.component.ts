@@ -6,7 +6,6 @@ import { onSideNavChange, animateText } from '../../animations/anim-side-menu';
 import { LeftMenuService } from '../../services/left-menu.service';
 import { AuthService } from '../../services/auth.service';
 import { GlobalService } from '../../services/global.service';
-import { BusyService } from '../../services/busy.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { DialogService } from '../../services/dialog.service';
 
@@ -24,7 +23,6 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   currentUser: User = null;
 
   subsUser = null;
-  subsLogout = null;
   subsDialog = null;
 
   constructor(
@@ -33,7 +31,6 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     private as: AuthService,
     public gs: GlobalService,
     private ds: DialogService,
-    private bs: BusyService,
     private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
@@ -55,7 +52,6 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsUser?.unsubscribe();
-    this.subsLogout?.unsubscribe();
     this.subsDialog?.unsubscribe();
   }
 
@@ -82,21 +78,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.bs.busy();
-    this.subsLogout = this.as.logout().subscribe({
-      next: (res: any) => {
-        this.gs.log('[LOGOUT_SUCCESS]', res);
-        this.as.removeUser();
-        this.bs.idle();
-        this.router.navigateByUrl('/');
-      },
-      error: err => {
-        this.gs.log('[LOGOUT_ERROR]', err);
-        this.as.removeUser();
-        this.bs.idle();
-        this.router.navigateByUrl('/');
-      }
-    });
+    this.as.logout();
   }
 
   openDocumentation(): void {

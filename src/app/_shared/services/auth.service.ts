@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -7,6 +8,7 @@ import User from '../models/User';
 
 import { GlobalService } from './global.service';
 import { ApiService } from './api.service';
+import { BusyService } from './busy.service';
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +20,9 @@ export class AuthService {
   public jwtToken = null;
 
   constructor(
+    private router: Router,
     private gs: GlobalService,
+    private bs: BusyService,
     private ls: LocalStorageService,
     private api: ApiService
   ) {
@@ -58,18 +62,27 @@ export class AuthService {
     }));
   }
 
-  logout(): Observable<any> {
-    this.gs.log('[AUTH_LOGOUT]', this.jwtToken);
-    this.ls.clear();
-    return this.api.deleteData(`/logout`).pipe(map(respLogout => {
-      this.removeUser();
-      return respLogout;
-    }));
-  }
-
   removeUser(): void {
     this.currentUserSubject.next(null);
     this.jwtToken = null;
+  }
+
+  logout(): void {
+    this.gs.log('[AUTH_LOGOUT]', this.jwtToken);
+    this.bs.busy();
+    this.api.deleteData(`/logout`).subscribe({
+      next: (res: any) => {
+        this.gs.log('[LOGOUT_SUCCESS]', res);
+        this.bs.idle();
+        this.removeUser();
+        this.ls.clear();
+        this.router.navigateByUrl('/');
+      },
+      error: err => {
+        this.gs.log('[LOGOUT_ERROR]', err);
+        this.bs.idle();
+      }
+    });
   }
 
 }

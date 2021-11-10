@@ -430,6 +430,9 @@ export async function socketBot(io: Server, socket: Socket) {
       callback(getRoomInfo(io, data.roomId));
     }
   });
+  socket.on('send-logout', async (data: any) => {
+    io.to(`Weeb-${data.username}`).volatile.emit('receive-logout', data.reason);
+  });
   socket.on('send-chat', async (data: RoomInfoInOut) => {
     try {
       if (data.jwtToken) {

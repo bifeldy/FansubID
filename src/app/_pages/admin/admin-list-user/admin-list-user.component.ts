@@ -7,6 +7,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
 import User from '../../../_shared/models/User';
 import { Role } from '../../../_shared/models/Role';
@@ -46,6 +47,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     private ds: DialogService,
     public as: AuthService,
     public gs: GlobalService,
+    public ss: StatsServerService,
     public adm: AdminService,
     public user: UserService
   ) {
@@ -172,6 +174,10 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
               this.gs.log('[USER_LIST_CLICK_BAN_SUCCESS]', res);
               this.bs.idle();
               this.getUser();
+              this.ss.socketEmitVolatile('send-logout', {
+                username: data.username,
+                reason: re.reason.inputText
+              });
             },
             error: err => {
               this.gs.log('[USER_LIST_CLICK_BAN_ERROR]', err);
