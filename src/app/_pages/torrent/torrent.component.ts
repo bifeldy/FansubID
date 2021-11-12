@@ -122,6 +122,24 @@ export class TorrentComponent implements OnInit, OnDestroy {
     });
   }
 
+  resumeTorrent(torrent: any): void {
+    this.torrent.resumeTorrent(torrent.infoHash, error => {
+      if (!error) {
+        this.gs.log('[TORRENT_FILE_RESUME_SUCCESS]', torrent.infoHash);
+      }
+      this.refreshTable();
+    });
+  }
+
+  pauseTorrent(torrent: any): void {
+    this.torrent.pauseTorrent(torrent.infoHash, error => {
+      if (!error) {
+        this.gs.log('[TORRENT_FILE_PAUSE_SUCCESS]', torrent.infoHash);
+      }
+      this.refreshTable();
+    });
+  }
+
   removeTorrent(torrent: any): void {
     this.torrent.removeTorrent(torrent.infoHash, error => {
       if (!error) {

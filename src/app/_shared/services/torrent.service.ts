@@ -66,7 +66,6 @@ export class TorrentService {
     //   completed?: boolean;
     //   indexedDb?: string;
     //   infoHash?: string;
-    //   isDownloadAndSeed?: boolean,
     //   name?: string;
     //   files?: any[];
     // }
@@ -142,9 +141,6 @@ export class TorrentService {
         callback(err, null);
       }
     });
-    if (!this.torrentsQueue[torrent.infoHash].isDownloadAndSeed) {
-      this.pauseTorrent(torrent.infoHash, null);
-    }
   }
 
   handleWire(wire: Wire, callback): any {
@@ -208,7 +204,6 @@ export class TorrentService {
       completed: completed,
       indexedDb: torrent.name + ' - ' + torrent.infoHash.slice(0, 8),
       infoHash: torrent.infoHash,
-      isDownloadAndSeed: true,
       name: torrent.name,
       files: []
     };
@@ -292,8 +287,6 @@ export class TorrentService {
       const torrent = this.client.get(torrentId);
       if (torrent) {
         torrent.pause();
-        this.torrentsQueue[torrentId].isDownloadAndSeed = false;
-        this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
         if (callback) {
           callback(torrent);
         }
@@ -306,8 +299,6 @@ export class TorrentService {
       const torrent = this.client.get(torrentId);
       if (torrent) {
         torrent.resume();
-        this.torrentsQueue[torrentId].isDownloadAndSeed = true;
-        this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
         if (callback) {
           callback(torrent);
         }

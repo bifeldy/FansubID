@@ -69,19 +69,6 @@
                         <div class="py-3 row">
                           <div class="col-3">
                             <div class="p2p-graph graphP2p-{{ row.infoHash }}"></div>
-                            <!-- 
-                              <div class="py-3 text-center">
-                                // TODO :: Pause & Resume
-                              </div>
-                            -->
-                            <button class="w-100" mat-stroked-button color="accent" (click)="refreshGraph(row)">
-                              <mat-icon class="me-1">refresh</mat-icon>
-                              Refresh Graph
-                            </button>
-                            <button class="w-100" mat-stroked-button color="accent" (click)="removeTorrent(row)">
-                              <mat-icon class="me-1">delete_outline</mat-icon>
-                              Delete / Remove Torrent
-                            </button>
                           </div>
                           <div class="col-4">
                             <p class="px-2 text-truncate" *ngIf="row.infoHash">
@@ -109,6 +96,24 @@
                                   {{ a }}
                                 </li>
                               </ul>
+                            </div>
+                            <div class="p-2">
+                              <button mat-stroked-button color="warn" class="m-1" (click)="refreshGraph(row)">
+                                <mat-icon class="me-1">refresh</mat-icon>
+                                Refresh Graph
+                              </button>
+                              <button mat-stroked-button color="warn" class="m-1" (click)="removeTorrent(row)">
+                                <mat-icon class="me-1">delete_outline</mat-icon>
+                                Remove
+                              </button>
+                              <button mat-stroked-button color="warn" class="m-1" (click)="resumeTorrent(row)" *ngIf="row.paused">
+                                <mat-icon class="me-1">play_arrow</mat-icon>
+                                Resume
+                              </button>
+                              <button mat-stroked-button color="warn" class="m-1" (click)="pauseTorrent(row)" *ngIf="!row.paused">
+                                <mat-icon class="me-1">pause</mat-icon>
+                                Pause
+                              </button>
                             </div>
                           </div>
                           <div class="col-5">
