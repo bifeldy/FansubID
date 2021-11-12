@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -9,7 +9,9 @@ import { AuthService } from '../../../_shared/services/auth.service';
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
+
+  timedOut = null;
 
   constructor(
     private router: Router,
@@ -19,18 +21,20 @@ export class UserListComponent implements OnInit {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
-    if (this.gs.isBrowser) {
-      if (this.as.currentUserValue) {
-        this.router.navigateByUrl(`/user/${this.as.currentUserValue.username}`);
-      } else {
-        this.router.navigateByUrl('/login');
-      }
-    }
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      //
+      this.timedOut = setTimeout(() => {
+        this.router.navigateByUrl(`/user/${this.as.currentUserValue.username}`);
+      }, 1234);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.timedOut) {
+      clearTimeout(this.timedOut);
+      this.timedOut = null;
     }
   }
 

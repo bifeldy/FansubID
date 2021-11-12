@@ -169,7 +169,7 @@
   <input type="file" #fileDropRef id="fileDropRef" multiple
   (change)="fileBrowseHandler($event.target.files)" [disabled]="isProcessing" style="visibility: hidden;" />
   
-  <button (click)="fileDropRef.click()" mat-fab color="warn" class="me-3 mb-5 fab-button" matTooltip="Seed Berkas"
+  <button (click)="fileDropRef.click()" mat-fab color="warn" class="me-3 mb-5 fab-button animate__animated animate__bounce animate__infinite animate__slow" matTooltip="Seed Berkas"
   style="position: fixed; bottom: 0; right: 0;" [disabled]="isProcessing">
   <mat-icon>cloud_upload</mat-icon>
   </button>

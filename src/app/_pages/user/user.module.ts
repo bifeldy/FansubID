@@ -22,7 +22,14 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    component: UserListComponent
+    component: UserListComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'User Profile',
+      description: 'Halaman Informasi Pengguna',
+      keywords: 'User',
+      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+    }
   },
   {
     path: ':username/edit',

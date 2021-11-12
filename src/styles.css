@@ -222,12 +222,12 @@ re-captcha > div {
     rgba(255,255,255,.75) 50%,
     #0000 66%
   );
-  background-size: 400% 100%;
+  background-size: 500% 100%;
   animation: animatedshiny 2s infinite;
 }
 
 @keyframes animatedshiny {
   0% {
-    background-position: right;    
+    background-position: right;
   }
 }
