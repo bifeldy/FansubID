@@ -209,6 +209,12 @@ re-captcha > div {
   }
 }
 
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .shiny {
   background-image: linear-gradient(
     -45deg,
@@ -224,10 +230,4 @@ re-captcha > div {
   0% {
     background-position: right;    
   }
-}
-
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
 }
