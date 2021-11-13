@@ -4,6 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GlobalService } from '../../_shared/services/global.service';
 import { NewsService } from '../../_shared/services/news.service';
 import { BusyService } from '../../_shared/services/busy.service';
+import { KomentarService } from '../../_shared/services/komentar.service';
 
 @Component({
   selector: 'app-home',
@@ -13,12 +14,15 @@ import { BusyService } from '../../_shared/services/busy.service';
 export class HomeComponent implements OnInit, OnDestroy {
 
   newsData = [];
+  komentarData = [];
 
   subsNews = null;
+  subsKomenGet = null;
 
   constructor(
     public gs: GlobalService,
     private news: NewsService,
+    private komen: KomentarService,
     private bs: BusyService
   ) {
     this.gs.bannerImg = '/assets/img/home-banner.png';
@@ -28,11 +32,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsNews?.unsubscribe();
+    this.subsKomenGet?.unsubscribe();
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.getNews();
+      this.getComment();
     }
   }
 
@@ -47,6 +53,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       error: err => {
         this.gs.log('[HOME_NEWS_LIST_ERROR]', err);
         this.bs.idle();
+      }
+    });
+  }
+
+  getComment(): void {
+    this.subsKomenGet = this.komen.getAllComment().subscribe({
+      next: res => {
+        this.gs.log('[HOME_KOMENTAR_LIST_SUCCESS]', res);
+        this.komentarData = res.results;
+      },
+      error: err => {
+        this.gs.log('[HOME_KOMENTAR_LIST_ERROR]', err);
       }
     });
   }

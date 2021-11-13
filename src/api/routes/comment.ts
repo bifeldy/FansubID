@@ -22,11 +22,11 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       where: [
         {
           ...((req.query.path) ? {
-            path: Equal(req.query.path),
-            parent_komentar_: IsNull()
+            path: Equal(req.query.path)
           } : {
             // All Path
           }),
+          parent_komentar_: IsNull(),
           comment: ILike(`%${req.query.q ? req.query.q : ''}%`)
         }
       ],

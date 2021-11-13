@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
+
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
@@ -27,7 +29,8 @@ const routes: Routes = [
     BannerNihongoModule,
     StatsServerModule,
     NotificationsModule,
-    SharedMaterialModule
+    SharedMaterialModule,
+    CustomPipeModule
   ]
 })
 export class HomeModule { }

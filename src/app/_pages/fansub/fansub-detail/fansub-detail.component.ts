@@ -119,7 +119,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
               }
               this.panelData = [];
               this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
-              this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
+              const webUrl = this.getUrlByName('web');
+              if (webUrl) {
+                this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
+              }
               this.getAnimeFansub();
               this.getDoramaFansub();
               this.getBerkasFansub();

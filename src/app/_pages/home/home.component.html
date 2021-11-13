@@ -66,6 +66,28 @@
           <app-banner-nihongo></app-banner-nihongo>
         </div>
       </div> -->
+      <div class="row" *ngIf="komentarData.length > 0">
+        <div class="col-12 sticky-top bg-bifeldy-dark">
+          <h2 class="pt-3 border-bottom-dotted">
+            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getComment()">
+              Refresh
+            </span>
+            <b class="text-bifeldy-dark">Komentar Terbaru</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <mat-selection-list [multiple]="false">
+            <mat-list-option *ngFor="let k of komentarData | slice:0:5" class="h-100">
+              <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
+              <a class="text-truncate text-decoration-none" routerLink="{{ k.path }}">
+                <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ k.created_at | dateAgo }}</span>
+                <span class="me-3 text-success">{{ k.user_.username }}</span>
+                <span class="text-warning">{{ k.comment }}</span>
+              </a>
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </div>
     </div>
     <div class="col-lg-4 col-xl-3">
       <div class="row sticky-top">
