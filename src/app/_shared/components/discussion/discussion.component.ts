@@ -32,6 +32,9 @@ export class DiscussionComponent implements OnInit, OnDestroy {
   @Input() komentar: Komentar[] = [];
 
   subsUser = null;
+  subsKomenSend = null;
+  subsKomenGetKomen = null;
+  subsKomenGetReply = null;
 
   constructor(
     private router: Router,
@@ -54,6 +57,9 @@ export class DiscussionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsUser?.unsubscribe();
+    this.subsKomenSend?.unsubscribe();
+    this.subsKomenGetKomen?.unsubscribe();
+    this.subsKomenGetReply?.unsubscribe();
     this.urlPath = null;
   }
 
@@ -67,7 +73,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
       path: this.urlPath,
       comment: this.commentToSend
     };
-    this.komen.sendComment(commentData).subscribe({
+    this.subsKomenSend = this.komen.sendComment(commentData).subscribe({
       next: res => {
         this.gs.log('[KOMENTAR_CREATE_REPLY_SUCCESS]', res);
         if (k) {
@@ -91,7 +97,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
         this.page = 1;
         this.pageFinished = false;
       }
-      this.komen.getComment(this.urlPath, '', this.page).subscribe({
+      this.subsKomenGetKomen = this.komen.getComment(this.urlPath, '', this.page).subscribe({
         next: res => {
           this.gs.log('[KOMENTAR_LIST_SUCCESS]', res);
           this.count = res.count;
@@ -117,7 +123,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
       k.reply_page = 1;
       k.reply_page_finised = false;
     }
-    this.komen.getReply(k.id, '', k.reply_page).subscribe({
+    this.subsKomenGetReply = this.komen.getReply(k.id, '', k.reply_page).subscribe({
       next: res => {
         this.gs.log('[REPLY_LIST_SUCCESS]', res);
         if (fresh) {
