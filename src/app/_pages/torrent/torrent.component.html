@@ -70,7 +70,7 @@
                           <div class="col-3">
                             <div class="p2p-graph graphP2p-{{ row.infoHash }}"></div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-9">
                             <p class="px-2 text-truncate" *ngIf="row.infoHash">
                               Info Hash ::
                               <span class="text-success">
@@ -83,12 +83,6 @@
                                 {{ row.magnetURI }}
                               </a>
                             </p>
-                            <p class="px-2 text-truncate" *ngIf="row.maxWebConns">
-                              Max. Connections ::
-                              <span class="text-success">
-                                {{ row.maxWebConns }}
-                              </span>
-                            </p>
                             <div class="px-2 text-truncate">
                               Announce Trackers ::
                               <ul class="text-success m-0">
@@ -98,29 +92,28 @@
                               </ul>
                             </div>
                             <div class="p-2">
-                              <button mat-stroked-button color="warn" class="m-1" (click)="refreshGraph(row)">
+                              <button mat-stroked-button class="m-1 text-warning" (click)="refreshGraph(row)">
                                 <mat-icon class="me-1">refresh</mat-icon>
                                 Refresh Graph
                               </button>
-                              <button mat-stroked-button color="warn" class="m-1" (click)="removeTorrent(row)">
+                              <button mat-stroked-button class="m-1 text-warning" (click)="removeTorrent(row)">
                                 <mat-icon class="me-1">delete_outline</mat-icon>
                                 Remove
                               </button>
-                              <button mat-stroked-button color="warn" class="m-1" (click)="resumeTorrent(row)" *ngIf="row.paused">
+                              <button mat-stroked-button class="m-1 text-warning" (click)="resumeTorrent(row)" *ngIf="row.paused">
                                 <mat-icon class="me-1">play_arrow</mat-icon>
                                 Resume
                               </button>
-                              <button mat-stroked-button color="warn" class="m-1" (click)="pauseTorrent(row)" *ngIf="!row.paused">
+                              <button mat-stroked-button class="m-1 text-warning" (click)="pauseTorrent(row)" *ngIf="!row.paused">
                                 <mat-icon class="me-1">pause</mat-icon>
                                 Pause
                               </button>
                             </div>
-                          </div>
-                          <div class="col-5">
                             <div class="px-2">
-                              Content Files ✨ Klik Untuk Download ::
-                              <ul class="m-0">
-                                <li *ngFor="let f of row.files">
+                              <div mat-subheader class="p-0">Rincian Isi Berkas ✨</div>
+                              <mat-selection-list [multiple]="false">
+                                <mat-list-option *ngFor="let f of row.files" class="h-100">
+                                  <mat-icon mat-list-icon class="ps-3">file_present</mat-icon>
                                   <div (click)="saveFile(f)" style="cursor: pointer;">
                                     <span class="text-{{ f.downloaded / f.length >= 1 ? 'primary' : 'bifeldy-dark' }}">
                                       {{ f.name }}
@@ -134,8 +127,8 @@
                                       {{ f.downloaded | bytes }} / {{ f.length | bytes }}
                                     </span>
                                   </div>
-                                </li>
-                              </ul>
+                                </mat-list-option>
+                              </mat-selection-list>
                             </div>
                           </div>
                         </div>

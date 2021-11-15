@@ -7,12 +7,11 @@ import { ToastrService } from 'ngx-toastr';
 import { saveAs } from 'file-saver';
 import Graph from 'p2p-graph';
 
-import User from '../../_shared/models/User';
-
 import { GlobalService } from '../../_shared/services/global.service';
 import { TorrentService } from '../../_shared/services/torrent.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 import { AuthService } from '../../_shared/services/auth.service';
+import { StatsServerService } from '../../_shared/services/stats-server.service';
 
 @Component({
   selector: 'app-torrent',
@@ -27,8 +26,6 @@ import { AuthService } from '../../_shared/services/auth.service';
   ],
 })
 export class TorrentComponent implements OnInit, OnDestroy {
-
-  currentUser: User = null;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -64,7 +61,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
     public as: AuthService,
     public torrent: TorrentService,
     private toast: ToastrService,
-    private ds: DialogService
+    private ds: DialogService,
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -74,7 +72,6 @@ export class TorrentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.torrent.tableDataRow);
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.dataSource.sort = this.sort;
       this.reviveTorrent();
     }
@@ -176,7 +173,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
     const userInput = {
       torrentBerkasName: {
         inputLabel: 'Nama Torrent',
-        inputText: `Torrent Dari ${this.currentUser.username}`,
+        inputText: `Torrent # ${this.ss.mySocket.id} @ ${new Date().toUTCString()}`,
       }
     };
     if (this.files.length == 1) {
