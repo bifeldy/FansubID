@@ -47,6 +47,20 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
             ]
           });
           if (selectedUser.length === 0) {
+            const result: any = {};
+            req.body.username = req.body.username.replace(/\s/g, '').replace(/[^a-z0-9]/g, '');
+            if (req.body.username.length < 8) {
+              result.username = 'Nama Pengguna Minimal 8 Huruf';
+            }
+            if (!req.body.email.match(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)) {
+              result.email = 'Email Tidak Valid';
+            }
+            if (Object.keys(result).length > 0) {
+              return res.status(400).json({
+                info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
+                result
+              });
+            }
             const ktpRepo = getRepository(KartuTandaPenduduk);
             const newUserKtp = new KartuTandaPenduduk();
             newUserKtp.nama = req.body.name;
@@ -57,8 +71,8 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
             newUserProfile.cover_url = '/favicon.ico';
             const resProfileSave = await profileRepo.save(newUserProfile);
             const newUser = new User();
-            newUser.username = req.body.username.replace(/\s/g, '');
-            newUser.email = req.body.email.replace(/\s/g, '');
+            newUser.username = req.body.username;
+            newUser.email = req.body.email;
             newUser.image_url = '/favicon.ico';
             newUser.password = CryptoJS.SHA512(req.body.password).toString();
             newUser.kartu_tanda_penduduk_ = resKtpSave;
