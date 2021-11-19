@@ -37,9 +37,6 @@ import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/programs/
 
 import { environment } from './src/environments/server/environment';
 
-// Helper
-import jwt from './src/api/helpers/jwt';
-
 // Server Settings
 import { serverGet, serverGetDiscordNotification } from './src/api/settings';
 
@@ -168,14 +165,7 @@ function startDiscordBot(): void {
 }
 
 function socketGenerateId(token: string): string {
-  let user = null;
-  try {
-    const decoded = jwt.JwtDecrypt(token);
-    user = decoded.user;
-  } catch (error) {
-    console.error(error);
-  }
-  return user ? `Weeb-${user.username}` : `Neet-${new Date().getTime()}`;
+  return `WeeBNeeT-${new Date().getTime()}`;
 }
 
 // Socket.io

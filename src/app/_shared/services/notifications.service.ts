@@ -19,10 +19,9 @@ export class NotificationsService {
         type: 'info',
         title: 'Pemberitahuan!',
         content: `
-          Website masih dalam tahap pengembangan sehingga belum semua fitur tersedia.
-          Jika Ingin Request Fitur Dapat Menghubungi Di Kanal Discord
-          '<a href="https://discord.gg/xGWdExk" target="_blank" class="text-decoration-none">#dev-prog</a>'.
-          Terima kasih. ^_^
+          Website masih dalam tahap pengembangan. Jika ingin request fitur baru ataupun melaporkan
+          <i>Bug</i> dapat menulis pesan di kanal Discord '<a href="https://discord.gg/xGWdExk"
+          target="_blank" class="text-decoration-none">#dev-prog</a>'. Terima kasih. ^_^
         `,
         dismissible: true
       }

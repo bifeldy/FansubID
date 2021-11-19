@@ -130,7 +130,7 @@ export class StatsServerService {
         -1,
         'warning',
         'Sambungan Terputus',
-        'Tidak dapat terhubung <i>peer-to-peer</i> dan menggunakan fitur obrolan!',
+        'Tidak dapat terhubung dengan <i>Server</i> melalui <i>WebSocket</i>, silahkan <i>Refresh</i> halaman!',
         false
       );
       if (this.intervalPingPong) {
