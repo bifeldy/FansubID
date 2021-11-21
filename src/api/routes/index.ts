@@ -210,20 +210,20 @@ router.use('/torrent', torrentRouter);
 
 // POST `/api/register`
 router.post('/register', auth.registerModule, async (req: UserRequest, res: Response, next) => {
-  req.bot?.send(
-    new MessageEmbed()
-    .setColor('#0099ff')
-    .setTitle(req.user.kartu_tanda_penduduk_.nama)
-    .setURL(`${environment.baseUrl}/user/${req.user.username}`)
-    .setAuthor('Hikki - Pendaftaran Pengguna Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-    .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
-    .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
-    .setTimestamp(req.user.updated_at)
-    .setFooter(
-      req.user.username,
-      req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
-    )
-  ).catch(console.error);
+  req.bot?.send('', {
+    embed: new MessageEmbed()
+      .setColor('#0099ff')
+      .setTitle(req.user.kartu_tanda_penduduk_.nama)
+      .setURL(`${environment.baseUrl}/user/${req.user.username}`)
+      .setAuthor('Hikki - Pendaftaran Pengguna Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+      .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
+      .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
+      .setTimestamp(req.user.updated_at)
+      .setFooter(
+        req.user.username,
+        req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
+      )
+  }).catch(console.error);
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {
@@ -316,20 +316,20 @@ router.post('/promote', auth.isAuthorized, async (req: UserRequest, res: Respons
         if (user.verified) {
           user.role = req.body.role;
           const resUserSave = await userRepo.save(user);
-          req.bot?.send(
-            new MessageEmbed()
-            .setColor('#69f0ae')
-            .setTitle(resUserSave.kartu_tanda_penduduk_.nama)
-            .setURL(`${environment.baseUrl}/user/${resUserSave.username}`)
-            .setAuthor(`Hikki - Promosi Menjadi ${resUserSave.role}`, `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-            .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, ' ').trim())
-            .setThumbnail(resUserSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resUserSave.image_url)
-            .setTimestamp(resUserSave.updated_at)
-            .setFooter(
-              `Diangkat promosi oleh :: ${req.user.username}`,
-              req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
-            )
-          ).catch(console.error);
+          req.bot?.send('', {
+            embed: new MessageEmbed()
+              .setColor('#69f0ae')
+              .setTitle(resUserSave.kartu_tanda_penduduk_.nama)
+              .setURL(`${environment.baseUrl}/user/${resUserSave.username}`)
+              .setAuthor(`Hikki - Promosi Menjadi ${resUserSave.role}`, `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+              .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, ' ').trim())
+              .setThumbnail(resUserSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resUserSave.image_url)
+              .setTimestamp(resUserSave.updated_at)
+              .setFooter(
+                `Diangkat promosi oleh :: ${req.user.username}`,
+                req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
+              )
+          }).catch(console.error);
           delete resUserSave.password;
           delete resUserSave.session_token;
           delete resUserSave.kartu_tanda_penduduk_;

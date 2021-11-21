@@ -191,22 +191,22 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             delete resFansubSave.user_.created_at;
             delete resFansubSave.user_.updated_at;
           }
-          req.bot?.send(
-            new MessageEmbed()
-            .setColor('#0099ff')
-            .setTitle(resFansubSave.name)
-            .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
-            .setAuthor('Hikki - Penambahan Fansub Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-            .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
-            // eslint-disable-next-line max-len
-            .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
-            .setTimestamp(resFansubSave.updated_at)
-            .setFooter(
-              resFansubSave.user_.username,
+          req.bot?.send('', {
+            embed: new MessageEmbed()
+              .setColor('#0099ff')
+              .setTitle(resFansubSave.name)
+              .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
+              .setAuthor('Hikki - Penambahan Fansub Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+              .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
               // eslint-disable-next-line max-len
-              resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
-            )
-          ).catch(console.error);
+              .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
+              .setTimestamp(resFansubSave.updated_at)
+              .setFooter(
+                resFansubSave.user_.username,
+                // eslint-disable-next-line max-len
+                resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
+              )
+          }).catch(console.error);
           req.io.volatile.emit('new-fansub', resFansubSave);
           return res.status(200).json({
             info: `😅 200 - Fansub API :: Tambah Baru 🤣`,
@@ -569,22 +569,22 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
           delete resFansubSave.user_.created_at;
           delete resFansubSave.user_.updated_at;
         }
-        req.bot?.send(
-          new MessageEmbed()
-          .setColor('#ff4081')
-          .setTitle(resFansubSave.name)
-          .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
-          .setAuthor('Hikki - Pembaharuan Data Fansub', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-          .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
-          // eslint-disable-next-line max-len
-          .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
-          .setTimestamp(resFansubSave.updated_at)
-          .setFooter(
-            resFansubSave.user_.username,
+        req.bot?.send('', {
+          embed: new MessageEmbed()
+            .setColor('#ff4081')
+            .setTitle(resFansubSave.name)
+            .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
+            .setAuthor('Hikki - Pembaharuan Data Fansub', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+            .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
             // eslint-disable-next-line max-len
-            resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
-          )
-        ).catch(console.error);
+            .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
+            .setTimestamp(resFansubSave.updated_at)
+            .setFooter(
+              resFansubSave.user_.username,
+              // eslint-disable-next-line max-len
+              resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
+            )
+        }).catch(console.error);
         return res.status(200).json({
           info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
           result: resFansubSave

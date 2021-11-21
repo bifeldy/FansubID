@@ -197,22 +197,22 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete bannedUser.banned_by_.created_at;
           delete bannedUser.banned_by_.updated_at;
         }
-        req.bot?.send(
-          new MessageEmbed()
-          .setColor('#c5e510')
-          .setTitle(banned.user_.username)
-          .setURL(`${environment.baseUrl}/user/${banned.user_.username}`)
-          .setAuthor('Hikki - Akun BANNED', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-          .addField('Alasan', banned.reason, false)
-          // eslint-disable-next-line max-len
-          .setThumbnail(banned.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.user_.image_url)
-          .setTimestamp(banned.updated_at)
-          .setFooter(
-            (banned.banned_by_ ? banned.banned_by_.username : 'AUTO_BANNED'),
+        req.bot?.send('', {
+          embed: new MessageEmbed()
+            .setColor('#c5e510')
+            .setTitle(banned.user_.username)
+            .setURL(`${environment.baseUrl}/user/${banned.user_.username}`)
+            .setAuthor('Hikki - Akun BANNED', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+            .addField('Alasan', banned.reason, false)
             // eslint-disable-next-line max-len
-            (banned.banned_by_ ? (banned.banned_by_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
-          )
-        ).catch(console.error);
+            .setThumbnail(banned.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.user_.image_url)
+            .setTimestamp(banned.updated_at)
+            .setFooter(
+              (banned.banned_by_ ? banned.banned_by_.username : 'AUTO_BANNED'),
+              // eslint-disable-next-line max-len
+              (banned.banned_by_ ? (banned.banned_by_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
+            )
+        }).catch(console.error);
         return res.status(200).json({
           info: `😅 200 - Banned API :: Berhasil BAN User 🤣`,
           results: bannedUser

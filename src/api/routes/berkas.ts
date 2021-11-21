@@ -291,27 +291,27 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
         delete resFileSave.user_.created_at;
         delete resFileSave.user_.updated_at;
       }
-      req.bot?.send(
-        new MessageEmbed()
-        .setColor('#0099ff')
-        .setTitle(resFileSave.name)
-        .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
-        .setAuthor('Hikki - Penambahan Berkas Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-        .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
-        .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
-        .addField('Fansub', fansubEmbedData.join(', '), false)
-        .addFields(
-          { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
-          { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
-          { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
-        )
-        .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
-        .setTimestamp(resFileSave.updated_at)
-        .setFooter(
-          resFileSave.user_.username,
-          resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
-        )
-      ).catch(console.error);
+      req.bot?.send('', {
+        embed: new MessageEmbed()
+          .setColor('#0099ff')
+          .setTitle(resFileSave.name)
+          .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
+          .setAuthor('Hikki - Penambahan Berkas Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+          .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
+          .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
+          .addField('Fansub', fansubEmbedData.join(', '), false)
+          .addFields(
+            { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
+            { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
+            { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
+          )
+          .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
+          .setTimestamp(resFileSave.updated_at)
+          .setFooter(
+            resFileSave.user_.username,
+            resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
+          )
+      }).catch(console.error);
       if (!resFileSave.private) {
         req.io.volatile.emit('new-berkas', resFileSave);
       }
@@ -559,28 +559,28 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
             delete resFileSave.user_.created_at;
             delete resFileSave.user_.updated_at;
           }
-          req.bot?.send(
-            new MessageEmbed()
-            .setColor('#ff4081')
-            .setTitle(resFileSave.name)
-            .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
-            .setAuthor('Hikki - Pembaharuan Data Berkas', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-            .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
-            // eslint-disable-next-line max-len
-            .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
-            .addField('Fansub', fansubEmbedData.join(', '), false)
-            .addFields(
-              { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
-              { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
-              { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
-            )
-            .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
-            .setTimestamp(resFileSave.updated_at)
-            .setFooter(
-              resFileSave.user_.username,
-              resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
-            )
-          ).catch(console.error);
+          req.bot?.send('', {
+            embed: new MessageEmbed()
+              .setColor('#ff4081')
+              .setTitle(resFileSave.name)
+              .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
+              .setAuthor('Hikki - Pembaharuan Data Berkas', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+              .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
+              // eslint-disable-next-line max-len
+              .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
+              .addField('Fansub', fansubEmbedData.join(', '), false)
+              .addFields(
+                { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
+                { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
+                { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
+              )
+              .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
+              .setTimestamp(resFileSave.updated_at)
+              .setFooter(
+                resFileSave.user_.username,
+                resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
+              )
+          }).catch(console.error);
           return res.status(200).json({
             info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
             result: resFileSave
