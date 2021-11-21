@@ -18,18 +18,15 @@ export class KartuTandaPenduduk {
   nama: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   tempat_lahir: string;
 
   @Column({ type: 'date', nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   tanggal_lahir: Date;
 
   @Column({ type: 'enum', enum: [
     JenisKelamin.LAKI,
     JenisKelamin.PEREMPUAN
   ], nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   jenis_kelamin: JenisKelamin;
 
   @Column({ type: 'enum', enum: [
@@ -38,7 +35,6 @@ export class KartuTandaPenduduk {
     GolonganDarah.O,
     GolonganDarah.AB
   ], nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   golongan_darah: GolonganDarah;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -51,7 +47,6 @@ export class KartuTandaPenduduk {
   rw: number;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   kelurahan_desa: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -68,7 +63,6 @@ export class KartuTandaPenduduk {
   agama: Agama;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   status_perkawinan: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -81,10 +75,8 @@ export class KartuTandaPenduduk {
   kewarganegaraan: WargaNegara;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   created_at: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   updated_at: number;
 }

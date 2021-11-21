@@ -23,48 +23,37 @@ export class Berkas {
   private: boolean;
 
   @Column({ type: 'text' })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   download_url: string;
 
   @Column({ type: 'text', nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   image_url: string;
 
   @Column({ type: 'int', default: 0 })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   view_count: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   created_at: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   updated_at: number;
 
   @ManyToOne(type => ProjectType)
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   project_type_: ProjectType;
 
   @ManyToOne(type => Anime)
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   anime_: Anime;
 
   @ManyToOne(type => Dorama)
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   dorama_: Dorama;
 
   @ManyToMany(type => Fansub)
   @JoinTable()
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   fansub_: Fansub[];
 
   @ManyToOne(type => User)
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   user_: User;
 
   @OneToOne(type => Attachment)
   @JoinColumn()
-  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   attachment_: Attachment;
 }

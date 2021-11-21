@@ -22,7 +22,6 @@ function JwtEncode(user: any, rememberMe = false): any {
 
 function JwtDecode(req: Request, res: Response, next: NextFunction): any {
   try {
-    // eslint-disable-next-line max-len
     let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length);

@@ -22,7 +22,6 @@ import { gDrive } from '../programs/gDrive';
 // Middleware
 import auth from '../middlewares/auth';
 
-// eslint-disable-next-line 
 function fileLampiranFilter(req, file, cb) {
   const typeArray = file.mimetype.split('/');
   const fileType = typeArray[0];
@@ -48,7 +47,6 @@ const upload = multer({
 
 const router = Router();
 
-// eslint-disable-next-line
 function deleteAttachment(fileName) {
   fs.unlink(`${environment.uploadFolder}/${fileName}`, (err) => {
     if (err) {

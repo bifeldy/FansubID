@@ -4,7 +4,6 @@ import { UserRequest } from '../models/UserRequest';
 
 import { environment } from '../../environments/server/environment';
 
-// eslint-disable-next-line 
 function log(text, data = null, forcePrint = false) {
   if (!environment.production) {
     forcePrint = true;
@@ -18,7 +17,6 @@ function log(text, data = null, forcePrint = false) {
   }
 }
 
-// eslint-disable-next-line
 async function reqHeaderBodyCleanUp(req: UserRequest, res: Response, next: NextFunction) {
   for (const propName in req.body) {
     if (req.body[propName] === null || req.body[propName] === undefined || req.body[propName] === '') {

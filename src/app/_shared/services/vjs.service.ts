@@ -17,7 +17,6 @@ export class VjsService {
     }
   }
 
-  // eslint-disable-next-line
   async loadSubtitle(subtitleUrls, callback) {
     const urls: any = [];
     if (subtitleUrls.length > 0) {
@@ -45,7 +44,6 @@ export class VjsService {
     }
   }
 
-  // eslint-disable-next-line
   async loadFonts(fontUrls, callback) {
     const urls: any = [];
     if (fontUrls.length > 0) {

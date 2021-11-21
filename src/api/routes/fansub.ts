@@ -198,12 +198,10 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
               .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
               .setAuthor('Hikki - Penambahan Fansub Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
               .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
-              // eslint-disable-next-line max-len
               .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
               .setTimestamp(resFansubSave.updated_at)
               .setFooter(
                 resFansubSave.user_.username,
-                // eslint-disable-next-line max-len
                 resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
               )
           }).catch(console.error);
@@ -576,12 +574,10 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
             .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
             .setAuthor('Hikki - Pembaharuan Data Fansub', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
             .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
-            // eslint-disable-next-line max-len
             .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
             .setTimestamp(resFansubSave.updated_at)
             .setFooter(
               resFansubSave.user_.username,
-              // eslint-disable-next-line max-len
               resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
             )
         }).catch(console.error);

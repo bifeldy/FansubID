@@ -30,7 +30,6 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
-  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   image_url = '/assets/img/form-no-image.png';
 
   projectData = {

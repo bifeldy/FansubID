@@ -18,7 +18,6 @@ export class User {
   email: string;
 
   @Column({ type: 'text', nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   image_url: string;
 
   @Column({ type: 'enum', enum: [
@@ -37,24 +36,19 @@ export class User {
   discord: string;
 
   @Column({ type: 'text', nullable: true })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   session_token: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   created_at: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   updated_at: number;
 
   @OneToOne(type => KartuTandaPenduduk)
   @JoinColumn()
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   kartu_tanda_penduduk_: KartuTandaPenduduk;
 
   @OneToOne(type => Profile)
   @JoinColumn()
-  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   profile_: Profile;
 }

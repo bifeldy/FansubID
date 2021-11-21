@@ -29,16 +29,12 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   imagePhoto = null;
   imagePhotoErrorText = null;
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   image_photo = null;
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   image_photo_original = null;
 
   imageCover = null;
   imageCoverErrorText = null;
-  // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle,id-blacklist,id-match
   image_cover = null;
-  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle, id-blacklist, id-match
   image_cover_original = null;
 
   passwordHide = true;

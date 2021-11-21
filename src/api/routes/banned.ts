@@ -204,12 +204,10 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
             .setURL(`${environment.baseUrl}/user/${banned.user_.username}`)
             .setAuthor('Hikki - Akun BANNED', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
             .addField('Alasan', banned.reason, false)
-            // eslint-disable-next-line max-len
             .setThumbnail(banned.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.user_.image_url)
             .setTimestamp(banned.updated_at)
             .setFooter(
               (banned.banned_by_ ? banned.banned_by_.username : 'AUTO_BANNED'),
-              // eslint-disable-next-line max-len
               (banned.banned_by_ ? (banned.banned_by_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
             )
         }).catch(console.error);

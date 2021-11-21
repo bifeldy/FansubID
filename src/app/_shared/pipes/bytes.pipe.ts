@@ -53,7 +53,6 @@ export class BytesPipe implements PipeTransform {
     let unit = from;
     while (unit !== 'B') {
       bytes *= 1024;
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       unit = BytesPipe.formats[unit].prev!;
     }
     if (to) {

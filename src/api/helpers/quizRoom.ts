@@ -9,7 +9,6 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// eslint-disable-next-line 
 export async function getQuizHirakata() {
   try {
     const manager = getManager();
@@ -58,7 +57,6 @@ export async function getQuizHirakata() {
   }
 }
 
-// eslint-disable-next-line
 export async function getQuizKanji(school = null, jlpt = null) {
   try {
     if (school == null && jlpt == null) {

@@ -108,7 +108,6 @@ export class GlobalService {
   }
 
   get randomColor(): any {
-    // eslint-disable-next-line no-bitwise
     return (Math.random() * 0xFFFFFF << 0).toString(16);
   }
 

@@ -10,7 +10,6 @@ import jwt from '../helpers/jwt';
 
 import { User } from '../entities/User';
 
-// eslint-disable-next-line
 export async function discordBot(io: Server, msg: Message): Promise<Message> {
   if (msg.content === '~about') {
     return msg.channel.send(`<@${msg.author.id}> https://github.com/bifeldy/Hikki`);
