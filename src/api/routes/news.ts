@@ -100,20 +100,22 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
           delete resNewsSave.user_.created_at;
           delete resNewsSave.user_.updated_at;
         }
-        req.bot?.send('', {
-          embed: new MessageEmbed()
-            .setColor('#0099ff')
-            .setTitle(resNewsSave.title)
-            .setURL(`${environment.baseUrl}/news/${resNewsSave.id}`)
-            .setAuthor('Hikki - Penambahan Berita Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-            .setDescription(resNewsSave.content.replace(/<[^>]*>/g, ' ').trim())
-            .setImage(resNewsSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.image_url)
-            .setTimestamp(resNewsSave.updated_at)
-            .setFooter(
-              resNewsSave.user_.username,
-              resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
-            )
-        }).catch(console.error);
+        req.botSendNews({
+          embeds: [
+            new MessageEmbed()
+              .setColor('#0099ff')
+              .setTitle(resNewsSave.title)
+              .setURL(`${environment.baseUrl}/news/${resNewsSave.id}`)
+              .setAuthor('Hikki - Penambahan Berita Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+              .setDescription(resNewsSave.content.replace(/<[^>]*>/g, ' ').trim())
+              .setImage(resNewsSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.image_url)
+              .setTimestamp(resNewsSave.updated_at)
+              .setFooter(
+                resNewsSave.user_.username,
+                resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
+              )
+          ]
+        });
         req.io.volatile.emit('new-news', resNewsSave);
         return res.status(200).json({
           info: `😅 200 - News API :: Tambah Baru 🤣`,
@@ -207,20 +209,22 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
               delete resNewsSave.user_.created_at;
               delete resNewsSave.user_.updated_at;
             }
-            req.bot?.send('', {
-              embed: new MessageEmbed()
-                .setColor('#ff4081')
-                .setTitle(resNewsSave.title)
-                .setURL(`${environment.baseUrl}/news/${resNewsSave.id}`)
-                .setAuthor('Hikki - Pembaharuan Data Berita', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-                .setDescription(resNewsSave.content.replace(/<[^>]*>/g, ' ').trim())
-                .setImage(resNewsSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.image_url)
-                .setTimestamp(resNewsSave.updated_at)
-                .setFooter(
-                  resNewsSave.user_.username,
-                  resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
-                )
-            }).catch(console.error);
+            req.botSendNews({
+              embeds: [
+                new MessageEmbed()
+                  .setColor('#ff4081')
+                  .setTitle(resNewsSave.title)
+                  .setURL(`${environment.baseUrl}/news/${resNewsSave.id}`)
+                  .setAuthor('Hikki - Pembaharuan Data Berita', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+                  .setDescription(resNewsSave.content.replace(/<[^>]*>/g, ' ').trim())
+                  .setImage(resNewsSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.image_url)
+                  .setTimestamp(resNewsSave.updated_at)
+                  .setFooter(
+                    resNewsSave.user_.username,
+                    resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
+                  )
+              ]
+            });
             return res.status(200).json({
               info: `😅 200 - News API :: Ubah ${req.params.id} 🤣`,
               result: resNewsSave

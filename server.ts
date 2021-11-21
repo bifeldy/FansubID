@@ -27,7 +27,7 @@ import { join } from 'path';
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 
-import { Client, TextChannel, Message } from 'discord.js';
+import { Client, TextChannel, Message, NewsChannel, Intents } from 'discord.js';
 
 import MorganChalk from './src/api/helpers/morganChalk';
 
@@ -113,11 +113,13 @@ async function updateVisitor(): Promise<any> {
   if (bot && io) {
     bot?.user?.setPresence({
       status: 'idle',
-      activity: {
-        name: `${io.sockets.sockets.size} Pengunjung`,
-        type: 'WATCHING',
-        url: 'http://hikki.id'
-      }
+      activities: [
+        {
+          name: `${io.sockets.sockets.size} Pengunjung`,
+          type: 'WATCHING',
+          url: 'http://hikki.id'
+        }
+      ]
     });
   }
 }
@@ -143,16 +145,14 @@ function startDiscordBot(): void {
         } catch (error) {
           github = null;
         }
-        // tslint:disable-next-line: max-line-length
         bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(bot.user.id)?.setNickname(`Hikki - ${github?.sha?.slice(0, 7)}`);
       }
     });
   });
   bot.on('message', async (msg: Message) => {
     try {
-      msg.channel = (msg.channel as TextChannel);
       if (msg.channel.id === environment.discordBotChannelBotId) {
-        logger.log(`[${msg.guild.name}] [${msg.channel.name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content}`);
+        logger.log(`[${msg.guild.name}] [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content}`);
         await discordBot(io, msg);
       }
     } catch (error) {
@@ -207,7 +207,7 @@ export function app(): http.Server {
     startSocketIo();
   }
   if (!bot) {
-    bot = new Client();
+    bot = new Client({ intents: [Intents.FLAGS.GUILDS] });
     startDiscordBot();
   }
 
@@ -226,19 +226,12 @@ export function app(): http.Server {
 
   expressApp.use(async (req: UserRequest, res, next) => {
     req.io = io;
-    req.bot = environment.production ? (bot.channels.cache.get(environment.discordBotChannelEventId) as TextChannel) : null;
-    if (req.bot) {
-      const botStatus = serverGetDiscordNotification();
-      let oldFunction = req.bot.send;
-      req.bot.send = function () {
-        if (botStatus) {
-          return oldFunction.apply(oldFunction, arguments);
-        }
-        return new Promise((resolve, reject) => {
-          reject(`[DISCORD_BOT_STATUS] 💢 ${botStatus}`);
-        });
+    req.botSendNews = function botSendNews(optionMessage: any) {
+      const botEnabled = environment.production ? (bot.channels.cache.get(environment.discordBotChannelEventId) as NewsChannel) : null;
+      if (botEnabled && serverGetDiscordNotification()) {
+        botEnabled.send(optionMessage).catch(console.error);
       }
-    }
+    };
     return next();
   });
 
@@ -278,7 +271,6 @@ createConnection({
   ...typeOrmConfig
 }).then(async connection => {
   const c: any = connection;
-  // tslint:disable-next-line: max-line-length
   logger.log(`[DB] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
   const port = process.env.PORT || 4000;
   const listener: any = app().listen(port, () => {
