@@ -126,11 +126,14 @@ async function updateVisitor(): Promise<any> {
 
 // Discord Bot
 function startDiscordBot(): void {
-  bot.on('disconnect', (event) => {
-    logger.log(`[DISCORD] 🎉 DISCONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
+  bot.on('messageCreate', (msg: Message) => {
+    if (msg.channel.id === environment.discordBotChannelBotId && msg.content.startsWith('~')) {
+      logger.log(`[${msg.guild.name}] [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content}`);
+      discordBot(io, msg).catch(console.error);
+    }
   });
-  bot.on('ready', () => {
-    logger.log(`[DISCORD] 🎉 CONNECTED ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id}`);
+  bot.once('ready', () => {
+    logger.log(`[DISCORD_CONNECTED] 🎉 ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id} 🎶`);
     updateVisitor();
     request({
       method: 'GET',
@@ -149,19 +152,7 @@ function startDiscordBot(): void {
       }
     });
   });
-  bot.on('message', async (msg: Message) => {
-    try {
-      if (msg.channel.id === environment.discordBotChannelBotId) {
-        logger.log(`[${msg.guild.name}] [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content}`);
-        await discordBot(io, msg);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  });
-  if (environment.production) {
-    bot.login(environment.discordBotLoginToken).catch(console.error);
-  }
+  bot.login(environment.discordBotLoginToken).catch(console.error);
 }
 
 function socketGenerateId(token: string): string {
@@ -207,7 +198,32 @@ export function app(): http.Server {
     startSocketIo();
   }
   if (!bot) {
-    bot = new Client({ intents: [Intents.FLAGS.GUILDS] });
+    bot = new Client({
+      intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILD_BANS,
+        Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+        Intents.FLAGS.GUILD_INTEGRATIONS,
+        Intents.FLAGS.GUILD_WEBHOOKS,
+        Intents.FLAGS.GUILD_INVITES,
+        Intents.FLAGS.GUILD_VOICE_STATES,
+        Intents.FLAGS.GUILD_PRESENCES,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Intents.FLAGS.GUILD_MESSAGE_TYPING,
+        Intents.FLAGS.DIRECT_MESSAGES,
+        Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+        Intents.FLAGS.DIRECT_MESSAGE_TYPING
+      ],
+      partials: [
+        'MESSAGE',
+        'REACTION',
+        'GUILD_MEMBER',
+        'USER',
+        'CHANNEL'
+      ]
+    });
     startDiscordBot();
   }
 

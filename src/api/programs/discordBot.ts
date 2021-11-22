@@ -12,10 +12,10 @@ import { User } from '../entities/User';
 
 export async function discordBot(io: Server, msg: Message): Promise<Message> {
   if (msg.content === '~about') {
-    return msg.channel.send(`<@${msg.author.id}> https://github.com/bifeldy/Hikki`);
+    return msg.reply({ content: `<@${msg.author.id}> https://github.com/bifeldy/Hikki` });
   } else if (msg.content === '~ping') {
     const latency = new Date().getTime() - new Date(msg.createdTimestamp).getTime();
-    return msg.channel.send(`<@${msg.author.id}> Pong ${latency} ms late!`);
+    return msg.reply({ content: `<@${msg.author.id}> Pong ${latency} ms late!` });
   } else if (msg.content.startsWith('~verify ')) {
     const args = msg.content.split(' ');
     if (args.length >= 3 && args.length <= 4) {
@@ -33,7 +33,7 @@ export async function discordBot(io: Server, msg: Message): Promise<Message> {
             relations: ['kartu_tanda_penduduk_', 'profile_']
           });
           if (user.verified) {
-            return msg.channel.send(`<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰`);
+            return msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
           } else if (args[1] === SosMed.DISCORD) {
             user.verified = true;
             await userRepo.save(user);
@@ -41,7 +41,7 @@ export async function discordBot(io: Server, msg: Message): Promise<Message> {
             if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
               await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
             }
-            await msg.channel.send(`<@${msg.author.id}> Berhasil 😚 Enjoy! 🤩`);
+            await msg.reply({ content: `<@${msg.author.id}> Berhasil 😚 Enjoy! 🤩` });
             return (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
               embeds: [
                 new MessageEmbed()
@@ -62,14 +62,16 @@ export async function discordBot(io: Server, msg: Message): Promise<Message> {
             throw new Error('Format Data Salah / Token Expired!');
           }
         } else {
-          return msg.channel.send(`<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔`);
+          return msg.reply({ content: `<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔` });
         }
       } catch (error) {
         console.error(error);
-        return msg.channel.send(`<@${msg.author.id}> Format data salah atau token expired 🤔`);
+        return msg.reply({ content: `<@${msg.author.id}> Format data salah atau token expired 🤔` });
       }
     } else {
-      return msg.channel.send(`<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔`);
+      return msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
     }
+  } else {
+    return msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/documentation 💩` });
   }
 }
