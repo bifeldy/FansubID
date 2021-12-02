@@ -15,6 +15,8 @@ import { WinboxService } from '../../_shared/services/winbox.service';
 })
 export class AboutComponent implements OnInit {
 
+  detailed = false;
+
   aboutProject = [
     {
       logo: '/assets/img/about/nodejs_logo.png',
@@ -72,6 +74,10 @@ export class AboutComponent implements OnInit {
 
   openWebsite(url: string): void {
     this.wb.winboxOpenUri(url);
+  }
+
+  toggleDetail(): void {
+    this.detailed = !this.detailed;
   }
 
 }

@@ -22,7 +22,7 @@
 <div class="container">
 
   <!-- Detail -->
-  <div class="row">
+  <div class="row pb-3">
     <div class="col-12">
       <div class="alert alert-secondary fade show">
         <h2 class="alert-heading">Tentang & Informasi!</h2>
@@ -56,7 +56,12 @@
         </p>
       </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 text-center">
+      <button mat-button color="accent" class="m-3" (click)="toggleDetail()">
+        ~ So Bad Yet, So Good! (｡&gt;﹏&lt;｡) ~
+      </button>
+    </div>
+    <div class="col-12" *ngIf="detailed">
       <div class="row">
         <div class="col-12 col-md-6 col-lg-4 col-xl-3 p-3" *ngFor="let p of aboutProject">
           <mat-card class="gradient-border rgb-border">
@@ -80,7 +85,7 @@
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col" *ngIf="detailed">
       <div class="row">
         <div class="col-12 text-center p-3">
           <button mat-flat-button color="accent" class="m-1" matTooltip="{{ l.value }}" *ngFor="let l of library | keyvalue">
