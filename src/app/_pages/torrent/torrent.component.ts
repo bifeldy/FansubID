@@ -96,7 +96,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
 
   toggleExpanded(row: any): void {
     this.torrent.expandedRow = this.torrent.expandedRow === row ? null : row
-    const selectedTorrent = this.torrent.client.get(row.infoHash);
+    const selectedTorrent = this.torrent.webClient.get(row.infoHash);
     this.gs.log('[TORRENT_CLICKED]', selectedTorrent as any);
   }
 
@@ -215,7 +215,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
       this.gs.log('[TORRENT_WIRE_INIT_GRAPH]', torrent);
       this.torrentsGraph[torrent.infoHash] = new Graph(`.graphP2p-${torrent.infoHash}`);
       this.torrentsGraph[torrent.infoHash].add({
-        id: (this.torrent.client as any).peerId,
+        id: (this.torrent.webClient as any).peerId,
         me: true,
         name: 'Kamu!'
       });
@@ -230,15 +230,15 @@ export class TorrentComponent implements OnInit, OnDestroy {
         wireName = `${w.remoteAddress}:${w.remotePort}`;
       }
       this.torrentsGraph[torrent.infoHash].add({ id: w.peerId, name: wireName });
-      this.torrentsGraph[torrent.infoHash].connect((this.torrent.client as any).peerId, w.peerId);
+      this.torrentsGraph[torrent.infoHash].connect((this.torrent.webClient as any).peerId, w.peerId);
     }
   }
 
   deleteAllGraph(torrent: any): void {
     this.gs.log('[TORRENT_WIRE_DELETE_GRAPH]', torrent);
-    const torrentWireList = this.torrentsGraph[torrent.infoHash].list().filter(w => w.id !== (this.torrent.client as any).peerId);
+    const torrentWireList = this.torrentsGraph[torrent.infoHash].list().filter(w => w.id !== (this.torrent.webClient as any).peerId);
     for (const w of torrentWireList) {
-      this.torrentsGraph[torrent.infoHash].disconnect((this.torrent.client as any).peerId, w.id);
+      this.torrentsGraph[torrent.infoHash].disconnect((this.torrent.webClient as any).peerId, w.id);
       this.torrentsGraph[torrent.infoHash].remove(w.id);
     }
   }

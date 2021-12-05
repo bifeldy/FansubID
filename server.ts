@@ -152,7 +152,9 @@ function startDiscordBot(): void {
       }
     });
   });
-  bot.login(environment.discordBotLoginToken).catch(console.error);
+  if (environment.production) {
+    bot.login(environment.discordBotLoginToken).catch(console.error);
+  }
 }
 
 function socketGenerateId(token: string): string {
@@ -260,7 +262,7 @@ export function app(): http.Server {
 
   logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
 
-  const distFolder = join(currentWorkingDir, 'dist/hikki/browser');
+  const distFolder = join(currentWorkingDir, `dist/${environment.siteName.toLocaleLowerCase()}/browser`);
   const indexHtml = fs.existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
