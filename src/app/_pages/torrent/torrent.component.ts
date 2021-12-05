@@ -95,9 +95,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
   }
 
   toggleExpanded(row: any): void {
-    this.torrent.expandedRow = this.torrent.expandedRow === row ? null : row
-    const selectedTorrent = this.torrent.webClient.get(row.infoHash);
-    this.gs.log('[TORRENT_CLICKED]', selectedTorrent as any);
+    this.torrent.expandedRow = this.torrent.expandedRow === row ? null : row;
+    this.gs.log('[TORRENT_CLICKED]', row);
   }
 
   saveFile(file): void {

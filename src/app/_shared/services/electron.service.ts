@@ -32,8 +32,21 @@ export class ElectronService {
     }
   }
 
-  send(channel: string, data = null): void {
-    this.ipcRndr?.send('torrent-client-init', data);
+  send(topic: string, data = null): void {
+    this.ipcRndr?.send(topic, data);
+  }
+
+  sendSync(refCallback: any, topic: string, data = null): void {
+    try {
+      const result = this.ipcRndr?.sendSync(topic, data);
+      if (refCallback) {
+        refCallback(null, result);
+      }
+    } catch (error) {
+      if (refCallback) {
+        refCallback(error, null);
+      }
+    }
   }
 
   handleElectronTorrent(refCallback, torrentsQueue): void {
