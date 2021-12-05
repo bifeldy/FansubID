@@ -1,6 +1,15 @@
 {
   "name": "hikki",
+  "description": "NgeWibu Dari Kamar~",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "author": {
+    "name": "B. Bias A. Ch.",
+    "email": "bifeldy@gmail.com"
+  },
+  "homepage": "https://www.hikki.id",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
