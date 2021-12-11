@@ -7,9 +7,10 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
+import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+
 import { Role } from '../../_shared/models/Role';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';

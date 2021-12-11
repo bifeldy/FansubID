@@ -1,6 +1,7 @@
+import _moment from 'moment';
+
 import { NgxMatDateFormats } from '@angular-material-components/datetime-picker';
 
-import _moment from 'moment';
 import { default as _rollupMoment } from 'moment';
 
 export const moment = _rollupMoment || _moment;

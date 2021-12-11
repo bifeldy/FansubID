@@ -1,18 +1,18 @@
+import cryptojs from 'crypto-js';
+import jwt from 'jsonwebtoken';
+
 import { Request, Response, NextFunction } from 'express';
 
 import { environment } from '../../environments/server/environment';
 
-import CryptoJS from 'crypto-js';
-import JWT from 'jsonwebtoken';
-
 const jwtAlgorithm = 'HS512';
 const jwtIssuer = 'Bifeldy';
 const jwtAudience = environment.siteName;
-const jwtSecretKey = CryptoJS.SHA512(environment.jwtSecretKey).toString();
+const jwtSecretKey = cryptojs.SHA512(environment.jwtSecretKey).toString();
 const jwtExpiredIn = 24 * 60 * 60;
 
-function JwtEncode(user: any, rememberMe = false): any {
-  return JWT.sign({ user }, jwtSecretKey, {
+export function JwtEncode(user: any, rememberMe = false): any {
+  return jwt.sign({ user }, jwtSecretKey, {
     algorithm: jwtAlgorithm,
     issuer: jwtIssuer,
     audience: jwtAudience,
@@ -20,7 +20,7 @@ function JwtEncode(user: any, rememberMe = false): any {
   });
 }
 
-function JwtDecode(req: Request, res: Response, next: NextFunction): any {
+export function JwtDecode(req: Request, res: Response, next: NextFunction): any {
   try {
     let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token.startsWith('Bearer ')) {
@@ -34,7 +34,7 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
         }
       });
     } else {
-      const decoded: {} = JWT.verify(token, jwtSecretKey);
+      const decoded: {} = jwt.verify(token, jwtSecretKey);
       return { ...decoded, token };
     }
   } catch (err) {
@@ -46,8 +46,8 @@ function JwtDecode(req: Request, res: Response, next: NextFunction): any {
   }
 }
 
-function JwtEncrypt(data): any {
-  return JWT.sign(data, jwtSecretKey, {
+export function JwtEncrypt(data): any {
+  return jwt.sign(data, jwtSecretKey, {
     algorithm: jwtAlgorithm,
     issuer: jwtIssuer,
     audience: jwtAudience,
@@ -55,12 +55,10 @@ function JwtEncrypt(data): any {
   });
 }
 
-function JwtDecrypt(token: string): any {
-  return JWT.verify(token, jwtSecretKey);
+export function JwtDecrypt(token: string): any {
+  return jwt.verify(token, jwtSecretKey);
 }
 
-function JwtView(token: string): any {
-  return JWT.decode(token);
+export function JwtView(token: string): any {
+  return jwt.decode(token);
 }
-
-export default { JwtEncode, JwtDecode, JwtEncrypt, JwtDecrypt, JwtView };

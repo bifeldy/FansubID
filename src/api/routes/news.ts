@@ -2,6 +2,9 @@ import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
 import { Equal, getRepository, ILike } from 'typeorm';
+import { MessageEmbed } from 'discord.js';
+
+import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -10,12 +13,7 @@ import { User } from '../entities/User';
 
 import { Role } from '../../app/_shared/models/Role';
 
-// Middleware
-import auth from '../middlewares/auth';
-
-import { MessageEmbed } from 'discord.js';
-
-import { environment } from '../../environments/server/environment';
+import { isAuthorized } from '../middlewares/auth';
 
 const router = Router();
 
@@ -68,7 +66,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/news`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       if ('title' in req.body && 'content' in req.body) {
@@ -172,7 +170,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 });
 
 // PUT `/api/news/:id`
-router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       if (
@@ -264,7 +262,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
 });
 
 // DELETE `/api/news/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const newsRepo = getRepository(News);

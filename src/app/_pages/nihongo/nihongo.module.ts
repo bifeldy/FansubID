@@ -2,11 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
+import { MaterialFileInputModule } from 'ngx-material-file-input';
+
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
+import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+
 import { Role } from '../../_shared/models/Role';
 
 import { NihongoListComponent } from './nihongo-list/nihongo-list.component';
@@ -23,7 +25,6 @@ import { BannerDiscordModule } from '../../_shared/components/banner-discord/ban
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { RightPanelModule } from '../../_shared/components/right-panel/right-panel.module';
 import { QuizModule } from '../../_shared/components/quiz/quiz.module';
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';

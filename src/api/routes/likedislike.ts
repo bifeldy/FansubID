@@ -12,13 +12,12 @@ import { User } from '../entities/User';
 import { Berkas } from '../entities/Berkas';
 import { Fansub } from '../entities/Fansub';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isAuthorized, isLogin } from '../middlewares/auth';
 
 const router = Router();
 
 // GET `/api/likedislike?tipe=&id=`
-router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const likedislikeRepo = getRepository(LikeDislike);
@@ -101,7 +100,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
 });
 
 // GET `/api/likedislike/:type/:idSlugUsername`
-router.get('/:type/:idSlugUsername', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/:type/:idSlugUsername', isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let selectedRepo = null;
     let selected = null;
@@ -221,7 +220,7 @@ router.get('/:type/:idSlugUsername', auth.isLogin, async (req: UserRequest, res:
 });
 
 // POST `/api/likedislike/:type/:idSlugUsername`
-router.post('/:type/:idSlugUsername', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let selectedRepo = null;
     let selected = null;
@@ -357,7 +356,7 @@ router.post('/:type/:idSlugUsername', auth.isAuthorized, async (req: UserRequest
 });
 
 // DELETE `/api/likedislike/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const likedislikeRepo = getRepository(LikeDislike);

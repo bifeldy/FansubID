@@ -1,5 +1,6 @@
 import { ServerInfo } from '../app/_shared/models/ServerInfo';
-import logger from './helpers/logger';
+
+import { log } from './helpers/logger';
 
 let settings: ServerInfo = {
   isMaintenance: false,
@@ -12,7 +13,7 @@ export function serverGet(): ServerInfo {
 }
 
 export function serverSet(server): void {
-  logger.log('[SERVER_SET] 👀', server);
+  log('[SERVER_SET] 👀', server);
   settings = server;
 }
 
@@ -21,7 +22,7 @@ export function serverGetMaintenance(): boolean {
 }
 
 export function serverSetMaintenance(isMaintenance: boolean): void {
-  logger.log('[SERVER_SET_MAINTENANCE] 👀', isMaintenance);
+  log('[SERVER_SET_MAINTENANCE] 👀', isMaintenance);
   settings.isMaintenance = isMaintenance;
 }
 
@@ -30,7 +31,7 @@ export function serverGetWinboxOpenLink(): boolean {
 }
 
 export function serverSetWinboxOpenLink(winboxOpenLink: boolean): void {
-  logger.log('[SERVER_SET_WINBOX] 👀', winboxOpenLink);
+  log('[SERVER_SET_WINBOX] 👀', winboxOpenLink);
   settings.winboxOpenLink = winboxOpenLink;
 }
 
@@ -39,6 +40,6 @@ export function serverGetDiscordNotification(): boolean {
 }
 
 export function serverSetDiscordNotification(discordNotification: boolean): void {
-  logger.log('[SERVER_SET_DISCORD] 👀', discordNotification);
+  log('[SERVER_SET_DISCORD] 👀', discordNotification);
   settings.discordNotification = discordNotification;
 }

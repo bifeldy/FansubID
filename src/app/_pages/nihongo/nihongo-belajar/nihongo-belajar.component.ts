@@ -10,7 +10,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { NihongoService } from '../../../_shared/services/nihongo.service';
 
-import User from '../../../_shared/models/User';
+import { User } from '../../../_shared/models/User';
 
 @Component({
   selector: 'app-belajar',

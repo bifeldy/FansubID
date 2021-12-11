@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
-import CryptoJS from 'crypto-js';
+import cryptojs from 'crypto-js';
 
 import { BusyService } from '../../../_shared/services/busy.service';
 import { UserService } from '../../../_shared/services/user.service';
@@ -244,7 +244,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     const body = this.gs.getDirtyValues(this.fg);
     this.gs.log('[USER_EDIT_DIRTY]', body);
     if ('new_password' in body) {
-      body.new_password = CryptoJS.SHA512(this.fg.value.new_password).toString();
+      body.new_password = cryptojs.SHA512(this.fg.value.new_password).toString();
     }
     this.submitted = true;
     if (this.fg.invalid) {

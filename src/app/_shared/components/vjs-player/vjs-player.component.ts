@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-
 import videojs from 'video.js';
+
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { GlobalService } from '../../services/global.service';
 
@@ -13,7 +13,8 @@ declare const SubtitlesOctopus: any;
 })
 export class VjsPlayerComponent implements OnInit, OnDestroy {
 
-  // see options: https://github.com/videojs/video.js/blob/mastertutorial-options.html
+  // References:
+  // https://github.com/videojs/video.js/blob/mastertutorial-options.html
 
   @ViewChild('target', { static: true }) target: ElementRef;
 

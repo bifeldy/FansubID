@@ -7,7 +7,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 
-import User from '../../../_shared/models/User';
+import { User } from '../../../_shared/models/User';
 import { Role } from '../../../_shared/models/Role';
 
 @Component({

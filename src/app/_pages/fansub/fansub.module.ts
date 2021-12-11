@@ -2,16 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { ChartsModule } from 'ng2-charts';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
-import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
+import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 
 import { Role } from '../../_shared/models/Role';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';

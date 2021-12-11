@@ -14,7 +14,7 @@ declare const Dmak: any;
 })
 export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
 
-  // references:
+  // References:
   // https://github.com/mbilbille/dmak
   // https://github.com/KanjiVG/kanjivg
 

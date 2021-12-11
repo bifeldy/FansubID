@@ -1,11 +1,10 @@
 import fetch from 'node-fetch';
 
-import { environment } from '../../environments/server/environment';
-
 import { google } from 'googleapis';
 
-// Helpers
-import logger from '../helpers/logger';
+import { environment } from '../../environments/server/environment';
+
+import { log } from '../helpers/logger';
 
 const refresh_url = 'https://oauth2.googleapis.com/token';
 const client_id = environment.driveClientId;
@@ -22,7 +21,7 @@ export async function gDrive(callback) {
     }
   });
   const res_json = await res.json();
-  logger.log(`[gDrive] 📎`, res_json);
+  log(`[gDrive] 📎`, res_json);
   googleClient.setCredentials(res_json);
   const gsApi = google.drive({
     version: 'v3',

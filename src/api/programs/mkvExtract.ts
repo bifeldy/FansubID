@@ -1,14 +1,57 @@
-// Adapted from https://github.com/qgustavor/mkv-extract/ licensed under MIT
-
-import { Decoder, tools } from 'ebml';
 import fs from 'fs';
 
-// Helpers
-import logger from '../helpers/logger';
+import { Decoder, tools } from 'ebml';
 
-function mkvExtract(fileName, filePath, callback): any {
+// Adapted from https://github.com/qgustavor/mkv-extract/ licensed under MIT
+
+import { log } from '../helpers/logger';
+
+function padZeroes(arr): any {
+  const len = Math.ceil(arr.length / 2) * 2;
+  const output = new Uint8Array(len);
+  output.set(arr, len - arr.length);
+  return output.buffer;
+}
+
+function readUnsignedInteger(data): any {
+  const view = new DataView(data);
+  return data.byteLength === 2 ? view.getUint16(0) : view.getUint32(0);
+}
+
+function formatTimestamp(timestamp): any {
+  const seconds = timestamp / 1000;
+  const hh = Math.floor(seconds / 3600);
+  let mm: any = Math.floor((seconds - hh * 3600) / 60);
+  let ss: any = (seconds - hh * 3600 - mm * 60).toFixed(2);
+  if (mm < 10) {
+    mm = `0${mm}`;
+  }
+  if (ss < 10) {
+    ss = `0${ss}`;
+  }
+  return `${hh}:${mm}:${ss}`;
+}
+
+function formatTimestampSRT(timestamp): any {
+  const seconds = timestamp / 1000;
+  let hh: any = Math.floor(seconds / 3600);
+  let mm: any = Math.floor((seconds - hh * 3600) / 60);
+  let ss: any = (seconds - hh * 3600 - mm * 60).toFixed(3);
+  if (hh < 10) {
+    hh = `0${hh}`;
+  }
+  if (mm < 10) {
+    mm = `0${mm}`;
+  }
+  if (ss < 10) {
+    ss = `0${ss}`;
+  }
+  return `${hh}:${mm}:${ss}`;
+}
+
+export function mkvExtract(fileName, filePath, callback): any {
   const startTime = new Date().getTime();
-  logger.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`);
+  log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`);
 
   const fileStream = fs.createReadStream(filePath);
   const decoder = new Decoder();
@@ -29,7 +72,7 @@ function mkvExtract(fileName, filePath, callback): any {
   });
 
   decoder.on('data', chunk => {
-    logger.log(`[MKVEXTRACT_CHUNK] ⌛ ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`);
+    log(`[MKVEXTRACT_CHUNK] ⌛ ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`);
     switch (chunk[0]) {
       case 'end':
         // if (chunk[1].name === 'Info') {
@@ -95,7 +138,7 @@ function mkvExtract(fileName, filePath, callback): any {
 
   fileStream.on('end', () => {
     const endTime = new Date().getTime();
-    logger.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`);
+    log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`);
     trackData.forEach((entries, index) => {
       const heading = entries[0];
       const isASS = heading.includes('Format:');
@@ -139,48 +182,3 @@ function mkvExtract(fileName, filePath, callback): any {
 
   fileStream.pipe(decoder as any);
 }
-
-function padZeroes(arr): any {
-  const len = Math.ceil(arr.length / 2) * 2;
-  const output = new Uint8Array(len);
-  output.set(arr, len - arr.length);
-  return output.buffer;
-}
-
-function readUnsignedInteger(data): any {
-  const view = new DataView(data);
-  return data.byteLength === 2 ? view.getUint16(0) : view.getUint32(0);
-}
-
-function formatTimestamp(timestamp): any {
-  const seconds = timestamp / 1000;
-  const hh = Math.floor(seconds / 3600);
-  let mm: any = Math.floor((seconds - hh * 3600) / 60);
-  let ss: any = (seconds - hh * 3600 - mm * 60).toFixed(2);
-  if (mm < 10) {
-    mm = `0${mm}`;
-  }
-  if (ss < 10) {
-    ss = `0${ss}`;
-  }
-  return `${hh}:${mm}:${ss}`;
-}
-
-function formatTimestampSRT(timestamp): any {
-  const seconds = timestamp / 1000;
-  let hh: any = Math.floor(seconds / 3600);
-  let mm: any = Math.floor((seconds - hh * 3600) / 60);
-  let ss: any = (seconds - hh * 3600 - mm * 60).toFixed(3);
-  if (hh < 10) {
-    hh = `0${hh}`;
-  }
-  if (mm < 10) {
-    mm = `0${mm}`;
-  }
-  if (ss < 10) {
-    ss = `0${ss}`;
-  }
-  return `${hh}:${mm}:${ss}`;
-}
-
-export default mkvExtract;

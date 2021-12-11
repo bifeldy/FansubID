@@ -10,8 +10,7 @@ import { Role } from '../../app/_shared/models/Role';
 import { User } from '../entities/User';
 import { Komentar } from '../entities/Komentar';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isAuthorized } from '../middlewares/auth';
 
 const router = Router();
 
@@ -74,7 +73,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/comment`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('path' in req.body && 'comment' in req.body) {
       const komenRepo = getRepository(Komentar);
@@ -176,7 +175,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 });
 
 // DELETE `/api/comment/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const komenRepo = getRepository(Komentar);

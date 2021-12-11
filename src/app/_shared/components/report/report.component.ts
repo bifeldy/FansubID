@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 
-import User from '../../models/User';
+import { User } from '../../models/User';
 import { LikeAndDislike } from '../../models/LikeAndDislike';
 
 import { GlobalService } from '../../../_shared/services/global.service';

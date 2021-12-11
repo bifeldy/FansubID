@@ -11,6 +11,7 @@ import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
+
 import { CustomDirectivesModule } from '../../_shared/directives/custom-directive.module';
 
 const routes: Routes = [

@@ -17,7 +17,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
-import User from '../../../_shared/models/User';
+import { User } from '../../../_shared/models/User';
 
 @Component({
   selector: 'app-berkas-create',

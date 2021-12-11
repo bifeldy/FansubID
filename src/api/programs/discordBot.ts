@@ -3,10 +3,10 @@ import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Equal, getRepository } from 'typeorm';
 
 import { environment } from '../../environments/server/environment';
+
 import { SosMed } from '../../app/_shared/models/SosMed';
 
-// Helper
-import jwt from '../helpers/jwt';
+import { JwtDecrypt } from '../helpers/jwt';
 
 import { User } from '../entities/User';
 
@@ -23,7 +23,7 @@ export async function discordBot(io: Server, msg: Message): Promise<Message> {
         if (args[3] === 'DELETE_CHAT') {
           await msg.delete();
         }
-        const decoded = jwt.JwtDecrypt(args[2]);
+        const decoded = JwtDecrypt(args[2]);
         if (decoded.discord.id === msg.author.id) {
           const userRepo = getRepository(User);
           const user = await userRepo.findOneOrFail({

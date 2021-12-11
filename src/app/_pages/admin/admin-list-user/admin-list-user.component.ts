@@ -9,7 +9,7 @@ import { UserService } from '../../../_shared/services/user.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
-import User from '../../../_shared/models/User';
+import { User } from '../../../_shared/models/User';
 import { Role } from '../../../_shared/models/Role';
 
 @Component({

@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
+
 import { Role } from '../../_shared/models/Role';
 
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';

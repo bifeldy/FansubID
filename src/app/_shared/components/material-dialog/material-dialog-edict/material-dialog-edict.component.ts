@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, Inject, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { toRomaji } from 'wanakana';
+
 import { GlobalService } from '../../../../_shared/services/global.service';
 import { NihongoService } from '../../../../_shared/services/nihongo.service';
 // import { RightPanelService } from '../../../../_shared/services/right-panel.service';
 
 import { DialogEdictData } from '../../../models/Dialog';
-
-import * as wanakana from 'wanakana';
 
 declare const Dmak: any;
 
@@ -44,7 +44,7 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
   }
 
   getRomaji(kana: string): string {
-    return wanakana.toRomaji(kana);
+    return toRomaji(kana);
   }
 
   ngOnInit(): void {

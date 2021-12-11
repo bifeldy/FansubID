@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { StatsServerService } from '../../../services/stats-server.service';
 
-import User from '../../../models/User';
+import { User } from '../../../models/User';
 
 @Component({
   selector: 'app-live-chat',

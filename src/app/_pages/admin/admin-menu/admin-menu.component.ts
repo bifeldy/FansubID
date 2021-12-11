@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { User } from '../../../_shared/models/User';
 import { ServerInfo } from '../../../_shared/models/ServerInfo';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
 import { AuthService } from '../../../_shared/services/auth.service';
-
-import User from '../../../_shared/models/User';
 
 @Component({
   selector: 'app-admin-menu',

@@ -1,8 +1,8 @@
+import pkg from '../../../../package.json';
+
 import { Component, OnInit } from '@angular/core';
 
 import { environment } from '../../../environments/client/environment';
-
-import pkg from '../../../../package.json';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { FabService } from '../../_shared/services/fab.service';

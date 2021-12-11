@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import idbChunkStore from 'idb-chunk-store';
 
 declare var WebTorrent: any;
 
+import { Injectable } from '@angular/core';
+
+import { Observable } from 'rxjs';
 import { Options, Instance, Torrent, TorrentOptions } from 'webtorrent';
 import { Wire } from 'bittorrent-protocol';
 
-import idbChunkStore from 'idb-chunk-store';
-import * as idb from 'idb';
+import { openDB } from 'idb';
 
 import { environment } from '../../../environments/client/environment';
 
@@ -181,7 +182,7 @@ export class TorrentService {
               name: this.torrentsQueue[key].name
             } as any));
           } else {
-            idb.openDB(this.torrentsQueue[key].indexedDb, 1).then(async db => {
+            openDB(this.torrentsQueue[key].indexedDb, 1).then(async db => {
               const trx = db.transaction('chunks', 'readonly');
               const store = trx.objectStore('chunks');
               const uint8Array: Uint8Array[] = await store.getAll();

@@ -1,3 +1,5 @@
+import Graph from 'p2p-graph';
+
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatSort } from '@angular/material/sort';
@@ -5,7 +7,6 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { ToastrService } from 'ngx-toastr';
 import { saveAs } from 'file-saver';
-import Graph from 'p2p-graph';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { TorrentService } from '../../_shared/services/torrent.service';

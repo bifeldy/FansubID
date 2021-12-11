@@ -39,13 +39,9 @@ export class ElectronService {
   sendSync(refCallback: any, topic: string, data = null): void {
     try {
       const result = this.ipcRndr?.sendSync(topic, data);
-      if (refCallback) {
-        refCallback(null, result);
-      }
+      refCallback(null, result);
     } catch (error) {
-      if (refCallback) {
-        refCallback(error, null);
-      }
+      refCallback(error, null);
     }
   }
 

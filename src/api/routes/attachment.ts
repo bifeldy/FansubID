@@ -7,20 +7,18 @@ import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal, ILike } from 'typeorm';
 import { drive_v3 } from 'googleapis';
 
+import { environment } from '../../environments/server/environment';
+
 import { UserRequest } from '../models/UserRequest';
 import { Role } from '../../app/_shared/models/Role';
-
-import { environment } from '../../environments/server/environment';
 
 import { User } from '../entities/User';
 import { Attachment } from '../entities/Attachment';
 import { TempAttachment } from '../entities/TempAttachment';
 
-// Programs
 import { gDrive } from '../programs/gDrive';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isAuthorized } from '../middlewares/auth';
 
 function fileLampiranFilter(req, file, cb) {
   const typeArray = file.mimetype.split('/');
@@ -56,7 +54,7 @@ function deleteAttachment(fileName) {
 }
 
 // GET `/api/attachment`
-router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const attachmentRepo = getRepository(Attachment);
@@ -115,7 +113,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
 });
 
 // POST `/api/attachment`
-router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.file) {
       if (req.user.verified) {
@@ -182,7 +180,7 @@ router.post('/', auth.isAuthorized, upload.single('file'), async (req: UserReque
 });
 
 // GET `/api/attachment/:id`
-router.get('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       const attachmentRepo = getRepository(Attachment);
@@ -243,7 +241,7 @@ router.get('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
 });
 
 // DELETE `/api/attachment/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const attachmentRepo = getRepository(Attachment);

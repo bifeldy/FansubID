@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-
 declare var WinBox: any;
+
+import { Injectable } from '@angular/core';
 
 import { ServerInfo } from '../models/ServerInfo';
 

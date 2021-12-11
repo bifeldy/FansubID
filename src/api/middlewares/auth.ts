@@ -1,9 +1,11 @@
 
 import request from 'postman-request';
+import CryptoJS from 'crypto-js';
 
 import { getRepository, Equal, ILike } from 'typeorm';
-
 import { Response, NextFunction } from 'express';
+
+import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -12,17 +14,11 @@ import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 import { Profile } from '../entities/Profile';
 import { Banned } from '../entities/Banned';
 
-import CryptoJS from 'crypto-js';
+import { JwtView, JwtEncode, JwtDecode } from '../helpers/jwt';
 
-import { environment } from '../../environments/server/environment';
-
-// Helper
-import jwt from '../helpers/jwt';
-
-// Programs
 import { disconnectRoom } from '../programs/socketWeb';
 
-async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
+export async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
     if (
       'username' in req.body &&
@@ -78,14 +74,14 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
             newUser.profile_ = resProfileSave;
             let resUserSave = await userRepo.save(newUser);
             const { password, session_token, ...noPwdSsToken } = resUserSave;
-            newUser.session_token = jwt.JwtEncode(noPwdSsToken, false);
+            newUser.session_token = JwtEncode(noPwdSsToken, false);
             resUserSave = await userRepo.save(newUser);
             req.user = (resUserSave as any);
             res.cookie(environment.tokenName, req.user.session_token, {
               httpOnly: true,
               secure: environment.production,
               sameSite: 'strict',
-              expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000),
+              expires: new Date(JwtView(req.user.session_token).exp * 1000),
               domain: environment.domain
             });
             return next();
@@ -127,7 +123,7 @@ async function registerModule(req: UserRequest, res: Response, next: NextFunctio
   }
 }
 
-async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
+export async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
   try {
     const bannedRepo = getRepository(Banned);
     const banned = await bannedRepo.findOneOrFail({
@@ -147,12 +143,11 @@ async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
       }
     });
   } catch (error) {
-    // console.error(error);
     return next();
   }
 }
 
-async function loginModule(req: UserRequest, res: Response, next: NextFunction) {
+export async function loginModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
     if ('userNameOrEmail' in req.body && 'password' in req.body) {
       const reqBodyPassword = CryptoJS.SHA512(req.body.password).toString();
@@ -165,14 +160,14 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
       });
       const { password, session_token, ...noPwdSsToken } = selectedUser;
       const rememberMe = ('rememberMe' in req.body && JSON.parse(req.body.rememberMe) === true);
-      selectedUser.session_token = jwt.JwtEncode(noPwdSsToken, rememberMe);
+      selectedUser.session_token = JwtEncode(noPwdSsToken, rememberMe);
       const resUserSave = await userRepo.save(selectedUser);
       req.user = (resUserSave as any);
       res.cookie(environment.tokenName, req.user.session_token, {
         httpOnly: true,
         secure: environment.production,
         sameSite: 'strict',
-        expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000),
+        expires: new Date(JwtView(req.user.session_token).exp * 1000),
         domain: environment.domain
       });
       checkBan(req, res, next);
@@ -190,8 +185,8 @@ async function loginModule(req: UserRequest, res: Response, next: NextFunction) 
   }
 }
 
-async function isAuthorized(req: UserRequest, res: Response, next: NextFunction) {
-  const decoded = jwt.JwtDecode(req, res, next);
+export async function isAuthorized(req: UserRequest, res: Response, next: NextFunction) {
+  const decoded = JwtDecode(req, res, next);
   if (decoded && 'token' in decoded && 'id' in decoded.user) {
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.find({
@@ -223,7 +218,7 @@ async function isAuthorized(req: UserRequest, res: Response, next: NextFunction)
   }
 }
 
-async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
+export async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
   try {
     const token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token) {
@@ -232,14 +227,13 @@ async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
       throw new Error('User Is Not Login');
     }
   } catch (err) {
-    // console.error(err);
     req.user = null;
     return next();
   }
 }
 
-async function logoutModule(req: UserRequest, res: Response, next: NextFunction) {
-  const decoded = jwt.JwtDecode(req, res, next);
+export async function logoutModule(req: UserRequest, res: Response, next: NextFunction) {
+  const decoded = JwtDecode(req, res, next);
   if (decoded && 'token' in decoded && 'id' in decoded.user) {
     try {
       const userRepo = getRepository(User);
@@ -275,6 +269,3 @@ async function logoutModule(req: UserRequest, res: Response, next: NextFunction)
     }
   }
 }
-
-const auth = { loginModule, isAuthorized, isLogin, logoutModule, registerModule };
-export default auth;

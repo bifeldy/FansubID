@@ -4,44 +4,42 @@ import 'reflect-metadata';
 
 import fs from 'fs';
 import http from 'http';
+import path from 'path';
 
 import cors from 'cors';
 import compression from 'compression';
 import request from 'request';
 
+import cookieParser from 'cookie-parser';
+import express from 'express';
+
+import MorganChalk from './src/api/helpers/morganChalk';
+
+import { log } from './src/api/helpers/logger';
+
 import { Server, Socket } from 'socket.io';
 
 import { UserRequest } from './src/api/models/UserRequest';
 
-const currentWorkingDir = process.cwd();
-
-import logger from './src/api/helpers/logger';
-
 import { createConnection, Equal, getRepository } from 'typeorm';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
-import cookieParser from 'cookie-parser';
-import express from 'express';
-import { join } from 'path';
 
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 
 import { Client, TextChannel, Message, NewsChannel, Intents } from 'discord.js';
 
-import MorganChalk from './src/api/helpers/morganChalk';
-
-// Programs
 import { discordBot } from './src/api/programs/discordBot';
 import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/programs/socketWeb';
 
 import { environment } from './src/environments/server/environment';
 
-// Server Settings
 import { serverGet, serverGetDiscordNotification } from './src/api/settings';
 
-// Model
 import { ApiKey } from './src/api/entities/ApiKey';
+
+const currentWorkingDir = process.cwd();
 
 const dbType = process.env.DB_TYPE || environment.dbType;
 const dbHost = process.env.DB_HOST || environment.dbHost;
@@ -128,12 +126,12 @@ async function updateVisitor(): Promise<any> {
 function startDiscordBot(): void {
   bot.on('messageCreate', (msg: Message) => {
     if (msg.channel.id === environment.discordBotChannelBotId && msg.content.startsWith('~')) {
-      logger.log(`[${msg.guild.name}] [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content}`);
+      log(`[${msg.guild.name}] [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content}`);
       discordBot(io, msg).catch(console.error);
     }
   });
   bot.once('ready', () => {
-    logger.log(`[DISCORD_CONNECTED] 🎉 ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id} 🎶`);
+    log(`[DISCORD_CONNECTED] 🎉 ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id} 🎶`);
     updateVisitor();
     request({
       method: 'GET',
@@ -260,10 +258,10 @@ export function app(): http.Server {
 
   expressApp.use('/api', indexRouter);
 
-  logger.log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
+  log(`[CLI] 📢 Working Directory :: ${currentWorkingDir} 🧨`, null, true);
 
-  const distFolder = join(currentWorkingDir, `dist/${environment.siteName.toLocaleLowerCase()}/browser`);
-  const indexHtml = fs.existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+  const distFolder = path.join(currentWorkingDir, `dist/${environment.siteName.toLocaleLowerCase()}/browser`);
+  const indexHtml = fs.existsSync(path.join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   expressApp.engine('html', ngExpressEngine({
@@ -289,10 +287,10 @@ createConnection({
   ...typeOrmConfig
 }).then(async connection => {
   const c: any = connection;
-  logger.log(`[DB] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
+  log(`[DB] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
   const port = process.env.PORT || 4000;
   const listener: any = app().listen(port, () => {
-    logger.log(`[HTTP] ✨ Node Angular TypeORM Express Socket ~ ${listener.address().address}:${listener.address().port} 💘`, null, true);
+    log(`[HTTP] ✨ Node Angular TypeORM Express Socket ~ ${listener.address().address}:${listener.address().port} 💘`, null, true);
   });
 }).catch(
   error => console.error(error)

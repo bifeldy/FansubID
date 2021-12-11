@@ -5,10 +5,11 @@ import fs from 'fs';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal, In } from 'typeorm';
 import { drive_v3 } from 'googleapis';
-
-import { UserRequest } from '../models/UserRequest';
+import { MessageEmbed } from 'discord.js';
 
 import { environment } from '../../environments/server/environment';
+
+import { UserRequest } from '../models/UserRequest';
 
 import { ProjectType } from '../entities/ProjectType';
 import { User } from '../entities/User';
@@ -21,21 +22,16 @@ import { TempAttachment } from '../entities/TempAttachment';
 
 import { Role } from '../../app/_shared/models/Role';
 
-// Programs
 import { gDrive } from '../programs/gDrive';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isLogin, isAuthorized } from '../middlewares/auth';
 
-// Helper
-import mkvExtract from '../programs/mkvExtract';
-
-import { MessageEmbed } from 'discord.js';
+import { mkvExtract } from '../programs/mkvExtract';
 
 const router = Router();
 
 // GET `/api/berkas`
-router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fileRepo = getRepository(Berkas);
     const [files, count] = await fileRepo.findAndCount({
@@ -111,7 +107,7 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
 });
 
 // POST `/api/berkas`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (
       'name' in req.body && 'description' in req.body && 'projectType_id' in req.body &&
@@ -336,7 +332,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // GET `/api/berkas/:id`
-router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/:id', isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fileRepo = getRepository(Berkas);
     const file = await fileRepo.findOneOrFail({
@@ -449,7 +445,7 @@ router.get('/:id', auth.isLogin, async (req: UserRequest, res: Response, next: N
 });
 
 // PUT `/api/berkas/:id`
-router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (
       'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body ||
@@ -615,7 +611,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
 });
 
 // DELETE `/api/berkas/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const berkasRepo = getRepository(Berkas);

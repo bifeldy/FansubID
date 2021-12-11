@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { QuizComponent } from './quiz.component';
 
 import { SharedMaterialModule } from '../../helpers/shared-material.module';
+
 import { RightPanelModule } from '../right-panel/right-panel.module';
 
 @NgModule({

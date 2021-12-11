@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-// import { Router } from '@angular/router';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { NewsService } from '../../_shared/services/news.service';

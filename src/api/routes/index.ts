@@ -1,31 +1,27 @@
-import { Router, Response, NextFunction } from 'express';
-
-import { getRepository, Equal, ILike, In, Not } from 'typeorm';
-
 import createError from 'http-errors';
 import request from 'postman-request';
 import multer from 'multer';
 import interceptor from 'express-interceptor';
 import rateLimit from 'express-rate-limit';
 
-import { Role } from '../../app/_shared/models/Role';
-import { UserRequest } from '../models/UserRequest';
+import { Router, Response, NextFunction } from 'express';
+import { getRepository, Equal, ILike, In, Not } from 'typeorm';
 
 import { environment } from '../../environments/server/environment';
+
+import { Role } from '../../app/_shared/models/Role';
+import { UserRequest } from '../models/UserRequest';
 
 import { ApiKey } from '../entities/ApiKey';
 import { User } from '../entities/User';
 import { SocialMedia } from '../entities/SocialMedia';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isAuthorized, registerModule, loginModule, logoutModule } from '../middlewares/auth';
 
-// Helper
-import jwt from '../helpers/jwt';
-import logger from '../helpers/logger';
+import { JwtEncode, JwtView, JwtEncrypt } from '../helpers/jwt';
+import { log, reqHeaderBodyCleanUp } from '../helpers/logger';
 
-// Server Settings
 import { serverGetMaintenance } from '../settings';
 
 // Child router file
@@ -113,7 +109,7 @@ const router = Router();
 const imgBB = 'https://api.imgbb.com/1/upload';
 
 // Logging Request Body
-router.use(logger.reqHeaderBodyCleanUp);
+router.use(reqHeaderBodyCleanUp);
 
 // GET `/api`
 router.get('/', (req: UserRequest, res: Response) => {
@@ -124,7 +120,7 @@ router.get('/', (req: UserRequest, res: Response) => {
 router.use(interceptor((req: UserRequest, res: Response) => {
   return {
     isInterceptable: () => {
-      logger.log('[INTERCEPT-STATUS] 💠', res.statusCode);
+      log('[INTERCEPT-STATUS] 💠', res.statusCode);
       switch (res.statusCode) {
         case 401:
           res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
@@ -140,7 +136,7 @@ router.use(interceptor((req: UserRequest, res: Response) => {
       }
     },
     intercept: (body: any, send: any) => {
-      logger.log('[INTERCEPT-BODY] 💠', body);
+      log('[INTERCEPT-BODY] 💠', body);
       return send(body);
     }
   };
@@ -207,7 +203,7 @@ router.use('/comment', commentRouter);
 router.use('/torrent', torrentRouter);
 
 // POST `/api/register`
-router.post('/register', auth.registerModule, async (req: UserRequest, res: Response, next) => {
+router.post('/register', registerModule, async (req: UserRequest, res: Response, next) => {
   req.botSendNews({
     embeds: [
       new MessageEmbed()
@@ -233,7 +229,7 @@ router.post('/register', auth.registerModule, async (req: UserRequest, res: Resp
 });
 
 // POST `/api/login`
-router.post('/login', auth.loginModule, (req: UserRequest, res: Response, next) => {
+router.post('/login', loginModule, (req: UserRequest, res: Response, next) => {
   return res.status(200).json({
     info: '😚 200 - Login API :: Berhasil Login Yeay 🤩',
     result: {
@@ -243,7 +239,7 @@ router.post('/login', auth.loginModule, (req: UserRequest, res: Response, next) 
 });
 
 // DELETE `/api/logout`
-router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest, res: Response, next) => {
+router.delete('/logout', isAuthorized, logoutModule, (req: UserRequest, res: Response, next) => {
   return res.status(200).json({
     info: '😍 200 - Logout API :: Berhasil Keluar UwUu 🥰',
     result: {
@@ -253,7 +249,7 @@ router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest
 });
 
 // // TODO :: POST `/api/reset-password`
-// router.post('/reset-password', auth.resetPasswordModule, (req: UserRequest, res: Response, next) => {
+// router.post('/reset-password', resetPasswordModule, (req: UserRequest, res: Response, next) => {
 //   return res.status(200).json({
 //     info: '😚 200 - Reset Password API :: Berhasil Reset Password Yeay 🤩',
 //     result: {
@@ -263,7 +259,7 @@ router.delete('/logout', auth.isAuthorized, auth.logoutModule, (req: UserRequest
 // });
 
 // PATCH `/api/verify` -- Verify Login Session
-router.patch('/verify', auth.isAuthorized, (req: UserRequest, res: Response, next) => {
+router.patch('/verify', isAuthorized, (req: UserRequest, res: Response, next) => {
   let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
   if (token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
@@ -276,7 +272,7 @@ router.patch('/verify', auth.isAuthorized, (req: UserRequest, res: Response, nex
 });
 
 // POST `/api/promote`
-router.post('/promote', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.post('/promote', isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
       if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
@@ -370,7 +366,7 @@ router.post('/promote', auth.isAuthorized, async (req: UserRequest, res: Respons
 });
 
 // POST `/api/image`
-router.post('/image', auth.isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next) => {
+router.post('/image', isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next) => {
   return request({
     method: 'POST',
     uri: imgBB,
@@ -409,7 +405,7 @@ router.post('/image', auth.isAuthorized, upload.single('file'), async (req: User
 });
 
 // POST `/api/cek-nik`
-router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if ('nik' in req.body && 'nama' in req.body && 'g-recaptcha-response' in req.body) {
       const userIp = req.header('x-real-ip') || req.socket.remoteAddress || '';
@@ -479,7 +475,7 @@ router.post('/cek-nik', auth.isAuthorized, async (req: UserRequest, res: Respons
 });
 
 // PUT `/api/verify` -- Verify Account By KTP
-router.put('/verify', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.put('/verify', isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if (req.user.verified) {
       return res.status(200).json({
@@ -536,13 +532,13 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res: Response,
         if ('profile_' in resUserSave) {
           delete resUserSave.profile_;
         }
-        user.session_token = jwt.JwtEncode(resUserSave, false);
+        user.session_token = JwtEncode(resUserSave, false);
         resUserSave = await userRepo.save(user);
         res.cookie(environment.tokenName, resUserSave.session_token, {
           httpOnly: true,
           secure: environment.production,
           sameSite: 'strict',
-          expires: new Date(jwt.JwtView(req.user.session_token).exp * 1000),
+          expires: new Date(JwtView(req.user.session_token).exp * 1000),
           domain: environment.domain
         });
         return res.status(200).json({
@@ -567,7 +563,7 @@ router.put('/verify', auth.isAuthorized, async (req: UserRequest, res: Response,
 });
 
 // PATCH `/api/verify` -- Verify Account By Social Media :: DISCORD, DISQUS, GOOGLE, FACEBOOK, Etc
-router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.patch('/verify', isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if (req.user.verified) {
       return res.status(200).json({
@@ -651,7 +647,7 @@ router.patch('/verify', auth.isAuthorized, async (req: UserRequest, res: Respons
                     info: `😅 ${r.statusCode} - Discord API :: Masuk & Verify 🤣`,
                     result: {
                       title: 'Kirim Token Ke Hikki Discord BOT Dalam 1 Menit! #🚮-bot-spam',
-                      message: '~verify DISCORD ' + jwt.JwtEncrypt({ discord: discordProfile, user: resUserSave }) + ' DELETE_CHAT'
+                      message: '~verify DISCORD ' + JwtEncrypt({ discord: discordProfile, user: resUserSave }) + ' DELETE_CHAT'
                     }
                   });
                 } catch (err) {

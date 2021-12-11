@@ -9,7 +9,7 @@ import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
 
-import auth from '../middlewares/auth';
+import { isAuthorized, isLogin } from '../middlewares/auth';
 
 import { Berkas } from '../entities/Berkas';
 import { Anime } from '../entities/Anime';
@@ -62,7 +62,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/anime`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('id' in req.body && 'name' in req.body && 'image_url' in req.body) {
       const animeRepo = getRepository(Anime);
@@ -163,7 +163,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
 });
 
 // PATCH `/api/anime/berkas?id=`
-router.patch('/berkas', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/berkas', isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const animeId = req.query.id ? req.query.id.split(',').map(Number) : req.body.id;
     if (Array.isArray(animeId) && animeId.length > 0) {

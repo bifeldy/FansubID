@@ -4,19 +4,17 @@ import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
-
 import { Role } from '../../app/_shared/models/Role';
 
 import { User } from '../entities/User';
 import { Notification } from '../entities/Notification';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isAuthorized } from '../middlewares/auth';
 
 const router = Router();
 
 // GET `/api/notification`
-router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const notificationRepo = getRepository(Notification);
@@ -72,7 +70,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
 });
 
 // POST `/api/notification`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next) => {
   if ('type' in req.body && 'title' in req.body && 'content' in req.body && 'dismissible' in req.body) {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       let notifTemplate = {
@@ -141,7 +139,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // DELETE `/api/notification/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const notificationRepo = getRepository(Notification);

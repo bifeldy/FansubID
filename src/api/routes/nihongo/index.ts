@@ -10,8 +10,7 @@ import { UserRequest } from '../../models/UserRequest';
 import { Nihongo } from '../../entities/Nihongo';
 import { User } from '../../entities/User';
 
-// Middleware
-import auth from '../../middlewares/auth';
+import { isAuthorized } from '../../middlewares/auth';
 
 import edictRouter from './edict';
 import kanjiRouter from './kanji';
@@ -87,7 +86,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/nihongo`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       if (
@@ -176,7 +175,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 });
 
 // PUT `/api/nihongo/:id`
-router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       if (
@@ -253,7 +252,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
 });
 
 // DELETE `/api/nihongo/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const kanaRepo = getRepository(Nihongo);

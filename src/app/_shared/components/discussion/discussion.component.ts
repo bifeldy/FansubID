@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
 
 import { Komentar } from '../../models/Komentar';
 
-import User from '../../models/User';
+import { User } from '../../models/User';
 
 @Component({
   selector: 'app-discussion',

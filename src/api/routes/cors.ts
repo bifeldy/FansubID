@@ -4,22 +4,19 @@ import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal, In, Not, IsNull } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
-
 import { Role } from '../../app/_shared/models/Role';
 
 import { User } from '../entities/User';
 import { ApiKey } from '../entities/ApiKey';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isAuthorized } from '../middlewares/auth';
 
-// Helper
 import { universalBtoa } from '../helpers/base64';
 
 const router = Router();
 
 // GET `/api/cors?id=`
-router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const corsRepo = getRepository(ApiKey);
     const queryId = req.query.id;
@@ -126,7 +123,7 @@ router.get('/', auth.isAuthorized, async (req: UserRequest, res: Response, next:
 });
 
 // POST `/api/cors`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       if ('name' in req.body && 'ip_domain' in req.body) {
@@ -201,7 +198,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // PUT `/api/cors/:id`
-router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       if ('name' in req.body || 'ip_domain' in req.body) {
@@ -267,7 +264,7 @@ router.put('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, ne
 });
 
 // DELETE `/api/cors/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const corsRepo = getRepository(ApiKey);

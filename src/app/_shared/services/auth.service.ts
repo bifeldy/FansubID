@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import User from '../models/User';
+import { User } from '../models/User';
 
 import { GlobalService } from './global.service';
 import { ApiService } from './api.service';

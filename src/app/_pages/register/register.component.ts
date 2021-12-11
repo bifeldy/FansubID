@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import CryptoJS from 'crypto-js';
+import cryptojs from 'crypto-js';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
@@ -102,7 +102,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         username: this.fg.value.username,
         name: this.fg.value.name,
         email: this.fg.value.email,
-        password: CryptoJS.SHA512(this.fg.value.password).toString(),
+        password: cryptojs.SHA512(this.fg.value.password).toString(),
         agree: this.fg.value.agree,
         'g-recaptcha-response': this.fg.value['g-recaptcha-response']
       }).subscribe({

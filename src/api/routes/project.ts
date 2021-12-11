@@ -4,13 +4,11 @@ import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal } from 'typeorm';
 
 import { UserRequest } from '../models/UserRequest';
-
 import { Role } from '../../app/_shared/models/Role';
 
 import { ProjectType } from '../entities/ProjectType';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isAuthorized } from '../middlewares/auth';
 
 const router = Router();
 
@@ -31,7 +29,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/project`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       if (
@@ -76,7 +74,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // DELETE `/api/project/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const projectRepo = getRepository(ProjectType);

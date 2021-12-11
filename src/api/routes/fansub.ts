@@ -2,6 +2,9 @@ import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal, ILike } from 'typeorm';
+import { MessageEmbed } from 'discord.js';
+
+import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
 
@@ -11,12 +14,7 @@ import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
 import { User } from '../entities/User';
 
-// Middleware
-import auth from '../middlewares/auth';
-
-import { MessageEmbed } from 'discord.js';
-
-import { environment } from '../../environments/server/environment';
+import { isLogin, isAuthorized } from '../middlewares/auth';
 
 const router = Router();
 
@@ -135,7 +133,7 @@ router.post('/cek-slug', async (req: UserRequest, res: Response, next: NextFunct
 });
 
 // POST `/api/fansub`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       if (
@@ -243,7 +241,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // PATCH `/api/fansub/berkas?id=`
-router.patch('/berkas', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/berkas', isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const fansubId = req.query.id ? req.query.id.split(',').map(Number) : req.body.id;
     if (Array.isArray(fansubId) && fansubId.length > 0) {
@@ -492,7 +490,7 @@ router.get('/:slug', async (req: UserRequest, res: Response, next: NextFunction)
 });
 
 // PUT `/api/fansub/:slug`
-router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:slug', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       if (
@@ -612,7 +610,7 @@ router.put('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, 
 });
 
 // DELETE `/api/fansub/:slug`
-router.delete('/:slug', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:slug', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const fansubRepo = getRepository(Fansub);

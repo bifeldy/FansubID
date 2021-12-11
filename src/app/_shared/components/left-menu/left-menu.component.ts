@@ -9,7 +9,7 @@ import { GlobalService } from '../../services/global.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { DialogService } from '../../services/dialog.service';
 
-import User from '../../models/User';
+import { User } from '../../models/User';
 import { Menu } from '../../models/Menu';
 
 @Component({

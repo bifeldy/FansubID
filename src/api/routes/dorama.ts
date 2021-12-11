@@ -9,7 +9,7 @@ import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
 
-import auth from '../middlewares/auth';
+import { isLogin, isAuthorized } from '../middlewares/auth';
 
 import { Berkas } from '../entities/Berkas';
 import { Dorama } from '../entities/Dorama';
@@ -62,7 +62,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 });
 
 // POST `/api/dorama`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('id' in req.body && 'name' in req.body && 'image_url' in req.body) {
       const doramaRepo = getRepository(Dorama);
@@ -168,7 +168,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
 });
 
 // PATCH `/api/dorama/berkas?id=`
-router.patch('/berkas', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.patch('/berkas', isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const doramaId = req.query.id ? req.query.id.split(',') : req.body.id;
     if (Array.isArray(doramaId) && doramaId.length > 0) {

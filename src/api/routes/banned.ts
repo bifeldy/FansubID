@@ -2,25 +2,22 @@ import createError from 'http-errors';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal, In, Not } from 'typeorm';
-
 import { MessageEmbed } from 'discord.js';
-
-import { UserRequest } from '../models/UserRequest';
 
 import { environment } from '../../environments/server/environment';
 
+import { UserRequest } from '../models/UserRequest';
 import { Role } from '../../app/_shared/models/Role';
 
 import { User } from '../entities/User';
 import { Banned } from '../entities/Banned';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isLogin, isAuthorized } from '../middlewares/auth';
 
 const router = Router();
 
 // GET `/api/banned?id=`
-router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const bannedRepo = getRepository(Banned);
     const queryId = req.query.id;
@@ -145,7 +142,7 @@ router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: Next
 });
 
 // POST `/api/banned`
-router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('reason' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
       if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
@@ -240,7 +237,7 @@ router.post('/', auth.isAuthorized, async (req: UserRequest, res: Response, next
 });
 
 // DELETE `/api/banned/:id`
-router.delete('/:id', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       let excludedRole = [req.user.role];

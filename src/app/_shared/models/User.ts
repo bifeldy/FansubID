@@ -2,7 +2,7 @@ import { Role } from './Role';
 import { KartuTandaPenduduk } from './KartuTandaPenduduk';
 import { Profile } from './Profile';
 
-interface User {
+export interface User {
   id?: number;
   username?: string;
   email?: string;
@@ -15,5 +15,3 @@ interface User {
   profile_?: Profile;
   session_token?: string;
 }
-
-export default User;

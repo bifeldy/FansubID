@@ -4,7 +4,7 @@ import { UserRequest } from '../models/UserRequest';
 
 import { environment } from '../../environments/server/environment';
 
-function log(text, data = null, forcePrint = false) {
+export function log(text, data = null, forcePrint = false) {
   if (!environment.production) {
     forcePrint = true;
   }
@@ -17,7 +17,7 @@ function log(text, data = null, forcePrint = false) {
   }
 }
 
-async function reqHeaderBodyCleanUp(req: UserRequest, res: Response, next: NextFunction) {
+export async function reqHeaderBodyCleanUp(req: UserRequest, res: Response, next: NextFunction) {
   for (const propName in req.body) {
     if (req.body[propName] === null || req.body[propName] === undefined || req.body[propName] === '') {
       delete req.body[propName];
@@ -27,5 +27,3 @@ async function reqHeaderBodyCleanUp(req: UserRequest, res: Response, next: NextF
   log('[REQUEST_BODY] 🏹', req.body);
   return next();
 }
-
-export default { log, reqHeaderBodyCleanUp };

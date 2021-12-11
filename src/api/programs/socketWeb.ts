@@ -1,15 +1,13 @@
 import { Server, Socket } from 'socket.io';
 import { Equal, getConnection, getRepository, ILike, IsNull, MoreThanOrEqual } from 'typeorm';
 
+import { serverGet, serverSet, serverSetDiscordNotification, serverSetMaintenance, serverSetWinboxOpenLink } from '../settings';
+
 import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/models/RoomInfo';
 
 import { Role } from '../../app/_shared/models/Role';
 
-// Server Settings
-import { serverGet, serverSet, serverSetDiscordNotification, serverSetMaintenance, serverSetWinboxOpenLink } from '../settings';
-
-// Helper
-import jwt from '../helpers/jwt';
+import { JwtDecrypt } from '../helpers/jwt';
 import { getQuizHirakata, getQuizKanji } from '../helpers/quizRoom';
 
 import { Notification } from '../entities/Notification';
@@ -25,7 +23,6 @@ const room = {};
 // Questions Each Room
 const quiz = {};
 
-// Generate Question
 async function getNewQuestion(roomId: string) {
   try {
     switch (roomId) {
@@ -181,7 +178,7 @@ export async function socketBot(io: Server, socket: Socket) {
   socket.on('server-set', async (data: any, callback: any) => {
     try {
       if (data.jwtToken) {
-        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        const decoded = JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
         if (data.user.role === Role.ADMIN || data.user.role === Role.MODERATOR) {
           if (data.server !== null && data.server !== undefined) {
@@ -212,7 +209,7 @@ export async function socketBot(io: Server, socket: Socket) {
     data.ip = socket.handshake.headers['x-real-ip'] || socket.handshake.address || socket.request.socket.remoteAddress;
     if (data.jwtToken) {
       try {
-        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        const decoded = JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
       } catch (error) {
         console.error(error);
@@ -406,7 +403,7 @@ export async function socketBot(io: Server, socket: Socket) {
   socket.on('leave-join-room', async (data: RoomInfoInOut) => {
     try {
       if (data.jwtToken) {
-        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        const decoded = JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
       } else {
         data.user = null;
@@ -430,7 +427,7 @@ export async function socketBot(io: Server, socket: Socket) {
   socket.on('send-chat', async (data: RoomInfoInOut) => {
     try {
       if (data.jwtToken) {
-        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        const decoded = JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
         if (data.roomId === 'GLOBAL_PUBLIK') {
           io.emit('receive-chat', sendChat(data));
@@ -445,7 +442,7 @@ export async function socketBot(io: Server, socket: Socket) {
   socket.on('quiz-answer', async (data: RoomInfoInOut) => {
     try {
       if (data.jwtToken) {
-        const decoded = jwt.JwtDecrypt(data.jwtToken);
+        const decoded = JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
         if (quiz[data.roomId]) {
           if (quiz[data.roomId].randomInteger === data.randomInteger) {

@@ -1,10 +1,13 @@
 import createError from 'http-errors';
+import cryptojs from 'crypto-js';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal } from 'typeorm';
+import { MessageEmbed } from 'discord.js';
+
+import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
-
 import { Role } from '../../app/_shared/models/Role';
 
 import { User } from '../entities/User';
@@ -12,21 +15,14 @@ import { Berkas } from '../entities/Berkas';
 import { Profile } from '../entities/Profile';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
-// Middleware
-import auth from '../middlewares/auth';
+import { isAuthorized, isLogin } from '../middlewares/auth';
 
-// Helper
-import jwt from '../helpers/jwt';
-
-import CryptoJS from 'crypto-js';
-import { MessageEmbed } from 'discord.js';
-
-import { environment } from '../../environments/server/environment';
+import { JwtEncode, JwtView } from '../helpers/jwt';
 
 const router = Router();
 
 // GET `/api/user`
-router.get('/', auth.isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.get('/', isLogin, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let maxPage = 0;
     let maxRow = 10;
@@ -144,7 +140,7 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
 });
 
 // PUT `/api/user/:username`
-router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.put('/:username', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body) {
       try {
@@ -160,7 +156,7 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             selectedUser.image_url = req.body.image_photo;
           }
           if (req.body.new_password) {
-            selectedUser.password = CryptoJS.SHA512(req.body.new_password).toString();
+            selectedUser.password = cryptojs.SHA512(req.body.new_password).toString();
           }
           try {
             const profileRepo = getRepository(Profile);
@@ -198,13 +194,13 @@ router.put('/:username', auth.isAuthorized, async (req: UserRequest, res: Respon
             delete resUserSave.session_token;
             delete resUserSave.kartu_tanda_penduduk_;
             delete resUserSave.profile_;
-            selectedUser.session_token = jwt.JwtEncode(resUserSave, false);
+            selectedUser.session_token = JwtEncode(resUserSave, false);
             resUserSave = await userRepo.save(selectedUser);
             res.cookie(environment.tokenName, resUserSave.session_token, {
               httpOnly: true,
               secure: environment.production,
               sameSite: 'strict',
-              expires: new Date(jwt.JwtView(resUserSave.session_token).exp * 1000),
+              expires: new Date(JwtView(resUserSave.session_token).exp * 1000),
               domain: environment.domain
             });
             return res.status(200).json({
@@ -316,7 +312,7 @@ router.patch('/:username/berkas', async (req: UserRequest, res: Response, next: 
 });
 
 // DELETE `/api/user/:username`
-router.delete('/:username', auth.isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+router.delete('/:username', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       const ktpRepo = getRepository(KartuTandaPenduduk);
