@@ -1,0 +1,28 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "../../",
+    "outDir": "../../dist/hikki/electron",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "CommonJS",
+    "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "resolveJsonModule": true,
+    "paths": {
+      "crypto": [
+        "../../node_modules/crypto-js"
+      ]
+    }
+  },
+  "files": [
+    "index.ts",
+    "preload.ts",
+  ],
+}
