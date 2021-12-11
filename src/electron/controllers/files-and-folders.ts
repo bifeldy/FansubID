@@ -8,7 +8,7 @@ import { isRoot } from '../config';
 import { DataFileFolder } from '../models/DataFileFolder';
 
 const defaultDataFileFolder: DataFileFolder = {
-  folderPath: '',
+  folderPath: 'user_data',
   ext: ['apng', 'bmp', 'gif', 'jpg', 'jpeg', 'png', 'svg', 'webp']
 };
 

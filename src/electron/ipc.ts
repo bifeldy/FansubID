@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
 
-import { getFolders, getFiles } from './_ipc/files-and-folders';
-import { initialize } from './_ipc/torrent';
+import { getFolders, getFiles } from './controllers/files-and-folders';
+import { initialize } from './controllers/torrent';
 
 export function handleIpc(): void {
   ipcMain.on('list-folders', getFolders);
