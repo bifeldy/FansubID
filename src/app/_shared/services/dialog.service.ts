@@ -94,7 +94,7 @@ export class DialogService {
             </div>
             <div class="col-12 my-3">
               <h3 class="text-success mb-0">KEWAJIBAN</h3>
-              <ol class="list-group list-group-numbered">
+              <ol>
                 <li>Dilarang berkata yang senonoh, jika terpaksa setidaknya mohon diplesetkan.</li>
                 <li>Jangan menyinggung hal-hal berbau <b>SARA</b>, <b>RASIS</b>, dan hal-hal serupa lainnya.</li>
                 <li>Jagalah ketertiban dan kerukunan antar pengguna.</li>
@@ -103,7 +103,7 @@ export class DialogService {
               </ol>
               <br />
               <h3 class="text-success mb-0">NORMA UMUM</h3>
-              <ul class="list-group list-group-numbered">
+              <ul>
                 <li>Kami beranggapan bahwa anda sudah cukup umur (13+).</li>
                 <li>Silahkan beradaptasi secara mandiri.</li>
                 <li>Untuk pembuatan entri data baru silahkan menyesuaikan.</li>
@@ -112,7 +112,7 @@ export class DialogService {
               </ul>
               <br />
               <h3 class="text-success mb-0">AKIBAT</h3>
-              <ul class="list-group list-group-numbered">
+              <ul>
                 <li>Mengingkari kewajiban = <i>Manual BAN</i> dengan peringatan berupa teguran.</li>
                 <li>Mendapat banyak <i>Report</i> = <i>Auto BAN</i>.</li>
               </ul>
