@@ -43,6 +43,10 @@ export class HeaderComponent implements OnInit {
     this.lms.onSideNavToggleView();
   }
 
+  reloadPage(): void {
+    window.location.reload();
+  }
+
   openSearch(): void {
     this.rps.toggleSidePanel('SearchAllComponent');
   }

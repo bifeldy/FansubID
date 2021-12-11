@@ -1,7 +1,7 @@
 <!-- Top Toolbar -->
 <mat-toolbar color="primary" style="height: 56px; padding: 0 12px;">
 
-  <button mat-icon-button (click)="toggleSideNav()">
+  <button mat-icon-button (click)="toggleSideNav()" matTooltip="Menu">
     <mat-icon>menu</mat-icon>
   </button>
   <span matLine class="text-truncate" style="margin-left: 1rem;">
@@ -11,7 +11,7 @@
 
   <span class="spacer"></span>
 
-  <button mat-icon-button (click)="openLiveChat()">
+  <button mat-icon-button (click)="openLiveChat()" matTooltip="Obrolan">
     <mat-icon [matBadge]="ss.messageChatCount" matBadgePosition="before" [matBadgeColor]="'accent'">
       forum
     </mat-icon>
@@ -21,8 +21,12 @@
     <mat-icon>apps</mat-icon>
   </button>
 
-  <button mat-icon-button (click)="openSearch()">
+  <button mat-icon-button (click)="openSearch()" matTooltip="Pencarian">
     <mat-icon>search</mat-icon>
+  </button>
+
+  <button mat-icon-button (click)="reloadPage()" *ngIf="!ss.mySocket?.id" matTooltip="Refresh">
+    <mat-icon>replay</mat-icon>
   </button>
 
 </mat-toolbar>
