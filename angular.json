@@ -210,12 +210,12 @@
               "outputHashing": "media",
               "fileReplacements": [
                 {
-                  "replace": "src/environments/client/environment.ts",
-                  "with": "src/environments/client/environment.prod.ts"
+                  "replace": "src/environments/app/environment.ts",
+                  "with": "src/environments/app/environment.prod.ts"
                 },
                 {
-                  "replace": "src/environments/server/environment.ts",
-                  "with": "src/environments/server/environment.prod.ts"
+                  "replace": "src/environments/api/environment.ts",
+                  "with": "src/environments/api/environment.prod.ts"
                 }
               ],
               "sourceMap": false,
