@@ -127,7 +127,7 @@ export class StatsServerService {
       this.gs.log('[SOCKET_DISCONNECTED]', reason);
       this.notif.addNotif(
         null,
-        -1,
+        'HIKKI_SOCKET_DISCONNECTED',
         'warning',
         'Sambungan Terputus',
         'Tidak dapat terhubung dengan <i>Server</i> melalui <i>WebSocket</i>, silahkan <i>Refresh</i> halaman!',

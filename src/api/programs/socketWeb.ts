@@ -7,7 +7,7 @@ import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/mod
 
 import { Role } from '../../app/_shared/models/Role';
 
-import { JwtDecrypt } from '../helpers/jwt';
+import { JwtDecrypt } from '../helpers/crypto';
 import { getQuizHirakata, getQuizKanji } from '../helpers/quizRoom';
 
 import { Notification } from '../entities/Notification';

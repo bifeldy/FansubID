@@ -1,6 +1,5 @@
 import request from 'postman-request';
 import translate from '@iamtraction/google-translate';
-import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
@@ -10,6 +9,8 @@ import { environment } from '../../environments/server/environment';
 import { UserRequest } from '../models/UserRequest';
 
 import { isLogin, isAuthorized } from '../middlewares/auth';
+
+import { cacheGet, cachePut } from '../helpers/cache';
 
 import { Berkas } from '../entities/Berkas';
 import { Dorama } from '../entities/Dorama';
@@ -25,7 +26,7 @@ const seasonal = [
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const searchQuery = req.query.q || '';
   const searchType = req.query.type || '';
-  const cacheData = cache.get(req.originalUrl);
+  const cacheData = cacheGet(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -53,7 +54,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           results: data
         };
         if (data.length > 0) {
-          cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
         }
         return res.status(statusCode).json(responseBody);
       }
@@ -131,7 +132,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   const year = req.query.year || currDate.getFullYear();
   const season = req.query.season || seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
   const quarter = seasonal.find(sB => sB.name === season).id || Math.ceil((currDate.getMonth() + 1) / 3);
-  const cacheData = cache.get(req.originalUrl);
+  const cacheData = cacheGet(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -159,7 +160,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
           results: data
         };
         if (data.length > 0) {
-          cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
         }
         return res.status(statusCode).json(responseBody);
       }
@@ -321,7 +322,7 @@ router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFuncti
 // GET `/api/dorama/:mdlSlug`
 router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
   const mdlId = req.params.mdlSlug.split('-')[0];
-  const cacheData = cache.get(req.originalUrl);
+  const cacheData = cacheGet(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -365,7 +366,7 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
           result: dramaDetail
         };
         if (dramaDetail) {
-          cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
         }
         return res.status(httpStatusCode).json(responseBody);
       }

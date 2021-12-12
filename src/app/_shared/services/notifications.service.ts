@@ -15,7 +15,7 @@ export class NotificationsService {
     {
       notifCreator: null,
       notifData: {
-        id: 0,
+        id: 'HIKKI_UNDER_DEVELOPMENT',
         type: 'info',
         title: 'Pemberitahuan!',
         content: `
@@ -54,7 +54,7 @@ export class NotificationsService {
     });
   }
 
-  removeNotif(id: number): void {
+  removeNotif(id): void {
     if (this.dissmissTimeout[id]) {
       clearTimeout(this.dissmissTimeout[id]);
       this.dissmissTimeout[id] = null;

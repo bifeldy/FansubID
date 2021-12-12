@@ -6,7 +6,7 @@ import { environment } from '../../environments/server/environment';
 
 import { SosMed } from '../../app/_shared/models/SosMed';
 
-import { JwtDecrypt } from '../helpers/jwt';
+import { JwtDecrypt } from '../helpers/crypto';
 
 import { User } from '../entities/User';
 

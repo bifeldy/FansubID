@@ -2,11 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import CryptoJS from 'crypto-js';
-
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { BusyService } from '../../_shared/services/busy.service';
+import { CryptoService } from '../../_shared/services/crypto.service';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +31,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
-    public as: AuthService
+    public as: AuthService,
+    private cs: CryptoService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.submitted = true;
       this.subsLogin = this.as.login({
         userNameOrEmail: this.fg.value.userNameOrEmail,
-        password: CryptoJS.SHA512(this.fg.value.password).toString(),
+        password: this.cs.hashPassword(this.fg.value.password),
         rememberMe: this.fg.value.rememberMe
       }).subscribe({
         next: (res: any) => {

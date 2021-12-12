@@ -8,6 +8,7 @@ import { LeftMenuService } from '../../services/left-menu.service';
 import { GlobalService } from '../../services/global.service';
 import { RightPanelService } from '../../services/right-panel.service';
 import { StatsServerService } from '../../services/stats-server.service';
+import { BusyService } from '../../services/busy.service';
 
 @Component({
   selector: 'app-header',
@@ -22,7 +23,8 @@ export class HeaderComponent implements OnInit {
     public router: Router,
     public pi: PageInfoService,
     public gs: GlobalService,
-    public ss: StatsServerService
+    public ss: StatsServerService,
+    private bs: BusyService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -44,6 +46,7 @@ export class HeaderComponent implements OnInit {
   }
 
   reloadPage(): void {
+    this.bs.busy();
     window.location.reload();
   }
 

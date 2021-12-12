@@ -27,7 +27,7 @@ export class NotificationsComponent implements OnInit {
     }
   }
 
-  removeNotif(id: number): void {
+  removeNotif(id): void {
     this.notif.removeNotif(id);
   }
 

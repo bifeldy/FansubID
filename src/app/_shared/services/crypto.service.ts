@@ -53,4 +53,8 @@ export class CryptoService {
     return decrypted;
   }
 
+  hashPassword(password): any {
+    return cryptojs.SHA512(password).toString();
+  }
+
 }

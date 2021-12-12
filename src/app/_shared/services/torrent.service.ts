@@ -99,7 +99,11 @@ export class TorrentService {
     if (this.gs.isBrowser) {
       if (this.electron.isElectron) {
         this.electron.handleElectronTorrent(this.refCallback, this.torrentsQueue);
-        this.electron.send('torrent-client-init', { announce: this.trackerAnnounce, maxWebConns: 16, /* store: idbChunkStore */ });
+        this.electron.send('torrent-client-init', {
+          announce: this.trackerAnnounce,
+          maxWebConns: 16,
+          /* store: idbChunkStore */
+        });
       } else {
         this.torrentsQueue = this.ls.getItem(this.localStorageTorrentKeyName, true) || this.torrentsQueue;
         this.webClient = new WebTorrent(this.webClientOptions);

@@ -19,7 +19,7 @@ import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
 import { isAuthorized, registerModule, loginModule, logoutModule } from '../middlewares/auth';
 
-import { JwtEncode, JwtView, JwtEncrypt } from '../helpers/jwt';
+import { JwtEncode, JwtView, JwtEncrypt } from '../helpers/crypto';
 import { log, reqHeaderBodyCleanUp } from '../helpers/logger';
 
 import { serverGetMaintenance } from '../settings';

@@ -2,12 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import cryptojs from 'crypto-js';
-
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { DialogService } from '../../_shared/services/dialog.service';
+import { CryptoService } from '../../_shared/services/crypto.service';
 
 @Component({
   selector: 'app-register',
@@ -39,7 +38,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     public route: ActivatedRoute,
     public as: AuthService,
-    private ds: DialogService
+    private ds: DialogService,
+    private cs: CryptoService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -102,7 +102,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         username: this.fg.value.username,
         name: this.fg.value.name,
         email: this.fg.value.email,
-        password: cryptojs.SHA512(this.fg.value.password).toString(),
+        password: this.cs.hashPassword(this.fg.value.password),
         agree: this.fg.value.agree,
         'g-recaptcha-response': this.fg.value['g-recaptcha-response']
       }).subscribe({

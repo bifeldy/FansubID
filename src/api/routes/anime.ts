@@ -1,6 +1,5 @@
 import request from 'postman-request';
 import translate from '@iamtraction/google-translate';
-import cache from 'memory-cache';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
@@ -8,6 +7,8 @@ import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
 import { environment } from '../../environments/server/environment';
 
 import { UserRequest } from '../models/UserRequest';
+
+import { cacheGet, cachePut } from '../helpers/cache';
 
 import { isAuthorized, isLogin } from '../middlewares/auth';
 
@@ -25,7 +26,7 @@ const seasonal = [
 router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   const searchQuery = req.query.q || '';
   const searchType = req.query.type || '';
-  const cacheData = cache.get(req.originalUrl);
+  const cacheData = cacheGet(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -53,7 +54,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
           results: data
         };
         if (data.length > 0) {
-          cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
         }
         return res.status(statusCode).json(responseBody);
       }
@@ -126,7 +127,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   const currDate = new Date();
   const year = req.query.year || currDate.getFullYear();
   const season = req.query.season || seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
-  const cacheData = cache.get(req.originalUrl);
+  const cacheData = cacheGet(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -154,7 +155,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
           results: data
         };
         if (data.length > 0) {
-          cache.put(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
         }
         return res.status(statusCode).json(responseBody);
       }
@@ -316,7 +317,7 @@ router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFuncti
 // GET `/api/anime/:malSlug`
 router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
   const malId = req.params.malSlug.split('-')[0];
-  const cacheData = cache.get(req.originalUrl);
+  const cacheData = cacheGet(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
@@ -364,7 +365,7 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
           result: animeDetail
         };
         if (animeDetail) {
-          cache.put(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
         }
         return res.status(httpStatusCode).json(responseBody);
       }

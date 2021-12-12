@@ -1,6 +1,5 @@
 
 import request from 'postman-request';
-import CryptoJS from 'crypto-js';
 
 import { getRepository, Equal, ILike } from 'typeorm';
 import { Response, NextFunction } from 'express';
@@ -14,7 +13,7 @@ import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 import { Profile } from '../entities/Profile';
 import { Banned } from '../entities/Banned';
 
-import { JwtView, JwtEncode, JwtDecode } from '../helpers/jwt';
+import { JwtView, JwtEncode, JwtDecode, hashPassword } from '../helpers/crypto';
 
 import { disconnectRoom } from '../programs/socketWeb';
 
@@ -69,7 +68,7 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
             newUser.username = req.body.username;
             newUser.email = req.body.email;
             newUser.image_url = '/favicon.ico';
-            newUser.password = CryptoJS.SHA512(req.body.password).toString();
+            newUser.password = hashPassword(req.body.password);
             newUser.kartu_tanda_penduduk_ = resKtpSave;
             newUser.profile_ = resProfileSave;
             let resUserSave = await userRepo.save(newUser);
@@ -150,7 +149,7 @@ export async function checkBan(req: UserRequest, res: Response, next: NextFuncti
 export async function loginModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
     if ('userNameOrEmail' in req.body && 'password' in req.body) {
-      const reqBodyPassword = CryptoJS.SHA512(req.body.password).toString();
+      const reqBodyPassword = hashPassword(req.body.password);
       const userRepo = getRepository(User);
       const selectedUser = await userRepo.findOneOrFail({
         where: [

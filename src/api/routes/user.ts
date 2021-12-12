@@ -1,5 +1,4 @@
 import createError from 'http-errors';
-import cryptojs from 'crypto-js';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal } from 'typeorm';
@@ -17,7 +16,7 @@ import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
 import { isAuthorized, isLogin } from '../middlewares/auth';
 
-import { JwtEncode, JwtView } from '../helpers/jwt';
+import { JwtEncode, JwtView, hashPassword } from '../helpers/crypto';
 
 const router = Router();
 
@@ -156,7 +155,7 @@ router.put('/:username', isAuthorized, async (req: UserRequest, res: Response, n
             selectedUser.image_url = req.body.image_photo;
           }
           if (req.body.new_password) {
-            selectedUser.password = cryptojs.SHA512(req.body.new_password).toString();
+            selectedUser.password = hashPassword(req.body.new_password);
           }
           try {
             const profileRepo = getRepository(Profile);
