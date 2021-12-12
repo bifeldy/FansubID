@@ -36,7 +36,7 @@ export const environment = {
   siteName: 'Hikki',
   author: 'Bifeldy',
   jwtSecretKey: '',
-  tokenName: 'hikki_token',
+  tokenName: 'Hikki_Token',
   domain: 'localhost',
   ip: '127.0.0.1',
   baseUrl: 'http://localhost:4000',

@@ -14,7 +14,7 @@ declare const SubtitlesOctopus: any;
 export class VjsPlayerComponent implements OnInit, OnDestroy {
 
   // References:
-  // https://github.com/videojs/video.js/blob/mastertutorial-options.html
+  // https://github.com/videojs/video.js
 
   @ViewChild('target', { static: true }) target: ElementRef;
 
