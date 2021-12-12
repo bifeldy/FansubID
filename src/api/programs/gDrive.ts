@@ -6,7 +6,7 @@ import { environment } from '../../environments/api/environment';
 
 import { log } from '../helpers/logger';
 
-const refresh_url = 'https://oauth2.googleapis.com/token';
+const refresh_url = environment.googleAuth;
 const client_id = environment.driveClientId;
 const client_secret = environment.driveClientSecret;
 const refresh_token = environment.driveRefreshToken;

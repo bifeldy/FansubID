@@ -78,6 +78,7 @@ export const environment = {
     Komentar
   ],
   uploadFolder: 'dist/hikki/uploads',
+  googleAuth: 'https://oauth2.googleapis.com/token',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',
   recaptchaApiUrl: 'https://www.google.com/recaptcha/api/siteverify',
   reCaptchaSecretKey: '',
