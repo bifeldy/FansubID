@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, timeout, map, retry } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 
-import { environment } from '../../../environments/client/environment';
+import { environment } from '../../../environments/app/environment';
 
 import { GlobalService } from './global.service';
 

@@ -12,7 +12,7 @@ import { BusyService } from '../services/busy.service';
 import { StatsServerService } from '../services/stats-server.service';
 import { LocalStorageService } from '../services/local-storage.service';
 
-import { environment } from '../../../environments/client/environment';
+import { environment } from '../../../environments/app/environment';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {

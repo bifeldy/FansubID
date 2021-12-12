@@ -10,7 +10,7 @@ import { Wire } from 'bittorrent-protocol';
 
 import { openDB } from 'idb';
 
-import { environment } from '../../../environments/client/environment';
+import { environment } from '../../../environments/app/environment';
 
 import { ToastrService } from 'ngx-toastr';
 

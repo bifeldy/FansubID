@@ -13,7 +13,7 @@ import { WinboxService } from '../../../_shared/services/winbox.service';
 
 import { User } from '../../../_shared/models/User';
 
-import { environment } from '../../../../environments/client/environment';
+import { environment } from '../../../../environments/app/environment';
 
 @Component({
   selector: 'app-berkas-detail',

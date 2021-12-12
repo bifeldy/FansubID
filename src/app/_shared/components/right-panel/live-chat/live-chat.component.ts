@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { environment } from '../../../../../environments/client/environment';
+import { environment } from '../../../../../environments/app/environment';
 
 import { GlobalService } from '../../../services/global.service';
 import { AuthService } from '../../../services/auth.service';

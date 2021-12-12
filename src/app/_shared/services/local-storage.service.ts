@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from '../../../environments/client/environment';
+import { environment } from '../../../environments/app/environment';
 
 import { CryptoService } from './crypto.service';
 import { GlobalService } from './global.service';

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
-import { environment } from '../../../environments/client/environment';
+import { environment } from '../../../environments/app/environment';
 
 import { GlobalService } from './global.service';
 

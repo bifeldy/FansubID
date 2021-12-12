@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { ToastrService } from 'ngx-toastr';
 
-import { environment } from '../../../environments/client/environment';
+import { environment } from '../../../environments/app/environment';
 
 import { serverGet } from '../../../../src/api/settings';
 

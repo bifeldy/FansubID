@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfi
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
 
-import { environment } from '../environments/client/environment';
+import { environment } from '../environments/app/environment';
 
 import { LeftMenuService } from './_shared/services/left-menu.service';
 import { RightPanelService } from './_shared/services/right-panel.service';

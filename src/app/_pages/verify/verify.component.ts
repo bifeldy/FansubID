@@ -11,7 +11,7 @@ import { BusyService } from '../../_shared/services/busy.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 import { WinboxService } from '../../_shared/services/winbox.service';
 
-import { environment } from '../../../environments/client/environment';
+import { environment } from '../../../environments/app/environment';
 
 @Component({
   selector: 'app-verify',

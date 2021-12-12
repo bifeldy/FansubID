@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { environment } from '../../../../../environments/client/environment';
+import { environment } from '../../../../../environments/app/environment';
 
 import { GlobalService } from '../../../services/global.service';
 import { NewsService } from '../../../services/news.service';

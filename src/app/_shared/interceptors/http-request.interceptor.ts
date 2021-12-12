@@ -7,7 +7,7 @@ import { GlobalService } from '../services/global.service';
 import { StatsServerService } from '../services/stats-server.service';
 import { AuthService } from '../services/auth.service';
 
-import { environment } from '../../../environments/client/environment';
+import { environment } from '../../../environments/app/environment';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
