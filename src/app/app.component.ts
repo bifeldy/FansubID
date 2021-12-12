@@ -104,9 +104,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               const str = e1.url.split('/')[1];
               if (str) {
                 const stringBadge = `badge${str[0].toUpperCase()}${str.slice(1)}`;
-                let arrBadge = this.ss[stringBadge];
-                if (arrBadge) {
-                  arrBadge = [];
+                if (this.ss[stringBadge]) {
+                  this.ss[stringBadge] = [];
                   const mainMenu = this.lms.mainMenus.find(m => m.link === e1.url);
                   const contentMenu = this.lms.contentMenus.find(m => m.link === e1.url);
                   const miscMenu = this.lms.miscMenus.find(m => m.link === e1.url);

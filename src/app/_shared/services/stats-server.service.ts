@@ -160,31 +160,37 @@ export class StatsServerService {
     this.mySocket.on('new-berkas', (berkasObj: any) => {
       this.gs.log('[SOCKET_BERKAS]', berkasObj);
       this.badgeBerkas.push(berkasObj);
-      const berkas = this.lms.mainMenus.find(m => m.link === '/berkas');
-      if (this.badgeBerkas.length > 0) {
-        berkas.badge = this.badgeBerkas.length;
-      } else {
-        berkas.badge = null;
+      const berkas = this.lms.contentMenus.find(m => m.link === '/berkas');
+      if (berkas) {
+        if (this.badgeBerkas.length > 0) {
+          berkas.badge = this.badgeBerkas.length;
+        } else {
+          berkas.badge = null;
+        }
       }
     });
     this.mySocket.on('new-fansub', (fansubObj: any) => {
       this.gs.log('[SOCKET_FANSUB]', fansubObj);
       this.badgeFansub.push(fansubObj);
-      const fansub = this.lms.mainMenus.find(m => m.link === '/fansub');
-      if (this.badgeFansub.length > 0) {
-        fansub.badge = this.badgeFansub.length;
-      } else {
-        fansub.badge = null;
+      const fansub = this.lms.contentMenus.find(m => m.link === '/fansub');
+      if (fansub) {
+        if (this.badgeFansub.length > 0) {
+          fansub.badge = this.badgeFansub.length;
+        } else {
+          fansub.badge = null;
+        }
       }
     });
     this.mySocket.on('new-news', (newsObj: any) => {
       this.gs.log('[SOCKET_NEWS]', newsObj);
       this.badgeNews.push(newsObj);
       const news = this.lms.mainMenus.find(m => m.link === '/news');
-      if (this.badgeNews.length > 0) {
-        news.badge = this.badgeNews.length;
-      } else {
-        news.badge = null;
+      if (news) {
+        if (this.badgeNews.length > 0) {
+          news.badge = this.badgeNews.length;
+        } else {
+          news.badge = null;
+        }
       }
     });
     this.mySocket.on('receive-chat', msg => {

@@ -87,6 +87,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
       this.messageHistory = this.ss.currentChatRoom;
     }
     this.scrollMessage();
+    this.ss.messageChatCount = 0;
     return this.messageHistory;
   }
 
