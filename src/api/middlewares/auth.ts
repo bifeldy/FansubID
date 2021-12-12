@@ -4,7 +4,7 @@ import request from 'postman-request';
 import { getRepository, Equal, ILike } from 'typeorm';
 import { Response, NextFunction } from 'express';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 import { UserRequest } from '../models/UserRequest';
 

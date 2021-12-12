@@ -3,7 +3,7 @@ import { sign, verify, decode } from 'jsonwebtoken';
 
 import { Request, Response, NextFunction } from 'express';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 export function hashPassword(password: string): string {
   return SHA512(password).toString();

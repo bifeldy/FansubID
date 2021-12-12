@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 import { google } from 'googleapis';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 import { log } from '../helpers/logger';
 

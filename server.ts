@@ -33,7 +33,7 @@ import { Client, TextChannel, Message, NewsChannel, Intents } from 'discord.js';
 import { discordBot } from './src/api/programs/discordBot';
 import { disconnectRoom, joinOrUpdateRoom, socketBot } from './src/api/programs/socketWeb';
 
-import { environment } from './src/environments/server/environment';
+import { environment } from './src/environments/api/environment';
 
 import { serverGet, serverGetDiscordNotification } from './src/api/settings';
 

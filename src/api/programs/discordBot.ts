@@ -2,7 +2,7 @@ import { Server } from 'socket.io';
 import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { Equal, getRepository } from 'typeorm';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 import { SosMed } from '../../app/_shared/models/SosMed';
 

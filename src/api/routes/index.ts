@@ -7,7 +7,7 @@ import rateLimit from 'express-rate-limit';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal, ILike, In, Not } from 'typeorm';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 import { Role } from '../../app/_shared/models/Role';
 import { UserRequest } from '../models/UserRequest';

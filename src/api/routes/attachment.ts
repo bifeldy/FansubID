@@ -7,7 +7,7 @@ import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal, ILike } from 'typeorm';
 import { drive_v3 } from 'googleapis';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 import { UserRequest } from '../models/UserRequest';
 import { Role } from '../../app/_shared/models/Role';

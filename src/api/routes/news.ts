@@ -4,7 +4,7 @@ import { Router, Response, NextFunction } from 'express';
 import { Equal, getRepository, ILike } from 'typeorm';
 import { MessageEmbed } from 'discord.js';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 import { UserRequest } from '../models/UserRequest';
 

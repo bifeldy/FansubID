@@ -7,7 +7,7 @@ import { getRepository, ILike, Equal, In } from 'typeorm';
 import { drive_v3 } from 'googleapis';
 import { MessageEmbed } from 'discord.js';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 import { UserRequest } from '../models/UserRequest';
 

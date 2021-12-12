@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 
 import { UserRequest } from '../models/UserRequest';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 export function log(text, data = null, forcePrint = false) {
   if (!environment.production) {

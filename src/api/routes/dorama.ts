@@ -4,7 +4,7 @@ import translate from '@iamtraction/google-translate';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
 
-import { environment } from '../../environments/server/environment';
+import { environment } from '../../environments/api/environment';
 
 import { UserRequest } from '../models/UserRequest';
 
