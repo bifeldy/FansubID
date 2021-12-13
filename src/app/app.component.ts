@@ -79,7 +79,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: ${environment.production ? 'Production' : 'Development'} With Logging Enabled 📌`);
-    this.gs.log(`[APP_ELECTRON] 🏹 ${this.electron.isElectron} 🔨`);
+    this.gs.log(`[APP_ELECTRON] 🔨`, this.electron.version);
     this.pi.updatePageMetaData(
       '「💤 Hikki」',
       '「✨ Di Kamar Saja!」',

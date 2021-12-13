@@ -24,9 +24,13 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.gs.isBrowser && request.url.startsWith(environment.apiUrl)) {
-      request = request.clone({ withCredentials: !this.gs.isDevMode });
+      request = request.clone({
+        withCredentials: !this.gs.isDevMode
+      });
       if (this.as.jwtToken) {
-        this.gs.log('[INTERCEPT_JWT]', this.as.jwtToken);
+        const tokenLength = this.as.jwtToken.length;
+        const shortToken = this.as.jwtToken.slice(0, 5) + '.....' + this.as.jwtToken.slice(tokenLength - 5, tokenLength);
+        this.gs.log('[INTERCEPT_JWT]', shortToken);
         request = request.clone({
           headers: request.headers.append('Authorization', `Bearer ${this.as.jwtToken}`)
         });

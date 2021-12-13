@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { ToastrService } from 'ngx-toastr';
-
 import { ipcRenderer } from 'electron';
 
 import { GlobalService } from './global.service';
@@ -11,6 +10,7 @@ import { GlobalService } from './global.service';
 })
 export class ElectronService {
 
+  public version = false;
   public ipcRndr: typeof ipcRenderer;
 
   constructor(
@@ -19,6 +19,7 @@ export class ElectronService {
   ) {
     if (this.gs.isBrowser) {
       if (this.isElectron) {
+        this.version = (window as any).electron.version;
         this.ipcRndr = (window as any).electron.ipcRenderer;
       }
     }
