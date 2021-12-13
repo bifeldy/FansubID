@@ -1,23 +1,22 @@
 import idbChunkStore from 'idb-chunk-store';
-
-declare var WebTorrent: any;
+import webTorrent from 'webtorrent';
 
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Options, Instance, Torrent, TorrentOptions } from 'webtorrent';
 import { Wire } from 'bittorrent-protocol';
-
 import { openDB } from 'idb';
 
 import { environment } from '../../../environments/app/environment';
-
-import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from './global.service';
 import { LocalStorageService } from './local-storage.service';
 import { ApiService } from './api.service';
 import { ElectronService } from './electron.service';
+
+declare const WebTorrent: typeof webTorrent;
 
 @Injectable({
   providedIn: 'root'
@@ -106,9 +105,13 @@ export class TorrentService {
         });
       } else {
         this.torrentsQueue = this.ls.getItem(this.localStorageTorrentKeyName, true) || this.torrentsQueue;
-        this.webClient = new WebTorrent(this.webClientOptions);
-        this.gs.log('[TORRENT_CLIENT_WEB_MODE_INITIALIZED]', this.webClient);
-        this.handleWebClient();
+        if (WebTorrent.WEBRTC_SUPPORT) {
+          this.webClient = new WebTorrent(this.webClientOptions);
+          this.gs.log('[TORRENT_CLIENT_WEB_MODE_INITIALIZED]', this.webClient);
+          this.handleWebClient();
+        } else {
+          this.toast.error('WebRTC Not Supported!', 'Whoops! Error.');
+        }
       }
     }
   }

@@ -1,12 +1,14 @@
-declare var WinBox: any;
-
 import { Injectable } from '@angular/core';
+
+import { WinBoxConstructor } from 'winbox';
 
 import { ServerInfo } from '../models/ServerInfo';
 
 import { GlobalService } from './global.service';
 import { DialogService } from './dialog.service';
 import { StatsServerService } from './stats-server.service';
+
+declare const WinBox: WinBoxConstructor;
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +58,7 @@ export class WinboxService {
     }
     if (this.currentServer?.winboxOpenLink && !((uriUrl as any).includesOneOf(['ftp://', 'mailto:']))) {
       const currentDateTime = new Date().getTime();
-      this.openedWindow[currentDateTime] = new WinBox({
+      this.openedWindow[currentDateTime] = new WinBox(uriUrl, {
         id: currentDateTime,
         title: uriUrl,
         url: uriUrl,
@@ -68,9 +70,7 @@ export class WinboxService {
         right: 0,
         bottom: 32,
         left: 64,
-        onclose: (force) => {
-          this.confirmationOpenUrl(uriUrl, windowTarget);
-        }
+        onclose: (force): any => this.confirmationOpenUrl(uriUrl, windowTarget)
       });
     } else {
       this.confirmationOpenUrl(uriUrl, windowTarget);

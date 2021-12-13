@@ -2,6 +2,8 @@ import videojs from 'video.js';
 
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
+import { VideoJsPlayer } from 'video.js';
+
 import { GlobalService } from '../../services/global.service';
 
 declare const SubtitlesOctopus: any;
@@ -18,7 +20,7 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
 
   @ViewChild('target', { static: true }) target: ElementRef;
 
-  player: videojs.Player;
+  player: VideoJsPlayer;
   subtitlesOctopus = null;
 
   @Input() videoUrl = '';
@@ -44,8 +46,7 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
           fluid: true,
           muted: false,
           sources: [{
-            src: this.videoUrl,
-            type: 'video/webm'
+            src: this.videoUrl
           }],
           poster: this.poster
         }, () => {

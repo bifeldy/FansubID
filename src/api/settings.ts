@@ -4,7 +4,7 @@ import { log } from './helpers/logger';
 
 let settings: ServerInfo = {
   isMaintenance: false,
-  winboxOpenLink: false,
+  winboxOpenLink: true,
   discordNotification: true
 };
 
