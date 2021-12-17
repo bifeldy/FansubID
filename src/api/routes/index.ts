@@ -264,6 +264,13 @@ router.patch('/verify', isAuthorized, (req: UserRequest, res: Response, next) =>
   if (token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
   }
+  res.cookie(environment.tokenName, token, {
+    httpOnly: true,
+    secure: environment.production,
+    sameSite: 'strict',
+    expires: new Date(JwtView(token).exp * 1000),
+    domain: environment.domain
+  });
   return res.status(200).json({
     info: '😍 200 - Verifikasi API :: Token Selesai Di Verifikasi UwUu 🥰',
     result: req.user,
