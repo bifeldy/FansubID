@@ -24,6 +24,8 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
   subtitlesOctopus = null;
 
   @Input() videoUrl = '';
+  @Input() videoType = 'x-matroska';
+
   @Input() subtitleUrl = '';
   @Input() subtitleFonts = [];
 
@@ -46,7 +48,8 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
           fluid: true,
           muted: false,
           sources: [{
-            src: this.videoUrl
+            src: this.videoUrl,
+            type: `video/${this.videoType == 'mkv' ? 'mp4' : this.videoType}`
           }],
           poster: this.poster
         }, () => {

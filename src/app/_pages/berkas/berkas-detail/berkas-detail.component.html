@@ -157,6 +157,7 @@
                   <mat-progress-bar color="accent" mode="buffer" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
                   <app-vjs-player *ngIf="isHaveDDL && vjsInit && vjsReady"
                     [videoUrl]="ddlVideo"
+                    [videoType]="lampiran.ext"
                     [subtitleUrl]="ddlSubtitles"
                     [subtitleFonts]="ddlFonts"
                     [poster]="'/favicon.ico'">
