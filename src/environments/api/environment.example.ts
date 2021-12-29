@@ -102,7 +102,10 @@ export const environment = {
   },
   externalApiCacheTime: 30 * 60 * 1000,
   externalApiAnime: 'http://api.jikan.moe/v3',
-  externalApiDorama: 'https://bifeldy-kuryana.vercel.app'
+  externalApiDorama: 'https://bifeldy-kuryana.vercel.app',
+  trackerAnnounce: [
+    'wss://tracker.hikki.id'
+  ]
 };
 
 /*

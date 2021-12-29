@@ -3,6 +3,7 @@ import webtorrentHealth from 'webtorrent-health';
 import { Router, Response, NextFunction } from 'express';
 
 import { UserRequest } from '../models/UserRequest';
+import { environment } from '../../environments/api/environment';
 
 const router = Router();
 
@@ -31,7 +32,7 @@ router.post('/', async (req: UserRequest, res: Response, next: NextFunction) => 
   try {
     if ('magnetHash' in req.body) {
       return webtorrentHealth(req.body.magnetHash, {
-        trackers: ['wss://tracker.hikki.id'],
+        trackers: environment.trackerAnnounce,
         timeout: req.body.trackTimeout || 1234
       }, (err, data) => {
         if (err) {

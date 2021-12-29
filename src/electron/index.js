@@ -1,12 +1,12 @@
-import { app, BrowserWindow, shell } from 'electron';
+const { app, BrowserWindow, shell } = require('electron');
 
-import { getMainWin, setMainWin } from './config';
-import { handleIpc } from './ipc';
+const { getMainWin, setMainWin } = require('./config');
+const { handleIpc } = require('./ipc');
 
-let websiteUrl: string = 'http://localhost:4000';
+let websiteUrl = 'http://localhost:4000';
 let customProtocol = 'hikki://';
 
-function handleMainWindow(): void {
+function handleMainWindow() {
   getMainWin().on('closed', () => {
     setMainWin(null);
   });

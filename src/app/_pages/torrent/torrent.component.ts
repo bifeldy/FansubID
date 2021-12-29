@@ -56,6 +56,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
 
   subsDialog = null;
   subsUser = null;
+  subsTableDataRow = null;
 
   constructor(
     public gs: GlobalService,
@@ -71,9 +72,15 @@ export class TorrentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.torrent.tableDataRow);
+    this.dataSource = new MatTableDataSource();
     if (this.gs.isBrowser) {
       this.dataSource.sort = this.sort;
+      this.subsTableDataRow = this.torrent.tableDataRow.subscribe({
+        next: tableDataRow => {
+          this.dataSource.data = tableDataRow;
+          this.refreshAllGraph();
+        }
+      });
       this.reviveTorrent();
     }
   }
@@ -82,22 +89,13 @@ export class TorrentComponent implements OnInit, OnDestroy {
     this.sort?.sortChange?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsUser?.unsubscribe();
-  }
-
-  refreshTable(): void {
-    if (this.dataSource) {
-      this.dataSource.data = this.torrent.tableDataRow;
-    }
-    setTimeout(() => {
-      for (const t of this.dataSource.data) {
-        this.refreshGraph(t);
-      }
-    }, 1234);
+    this.subsTableDataRow?.unsubscribe();
   }
 
   toggleExpanded(row: any): void {
-    this.torrent.expandedRow = this.torrent.expandedRow === row ? null : row;
     this.gs.log('[TORRENT_CLICKED]', row);
+    this.torrent.expandedRow = this.torrent.expandedRow === row ? null : row;
+    this.refreshGraph(row);
   }
 
   saveFile(file): void {
@@ -115,16 +113,13 @@ export class TorrentComponent implements OnInit, OnDestroy {
 
   reviveTorrent(): void {
     this.torrent.resurrectFiles((error, result) => {
-      this.refreshTable();
+      this.refreshAllGraph();
     });
   }
 
   resumeTorrent(torrent: any): void {
     this.torrent.resumeTorrent(torrent.infoHash, error => {
-      if (!error) {
-        this.gs.log('[TORRENT_FILE_RESUME_SUCCESS]', torrent.infoHash);
-      }
-      this.refreshTable();
+      this.refreshAllGraph();
     });
   }
 
@@ -133,7 +128,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
       if (!error) {
         this.gs.log('[TORRENT_FILE_PAUSE_SUCCESS]', torrent.infoHash);
       }
-      this.refreshTable();
+      this.refreshAllGraph();
     });
   }
 
@@ -142,17 +137,18 @@ export class TorrentComponent implements OnInit, OnDestroy {
       if (!error) {
         this.gs.log('[TORRENT_FILE_REMOVE_SUCCESS]', torrent.infoHash);
       }
+      this.torrentsGraph[torrent.infoHash].destroy();
       delete this.torrentsGraph[torrent.infoHash];
-      this.refreshTable();
+      this.refreshAllGraph();
     });
   }
 
   downloadFiles(event: Event): void {
     this.isProcessing = true;
     this.torrent.downloadFiles(this.magnetHash, (error, result) => {
-      this.refreshTable();
       this.magnetHash = null;
       this.isProcessing = false;
+      this.refreshAllGraph();
     });
   }
 
@@ -160,8 +156,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
     this.gs.log('[TORRENT_SEED_USER_INFORMATION]', userInput);
     this.isProcessing = true;
     this.torrent.uploadFiles(userInput, this.files, (error, result) => {
-      this.refreshTable();
       this.isProcessing = false;
+      this.refreshAllGraph();
     });
   }
 
@@ -193,8 +189,6 @@ export class TorrentComponent implements OnInit, OnDestroy {
           this.gs.log('[INPUT_DIALOG_CLOSED]', re);
           if (re) {
             this.uploadFiles(re);
-          } else {
-            this.refreshTable();
           }
           this.subsDialog.unsubscribe();
         }
@@ -250,6 +244,14 @@ export class TorrentComponent implements OnInit, OnDestroy {
       this.addAllGraph(torrent);
     } else {
       this.initGraph(torrent);
+    }
+  }
+
+  refreshAllGraph(): void {
+    for (const d of this.dataSource.data) {
+      setTimeout(() => {
+        this.refreshGraph(d);
+      }, 1234);
     }
   }
 

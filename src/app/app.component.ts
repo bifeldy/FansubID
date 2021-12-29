@@ -16,7 +16,6 @@ import { StatsServerService } from './_shared/services/stats-server.service';
 import { WinboxService } from './_shared/services/winbox.service';
 import { LocalStorageService } from './_shared/services/local-storage.service';
 import { DialogService } from './_shared/services/dialog.service';
-import { ElectronService } from './_shared/services/electron.service';
 
 @Component({
   selector: 'app-root',
@@ -56,8 +55,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     public rps: RightPanelService,
     public ss: StatsServerService,
     private wb: WinboxService,
-    private ds: DialogService,
-    private electron: ElectronService
+    private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -79,7 +77,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: ${environment.production ? 'Production' : 'Development'} With Logging Enabled 📌`);
-    this.gs.log(`[APP_ELECTRON] 🔨`, this.electron.version);
     this.pi.updatePageMetaData(
       '「💤 Hikki」',
       '「✨ Di Kamar Saja!」',

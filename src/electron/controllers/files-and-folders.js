@@ -1,18 +1,16 @@
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 
-import { IpcMainEvent } from 'electron';
+const { IpcMainEvent } = require('electron');
 
-import { isRoot } from '../config';
+const { isRoot } = require('../config');
 
-import { DataFileFolder } from '../models/DataFileFolder';
-
-const defaultDataFileFolder: DataFileFolder = {
+const defaultDataFileFolder = {
   folderPath: 'user_data',
   ext: ['apng', 'bmp', 'gif', 'jpg', 'jpeg', 'png', 'svg', 'webp']
 };
 
-export function getFolders(event: IpcMainEvent, data = defaultDataFileFolder) {
+function getFolders(event, data = defaultDataFileFolder) {
   const fullPath = path.join(process.cwd(), data.folderPath);
   fs.readdir(fullPath, { withFileTypes: true }, (err, files) => {
     if (!err) {
@@ -27,7 +25,7 @@ export function getFolders(event: IpcMainEvent, data = defaultDataFileFolder) {
   });
 }
 
-export function getFiles(event: IpcMainEvent, data = defaultDataFileFolder) {
+function getFiles(event, data = defaultDataFileFolder) {
   const fullPath = path.join(process.cwd(), data.folderPath);
   fs.readdir(fullPath, { withFileTypes: true }, (err, files) => {
     if (!err) {
@@ -39,3 +37,8 @@ export function getFiles(event: IpcMainEvent, data = defaultDataFileFolder) {
     }
   });
 }
+
+module.exports = {
+  getFolders,
+  getFiles
+};

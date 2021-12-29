@@ -11,7 +11,34 @@ export const environment = {
   apiKey: 'hikki_api_key',
   discordUrl: 'https://discord.gg/xGWdExk',
   discordGuildId: '342220398022098944',
-  discordClientId: '789831990433153034'
+  discordClientId: '789831990433153034',
+  trackerAnnounce: [
+    'wss://tracker.hikki.id',
+    'wss://tracker.btorrent.xyz',
+    'wss://tracker.openwebtorrent.com'
+  ],
+  iceServers: [
+    {
+      urls: [
+        'stun:stun-turn.hikki.id:5349',
+        'stun:relay.socket.dev:443'
+      ]
+    },
+    {
+      urls: [
+        'turn:stun-turn.hikki.id:5349'
+      ],
+      username: "turn",
+      credential: "hikki.id"
+    },
+    {
+      urls: [
+        'turn:relay.socket.dev:443'
+      ],
+      username: "relay.socket.dev",
+      credential: "tears-whiplash-overall-diction"
+    }
+  ]
 };
 
 /*
