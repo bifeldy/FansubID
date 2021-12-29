@@ -25,18 +25,14 @@ export const environment = {
       ]
     },
     {
-      urls: [
-        'turn:stun-turn.hikki.id:5349'
-      ],
-      username: "turn",
-      credential: "hikki.id"
+      urls: ['turn:stun-turn.hikki.id:5349'],
+      username: 'turn',
+      credential: 'hikki.id'
     },
     {
-      urls: [
-        'turn:relay.socket.dev:443'
-      ],
-      username: "relay.socket.dev",
-      credential: "tears-whiplash-overall-diction"
+      urls: ['turn:relay.socket.dev:443'],
+      username: 'relay.socket.dev',
+      credential: 'tears-whiplash-overall-diction'
     }
   ]
 };

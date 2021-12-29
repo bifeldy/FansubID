@@ -59,9 +59,6 @@ export async function getQuizHirakata() {
 
 export async function getQuizKanji(school = null, jlpt = null) {
   try {
-    if (school == null && jlpt == null) {
-      throw new Error('School / JLPT Level Tidak Ada Yang Dipilih!');
-    }
     const manager = getManager();
     let sqlQuery = `
       DO $$
@@ -77,7 +74,17 @@ export async function getQuizKanji(school = null, jlpt = null) {
           INTO total_data
           FROM kanji
     `;
-    if (school != null) {
+    if (school == null && jlpt == null) {
+      sqlQuery += `
+          WHERE translate <> '';
+        max_select := total_data - select_count;
+        DROP TABLE IF EXISTS kanji_all_quiz;
+        CREATE TABLE kanji_all_quiz AS
+          SELECT *
+          FROM kanji
+          WHERE translate <> ''
+      `;
+    } else if (school != null) {
       sqlQuery += `
           WHERE school::varchar(255) ILIKE '%${school}%';
         max_select := total_data - select_count;
@@ -108,7 +115,9 @@ export async function getQuizKanji(school = null, jlpt = null) {
       END $$
     `;
     let kanjis = await manager.query(sqlQuery);
-    if (school != null) {
+    if (school == null && jlpt == null) {
+      sqlQuery = `SELECT * FROM kanji_all_quiz`;
+    } else if (school != null) {
       sqlQuery = `SELECT * FROM kanji_s${school}_quiz`;
     } else if (jlpt != null) {
       sqlQuery = `SELECT * FROM kanji_n${jlpt}_quiz`;

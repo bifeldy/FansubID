@@ -53,8 +53,8 @@ async function getNewQuestion(roomId: string) {
         const jlptLevel = roomId.split('-').pop()[1];
         quiz[roomId] = await getQuizKanji(null, jlptLevel);
         return;
-      case '/nihongo/kanji-semua':
-        quiz[roomId] = await getQuizKanji('', '');
+      case '/nihongo/semua-kanji':
+        quiz[roomId] = await getQuizKanji(null, null);
         return;
       default:
         return;

@@ -237,7 +237,7 @@ export class NihongoListComponent implements OnInit {
       letter: '~349 Unik'
     },
     {
-      url: 'kanji-semua',
+      url: 'semua-kanji',
       name: 'All Kanji',
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,

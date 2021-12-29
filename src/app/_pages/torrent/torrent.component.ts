@@ -13,6 +13,7 @@ import { TorrentService } from '../../_shared/services/torrent.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { StatsServerService } from '../../_shared/services/stats-server.service';
+import { BusyService } from '../../_shared/services/busy.service';
 
 @Component({
   selector: 'app-torrent',
@@ -64,7 +65,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
     public torrent: TorrentService,
     private toast: ToastrService,
     private ds: DialogService,
-    private ss: StatsServerService
+    private ss: StatsServerService,
+    private bs: BusyService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -100,10 +102,12 @@ export class TorrentComponent implements OnInit, OnDestroy {
 
   saveFile(file): void {
     if (file.downloaded / file.length >= 1) {
+      this.bs.busy();
       file.getBlobURL((err, blobUrl: string) => {
         if (!err) {
           this.gs.log('[TORRENT_FILE_BLOBURL]', blobUrl);
           saveAs(blobUrl, file.name);
+          this.bs.idle();
         }
       });
     } else {
