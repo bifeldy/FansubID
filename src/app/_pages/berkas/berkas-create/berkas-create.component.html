@@ -176,7 +176,7 @@
                       <mat-progress-bar [mode]="attachmentMode" [value]="attachmentPercentage"></mat-progress-bar>
                     </div>
                   </div>
-                  <div class="col-3" *ngIf="!attachmentIsUploading && !attachmentIsCompleted">
+                  <div class="col-6 col-lg-4" *ngIf="!attachmentIsUploading && !attachmentIsCompleted">
                     <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitAttachment()">
                       <mat-icon class="me-1">attachment</mat-icon>
                       Unggah
