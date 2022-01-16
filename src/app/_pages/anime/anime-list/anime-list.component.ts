@@ -138,7 +138,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     this.subsSeasonalAnime = this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe({
       next: res => {
         this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
-        this.seasonalAnime = res.results.filter(a => a.continuing === false && a.kids === false).sort((a, b) => b.score - a.score);
+        this.seasonalAnime = res.results.sort((a, b) => b.score - a.score);
         if (showFab) {
           this.fs.initializeFab('settings_backup_restore', null, 'Kembali Ke Musim Sekarang', '/anime', false);
         }
@@ -179,9 +179,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
         }
         seasonalAnimeWithFansub = seasonalAnimeWithFansub.sort((a, b) => b['Nama Fansub'].length - a['Nama Fansub'].length);
         this.tabData[0].data.row = seasonalAnimeWithFansub;
-        this.seasonalAnimeCard = this.seasonalAnime.filter(a =>
-          a.continuing === false && a.type === 'TV' && a.r18 === false && a.kids === false
-        );
+        this.seasonalAnimeCard = this.seasonalAnime;
         this.bs.idle();
       },
       error: err => {

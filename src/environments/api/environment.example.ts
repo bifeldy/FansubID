@@ -101,7 +101,7 @@ export const environment = {
     'user-agent': 'node.js'
   },
   externalApiCacheTime: 30 * 60 * 1000,
-  externalApiAnime: 'http://api.jikan.moe/v3',
+  externalApiAnime: 'http://api.jikan.moe/v4',
   externalApiDorama: 'https://bifeldy-kuryana.vercel.app',
   trackerAnnounce: [
     'wss://tracker.hikki.id'

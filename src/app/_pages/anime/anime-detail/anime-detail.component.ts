@@ -135,11 +135,10 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   openSeasonalAnime(): void {
-    const seasonYear = (this.animeData?.premiered?.toLowerCase()?.split(' ') || '');
     this.router.navigate(['/anime'], {
       queryParams: {
-        season: (seasonYear[0] || ''),
-        year: (seasonYear[1] || '')
+        season: this.animeData.season,
+        year: this.animeData.year
       }
     });
   }

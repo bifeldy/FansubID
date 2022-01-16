@@ -32,7 +32,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   } else {
     return request({
       method: 'GET',
-      uri: `${environment.externalApiAnime}/search/anime?q=${searchQuery}&type=${searchType}`,
+      uri: `${environment.externalApiAnime}/anime?q=${searchQuery}&type=${searchType}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
@@ -45,7 +45,10 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
         const statusCode = result.statusCode;
         let data = [];
         try {
-          data = JSON.parse(body).results;
+          data = JSON.parse(body).data;
+          for (let i = 0; i < data.length; i++) {
+            data[i].image_url = data[i].images.jpg?.image_url || data[i].images.webp?.image_url;
+          }
         } catch (e) {
           console.error(e);
         }
@@ -133,7 +136,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   } else {
     return request({
       method: 'GET',
-      uri: `${environment.externalApiAnime}/season/${year}/${season}`,
+      uri: `${environment.externalApiAnime}/seasons/${year}/${season}`,
       headers: environment.nodeJsXhrHeader
     }, async (error, result, body) => {
       if (error || !result) {
@@ -146,7 +149,10 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
         const statusCode = result.statusCode;
         let data = [];
         try {
-          data = JSON.parse(body).anime;
+          data = JSON.parse(body).data;
+          for (let i = 0; i < data.length; i++) {
+            data[i].image_url = data[i].images.jpg?.image_url || data[i].images.webp?.image_url;
+          }
         } catch (e) {
           console.error(e);
         }
@@ -336,17 +342,9 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
         let animeDetail = null;
         let httpStatusCode = 404;
         try {
-          animeDetail = JSON.parse(body);
+          animeDetail = JSON.parse(body).data;
+          animeDetail.image_url = animeDetail.images.jpg?.image_url || animeDetail.images.webp?.image_url;
           httpStatusCode = result.statusCode;
-          if ('request_hash' in animeDetail) {
-            delete animeDetail.request_hash;
-          }
-          if ('request_cached' in animeDetail) {
-            delete animeDetail.request_cached;
-          }
-          if ('request_cache_expiry' in animeDetail) {
-            delete animeDetail.request_cache_expiry;
-          }
           try {
             if ('synopsis' in animeDetail && animeDetail.synopsis) {
               const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
