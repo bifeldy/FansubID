@@ -243,7 +243,8 @@ export async function socketBot(io: Server, socket: Socket) {
           selected = await selectedRepo.findOneOrFail({
             where: [
               { username: ILike(idSlugUsername) }
-            ]
+            ],
+            relations: ['profile_']
           });
         } else {
           // Other Url Target In Hikki API -- e.g '/news/:newsId'
@@ -284,12 +285,12 @@ export async function socketBot(io: Server, socket: Socket) {
             });
             track.track_by_ = visitorUser;
           }
-          const resTrackSave = await trackRepo.save(track);
+          await trackRepo.save(track);
           if (trackType === 'user') {
             selectedRepo = getRepository(Profile);
             selected = await selectedRepo.findOneOrFail({
               where: [
-                { id: Equal(resTrackSave.user_.id) }
+                { id: Equal(selected.profile_.id) }
               ]
             });
           }

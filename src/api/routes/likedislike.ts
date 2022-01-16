@@ -6,9 +6,11 @@ import { getRepository, ILike, Equal } from 'typeorm';
 import { UserRequest } from '../models/UserRequest';
 
 import { Role } from '../../app/_shared/models/Role';
+import { LikeAndDislike } from '../../app/_shared/models/LikeAndDislike';
 
 import { LikeDislike } from '../entities/LikeDislike';
 import { User } from '../entities/User';
+import { Profile } from '../entities/Profile';
 import { Berkas } from '../entities/Berkas';
 import { Fansub } from '../entities/Fansub';
 
@@ -243,7 +245,8 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
       selected = await selectedRepo.findOneOrFail({
         where: [
           { username: ILike(req.params.idSlugUsername) }
-        ]
+        ],
+        relations: ['profile_']
       });
     } else {
       // Other Url Target In Hikki API -- e.g '/news/:newsId'
@@ -262,6 +265,7 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
       ],
       relations: ['berkas_', 'fansub_', 'user_', 'report_by_']
     });
+    let result = null;
     if (likedislike.length <= 0) {
       const ldl = new LikeDislike();
       ldl[`${req.params.type}_`] = selected;
@@ -302,10 +306,7 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
         delete resLdlSave.report_by_.created_at;
         delete resLdlSave.report_by_.updated_at;
       }
-      return res.status(200).json({
-        info: `😅 200 - Like Dislike API :: Berhasil Report 🤣`,
-        result: resLdlSave
-      });
+      result = resLdlSave;
     } else if (likedislike.length === 1) {
       let auditedLikedislike = null;
       if (!req.body.likedislike) {
@@ -342,12 +343,42 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
         delete auditedLikedislike.report_by_.created_at;
         delete auditedLikedislike.report_by_.updated_at;
       }
-      return res.status(200).json({
-        info: `😅 200 - Like Dislike API :: Berhasil Audit Report ${auditedLikedislike.id} 🤣`,
-        result: auditedLikedislike
-      });
+      result = auditedLikedislike;
     } else {
       throw new Error('Data Duplikat');
+    }
+    if (req.params.type === 'berkas' || req.params.type === 'fansub' || req.params.type === 'user') {
+      if (req.params.type === 'user') {
+        selectedRepo = getRepository(Profile);
+        selected = await selectedRepo.findOneOrFail({
+          where: [
+            { id: Equal(selected.profile_.id) }
+          ]
+        });
+      }
+      const updatedLikeCount = await likedislikeRepo.count({
+        where: [
+          {
+            [`${req.params.type}_`]: {
+              id: Equal(selected.id)
+            },
+            type: Equal(LikeAndDislike.LIKE),
+          }
+        ],
+      });
+      selected.like_count = updatedLikeCount;
+      await selectedRepo.save(selected);
+    }
+    if (likedislike.length <= 0) {
+      return res.status(200).json({
+        info: `😅 200 - Like Dislike API :: Berhasil Report 🤣`,
+        result
+      });
+    } else if (likedislike.length === 1) {
+      return res.status(200).json({
+        info: `😅 200 - Like Dislike API :: Berhasil Audit Report ${result.id} 🤣`,
+        result
+      });
     }
   } catch (error) {
     console.error(error);

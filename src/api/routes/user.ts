@@ -320,7 +320,8 @@ router.delete('/:username', isAuthorized, async (req: UserRequest, res: Response
       const user =  await userRepo.findOneOrFail({
         where: [
           { username: ILike(req.params.username) }
-        ]
+        ],
+        relations: ['profile_']
       });
       const ktp = await ktpRepo.findOneOrFail({
         where: [
@@ -329,7 +330,7 @@ router.delete('/:username', isAuthorized, async (req: UserRequest, res: Response
       });
       const profile = await profileRepo.findOneOrFail({
         where: [
-          { id: Equal(user.id) }
+          { id: Equal(user.profile_.id) }
         ]
       });
       const deletedUser = await userRepo.remove(user);
