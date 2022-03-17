@@ -50,7 +50,6 @@ router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: Next
         if ('berkas_' in l && l.berkas_) {
           delete l.berkas_.description;
           delete l.berkas_.download_url;
-          delete l.berkas_.private;
           delete l.berkas_.created_at;
           delete l.berkas_.updated_at;
         }
@@ -168,7 +167,6 @@ router.get('/:type/:idSlugUsername', isLogin, async (req: UserRequest, res: Resp
           if ('berkas_' in myReport[0] && myReport[0].berkas_) {
             delete myReport[0].berkas_.description;
             delete myReport[0].berkas_.download_url;
-            delete myReport[0].berkas_.private;
             delete myReport[0].berkas_.created_at;
             delete myReport[0].berkas_.updated_at;
           }
@@ -281,7 +279,6 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
       if ('berkas_' in resLdlSave && resLdlSave.berkas_) {
         delete resLdlSave.berkas_.description;
         delete resLdlSave.berkas_.download_url;
-        delete resLdlSave.berkas_.private;
         delete resLdlSave.berkas_.created_at;
         delete resLdlSave.berkas_.updated_at;
       }
@@ -318,7 +315,6 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
       if ('berkas_' in auditedLikedislike && auditedLikedislike.berkas_) {
         delete auditedLikedislike.berkas_.description;
         delete auditedLikedislike.berkas_.download_url;
-        delete auditedLikedislike.berkas_.private;
         delete auditedLikedislike.berkas_.created_at;
         delete auditedLikedislike.berkas_.updated_at;
       }
@@ -401,7 +397,6 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
       if ('berkas_' in deletedLikedislike && deletedLikedislike.berkas_) {
         delete deletedLikedislike.berkas_.description;
         delete deletedLikedislike.berkas_.download_url;
-        delete deletedLikedislike.berkas_.private;
         delete deletedLikedislike.berkas_.created_at;
         delete deletedLikedislike.berkas_.updated_at;
       }

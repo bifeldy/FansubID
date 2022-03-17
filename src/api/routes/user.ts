@@ -13,10 +13,13 @@ import { User } from '../entities/User';
 import { Berkas } from '../entities/Berkas';
 import { Profile } from '../entities/Profile';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
+import { Komentar } from '../entities/Komentar';
+import { LikeDislike } from '../entities/LikeDislike';
 
 import { isAuthorized, isLogin } from '../middlewares/auth';
 
 import { JwtEncode, JwtView, hashPassword } from '../helpers/crypto';
+import { Track } from '../entities/Track';
 
 const router = Router();
 
@@ -238,8 +241,8 @@ router.put('/:username', isAuthorized, async (req: UserRequest, res: Response, n
   }
 });
 
-// PATCH `/api/user/:username/berkas`
-router.patch('/:username/berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
+// GET `/api/user/:username/feed-berkas`
+router.get('/:username/feed-berkas', async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
@@ -270,7 +273,6 @@ router.patch('/:username/berkas', async (req: UserRequest, res: Response, next: 
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const f of files) {
-      delete f.private;
       delete f.download_url;
       delete f.description;
       if ('project_type_' in f && f.project_type_) {
@@ -303,6 +305,278 @@ router.patch('/:username/berkas', async (req: UserRequest, res: Response, next: 
       count,
       pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: files
+    });
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
+  }
+});
+
+// GET `/api/user/:username/feed-comment`
+router.get('/:username/feed-comment', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const userRepo = getRepository(User);
+    const selectedUser = await userRepo.findOneOrFail({
+      where: [
+        { username: ILike(req.params.username) }
+      ]
+    });
+    const komenRepo = getRepository(Komentar);
+    const [komens, count] = await komenRepo.findAndCount({
+      where: [
+        {
+          comment: ILike(`%${req.query.q ? req.query.q : ''}%`),
+          user_: {
+            id: Equal(selectedUser.id)
+          }
+        }
+      ],
+      order: {
+        ...((req.query.sort && req.query.order) ? {
+          [req.query.sort]: req.query.order.toUpperCase()
+        } : {
+          created_at: 'DESC',
+          comment: 'ASC'
+        })
+      },
+      relations: ['user_'],
+      skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+      take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+    });
+    for (const k of komens) {
+      if ('user_' in k && k.user_) {
+        delete k.user_.role;
+        delete k.user_.password;
+        delete k.user_.session_token;
+        delete k.user_.created_at;
+        delete k.user_.updated_at;
+      }
+    }
+    return res.status(200).json({
+      info: `😅 200 - User API :: Feed Komentar ${req.params.username} 🤣`,
+      count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+      results: komens
+    });
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
+  }
+});
+
+// GET `/api/user/:username/feed-likedislike`
+router.get('/:username/feed-likedislike', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const userRepo = getRepository(User);
+    const selectedUser = await userRepo.findOneOrFail({
+      where: [
+        { username: ILike(req.params.username) }
+      ]
+    });
+    const likedislikeRepo = getRepository(LikeDislike);
+    const [likedislikes, count] = await likedislikeRepo.findAndCount({
+      where: [
+        {
+          berkas_: {
+            name: ILike(`%${req.query.q ? req.query.q : ''}%`)
+          },
+          report_by_: {
+            id: Equal(selectedUser.id)
+          }
+        },
+        {
+          fansub_: {
+            name: ILike(`%${req.query.q ? req.query.q : ''}%`)
+          },
+          report_by_: {
+            id: Equal(selectedUser.id)
+          }
+        },
+        {
+          user_: {
+            kartu_tanda_penduduk_: {
+              nama: ILike(`%${req.query.q ? req.query.q : ''}%`)
+            }
+          },
+          report_by_: {
+            id: Equal(selectedUser.id)
+          }
+        }
+      ],
+      order: {
+        ...((req.query.sort && req.query.order) ? {
+          [req.query.sort]: req.query.order.toUpperCase()
+        } : {
+          created_at: 'DESC',
+          berkas_: 'ASC',
+          fansub_: 'ASC',
+          user_: 'ASC'
+        })
+      },
+      relations: ['berkas_', 'fansub_', 'user_', 'report_by_', 'user_.kartu_tanda_penduduk_'],
+      skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+      take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+    });
+    for (const ldl of likedislikes) {
+      if ('berkas_' in ldl && ldl.berkas_) {
+        delete ldl.berkas_.download_url;
+        delete ldl.berkas_.description;
+        delete ldl.berkas_.created_at;
+        delete ldl.berkas_.updated_at;
+      }
+      if ('fansub_' in ldl && ldl.fansub_) {
+        delete ldl.fansub_.description;
+        delete ldl.fansub_.urls;
+        delete ldl.fansub_.tags;
+        delete ldl.fansub_.created_at;
+        delete ldl.fansub_.updated_at;
+      }
+      if ('user_' in ldl && ldl.user_) {
+        delete ldl.user_.role;
+        delete ldl.user_.password;
+        delete ldl.user_.session_token;
+        delete ldl.user_.created_at;
+        delete ldl.user_.updated_at;
+        if ('kartu_tanda_penduduk_' in ldl.user_ && ldl.user_.kartu_tanda_penduduk_) {
+          delete ldl.user_.kartu_tanda_penduduk_.id;
+          delete ldl.user_.kartu_tanda_penduduk_.agama;
+          delete ldl.user_.kartu_tanda_penduduk_.alamat;
+          delete ldl.user_.kartu_tanda_penduduk_.golongan_darah;
+          delete ldl.user_.kartu_tanda_penduduk_.kecamatan;
+          delete ldl.user_.kartu_tanda_penduduk_.kelurahan_desa;
+          delete ldl.user_.kartu_tanda_penduduk_.kewarganegaraan;
+          delete ldl.user_.kartu_tanda_penduduk_.nik;
+          delete ldl.user_.kartu_tanda_penduduk_.pekerjaan;
+          delete ldl.user_.kartu_tanda_penduduk_.rt;
+          delete ldl.user_.kartu_tanda_penduduk_.rw;
+          delete ldl.user_.kartu_tanda_penduduk_.status_perkawinan;
+          delete ldl.user_.kartu_tanda_penduduk_.created_at;
+          delete ldl.user_.kartu_tanda_penduduk_.updated_at;
+        }
+      }
+      if ('report_by_' in ldl && ldl.report_by_) {
+        delete ldl.report_by_.role;
+        delete ldl.report_by_.password;
+        delete ldl.report_by_.session_token;
+        delete ldl.report_by_.created_at;
+        delete ldl.report_by_.updated_at;
+      }
+    }
+    return res.status(200).json({
+      info: `😅 200 - User API :: Feed Like Dislike ${req.params.username} 🤣`,
+      count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+      results: likedislikes
+    });
+  } catch (error) {
+    console.error(error);
+    return next(createError(404));
+  }
+});
+
+// GET `/api/user/:username/feed-visit`
+router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const userRepo = getRepository(User);
+    const selectedUser = await userRepo.findOneOrFail({
+      where: [
+        { username: ILike(req.params.username) }
+      ]
+    });
+    const trackRepo = getRepository(Track);
+    const [tracks, count] = await trackRepo.findAndCount({
+      where: [
+        {
+          berkas_: {
+            name: ILike(`%${req.query.q ? req.query.q : ''}%`)
+          },
+          track_by_: {
+            id: Equal(selectedUser.id)
+          }
+        },
+        {
+          fansub_: {
+            name: ILike(`%${req.query.q ? req.query.q : ''}%`)
+          },
+          track_by_: {
+            id: Equal(selectedUser.id)
+          }
+        },
+        {
+          user_: {
+            kartu_tanda_penduduk_: {
+              nama: ILike(`%${req.query.q ? req.query.q : ''}%`)
+            }
+          },
+          track_by_: {
+            id: Equal(selectedUser.id)
+          }
+        }
+      ],
+      order: {
+        ...((req.query.sort && req.query.order) ? {
+          [req.query.sort]: req.query.order.toUpperCase()
+        } : {
+          created_at: 'DESC',
+          berkas_: 'ASC',
+          fansub_: 'ASC',
+          user_: 'ASC'
+        })
+      },
+      relations: ['berkas_', 'fansub_', 'user_', 'track_by_', 'user_.kartu_tanda_penduduk_'],
+      skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
+      take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
+    });
+    for (const t of tracks) {
+      if ('berkas_' in t && t.berkas_) {
+        delete t.berkas_.download_url;
+        delete t.berkas_.description;
+        delete t.berkas_.created_at;
+        delete t.berkas_.updated_at;
+      }
+      if ('fansub_' in t && t.fansub_) {
+        delete t.fansub_.description;
+        delete t.fansub_.urls;
+        delete t.fansub_.tags;
+        delete t.fansub_.created_at;
+        delete t.fansub_.updated_at;
+      }
+      if ('user_' in t && t.user_) {
+        delete t.user_.role;
+        delete t.user_.password;
+        delete t.user_.session_token;
+        delete t.user_.created_at;
+        delete t.user_.updated_at;
+        if ('kartu_tanda_penduduk_' in t.user_ && t.user_.kartu_tanda_penduduk_) {
+          delete t.user_.kartu_tanda_penduduk_.id;
+          delete t.user_.kartu_tanda_penduduk_.agama;
+          delete t.user_.kartu_tanda_penduduk_.alamat;
+          delete t.user_.kartu_tanda_penduduk_.golongan_darah;
+          delete t.user_.kartu_tanda_penduduk_.kecamatan;
+          delete t.user_.kartu_tanda_penduduk_.kelurahan_desa;
+          delete t.user_.kartu_tanda_penduduk_.kewarganegaraan;
+          delete t.user_.kartu_tanda_penduduk_.nik;
+          delete t.user_.kartu_tanda_penduduk_.pekerjaan;
+          delete t.user_.kartu_tanda_penduduk_.rt;
+          delete t.user_.kartu_tanda_penduduk_.rw;
+          delete t.user_.kartu_tanda_penduduk_.status_perkawinan;
+          delete t.user_.kartu_tanda_penduduk_.created_at;
+          delete t.user_.kartu_tanda_penduduk_.updated_at;
+        }
+      }
+      if ('track_by_' in t && t.track_by_) {
+        delete t.track_by_.role;
+        delete t.track_by_.password;
+        delete t.track_by_.session_token;
+        delete t.track_by_.created_at;
+        delete t.track_by_.updated_at;
+      }
+    }
+    return res.status(200).json({
+      info: `😅 200 - User API :: Feed Kunjungan ${req.params.username} 🤣`,
+      count,
+      pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
+      results: tracks
     });
   } catch (error) {
     console.error(error);

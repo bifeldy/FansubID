@@ -42,7 +42,19 @@ export class UserService {
   }
 
   getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
-    return this.api.patchData(`/user/${username}/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.getData(`/user/${username}/feed-berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  }
+
+  getUserFeedComment(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+    return this.api.getData(`/user/${username}/feed-comment?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  }
+
+  getUserFeedLikeDislike(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+    return this.api.getData(`/user/${username}/feed-likedislike?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  }
+
+  getUserFeedVisit(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+    return this.api.getData(`/user/${username}/feed-visit?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   cekNik(userData): Observable<any> {
