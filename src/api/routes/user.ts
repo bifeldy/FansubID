@@ -528,6 +528,9 @@ router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: 
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const t of tracks) {
+      if (req.user.username != selectedUser.username) {
+        delete t.ip;
+      }
       if ('berkas_' in t && t.berkas_) {
         delete t.berkas_.download_url;
         delete t.berkas_.description;
