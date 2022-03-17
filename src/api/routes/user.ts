@@ -528,7 +528,7 @@ router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: 
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const t of tracks) {
-      if (req.user.username != selectedUser.username) {
+      if (req.user.username != selectedUser.username && req.user.role != Role.ADMIN && req.user.role != Role.MODERATOR) {
         delete t.ip;
       }
       if ('berkas_' in t && t.berkas_) {
