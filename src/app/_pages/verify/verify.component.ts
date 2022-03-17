@@ -123,8 +123,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
           <div class="text-center p-3">
             <img src="/favicon.ico" class="mb-4">
             <p class="text-warning">
-              Karena masalah kebocoran data pemerintah kemarin terungkap, <br />
-              Verifikasi dengan menggunakan KTP ditutup untuk sementara!
+              Karena masalah kebocoran data pemerintah terungkap, saat ini metode verifikasi dengan menggunakan KTP ditutup untuk sementara!
             </p>
           </div>
         `,

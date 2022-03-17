@@ -481,8 +481,8 @@ router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, ne
   }
 });
 
-// PUT `/api/verify` -- Verify Account By KTP
-router.put('/verify', isAuthorized, async (req: UserRequest, res: Response, next) => {
+// PUT `/api/verify-ktp` -- Verify Account By KTP
+router.put('/verify-ktp', isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if (req.user.verified) {
       return res.status(200).json({
@@ -569,8 +569,8 @@ router.put('/verify', isAuthorized, async (req: UserRequest, res: Response, next
   }
 });
 
-// PATCH `/api/verify` -- Verify Account By Social Media :: DISCORD, DISQUS, GOOGLE, FACEBOOK, Etc
-router.patch('/verify', isAuthorized, async (req: UserRequest, res: Response, next) => {
+// PUT `/api/verify-sosmed` -- Verify Account By Social Media :: DISCORD, DISQUS, GOOGLE, FACEBOOK, Etc
+router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Response, next) => {
   try {
     if (req.user.verified) {
       return res.status(200).json({

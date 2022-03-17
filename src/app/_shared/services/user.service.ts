@@ -50,14 +50,14 @@ export class UserService {
   }
 
   verifyKTP(userData): Observable<any> {
-    return this.api.putData('/verify', userData).pipe(map(respVerifyKTP => {
+    return this.api.putData('/verify-ktp', userData).pipe(map(respVerifyKTP => {
       this.as.jwtToken = respVerifyKTP.result.jwtToken;
       return respVerifyKTP;
     }));
   }
 
   sosmedLogin(data): Observable<any> {
-    return this.api.patchData('/verify', data);
+    return this.api.putData('/verify-sosmed', data);
   }
 
 }
