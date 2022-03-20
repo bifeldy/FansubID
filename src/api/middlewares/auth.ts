@@ -169,7 +169,7 @@ export async function loginModule(req: UserRequest, res: Response, next: NextFun
         expires: new Date(JwtView(req.user.session_token).exp * 1000),
         domain: environment.domain
       });
-      checkBan(req, res, next);
+      return checkBan(req, res, next);
     } else {
       throw new Error('Username, Email, atau Password tidak tepat!');
     }
@@ -186,34 +186,32 @@ export async function loginModule(req: UserRequest, res: Response, next: NextFun
 
 export async function isAuthorized(req: UserRequest, res: Response, next: NextFunction) {
   const decoded = JwtDecode(req, res, next);
-  if (decoded && 'token' in decoded && 'id' in decoded.user) {
+  try {
     const userRepo = getRepository(User);
-    const selectedUser = await userRepo.find({
+    const selectedUser = await userRepo.findOneOrFail({
       where: [
         { id: Equal(decoded.user.id), session_token: Equal(decoded.token) }
       ],
       relations: ['kartu_tanda_penduduk_', 'profile_'],
     });
-    if (selectedUser.length === 1) {
-      const usr = selectedUser[0];
-      delete usr.password;
-      delete usr.session_token;
-      delete usr.kartu_tanda_penduduk_.id;
-      delete usr.kartu_tanda_penduduk_.created_at;
-      delete usr.kartu_tanda_penduduk_.updated_at;
-      delete usr.profile_.id;
-      delete usr.profile_.created_at;
-      delete usr.profile_.updated_at;
-      req.user = (usr as any);
-      checkBan(req, res, next);
-    } else {
-      return res.status(401).json({
-        info: '🙄 401 - Authentication API :: Authorisasi Sesi Gagal 😪',
-        result: {
-          message: 'Akses Token Ditolak!'
-        }
-      });
-    }
+    delete selectedUser.password;
+    delete selectedUser.session_token;
+    delete selectedUser.kartu_tanda_penduduk_.id;
+    delete selectedUser.kartu_tanda_penduduk_.created_at;
+    delete selectedUser.kartu_tanda_penduduk_.updated_at;
+    delete selectedUser.profile_.id;
+    delete selectedUser.profile_.created_at;
+    delete selectedUser.profile_.updated_at;
+    req.user = (selectedUser as any);
+    return checkBan(req, res, next);
+  } catch (err) {
+    console.error(err);
+    return res.status(401).json({
+      info: '🙄 401 - Authentication API :: Authorisasi Sesi Gagal 😪',
+      result: {
+        message: 'Akses Token Ditolak!'
+      }
+    });
   }
 }
 
@@ -221,7 +219,7 @@ export async function isLogin(req: UserRequest, res: Response, next: NextFunctio
   try {
     const token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token) {
-      isAuthorized(req, res, next);
+      return isAuthorized(req, res, next);
     } else {
       throw new Error('User Is Not Login');
     }
