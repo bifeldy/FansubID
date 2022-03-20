@@ -22,7 +22,7 @@
               <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
               <a class="text-truncate text-decoration-none" routerLink="{{ fk.path }}">
                 <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
-                <span class="me-3 text-success">{{ fk.user_.username }}</span>
+                <!-- <span class="me-3 text-success">{{ fk.user_.username }}</span> -->
                 <span class="text-warning">{{ fk.comment }}</span>
               </a>
             </mat-list-option>
@@ -50,7 +50,7 @@
                 )
               ">
                 <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fldl.created_at | dateAgo }}</span>
-                <span class="me-3 text-success">{{ fldl.report_by_.username }}</span>
+                <!-- <span class="me-3 text-success">{{ fldl.report_by_.username }}</span> -->
                 <span class="me-3 text-info">{{ fldl.type }}</span>
                 <span class="me-3">{{ fldl.berkas_ ? 'Berkas' : (fldl.fansub_ ? 'Fansub' : (fldl.user_ ? 'User' : '')) }}</span>
                 <span class="text-warning">{{ fldl.berkas_?.name || fldl.fansub_?.name || fldl.user_?.kartu_tanda_penduduk_?.nama }}</span>
@@ -80,9 +80,8 @@
                 )
               ">
                 <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fv.created_at | dateAgo }}</span>
-                <span class="me-3 text-success">{{ fv.track_by_.username }}</span>
-                <span class="me-3 text-info">Mengunjungi</span>
-                <span class="me-3">{{ fv.berkas_ ? 'Berkas' : (fv.fansub_ ? 'Fansub' : (fv.user_ ? 'User' : '')) }}</span>
+                <!-- <span class="me-3 text-success">{{ fv.track_by_.username }}</span> -->
+                <span class="me-3 text-info">{{ fv.berkas_ ? 'Berkas' : (fv.fansub_ ? 'Fansub' : (fv.user_ ? 'User' : '')) }}</span>
                 <span class="text-warning">{{ fv.berkas_?.name || fv.fansub_?.name || fv.user_?.kartu_tanda_penduduk_?.nama }}</span>
               </a>
             </mat-list-option>
