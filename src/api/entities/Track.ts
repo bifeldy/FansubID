@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 import { Berkas } from './Berkas';
 import { Fansub } from './Fansub';
+import { News } from './News';
 import { User } from './User';
 
 @Entity({ name: 'track' })
@@ -18,6 +19,9 @@ export class Track {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
+  @ManyToOne(type => News)
+  news_: News;
 
   @ManyToOne(type => Berkas)
   berkas_: Berkas;

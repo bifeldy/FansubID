@@ -22,7 +22,6 @@
               <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
               <a class="text-truncate text-decoration-none" routerLink="{{ fk.path }}">
                 <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
-                <!-- <span class="me-3 text-success">{{ fk.user_.username }}</span> -->
                 <span class="text-warning">{{ fk.comment }}</span>
               </a>
             </mat-list-option>
@@ -45,15 +44,16 @@
               <a class="text-truncate text-decoration-none" [routerLink]="
                 fldl.berkas_ ? '/berkas/' + fldl.berkas_?.id : (
                   fldl.fansub_ ? '/fansub/' + fldl.fansub_?.slug : (
-                    fldl.user_ ? '/user/' + fldl.user_?.username : ''
+                    fldl.user_ ? '/user/' + fldl.user_?.username : (
+                      fldl.news_ ? '/news/' + fldl.news_?.id : ''
+                    )
                   )
                 )
               ">
                 <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fldl.created_at | dateAgo }}</span>
-                <!-- <span class="me-3 text-success">{{ fldl.report_by_.username }}</span> -->
                 <span class="me-3 text-success">{{ fldl.type }}</span>
-                <span class="me-3 text-info">{{ fldl.berkas_ ? 'Berkas' : (fldl.fansub_ ? 'Fansub' : (fldl.user_ ? 'User' : '')) }}</span>
-                <span class="text-warning">{{ fldl.berkas_?.name || fldl.fansub_?.name || fldl.user_?.kartu_tanda_penduduk_?.nama }}</span>
+                <span class="me-3 text-info">{{ fldl.berkas_ ? 'Berkas' : (fldl.fansub_ ? 'Fansub' : (fldl.user_ ? 'User' : (fldl.news_ ? 'News' : ''))) }}</span>
+                <span class="text-warning">{{ fldl.berkas_?.name || fldl.fansub_?.name || fldl.user_?.kartu_tanda_penduduk_?.nama || fldl.news_?.title }}</span>
               </a>
             </mat-list-option>
           </mat-selection-list>
@@ -75,14 +75,15 @@
               <a class="text-truncate text-decoration-none" [routerLink]="
                 fv.berkas_ ? '/berkas/' + fv.berkas_?.id : (
                   fv.fansub_ ? '/fansub/' + fv.fansub_?.slug : (
-                    fv.user_ ? '/user/' + fv.user_?.username : ''
+                    fv.user_ ? '/user/' + fv.user_?.username : (
+                      fv.news_ ? '/news/' + fv.news_?.id : ''
+                    )
                   )
                 )
               ">
                 <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fv.created_at | dateAgo }}</span>
-                <!-- <span class="me-3 text-success">{{ fv.track_by_.username }}</span> -->
-                <span class="me-3 text-info">{{ fv.berkas_ ? 'Berkas' : (fv.fansub_ ? 'Fansub' : (fv.user_ ? 'User' : '')) }}</span>
-                <span class="text-warning">{{ fv.berkas_?.name || fv.fansub_?.name || fv.user_?.kartu_tanda_penduduk_?.nama }}</span>
+                <span class="me-3 text-info">{{ fv.berkas_ ? 'Berkas' : (fv.fansub_ ? 'Fansub' : (fv.user_ ? 'User' : (fv.news_ ? 'News' : ''))) }}</span>
+                <span class="text-warning">{{ fv.berkas_?.name || fv.fansub_?.name || fv.user_?.kartu_tanda_penduduk_?.nama || fv.news_?.title }}</span>
               </a>
             </mat-list-option>
           </mat-selection-list>

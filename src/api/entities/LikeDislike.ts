@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Berkas } from './Berkas';
 import { Fansub } from './Fansub';
 import { User } from './User';
+import { News } from './News';
 
 import { LikeAndDislike } from '../../app/_shared/models/LikeAndDislike';
 
@@ -20,6 +21,9 @@ export class LikeDislike {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
+  @ManyToOne(type => News)
+  news_: News;
 
   @ManyToOne(type => Berkas)
   berkas_: Berkas;

@@ -377,6 +377,14 @@ router.get('/:username/feed-likedislike', isAuthorized, async (req: UserRequest,
     const [likedislikes, count] = await likedislikeRepo.findAndCount({
       where: [
         {
+          news_: {
+            title: ILike(`%${req.query.q ? req.query.q : ''}%`)
+          },
+          report_by_: {
+            id: Equal(selectedUser.id)
+          }
+        },
+        {
           berkas_: {
             name: ILike(`%${req.query.q ? req.query.q : ''}%`)
           },
@@ -413,11 +421,17 @@ router.get('/:username/feed-likedislike', isAuthorized, async (req: UserRequest,
           user_: 'ASC'
         })
       },
-      relations: ['berkas_', 'fansub_', 'user_', 'report_by_', 'user_.kartu_tanda_penduduk_'],
+      relations: ['news_', 'berkas_', 'fansub_', 'user_', 'report_by_', 'user_.kartu_tanda_penduduk_'],
       skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const ldl of likedislikes) {
+      if ('news_' in ldl && ldl.news_) {
+        delete ldl.news_.content;
+        delete ldl.news_.tags;
+        delete ldl.news_.created_at;
+        delete ldl.news_.updated_at;
+      }
       if ('berkas_' in ldl && ldl.berkas_) {
         delete ldl.berkas_.download_url;
         delete ldl.berkas_.description;
@@ -487,6 +501,14 @@ router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: 
     const [tracks, count] = await trackRepo.findAndCount({
       where: [
         {
+          news_: {
+            title: ILike(`%${req.query.q ? req.query.q : ''}%`)
+          },
+          track_by_: {
+            id: Equal(selectedUser.id)
+          }
+        },
+        {
           berkas_: {
             name: ILike(`%${req.query.q ? req.query.q : ''}%`)
           },
@@ -523,13 +545,19 @@ router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: 
           user_: 'ASC'
         })
       },
-      relations: ['berkas_', 'fansub_', 'user_', 'track_by_', 'user_.kartu_tanda_penduduk_'],
+      relations: ['news_', 'berkas_', 'fansub_', 'user_', 'track_by_', 'user_.kartu_tanda_penduduk_'],
       skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const t of tracks) {
       if (req.user.username != selectedUser.username && req.user.role != Role.ADMIN && req.user.role != Role.MODERATOR) {
         delete t.ip;
+      }
+      if ('news_' in t && t.news_) {
+        delete t.news_.content;
+        delete t.news_.tags;
+        delete t.news_.created_at;
+        delete t.news_.updated_at;
       }
       if ('berkas_' in t && t.berkas_) {
         delete t.berkas_.download_url;

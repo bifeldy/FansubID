@@ -16,6 +16,7 @@ import { Track } from '../entities/Track';
 import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Profile } from '../entities/Profile';
+import { News } from '../entities/News';
 
 // Room Chat List
 const room = {};
@@ -218,7 +219,12 @@ export async function socketBot(io: Server, socket: Socket) {
     } else {
       data.user = null;
     }
-    if (data.pathUrl.startsWith('/berkas/') || data.pathUrl.startsWith('/fansub/') || data.pathUrl.startsWith('/user/')) {
+    if (
+      data.pathUrl.startsWith('/berkas/') ||
+      data.pathUrl.startsWith('/fansub/') ||
+      data.pathUrl.startsWith('/news/') ||
+      data.pathUrl.startsWith('/user/')
+    ) {
       try {
         const trackType = data.pathUrl.split('?')[0].split('/')[1];
         const idSlugUsername = data.pathUrl.split('?')[0].split('/')[2];
@@ -246,6 +252,13 @@ export async function socketBot(io: Server, socket: Socket) {
             ],
             relations: ['profile_']
           });
+        } else if (trackType === 'news') {
+          selectedRepo = getRepository(News);
+          selected = await selectedRepo.findOneOrFail({
+            where: [
+              { id: Equal(idSlugUsername) }
+            ]
+          });
         } else {
           // Other Url Target In Hikki API -- e.g '/news/:newsId'
         }
@@ -270,7 +283,7 @@ export async function socketBot(io: Server, socket: Socket) {
               })
             }
           ],
-          relations: ['berkas_', 'fansub_', 'user_', 'track_by_']
+          relations: ['news_', 'berkas_', 'fansub_', 'user_', 'track_by_']
         });
         if (tracks.length <= 0) {
           const track = new Track();
@@ -302,7 +315,7 @@ export async function socketBot(io: Server, socket: Socket) {
                 }
               }
             ],
-            relations: ['berkas_', 'fansub_', 'user_']
+            relations: ['news_', 'berkas_', 'fansub_', 'user_']
           });
           selected.view_count = visitorCount;
           await selectedRepo.save(selected);
@@ -339,6 +352,13 @@ export async function socketBot(io: Server, socket: Socket) {
             { username: ILike(data.idSlugUsername) }
           ]
         });
+      } else if (data.trackType === 'news') {
+        selectedRepo = getRepository(News);
+        selected = await selectedRepo.findOneOrFail({
+          where: [
+            { id: Equal(data.idSlugUsername) }
+          ]
+        });
       } else {
         // Other Url Target In Hikki API -- e.g '/news/:newsId'
       }
@@ -353,7 +373,7 @@ export async function socketBot(io: Server, socket: Socket) {
             }
           }
         ],
-        relations: ['berkas_', 'fansub_', 'user_', 'track_by_']
+        relations: ['news_', 'berkas_', 'fansub_', 'user_', 'track_by_']
       });
       result.unique_ip = [...new Set(tracks.map(t => t.ip))].length;
       result.unique_user = [...new Set(tracks.map(t => t.track_by_?.id))].length;

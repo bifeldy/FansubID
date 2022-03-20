@@ -13,6 +13,7 @@ import { User } from '../entities/User';
 import { Profile } from '../entities/Profile';
 import { Berkas } from '../entities/Berkas';
 import { Fansub } from '../entities/Fansub';
+import { News } from '../entities/News';
 
 import { isAuthorized, isLogin } from '../middlewares/auth';
 
@@ -42,11 +43,17 @@ router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: Next
             created_at: 'DESC'
           })
         },
-        relations: ['berkas_', 'fansub_', 'user_', 'report_by_'],
+        relations: ['news_', 'berkas_', 'fansub_', 'user_', 'report_by_'],
         skip: req.query.page > 0 ? (req.query.page * req.query.row - req.query.row) : 0,
         take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
       });
       for (const l of likedislike) {
+        if ('news_' in l && l.news_) {
+          delete l.news_.content;
+          delete l.news_.tags;
+          delete l.news_.created_at;
+          delete l.news_.updated_at;
+        }
         if ('berkas_' in l && l.berkas_) {
           delete l.berkas_.description;
           delete l.berkas_.download_url;
@@ -112,6 +119,13 @@ router.get('/:type/:idSlugUsername', isLogin, async (req: UserRequest, res: Resp
           { id: Equal(req.params.idSlugUsername) }
         ]
       });
+    } else if (req.params.type === 'news') {
+      selectedRepo = getRepository(News);
+      selected = await selectedRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.idSlugUsername) }
+        ]
+      });
     } else if (req.params.type === 'fansub') {
       selectedRepo = getRepository(Fansub);
       selected = await selectedRepo.findOneOrFail({
@@ -153,7 +167,7 @@ router.get('/:type/:idSlugUsername', isLogin, async (req: UserRequest, res: Resp
               }
             }
           ],
-          relations: ['berkas_', 'fansub_', 'user_', 'report_by_']
+          relations: ['news_', 'berkas_', 'fansub_', 'user_', 'report_by_']
         });
         if (myReport.length <= 0) {
           return res.status(200).json({
@@ -164,6 +178,12 @@ router.get('/:type/:idSlugUsername', isLogin, async (req: UserRequest, res: Resp
             }
           });
         } else if (myReport.length === 1) {
+          if ('news_' in myReport[0] && myReport[0].news_) {
+            delete myReport[0].news_.content;
+            delete myReport[0].news_.tags;
+            delete myReport[0].news_.created_at;
+            delete myReport[0].news_.updated_at;
+          }
           if ('berkas_' in myReport[0] && myReport[0].berkas_) {
             delete myReport[0].berkas_.description;
             delete myReport[0].berkas_.download_url;
@@ -231,6 +251,13 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
           { id: Equal(req.params.idSlugUsername) }
         ]
       });
+    } else if (req.params.type === 'news') {
+      selectedRepo = getRepository(News);
+      selected = await selectedRepo.findOneOrFail({
+        where: [
+          { id: Equal(req.params.idSlugUsername) }
+        ]
+      });
     } else if (req.params.type === 'fansub') {
       selectedRepo = getRepository(Fansub);
       selected = await selectedRepo.findOneOrFail({
@@ -261,7 +288,7 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
           }
         }
       ],
-      relations: ['berkas_', 'fansub_', 'user_', 'report_by_']
+      relations: ['news_', 'berkas_', 'fansub_', 'user_', 'report_by_']
     });
     let result = null;
     if (likedislike.length <= 0) {
@@ -276,6 +303,12 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
       });
       ldl.report_by_ = visitorUser;
       const resLdlSave = await likedislikeRepo.save(ldl);
+      if ('news_' in resLdlSave && resLdlSave.news_) {
+        delete resLdlSave.news_.content;
+        delete resLdlSave.news_.tags;
+        delete resLdlSave.news_.created_at;
+        delete resLdlSave.news_.updated_at;
+      }
       if ('berkas_' in resLdlSave && resLdlSave.berkas_) {
         delete resLdlSave.berkas_.description;
         delete resLdlSave.berkas_.download_url;
@@ -311,6 +344,12 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
       } else {
         likedislike[0].type = req.body.likedislike;
         auditedLikedislike = await likedislikeRepo.save(likedislike[0]);
+      }
+      if ('news_' in auditedLikedislike && auditedLikedislike.news_) {
+        delete auditedLikedislike.news_.content;
+        delete auditedLikedislike.news_.tags;
+        delete auditedLikedislike.news_.created_at;
+        delete auditedLikedislike.news_.updated_at;
       }
       if ('berkas_' in auditedLikedislike && auditedLikedislike.berkas_) {
         delete auditedLikedislike.berkas_.description;
