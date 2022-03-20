@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { FabService } from '../../../_shared/services/fab.service';
+import { BusyService } from '../../../_shared/services/busy.service';
+import { UserService } from '../../../_shared/services/user.service';
 
 @Component({
   selector: 'app-user-list',
@@ -11,12 +13,20 @@ import { AuthService } from '../../../_shared/services/auth.service';
 })
 export class UserListComponent implements OnInit, OnDestroy {
 
-  timedOut = null;
+  feedKomentarData = [];
+  feedLikeDislikeData = [];
+  feedVisitData = [];
+
+  subsFeedKomentar = null;
+  subsFeedLikeDislike = null;
+  subsFeedVisit = null;
 
   constructor(
-    private router: Router,
     public as: AuthService,
-    public gs: GlobalService
+    public gs: GlobalService,
+    private fs: FabService,
+    private bs: BusyService,
+    private us: UserService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -25,17 +35,68 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.timedOut = setTimeout(() => {
-        this.router.navigateByUrl(`/user/${this.as.currentUserValue.username}`);
-      }, 1234);
+      this.getUserFeedComment();
+      this.getUserFeedLikeDislike();
+      this.getUserFeedVisit();
+      this.fs.initializeFab(
+        'arrow_forward',
+        null,
+        'Menuju Halaman Profile',
+        `/user/${this.as.currentUserValue.username}`,
+        false
+      );
     }
   }
 
   ngOnDestroy(): void {
-    if (this.timedOut) {
-      clearTimeout(this.timedOut);
-      this.timedOut = null;
-    }
+    this.subsFeedKomentar?.unsubscribe();
+    this.subsFeedLikeDislike?.unsubscribe();
+    this.subsFeedVisit?.unsubscribe();
+  }
+
+  getUserFeedComment(): void {
+    this.bs.busy();
+    this.subsFeedKomentar = this.us.getUserFeedComment(this.as.currentUserValue.username, '', 1, 5).subscribe({
+      next: res => {
+        this.gs.log('[USER_FEED_COMMENT_SUCCESS]', res);
+        this.feedKomentarData = res.results;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[USER_FEED_COMMENT_ERROR]', err);
+        this.bs.idle();
+      }
+    });
+  }
+
+  getUserFeedLikeDislike(): void {
+    this.bs.busy();
+    this.subsFeedLikeDislike = this.us.getUserFeedLikeDislike(this.as.currentUserValue.username, '', 1, 5).subscribe({
+      next: res => {
+        this.gs.log('[USER_FEED_LIKEDISLIKE_SUCCESS]', res);
+        this.feedLikeDislikeData = res.results;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[USER_FEED_LIKEDISLIKE_ERROR]', err);
+        this.bs.idle();
+      }
+    });
+  }
+
+  getUserFeedVisit(): void {
+    this.bs.busy();
+    this.subsFeedVisit = this.us.getUserFeedVisit(this.as.currentUserValue.username, '', 1, 5).subscribe({
+      next: res => {
+        this.gs.log('[USER_FEED_VISIT_SUCCESS]', res);
+        this.feedVisitData = res.results;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[USER_FEED_VISIT_ERROR]', err);
+        this.bs.idle();
+      }
+    });
   }
 
 }

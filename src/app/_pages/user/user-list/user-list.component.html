@@ -1,12 +1,116 @@
-<!-- Center Screen -->
-<div class="h-100 row align-items-center m-0">
+<!-- Notification -->
+<app-notifications></app-notifications>
 
-  <!-- Not Found Content -->
-  <div class="container not-found-banner p-0" style="transform: scaleX(-1);">
-
-    <!-- Notfound Message Text-->
-    <h1 class="p-3 m-3" style="transform: scaleX(-1);">Memuat Data ...</h1>
-    <h1 class="p-3 m-3" style="transform: scaleX(-1);">Mohon Menunggu!</h1>
-
+<!-- Content -->
+<div class="container">
+  
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-lg-8 col-xl-9">
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy-dark">
+          <h2 class="pt-3 border-bottom-dotted">
+            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedComment()">
+              Refresh
+            </span>
+            <b class="text-bifeldy-dark">Riwayat Komentar</b>
+          </h2>
+        </div>
+        <div class="col-12" *ngIf="feedKomentarData.length > 0; else noData;">
+          <mat-selection-list [multiple]="false">
+            <mat-list-option *ngFor="let fk of feedKomentarData | slice:0:5" class="h-100">
+              <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
+              <a class="text-truncate text-decoration-none" routerLink="{{ fk.path }}">
+                <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
+                <span class="me-3 text-success">{{ fk.user_.username }}</span>
+                <span class="text-warning">{{ fk.comment }}</span>
+              </a>
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy-dark">
+          <h2 class="pt-3 border-bottom-dotted">
+            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedLikeDislike()">
+              Refresh
+            </span>
+            <b class="text-bifeldy-dark">Riwayat Like & Dislike</b>
+          </h2>
+        </div>
+        <div class="col-12" *ngIf="feedLikeDislikeData.length > 0; else noData;">
+          <mat-selection-list [multiple]="false">
+            <mat-list-option *ngFor="let fldl of feedLikeDislikeData | slice:0:5" class="h-100">
+              <mat-icon mat-list-icon class="ps-3">volunteer_activism</mat-icon>
+              <a class="text-truncate text-decoration-none" [routerLink]="
+                fldl.berkas_ ? '/berkas/' + fldl.berkas_?.id : (
+                  fldl.fansub_ ? '/fansub/' + fldl.fansub_?.slug : (
+                    fldl.user_ ? '/user/' + fldl.user_?.username : ''
+                  )
+                )
+              ">
+                <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fldl.created_at | dateAgo }}</span>
+                <span class="me-3 text-success">{{ fldl.report_by_.username }}</span>
+                <span class="me-3 text-info">{{ fldl.type }}</span>
+                <span class="me-3">{{ fldl.berkas_ ? 'Berkas' : (fldl.fansub_ ? 'Fansub' : (fldl.user_ ? 'User' : '')) }}</span>
+                <span class="text-warning">{{ fldl.berkas_?.name || fldl.fansub_?.name || fldl.user_?.kartu_tanda_penduduk_?.nama }}</span>
+              </a>
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy-dark">
+          <h2 class="pt-3 border-bottom-dotted">
+            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedVisit()">
+              Refresh
+            </span>
+            <b class="text-bifeldy-dark">Riwayat Kunjungan</b>
+          </h2>
+        </div>
+        <div class="col-12" *ngIf="feedVisitData.length > 0; else noData;">
+          <mat-selection-list [multiple]="false">
+            <mat-list-option *ngFor="let fv of feedVisitData | slice:0:5" class="h-100">
+              <mat-icon mat-list-icon class="ps-3">directions_run</mat-icon>
+              <a class="text-truncate text-decoration-none" [routerLink]="
+                fv.berkas_ ? '/berkas/' + fv.berkas_?.id : (
+                  fv.fansub_ ? '/fansub/' + fv.fansub_?.slug : (
+                    fv.user_ ? '/user/' + fv.user_?.username : ''
+                  )
+                )
+              ">
+                <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fv.created_at | dateAgo }}</span>
+                <span class="me-3 text-success">{{ fv.track_by_.username }}</span>
+                <span class="me-3 text-info">Mengunjungi</span>
+                <span class="me-3">{{ fv.berkas_ ? 'Berkas' : (fv.fansub_ ? 'Fansub' : (fv.user_ ? 'User' : '')) }}</span>
+                <span class="text-warning">{{ fv.berkas_?.name || fv.fansub_?.name || fv.user_?.kartu_tanda_penduduk_?.nama }}</span>
+              </a>
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xl-3">
+      <div class="row sticky-top">
+        <div class="col-12">
+          <app-banner-discord></app-banner-discord>
+          <app-stats-server></app-stats-server>
+        </div>
+      </div>
+    </div>
   </div>
+
 </div>
+
+<ng-template #noData>
+  <div class="col-12 p-3"
+    style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+    <div class="row align-items-center h-100">
+      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+        <h3 class="m-0">
+          Tidak Ada Data ¯\_(ツ)_/¯
+        </h3>
+      </div>
+    </div>
+  </div>
+</ng-template>

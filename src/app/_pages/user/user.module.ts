@@ -12,6 +12,10 @@ import { SharedMaterialModule } from '../../_shared/helpers/shared-material.modu
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { ReportModule } from '../../_shared/components/report/report.module';
+import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
+import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
+import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
 import { Role } from '../../_shared/models/Role';
 
@@ -26,7 +30,7 @@ const routes: Routes = [
     component: UserListComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'User Profile',
+      title: 'User - Dashboard Overview',
       description: 'Halaman Informasi Pengguna',
       keywords: 'User',
       roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
@@ -65,7 +69,11 @@ const routes: Routes = [
     ReactiveFormsModule,
     MaterialFileInputModule,
     AngularEditorModule,
-    ReportModule
+    ReportModule,
+    NotificationsModule,
+    BannerDiscordModule,
+    StatsServerModule,
+    CustomPipeModule
   ]
 })
 export class UserModule { }
