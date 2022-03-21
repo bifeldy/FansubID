@@ -341,23 +341,18 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
         let dramaDetail = null;
         let httpStatusCode = 404;
         try {
-          const dramaDetailResponse = JSON.parse(body);
+          dramaDetail = JSON.parse(body).data;
           httpStatusCode = result.statusCode;
-          if (httpStatusCode === 200) {
-            try {
-              if ('synopsis' in dramaDetailResponse.data && dramaDetailResponse.data.synopsis) {
-                const translatedDoramaSynopsis = await translate(dramaDetailResponse.data.synopsis, { to: 'id' });
-                dramaDetailResponse.data.synopsis = translatedDoramaSynopsis.text;
-              }
-            } catch (e2) {
-              console.error(e2);
-              httpStatusCode = 202;
-              dramaDetailResponse.data.message = 'Penerjemah / Alih Bahasa Gagal!';
+          try {
+            if ('synopsis' in dramaDetail && dramaDetail.synopsis) {
+              const translatedDoramaSynopsis = await translate(dramaDetail.synopsis, { to: 'id' });
+              dramaDetail.synopsis = translatedDoramaSynopsis.text;
             }
-          } else {
-            httpStatusCode = dramaDetailResponse.status_code;
+          } catch (e2) {
+            console.error(e2);
+            httpStatusCode = 202;
+            dramaDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
           }
-          dramaDetail = dramaDetailResponse.data;
         } catch (e1) {
           console.error(e1);
         }
