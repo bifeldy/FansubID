@@ -9,15 +9,15 @@
 
   <!-- Left Side Menu -->
   <mat-sidenav #leftSideNav disableClose [mode]="'side'" [opened]="lms.opened" [ngStyle]="{
-    'background-image': 'url(/assets/img/bg-left-menu.png)'
+    'background-image': 'url(' + gs.leftMenuImage + ')'
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-left-menu></app-left-menu>
   </mat-sidenav>
 
   <!-- Right Side Menu -->
-  <mat-sidenav #rightSidePanel [mode]="'over'" [opened]="false" position="end" (closedStart)="rps.onClose()" [ngStyle]="{
-    'background-image': 'url(/assets/img/bg-right-panel.png)'
-  }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat; background-color: #303030 !important;">
+  <mat-sidenav #rightSidePanel [mode]="'over'" [opened]="false" position="end" class="bg-bifeldy-dark" (closedStart)="rps.onClose()" [ngStyle]="{
+    'background-image': 'url(' + gs.rightMenuImage + ')'
+  }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-right-panel></app-right-panel>
   </mat-sidenav>
 

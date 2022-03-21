@@ -25,10 +25,13 @@ export class GlobalService {
 
   public routerData = null;
 
-  public bgImgUrl = null;
+  public bgImgUrlPath = null;
   public bannerImg = null;
   public sizeContain = false;
   public bgRepeat = false;
+
+  public leftMenuImage = null;
+  public rightMenuImage = null;
 
   public isBrowser = null;
   public document: Document = null;
@@ -110,21 +113,31 @@ export class GlobalService {
     return (Math.random() * 0xFFFFFF << 0).toString(16);
   }
 
+  get bgImgUrl(): string {
+    if (this.isDesktop) {
+      return this.bgImgUrlPath;
+    }
+    return null;
+  }
+
   onResize(event): void {
     if (event) {
       this.log('[WINDOW_RESIZE]', event);
     }
     if (this.isBrowser) {
       const browserWindow = event?.target?.window || window;
+      this.isDesktop = true;
+      this.leftMenuImage = '/assets/img/bg-left-menu.png';
+      this.rightMenuImage = '/assets/img/bg-right-panel.png';
       if (browserWindow.innerWidth >= 1200) {
-        this.isDesktop = true;
         this.gridListBreakpoint = 3;
       } else if (browserWindow.innerWidth >= 992) {
-        this.isDesktop = true;
         this.gridListBreakpoint = 2;
       } else {
         this.isDesktop = false;
         this.gridListBreakpoint = 1;
+        this.leftMenuImage = null;
+        this.rightMenuImage = '';
       }
     }
   }

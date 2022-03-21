@@ -171,7 +171,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateBackgroundImage(): void {
     const urlPath = this.router.url.substr(1).split('/')[0].split('?')[0];
-    this.gs.bgImgUrl = urlPath ? `/assets/img/router/bg-${urlPath}.png` : '';
+    this.gs.bgImgUrlPath = urlPath ? `/assets/img/router/bg-${urlPath}.png` : '';
   }
 
   checkStorage(): void {
