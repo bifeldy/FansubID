@@ -142,7 +142,7 @@
     "@types/winbox": "^0.2.1",
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
-    "electron": "^16.0.4",
+    "electron": "^16.0.6",
     "eslint": "^7.26.0",
     "eslint-plugin-import": "latest",
     "eslint-plugin-jsdoc": "latest",
