@@ -3,7 +3,7 @@
 
 <!-- Content -->
 <div class="container">
-  
+
   <!-- Detail -->
   <div class="row pb-3 px-0">
     <div class="col-12 sticky-top bg-bifeldy-dark pb-3">
@@ -42,7 +42,7 @@
           </div>
         </div>
         <div class="col-12" *ngIf="kanjiData.length > 0">
-          <div class="row px-3">
+          <div class="row px-3" appDomChange>
             <div class="col-6 col-md-3 col-lg-2 p-2" *ngFor="let k of kanjiData">
               <div class="card text-center p-3" (click)="openEdict(k)" style="cursor: pointer;">
                 <div class="card-body p-0">

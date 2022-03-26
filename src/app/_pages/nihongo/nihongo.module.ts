@@ -29,6 +29,8 @@ import { RightPanelModule } from '../../_shared/components/right-panel/right-pan
 import { QuizModule } from '../../_shared/components/quiz/quiz.module';
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
 
+import { CustomDirectivesModule } from '../../_shared/directives/custom-directive.module';
+
 const routes: Routes = [
   {
     path: '',
@@ -582,7 +584,8 @@ const routes: Routes = [
     StatsServerModule,
     RightPanelModule,
     QuizModule,
-    MaterialTableModule
+    MaterialTableModule,
+    CustomDirectivesModule
   ]
 })
 export class NihongoModule { }

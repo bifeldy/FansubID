@@ -73,6 +73,8 @@
     "idb": "^6.1.5",
     "idb-chunk-store": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
+    "kuroshiro": "~1.1.2",
+    "kuroshiro-analyzer-kuromoji": "^1.1.0",
     "localstorage-polyfill": "^1.0.1",
     "memory-cache": "^0.2.0",
     "moment": "^2.29.1",

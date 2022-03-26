@@ -8,6 +8,8 @@ import { CustomPipeModule } from '../../pipes/custom-pipe.module';
 
 import { SharedMaterialModule } from '../../helpers/shared-material.module';
 
+import { CustomDirectivesModule } from '../../directives/custom-directive.module';
+
 @NgModule({
   declarations: [
     DiscussionComponent
@@ -17,7 +19,8 @@ import { SharedMaterialModule } from '../../helpers/shared-material.module';
     FormsModule,
     ReactiveFormsModule,
     SharedMaterialModule,
-    CustomPipeModule
+    CustomPipeModule,
+    CustomDirectivesModule
   ],
   exports: [DiscussionComponent]
 })
