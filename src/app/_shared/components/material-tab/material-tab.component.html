@@ -15,12 +15,11 @@
       </ng-template>
       <div class="p-3" *ngIf="tab.data.length > 0">
         <mat-selection-list [multiple]="false" class="p-0">
-          <mat-grid-list [cols]="gs.gridListBreakpoint" rowHeight="10:2">
+          <mat-grid-list [cols]="gs.gridListBreakpoint" rowHeight="72px">
             <mat-grid-tile *ngFor="let d of tab.data">
               <mat-list-option (click)="onGridClicked(d)">
                 <img matListAvatar src="{{ d.image }}" class="ms-3" style="border-radius: 0;" />
-                <h4 matLine *ngIf="d.description">{{ d.title }}</h4>
-                <h4 *ngIf="!d.description">{{ d.title }}</h4>
+                <h4 matLine>{{ d.title }}</h4>
                 <p matLine>{{ d.description }}</p>
               </mat-list-option>
             </mat-grid-tile>
@@ -50,8 +49,7 @@
         <mat-selection-list [multiple]="false">
           <mat-list-option *ngFor="let d of tab.data" (click)="onListClicked(d)">
             <img matListAvatar src="{{ d.image }}" class="ms-3" style="border-radius: 0;" />
-            <h4 matLine *ngIf="d.description">{{ d.title }}</h4>
-            <h4 *ngIf="!d.description">{{ d.title }}</h4>
+            <h4 matLine>{{ d.title }}</h4>
             <p matLine>{{ d.description }}</p>
           </mat-list-option>
         </mat-selection-list>

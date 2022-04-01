@@ -130,8 +130,10 @@ export class GlobalService {
       this.leftMenuImage = '/assets/img/bg-left-menu.png';
       this.rightMenuImage = '/assets/img/bg-right-panel.png';
       if (browserWindow.innerWidth >= 1200) {
-        this.gridListBreakpoint = 3;
+        this.gridListBreakpoint = 4;
       } else if (browserWindow.innerWidth >= 992) {
+        this.gridListBreakpoint = 3;
+      } else if (browserWindow.innerWidth >= 767) {
         this.gridListBreakpoint = 2;
       } else {
         this.isDesktop = false;
