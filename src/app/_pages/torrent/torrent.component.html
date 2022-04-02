@@ -92,19 +92,19 @@
                               </ul>
                             </div>
                             <div class="p-2">
-                              <button mat-stroked-button class="m-1 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" (click)="refreshGraph(row)">
+                              <button mat-stroked-button class="m-1 text-warning" (click)="refreshGraph(row)">
                                 <mat-icon class="me-1">refresh</mat-icon>
                                 Refresh Graph
                               </button>
-                              <button mat-stroked-button class="m-1 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" (click)="removeTorrent(row)">
+                              <button mat-stroked-button class="m-1 text-warning" (click)="removeTorrent(row)">
                                 <mat-icon class="me-1">delete_outline</mat-icon>
                                 Remove
                               </button>
-                              <button mat-stroked-button class="m-1 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" (click)="resumeTorrent(row)" *ngIf="row.paused">
+                              <button mat-stroked-button class="m-1 text-warning" (click)="resumeTorrent(row)" *ngIf="row.paused">
                                 <mat-icon class="me-1">play_arrow</mat-icon>
                                 Resume
                               </button>
-                              <button mat-stroked-button class="m-1 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" (click)="pauseTorrent(row)" *ngIf="!row.paused">
+                              <button mat-stroked-button class="m-1 text-warning" (click)="pauseTorrent(row)" *ngIf="!row.paused">
                                 <mat-icon class="me-1">pause</mat-icon>
                                 Pause
                               </button>
@@ -119,7 +119,7 @@
                                       {{ f.name }}
                                     </span>
                                     --
-                                    <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
+                                    <span class="text-warning">
                                       {{ f.downloaded / f.length * 100 | number:'1.2-2' }} %
                                     </span>
                                     ::

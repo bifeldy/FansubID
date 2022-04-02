@@ -96,6 +96,10 @@ re-captcha > div {
   color: #000000;
 }
 
+.text-warning {
+  color: #6610f2 !important;
+}
+
 .angular-editor-toolbar {
   background-color: transparent !important;
 }

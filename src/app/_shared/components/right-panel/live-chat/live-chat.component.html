@@ -48,7 +48,7 @@
                 <span class="me-1 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}" style="cursor: pointer;" (click)="openUserProfile(c.sender.username)">
                   {{ c.sender.username }}
                 </span>
-                <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="word-break: break-word;" [innerHtml]="gs.htmlToText(c.message).linkify()"></span>
+                <span class="text-warning" style="word-break: break-word;" [innerHtml]="gs.htmlToText(c.message).linkify()"></span>
               </h5>
             </div>
           </div>

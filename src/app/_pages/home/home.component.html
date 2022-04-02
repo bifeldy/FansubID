@@ -10,7 +10,7 @@
       <div class="row">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
-            <a class="float-end text-decoration-none text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" routerLink="/news" style="font-size: small;">
+            <a class="float-end text-decoration-none text-warning" routerLink="/news" style="font-size: small;">
               Selengkapnya
             </a>
             <b class="text-bifeldy">Papan Pengumuman</b>
@@ -41,7 +41,7 @@
                     <mat-card-header>
                       <div mat-card-avatar style="background-size: cover;"
                       [style.background-image]="'url(' + n.user_.image_url + ')'"></div>
-                      <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }} mb-1" style="cursor: pointer;">
+                      <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-warning mb-1" style="cursor: pointer;">
                         <h3 class="mb-0">{{ n.user_.username }}</h3>
                       </mat-card-title>
                       <mat-card-subtitle class="mb-0">{{ n.created_at | date:'d MMM y' }}</mat-card-subtitle>
@@ -56,7 +56,7 @@
       <!-- <div class="row">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
-            <a class="float-end text-decoration-none text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" routerLink="/nihongo" style="font-size: small;">
+            <a class="float-end text-decoration-none text-warning" routerLink="/nihongo" style="font-size: small;">
               Selengkapnya
             </a>
             <b class="text-bifeldy">Belajar Bahasa Jepang</b>
@@ -69,7 +69,7 @@
       <div class="row" *ngIf="komentarData.length > 0">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
-            <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getComment()">
+            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getComment()">
               Refresh
             </span>
             <b class="text-bifeldy">Komentar Terbaru</b>
@@ -82,7 +82,7 @@
               <a class="text-truncate text-decoration-none" routerLink="{{ k.path }}">
                 <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ k.created_at | dateAgo }}</span>
                 <span class="me-3 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ k.user_.username }}</span>
-                <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ k.comment }}</span>
+                <span class="text-warning">{{ k.comment }}</span>
               </a>
             </mat-list-option>
           </mat-selection-list>

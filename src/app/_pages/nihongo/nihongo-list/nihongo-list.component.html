@@ -36,7 +36,7 @@
                     [style.background-image]="'url(' + (t.image_url || '') + ')'">
                     <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
                   </div>
-                  <mat-card-title class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }} mb-1" style="cursor: pointer;">
+                  <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
                     <h3 class="mb-0">{{ t.name }}</h3>
                   </mat-card-title>
                   <mat-card-subtitle class="mb-0">{{ t.letter }}</mat-card-subtitle>

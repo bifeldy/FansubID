@@ -19,21 +19,21 @@
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.author?.name">
       Commiter ::
-      <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
-        <a href="https://github.com/{{ ss.github?.commit?.author?.name }}" target="_blank" class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }} text-decoration-none">
+      <span class="text-warning">
+        <a href="https://github.com/{{ ss.github?.commit?.author?.name }}" target="_blank" class="text-warning text-decoration-none">
           {{ ss.github?.commit?.author?.name }}
         </a>
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.message">
       Message ::
-      <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
+      <span class="text-warning">
         {{ ss.github?.commit?.message }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="currentServer">
       Server ::
-      <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
+      <span class="text-warning">
         {{ currentServer?.isMaintenance ? 'Dalam Perbaikan' : 'Berjalan Normal' }}
       </span>
     </p>

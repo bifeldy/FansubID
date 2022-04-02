@@ -61,6 +61,10 @@ $my-dark-theme: map_merge($dark-theme, (custom: $my-app-custom));
   color: #ffffff !important;
 }
 
+.bifeldy-dark-theme .text-warning {
+  color: #ffc107 !important;
+}
+
 .bifeldy-dark-theme .gradient-border,
 .bifeldy-dark-theme .mat-card,
 .bifeldy-dark-theme .card {

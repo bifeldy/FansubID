@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
-<div mat-dialog-content class="p-4" class="text-break text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
+<div mat-dialog-content class="p-4" class="text-break text-warning">
   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'" *ngFor="let item of data.input | keyvalue">
     <mat-label>{{  item.value.inputLabel }}</mat-label>
     <input matInput [(ngModel)]="item.value.inputText" placeholder="{{ item.value.inputText }}" />

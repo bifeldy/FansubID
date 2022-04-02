@@ -19,7 +19,7 @@
     <div class="flex-grow-1 ms-3">
       <div (click)="showHideCommentBox(k)">
         <p class="m-0">
-          <b class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="cursor: pointer;" (click)="openUserProfile(k); $event.stopPropagation()">
+          <b class="text-warning" style="cursor: pointer;" (click)="openUserProfile(k); $event.stopPropagation()">
             {{ k.user_.username }}
           </b>
           <small class="ms-3 text-bifeldy" matTooltip="{{ k.created_at | date:'d MMMM y, h:mm:ss a z' }}">

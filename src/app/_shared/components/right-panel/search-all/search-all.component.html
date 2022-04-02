@@ -19,7 +19,7 @@
             <img matListAvatar src="{{ b.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ b.title }}</h4>
             <h5 matLine>
-              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ b.user_.username }}</span> &nbsp;
+              <span class="text-warning">{{ b.user_.username }}</span> &nbsp;
               <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ b.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
@@ -39,7 +39,7 @@
               {{ k.character }} | {{ k.v_kunyomi }}| {{ k.v_onyomi }}
             </h4>
             <h5 matLine class="ms-3">
-              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">N{{ k.jlpt }}</span> &nbsp;
+              <span class="text-warning">N{{ k.jlpt }}</span> &nbsp;
               <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ k.translate }}</span>
             </h5>
           </mat-list-option>
@@ -58,7 +58,7 @@
             <img matListAvatar src="{{ a.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ a.title }}</h4>
             <h5 matLine>
-              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ a.mal_id }}</span> &nbsp;
+              <span class="text-warning">{{ a.mal_id }}</span> &nbsp;
               <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ a.episodes }} Eps {{ a.type }}</span>
             </h5>
           </mat-list-option>
@@ -77,7 +77,7 @@
             <img matListAvatar src="{{ d.thumb }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ d.title }}</h4>
             <h5 matLine>
-              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ d.mdl_id }}</span> &nbsp;
+              <span class="text-warning">{{ d.mdl_id }}</span> &nbsp;
               <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ d.type }}</span>
             </h5>
           </mat-list-option>
@@ -96,7 +96,7 @@
             <img matListAvatar src="{{ f.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ f.name }}</h4>
             <h5 matLine>
-              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ f.active ? 'Aktif' : 'Tidak Aktif' }}</span> &nbsp;
+              <span class="text-warning">{{ f.active ? 'Aktif' : 'Tidak Aktif' }}</span> &nbsp;
               <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ f.born | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
@@ -115,7 +115,7 @@
             <img matListAvatar src="{{ b.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ b.name }}</h4>
             <h5 matLine>
-              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ b.user_.username }}</span> &nbsp;
+              <span class="text-warning">{{ b.user_.username }}</span> &nbsp;
               <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ b.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
@@ -134,7 +134,7 @@
             <img matListAvatar src="{{ p.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ p.kartu_tanda_penduduk_.nama }}</h4>
             <h5 matLine>
-              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ p.id }}</span> &nbsp;
+              <span class="text-warning">{{ p.id }}</span> &nbsp;
               <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ p.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>

@@ -7,7 +7,7 @@
           <div id="dmakElement" #dmakElement class="text-center"></div>
         </div>
         <div class="col-12 mt-3">
-          <p class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ data.translate }}</p>
+          <p class="text-warning">{{ data.translate }}</p>
         </div>
         <div class="col-12">
           <div class="text-truncate">
@@ -48,7 +48,7 @@
               <mat-list-option *ngFor="let e of edict" (click)="openVocab(e)">
                 <h4 class="px-3" matLine>{{ e.kanji }}</h4>
                 <h5 class="px-3 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}" matLine>{{ e.reading }} ({{ getRomaji(e.reading) }})</h5>
-                <p class="px-3 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" matLine>{{ e.meaning }}</p>
+                <p class="px-3 text-warning" matLine>{{ e.meaning }}</p>
               </mat-list-option>
             </mat-selection-list>
           </div>
