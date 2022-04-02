@@ -25,14 +25,14 @@
         <div class="sticky-top bg-bifeldy">
           <div class="col-12">
             <h2 class="pt-3 m-0">
-              <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">{{ newsData.title }}</b>
+              <b class="text-bifeldy">{{ newsData.title }}</b>
             </h2>
           </div>
           <div class="col-12">
             <hr class="my-1 border-bottom-dotted" style="height: 4px; background: url(/assets/img/stripe.png);" />
           </div>
           <div class="col-12">
-            <h5 class="pb-3 m-0 text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
+            <h5 class="pb-3 m-0 text-bifeldy">
               Oleh ::
               <a routerLink="/user/{{ newsData.user_.username }}" class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }} text-decoration-none">
                 {{ newsData.user_.username }}
@@ -48,7 +48,7 @@
   <div class="row pt-3">
     <div class="col-12 sticky-top bg-bifeldy">
       <h2 class="pt-3 border-bottom-dotted">
-        <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Komentar</b>
+        <b class="text-bifeldy">Komentar</b>
       </h2>
     </div>
     <div class="col-12">

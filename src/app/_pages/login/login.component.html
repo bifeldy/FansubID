@@ -20,7 +20,7 @@
                 <div class="form-group row py-2">
                   <label for="userNameOrEmail" class="col-md-4 col-form-label text-md-end">Nama Pengguna</label>
                   <div class="col-md-8">
-                    <input type="text" id="userNameOrEmail" class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} form-control {{
+                    <input type="text" id="userNameOrEmail" class="text-bifeldy form-control {{
                         !fg.get('userNameOrEmail').valid && fg.get('userNameOrEmail').touched ? 'is-invalid' : ''
                       }}" placeholder="Username / E-Mail" required autofocus formControlName="userNameOrEmail" autocomplete="email, username" />
                     <span class="invalid-feedback" role="alert">
@@ -36,7 +36,7 @@
                 <div class="form-group row py-2">
                   <label for="password" class="col-md-4 col-form-label text-md-end">Kata Sandi</label>
                   <div class="col-md-8">
-                    <input type="password" id="password" class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} form-control {{
+                    <input type="password" id="password" class="text-bifeldy form-control {{
                         !fg.get('password').valid && fg.get('password').touched ? 'is-invalid' : ''
                       }}" placeholder="Password" required formControlName="password" autocomplete="current-password, new-password" />
                     <span class="invalid-feedback" role="alert">

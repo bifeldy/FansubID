@@ -15,7 +15,7 @@
                 <div class="form-group row py-2">
                   <label for="username" class="col-md-4 col-form-label text-md-end">Nama Pengguna</label>
                   <div class="col-md-8">
-                    <input type="text" id="username" class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} form-control {{
+                    <input type="text" id="username" class="text-bifeldy form-control {{
                         !fg.get('username').valid && fg.get('username').touched ? 'is-invalid' : ''
                       }}" placeholder="Username Minimal 8 Huruf" required autofocus formControlName="username" autocomplete="username" />
                     <span class="invalid-feedback" role="alert">
@@ -37,7 +37,7 @@
                 <div class="form-group row py-2">
                   <label for="name" class="col-md-4 col-form-label text-md-end">Nama Lengkap</label>
                   <div class="col-md-8">
-                    <input type="text" id="name" class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} form-control {{
+                    <input type="text" id="name" class="text-bifeldy form-control {{
                         !fg.get('name').valid && fg.get('name').touched ? 'is-invalid' : ''
                       }}" placeholder="Nama Lengkap" required autofocus formControlName="name" autocomplete="name" />
                     <span class="invalid-feedback" role="alert">
@@ -53,7 +53,7 @@
                 <div class="form-group row py-2">
                   <label for="email" class="col-md-4 col-form-label text-md-end">Alamat Surel</label>
                   <div class="col-md-8">
-                    <input type="email" id="email" class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} form-control {{
+                    <input type="email" id="email" class="text-bifeldy form-control {{
                         !fg.get('email').valid && fg.get('email').touched ? 'is-invalid' : ''
                       }}" placeholder="Alamat E-Mail" required autofocus formControlName="email" autocomplete="email" />
                     <span class="invalid-feedback" role="alert">
@@ -74,7 +74,7 @@
                 <div class="form-group row py-2">
                   <label for="password" class="col-md-4 col-form-label text-md-end">Kata Sandi</label>
                   <div class="col-md-8">
-                    <input type="password" id="password" class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} form-control {{
+                    <input type="password" id="password" class="text-bifeldy form-control {{
                         !fg.get('password').valid && fg.get('password').touched ? 'is-invalid' : ''
                       }}" placeholder="Password Minimal 8 Huruf" required formControlName="password" autocomplete="current-password, new-password" />
                     <span class="invalid-feedback" role="alert">

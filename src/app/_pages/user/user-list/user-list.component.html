@@ -13,7 +13,7 @@
             <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedComment()">
               Refresh
             </span>
-            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Riwayat Komentar</b>
+            <b class="text-bifeldy">Riwayat Komentar</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedKomentarData.length > 0; else noData;">
@@ -34,7 +34,7 @@
             <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedLikeDislike()">
               Refresh
             </span>
-            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Riwayat Like & Dislike</b>
+            <b class="text-bifeldy">Riwayat Like & Dislike</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedLikeDislikeData.length > 0; else noData;">
@@ -65,7 +65,7 @@
             <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedVisit()">
               Refresh
             </span>
-            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Riwayat Kunjungan</b>
+            <b class="text-bifeldy">Riwayat Kunjungan</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedVisitData.length > 0; else noData;">
@@ -106,7 +106,7 @@
   <div class="col-12 p-3"
     style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
     <div class="row align-items-center h-100">
-      <div class="col-8 mx-auto text-bifeldy-dark text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
+      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
         <h3 class="m-0">
           Tidak Ada Data ¯\_(ツ)_/¯
         </h3>

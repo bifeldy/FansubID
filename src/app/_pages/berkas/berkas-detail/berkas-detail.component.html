@@ -6,7 +6,7 @@
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
         <div class="row align-items-center h-100">
           <div class="col-12 mx-auto">
-            <div class="container text-bifeldy-dark">
+            <div class="container text-light">
               <h2 class="mb-0" style="line-height: normal;">
                 {{ berkasData.project_type_.name }}
               </h2>
@@ -35,7 +35,7 @@
             <div class="row py-3">
               <div class="col-12 pt-3 sticky-top bg-bifeldy">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Tautan Rujukan</b></h2>
+                  <b class="text-bifeldy">Tautan Rujukan</b></h2>
               </div>
               <div class="col-12">
                 <mat-selection-list [multiple]="false">
@@ -61,7 +61,7 @@
             <div class="row py-3">
               <div class="col-12 pt-3 sticky-top bg-bifeldy">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Tautan Unduhan</b>
+                  <b class="text-bifeldy">Tautan Unduhan</b>
                 </h2>
               </div>
               <div class="col-12 text-center" *ngIf="currentUser">
@@ -80,7 +80,7 @@
             <div class="row py-3" *ngIf="currentUser && berkasData.attachment_">
               <div class="col-12 pt-3 sticky-top bg-bifeldy">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Tautan DDL</b>
+                  <b class="text-bifeldy">Tautan DDL</b>
                 </h2>
               </div>
               <div class="col-12 text-center" *ngIf="isHaveDDL">
@@ -144,7 +144,7 @@
             <div class="row py-3" *ngIf="berkasData.attachment_">
               <div class="col-12 pt-3 sticky-top bg-bifeldy">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Video Stream</b>
+                  <b class="text-bifeldy">Video Stream</b>
                 </h2>
               </div>
               <div class="col-12">
@@ -172,7 +172,7 @@
             <div class="row py-3">
               <div class="col-12 pt-3 sticky-top bg-bifeldy">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Deskripsi & Informasi</b>
+                  <b class="text-bifeldy">Deskripsi & Informasi</b>
                 </h2>
               </div>
               <div class="col-12">
@@ -187,7 +187,7 @@
             <div class="row py-3">
               <div class="col-12 sticky-top bg-bifeldy">
                 <h2 class="pt-3 border-bottom-dotted">
-                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Komentar</b>
+                  <b class="text-bifeldy">Komentar</b>
                 </h2>
               </div>
               <div class="col-12">
