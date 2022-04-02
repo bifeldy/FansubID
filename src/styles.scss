@@ -69,6 +69,10 @@ $my-dark-theme: map_merge($dark-theme, (custom: $my-app-custom));
   color: #69f0ae !important;
 }
 
+.bifeldy-dark-theme .mat-dialog-container {
+  background-color: rgb(48, 48, 48) !important;
+}
+
 .bifeldy-dark-theme .gradient-border,
 .bifeldy-dark-theme .mat-card,
 .bifeldy-dark-theme .card {

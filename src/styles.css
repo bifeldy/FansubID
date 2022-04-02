@@ -105,6 +105,10 @@ re-captcha > div {
   color: #28a745 !important;
 }
 
+.mat-dialog-container {
+  background-color: rgb(250, 250, 250);
+}
+
 .angular-editor-toolbar {
   background-color: transparent !important;
 }
