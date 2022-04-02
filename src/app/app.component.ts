@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   localStorageAturanTatibKeyName = `${environment.siteName}_AturanTatib`;
 
+  @HostListener('contextmenu', ['$event']) rightClick;
   @HostListener('document:click', ['$event']) documentClicked;
   @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
 
@@ -150,6 +151,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     if (this.gs.isBrowser) {
       this.checkStorage();
+      this.rightClick = this.onRightClick;
       this.documentClicked = this.onDocumentClicked;
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
       const aturanTatib = this.ls.getItem(this.localStorageAturanTatibKeyName) === 'true';
@@ -192,6 +194,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   resetLoading(): void {
     this.bs.clear();
+  }
+
+  onRightClick(ev): any {
+    ev.preventDefault();
   }
 
   onDocumentClicked(ev): boolean {
