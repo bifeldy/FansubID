@@ -115,7 +115,7 @@
                                 <mat-list-option *ngFor="let f of row.files" class="h-100">
                                   <mat-icon mat-list-icon class="ps-3">file_present</mat-icon>
                                   <div (click)="saveFile(f)" style="cursor: pointer;">
-                                    <span class="text-{{ f.downloaded / f.length >= 1 ? 'primary' : 'bifeldy-' + (gs.isDarkMode ? 'dark' : 'light') }}">
+                                    <span class="text-{{ f.downloaded / f.length >= 1 ? 'primary' : 'bifeldy' }}">
                                       {{ f.name }}
                                     </span>
                                     --

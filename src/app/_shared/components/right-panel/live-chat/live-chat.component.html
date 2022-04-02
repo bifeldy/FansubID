@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 mt-auto bg-bifeldy" *ngIf="currentUser">
+      <div class="col-12 mt-auto" *ngIf="currentUser">
         <mat-form-field class="ms-auto pt-3 col-12" [color]="'accent'">
           <mat-label>Kirim Pesan Obrolan Disini ...</mat-label>
           <input matInput maxlength="200" placeholder="Ex. Hello 世界！" (keyup.enter)="applyFilter($event)"
@@ -62,7 +62,7 @@
           <mat-icon matSuffix>send</mat-icon>
         </mat-form-field>
       </div>
-      <div class="col-12 mt-auto bg-bifeldy text-center" *ngIf="!currentUser">
+      <div class="col-12 mt-auto text-center" *ngIf="!currentUser">
         <button class="m-1" mat-stroked-button color="accent" (click)="login()">
           <mat-icon class="me-1">vpn_key</mat-icon>
           Login Untuk Bisa Mengobrol
