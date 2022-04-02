@@ -43,7 +43,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   subsDialog = null;
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     private news: NewsService,
     private ds: DialogService,
     private nihon: NihongoService,

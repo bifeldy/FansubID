@@ -31,7 +31,7 @@ export class NotificationsService {
   dissmissTimeout = {};
 
   constructor(
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

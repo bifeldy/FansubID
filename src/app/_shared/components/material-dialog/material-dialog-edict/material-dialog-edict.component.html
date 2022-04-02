@@ -7,18 +7,18 @@
           <div id="dmakElement" #dmakElement class="text-center"></div>
         </div>
         <div class="col-12 mt-3">
-          <p class="text-warning">{{ data.translate }}</p>
+          <p class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ data.translate }}</p>
         </div>
         <div class="col-12">
           <div class="text-truncate">
-            JLPT Level :: <span class="text-success">N{{ data.jlpt }}</span>
+            JLPT Level :: <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">N{{ data.jlpt }}</span>
           </div>
           <div class="text-truncate">
-            School Level :: <span class="text-success">{{ data.school }}</span>
+            School Level :: <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ data.school }}</span>
           </div>
           <div class="text-truncate mt-3">
             Kunyomi ::
-            <ul class="text-success m-0">
+            <ul class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} m-0">
               <li *ngFor="let v of data.v_kunyomi.split(',')">
                 {{ v }} ({{ getRomaji(v) }})
               </li>
@@ -26,7 +26,7 @@
           </div>
           <div class="text-truncate">
             Onyomi :: 
-            <ul class="text-success m-0">
+            <ul class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} m-0">
               <li *ngFor="let v of data.v_onyomi.split(',')">
                 {{ v }} ({{ getRomaji(v) }})
               </li>
@@ -39,7 +39,7 @@
       <div class="row">
         <div class="col-12 sticky-top" style="background: #424242">
           <h2 class="border-bottom-dotted">
-            <b class="text-bifeldy-dark">Kosa Kata</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Kosa Kata</b>
           </h2>
         </div>
         <div class="col-12">
@@ -47,15 +47,15 @@
             <mat-selection-list [multiple]="false">
               <mat-list-option *ngFor="let e of edict" (click)="openVocab(e)">
                 <h4 class="px-3" matLine>{{ e.kanji }}</h4>
-                <h5 class="px-3 text-success" matLine>{{ e.reading }} ({{ getRomaji(e.reading) }})</h5>
-                <p class="px-3 text-warning" matLine>{{ e.meaning }}</p>
+                <h5 class="px-3 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}" matLine>{{ e.reading }} ({{ getRomaji(e.reading) }})</h5>
+                <p class="px-3 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" matLine>{{ e.meaning }}</p>
               </mat-list-option>
             </mat-selection-list>
           </div>
           <div *ngIf="edict.length <= 0"
             style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
             <div class="row align-items-center h-100">
-              <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+              <div class="col-8 mx-auto text-bifeldy-dark text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
                 <h3 class="m-0">
                   Tidak Ada Data ¯\_(ツ)_/¯
                 </h3>

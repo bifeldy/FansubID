@@ -12,7 +12,7 @@ export class LocalStorageService {
 
   constructor(
     private crypt: CryptoService,
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -61,6 +61,7 @@ export class LocalStorageService {
       // localStorage.clear();
       this.removeItem(`${environment.siteName}_AturanTatib`);
       this.removeItem(`${environment.siteName}_DebugLogs`);
+      this.removeItem(`${environment.siteName}_DarkMode`);
       this.removeItem(`${environment.siteName}_JwtToken`);
       this.removeItem(`${environment.siteName}_LiveChatResults`);
       this.removeItem(`${environment.siteName}_SearchResults`);

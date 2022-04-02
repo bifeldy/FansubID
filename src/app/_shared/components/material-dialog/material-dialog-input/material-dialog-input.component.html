@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
-<div mat-dialog-content class="p-4" class="text-break text-warning">
+<div mat-dialog-content class="p-4" class="text-break text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'" *ngFor="let item of data.input | keyvalue">
     <mat-label>{{  item.value.inputLabel }}</mat-label>
     <input matInput [(ngModel)]="item.value.inputText" placeholder="{{ item.value.inputText }}" />
@@ -7,6 +7,6 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data.input" class="ms-auto text-success shiny">{{ data.confirmText }}</button>
+  <button mat-button [mat-dialog-close]="data.input" class="ms-auto text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} shiny">{{ data.confirmText }}</button>
   <button mat-button [mat-dialog-close]="false" *ngIf="data.cancelText">{{ data.cancelText }}</button>
 </div>

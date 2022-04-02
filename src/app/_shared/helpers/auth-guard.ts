@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     private router: Router,
     private as: AuthService,
     private toast: ToastrService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService
   ) {
     if (this.gs.isBrowser) {

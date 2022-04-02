@@ -32,7 +32,7 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private rps: RightPanelService,
     private quiz: QuizService,
     private ds: DialogService

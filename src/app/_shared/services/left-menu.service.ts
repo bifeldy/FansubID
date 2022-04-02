@@ -86,7 +86,7 @@ export class LeftMenuService {
   ];
 
   constructor(
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       this.opened = (window.innerWidth >= 992) ? true : false;

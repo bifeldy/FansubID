@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-12 sticky-top bg-bifeldy-dark">
+  <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
     <mat-form-field class="ms-auto pt-3 col-12" [color]="'accent'">
       <mat-label>Cari Apapun Di Sini ...</mat-label>
       <input matInput maxlength="200" placeholder="Ex. ばーかー！" (keyup.enter)="applyFilter($event)" [(ngModel)]="searchResult.q" />
@@ -10,7 +10,7 @@
     <div class="row" *ngIf="searchResult.beritaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Berita</b>
+          <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Berita</b>
         </h2>
       </div>
       <div class="col-12">
@@ -19,8 +19,8 @@
             <img matListAvatar src="{{ b.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ b.title }}</h4>
             <h5 matLine>
-              <span class="text-warning">{{ b.user_.username }}</span> &nbsp;
-              <span class="text-success">{{ b.created_at | date:'d-MM-y' }}</span>
+              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ b.user_.username }}</span> &nbsp;
+              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ b.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -29,7 +29,7 @@
     <div class="row" *ngIf="searchResult.kanjiResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Kanji</b>
+          <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Kanji</b>
         </h2>
       </div>
       <div class="col-12">
@@ -39,8 +39,8 @@
               {{ k.character }} | {{ k.v_kunyomi }}| {{ k.v_onyomi }}
             </h4>
             <h5 matLine class="ms-3">
-              <span class="text-warning">N{{ k.jlpt }}</span> &nbsp;
-              <span class="text-success">{{ k.translate }}</span>
+              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">N{{ k.jlpt }}</span> &nbsp;
+              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ k.translate }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -49,7 +49,7 @@
     <div class="row" *ngIf="searchResult.animeResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Anime</b>
+          <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Anime</b>
         </h2>
       </div>
       <div class="col-12">
@@ -58,8 +58,8 @@
             <img matListAvatar src="{{ a.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ a.title }}</h4>
             <h5 matLine>
-              <span class="text-warning">{{ a.mal_id }}</span> &nbsp;
-              <span class="text-success">{{ a.episodes }} Eps {{ a.type }}</span>
+              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ a.mal_id }}</span> &nbsp;
+              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ a.episodes }} Eps {{ a.type }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -68,7 +68,7 @@
     <div class="row" *ngIf="searchResult.doramaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Dorama</b>
+          <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Dorama</b>
         </h2>
       </div>
       <div class="col-12">
@@ -77,8 +77,8 @@
             <img matListAvatar src="{{ d.thumb }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ d.title }}</h4>
             <h5 matLine>
-              <span class="text-warning">{{ d.mdl_id }}</span> &nbsp;
-              <span class="text-success">{{ d.type }}</span>
+              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ d.mdl_id }}</span> &nbsp;
+              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ d.type }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -87,7 +87,7 @@
     <div class="row" *ngIf="searchResult.fansubResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Fansub</b>
+          <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Fansub</b>
         </h2>
       </div>
       <div class="col-12">
@@ -96,8 +96,8 @@
             <img matListAvatar src="{{ f.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ f.name }}</h4>
             <h5 matLine>
-              <span class="text-warning">{{ f.active ? 'Aktif' : 'Tidak Aktif' }}</span> &nbsp;
-              <span class="text-success">{{ f.born | date:'d-MM-y' }}</span>
+              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ f.active ? 'Aktif' : 'Tidak Aktif' }}</span> &nbsp;
+              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ f.born | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -106,7 +106,7 @@
     <div class="row" *ngIf="searchResult.berkasResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Berkas</b>
+          <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Berkas</b>
         </h2>
       </div>
       <div class="col-12">
@@ -115,8 +115,8 @@
             <img matListAvatar src="{{ b.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ b.name }}</h4>
             <h5 matLine>
-              <span class="text-warning">{{ b.user_.username }}</span> &nbsp;
-              <span class="text-success">{{ b.created_at | date:'d-MM-y' }}</span>
+              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ b.user_.username }}</span> &nbsp;
+              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ b.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -125,7 +125,7 @@
     <div class="row" *ngIf="searchResult.penggunaResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Pengguna</b>
+          <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Pengguna</b>
         </h2>
       </div>
       <div class="col-12">
@@ -134,8 +134,8 @@
             <img matListAvatar src="{{ p.image_url }}" class="ms-3" style="border-radius: 0;" />
             <h4 matLine>{{ p.kartu_tanda_penduduk_.nama }}</h4>
             <h5 matLine>
-              <span class="text-warning">{{ p.id }}</span> &nbsp;
-              <span class="text-success">{{ p.created_at | date:'d-MM-y' }}</span>
+              <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ p.id }}</span> &nbsp;
+              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ p.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>

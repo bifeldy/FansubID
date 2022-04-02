@@ -9,9 +9,9 @@
     <div class="col-12">
       <div class="row">
         <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
-          <div class="col-12 sticky-top bg-bifeldy-dark">
+          <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
             <h2 class="pt-3 border-bottom-dotted">
-              <b class="text-bifeldy-dark">Buat Tipe Jenis Proyek Baru</b>
+              <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Buat Tipe Jenis Proyek Baru</b>
             </h2>
           </div>
           <div class="col-12">
@@ -89,9 +89,9 @@
         </form>
       </div>
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
           <h2 class="pt-3 border-bottom-dotted">
-            <b class="text-bifeldy-dark">Hapus Jenis Proyek Yang Ada</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Hapus Jenis Proyek Yang Ada</b>
           </h2>
         </div>
         <div class="col-12">

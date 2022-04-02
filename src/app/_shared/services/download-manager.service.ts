@@ -14,7 +14,7 @@ export class DownloadManagerService {
   public attachmentsDownload = {};
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     private toast: ToastrService,
     private api: ApiService
   ) {

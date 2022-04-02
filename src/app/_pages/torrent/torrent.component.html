@@ -10,9 +10,9 @@
     <div class="row pb-3 px-0">
       <div class="col-12">
         <div class="row">
-          <div class="col-12 sticky-top bg-bifeldy-dark">
+          <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
             <h2 class="pt-3 border-bottom-dotted">
-              <b class="text-bifeldy-dark">Web-SocketRTC Torrent</b>
+              <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Web-SocketRTC Torrent</b>
             </h2>
           </div>
           <div class="col-12">
@@ -73,7 +73,7 @@
                           <div class="col-9">
                             <p class="px-2 text-truncate" *ngIf="row.infoHash">
                               Info Hash ::
-                              <span class="text-success">
+                              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
                                 {{ row.infoHash }}
                               </span>
                             </p>
@@ -85,26 +85,26 @@
                             </p>
                             <div class="px-2 text-truncate">
                               Announce Trackers ::
-                              <ul class="text-success m-0">
+                              <ul class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} m-0">
                                 <li *ngFor="let a of row.announce">
                                   {{ a }}
                                 </li>
                               </ul>
                             </div>
                             <div class="p-2">
-                              <button mat-stroked-button class="m-1 text-warning" (click)="refreshGraph(row)">
+                              <button mat-stroked-button class="m-1 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" (click)="refreshGraph(row)">
                                 <mat-icon class="me-1">refresh</mat-icon>
                                 Refresh Graph
                               </button>
-                              <button mat-stroked-button class="m-1 text-warning" (click)="removeTorrent(row)">
+                              <button mat-stroked-button class="m-1 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" (click)="removeTorrent(row)">
                                 <mat-icon class="me-1">delete_outline</mat-icon>
                                 Remove
                               </button>
-                              <button mat-stroked-button class="m-1 text-warning" (click)="resumeTorrent(row)" *ngIf="row.paused">
+                              <button mat-stroked-button class="m-1 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" (click)="resumeTorrent(row)" *ngIf="row.paused">
                                 <mat-icon class="me-1">play_arrow</mat-icon>
                                 Resume
                               </button>
-                              <button mat-stroked-button class="m-1 text-warning" (click)="pauseTorrent(row)" *ngIf="!row.paused">
+                              <button mat-stroked-button class="m-1 text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" (click)="pauseTorrent(row)" *ngIf="!row.paused">
                                 <mat-icon class="me-1">pause</mat-icon>
                                 Pause
                               </button>
@@ -115,15 +115,15 @@
                                 <mat-list-option *ngFor="let f of row.files" class="h-100">
                                   <mat-icon mat-list-icon class="ps-3">file_present</mat-icon>
                                   <div (click)="saveFile(f)" style="cursor: pointer;">
-                                    <span class="text-{{ f.downloaded / f.length >= 1 ? 'primary' : 'bifeldy-dark' }}">
+                                    <span class="text-{{ f.downloaded / f.length >= 1 ? 'primary' : 'bifeldy-' + (gs.isDarkMode ? 'dark' : 'light') }}">
                                       {{ f.name }}
                                     </span>
                                     --
-                                    <span class="text-warning">
+                                    <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
                                       {{ f.downloaded / f.length * 100 | number:'1.2-2' }} %
                                     </span>
                                     ::
-                                    <span class="text-success">
+                                    <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
                                       {{ f.downloaded | bytes }} / {{ f.length | bytes }}
                                     </span>
                                   </div>
@@ -145,7 +145,7 @@
                     <td class="mat-cell text-center align-items-center p-0" [attr.colspan]="tableDataColumn.length"
                       style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
                       <div class="row align-items-center h-100">
-                        <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+                        <div class="col-8 mx-auto text-bifeldy-dark text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
                           <h3 class="m-0">
                             Tidak Ada Data ¯\_(ツ)_/¯
                           </h3>

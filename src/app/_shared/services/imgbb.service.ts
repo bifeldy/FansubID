@@ -12,7 +12,7 @@ export class ImgbbService {
 
   constructor(
     private api: ApiService,
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

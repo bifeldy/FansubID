@@ -1,7 +1,7 @@
 <div class="row" [ngStyle]="{ 'height': (chatOnly ? '' : 'calc(100vh - 120px)') }">
   <div class="col-12 h-100">
     <div class="row" style="height: 40%!important;" *ngIf="!chatOnly">
-      <div class="col-12 sticky-top bg-bifeldy-dark">
+      <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
         <h3 class="border-bottom-dotted row">
           <mat-form-field class="pt-3 col-12" [color]="'accent'">
             <mat-label>Ruangan</mat-label>
@@ -16,7 +16,7 @@
         <div class="h-100" style="overflow-y: auto;">
           <div class="row m-0" *ngIf="roomCurrentOrGlobal">
             <div class="col-6 p-0" *ngFor="let u of roomCurrentOrGlobal.member_list | keyvalue">
-              <div class="card d-flex py-1 align-items-center p-1" routerLink="/user/Bifeldy" *ngIf="u.value">
+              <div class="card d-flex py-1 align-items-center p-1 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}" routerLink="/user/Bifeldy" *ngIf="u.value">
                 <div class="flex-shrink-0">
                   <img height="24" width="24" src="{{ u.value.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
                 </div>
@@ -32,9 +32,9 @@
       </div>
     </div>
     <div class="row" [ngStyle]="{ 'height': (chatOnly ? '100%!important' : '60%!important') }">
-      <div class="col-12 sticky-top bg-bifeldy-dark">
+      <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
         <h2 class="pt-3 border-bottom-dotted">
-          <b class="text-bifeldy-dark">Obrolan</b>
+          <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Obrolan</b>
         </h2>
       </div>
       <div class="col-12" *ngIf="currentUser">
@@ -45,16 +45,16 @@
             </div>
             <div class="flex-grow-1 mx-1 my-auto">
               <h5 matLine class="m-0">
-                <span class="me-1 text-success" style="cursor: pointer;" (click)="openUserProfile(c.sender.username)">
+                <span class="me-1 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}" style="cursor: pointer;" (click)="openUserProfile(c.sender.username)">
                   {{ c.sender.username }}
                 </span>
-                <span class="text-warning" style="word-break: break-word;" [innerHtml]="gs.htmlToText(c.message).linkify()"></span>
+                <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="word-break: break-word;" [innerHtml]="gs.htmlToText(c.message).linkify()"></span>
               </h5>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-12 mt-auto bg-bifeldy-dark" *ngIf="currentUser">
+      <div class="col-12 mt-auto bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" *ngIf="currentUser">
         <mat-form-field class="ms-auto pt-3 col-12" [color]="'accent'">
           <mat-label>Kirim Pesan Obrolan Disini ...</mat-label>
           <input matInput maxlength="200" placeholder="Ex. Hello 世界！" (keyup.enter)="applyFilter($event)"
@@ -62,7 +62,7 @@
           <mat-icon matSuffix>send</mat-icon>
         </mat-form-field>
       </div>
-      <div class="col-12 mt-auto bg-bifeldy-dark text-center" *ngIf="!currentUser">
+      <div class="col-12 mt-auto bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} text-center" *ngIf="!currentUser">
         <button class="m-1" mat-stroked-button color="accent" (click)="login()">
           <mat-icon class="me-1">vpn_key</mat-icon>
           Login Untuk Bisa Mengobrol

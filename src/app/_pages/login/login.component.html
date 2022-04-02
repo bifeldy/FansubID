@@ -2,7 +2,7 @@
   style="background-size: cover; background-repeat: repeat; background-position: center; transform: rotateY(180deg);" *ngIf="fg">
   <div class="row align-items-center h-100 m-0" style="transform: rotateY(180deg);">
     <div class="col-12 col-md-10 m-auto py-3">
-      <div class="row rgb-border rounded bg-bifeldy-dark">
+      <div class="row rgb-border rounded bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
         <div class="col-lg-5 col-md-3 ms-auto p-0" [ngStyle]="{
           'background-position': 'center',
           'background-size': 'cover',
@@ -15,12 +15,12 @@
                 <div class="text-center mb-4">
                   <img class="mb-4" src="/favicon.ico" />
                   <h1 class="h3 mb-3 font-weight-normal">Hai, Jumpa Lagi! >_<"</h1>
-                  <p class="text-warning">{{ loginInfo }}</p>
+                  <p class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ loginInfo }}</p>
                 </div>
                 <div class="form-group row py-2">
                   <label for="userNameOrEmail" class="col-md-4 col-form-label text-md-end">Nama Pengguna</label>
                   <div class="col-md-8">
-                    <input type="text" id="userNameOrEmail" class="text-light form-control {{
+                    <input type="text" id="userNameOrEmail" class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} form-control {{
                         !fg.get('userNameOrEmail').valid && fg.get('userNameOrEmail').touched ? 'is-invalid' : ''
                       }}" placeholder="Username / E-Mail" required autofocus formControlName="userNameOrEmail" autocomplete="email, username" />
                     <span class="invalid-feedback" role="alert">
@@ -36,7 +36,7 @@
                 <div class="form-group row py-2">
                   <label for="password" class="col-md-4 col-form-label text-md-end">Kata Sandi</label>
                   <div class="col-md-8">
-                    <input type="password" id="password" class="text-light form-control {{
+                    <input type="password" id="password" class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} form-control {{
                         !fg.get('password').valid && fg.get('password').touched ? 'is-invalid' : ''
                       }}" placeholder="Password" required formControlName="password" autocomplete="current-password, new-password" />
                     <span class="invalid-feedback" role="alert">

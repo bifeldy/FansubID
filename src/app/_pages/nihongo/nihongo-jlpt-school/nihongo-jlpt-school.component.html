@@ -6,7 +6,7 @@
 
   <!-- Detail -->
   <div class="row pb-3 px-0">
-    <div class="col-12 sticky-top bg-bifeldy-dark pb-3">
+    <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} pb-3">
       <h3 class="m-0 border-bottom border-primary row">
         <mat-form-field class="pt-3 col-4 col-lg-2" [color]="'accent'">
           <mat-label>JLPT</mat-label>
@@ -34,7 +34,7 @@
         <div class="col-12 p-3" *ngIf="kanjiData.length <= 0"
           style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
           <div class="row align-items-center h-100">
-            <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+            <div class="col-8 mx-auto text-bifeldy-dark text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
               <h3 class="m-0">
                 Tidak Ada Data ¯\_(ツ)_/¯
               </h3>
@@ -50,7 +50,7 @@
                   <div>{{ k.translate }}</div>
                 </div>
                 <div class="position-absolute top-0 end-0" style="margin-right: 3px; font-size: x-small;">
-                  <span class="text-warning">N{{ k.jlpt }}</span>
+                  <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">N{{ k.jlpt }}</span>
                   <span> - </span>
                   <span class="text-info">S{{ k.school }}</span>
                 </div>
@@ -66,5 +66,5 @@
 
 <!-- Bottom Navigation Bar -->
 <div class="container position-sticky bottom-0">
-  <mat-paginator class="bg-bifeldy-dark" showFirstLastButtons [color]="'accent'" [length]="count" [pageSizeOptions]="pageSizeOptions" (page)="paginatorChanged($event)"></mat-paginator>
+  <mat-paginator class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" showFirstLastButtons [color]="'accent'" [length]="count" [pageSizeOptions]="pageSizeOptions" (page)="paginatorChanged($event)"></mat-paginator>
 </div>

@@ -15,7 +15,7 @@ export class UserService {
   constructor(
     private api: ApiService,
     private as: AuthService,
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

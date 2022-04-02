@@ -1,8 +1,9 @@
 <swiper [config]="swiperConfig" *ngIf="animeDoramaData.length > 0">
-  <div class="card shadow align-items-center" *ngFor="let ad of animeDoramaData" style="height: 240px; background-size: cover; background-position: center;"
-    [style.background-image]="'url(' + ad.image_url + ')'" (click)="onCardClicked(ad)">
+  <div class="card shadow align-items-center" *ngFor="let ad of animeDoramaData"
+    style="height: 240px; background-size: cover !important; background-position: center !important;"
+    [style.background-image]="'url(' + ad.image_url + ') !important'" (click)="onCardClicked(ad)">
     <div class="row align-items-center w-100 h-100">
-      <div class="mt-auto text-light p-0 col-12" style="background-color: rgba(0, 0, 0, 0.75);">
+      <div class="mt-auto text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} p-0 col-12" style="background-color: rgba(0, 0, 0, 0.75);">
         <div class="row m-0 p-0">
           <div class="col-6 m-0 p-1">{{ ad.episodes ? ad.episodes : '?' }} Eps</div>
           <div class="col-6 m-0 p-1 text-end">{{ ad.namaFansubs.length }} Grup</div>

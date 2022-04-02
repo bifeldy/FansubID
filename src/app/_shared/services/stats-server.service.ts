@@ -56,7 +56,7 @@ export class StatsServerService {
 
   constructor(
     private as: AuthService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private notif: NotificationsService,
     private lms: LeftMenuService,
     private toast: ToastrService,

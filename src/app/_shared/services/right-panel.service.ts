@@ -17,7 +17,7 @@ export class RightPanelService {
   componentView = null;
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {

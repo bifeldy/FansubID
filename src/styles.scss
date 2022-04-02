@@ -1,3 +1,91 @@
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// **Be sure that you only ever include this mixin once!**
+@include mat-core();
+
+// Define the default theme (same as the example above).
+$light-primary: mat-palette($mat-indigo);
+$light-accent:  mat-palette($mat-pink);
+$light-warn: mat-palette($mat-deep-orange);
+$light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
+
+// Define an alternate dark theme.
+$dark-primary: mat-palette($mat-purple);
+$dark-accent: mat-palette($mat-green);
+$dark-warn: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+
+// Define custom theme
+$custom-palette: (
+  terang: #fafafa,
+  gelap: #303030,
+  contrast: (
+    terang: #303030,
+    gelap: #fafafa,
+  )
+);
+$my-app-custom: mat-palette($custom-palette, custom);
+$my-light-theme: map_merge($light-theme, (custom: $my-app-custom));
+$my-dark-theme: map_merge($dark-theme, (custom: $my-app-custom));
+
+// Include the default theme styles (color and default density)
+@include angular-material-theme($my-light-theme);
+
+// Include the dark color styles inside of a block with a CSS class. You can make this
+// CSS class whatever you want. In this example, any component inside of an element with
+// `.bifeldy-dark-theme` will be affected by this alternate dark theme instead of the default theme.
+.bifeldy-dark-theme {
+  @include angular-material-color($my-dark-theme);
+}
+
+.mat-gelap,
+.mat-background-gelap > .mat-tab-header {
+  background-color: mat-color(map-get($my-light-theme, custom), gelap);
+  color: mat-color(map-get($my-light-theme, custom), gelap-contrast);
+}
+
+.mat-terang,
+.mat-background-terang > .mat-tab-header {
+  background-color: mat-color(map-get($my-dark-theme, custom), terang);
+  color: mat-color(map-get($my-dark-theme, custom), terang-contrast);
+}
+
+.bifeldy-dark-theme .gradient-border,
+.bifeldy-dark-theme .mat-card,
+.bifeldy-dark-theme .card {
+  background: rgb(80, 80, 80, 0.875) !important;
+}
+
+.bifeldy-dark-theme .mat-row:not(.expanded-row, .detail-row) {
+  &:hover {
+    background-color: rgba(66, 66, 66, 0.875) !important;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .bifeldy-dark-theme .mat-table {
+    .mat-row {
+      background-color: rgba(66, 66, 66, 0.875) !important;
+    }
+  }
+}
+
+.bifeldy-dark-theme .shiny {
+  background-image: linear-gradient(
+    -45deg,
+    #0000 33%,
+    rgba(255,255,255,.75) 50%,
+    #0000 66%
+  );
+  background-size: 500% 100%;
+  animation: animatedshiny 2s infinite;
+}
+
+/* Custom SCSS Below */
+
 .s-wrapper.swiper.swiper-container.swiper-container-initialized.swiper-container-horizontal {
   padding-bottom: 2rem;
 }

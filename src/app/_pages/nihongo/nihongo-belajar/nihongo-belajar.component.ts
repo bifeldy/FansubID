@@ -99,7 +99,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     private router: Router,
     private toast: ToastrService,
     public as: AuthService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService,
     private ds: DialogService,
     private nihon: NihongoService

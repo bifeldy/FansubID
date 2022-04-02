@@ -15,7 +15,7 @@
   </mat-sidenav>
 
   <!-- Right Side Menu -->
-  <mat-sidenav #rightSidePanel [mode]="'over'" [opened]="false" position="end" class="bg-bifeldy-dark" (closedStart)="rps.onClose()" [ngStyle]="{
+  <mat-sidenav #rightSidePanel [mode]="'over'" [opened]="false" position="end" class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" (closedStart)="rps.onClose()" [ngStyle]="{
     'background-image': 'url(' + gs.rightMenuImage + ')'
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-right-panel></app-right-panel>
@@ -46,7 +46,7 @@
 
 <!-- Loading Animation -->
 <ngx-spinner [bdColor]="'#0000007f'" [type]="'square-jelly-box'" [size]="'medium'" [color]="'#e84360'">
-  <p class="text-white text-center">
+  <p class="text-bifeldy-dark text-center">
     Sedang Memuat Data ^_^ <br /> Mohon Menunggu ... <br />
     <span class="text-warning" (click)="resetLoading()">
       <u style="cursor: pointer;">Batalkan</u>

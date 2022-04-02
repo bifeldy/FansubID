@@ -8,7 +8,7 @@
   <div class="row pb-3 px-0">
     <div class="col-lg-8 col-xl-9">
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-dark pb-3">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} pb-3">
           <h3 class="m-0 border-bottom border-primary row">
             <mat-form-field class="pt-3 col-6 col-lg-4" [color]="'accent'">
               <mat-label>Pilih Kategori</mat-label>
@@ -31,7 +31,7 @@
                 <div class="row">
                   <div class="col-12">
                     <h2 class="pt-3 border-bottom-dotted">
-                      <b class="text-bifeldy-dark">Standar</b>
+                      <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Standar</b>
                     </h2>
                   </div>
                   <div class="col-12">
@@ -45,7 +45,7 @@
                 <div class="row">
                   <div class="col-12">
                     <h2 class="pt-3 border-bottom-dotted">
-                      <b class="text-bifeldy-dark">Lainnya</b>
+                      <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Lainnya</b>
                     </h2>
                   </div>
                   <div class="col-12">
@@ -61,7 +61,7 @@
                 <div class="row">
                   <div class="col-12">
                     <h2 class="pt-3 border-bottom-dotted">
-                      <b class="text-bifeldy-dark">Dakuon</b>
+                      <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Dakuon</b>
                     </h2>
                   </div>
                   <div class="col-12">
@@ -75,7 +75,7 @@
                 <div class="row">
                   <div class="col-12">
                     <h2 class="pt-3 border-bottom-dotted">
-                      <b class="text-bifeldy-dark">Handakuon</b>
+                      <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Handakuon</b>
                     </h2>
                   </div>
                   <div class="col-12">
@@ -89,7 +89,7 @@
                 <div class="row">
                   <div class="col-12">
                     <h2 class="pt-3 border-bottom-dotted">
-                      <b class="text-bifeldy-dark">Yuon</b>
+                      <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Yuon</b>
                     </h2>
                   </div>
                   <div class="col-12">
@@ -121,11 +121,11 @@
                         style="background-size: contain; border-radius: 0; background-position: center; background-repeat: no-repeat;"
                         [style.background-image]="'url(' + d.image_url + ')'">
                       </div>
-                      <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
+                      <mat-card-title class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }} mb-1" style="cursor: pointer;">
                         <h3 matLine class="mb-0">{{ d.kana }}</h3>
                       </mat-card-title>
                       <mat-card-subtitle class="mb-0">
-                        <p matLine class="m-0 text-success">{{ d.romaji }}</p>
+                        <p matLine class="m-0 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ d.romaji }}</p>
                         <p matLine class="m-0">{{ d.meaning }}</p>
                       </mat-card-subtitle>
                     </mat-card-header>
@@ -137,7 +137,7 @@
         </ng-template>
       </div>
       <div class="position-sticky bottom-0" [style.display]="(modeTampilan != 'hiragana' && modeTampilan != 'katakana' && modeTampilan != 'angka') ? 'block' : 'none'">
-        <mat-paginator class="bg-bifeldy-dark" showFirstLastButtons [color]="'accent'" [length]="count"
+        <mat-paginator class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" showFirstLastButtons [color]="'accent'" [length]="count"
           [pageSizeOptions]="pageSizeOptions" (page)="paginatorChanged($event)"></mat-paginator>
       </div>
     </div>
@@ -157,7 +157,7 @@
   <div class="col-12 p-3" *ngIf="daftarNihongo.length <= 0"
     style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
     <div class="row align-items-center h-100">
-      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+      <div class="col-8 mx-auto text-bifeldy-dark text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
         <h3 class="m-0">
           Tidak Ada Data ¯\_(ツ)_/¯
         </h3>

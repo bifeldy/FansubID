@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{ data.title }} '{{ data.dataset ? data.dataset.kana : data.modeTampilan }}'</h1>
-<div mat-dialog-content class="p-4" class="text-break text-warning">
+<div mat-dialog-content class="p-4" class="text-break text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
   <form [formGroup]="fg" *ngIf="fg">
     <div class="row">
       <div class="col-12 col-md-5 col-xl-4 p-3">
@@ -60,7 +60,7 @@
         <div class="row" *ngIf="data.dataset?.user_">
           <div class="col text-end">
             Last Edit By ::
-            <a routerLink="/user/{{ data.dataset?.user_?.username }}" class="text-success" style="text-decoration: none;">
+            <a routerLink="/user/{{ data.dataset?.user_?.username }}" class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}" style="text-decoration: none;">
               {{ data.dataset?.user_?.username }}
             </a>
           </div>
@@ -70,7 +70,7 @@
   </form>
 </div>
 <div mat-dialog-actions *ngIf="fg">
-  <button mat-button (click)="saveData()" class="ms-auto text-success" [disabled]="submitted || fg.invalid || !fg.dirty">
+  <button mat-button (click)="saveData()" class="ms-auto text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}" [disabled]="submitted || fg.invalid || !fg.dirty">
     {{ data.confirmText }}
   </button>
   <button mat-button [mat-dialog-close]="null" *ngIf="data.cancelText">{{ data.cancelText }}</button>

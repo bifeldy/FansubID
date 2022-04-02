@@ -9,9 +9,9 @@
     <div class="col-12">
       <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
         <div class="row mt-3 mb-3">
-          <div class="col-12 sticky-top bg-bifeldy-dark">
+          <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
             <h2 class="pt-3 border-bottom-dotted">
-              <b class="text-bifeldy-dark">Ubah Berkas</b>
+              <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Ubah Berkas</b>
             </h2>
           </div>
           <div class="col-12">
@@ -68,7 +68,7 @@
                         </mat-option>
                       </ng-container>
                     </mat-autocomplete>
-                    <small *ngIf="selectedFilterAnime" class="text-warning">{{ selectedFilterAnime.title }}</small>
+                    <small *ngIf="selectedFilterAnime" class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ selectedFilterAnime.title }}</small>
                     <mat-error>
                       <strong *ngIf="fg.get('anime_id').hasError('required')">ID Anime Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('anime_id').hasError('pattern')">ID Anime Hanya Boleh Angka</strong>
@@ -89,7 +89,7 @@
                         </mat-option>
                       </ng-container>
                     </mat-autocomplete>
-                    <small *ngIf="selectedFilterDorama" class="text-warning">{{ selectedFilterDorama.title }}</small>
+                    <small *ngIf="selectedFilterDorama" class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ selectedFilterDorama.title }}</small>
                     <mat-error>
                       <strong *ngIf="fg.get('dorama_id').hasError('required')">ID Dorama Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('dorama_id').hasError('pattern')">ID Dorama Hanya Boleh Angka</strong>
@@ -114,7 +114,7 @@
                               <span>{{ f.name }}</span>
                             </mat-option>
                           </mat-autocomplete>
-                          <small class="text-warning">{{ fs.get('fansub_name').value }}</small>
+                          <small class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ fs.get('fansub_name').value }}</small>
                           <mat-error>
                             <strong *ngIf="fs.get('fansub_id').hasError('required')">ID Fansub Tidak Boleh Kosong</strong>
                             <strong *ngIf="fs.get('fansub_id').hasError('pattern')">ID Fansub Hanya Boleh Angka</strong>
@@ -156,7 +156,7 @@
                 </div>
                 <div class="row" *ngIf="attachmentFile">
                   <mat-list>
-                    <div mat-subheader class="text-warning">Berkas yang terlampir tidak boleh diubah.</div>
+                    <div mat-subheader class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">Berkas yang terlampir tidak boleh diubah.</div>
                     <mat-list-item>
                       <mat-icon mat-list-icon>attach_file</mat-icon>
                       <div mat-line>{{ attachmentFile.name }}.{{ attachmentFile.ext }}</div>

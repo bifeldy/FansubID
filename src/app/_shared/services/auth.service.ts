@@ -21,7 +21,7 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService,
     private ls: LocalStorageService,
     private api: ApiService

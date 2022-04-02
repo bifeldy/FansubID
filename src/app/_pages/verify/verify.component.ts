@@ -122,7 +122,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         htmlMessage: `
           <div class="text-center p-3">
             <img src="/favicon.ico" class="mb-4">
-            <p class="text-warning">
+            <p class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
               Karena masalah kebocoran data pemerintah terungkap, saat ini metode verifikasi dengan menggunakan KTP ditutup untuk sementara!
             </p>
           </div>

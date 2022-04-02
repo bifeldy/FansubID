@@ -21,7 +21,7 @@ export class PageInfoService {
   constructor(
     private t: Title,
     private m: Meta,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private router: Router
   ) {
     this.m.updateTag({ property: 'og:site_name', content: this.siteName });
@@ -57,6 +57,14 @@ export class PageInfoService {
       this.m.addTag({ property: 'twitter:card', content: 'summary_large_image' });
     } else {
       this.m.removeTag( 'property="twitter:card"');
+    }
+  }
+
+  updateStatusBarTheme(isDarkMode) {
+    if (isDarkMode) {
+      this.m.updateTag({ name: 'theme-color', content: '#9c27b0' });
+    } else {
+      this.m.updateTag({ name: 'theme-color', content: '#3f51b5' });
     }
   }
 

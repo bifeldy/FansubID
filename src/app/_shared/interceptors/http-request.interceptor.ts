@@ -13,7 +13,7 @@ import { environment } from '../../../environments/app/environment';
 export class HttpRequestInterceptor implements HttpInterceptor {
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     private ss: StatsServerService,
     private as: AuthService
   ) {

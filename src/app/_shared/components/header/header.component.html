@@ -11,6 +11,10 @@
 
   <span class="spacer"></span>
 
+  <button mat-icon-button (click)="toggleDarkTheme()" matTooltip="Ganti Warna">
+    <mat-icon>nights_stay</mat-icon>
+  </button>
+
   <button mat-icon-button (click)="openLiveChat()" matTooltip="Obrolan">
     <mat-icon [matBadge]="ss.messageChatCount" matBadgePosition="before" [matBadgeColor]="'accent'">
       forum

@@ -34,7 +34,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
   subsDialog = null;
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     private bs: BusyService,
     private nihon: NihongoService,
     private ds: DialogService

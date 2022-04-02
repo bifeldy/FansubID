@@ -6,7 +6,7 @@
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
         <div class="row align-items-center h-100">
           <div class="col-12 mx-auto">
-            <div class="container">
+            <div class="container text-bifeldy-dark">
               <h2 class="mb-0" style="line-height: normal;">
                 {{ berkasData.project_type_.name }}
               </h2>
@@ -33,9 +33,9 @@
               <img class="w-100" src="{{ berkasData.image_url }}" />
             </div>
             <div class="row py-3">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy-dark">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-dark">Tautan Rujukan</b></h2>
+                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Tautan Rujukan</b></h2>
               </div>
               <div class="col-12">
                 <mat-selection-list [multiple]="false">
@@ -59,9 +59,9 @@
               </div>
             </div>
             <div class="row py-3">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy-dark">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-dark">Tautan Unduhan</b>
+                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Tautan Unduhan</b>
                 </h2>
               </div>
               <div class="col-12 text-center" *ngIf="currentUser">
@@ -78,9 +78,9 @@
               </div>
             </div>
             <div class="row py-3" *ngIf="currentUser && berkasData.attachment_">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy-dark">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-dark">Tautan DDL</b>
+                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Tautan DDL</b>
                 </h2>
               </div>
               <div class="col-12 text-center" *ngIf="isHaveDDL">
@@ -142,9 +142,9 @@
         <div class="row sticky-top">
           <div class="col">
             <div class="row py-3" *ngIf="berkasData.attachment_">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy-dark">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-dark">Video Stream</b>
+                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Video Stream</b>
                 </h2>
               </div>
               <div class="col-12">
@@ -170,9 +170,9 @@
               </div>
             </div>
             <div class="row py-3">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy-dark">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy-dark">Deskripsi & Informasi</b>
+                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Deskripsi & Informasi</b>
                 </h2>
               </div>
               <div class="col-12">
@@ -185,9 +185,9 @@
               </div>
             </div>
             <div class="row py-3">
-              <div class="col-12 sticky-top bg-bifeldy-dark">
+              <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
                 <h2 class="pt-3 border-bottom-dotted">
-                  <b class="text-bifeldy-dark">Komentar</b>
+                  <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Komentar</b>
                 </h2>
               </div>
               <div class="col-12">

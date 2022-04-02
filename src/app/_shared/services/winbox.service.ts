@@ -23,7 +23,7 @@ export class WinboxService {
   subsServer = null;
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     private ds: DialogService,
     public ss: StatsServerService
   ) {

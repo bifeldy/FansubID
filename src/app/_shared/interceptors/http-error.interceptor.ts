@@ -20,7 +20,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   currentUser = null;
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     private router: Router,
     private as: AuthService,
     private toast: ToastrService,

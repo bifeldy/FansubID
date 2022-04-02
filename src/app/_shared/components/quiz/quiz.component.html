@@ -2,7 +2,7 @@
   <div class="col-12">
     <div class="row w-100 ps-3" style="display: inline-flex; flex-wrap: nowrap; overflow-x: hidden;">
       <div class="p-2" style="width: auto;" *ngFor="let p of participants | keyvalue: scoreOrder; let idx = index">
-        <div class="card text-center bg-bifeldy-dark border-0" style="width: 64px;">
+        <div class="card text-center bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} border-0" style="width: 64px;">
           <div class="card-body p-0" (click)="openProfile(p.value.username)" style="cursor: pointer;">
             <div [matBadge]="p?.value?.quiz?.score" matBadgePosition="below" [matBadgeColor]="(idx == 0 ? 'warn' : (idx == 1 ? 'primary' : 'accent'))"
               class="rounded-3" style="
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="ms-auto p-2" style="width: auto; position: sticky; right: 0; background-color: #303030 !important">
-        <div class="card text-center bg-bifeldy-dark border-0" style="width: 64px;">
+        <div class="card text-center bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} border-0" style="width: 64px;">
           <div class="card-body p-0" (click)="openLiveChat()" style="cursor: pointer;">
             <div class="rounded-3" style="
                 background-image: url('/favicon.ico');

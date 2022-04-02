@@ -12,7 +12,7 @@ export class BerkasService {
 
   constructor(
     private api: ApiService,
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

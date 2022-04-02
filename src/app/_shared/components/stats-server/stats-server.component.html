@@ -1,57 +1,57 @@
 <div class="row">
-  <div class="col-12 sticky-top bg-bifeldy-dark">
+  <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
     <h2 class="pt-3 border-bottom-dotted">
-      <b class="text-bifeldy-dark">Statistik Server</b>
+      <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Statistik Server</b>
     </h2>
   </div>
   <div class="col-12">
     <p class="px-2 text-truncate" *ngIf="ss.github?.sha">
       Portal ::
-      <span class="text-success">
+      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
         {{ ss.github?.sha }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.author?.date">
       Date ::
-      <span class="text-success">
+      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
         {{ ss.github?.commit?.author?.date | date:'d MMM y, h:mm:ss a' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.author?.name">
       Commiter ::
-      <span class="text-warning">
-        <a href="https://github.com/{{ ss.github?.commit?.author?.name }}" target="_blank" class="text-warning text-decoration-none">
+      <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
+        <a href="https://github.com/{{ ss.github?.commit?.author?.name }}" target="_blank" class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }} text-decoration-none">
           {{ ss.github?.commit?.author?.name }}
         </a>
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.message">
       Message ::
-      <span class="text-warning">
+      <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
         {{ ss.github?.commit?.message }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="currentServer">
       Server ::
-      <span class="text-warning">
+      <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">
         {{ currentServer?.isMaintenance ? 'Dalam Perbaikan' : 'Berjalan Normal' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.mySocket">
       Socket ::
-      <span class="text-success">
+      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
         {{ ss.mySocket?.id ? ss.mySocket.id : 'Sambungan Terputus' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.latency">
       Latency ::
-      <span class="text-success">
+      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
         {{ ss.latency }} ms
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.visitor">
       Nodes ::
-      <span class="text-success">
+      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
         {{ ss.visitor }} Koneksi
       </span>
     </p>

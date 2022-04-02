@@ -8,12 +8,12 @@
   <div class="row pb-3 px-0">
     <div class="col-lg-8 col-xl-9">
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
           <h2 class="pt-3 border-bottom-dotted">
-            <a class="float-end text-decoration-none text-warning" routerLink="/news" style="font-size: small;">
+            <a class="float-end text-decoration-none text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" routerLink="/news" style="font-size: small;">
               Selengkapnya
             </a>
-            <b class="text-bifeldy-dark">Papan Pengumuman</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Papan Pengumuman</b>
           </h2>
         </div>
         <div class="col-12">
@@ -21,7 +21,7 @@
             <div class="col-12 p-3" *ngIf="newsData.length <= 0"
               style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
               <div class="row align-items-center h-100">
-                <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+                <div class="col-8 mx-auto text-bifeldy-dark text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
                   <h3 class="m-0">
                     Tidak Ada Data ¯\_(ツ)_/¯
                   </h3>
@@ -41,7 +41,7 @@
                     <mat-card-header>
                       <div mat-card-avatar style="background-size: cover;"
                       [style.background-image]="'url(' + n.user_.image_url + ')'"></div>
-                      <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-warning mb-1" style="cursor: pointer;">
+                      <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }} mb-1" style="cursor: pointer;">
                         <h3 class="mb-0">{{ n.user_.username }}</h3>
                       </mat-card-title>
                       <mat-card-subtitle class="mb-0">{{ n.created_at | date:'d MMM y' }}</mat-card-subtitle>
@@ -54,12 +54,12 @@
         </div>
       </div>
       <!-- <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
           <h2 class="pt-3 border-bottom-dotted">
-            <a class="float-end text-decoration-none text-warning" routerLink="/nihongo" style="font-size: small;">
+            <a class="float-end text-decoration-none text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" routerLink="/nihongo" style="font-size: small;">
               Selengkapnya
             </a>
-            <b class="text-bifeldy-dark">Belajar Bahasa Jepang</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Belajar Bahasa Jepang</b>
           </h2>
         </div>
         <div class="col-12">
@@ -67,12 +67,12 @@
         </div>
       </div> -->
       <div class="row" *ngIf="komentarData.length > 0">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
           <h2 class="pt-3 border-bottom-dotted">
-            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getComment()">
+            <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getComment()">
               Refresh
             </span>
-            <b class="text-bifeldy-dark">Komentar Terbaru</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Komentar Terbaru</b>
           </h2>
         </div>
         <div class="col-12">
@@ -80,9 +80,9 @@
             <mat-list-option *ngFor="let k of komentarData | slice:0:5" class="h-100">
               <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
               <a class="text-truncate text-decoration-none" routerLink="{{ k.path }}">
-                <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ k.created_at | dateAgo }}</span>
-                <span class="me-3 text-success">{{ k.user_.username }}</span>
-                <span class="text-warning">{{ k.comment }}</span>
+                <span class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ k.created_at | dateAgo }}</span>
+                <span class="me-3 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ k.user_.username }}</span>
+                <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ k.comment }}</span>
               </a>
             </mat-list-option>
           </mat-selection-list>

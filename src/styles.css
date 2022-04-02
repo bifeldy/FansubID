@@ -23,15 +23,16 @@ body {
 }
 
 .form-control {
-  background-color: #0000 !important;
+  background-color: rgba(255, 255, 255, 0) !important
 }
 
 .spacer {
   flex: 1 1 auto;
 }
 
+.card,
 .mat-card {
-  background-color: rgba(66, 66, 66, 0.875) !important;
+  background-color: rgba(255, 255, 255, 0.875) !important;
 }
 
 .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
@@ -43,12 +44,11 @@ body {
 }
 
 .mat-tab-label-active {
-  color: #ff4081;
+  color: #ff4081 !important;
   opacity: 1 !important;
 }
 
 .mat-tab-header {
-  background-color: rgba(48, 48, 48, 0.875) !important;
   position: sticky !important;
   top: 0;
   z-index: 1020;
@@ -79,10 +79,6 @@ re-captcha > div {
   white-space: normal !important;
 }
 
-.card {
-  background-color: rgba(66, 66, 66, 0.875);
-}
-
 .img-thumbnail {
   background-color: #dddddd;
 }
@@ -93,15 +89,19 @@ re-captcha > div {
 }
 
 .bg-bifeldy-dark {
-  background-color: rgba(48, 48, 48, 0.875) !important;
+  background-color: rgb(48, 48, 48) !important;
 }
 
 .bg-bifeldy-light {
-  background-color: rgba(66, 66, 66, 0.875) !important;
+  background-color: rgb(250, 250, 250) !important;
 }
 
 .text-bifeldy-dark {
-  color: #acacac !important;
+  color: #ffffff !important;
+}
+
+.text-bifeldy-light {
+  color: #000000 !important
 }
 
 .angular-editor-toolbar {
@@ -116,8 +116,12 @@ re-captcha > div {
   background: rgba(0, 0, 0, 0.75) !important;
 }
 
-.text-success {
+.text-success-dark {
   color: #69f0ae !important;
+}
+
+.text-success-light {
+  color: #28a745 !important;
 }
 
 #sourceText {
@@ -133,7 +137,7 @@ re-captcha > div {
 }
 
 .gradient-border {
-  background: #424242;
+  background: rgb(255, 255, 255, 0.875) !important;
   position: relative;
 }
 
@@ -218,9 +222,9 @@ re-captcha > div {
 .shiny {
   background-image: linear-gradient(
     -45deg,
-    #0000 33%,
-    rgba(255,255,255,.75) 50%,
-    #0000 66%
+    rgba(0, 0, 0, 0) 33%,
+    rgba(66,66,66,.75) 50%,
+    rgba(0, 0, 0, 0) 66%
   );
   background-size: 500% 100%;
   animation: animatedshiny 2s infinite;

@@ -13,7 +13,7 @@
 
 .side-menu-link-active {
   background: rgba(255, 64, 129, 0.15);
-  color: #ff4081;
+  color: #ff4081 !important;
   font-weight: bold;
 }
 

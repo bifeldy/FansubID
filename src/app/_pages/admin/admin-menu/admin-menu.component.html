@@ -4,7 +4,7 @@
       <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
       <div class="row align-items-center h-100">
         <div class="col-12 mx-auto">
-          <div class="container">
+          <div class="container text-bifeldy-dark">
             <h2 class="mb-1" style="line-height: normal;">
               {{ currentUser.kartu_tanda_penduduk_.nama }} :: {{ currentUser.role }}
             </h2>
@@ -33,7 +33,7 @@
                 [style.background-image]="'url(' + (m.image_url || '') + ')'">
                 <mat-icon style="font-size: 300%;" *ngIf="m.icon">{{ m.icon }}</mat-icon>
               </div>
-              <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
+              <mat-card-title class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }} mb-1" style="cursor: pointer;">
                 <h3 class="mb-0">{{ m.name }}</h3>
               </mat-card-title>
               <mat-card-subtitle class="mb-0">{{ m.deskripsi }}</mat-card-subtitle>
@@ -42,9 +42,9 @@
         </div>
       </div>
       <div class="row" *ngIf="settings">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
           <h2 class="pt-3 border-bottom-dotted">
-            <b class="text-bifeldy-dark">Web & Server Configuration</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Web & Server Configuration</b>
           </h2>
         </div>
         <div class="col-12">

@@ -13,7 +13,7 @@ import { StatsServerService } from './stats-server.service';
 export class QuizService {
 
   constructor(
-    private gs: GlobalService,
+    public gs: GlobalService,
     public ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {

@@ -40,6 +40,7 @@ export class GlobalService {
   public isDesktop = true;
 
   public isDevMode = true;
+  public isDarkMode = false;
 
   public gambarUploadSizeLimit = 256 * 1000;
   public berkasUploadSizeLimit = 256 * 1000 * 1000;
@@ -192,6 +193,24 @@ export class GlobalService {
           .replace(pseudoUrlPattern, '$1<a class="text-decoration-none" href="http://$2" target="_blank">$2</a>')
           .replace(emailAddressPattern, '<a class="text-decoration-none" href="mailto:$&" target="_blank">$&</a>');
       };
+    }
+  }
+
+  toggleDarkTheme(firstRun = false): void {
+    if (firstRun) {
+      if (this.isDarkMode) {
+        this.document.body.classList.add('bifeldy-dark-theme');
+      } else {
+        this.document.body.classList.remove('bifeldy-dark-theme');
+      }
+    } else {
+      if (this.isDarkMode) {
+        this.isDarkMode = false;
+        this.document.body.classList.remove('bifeldy-dark-theme');
+      } else {
+        this.isDarkMode = true;
+        this.document.body.classList.add('bifeldy-dark-theme');
+      }
     }
   }
 

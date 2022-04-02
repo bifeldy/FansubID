@@ -8,12 +8,12 @@
   <div class="row pb-3 px-0">
     <div class="col-lg-8 col-xl-9">
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
           <h2 class="pt-3 border-bottom-dotted">
-            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedComment()">
+            <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedComment()">
               Refresh
             </span>
-            <b class="text-bifeldy-dark">Riwayat Komentar</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Riwayat Komentar</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedKomentarData.length > 0; else noData;">
@@ -21,20 +21,20 @@
             <mat-list-option *ngFor="let fk of feedKomentarData | slice:0:5" class="h-100">
               <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
               <a class="text-truncate text-decoration-none" routerLink="{{ fk.path }}">
-                <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
-                <span class="text-warning">{{ fk.comment }}</span>
+                <span class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
+                <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ fk.comment }}</span>
               </a>
             </mat-list-option>
           </mat-selection-list>
         </div>
       </div>
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
           <h2 class="pt-3 border-bottom-dotted">
-            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedLikeDislike()">
+            <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedLikeDislike()">
               Refresh
             </span>
-            <b class="text-bifeldy-dark">Riwayat Like & Dislike</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Riwayat Like & Dislike</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedLikeDislikeData.length > 0; else noData;">
@@ -50,22 +50,22 @@
                   )
                 )
               ">
-                <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fldl.created_at | dateAgo }}</span>
-                <span class="me-3 text-success">{{ fldl.type }}</span>
+                <span class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fldl.created_at | dateAgo }}</span>
+                <span class="me-3 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ fldl.type }}</span>
                 <span class="me-3 text-info">{{ fldl.berkas_ ? 'Berkas' : (fldl.fansub_ ? 'Fansub' : (fldl.user_ ? 'User' : (fldl.news_ ? 'News' : ''))) }}</span>
-                <span class="text-warning">{{ fldl.berkas_?.name || fldl.fansub_?.name || fldl.user_?.kartu_tanda_penduduk_?.nama || fldl.news_?.title }}</span>
+                <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ fldl.berkas_?.name || fldl.fansub_?.name || fldl.user_?.kartu_tanda_penduduk_?.nama || fldl.news_?.title }}</span>
               </a>
             </mat-list-option>
           </mat-selection-list>
         </div>
       </div>
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-dark">
+        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
           <h2 class="pt-3 border-bottom-dotted">
-            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedVisit()">
+            <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedVisit()">
               Refresh
             </span>
-            <b class="text-bifeldy-dark">Riwayat Kunjungan</b>
+            <b class="text-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">Riwayat Kunjungan</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedVisitData.length > 0; else noData;">
@@ -81,9 +81,9 @@
                   )
                 )
               ">
-                <span class="bg-bifeldy-dark ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fv.created_at | dateAgo }}</span>
+                <span class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fv.created_at | dateAgo }}</span>
                 <span class="me-3 text-info">{{ fv.berkas_ ? 'Berkas' : (fv.fansub_ ? 'Fansub' : (fv.user_ ? 'User' : (fv.news_ ? 'News' : ''))) }}</span>
-                <span class="text-warning">{{ fv.berkas_?.name || fv.fansub_?.name || fv.user_?.kartu_tanda_penduduk_?.nama || fv.news_?.title }}</span>
+                <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ fv.berkas_?.name || fv.fansub_?.name || fv.user_?.kartu_tanda_penduduk_?.nama || fv.news_?.title }}</span>
               </a>
             </mat-list-option>
           </mat-selection-list>
@@ -106,7 +106,7 @@
   <div class="col-12 p-3"
     style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
     <div class="row align-items-center h-100">
-      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(0, 0, 0, 0.5);">
+      <div class="col-8 mx-auto text-bifeldy-dark text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
         <h3 class="m-0">
           Tidak Ada Data ¯\_(ツ)_/¯
         </h3>

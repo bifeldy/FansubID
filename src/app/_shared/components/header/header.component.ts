@@ -9,6 +9,7 @@ import { GlobalService } from '../../services/global.service';
 import { RightPanelService } from '../../services/right-panel.service';
 import { StatsServerService } from '../../services/stats-server.service';
 import { BusyService } from '../../services/busy.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +18,8 @@ import { BusyService } from '../../services/busy.service';
 })
 export class HeaderComponent implements OnInit {
 
+  localStorageDarkModeKeyName = `${environment.siteName}_DarkMode`;
+
   constructor(
     private lms: LeftMenuService,
     private rps: RightPanelService,
@@ -24,7 +27,8 @@ export class HeaderComponent implements OnInit {
     public pi: PageInfoService,
     public gs: GlobalService,
     public ss: StatsServerService,
-    private bs: BusyService
+    private bs: BusyService,
+    private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -33,7 +37,13 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      //
+      const osTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.gs.isDarkMode = osTheme || this.ls.getItem(this.localStorageDarkModeKeyName) === 'true';
+      this.toggleDarkTheme(true);
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        this.gs.isDarkMode = event.matches;
+        this.toggleDarkTheme(true);
+      });
     }
   }
 
@@ -60,6 +70,12 @@ export class HeaderComponent implements OnInit {
 
   openAdminNavigation(): void {
     this.rps.toggleSidePanel('AdminNavigationComponent');
+  }
+
+  toggleDarkTheme(firstRun = false): void {
+    this.gs.toggleDarkTheme(firstRun);
+    this.ls.setItem(this.localStorageDarkModeKeyName, JSON.stringify(this.gs.isDarkMode));
+    this.pi.updateStatusBarTheme(this.gs.isDarkMode);
   }
 
 }

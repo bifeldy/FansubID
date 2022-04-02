@@ -51,7 +51,7 @@ export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
         },
         attr: {
           active: '#f44336',
-          stroke: '#69f0ae'
+          stroke: '#28a745'
         }
       }
     });

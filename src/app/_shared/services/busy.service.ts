@@ -13,7 +13,7 @@ export class BusyService {
 
   constructor(
     private spinnerService: NgxSpinnerService,
-    private gs: GlobalService
+    public gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
