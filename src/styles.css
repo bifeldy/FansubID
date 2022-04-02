@@ -100,6 +100,10 @@ re-captcha > div {
   color: #6610f2 !important;
 }
 
+.text-success {
+  color: #28a745 !important;
+}
+
 .angular-editor-toolbar {
   background-color: transparent !important;
 }
@@ -110,14 +114,6 @@ re-captcha > div {
 
 .cdk-overlay-dark-backdrop {
   background: rgba(0, 0, 0, 0.75) !important;
-}
-
-.text-success-dark {
-  color: #69f0ae !important;
-}
-
-.text-success-light {
-  color: #28a745 !important;
 }
 
 #sourceText {

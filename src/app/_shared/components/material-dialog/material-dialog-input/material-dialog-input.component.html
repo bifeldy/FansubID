@@ -7,6 +7,6 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data.input" class="ms-auto text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} shiny">{{ data.confirmText }}</button>
+  <button mat-button [mat-dialog-close]="data.input" class="ms-auto text-success shiny">{{ data.confirmText }}</button>
   <button mat-button [mat-dialog-close]="false" *ngIf="data.cancelText">{{ data.cancelText }}</button>
 </div>

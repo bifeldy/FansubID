@@ -20,7 +20,7 @@
             <h4 matLine>{{ b.title }}</h4>
             <h5 matLine>
               <span class="text-warning">{{ b.user_.username }}</span> &nbsp;
-              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ b.created_at | date:'d-MM-y' }}</span>
+              <span class="text-success">{{ b.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -40,7 +40,7 @@
             </h4>
             <h5 matLine class="ms-3">
               <span class="text-warning">N{{ k.jlpt }}</span> &nbsp;
-              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ k.translate }}</span>
+              <span class="text-success">{{ k.translate }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -59,7 +59,7 @@
             <h4 matLine>{{ a.title }}</h4>
             <h5 matLine>
               <span class="text-warning">{{ a.mal_id }}</span> &nbsp;
-              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ a.episodes }} Eps {{ a.type }}</span>
+              <span class="text-success">{{ a.episodes }} Eps {{ a.type }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -78,7 +78,7 @@
             <h4 matLine>{{ d.title }}</h4>
             <h5 matLine>
               <span class="text-warning">{{ d.mdl_id }}</span> &nbsp;
-              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ d.type }}</span>
+              <span class="text-success">{{ d.type }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -97,7 +97,7 @@
             <h4 matLine>{{ f.name }}</h4>
             <h5 matLine>
               <span class="text-warning">{{ f.active ? 'Aktif' : 'Tidak Aktif' }}</span> &nbsp;
-              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ f.born | date:'d-MM-y' }}</span>
+              <span class="text-success">{{ f.born | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -116,7 +116,7 @@
             <h4 matLine>{{ b.name }}</h4>
             <h5 matLine>
               <span class="text-warning">{{ b.user_.username }}</span> &nbsp;
-              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ b.created_at | date:'d-MM-y' }}</span>
+              <span class="text-success">{{ b.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>
@@ -135,7 +135,7 @@
             <h4 matLine>{{ p.kartu_tanda_penduduk_.nama }}</h4>
             <h5 matLine>
               <span class="text-warning">{{ p.id }}</span> &nbsp;
-              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ p.created_at | date:'d-MM-y' }}</span>
+              <span class="text-success">{{ p.created_at | date:'d-MM-y' }}</span>
             </h5>
           </mat-list-option>
         </mat-selection-list>

@@ -51,7 +51,7 @@
                 )
               ">
                 <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fldl.created_at | dateAgo }}</span>
-                <span class="me-3 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ fldl.type }}</span>
+                <span class="me-3 text-success">{{ fldl.type }}</span>
                 <span class="me-3 text-info">{{ fldl.berkas_ ? 'Berkas' : (fldl.fansub_ ? 'Fansub' : (fldl.user_ ? 'User' : (fldl.news_ ? 'News' : ''))) }}</span>
                 <span class="text-warning">{{ fldl.berkas_?.name || fldl.fansub_?.name || fldl.user_?.kartu_tanda_penduduk_?.nama || fldl.news_?.title }}</span>
               </a>

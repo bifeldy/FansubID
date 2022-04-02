@@ -7,13 +7,13 @@
   <div class="col-12">
     <p class="px-2 text-truncate" *ngIf="ss.github?.sha">
       Portal ::
-      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
+      <span class="text-success">
         {{ ss.github?.sha }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.author?.date">
       Date ::
-      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
+      <span class="text-success">
         {{ ss.github?.commit?.author?.date | date:'d MMM y, h:mm:ss a' }}
       </span>
     </p>
@@ -39,19 +39,19 @@
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.mySocket">
       Socket ::
-      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
+      <span class="text-success">
         {{ ss.mySocket?.id ? ss.mySocket.id : 'Sambungan Terputus' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.latency">
       Latency ::
-      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
+      <span class="text-success">
         {{ ss.latency }} ms
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="ss.visitor">
       Nodes ::
-      <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
+      <span class="text-success">
         {{ ss.visitor }} Koneksi
       </span>
     </p>

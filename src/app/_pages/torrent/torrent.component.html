@@ -73,7 +73,7 @@
                           <div class="col-9">
                             <p class="px-2 text-truncate" *ngIf="row.infoHash">
                               Info Hash ::
-                              <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
+                              <span class="text-success">
                                 {{ row.infoHash }}
                               </span>
                             </p>
@@ -85,7 +85,7 @@
                             </p>
                             <div class="px-2 text-truncate">
                               Announce Trackers ::
-                              <ul class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} m-0">
+                              <ul class="text-success m-0">
                                 <li *ngFor="let a of row.announce">
                                   {{ a }}
                                 </li>
@@ -123,7 +123,7 @@
                                       {{ f.downloaded / f.length * 100 | number:'1.2-2' }} %
                                     </span>
                                     ::
-                                    <span class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">
+                                    <span class="text-success">
                                       {{ f.downloaded | bytes }} / {{ f.length | bytes }}
                                     </span>
                                   </div>

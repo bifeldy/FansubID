@@ -95,7 +95,7 @@ export class DialogService {
               <img class="w-50" src="/assets/img/dialog.png">
             </div>
             <div class="col-12 my-3">
-              <h3 class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} mb-0">KEWAJIBAN</h3>
+              <h3 class="text-success mb-0">KEWAJIBAN</h3>
               <ol>
                 <li>Dilarang berkata yang senonoh, jika terpaksa setidaknya mohon diplesetkan.</li>
                 <li>Jangan menyinggung hal-hal berbau <b>SARA</b>, <b>RASIS</b>, dan hal-hal serupa lainnya.</li>
@@ -104,7 +104,7 @@ export class DialogService {
                 <li>Unggah berkas yang berbau <b>NSFW</b> harap mengaktifkan fitur <i>private</i>.</li>
               </ol>
               <br />
-              <h3 class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} mb-0">NORMA UMUM</h3>
+              <h3 class="text-success mb-0">NORMA UMUM</h3>
               <ul>
                 <li>Kami beranggapan bahwa anda sudah cukup umur (13+).</li>
                 <li>Silahkan beradaptasi secara mandiri.</li>
@@ -113,7 +113,7 @@ export class DialogService {
                 <li>Terima kasih dan semoga harimu menyenangkan!</li>
               </ul>
               <br />
-              <h3 class="text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }} mb-0">AKIBAT</h3>
+              <h3 class="text-success mb-0">AKIBAT</h3>
               <ul>
                 <li>Mengingkari kewajiban = <i>Manual BAN</i> dengan peringatan berupa teguran.</li>
                 <li>Mendapat banyak <i>Report</i> = <i>Auto BAN</i>.</li>
