@@ -6,22 +6,22 @@
 
   <!-- Summaries -->
   <div class="row p-3">
-    <div class="col-12 col-md-6 py-1 bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" *ngIf="barChartAnimeData.length > 0 && barChartAnimeLabels.length > 0">
+    <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="barChartAnimeData.length > 0 && barChartAnimeLabels.length > 0">
       <canvas baseChart [data]="barChartAnimeData" [labels]="barChartAnimeLabels" [chartType]="barChartType"
         [options]="barChartAnimeOptions" [plugins]="chartPlugins" [legend]="false">
       </canvas>
     </div>
-    <div class="col-12 col-md-6 py-1 bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" *ngIf="barChartDoramaData.length > 0 && barChartDoramaLabels.length > 0">
+    <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="barChartDoramaData.length > 0 && barChartDoramaLabels.length > 0">
       <canvas baseChart [data]="barChartDoramaData" [labels]="barChartDoramaLabels" [chartType]="barChartType"
         [options]="barChartDoramaOptions" [plugins]="chartPlugins" [legend]="false">
       </canvas>
     </div>
-    <div class="col-12 col-md-6 py-1 bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" *ngIf="pieChartStatusData.length == 2 && pieChartStatusLabels.length == 2">
+    <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="pieChartStatusData.length == 2 && pieChartStatusLabels.length == 2">
       <canvas baseChart [data]="pieChartStatusData" [labels]="pieChartStatusLabels" [chartType]="pieChartType"
         [options]="pieChartStatusOptions" [plugins]="chartPlugins" [legend]="true">
       </canvas>
     </div>
-    <div class="col-12 col-md-6 py-1 bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" *ngIf="doughnutChartGarapanData.length == 2 && doughnutChartGarapanLabels.length == 2">
+    <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="doughnutChartGarapanData.length == 2 && doughnutChartGarapanLabels.length == 2">
       <canvas baseChart [data]="doughnutChartGarapanData" [labels]="doughnutChartGarapanLabels" [chartType]="doughnutChartType"
         [options]="doughnutChartGarapanOptions" [plugins]="chartPlugins" [legend]="true">
       </canvas>

@@ -8,7 +8,7 @@
   <div class="row pb-3 px-0">
     <div class="col-lg-8 col-xl-9">
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} pb-3">
+        <div class="col-12 sticky-top bg-bifeldy pb-3">
           <h3 class="m-0 border-bottom border-primary row">
             <mat-form-field class="pt-3 col-6 col-lg-4" [color]="'accent'">
               <mat-label>Pilih Kategori</mat-label>
@@ -137,7 +137,7 @@
         </ng-template>
       </div>
       <div class="position-sticky bottom-0" [style.display]="(modeTampilan != 'hiragana' && modeTampilan != 'katakana' && modeTampilan != 'angka') ? 'block' : 'none'">
-        <mat-paginator class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}" showFirstLastButtons [color]="'accent'" [length]="count"
+        <mat-paginator class="bg-bifeldy" showFirstLastButtons [color]="'accent'" [length]="count"
           [pageSizeOptions]="pageSizeOptions" (page)="paginatorChanged($event)"></mat-paginator>
       </div>
     </div>

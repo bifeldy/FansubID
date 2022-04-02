@@ -88,12 +88,8 @@ re-captcha > div {
   background-color: #ff4081;
 }
 
-.bg-bifeldy-dark {
-  background-color: rgb(48, 48, 48) !important;
-}
-
-.bg-bifeldy-light {
-  background-color: rgb(250, 250, 250) !important;
+.bg-bifeldy {
+  background-color: rgb(250, 250, 250);
 }
 
 .text-bifeldy-dark {

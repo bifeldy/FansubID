@@ -8,7 +8,7 @@
   <div class="row pb-3 px-0">
     <div class="col-lg-8 col-xl-9">
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
+        <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
             <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedComment()">
               Refresh
@@ -21,7 +21,7 @@
             <mat-list-option *ngFor="let fk of feedKomentarData | slice:0:5" class="h-100">
               <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
               <a class="text-truncate text-decoration-none" routerLink="{{ fk.path }}">
-                <span class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
+                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
                 <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ fk.comment }}</span>
               </a>
             </mat-list-option>
@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
+        <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
             <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedLikeDislike()">
               Refresh
@@ -50,7 +50,7 @@
                   )
                 )
               ">
-                <span class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fldl.created_at | dateAgo }}</span>
+                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fldl.created_at | dateAgo }}</span>
                 <span class="me-3 text-{{ gs.isDarkMode ? 'success-dark' : 'success-light' }}">{{ fldl.type }}</span>
                 <span class="me-3 text-info">{{ fldl.berkas_ ? 'Berkas' : (fldl.fansub_ ? 'Fansub' : (fldl.user_ ? 'User' : (fldl.news_ ? 'News' : ''))) }}</span>
                 <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ fldl.berkas_?.name || fldl.fansub_?.name || fldl.user_?.kartu_tanda_penduduk_?.nama || fldl.news_?.title }}</span>
@@ -60,7 +60,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
+        <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
             <span class="float-end text-{{ gs.isDarkMode ? 'warning' : 'primary' }}" style="font-size: small; cursor: pointer;" (click)="getUserFeedVisit()">
               Refresh
@@ -81,7 +81,7 @@
                   )
                 )
               ">
-                <span class="bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }} ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fv.created_at | dateAgo }}</span>
+                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fv.created_at | dateAgo }}</span>
                 <span class="me-3 text-info">{{ fv.berkas_ ? 'Berkas' : (fv.fansub_ ? 'Fansub' : (fv.user_ ? 'User' : (fv.news_ ? 'News' : ''))) }}</span>
                 <span class="text-{{ gs.isDarkMode ? 'warning' : 'primary' }}">{{ fv.berkas_?.name || fv.fansub_?.name || fv.user_?.kartu_tanda_penduduk_?.nama || fv.news_?.title }}</span>
               </a>

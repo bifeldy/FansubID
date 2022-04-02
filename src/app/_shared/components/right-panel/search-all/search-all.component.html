@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-12 sticky-top bg-bifeldy-{{ gs.isDarkMode ? 'dark' : 'light' }}">
+  <div class="col-12 sticky-top bg-bifeldy">
     <mat-form-field class="ms-auto pt-3 col-12" [color]="'accent'">
       <mat-label>Cari Apapun Di Sini ...</mat-label>
       <input matInput maxlength="200" placeholder="Ex. ばーかー！" (keyup.enter)="applyFilter($event)" [(ngModel)]="searchResult.q" />

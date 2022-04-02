@@ -53,6 +53,10 @@ $my-dark-theme: map_merge($dark-theme, (custom: $my-app-custom));
   color: mat-color(map-get($my-dark-theme, custom), terang-contrast);
 }
 
+.bifeldy-dark-theme .bg-bifeldy {
+  background-color: rgb(48, 48, 48) !important;
+}
+
 .bifeldy-dark-theme .gradient-border,
 .bifeldy-dark-theme .mat-card,
 .bifeldy-dark-theme .card {
