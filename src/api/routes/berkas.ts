@@ -22,7 +22,7 @@ import { TempAttachment } from '../entities/TempAttachment';
 
 import { Role } from '../../app/_shared/models/Role';
 
-import { gDrive } from '../programs/gDrive';
+import { gDrive } from '../programs/googleApp';
 
 import { isLogin, isAuthorized } from '../middlewares/auth';
 
@@ -227,28 +227,30 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
             } else {
               mimeType += attachment.ext.toString().toLowerCase();
             }
-            gDrive(async (d: drive_v3.Drive) => {
-              const dFile = await d.files.create({
-                requestBody: {
-                  name: `${attachment.name.toString().toLowerCase()}.${attachment.ext.toString().toLowerCase()}`,
-                  parents: [
-                    environment.gdriveFolderId // Hikki ひきこもり - Folder
-                  ],
-                  mimeType
-                },
-                media: {
-                  mimeType,
-                  body: fs.createReadStream(files[fIdx])
-                },
-                fields: 'id'
-              });
-              resAttachmentSave.google_drive = dFile.data.id;
-              await attachmentRepo.save(resAttachmentSave);
-              fs.unlink(files[fIdx], (er) => {
-                if (er) {
-                  console.error(er);
-                }
-              });
+            gDrive(async (gAppError, d: drive_v3.Drive) => {
+              if (!gAppError) {
+                const dFile = await d.files.create({
+                  requestBody: {
+                    name: `${attachment.name.toString().toLowerCase()}.${attachment.ext.toString().toLowerCase()}`,
+                    parents: [
+                      environment.gdriveFolderId // Hikki ひきこもり - Folder
+                    ],
+                    mimeType
+                  },
+                  media: {
+                    mimeType,
+                    body: fs.createReadStream(files[fIdx])
+                  },
+                  fields: 'id'
+                });
+                resAttachmentSave.google_drive = dFile.data.id;
+                await attachmentRepo.save(resAttachmentSave);
+                fs.unlink(files[fIdx], (er) => {
+                  if (er) {
+                    console.error(er);
+                  }
+                });
+              }
             });
           } else {
             return next(createError(404));
