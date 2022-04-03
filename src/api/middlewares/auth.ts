@@ -13,7 +13,7 @@ import { Profile } from '../entities/Profile';
 import { Banned } from '../entities/Banned';
 import { Registration } from '../entities/Registration';
 
-import { JwtView, JwtEncode, JwtDecode, hashPassword, JwtEncrypt, JwtDecrypt } from '../helpers/crypto';
+import { JwtView, CredentialEncode, CredentialDecode, hashPassword, JwtEncrypt, JwtDecrypt } from '../helpers/crypto';
 
 import { disconnectRoom } from '../programs/socketWeb';
 import { composeRegister, gMailSend } from '../programs/googleApp';
@@ -163,7 +163,7 @@ export async function activationModule(req: UserRequest, res: Response, next: Ne
     const userRepo = getRepository(User);
     let resUserSave = await userRepo.save(newUser);
     const { password, session_token, ...noPwdSsToken } = resUserSave;
-    newUser.session_token = JwtEncode(noPwdSsToken, false);
+    newUser.session_token = CredentialEncode({ user: noPwdSsToken }, false);
     resUserSave = await userRepo.save(newUser);
     req.user = (resUserSave as any);
     res.cookie(environment.tokenName, req.user.session_token, {
@@ -247,7 +247,7 @@ export async function loginModule(req: UserRequest, res: Response, next: NextFun
       });
       const { password, session_token, ...noPwdSsToken } = selectedUser;
       const rememberMe = ('rememberMe' in req.body && JSON.parse(req.body.rememberMe) === true);
-      selectedUser.session_token = JwtEncode(noPwdSsToken, rememberMe);
+      selectedUser.session_token = CredentialEncode({ user: noPwdSsToken }, rememberMe);
       const resUserSave = await userRepo.save(selectedUser);
       req.user = (resUserSave as any);
       res.cookie(environment.tokenName, req.user.session_token, {
@@ -273,7 +273,7 @@ export async function loginModule(req: UserRequest, res: Response, next: NextFun
 }
 
 export async function isAuthorized(req: UserRequest, res: Response, next: NextFunction) {
-  const decoded = JwtDecode(req, res, next);
+  const decoded = CredentialDecode(req, res, next);
   try {
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
@@ -318,7 +318,7 @@ export async function isLogin(req: UserRequest, res: Response, next: NextFunctio
 }
 
 export async function logoutModule(req: UserRequest, res: Response, next: NextFunction) {
-  const decoded = JwtDecode(req, res, next);
+  const decoded = CredentialDecode(req, res, next);
   if (decoded && 'token' in decoded && 'id' in decoded.user) {
     try {
       const userRepo = getRepository(User);

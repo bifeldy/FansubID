@@ -19,7 +19,7 @@ import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
 import { isAuthorized, registerModule, loginModule, logoutModule, activationModule, reSendActivation } from '../middlewares/auth';
 
-import { JwtEncode, JwtView, JwtEncrypt } from '../helpers/crypto';
+import { CredentialEncode, JwtView, JwtEncrypt } from '../helpers/crypto';
 import { log, reqHeaderBodyCleanUp } from '../helpers/logger';
 
 import { serverGetMaintenance } from '../settings';
@@ -566,7 +566,7 @@ router.put('/verify-ktp', isAuthorized, async (req: UserRequest, res: Response, 
         if ('profile_' in resUserSave) {
           delete resUserSave.profile_;
         }
-        user.session_token = JwtEncode(resUserSave, false);
+        user.session_token = CredentialEncode({ user: resUserSave }, false);
         resUserSave = await userRepo.save(user);
         res.cookie(environment.tokenName, resUserSave.session_token, {
           httpOnly: true,

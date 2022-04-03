@@ -15,8 +15,8 @@ const jwtAudience = environment.siteName;
 const jwtSecretKey = hashPassword(environment.jwtSecretKey);
 const jwtExpiredIn = 24 * 60 * 60;
 
-export function JwtEncode(userData: any, rememberMe = false): any {
-  return sign({ user: userData }, jwtSecretKey, {
+export function CredentialEncode(data: any, rememberMe = false): any {
+  return sign(data, jwtSecretKey, {
     algorithm: jwtAlgorithm,
     issuer: jwtIssuer,
     audience: jwtAudience,
@@ -24,7 +24,7 @@ export function JwtEncode(userData: any, rememberMe = false): any {
   });
 }
 
-export function JwtDecode(req: Request, res: Response, next: NextFunction): any {
+export function CredentialDecode(req: Request, res: Response, next: NextFunction): any {
   try {
     let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
     if (token.startsWith('Bearer ')) {

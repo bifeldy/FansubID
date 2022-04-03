@@ -18,7 +18,7 @@ import { LikeDislike } from '../entities/LikeDislike';
 
 import { isAuthorized, isLogin } from '../middlewares/auth';
 
-import { JwtEncode, JwtView, hashPassword } from '../helpers/crypto';
+import { CredentialEncode, JwtView, hashPassword } from '../helpers/crypto';
 import { Track } from '../entities/Track';
 
 const router = Router();
@@ -196,7 +196,7 @@ router.put('/:username', isAuthorized, async (req: UserRequest, res: Response, n
             delete resUserSave.session_token;
             delete resUserSave.kartu_tanda_penduduk_;
             delete resUserSave.profile_;
-            selectedUser.session_token = JwtEncode(resUserSave, false);
+            selectedUser.session_token = CredentialEncode({ user: resUserSave }, false);
             resUserSave = await userRepo.save(selectedUser);
             res.cookie(environment.tokenName, resUserSave.session_token, {
               httpOnly: true,
