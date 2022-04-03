@@ -60,11 +60,14 @@ export async function gMailSend(mailOpt, callback): Promise<void> {
     const transporter = nodemailer.createTransport({
       host: gcp.gMail.host,
       port: gcp.gMail.port,
-      secure: true,
+      secure: gcp.gMail.secure,
       auth: {
         type: 'OAuth2',
         user: gcp.gMail.senderAddress,
         accessToken: auth.credentials.access_token
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
     const mail = await transporter.sendMail({
@@ -78,6 +81,38 @@ export async function gMailSend(mailOpt, callback): Promise<void> {
       text: mailOpt.text
     });
     log(`[gMail] 💌`, mail);
+    callback(null, mail);
+  } catch (err) {
+    console.error(err);
+    callback(err, null);
+  }
+}
+
+export async function yMailSend(mailOpt, callback): Promise<void> {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: environment.yMail.host,
+      port: environment.yMail.port,
+      secure: environment.yMail.secure,
+      auth: {
+        user: environment.yMail.senderAddress,
+        pass: environment.yMail.senderPassword
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+    const mail = await transporter.sendMail({
+      from: {
+        name: environment.yMail.senderName,
+        address: environment.yMail.senderAddress
+      },
+      to: mailOpt.to,
+      subject: mailOpt.subject,
+      html: mailOpt.html,
+      text: mailOpt.text
+    });
+    log(`[yMail] 💌`, mail);
     callback(null, mail);
   } catch (err) {
     console.error(err);

@@ -16,7 +16,7 @@ import { Registration } from '../entities/Registration';
 import { JwtView, CredentialEncode, CredentialDecode, hashPassword, JwtEncrypt, JwtDecrypt } from '../helpers/crypto';
 
 import { disconnectRoom } from '../programs/socketWeb';
-import { composeRegister, gMailSend } from '../programs/googleApp';
+import { composeRegister, yMailSend } from '../programs/googleApp';
 
 export async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
@@ -93,7 +93,7 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
               penggunaSave.nama,
               penggunaSave.activation_token
             );
-            return gMailSend(mailOpt, (gAppError, m) => {
+            return yMailSend(mailOpt, (gAppError, m) => {
               return next();
             });
           } else {
@@ -196,7 +196,7 @@ export async function reSendActivation(req: UserRequest, res: Response, next: Ne
       selectedRegistration.nama,
       selectedRegistration.activation_token
     );
-    return gMailSend(mailOpt, (gAppError, m) => {
+    return yMailSend(mailOpt, (gAppError, m) => {
       return next();
     });
   } catch (err) {

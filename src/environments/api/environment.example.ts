@@ -96,10 +96,19 @@ export const environment = {
     gMail: {
       host: 'smtp.gmail.com',
       port: 465,
+      secure: true,
       senderName: `Hikki | No-Reply`,
       senderAddress: 'noreply@hikki.id',
       refreshToken: ''
-    },
+    }
+  },
+  yMail: {
+    host: 'smtp.mail.yahoo.co.jp',
+    port: 465,
+    secure: true,
+    senderName: `Hikki | No-Reply`,
+    senderAddress: 'noreply@hikki.id',
+    senderPassword: ''
   },
   discordApiUrl: 'https://discord.com/api',
   discordGuildId: '342220398022098944',
