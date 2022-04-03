@@ -30,6 +30,7 @@ import { Hirakata } from '../../api/entities/Hirakata';
 import { HirakataStats } from '../../api/entities/HirakataStats';
 import { Nihongo } from '../../api/entities/Nihongo';
 import { Komentar } from '../../api/entities/Komentar';
+import { Registration } from '../../api/entities/Registration';
 
 export const environment = {
   production: false,
@@ -75,19 +76,30 @@ export const environment = {
     Hirakata,
     HirakataStats,
     Nihongo,
-    Komentar
+    Komentar,
+    Registration
   ],
   uploadFolder: 'dist/hikki/uploads',
-  googleAuth: 'https://oauth2.googleapis.com/token',
+  googleAuthUrl: 'https://oauth2.googleapis.com/token',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',
   recaptchaApiUrl: 'https://www.google.com/recaptcha/api/siteverify',
   reCaptchaSecretKey: '',
   apiPemerintahKTPUrl: '',
   apiPemerintahKTPSecretKey: '',
   imgbbKey: '',
-  driveClientId: '',
-  driveClientSecret: '',
-  driveRefreshToken: '',
+  gCloudPlatform: {
+    clientId: '',
+    clientSecret: '',
+    gDrive: {
+      refreshToken: ''
+    },
+    gMail: {
+      host: 'smtp.gmail.com',
+      port: 465,
+      address: 'noreply@hikki.id',
+      refreshToken: ''
+    },
+  },
   discordApiUrl: 'https://discord.com/api',
   discordGuildId: '342220398022098944',
   discordClientId: '789831990433153034',

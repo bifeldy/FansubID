@@ -17,7 +17,7 @@ import { User } from '../entities/User';
 import { SocialMedia } from '../entities/SocialMedia';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 
-import { isAuthorized, registerModule, loginModule, logoutModule } from '../middlewares/auth';
+import { isAuthorized, registerModule, loginModule, logoutModule, activationModule, reSendActivation } from '../middlewares/auth';
 
 import { JwtEncode, JwtView, JwtEncrypt } from '../helpers/crypto';
 import { log, reqHeaderBodyCleanUp } from '../helpers/logger';
@@ -51,7 +51,7 @@ import { MessageEmbed } from 'discord.js';
 const apiLimiter = rateLimit({
   windowMs: 60000, // 60 Seconds / 1 Minute
   max: 15, // 15 Request
-  handler: (req, res, next) => {
+  handler: (req: UserRequest, res: Response, next: NextFunction) => {
     return res.status(429).json({
       info: '😡 429 - API SPAM :: Kebanjiran Permintaan 😤',
       result: {
@@ -112,8 +112,29 @@ const imgBB = 'https://api.imgbb.com/1/upload';
 router.use(reqHeaderBodyCleanUp);
 
 // GET `/api`
-router.get('/', (req: UserRequest, res: Response) => {
+router.get('/', (req: UserRequest, res: Response, next: NextFunction) => {
   return res.redirect('/documentation');
+});
+
+// GET `/api/aktivasi`
+router.get('/aktivasi', activationModule, (req: UserRequest, res: Response, next: NextFunction) => {
+  req.botSendNews({
+    embeds: [
+      new MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle(req.user.kartu_tanda_penduduk_.nama)
+        .setURL(`${environment.baseUrl}/user/${req.user.username}`)
+        .setAuthor('Hikki - Pendaftaran Pengguna Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+        .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
+        .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
+        .setTimestamp(req.user.updated_at)
+        .setFooter(
+          req.user.username,
+          req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
+        )
+    ]
+  });
+  return res.redirect('/login');
 });
 
 // Intercept Status Response
@@ -143,7 +164,7 @@ router.use(interceptor((req: UserRequest, res: Response) => {
 }));
 
 // Check Api Key
-router.use(async (req: UserRequest, res, next) => {
+router.use(async (req: UserRequest, res: Response, next: NextFunction) => {
   const k = req.query.key || '';
   let o = req.headers.origin || req.headers.referer || req.header('x-real-ip') || req.socket.remoteAddress || '';
   if (o.startsWith('http://')) {
@@ -203,33 +224,39 @@ router.use('/comment', commentRouter);
 router.use('/torrent', torrentRouter);
 
 // POST `/api/register`
-router.post('/register', registerModule, async (req: UserRequest, res: Response, next) => {
-  req.botSendNews({
-    embeds: [
-      new MessageEmbed()
-        .setColor('#0099ff')
-        .setTitle(req.user.kartu_tanda_penduduk_.nama)
-        .setURL(`${environment.baseUrl}/user/${req.user.username}`)
-        .setAuthor('Hikki - Pendaftaran Pengguna Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
-        .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
-        .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
-        .setTimestamp(req.user.updated_at)
-        .setFooter(
-          req.user.username,
-          req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
-        )
-    ]
-  });
+router.post('/register', registerModule, async (req: UserRequest, res: Response, next: NextFunction) => {
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {
-      jwtToken: req.user.session_token
+      id: req.user.id,
+      title: 'Aktivasi Akun Dalam 5 Menit',
+      message: `
+        Silahkan Periksa Email Untuk Menyelesaikan Pendaftaran. <br />
+        Petunjuk Sudah Dikirimkan Ke '<span class="text-danger">${req.user.email}</span>'. <br />
+        .: ${req.user.id} :.
+      `
+    }
+  });
+});
+
+// POST `/api/aktivasi`
+router.post('/aktivasi', reSendActivation, async (req: UserRequest, res: Response, next: NextFunction) => {
+  return res.status(200).json({
+    info: '😚 200 - Register API :: Berhasil Kirim Ulang Aktivasi 🤩',
+    result: {
+      id: req.user.id,
+      title: 'Pengiriman Ulang Aktivasi',
+      message: `
+        Silahkan Periksa Kembali Email Anda. <br />
+        '<span class="text-danger">${req.user.email}</span>' <br />
+        .: ${req.user.id} :.
+      `
     }
   });
 });
 
 // POST `/api/login`
-router.post('/login', loginModule, (req: UserRequest, res: Response, next) => {
+router.post('/login', loginModule, (req: UserRequest, res: Response, next: NextFunction) => {
   return res.status(200).json({
     info: '😚 200 - Login API :: Berhasil Login Yeay 🤩',
     result: {
@@ -239,7 +266,7 @@ router.post('/login', loginModule, (req: UserRequest, res: Response, next) => {
 });
 
 // DELETE `/api/logout`
-router.delete('/logout', isAuthorized, logoutModule, (req: UserRequest, res: Response, next) => {
+router.delete('/logout', isAuthorized, logoutModule, (req: UserRequest, res: Response, next: NextFunction) => {
   return res.status(200).json({
     info: '😍 200 - Logout API :: Berhasil Keluar UwUu 🥰',
     result: {
@@ -249,7 +276,7 @@ router.delete('/logout', isAuthorized, logoutModule, (req: UserRequest, res: Res
 });
 
 // // TODO :: POST `/api/reset-password`
-// router.post('/reset-password', resetPasswordModule, (req: UserRequest, res: Response, next) => {
+// router.post('/reset-password', resetPasswordModule, (req: UserRequest, res: Response, next: NextFunction) => {
 //   return res.status(200).json({
 //     info: '😚 200 - Reset Password API :: Berhasil Reset Password Yeay 🤩',
 //     result: {
@@ -259,7 +286,7 @@ router.delete('/logout', isAuthorized, logoutModule, (req: UserRequest, res: Res
 // });
 
 // PATCH `/api/verify` -- Verify Login Session
-router.patch('/verify', isAuthorized, (req: UserRequest, res: Response, next) => {
+router.patch('/verify', isAuthorized, (req: UserRequest, res: Response, next: NextFunction) => {
   let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
   if (token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
@@ -279,7 +306,7 @@ router.patch('/verify', isAuthorized, (req: UserRequest, res: Response, next) =>
 });
 
 // POST `/api/promote`
-router.post('/promote', isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.post('/promote', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
       if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
@@ -373,7 +400,7 @@ router.post('/promote', isAuthorized, async (req: UserRequest, res: Response, ne
 });
 
 // POST `/api/image`
-router.post('/image', isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next) => {
+router.post('/image', isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next: NextFunction) => {
   return request({
     method: 'POST',
     uri: imgBB,
@@ -412,7 +439,7 @@ router.post('/image', isAuthorized, upload.single('file'), async (req: UserReque
 });
 
 // POST `/api/cek-nik`
-router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('nik' in req.body && 'nama' in req.body && 'g-recaptcha-response' in req.body) {
       const userIp = req.header('x-real-ip') || req.socket.remoteAddress || '';
@@ -482,7 +509,7 @@ router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, ne
 });
 
 // PUT `/api/verify-ktp` -- Verify Account By KTP
-router.put('/verify-ktp', isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.put('/verify-ktp', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       return res.status(200).json({
@@ -570,7 +597,7 @@ router.put('/verify-ktp', isAuthorized, async (req: UserRequest, res: Response, 
 });
 
 // PUT `/api/verify-sosmed` -- Verify Account By Social Media :: DISCORD, DISQUS, GOOGLE, FACEBOOK, Etc
-router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if (req.user.verified) {
       return res.status(200).json({
@@ -653,7 +680,7 @@ router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Respons
                   return res.status(r.statusCode).json({
                     info: `😅 ${r.statusCode} - Discord API :: Masuk & Verify 🤣`,
                     result: {
-                      title: 'Kirim Token Ke Hikki Discord BOT Dalam 1 Menit! #🚮-bot-spam',
+                      title: 'Kirim Token Ke Hikki Discord BOT Dalam 3 Menit! #🚮-bot-spam',
                       message: '~verify DISCORD ' + JwtEncrypt({ discord: discordProfile, user: resUserSave }) + ' DELETE_CHAT'
                     }
                   });
@@ -709,12 +736,12 @@ router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Respons
 });
 
 // Catch 404 and forward to error handler
-router.use((req: UserRequest, res: Response, next) => {
+router.use((req: UserRequest, res: Response, next: NextFunction) => {
   return next(createError(404));
 });
 
 // Error handler
-router.use((err: any, req: UserRequest, res: Response, next) => {
+router.use((err: any, req: UserRequest, res: Response, next: NextFunction) => {
   res.locals.message = err.message;
   res.locals.error = err;
   return res.status(err.status || 500).json({

@@ -30,6 +30,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   subsRegister = null;
   subsVerify = null;
   subsDialog = null;
+  subsResendActivation = null;
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +52,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.subsVerify?.unsubscribe();
     this.subsUser?.unsubscribe();
     this.subsDialog?.unsubscribe();
+    this.subsResendActivation?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -107,24 +109,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
         'g-recaptcha-response': this.fg.value['g-recaptcha-response']
       }).subscribe({
         next: (res: any) => {
+          this.gs.log('[REGISTER_FORM_SUCCESS]', res);
           this.bs.idle();
+          this.submitted = false;
+          this.captchaRef.reset();
           this.registerInfo = res.info;
-          this.bs.busy();
-          this.subsVerify = this.as.verify(res.result.jwtToken).subscribe({
-            next: success => {
-              this.registerInfo = success.info;
-              this.gs.log('[VERIFY_REGISTER_SUCCESS]', success);
-              this.bs.idle();
-              this.captchaRef.reset();
-              this.router.navigateByUrl(this.returnUrl);
-            },
-            error: error => {
-              this.gs.log('[VERIFY_REGISTER_ERROR]', error);
-              this.bs.idle();
-              this.captchaRef.reset();
-              this.router.navigateByUrl('/login');
-            }
-          });
+          this.activationDialog(res);
         },
         error: err => {
           this.gs.log('[REGISTER_FORM_ERROR]', err);
@@ -137,6 +127,36 @@ export class RegisterComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  activationDialog(res: any) {
+    this.subsDialog = this.ds.openInfoDialog({
+      data: {
+        title: res.result.title,
+        htmlMessage: res.result.message,
+        confirmText: 'Kirim Ulang Email'
+      },
+      disableClose: true
+    }).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.bs.busy();
+          this.subsResendActivation = this.as.resendActivation(res.result.id).subscribe({
+            next: success => {
+              this.gs.log('[RESEND_ACTIVATION_SUCCESS]', success);
+              this.bs.idle();
+              this.activationDialog(success);
+            },
+            error: error => {
+              this.gs.log('[RESEND_ACTIVATION_ERROR]', error);
+              this.bs.idle();
+            }
+          });
+        }
+        this.subsDialog.unsubscribe();
+      }
+    });
   }
 
   captcha(captchaResponse, captchaRef): void {

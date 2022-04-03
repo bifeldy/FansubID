@@ -15,8 +15,8 @@ const jwtAudience = environment.siteName;
 const jwtSecretKey = hashPassword(environment.jwtSecretKey);
 const jwtExpiredIn = 24 * 60 * 60;
 
-export function JwtEncode(user: any, rememberMe = false): any {
-  return sign({ user }, jwtSecretKey, {
+export function JwtEncode(userData: any, rememberMe = false): any {
+  return sign({ user: userData }, jwtSecretKey, {
     algorithm: jwtAlgorithm,
     issuer: jwtIssuer,
     audience: jwtAudience,
@@ -50,12 +50,12 @@ export function JwtDecode(req: Request, res: Response, next: NextFunction): any 
   }
 }
 
-export function JwtEncrypt(data): any {
+export function JwtEncrypt(data, expTimeSecond = 3 * 60): any {
   return sign(data, jwtSecretKey, {
     algorithm: jwtAlgorithm,
     issuer: jwtIssuer,
     audience: jwtAudience,
-    expiresIn: 1 * 60,
+    expiresIn: expTimeSecond,
   });
 }
 

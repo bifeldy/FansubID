@@ -47,6 +47,13 @@ export class AuthService {
     }));
   }
 
+  resendActivation(id: any): Observable<any> {
+    this.gs.log('[AUTH_ACTIVATION]', id);
+    return this.api.postData(`/aktivasi`, { id }).pipe(map(respActivation => {
+      return respActivation;
+    }));
+  }
+
   login(loginData: any): Observable<any> {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(map(respLogin => {

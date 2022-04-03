@@ -1,4 +1,3 @@
-
 import request from 'postman-request';
 
 import { getRepository, Equal, ILike } from 'typeorm';
@@ -12,10 +11,12 @@ import { User } from '../entities/User';
 import { KartuTandaPenduduk } from '../entities/KartuTandaPenduduk';
 import { Profile } from '../entities/Profile';
 import { Banned } from '../entities/Banned';
+import { Registration } from '../entities/Registration';
 
-import { JwtView, JwtEncode, JwtDecode, hashPassword } from '../helpers/crypto';
+import { JwtView, JwtEncode, JwtDecode, hashPassword, JwtEncrypt, JwtDecrypt } from '../helpers/crypto';
 
 import { disconnectRoom } from '../programs/socketWeb';
+import { composeRegister, gMailSend } from '../programs/googleApp';
 
 export async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
@@ -40,7 +41,15 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
               { email: ILike(req.body.email) }
             ]
           });
-          if (selectedUser.length === 0) {
+          const registrationRepo = getRepository(Registration);
+          const selectedRegistration = await registrationRepo.find({
+            where: [
+              { username: ILike(req.body.username) },
+              { email: ILike(req.body.email) }
+            ]
+          });
+          const penggunaDuplikat = [...selectedUser, ...selectedRegistration];
+          if (penggunaDuplikat.length === 0) {
             const result: any = {};
             req.body.username = req.body.username.replace(/\s/g, '').replace(/[^a-z0-9]/g, '');
             if (req.body.username.length < 8) {
@@ -55,43 +64,46 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
                 result
               });
             }
-            const ktpRepo = getRepository(KartuTandaPenduduk);
-            const newUserKtp = new KartuTandaPenduduk();
-            newUserKtp.nama = req.body.name;
-            const resKtpSave = await ktpRepo.save(newUserKtp);
-            const profileRepo = getRepository(Profile);
-            const newUserProfile = new Profile();
-            newUserProfile.description = '// No Description';
-            newUserProfile.cover_url = '/favicon.ico';
-            const resProfileSave = await profileRepo.save(newUserProfile);
-            const newUser = new User();
-            newUser.username = req.body.username;
-            newUser.email = req.body.email;
-            newUser.image_url = '/favicon.ico';
-            newUser.password = hashPassword(req.body.password);
-            newUser.kartu_tanda_penduduk_ = resKtpSave;
-            newUser.profile_ = resProfileSave;
-            let resUserSave = await userRepo.save(newUser);
-            const { password, session_token, ...noPwdSsToken } = resUserSave;
-            newUser.session_token = JwtEncode(noPwdSsToken, false);
-            resUserSave = await userRepo.save(newUser);
-            req.user = (resUserSave as any);
-            res.cookie(environment.tokenName, req.user.session_token, {
-              httpOnly: true,
-              secure: environment.production,
-              sameSite: 'strict',
-              expires: new Date(JwtView(req.user.session_token).exp * 1000),
-              domain: environment.domain
+            const pengguna = new Registration();
+            pengguna.username = req.body.username;
+            pengguna.email = req.body.email;
+            pengguna.password = hashPassword(req.body.password);
+            pengguna.nama = req.body.name;
+            let penggunaSave = await registrationRepo.save(pengguna);
+            const { password, activation_token, ...noPwdAcToken } = penggunaSave;
+            pengguna.activation_token = JwtEncrypt({ user: noPwdAcToken }, 5 * 60);
+            penggunaSave = await registrationRepo.save(pengguna);
+            req.user = (penggunaSave as any);
+            setTimeout(async () => {
+              try {
+                const registrationToBeDeleted = await registrationRepo.findOneOrFail({
+                  where: [
+                    { id: Equal(penggunaSave.id), activation_token: Equal(penggunaSave.activation_token) }
+                  ]
+                });
+                await registrationRepo.remove(registrationToBeDeleted);
+              } catch (err) {
+                console.error(err);
+              }
+            }, 3 * 60 * 1000);
+            const mailOpt = composeRegister(
+              penggunaSave.id,
+              penggunaSave.email,
+              penggunaSave.username,
+              penggunaSave.nama,
+              penggunaSave.activation_token
+            );
+            return gMailSend(mailOpt, (gAppError, m) => {
+              return next();
             });
-            return next();
           } else {
             const result: any = {};
-            for (const sU of selectedUser) {
-              if (sU.username === req.body.username) {
-                result.username = `${sU.username} Sudah Terpakai`;
+            for (const pD of penggunaDuplikat) {
+              if (pD.username === req.body.username) {
+                result.username = `${pD.username} Sudah Terpakai`;
               }
-              if (sU.email === req.body.email) {
-                result.email = `${sU.email} Sudah Terpakai`;
+              if (pD.email === req.body.email) {
+                result.email = `${pD.email} Sudah Terpakai`;
               }
             }
             return res.status(400).json({
@@ -121,6 +133,82 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
     });
   }
 }
+
+export async function activationModule(req: UserRequest, res: Response, next: NextFunction) {
+  try {
+    const token = req.query.token || '';
+    const decoded = JwtDecrypt(token);
+    const registrationRepo = getRepository(Registration);
+    const selectedRegistration = await registrationRepo.findOneOrFail({
+      where: [
+        { id: Equal(decoded.user.id) }
+      ]
+    });
+    const ktpRepo = getRepository(KartuTandaPenduduk);
+    const newUserKtp = new KartuTandaPenduduk();
+    newUserKtp.nama = selectedRegistration.nama;
+    const resKtpSave = await ktpRepo.save(newUserKtp);
+    const profileRepo = getRepository(Profile);
+    const newUserProfile = new Profile();
+    newUserProfile.description = '// No Description';
+    newUserProfile.cover_url = '/favicon.ico';
+    const resProfileSave = await profileRepo.save(newUserProfile);
+    const newUser = new User();
+    newUser.username = selectedRegistration.username;
+    newUser.email = selectedRegistration.email;
+    newUser.image_url = '/favicon.ico';
+    newUser.password = selectedRegistration.password;
+    newUser.kartu_tanda_penduduk_ = resKtpSave;
+    newUser.profile_ = resProfileSave;
+    const userRepo = getRepository(User);
+    let resUserSave = await userRepo.save(newUser);
+    const { password, session_token, ...noPwdSsToken } = resUserSave;
+    newUser.session_token = JwtEncode(noPwdSsToken, false);
+    resUserSave = await userRepo.save(newUser);
+    req.user = (resUserSave as any);
+    res.cookie(environment.tokenName, req.user.session_token, {
+      httpOnly: true,
+      secure: environment.production,
+      sameSite: 'strict',
+      expires: new Date(JwtView(req.user.session_token).exp * 1000),
+      domain: environment.domain
+    });
+    return next();
+  } catch (err) {
+    console.error(err);
+    return res.redirect('/register');
+  }
+}
+
+export async function reSendActivation(req: UserRequest, res: Response, next: NextFunction) {
+  try {
+    const registrationRepo = getRepository(Registration);
+    const selectedRegistration = await registrationRepo.findOneOrFail({
+      where: [
+        { id: Equal(req.body.id) }
+      ]
+    });
+    req.user = (selectedRegistration as any);
+    const mailOpt = composeRegister(
+      selectedRegistration.id,
+      selectedRegistration.email,
+      selectedRegistration.username,
+      selectedRegistration.nama,
+      selectedRegistration.activation_token
+    );
+    return gMailSend(mailOpt, (gAppError, m) => {
+      return next();
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({
+      info: '🙄 400 - Authentication API :: Kirim Ulang Aktivasi Gagal 😪',
+      result: {
+        message: 'Data Tidak Lengkap!'
+      }
+    });
+  }
+};
 
 export async function checkBan(req: UserRequest, res: Response, next: NextFunction) {
   try {

@@ -70,7 +70,7 @@ router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: Next
 });
 
 // POST `/api/notification`
-router.post('/', isAuthorized, async (req: UserRequest, res: Response, next) => {
+router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   if ('type' in req.body && 'title' in req.body && 'content' in req.body && 'dismissible' in req.body) {
     if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
       let notifTemplate = {
