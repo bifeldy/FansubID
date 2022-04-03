@@ -63,14 +63,14 @@ export async function gMailSend(mailOpt, callback): Promise<void> {
       secure: true,
       auth: {
         type: 'OAuth2',
-        user: gcp.gMail.address,
+        user: gcp.gMail.senderAddress,
         accessToken: auth.credentials.access_token
       }
     });
     const mail = await transporter.sendMail({
       from: {
-        name: `${environment.siteName} | No-Reply`,
-        address: gcp.gMail.address
+        name: gcp.gMail.senderName,
+        address: gcp.gMail.senderAddress
       },
       to: mailOpt.to,
       subject: mailOpt.subject,
@@ -88,12 +88,17 @@ export async function gMailSend(mailOpt, callback): Promise<void> {
 export function composeRegister(id: string, email:string, username: string, fullName: string, acToken: string): any {
   return {
     to: email,
-    subject: 'Hikki - Aktivasi Akun',
+    subject: `${environment.siteName} - Aktivasi Akun`,
     html: `
-      <h1>Hikki - Aktivasi Akun</h1>
-      <p>Halo ${fullName} (${username}).</p>
+      <h1>${fullName} (<i>${username}</i>).</h1>
+      <h2>
+        <a href="${environment.baseUrl}">
+          ${environment.baseUrl}
+        </a>
+      </h2>
+      <p>(づ￣ ³￣)づ</p>
       <p>
-        Terima kasih telah mendaftar di Hikki. <br />
+        Hai, terima kasih telah mendaftar di ${environment.siteName}. <br />
         Untuk mengaktifkan akun, silahkan klik link berikut ini.
       </p>
       <p>
@@ -102,16 +107,22 @@ export function composeRegister(id: string, email:string, username: string, full
         </a>
       </p>
       <p>Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser anda.</p>
-      <p>Terima kasih dan selamat datang ^_^</p>
+      <p>(つ≧▽≦)つ</p>
+      <p>Terima kasih dan selamat datang.</p>
+      <p>(っ.❛ ᴗ ❛.)っ</p>
       <p>.: ${id} :.</p>
     `,
     text: `
-      Halo ${fullName} (${username}).
-      Terima kasih telah mendaftar di Hikki.
+      ${fullName} (${username}).
+      ${environment.baseUrl}
+      (づ￣ ³￣)づ
+      Hai, terima kasih telah mendaftar di ${environment.siteName}.
       Untuk mengaktifkan akun, silahkan klik link berikut ini.
       ${environment.baseUrl}/api/aktivasi?token=${acToken}
-      Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser anda
-      Terima kasih dan selamat datang ^_^
+      Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser anda.
+      (つ≧▽≦)つ
+      Terima kasih dan selamat datang.
+      (っ.❛ ᴗ ❛.)っ
       .: ${id} :.
     `
   };

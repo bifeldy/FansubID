@@ -96,7 +96,8 @@ export const environment = {
     gMail: {
       host: 'smtp.gmail.com',
       port: 465,
-      address: 'noreply@hikki.id',
+      senderName: `Hikki | No-Reply`,
+      senderAddress: 'noreply@hikki.id',
       refreshToken: ''
     },
   },
