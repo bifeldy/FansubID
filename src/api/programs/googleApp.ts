@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
+import formData from 'form-data';
 import nodemailer from 'nodemailer';
+import Mailgun from 'mailgun.js';
 
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
@@ -66,9 +68,8 @@ export async function gMailSend(mailOpt, callback): Promise<void> {
         user: gcp.gMail.senderAddress,
         accessToken: auth.credentials.access_token
       },
-      tls: {
-        rejectUnauthorized: false
-      }
+      debug: environment.production,
+      logger: environment.production
     });
     const mail = await transporter.sendMail({
       from: {
@@ -98,9 +99,8 @@ export async function yMailSend(mailOpt, callback): Promise<void> {
         user: environment.yMail.senderAddress,
         pass: environment.yMail.senderPassword
       },
-      tls: {
-        rejectUnauthorized: false
-      }
+      debug: environment.production,
+      logger: environment.production
     });
     const mail = await transporter.sendMail({
       from: {
@@ -113,6 +113,21 @@ export async function yMailSend(mailOpt, callback): Promise<void> {
       text: mailOpt.text
     });
     log(`[yMail] 💌`, mail);
+    callback(null, mail);
+  } catch (err) {
+    console.error(err);
+    callback(err, null);
+  }
+}
+
+export async function mgSend(mailBody, callback): Promise<void> {
+  try {
+    const mg = new Mailgun(formData).client(environment.mailGun.clientOptions);
+    const mail = await mg.messages.create(environment.mailGun.domain, {
+      from: `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`,
+      ...mailBody
+    });
+    log(`[mailGun] 💌`, mail);
     callback(null, mail);
   } catch (err) {
     console.error(err);

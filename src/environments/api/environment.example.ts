@@ -110,6 +110,16 @@ export const environment = {
     senderAddress: 'noreply@hikki.id',
     senderPassword: ''
   },
+  mailGun: {
+    clientOptions: {
+      username: 'noreply',
+      key: '',
+      url: 'https://api.mailgun.net',
+    },
+    fullName: `Hikki | No-Reply`,
+    domain: 'hikki.id',
+    password: ''
+  },
   discordApiUrl: 'https://discord.com/api',
   discordGuildId: '342220398022098944',
   discordClientId: '789831990433153034',

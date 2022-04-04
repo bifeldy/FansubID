@@ -64,7 +64,7 @@ export class AuthService {
 
   register(registerData: any): Observable<any> {
     this.gs.log('[AUTH_REGISTER]', registerData);
-    return this.api.postData(`/register`, registerData).pipe(map(respRegister => {
+    return this.api.postData(`/register`, registerData, false, {}, 150000).pipe(map(respRegister => {
       return respRegister;
     }));
   }
