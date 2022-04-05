@@ -37,7 +37,7 @@ export class ApiService {
     }
   }
 
-  getData(path: string, options = {}, timedOut = 20000, retryCount = 3): Observable<any> {
+  getData(path: string, options = {}, timedOut = 20 * 1000, retryCount = 3): Observable<any> {
     this.gs.log('[API_GET]', path);
     return this.http.get(this.HTTP_REQ_URL(path), options).pipe(
       catchError(err => throwError(() => err)),
@@ -47,7 +47,7 @@ export class ApiService {
     );
   }
 
-  postData(path: string, model = {}, multipart = false, options = {}): Observable<any> {
+  postData(path: string, model = {}, multipart = false, options = {}, timedOut = 60 * 1000): Observable<any> {
     this.gs.log('[API_POST]', path);
     let body = model;
     if (multipart) {
@@ -55,11 +55,12 @@ export class ApiService {
     }
     return this.http.post(this.HTTP_REQ_URL(path), body, options).pipe(
       catchError(err => throwError(() => err)),
-      map(res => res)
+      map(res => res),
+      timeout(timedOut)
     );
   }
 
-  putData(path: string, model = {}, multipart = false, options = {}, timedOut = 10000): Observable<any> {
+  putData(path: string, model = {}, multipart = false, options = {}, timedOut = 60 * 1000): Observable<any> {
     this.gs.log('[API_PUT]', path);
     let body = model;
     if (multipart) {
@@ -72,7 +73,7 @@ export class ApiService {
     );
   }
 
-  patchData(path: string, model = {}, multipart = false, options = {}, timedOut = 10000): Observable<any> {
+  patchData(path: string, model = {}, multipart = false, options = {}, timedOut = 60 * 1000): Observable<any> {
     this.gs.log('[API_PATCH]', path);
     let body = model;
     if (multipart) {
@@ -85,12 +86,13 @@ export class ApiService {
     );
   }
 
-  deleteData(path: string, timedOut = 5000): Observable<any> {
+  deleteData(path: string, timedOut = 20 * 1000, retryCount = 3): Observable<any> {
     this.gs.log('[API_DELETE]', path);
     return this.http.delete(this.HTTP_REQ_URL(path)).pipe(
       catchError(err => throwError(() => err)),
       map(res => res),
-      timeout(timedOut)
+      timeout(timedOut),
+      retry(retryCount)
     );
   }
 
