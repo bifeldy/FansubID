@@ -111,16 +111,16 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     const DISCORD = urls.find(u => u.name === 'discord');
     const ACTIVE = data.active === true ? '1' : '0';
     this.fg = this.fb.group({
-      name: [data.name, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      born: [data.born, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      name: [data.name, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      born: [data.born, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [data.tags, Validators.compose([])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      web: [(WEB?.url || null), Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      web: [(WEB?.url || null), Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),

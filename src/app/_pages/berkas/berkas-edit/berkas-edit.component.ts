@@ -186,13 +186,13 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       }
     }
     this.fg = this.fb.group({
-      name: [data.name, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      projectType_id: [data.project_type_.id, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      name: [data.name, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      description: [data.description, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      projectType_id: [data.project_type_.id, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       anime_id: [(data.anime_?.id || null), Validators.compose([])],
       dorama_id: [(data.dorama_?.id || null), Validators.compose([])],
       fansub_list: this.fb.array([]),
-      image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       download_url: this.fb.array([]),
       private: [data.private, Validators.compose([Validators.required])]
     });
@@ -282,8 +282,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   createDownloadLink(dataName = null, dataUrl = null): any {
     return this.fb.group({
-      name: [dataName, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      url: [dataUrl, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      name: [dataName, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      url: [dataUrl, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
     });
   }
 
@@ -306,7 +306,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   createFansub(dataId = null, dataName = null): any {
     return this.fb.group({
       fansub_id: [dataId, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
-      fansub_name: [dataName, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      fansub_name: [dataName, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
     });
   }
 

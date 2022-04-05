@@ -78,16 +78,16 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      born: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      active: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      born: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      active: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       slug: [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [[], Validators.compose([])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      web: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      facebook: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      discord: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      web: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      facebook: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      discord: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),

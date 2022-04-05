@@ -112,17 +112,17 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   initForm(data): void {
     this.fg = this.fb.group({
-      description: [data.profile_.description, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      description: [data.profile_.description, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       new_password: [
         null,
         Validators.compose([
           Validators.required,
           Validators.minLength(5),
-          Validators.pattern(this.gs.allKeyboardKeysRegex)
+          Validators.pattern(this.gs.englishKeyboardKeysRegex)
         ])
       ],
-      image_photo: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      image_cover: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])]
+      image_photo: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      image_cover: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
     });
     this.image_photo = data.image_url;
     this.image_photo_original = this.image_photo;

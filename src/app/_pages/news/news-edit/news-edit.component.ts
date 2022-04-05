@@ -98,9 +98,9 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     this.image_url = data.image_url;
     this.image_url_original = this.image_url;
     this.fg = this.fb.group({
-      title: [data.title, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      content: [data.content, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      title: [data.title, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      content: [data.content, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       tags: [data.tags, Validators.compose([])],
     });
   }

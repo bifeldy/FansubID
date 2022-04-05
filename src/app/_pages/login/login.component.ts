@@ -66,8 +66,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      userNameOrEmail: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
-      password: [null, [Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]],
+      userNameOrEmail: [null, [Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
+      password: [null, [Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
       rememberMe: [false, []]
     });
   }

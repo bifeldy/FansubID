@@ -58,15 +58,15 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
   initForm(data): void {
     this.fg = this.fb.group({
       kana: [data?.kana, Validators.compose([Validators.required, Validators.pattern(this.gs.japaneseKeyboardKeysRegex)])],
-      romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.allKeyboardKeysRegex)])],
+      romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
     });
     if (data) {
       this.image_url = data?.image_url;
     } else {
-      this.fg.controls.image.setValidators([Validators.required, Validators.pattern(this.gs.allKeyboardKeysRegex)]);
+      this.fg.controls.image.setValidators([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]);
     }
     this.image_url_original = this.image_url;
   }

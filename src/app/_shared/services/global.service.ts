@@ -18,8 +18,9 @@ export class GlobalService {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
+  readonly allKeyboardKeysRegex = /^[\P{Cc}\P{Cn}\P{Cs}]*$/;
   readonly japaneseKeyboardKeysRegex = /[一-龠ぁ-ゔァ-ヴーａ-ｚＡ-Ｚ０-９々〆〤、。]+/u;
-  readonly allKeyboardKeysRegex = /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/;
+  readonly englishKeyboardKeysRegex = /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/;
 
   readonly emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
