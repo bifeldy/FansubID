@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
-import formData from 'form-data';
 import nodemailer from 'nodemailer';
-import Mailgun from 'mailgun.js';
+import request from 'postman-request';
 
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
@@ -122,13 +121,28 @@ export async function yMailSend(mailOpt, callback): Promise<void> {
 
 export async function mgSend(mailBody, callback): Promise<void> {
   try {
-    const mg = new Mailgun(formData).client(environment.mailGun.clientOptions);
-    const mail = await mg.messages.create(environment.mailGun.domain, {
-      from: `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`,
-      ...mailBody
+    const headerAuth = Buffer.from(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`).toString('base64');
+    return request({
+      method: 'POST',
+      uri: `${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`,
+      formData: {
+        from: `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`,
+        ...mailBody
+      },
+        headers: {
+          ...environment.nodeJsXhrHeader,
+          Authorization: `Basic ${headerAuth}`,
+          'Content-Type': 'multipart/form-data'
+        }
+    }, async (error, result, body) => {
+      if (!error) {
+        const mail = JSON.parse(body);
+        log(`[mailGun] 💌`, mail);
+        callback(null, mail);
+      } else {
+        callback(error, null);
+      }
     });
-    log(`[mailGun] 💌`, mail);
-    callback(null, mail);
   } catch (err) {
     console.error(err);
     callback(err, null);
