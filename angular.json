@@ -197,15 +197,16 @@
             "outputPath": "dist/hikki/server",
             "main": "server.ts",
             "tsConfig": "tsconfig.server.json",
+            "sourceMap": true,
+            "optimization": false,
+            "bundleDependencies": false,
             "externalDependencies": [
               "@discordjs/opus",
               "discord.js",
               "ffmpeg-static",
               "pg",
               "ytdl-core"
-            ],
-            "sourceMap": true,
-            "optimization": false
+            ]
           },
           "configurations": {
             "production": {
@@ -222,6 +223,7 @@
               ],
               "sourceMap": false,
               "optimization": true,
+              "bundleDependencies": true,
               "externalDependencies": [
                 "@discordjs/opus",
                 "discord.js",

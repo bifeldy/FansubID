@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import nodemailer from 'nodemailer';
-import request from 'postman-request';
+
+import childProcess from 'child_process';
 
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
@@ -8,6 +9,8 @@ import { google } from 'googleapis';
 import { environment } from '../../environments/api/environment';
 
 import { log } from '../helpers/logger';
+
+import { serverGetMailProvider } from '../settings';
 
 const googleAuthUrl = environment.googleAuthUrl;
 const gcp = environment.gCloudPlatform;
@@ -41,12 +44,20 @@ export async function gDrive(callback): Promise<void> {
   try {
     const auth = await gAuth(gcp.gDrive.refreshToken);
     const drive = google.drive({ version: 'v3', auth });
-    log(`[gDrive] ⛅`, drive);
+    log(`[GDRIVE] ⛅`, drive);
     callback(null, drive);
   } catch (err) {
     console.error(err);
     callback(err, null);
   }
+}
+
+export function isRegisterOpened(): boolean {
+  const mailProvider = serverGetMailProvider();
+  for (const key in mailProvider) {
+    if (mailProvider[key]) return true;
+  }
+  return false;
 }
 
 // {
@@ -55,8 +66,16 @@ export async function gDrive(callback): Promise<void> {
 //   text: '',
 //   html: ''
 // }
-export async function gMailSend(mailOpt, callback): Promise<void> {
+export async function mailSend(userData) {
+  const mailProvider = serverGetMailProvider();
+  if(mailProvider.mlgun) return mlGunSend(userData);
+  if(mailProvider.yahoo) return yMailSend(userData);
+  if(mailProvider.gmail) return gMailSend(userData);
+};
+
+async function gMailSend(userData) {
   try {
+    const mailOpt = composeRegisterMail(userData);
     const auth = await gAuth(gcp.gMail.refreshToken);
     const transporter = nodemailer.createTransport({
       host: gcp.gMail.host,
@@ -80,16 +99,15 @@ export async function gMailSend(mailOpt, callback): Promise<void> {
       html: mailOpt.html,
       text: mailOpt.text
     });
-    log(`[gMail] 💌`, mail);
-    callback(null, mail);
+    log(`[GMAIL] 💌`, mail);
   } catch (err) {
     console.error(err);
-    callback(err, null);
   }
 }
 
-export async function yMailSend(mailOpt, callback): Promise<void> {
+async function yMailSend(userData) {
   try {
+    const mailOpt = composeRegisterMail(userData);
     const transporter = nodemailer.createTransport({
       host: environment.yMail.host,
       port: environment.yMail.port,
@@ -111,50 +129,37 @@ export async function yMailSend(mailOpt, callback): Promise<void> {
       html: mailOpt.html,
       text: mailOpt.text
     });
-    log(`[yMail] 💌`, mail);
-    callback(null, mail);
+    log(`[YMAIL] 💌`, mail);
   } catch (err) {
     console.error(err);
-    callback(err, null);
   }
 }
 
-export async function mgSend(mailBody, callback): Promise<void> {
+async function mlGunSend(userData) {
   try {
-    const headerAuth = Buffer.from(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`).toString('base64');
-    return request({
-      method: 'POST',
-      uri: `${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`,
-      formData: {
-        from: `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`,
-        ...mailBody
-      },
-        headers: {
-          ...environment.nodeJsXhrHeader,
-          Authorization: `Basic ${headerAuth}`,
-          'Content-Type': 'multipart/form-data'
-        }
-    }, async (error, result, body) => {
-      if (!error) {
-        const mail = JSON.parse(body);
-        log(`[mailGun] 💌`, mail);
-        callback(null, mail);
-      } else {
-        callback(error, null);
-      }
-    });
+    const mailOpt = composeRegisterMail(userData);
+    const shellCommand = `
+      curl ${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages -s
+      --user '${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}'
+      -F from='${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>'
+      -F to='${mailOpt.to}'
+      -F subject='${mailOpt.subject}'
+      -F html='${mailOpt.html}'
+    `.replace(/\s\s+/g, ' ').trim();
+    console.log(`[EXECUTE_CURL] ⚡`, shellCommand);
+    const stdOut = childProcess.execSync(shellCommand).toString();
+    console.log(`[MAILGUN_SUCCESS] 💌`, stdOut);
   } catch (err) {
     console.error(err);
-    callback(err, null);
   }
 }
 
-export function composeRegister(id: string, email:string, username: string, fullName: string, acToken: string): any {
-  return {
-    to: email,
+function composeRegisterMail(user: any): any {
+  const result = {
+    to: user.email,
     subject: `${environment.siteName} - Aktivasi Akun`,
     html: `
-      <h1>${fullName} (<i>${username}</i>).</h1>
+      <h1>${user.nama} (<i>${user.username}</i>).</h1>
       <h2>
         <a href="${environment.baseUrl}">
           ${environment.baseUrl}
@@ -166,28 +171,31 @@ export function composeRegister(id: string, email:string, username: string, full
         Untuk mengaktifkan akun, silahkan klik link berikut ini.
       </p>
       <p>
-        <a href="${environment.baseUrl}/api/aktivasi?token=${acToken}">
-          ${environment.baseUrl}/api/aktivasi?token=${acToken}
+        <a href="${environment.baseUrl}/api/aktivasi?token=${user.activation_token}">
+          ${environment.baseUrl}/api/aktivasi?token=${user.activation_token}
         </a>
       </p>
       <p>Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser anda.</p>
       <p>(つ≧▽≦)つ</p>
       <p>Terima kasih dan selamat datang.</p>
       <p>(っ.❛ ᴗ ❛.)っ</p>
-      <p>.: ${id} :.</p>
+      <p>.: ${user.id} :.</p>
     `,
-    text: `
-      ${fullName} (${username}).
-      ${environment.baseUrl}
-      (づ￣ ³￣)づ
-      Hai, terima kasih telah mendaftar di ${environment.siteName}.
-      Untuk mengaktifkan akun, silahkan klik link berikut ini.
-      ${environment.baseUrl}/api/aktivasi?token=${acToken}
-      Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser anda.
-      (つ≧▽≦)つ
-      Terima kasih dan selamat datang.
-      (っ.❛ ᴗ ❛.)っ
-      .: ${id} :.
-    `
+    // text: `
+    //   ${user.nama} (${user.username}).
+    //   ${environment.baseUrl}
+    //   (づ￣ ³￣)づ
+    //   Hai, terima kasih telah mendaftar di ${environment.siteName}.
+    //   Untuk mengaktifkan akun, silahkan klik link berikut ini.
+    //   ${environment.baseUrl}/api/aktivasi?token=${user.activation_token}
+    //   Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser anda.
+    //   (つ≧▽≦)つ
+    //   Terima kasih dan selamat datang.
+    //   (っ.❛ ᴗ ❛.)っ
+    //   .: ${user.id} :.
+    // `
   };
+  result.html = result.html.replace(/\s\s+/g, ' ').trim();
+  // result.text = result.text.replace(/\s\s+/g, ' ');
+  return result;
 }

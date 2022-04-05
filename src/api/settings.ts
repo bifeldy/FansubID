@@ -5,7 +5,12 @@ import { log } from './helpers/logger';
 let settings: ServerInfo = {
   isMaintenance: false,
   winboxOpenLink: true,
-  discordNotification: true
+  discordNotification: true,
+  mailProvider: {
+    mlgun: true,
+    yahoo: false,
+    gmail: false
+  }
 };
 
 export function serverGet(): ServerInfo {
@@ -42,4 +47,13 @@ export function serverGetDiscordNotification(): boolean {
 export function serverSetDiscordNotification(discordNotification: boolean): void {
   log('[SERVER_SET_DISCORD] 👀', discordNotification);
   settings.discordNotification = discordNotification;
+}
+
+export function serverGetMailProvider(): any {
+  return settings.mailProvider;
+}
+
+export function serverSetMailProvider(mailProvider: any): void {
+  log('[SERVER_SET_MAIL_PROVIDER] 👀', mailProvider);
+  settings.mailProvider = mailProvider;
 }

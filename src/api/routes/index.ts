@@ -22,6 +22,8 @@ import { isAuthorized, registerModule, loginModule, logoutModule, activationModu
 import { CredentialEncode, JwtView, JwtEncrypt } from '../helpers/crypto';
 import { log, reqHeaderBodyCleanUp } from '../helpers/logger';
 
+import { mailSend } from '../programs/googleApp';
+
 import { serverGetMaintenance } from '../settings';
 
 // Child router file
@@ -225,11 +227,20 @@ router.use('/torrent', torrentRouter);
 
 // POST `/api/register`
 router.post('/register', registerModule, async (req: UserRequest, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(403).json({
+      info: `😫 403 - Register API :: Tidak Ada Layanan 💩`,
+      result: {
+        message: `Pendaftaran Sedang Ditutup.`
+      }
+    });
+  }
+  mailSend(req.user);
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {
       id: req.user.id,
-      title: 'Aktivasi Akun Dalam 5 Menit',
+      title: 'Aktivasi Akun',
       message: `
         Silahkan Periksa Email Untuk Menyelesaikan Pendaftaran. <br />
         Petunjuk Sudah Dikirimkan Ke '<span class="text-danger">${req.user.email}</span>'. <br />
@@ -241,6 +252,7 @@ router.post('/register', registerModule, async (req: UserRequest, res: Response,
 
 // POST `/api/aktivasi`
 router.post('/aktivasi', reSendActivation, async (req: UserRequest, res: Response, next: NextFunction) => {
+  mailSend(req.user);
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Kirim Ulang Aktivasi 🤩',
     result: {

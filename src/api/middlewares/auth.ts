@@ -16,11 +16,14 @@ import { Registration } from '../entities/Registration';
 import { JwtView, CredentialEncode, CredentialDecode, hashPassword, JwtEncrypt, JwtDecrypt } from '../helpers/crypto';
 
 import { disconnectRoom } from '../programs/socketWeb';
-import { composeRegister, mgSend } from '../programs/googleApp';
+import { isRegisterOpened } from '../programs/googleApp';
 
 export async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
-    if (
+    if (!isRegisterOpened()) {
+      req.user = null;
+      return next();
+    } else if (
       'username' in req.body &&
       'name' in req.body &&
       'email' in req.body &&
@@ -34,13 +37,6 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
       `.trim(), async (e1, r1, b1) => {
         b1 = JSON.parse(b1);
         if (b1 && b1.success) {
-          const userRepo = getRepository(User);
-          const selectedUser = await userRepo.find({
-            where: [
-              { username: ILike(req.body.username) },
-              { email: ILike(req.body.email) }
-            ]
-          });
           const registrationRepo = getRepository(Registration);
           const selectedRegistration = await registrationRepo.find({
             where: [
@@ -48,8 +44,18 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
               { email: ILike(req.body.email) }
             ]
           });
-          const penggunaDuplikat = [...selectedUser, ...selectedRegistration];
-          if (penggunaDuplikat.length === 0) {
+          if (selectedRegistration.length > 0) {
+            req.user = (selectedRegistration as any);
+            return next();
+          }
+          const userRepo = getRepository(User);
+          const selectedUser = await userRepo.find({
+            where: [
+              { username: ILike(req.body.username) },
+              { email: ILike(req.body.email) }
+            ]
+          });
+          if (selectedUser.length === 0) {
             const result: any = {};
             req.body.username = req.body.username.replace(/\s/g, '').replace(/[^a-z0-9]/g, '');
             if (req.body.username.length < 8) {
@@ -86,19 +92,10 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
                 console.error(err);
               }
             }, 3 * 60 * 1000);
-            const mailOpt = composeRegister(
-              penggunaSave.id,
-              penggunaSave.email,
-              penggunaSave.username,
-              penggunaSave.nama,
-              penggunaSave.activation_token
-            );
-            return mgSend(mailOpt, (gAppError, m) => {
-              return next();
-            });
+            return next();
           } else {
             const result: any = {};
-            for (const pD of penggunaDuplikat) {
+            for (const pD of selectedUser) {
               if (pD.username === req.body.username) {
                 result.username = `${pD.username} Sudah Terpakai`;
               }
@@ -189,22 +186,13 @@ export async function reSendActivation(req: UserRequest, res: Response, next: Ne
       ]
     });
     req.user = (selectedRegistration as any);
-    const mailOpt = composeRegister(
-      selectedRegistration.id,
-      selectedRegistration.email,
-      selectedRegistration.username,
-      selectedRegistration.nama,
-      selectedRegistration.activation_token
-    );
-    return mgSend(mailOpt, (gAppError, m) => {
-      return next();
-    });
+    return next();
   } catch (err) {
     console.error(err);
-    return res.status(400).json({
-      info: '🙄 400 - Authentication API :: Kirim Ulang Aktivasi Gagal 😪',
+    return res.status(404).json({
+      info: '🤔 404 - Authentication API :: Pengguna Tidak Ditemukan 😷',
       result: {
-        message: 'Data Tidak Lengkap!'
+        message: 'Silahkan Coba Daftar Kembali!'
       }
     });
   }
