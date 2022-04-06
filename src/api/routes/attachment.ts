@@ -16,7 +16,7 @@ import { User } from '../entities/User';
 import { Attachment } from '../entities/Attachment';
 import { TempAttachment } from '../entities/TempAttachment';
 
-import { gDrive } from '../programs/googleApp';
+import { gDrive } from '../programs/bifeldyApp';
 
 import { isAuthorized } from '../middlewares/auth';
 

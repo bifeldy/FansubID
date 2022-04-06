@@ -199,7 +199,7 @@
             "tsConfig": "tsconfig.server.json",
             "sourceMap": true,
             "optimization": false,
-            "bundleDependencies": false,
+            "bundleDependencies": true,
             "externalDependencies": [
               "@discordjs/opus",
               "discord.js",
@@ -255,7 +255,18 @@
             "serverTarget": "hikki:server:production",
             "routes": [
               "/",
-              "/about"
+              "/about",
+              "/anime",
+              "/berkas",
+              "/dorama",
+              "/error",
+              "/fansub",
+              "/home",
+              "/login",
+              "/news",
+              "/nihongo",
+              "/register",
+              "/torrent"
             ]
           },
           "configurations": {

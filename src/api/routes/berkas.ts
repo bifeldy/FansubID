@@ -22,7 +22,7 @@ import { TempAttachment } from '../entities/TempAttachment';
 
 import { Role } from '../../app/_shared/models/Role';
 
-import { gDrive } from '../programs/googleApp';
+import { gDrive } from '../programs/bifeldyApp';
 
 import { isLogin, isAuthorized } from '../middlewares/auth';
 

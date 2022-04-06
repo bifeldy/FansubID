@@ -6,54 +6,34 @@ let settings: ServerInfo = {
   isMaintenance: false,
   winboxOpenLink: true,
   discordNotification: true,
-  mailProvider: {
-    mlgun: true,
-    yahoo: false,
-    gmail: false
-  }
+  openForRegister: true
 };
 
 export function serverGet(): ServerInfo {
   return settings;
 }
 
-export function serverSet(server): void {
-  log('[SERVER_SET] 👀', server);
-  settings = server;
+export function serverSet(data): void {
+  for (const key in data) {
+    if (settings.hasOwnProperty(key)) {
+      log(`[SERVER_SET_${key.toUpperCase()}] 👀`, data[key]);
+      settings[key] = data[key];
+    }
+  }
 }
 
 export function serverGetMaintenance(): boolean {
   return settings.isMaintenance;
 }
 
-export function serverSetMaintenance(isMaintenance: boolean): void {
-  log('[SERVER_SET_MAINTENANCE] 👀', isMaintenance);
-  settings.isMaintenance = isMaintenance;
-}
-
 export function serverGetWinboxOpenLink(): boolean {
   return settings.winboxOpenLink;
-}
-
-export function serverSetWinboxOpenLink(winboxOpenLink: boolean): void {
-  log('[SERVER_SET_WINBOX] 👀', winboxOpenLink);
-  settings.winboxOpenLink = winboxOpenLink;
 }
 
 export function serverGetDiscordNotification(): boolean {
   return settings.discordNotification;
 }
 
-export function serverSetDiscordNotification(discordNotification: boolean): void {
-  log('[SERVER_SET_DISCORD] 👀', discordNotification);
-  settings.discordNotification = discordNotification;
-}
-
-export function serverGetMailProvider(): any {
-  return settings.mailProvider;
-}
-
-export function serverSetMailProvider(mailProvider: any): void {
-  log('[SERVER_SET_MAIL_PROVIDER] 👀', mailProvider);
-  settings.mailProvider = mailProvider;
+export function serverGetOpenForRegister(): any {
+  return settings.openForRegister;
 }

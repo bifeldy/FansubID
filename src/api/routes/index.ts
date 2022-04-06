@@ -22,7 +22,7 @@ import { isAuthorized, registerModule, loginModule, logoutModule, activationModu
 import { CredentialEncode, JwtView, JwtEncrypt } from '../helpers/crypto';
 import { log, reqHeaderBodyCleanUp } from '../helpers/logger';
 
-import { mailSend } from '../programs/googleApp';
+import { mailSend, composeRegisterMail } from '../programs/bifeldyApp';
 
 import { serverGetMaintenance } from '../settings';
 
@@ -235,7 +235,7 @@ router.post('/register', registerModule, async (req: UserRequest, res: Response,
       }
     });
   }
-  mailSend(req.user);
+  mailSend(composeRegisterMail(req.user));
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Registrasi Yeay 🤩',
     result: {
@@ -252,7 +252,7 @@ router.post('/register', registerModule, async (req: UserRequest, res: Response,
 
 // POST `/api/aktivasi`
 router.post('/aktivasi', reSendActivation, async (req: UserRequest, res: Response, next: NextFunction) => {
-  mailSend(req.user);
+  mailSend(composeRegisterMail(req.user));
   return res.status(200).json({
     info: '😚 200 - Register API :: Berhasil Kirim Ulang Aktivasi 🤩',
     result: {

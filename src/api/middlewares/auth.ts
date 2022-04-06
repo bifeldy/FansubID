@@ -16,11 +16,11 @@ import { Registration } from '../entities/Registration';
 import { JwtView, CredentialEncode, CredentialDecode, hashPassword, JwtEncrypt, JwtDecrypt } from '../helpers/crypto';
 
 import { disconnectRoom } from '../programs/socketWeb';
-import { isRegisterOpened } from '../programs/googleApp';
+import { serverGetOpenForRegister } from '../settings';
 
 export async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
   try {
-    if (!isRegisterOpened()) {
+    if (!serverGetOpenForRegister()) {
       req.user = null;
       return next();
     } else if (
@@ -44,10 +44,6 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
               { email: ILike(req.body.email) }
             ]
           });
-          if (selectedRegistration.length > 0) {
-            req.user = (selectedRegistration as any);
-            return next();
-          }
           const userRepo = getRepository(User);
           const selectedUser = await userRepo.find({
             where: [
@@ -55,7 +51,8 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
               { email: ILike(req.body.email) }
             ]
           });
-          if (selectedUser.length === 0) {
+          const userNotAvailable = [...selectedRegistration, ...selectedUser];
+          if (userNotAvailable.length === 0) {
             const result: any = {};
             req.body.username = req.body.username.replace(/\s/g, '').replace(/[^a-z0-9]/g, '');
             if (req.body.username.length < 8) {
@@ -95,12 +92,12 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
             return next();
           } else {
             const result: any = {};
-            for (const pD of selectedUser) {
-              if (pD.username === req.body.username) {
-                result.username = `${pD.username} Sudah Terpakai`;
+            for (const user of userNotAvailable) {
+              if (user.username === req.body.username) {
+                result.username = `${user.username} Sudah Terpakai`;
               }
-              if (pD.email === req.body.email) {
-                result.email = `${pD.email} Sudah Terpakai`;
+              if (user.email === req.body.email) {
+                result.email = `${user.email} Sudah Terpakai`;
               }
             }
             return res.status(400).json({

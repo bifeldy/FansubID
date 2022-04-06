@@ -24,7 +24,7 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
     public gs: GlobalService,
     public as: AuthService,
     public adm: AdminService,
-    private ss: StatsServerService
+    public ss: StatsServerService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
