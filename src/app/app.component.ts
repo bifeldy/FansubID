@@ -27,8 +27,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   localStorageAturanTatibKeyName = `${environment.siteName}_AturanTatib`;
 
-  @HostListener('contextmenu', ['$event']) rightClick;
-  @HostListener('document:click', ['$event']) documentClicked;
+  @HostListener('window:contextmenu', ['$event']) windowRightClick;
+  @HostListener('window:click', ['$event']) windowLeftClick;
   @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
 
   @ViewChild('leftSideNav', { static: true }) leftSideNav: ElementRef;
@@ -151,8 +151,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     if (this.gs.isBrowser) {
       this.checkStorage();
-      this.rightClick = this.onRightClick;
-      this.documentClicked = this.onDocumentClicked;
+      this.windowRightClick = this.onWindowRightClick;
+      this.windowLeftClick = this.onWindowLeftClick;
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
       const aturanTatib = this.ls.getItem(this.localStorageAturanTatibKeyName) === 'true';
       if (!aturanTatib) {
@@ -196,11 +196,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bs.clear();
   }
 
-  onRightClick(ev): any {
+  onWindowRightClick(ev): any {
     ev.preventDefault();
   }
 
-  onDocumentClicked(ev): boolean {
+  onWindowLeftClick(ev): boolean {
     this.gs.log('[MOUSE_CLICK]', ev);
     const e = ev || window.event;
     const el = e.target || e.srcElement;
