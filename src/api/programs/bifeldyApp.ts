@@ -1,7 +1,5 @@
 import fetch from 'node-fetch';
 
-import childProcess from 'child_process';
-
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 
@@ -51,21 +49,25 @@ export async function gDrive(callback): Promise<void> {
 
 //
 // https://app.eu.mailgun.com/app/sending/domains/hikki.id/templates
+// https://app.eu.mailgun.com/app/sending/domains/hikki.id/logs > Actions > Details > MIME
 //
-export function mailSend(mailBody) {
+export async function mailSend(mailBody) {
   try {
-    const shellCommand = `
-      curl "${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages" -s
-      --user "${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}"
-      -F from="${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>"
-      -F to="${mailBody.to}"
-      -F subject="${mailBody.subject}"
-      -F template="${mailBody.template}"
-      -F h:X-Mailgun-Variables="${mailBody.variables}"
-    `.replace(/\s\s+/g, ' ').trim();
-    log(`[EXECUTE_CURL] ⚡`, shellCommand);
-    const stdOut = childProcess.execSync(shellCommand).toString();
-    log(`[MAILGUN_SUCCESS] 💌`, stdOut);
+    const formData = new URLSearchParams();
+    formData.append('from', `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`);
+    formData.append('to', mailBody.to);
+    formData.append('subject', mailBody.subject);
+    formData.append('template', mailBody.template);
+    formData.append('h:X-Mailgun-Variables', JSON.stringify(mailBody.variables));
+    const res = await fetch(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Authorization': `Basic ${Buffer.from(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`).toString('base64')}`,
+      }
+    });
+    const result = await res.json();
+    log(`[MAILGUN_SUCCESS] 💌`, result);
   } catch (err) {
     console.error(err);
   }
@@ -80,14 +82,14 @@ export function composeRegisterMail(user: any): any {
     to: user.email,
     subject: `${environment.siteName} | Aktivasi Akun`,
     template: 'register',
-    variables: `{
-      \\"nama\\": \\"${user.nama}\\",
-      \\"username\\": \\"${user.username}\\",
-      \\"baseUrl\\": \\"${environment.baseUrl}\\",
-      \\"siteName\\": \\"${environment.siteName}\\",
-      \\"activationToken\\": \\"${user.activation_token}\\",
-      \\"id\\": \\"${user.id}\\"
-    }`
+    variables: {
+      nama: user.nama,
+      username: user.username,
+      baseUrl: environment.baseUrl,
+      siteName: environment.siteName,
+      activationToken: user.activation_token,
+      id: user.id,
+    }
     // html: `
     //   <h1>${user.nama} (<i>${user.username}</i>).</h1>
     //   <h2>
@@ -127,6 +129,5 @@ export function composeRegisterMail(user: any): any {
   };
   // result.html = result.html.replace(/\s\s+/g, ' ').trim();
   // result.text = result.text.replace(/\s\s+/g, ' ').trim();
-  result.variables = result.variables.replace(/\s\s+/g, ' ').trim();
   return result;
 }

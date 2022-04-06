@@ -231,7 +231,7 @@ router.post('/register', registerModule, async (req: UserRequest, res: Response,
     return res.status(403).json({
       info: `😫 403 - Register API :: Tidak Ada Layanan 💩`,
       result: {
-        message: `Pendaftaran Sedang Ditutup.`
+        message: `Pendaftaran Sedang Ditutup!`
       }
     });
   }

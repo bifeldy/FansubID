@@ -62,6 +62,7 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
               result.email = 'Email Tidak Valid';
             }
             if (Object.keys(result).length > 0) {
+              result.message = 'Akun Tidak Dapat Digunakan!';
               return res.status(400).json({
                 info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
                 result
