@@ -25,8 +25,8 @@ export class QuizComponent implements OnInit, OnDestroy {
   subsDialog = null;
 
   scoreOrder = (a: KeyValue<number, any>, b: KeyValue<number, any>): number => {
-    return a.value.quiz.score > b.value.quiz.score ? -1 : (
-      b.value.quiz.score > a.value.quiz.score ? 1 : 0
+    return a.value.points > b.value.points ? -1 : (
+      b.value.points > a.value.points ? 1 : 0
     );
   }
 

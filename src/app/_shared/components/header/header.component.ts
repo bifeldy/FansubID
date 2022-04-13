@@ -20,6 +20,10 @@ export class HeaderComponent implements OnInit {
 
   localStorageDarkModeKeyName = `${environment.siteName}_DarkMode`;
 
+  myPoints = 0;
+
+  subsGlobalRoom = null;
+
   constructor(
     private lms: LeftMenuService,
     private rps: RightPanelService,
@@ -43,6 +47,11 @@ export class HeaderComponent implements OnInit {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
         this.gs.isDarkMode = event.matches;
         this.toggleDarkTheme(true);
+      });
+      this.subsGlobalRoom = this.ss.globalRoom.subscribe({
+        next: global => {
+          this.myPoints = global?.member_list[this.ss.mySocket.id]?.points || 0;
+        }
       });
     }
   }

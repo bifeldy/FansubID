@@ -81,12 +81,69 @@ function getRoomInfo(io: Server, roomId: string): RoomInfoResponse {
   };
 }
 
-function increasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut): void {
-  room[data.roomId][socket.id].quiz.score++;
+function calculatePoints(data: RoomInfoInOut): number {
+  let points = 1;
+  if (quiz[data.roomId].question.jlpt == 0) {
+    points = 64;
+  } else if (quiz[data.roomId].question.jlpt) {
+    // n5 = 2, n4 = 4, n3 = 8, n2 = 16, n1 = 32
+    const totalPangkat = (Math.abs(quiz[data.roomId].question.jlpt - 5) + 1);
+    let hasilPangkatDua = 1;
+    for (let i = 0; i < totalPangkat; i++) {
+      hasilPangkatDua = hasilPangkatDua * 2;
+    }
+    points = hasilPangkatDua;
+  } else {
+    points = 1;
+  }
+  return points;
 }
 
-function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut): void {
-  room[data.roomId][socket.id].quiz.score--;
+async function increasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut) {
+  const userRepo = getRepository(User);
+  const selectedUser = await userRepo.findOneOrFail({
+    where: [
+      { id: Equal(data.user.id) }
+    ],
+    relations: ['profile_']
+  });
+  const profileRepo = getRepository(Profile);
+  const selectedProfile = await profileRepo.findOneOrFail({
+    where: [
+      { id: Equal(selectedUser.profile_.id) }
+    ]
+  });
+  let points = calculatePoints(data);
+  selectedProfile.points += points;
+  const resSaveProfile = await profileRepo.save(selectedProfile);
+  room[data.roomId][socket.id].points = resSaveProfile.points;
+  return points;
+}
+
+async function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut) {
+  const userRepo = getRepository(User);
+  const selectedUser = await userRepo.findOneOrFail({
+    where: [
+      { id: Equal(data.user.id) }
+    ],
+    relations: ['profile_']
+  });
+  const profileRepo = getRepository(Profile);
+  const selectedProfile = await profileRepo.findOneOrFail({
+    where: [
+      { id: Equal(selectedUser.profile_.id) }
+    ]
+  });
+  let points = calculatePoints(data);
+  if (selectedProfile.points > 0) {
+    selectedProfile.points += (points * -1);
+    if (selectedProfile.points <= 0) {
+      selectedProfile.points = 0;
+    }
+    const resSaveProfile = await profileRepo.save(selectedProfile);
+    room[data.roomId][socket.id].points = resSaveProfile.points;
+  }
+  return (points * -1);
 }
 
 export async function checkMultipleConnection(io: Server, socket: Socket, data: RoomInfoInOut) {
@@ -141,17 +198,24 @@ export async function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInf
     } catch (err) {
       console.error(err);
     }
-    if (data.user && data.newRoom.startsWith('/nihongo/')) {
-      room[data.newRoom][socket.id].quiz = {
-        score: 0
-      };
-      if (!quiz[data.newRoom]) {
-        await getNewQuestion(data.newRoom);
-      }
-      socket.emit('quiz-question', {
-        room_id: data.newRoom,
-        ...quiz[data.newRoom]
+    if (data.user) {
+      const userRepo = getRepository(User);
+      const selectedUser = await userRepo.findOneOrFail({
+        where: [
+          { id: Equal(data.user.id) }
+        ],
+        relations: ['profile_']
       });
+      room[data.newRoom][socket.id].points = selectedUser.profile_.points;
+      if (data.newRoom.startsWith('/nihongo/')) {
+        if (!quiz[data.newRoom]) {
+          await getNewQuestion(data.newRoom);
+        }
+        socket.emit('quiz-question', {
+          room_id: data.newRoom,
+          ...quiz[data.newRoom]
+        });
+      }
     }
     io.to(data.newRoom).emit('room-info', getRoomInfo(io, data.newRoom));
   }
@@ -480,12 +544,11 @@ export async function socketBot(io: Server, socket: Socket) {
         data.user = decoded.user;
         if (quiz[data.roomId]) {
           if (quiz[data.roomId].randomInteger === data.randomInteger) {
-            let correctAnswer = false;
+            let answer = 0;
             if (Object.entries(quiz[data.roomId].question).toString() === Object.entries(data.answer).toString()) {
-              increasePlayerPoint(io, socket, data);
-              correctAnswer = true;
+              answer = await increasePlayerPoint(io, socket, data);
             } else {
-              decreasePlayerPoint(io, socket, data);
+              answer = await decreasePlayerPoint(io, socket, data);
             }
             await getNewQuestion(data.roomId);
             io.to(data.roomId).emit('room-info', getRoomInfo(io, data.roomId));
@@ -494,7 +557,7 @@ export async function socketBot(io: Server, socket: Socket) {
               sender: {
                 username: `[📢-LOG]`
               },
-              message: `'${data.user.username}' Menjawab ${correctAnswer ? 'Benar (+1)' : 'Salah (-1)'}`
+              message: `'${data.user.username}' Menjawab ${answer > 0 ? 'Benar ' : 'Salah '} (${answer})`
             });
             io.to(data.roomId).emit('quiz-question', {
               room_id: data.roomId,
