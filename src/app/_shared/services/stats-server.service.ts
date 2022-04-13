@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
@@ -56,6 +57,7 @@ export class StatsServerService {
 
   constructor(
     private as: AuthService,
+    private router: Router,
     public gs: GlobalService,
     private notif: NotificationsService,
     private lms: LeftMenuService,
@@ -64,7 +66,6 @@ export class StatsServerService {
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io(environment.baseUrl, {
-        reconnection: false,
         extraHeaders: {
           token: this.as.jwtToken
         }
@@ -119,6 +120,10 @@ export class StatsServerService {
     this.mySocket.on('connect', () => {
       this.gs.log('[SOCKET_CONNECTED]', this.mySocket.id);
       this.pingPong();
+      this.notif.removeNotif('HIKKI_SOCKET_DISCONNECTED');
+      setTimeout(() => {
+        this.socketLeaveAndJoinNewRoom(null, this.router.url);
+      }, 1234);
       this.intervalPingPong = setInterval(() => {
         this.pingPong();
       }, 10000);
@@ -130,7 +135,7 @@ export class StatsServerService {
         'HIKKI_SOCKET_DISCONNECTED',
         'warning',
         'Sambungan Terputus',
-        'Tidak dapat terhubung dengan <i>Server</i> melalui <i>WebSocket</i>, silahkan <i>Refresh</i> halaman!',
+        'Tidak dapat terhubung dengan <i>Server</i> melalui <i>WebSocket</i> !!',
         false
       );
       if (this.intervalPingPong) {
@@ -141,7 +146,7 @@ export class StatsServerService {
       this.gs.log('[SOCKET_VISITOR]', this.visitor);
       this.visitor = visitors;
     });
-    this.mySocket.on('receive-logout', reason => {
+    this.mySocket.on('force-logout', reason => {
       this.gs.log('[SOCKET_EXIT]', reason);
       this.toast.info(reason, 'Keluar Paksa!');
       this.as.logout();
@@ -211,9 +216,13 @@ export class StatsServerService {
         this.currentRoomSubject.next(roomInfo);
       }
     });
-    this.mySocket.on('multiple-connection', multipleConnection => {
+    this.mySocket.on('multiple-connection', (multipleConnection, callback) => {
       this.gs.log('[SOCKET_MULTIPLE-CONNECTION]', multipleConnection);
       this.toast.warning('Sesi lain telah aktif!', 'Koneksi Duplikat');
+      this.mySocket.io.reconnection(false);
+      if (callback) {
+        callback();
+      }
     });
     this.mySocket.on('quiz-question', quizQuestion => {
       this.gs.log('[SOCKET_QUIZ]', quizQuestion);

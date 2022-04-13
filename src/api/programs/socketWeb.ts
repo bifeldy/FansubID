@@ -101,8 +101,9 @@ export async function checkMultipleConnection(io: Server, socket: Socket, data: 
       }
     }
     for (const id of multipleSocketId) {
-      io.sockets.sockets.get(id).emit('multiple-connection', [...multipleSocketId, socket.id]);
-      io.sockets.sockets.get(id).disconnect(true);
+      io.sockets.sockets.get(id).emit('multiple-connection', [...multipleSocketId, socket.id], () => {
+        io.sockets.sockets.get(id).disconnect(true);
+      });
     }
   }
 }
@@ -114,41 +115,45 @@ export async function disconnectRoom(io: Server, socket: Socket) {
   }
 }
 
-export function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut): void {
+export async function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
   if (data.oldRoom) {
     if (!room[data.oldRoom]) {
       room[data.oldRoom] = {};
     }
     delete room[data.oldRoom][socket.id];
-    socket.leave(data.oldRoom);
+    try {
+      await socket.leave(data.oldRoom);
+    } catch (err) {
+      console.error(err);
+    }
     io.to(data.oldRoom).emit('room-info', getRoomInfo(io, data.oldRoom));
   }
 }
 
 export async function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
-  try {
-    if (data.newRoom) {
-      if (!room[data.newRoom]) {
-        room[data.newRoom] = {};
-      }
-      room[data.newRoom][socket.id] = data.user;
-      socket.join(data.newRoom);
-      if (data.user && data.newRoom.startsWith('/nihongo/')) {
-        room[data.newRoom][socket.id].quiz = {
-          score: 0
-        };
-        if (!quiz[data.newRoom]) {
-          await getNewQuestion(data.newRoom);
-        }
-        socket.emit('quiz-question', {
-          room_id: data.newRoom,
-          ...quiz[data.newRoom]
-        });
-      }
-      io.to(data.newRoom).emit('room-info', getRoomInfo(io, data.newRoom));
+  if (data.newRoom) {
+    if (!room[data.newRoom]) {
+      room[data.newRoom] = {};
     }
-  } catch (error) {
-    console.error(error);
+    room[data.newRoom][socket.id] = data.user;
+    try {
+      await socket.join(data.newRoom);
+    } catch (err) {
+      console.error(err);
+    }
+    if (data.user && data.newRoom.startsWith('/nihongo/')) {
+      room[data.newRoom][socket.id].quiz = {
+        score: 0
+      };
+      if (!quiz[data.newRoom]) {
+        await getNewQuestion(data.newRoom);
+      }
+      socket.emit('quiz-question', {
+        room_id: data.newRoom,
+        ...quiz[data.newRoom]
+      });
+    }
+    io.to(data.newRoom).emit('room-info', getRoomInfo(io, data.newRoom));
   }
 }
 
@@ -417,9 +422,9 @@ export async function socketBot(io: Server, socket: Socket) {
         data.user = null;
       }
       leaveRoom(io, socket, data);
-      await joinOrUpdateRoom(io, socket, data);
-      await joinOrUpdateRoom(io, socket, { user: data.user, newRoom: 'GLOBAL_PUBLIK' });
-      checkMultipleConnection(io, socket, data);
+      joinOrUpdateRoom(io, socket, data);
+      joinOrUpdateRoom(io, socket, { user: data.user, newRoom: 'GLOBAL_PUBLIK' });
+      await checkMultipleConnection(io, socket, data);
     } catch (error) {
       console.error(error);
     }
@@ -429,8 +434,29 @@ export async function socketBot(io: Server, socket: Socket) {
       callback(getRoomInfo(io, data.roomId));
     }
   });
-  socket.on('send-logout', async (data: any) => {
-    io.to(`Weeb-${data.username}`).volatile.emit('receive-logout', data.reason);
+  socket.on('force-logout', async (data: any) => {
+    try {
+      if (data.jwtToken) {
+        const decoded = JwtDecrypt(data.jwtToken);
+        data.user = decoded.user;
+        if (data.user.role === Role.ADMIN || data.user.role === Role.MODERATOR) {
+          const multipleSocketId = [];
+          for (const socketId of Object.keys(room['GLOBAL_PUBLIK'])) {
+            if (
+              socketId !== socket.id && room['GLOBAL_PUBLIK'][socketId] &&
+              room['GLOBAL_PUBLIK'][socketId].username === data.username
+            ) {
+              multipleSocketId.push(socketId);
+            }
+          }
+          for (const id of multipleSocketId) {
+            io.sockets.sockets.get(id).emit('force-logout', data.reason);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
   });
   socket.on('send-chat', async (data: RoomInfoInOut) => {
     try {

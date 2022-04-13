@@ -174,7 +174,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
               this.gs.log('[USER_LIST_CLICK_BAN_SUCCESS]', res);
               this.bs.idle();
               this.getUser();
-              this.ss.socketEmitVolatile('send-logout', {
+              this.ss.socketEmitVolatile('force-logout', {
                 username: data.username,
                 reason: re.reason.inputText
               });

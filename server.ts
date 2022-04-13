@@ -156,7 +156,7 @@ function startDiscordBot(): void {
 }
 
 function socketGenerateId(token: string): string {
-  return `WeeBNeeT-${new Date().getTime()}`;
+  return `${environment.siteName}-${new Date().getTime()}`;
 }
 
 // Socket.io
@@ -168,7 +168,7 @@ function startSocketIo(): void {
   });
   io.on('connection', async (socket: Socket) => {
     try {
-      await joinOrUpdateRoom(io, socket, { user: null, newRoom: 'GLOBAL_PUBLIK' });
+      joinOrUpdateRoom(io, socket, { user: null, newRoom: 'GLOBAL_PUBLIK' });
       updateVisitor();
       io.emit('visitors', io.sockets.sockets.size);
       socket.on('disconnect', () => {
