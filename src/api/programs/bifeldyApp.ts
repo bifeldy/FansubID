@@ -36,18 +36,19 @@ async function gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
 
 export async function gDrive(callback, isUpload = false): Promise<void> {
   try {
-    let auth = null;
-    if (isUpload) {
-      auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
-    } else {
-      auth = new google.auth.GoogleAuth({
-        credentials: {
-          client_email: gcp.serviceAccount.client_email,
-          private_key: gcp.serviceAccount.private_key
-        },
-        scopes: ['https://www.googleapis.com/auth/drive']
-      });
-    }
+    // let auth = null;
+    // if (isUpload) {
+    //   auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
+    // } else {
+    //   auth = new google.auth.GoogleAuth({
+    //     credentials: {
+    //       client_email: gcp.serviceAccount.client_email,
+    //       private_key: gcp.serviceAccount.private_key
+    //     },
+    //     scopes: ['https://www.googleapis.com/auth/drive']
+    //   });
+    // }
+    const auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
     const drive = google.drive({ version: 'v3', auth });
     log(`[GDRIVE] ⛅`, drive);
     callback(null, drive);
