@@ -68,7 +68,7 @@
                         </mat-option>
                       </ng-container>
                     </mat-autocomplete>
-                    <small *ngIf="selectedFilterAnime" class="text-warning">{{ selectedFilterAnime.title }}</small>
+                    <small *ngIf="fg.get('anime_name').value" class="text-warning">{{ fg.get('anime_name').value }}</small>
                     <mat-error>
                       <strong *ngIf="fg.get('anime_id').hasError('required')">ID Anime Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('anime_id').hasError('pattern')">ID Anime Hanya Boleh Angka</strong>
@@ -89,7 +89,7 @@
                         </mat-option>
                       </ng-container>
                     </mat-autocomplete>
-                    <small *ngIf="selectedFilterDorama" class="text-warning">{{ selectedFilterDorama.title }}</small>
+                    <small *ngIf="fg.get('dorama_name').value" class="text-warning">{{ fg.get('dorama_name').value }}</small>
                     <mat-error>
                       <strong *ngIf="fg.get('dorama_id').hasError('required')">ID Dorama Tidak Boleh Kosong</strong>
                       <strong *ngIf="fg.get('dorama_id').hasError('pattern')">ID Dorama Hanya Boleh Angka</strong>
@@ -103,16 +103,21 @@
                       <div class="row" [formGroupName]="i">
                         <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
                           <mat-label>Fansub Terkait</mat-label>
-                          <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" (focus)="changeFilterFansub(i)" />
+                          <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" />
                           <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i == 0">short_text</mat-icon>
                           <button mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value && i > 0">
                             <mat-icon>close</mat-icon>
                           </button>
                           <mat-autocomplete #autoCompleteFansub="matAutocomplete">
-                            <mat-option *ngFor="let f of filteredFansub | async" [value]="f.id" class="px-1" (click)="filterFansubSelected(f, i)">
-                              <img src="{{ f.image_url }}" style="border-radius: 0; height: 40px; width: 40px; object-fit: cover;" class="me-1" />
-                              <span>{{ f.name }}</span>
+                            <mat-option *ngIf="isLoading" class="is-loading">
+                              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                             </mat-option>
+                            <ng-container *ngIf="!isLoading">
+                              <mat-option *ngFor="let f of filteredFansub" [value]="f.id" class="px-1" (click)="filterFansubSelected(f, i)">
+                                <img src="{{ f.image_url }}" style="border-radius: 0; height: 40px; width: 40px; object-fit: cover;" class="me-1" />
+                                <span>{{ f.name }}</span>
+                              </mat-option>
+                            </ng-container>
                           </mat-autocomplete>
                           <small class="text-warning">{{ fs.get('fansub_name').value }}</small>
                           <mat-error>
