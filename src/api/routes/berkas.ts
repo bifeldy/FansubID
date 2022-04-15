@@ -251,7 +251,7 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
                   }
                 });
               }
-            });
+            }, true);
           } else {
             return next(createError(404));
           }

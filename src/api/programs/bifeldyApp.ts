@@ -7,7 +7,6 @@ import { environment } from '../../environments/api/environment';
 
 import { log } from '../helpers/logger';
 
-const googleAuthUrl = environment.googleAuthUrl;
 const gcp = environment.gCloudPlatform;
 
 // {
@@ -16,10 +15,10 @@ const gcp = environment.gCloudPlatform;
 //   scope: ['https://www.googleapis.com/auth/drive', 'https://mail.google.com'],
 //   token_type: 'Bearer'
 // }
-async function gAuth(refreshToken): Promise<OAuth2Client> {
+async function gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
   try {
     const googleClient = new google.auth.OAuth2(gcp.clientId, gcp.clientSecret);
-    const res = await fetch(googleAuthUrl, {
+    const res = await fetch(gcp.serviceAccount.token_uri, {
       method: 'POST',
       body: `grant_type=refresh_token&client_id=${encodeURIComponent(gcp.clientId)}&client_secret=${encodeURIComponent(gcp.clientSecret)}&refresh_token=${encodeURIComponent(refreshToken)}`,
       headers: {
@@ -35,9 +34,20 @@ async function gAuth(refreshToken): Promise<OAuth2Client> {
   }
 }
 
-export async function gDrive(callback): Promise<void> {
+export async function gDrive(callback, isUpload = false): Promise<void> {
   try {
-    const auth = await gAuth(gcp.gDrive.refreshToken);
+    let auth = null;
+    if (isUpload) {
+      auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
+    } else {
+      auth = new google.auth.GoogleAuth({
+        credentials: {
+          client_email: gcp.serviceAccount.client_email,
+          private_key: gcp.serviceAccount.private_key
+        },
+        scopes: ['https://www.googleapis.com/auth/drive']
+      });
+    }
     const drive = google.drive({ version: 'v3', auth });
     log(`[GDRIVE] ⛅`, drive);
     callback(null, drive);
