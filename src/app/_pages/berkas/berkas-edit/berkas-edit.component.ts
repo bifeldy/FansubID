@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-// import { Observable } from 'rxjs';
-import { tap, debounceTime, switchMap, finalize, /* map, startWith, */ distinctUntilChanged, retry } from 'rxjs/operators';
+import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -44,12 +43,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   filteredAnime = [];
   filteredDorama = [];
   filteredFansub = [];
-  // selectedFilterAnime = null;
-  // selectedFilterDorama = null;
   isLoading = false;
-
-  // fansubs = [];
-  // filteredFansub: Observable<any[]>;
 
   animeCheckOrAddResponse = null;
   doramaCheckOrAddResponse = null;
@@ -114,7 +108,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl(`/berkas/${res.result.id}`);
           } else {
             this.loadProjectList();
-            // this.loadFansubList();
             this.initForm(res.result);
           }
         },
@@ -163,21 +156,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  // loadFansubList(): void {
-  //   this.bs.busy();
-  //   this.subsFansub = this.fansub.getAllFansub().subscribe({
-  //     next: res => {
-  //       this.gs.log('[FANSUB_LOAD_SUCCESS]', res);
-  //       this.fansubs = res.results;
-  //       this.bs.idle();
-  //     },
-  //     error: err => {
-  //       this.gs.log('[FANSUB_LOAD_ERROR]', err);
-  //       this.bs.idle();
-  //     }
-  //   });
-  // }
-
   initForm(data): void {
     if ('attachment_' in data && data.attachment_) {
       this.attachmentFile = data.attachment_;
@@ -209,14 +187,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.image_url_original = this.image_url;
     this.berkasType = data.project_type_.name;
     if (data.anime_) {
-      // this.selectedFilterAnime = data.anime_;
-      // this.selectedFilterAnime.title = data.anime_.name;
       this.fg.controls.anime_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
       this.fg.controls.anime_name.setValidators([Validators.required]);
     }
     if (data.dorama_) {
-      // this.selectedFilterDorama = data.dorama_;
-      // this.selectedFilterDorama.title = data.dorama_.name;
       this.fg.controls.dorama_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
       this.fg.controls.dorama_name.setValidators([Validators.required]);
     }
@@ -266,8 +240,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       next: projectId => {
         this.gs.log('[BERKAS_EDIT_PROJECT_CHANGED]', projectId);
         const selectedProject = this.projectList.find(p => p.id === projectId);
-        // this.resetSelectedAnime();
-        // this.resetSelectedDorama();
         this.fg.controls.anime_id.patchValue(null);
         this.fg.controls.anime_name.patchValue(null);
         this.fg.controls.dorama_id.patchValue(null);
@@ -370,24 +342,11 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  // changeFilterFansub(i: number): void {
-  //   this.filteredFansub = this.getFansubControl.controls[i].get('fansub_id').valueChanges.pipe(
-  //     startWith(''),
-  //     map(fansub => this.fansubs.filter(f => (
-  //       f.name as string).toString().toLowerCase().includes(
-  //         (fansub as string).toString().toLowerCase()
-  //       )
-  //     ))
-  //   );
-  // }
-
   resetSelectedAnime(): void {
-    // this.selectedFilterAnime = null;
     this.fg.controls.anime_name.patchValue(null);
   }
 
   resetSelectedDorama(): void {
-    // this.selectedFilterDorama = null;
     this.fg.controls.dorama_name.patchValue(null);
   }
 
@@ -398,7 +357,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   filterAnimeSelected(data): void {
     this.gs.log('[ANIME_FILTER_CLICK]', data);
     this.submitted = true;
-    // this.selectedFilterAnime = data;
     this.subsAnimeNew = this.anime.addNewAnime({
       id: data.mal_id,
       name: data.title,
@@ -425,7 +383,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   filterDoramaSelected(data): void {
     this.gs.log('[DORAMA_FILTER_CLICK]', data);
     this.submitted = true;
-    // this.selectedFilterDorama = data;
     this.subsDoramaNew = this.dorama.addNewDorama({
       id: parseInt(data.mdl_id, 10),
       slug: data.slug,
@@ -523,16 +480,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       delete body.fansub_list;
     }
     this.submitted = true;
-    if (this.fg.invalid /* || (
-      (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) &&
-      (!this.selectedFilterDorama && this.fg.controls.dorama_id.dirty === true)
-    ) */) {
-      // if (!this.selectedFilterAnime && this.fg.controls.anime_id.dirty === true) {
-      //   this.fg.controls.anime_id.patchValue(null);
-      // }
-      // if (!this.selectedFilterDorama && this.fg.controls.dorama_id.dirty === true) {
-      //   this.fg.controls.dorama_id.patchValue(null);
-      // }
+    if (this.fg.invalid) {
       this.submitted = false;
       this.bs.idle();
       return;
