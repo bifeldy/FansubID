@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
-import { tap, debounceTime, switchMap, finalize,  map, startWith, distinctUntilChanged, retry } from 'rxjs/operators';
+// import { Observable } from 'rxjs';
+import { tap, debounceTime, switchMap, finalize, /* map, startWith, */ distinctUntilChanged, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -40,12 +40,13 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   filteredAnime = [];
   filteredDorama = [];
-  selectedFilterAnime = null;
-  selectedFilterDorama = null;
+  filteredFansub = [];
+  // selectedFilterAnime = null;
+  // selectedFilterDorama = null;
   isLoading = false;
 
-  fansubs = [];
-  filteredFansub: Observable<any[]>;
+  // fansubs = [];
+  // filteredFansub: Observable<any[]>;
 
   animeCheckOrAddResponse = null;
   doramaCheckOrAddResponse = null;
@@ -73,6 +74,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   subsFansub = null;
   subsAnimeDetail = null;
   subsDoramaDetail = null;
+  subsProjectDetail = null;
+  subsFansubDetail = [];
   subsAnimeNew = null;
   subsDoramaNew = null;
   subsImgbb = null;
@@ -109,7 +112,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.loadProjectList();
-      this.loadFansubList();
+      // this.loadFansubList();
       this.initForm();
     }
   }
@@ -135,6 +138,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.subsFansub?.unsubscribe();
     this.subsAnimeDetail?.unsubscribe();
     this.subsDoramaDetail?.unsubscribe();
+    this.subsProjectDetail?.unsubscribe();
+    for (const sFD of this.subsFansubDetail) {
+      sFD?.unsubscribe();
+    }
     this.subsAnimeNew?.unsubscribe();
     this.subsDoramaNew?.unsubscribe();
     this.subsImgbb?.unsubscribe();
@@ -156,20 +163,20 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadFansubList(): void {
-    this.bs.busy();
-    this.subsFansub = this.fansub.getAllFansub().subscribe({
-      next: res => {
-        this.gs.log('[FANSUB_LOAD_SUCCESS]', res);
-        this.fansubs = res.results;
-        this.bs.idle();
-      },
-      error: err => {
-        this.gs.log('[FANSUB_LOAD_ERROR]', err);
-        this.bs.idle();
-      }
-    });
-  }
+  // loadFansubList(): void {
+  //   this.bs.busy();
+  //   this.subsFansub = this.fansub.getAllFansub().subscribe({
+  //     next: res => {
+  //       this.gs.log('[FANSUB_LOAD_SUCCESS]', res);
+  //       this.fansubs = res.results;
+  //       this.bs.idle();
+  //     },
+  //     error: err => {
+  //       this.gs.log('[FANSUB_LOAD_ERROR]', err);
+  //       this.bs.idle();
+  //     }
+  //   });
+  // }
 
   initForm(): void {
     this.fg = this.fb.group({
@@ -177,7 +184,9 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       anime_id: [null, Validators.compose([])],
+      anime_name: [null, Validators.compose([])],
       dorama_id: [null, Validators.compose([])],
+      dorama_name: [null, Validators.compose([])],
       fansub_list: this.fb.array([this.createFansub()]),
       image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       attachment_id: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
@@ -188,7 +197,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       debounceTime(500),
       distinctUntilChanged(),
       tap(() => this.isLoading = true),
-      switchMap(searchQuery => this.anime.searchAnime(searchQuery).pipe(finalize(() => this.isLoading = false))), retry(-1)
+      switchMap(searchQuery => this.anime.searchAnime(searchQuery).pipe(
+        finalize(() => this.isLoading = false)
+      )),
+      retry(-1)
     ).subscribe({
       next: res => {
         this.gs.log('[BERKAS_CREATE_SEARCH_ANIME_RESULT]', res);
@@ -199,7 +211,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       debounceTime(500),
       distinctUntilChanged(),
       tap(() => this.isLoading = true),
-      switchMap(searchQuery => this.dorama.searchDorama(searchQuery).pipe(finalize(() => this.isLoading = false))), retry(-1)
+      switchMap(searchQuery => this.dorama.searchDorama(searchQuery).pipe(
+        finalize(() => this.isLoading = false)
+      )),
+      retry(-1)
     ).subscribe({
       next: res => {
         this.gs.log('[BERKAS_CREATE_SEARCH_DORAMA_RESULT]', res);
@@ -210,7 +225,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
         this.filteredDorama = (res as any).results;
       }
     });
-    this.fg.get('projectType_id').valueChanges.pipe(
+    this.subsProjectDetail = this.fg.get('projectType_id').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       retry(-1)
@@ -218,29 +233,43 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       next: projectId => {
         this.gs.log('[BERKAS_CREATE_PROJECT_CHANGED]', projectId);
         const selectedProject = this.projectList.find(p => p.id === projectId);
-        this.resetSelectedAnime();
-        this.resetSelectedDorama();
+        // this.resetSelectedAnime();
+        // this.resetSelectedDorama();
         this.fg.controls.anime_id.patchValue(null);
+        this.fg.controls.anime_name.patchValue(null);
         this.fg.controls.dorama_id.patchValue(null);
+        this.fg.controls.dorama_name.patchValue(null);
         this.fg.controls.anime_id.setErrors(null);
+        this.fg.controls.anime_name.setErrors(null);
         this.fg.controls.dorama_id.setErrors(null);
+        this.fg.controls.dorama_name.setErrors(null);
         this.fg.controls.anime_id.clearValidators();
+        this.fg.controls.anime_name.clearValidators();
         this.fg.controls.dorama_id.clearValidators();
+        this.fg.controls.dorama_name.clearValidators();
         this.fg.controls.anime_id.markAsPristine();
+        this.fg.controls.anime_name.markAsPristine();
         this.fg.controls.dorama_id.markAsPristine();
+        this.fg.controls.dorama_name.markAsPristine();
         this.fg.controls.anime_id.markAsUntouched();
+        this.fg.controls.anime_name.markAsUntouched();
         this.fg.controls.dorama_id.markAsUntouched();
+        this.fg.controls.dorama_name.markAsUntouched();
         if (selectedProject.name.toLowerCase().includes('anime')) {
           this.berkasType = selectedProject.name;
           this.fg.controls.anime_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+          this.fg.controls.anime_name.setValidators([Validators.required]);
         } else if (selectedProject.name.toLowerCase().includes('dorama')) {
           this.berkasType = selectedProject.name;
           this.fg.controls.dorama_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+          this.fg.controls.dorama_name.setValidators([Validators.required]);
         } else {
           this.berkasType = '';
         }
         this.fg.controls.anime_id.updateValueAndValidity();
+        this.fg.controls.anime_name.updateValueAndValidity();
         this.fg.controls.dorama_id.updateValueAndValidity();
+        this.fg.controls.dorama_name.updateValueAndValidity();
       }
     });
   }
@@ -269,37 +298,56 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   createFansub(): any {
-    return this.fb.group({
+    const fbGroup = this.fb.group({
       fansub_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
-      fansub_name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      fansub_name: [null, Validators.compose([Validators.required])],
     });
+    this.subsFansubDetail.push(fbGroup.get('fansub_id').valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => this.isLoading = true),
+      switchMap(searchQuery => this.fansub.searchFansub(searchQuery).pipe(
+        finalize(() => this.isLoading = false)
+      )),
+      retry(-1)
+    ).subscribe({
+      next: res => {
+        this.gs.log('[BERKAS_CREATE_SEARCH_FANSUB_RESULT]', res);
+        this.filteredFansub = (res as any).results;
+      }
+    }));
+    return fbGroup;
   }
 
   removeFansub(i: number): void {
     this.getFansubControl.removeAt(i);
+    this.subsFansubDetail[i]?.unsubscribe();
+    this.subsFansubDetail.splice(i, 1);
   }
 
   addFansub(): any {
     this.getFansubControl.push(this.createFansub());
   }
 
-  changeFilterFansub(i: number): void {
-    this.filteredFansub = this.getFansubControl.controls[i].get('fansub_id').valueChanges.pipe(
-      startWith(''),
-      map(fansub => this.fansubs.filter(f => (
-        f.name as string).toString().toLowerCase().includes(
-          (fansub as string).toString().toLowerCase()
-        )
-      ))
-    );
-  }
+  // changeFilterFansub(i: number): void {
+  //   this.filteredFansub = this.getFansubControl.controls[i].get('fansub_id').valueChanges.pipe(
+  //     startWith(''),
+  //     map(fansub => this.fansubs.filter(f => (
+  //       f.name as string).toString().toLowerCase().includes(
+  //         (fansub as string).toString().toLowerCase()
+  //       )
+  //     ))
+  //   );
+  // }
 
   resetSelectedAnime(): void {
-    this.selectedFilterAnime = null;
+    // this.selectedFilterAnime = null;
+    this.fg.controls.anime_name.patchValue(null);
   }
 
   resetSelectedDorama(): void {
-    this.selectedFilterDorama = null;
+    // this.selectedFilterDorama = null;
+    this.fg.controls.dorama_name.patchValue(null);
   }
 
   resetSelectedFansub(i: number): any {
@@ -309,23 +357,26 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   filterAnimeSelected(data): void {
     this.gs.log('[ANIME_FILTER_CLICK]', data);
     this.submitted = true;
-    this.selectedFilterAnime = data;
+    // this.selectedFilterAnime = data;
     this.subsAnimeNew = this.anime.addNewAnime({
-      id: this.selectedFilterAnime.mal_id,
-      name: this.selectedFilterAnime.title,
-      image_url: this.selectedFilterAnime.image_url,
-      type: this.selectedFilterAnime.type
+      id: data.mal_id,
+      name: data.title,
+      image_url: data.image_url,
+      type: data.type
     }).subscribe({
       next: res => {
         this.gs.log('[ANIME_CHECK_ADD_SUCCESS]', res);
         this.animeCheckOrAddResponse = res.result;
         this.submitted = false;
+        this.fg.controls.anime_id.patchValue(res.result.id);
+        this.fg.controls.anime_name.patchValue(res.result.name);
       },
       error: err => {
         this.gs.log('[ANIME_CHECK_ADD_ERROR]', err);
         this.submitted = false;
         this.resetSelectedAnime();
         this.fg.controls.anime_id.patchValue(null);
+        this.fg.controls.anime_name.patchValue(null);
       }
     });
   }
@@ -333,24 +384,27 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   filterDoramaSelected(data): void {
     this.gs.log('[DORAMA_FILTER_CLICK]', data);
     this.submitted = true;
-    this.selectedFilterDorama = data;
+    // this.selectedFilterDorama = data;
     this.subsDoramaNew = this.dorama.addNewDorama({
-      id: parseInt(this.selectedFilterDorama.mdl_id, 10),
-      slug: this.selectedFilterDorama.slug,
-      name: this.selectedFilterDorama.title,
-      image_url: this.selectedFilterDorama.image_url,
-      type: this.selectedFilterDorama.type
+      id: parseInt(data.mdl_id, 10),
+      slug: data.slug,
+      name: data.title,
+      image_url: data.image_url,
+      type: data.type
     }).subscribe({
       next: res => {
         this.gs.log('[DORAMA_CHECK_ADD_SUCCESS]', res);
         this.doramaCheckOrAddResponse = res.result;
         this.submitted = false;
+        this.fg.controls.dorama_id.patchValue(res.result.id);
+        this.fg.controls.dorama_name.patchValue(res.result.name);
       },
       error: err => {
         this.gs.log('[DORAMA_CHECK_ADD_ERROR]', err);
         this.submitted = false;
         this.resetSelectedDorama();
         this.fg.controls.dorama_id.patchValue(null);
+        this.fg.controls.dorama_name.patchValue(null);
       }
     });
   }
@@ -415,13 +469,13 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.bs.busy();
     this.submitted = true;
-    if (this.fg.invalid || (!this.selectedFilterAnime && !this.selectedFilterDorama) || this.attachmentIsUploading) {
-      if (!this.selectedFilterAnime) {
-        this.fg.controls.anime_id.patchValue(null);
-      }
-      if (!this.selectedFilterDorama) {
-        this.fg.controls.dorama_id.patchValue(null);
-      }
+    if (this.fg.invalid || /* (!this.selectedFilterAnime && !this.selectedFilterDorama) || */ this.attachmentIsUploading) {
+      // if (!this.selectedFilterAnime) {
+      //   this.fg.controls.anime_id.patchValue(null);
+      // }
+      // if (!this.selectedFilterDorama) {
+      //   this.fg.controls.dorama_id.patchValue(null);
+      // }
       this.submitted = false;
       this.bs.idle();
       return;
