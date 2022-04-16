@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal, ILike, In, Not } from 'typeorm';
+import { XMLBuilder } from 'fast-xml-parser';
 
 import { environment } from '../../environments/api/environment';
 
@@ -139,13 +140,14 @@ router.get('/aktivasi', activationModule, (req: UserRequest, res: Response, next
   return res.redirect('/login');
 });
 
-// Intercept Status Response
+// Intercept Response
 router.use(interceptor((req: UserRequest, res: Response) => {
   return {
     isInterceptable: () => {
-      log('[INTERCEPT-STATUS] 💠', res.statusCode);
-      switch (res.statusCode) {
+      const resStatusCode = res.statusCode;
+      switch (resStatusCode) {
         case 401:
+          log('[INTERCEPT-401] 💠', resStatusCode);
           res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
             httpOnly: true,
             secure: environment.production,
@@ -153,13 +155,33 @@ router.use(interceptor((req: UserRequest, res: Response) => {
             maxAge: 0,
             domain: environment.domain
           });
-          return true;
         default:
-          return false;
+          break;
       }
+      try {
+        const resXml = ('xml' in req.query && JSON.parse(req.query.xml) === true);
+        log('[INTERCEPT-XML] 💠', resXml);
+        if (resXml) {
+          res.set('Content-Type', 'application/xml');
+          return true;
+        } else {
+          res.set('Content-Type', 'application/json');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      return false;
     },
     intercept: (body: any, send: any) => {
-      log('[INTERCEPT-BODY] 💠', body);
+      log('[INTERCEPT-BODY_JSON] 💠', body);
+      try {
+        body = JSON.parse(body);
+        body = new XMLBuilder({}).build(body);
+        body = `<?xml version="1.0" encoding="utf-8" ?><root>${body}</root>`;
+        log('[INTERCEPT-BODY_XML] 💠', body);
+      } catch (error) {
+        console.error(error);
+      }
       return send(body);
     }
   };
