@@ -170,6 +170,10 @@ router.use(interceptor((req: UserRequest, res: Response) => {
       switch (res.statusCode) {
         case 401:
           intercept401 = true;
+          break;
+        case 429:
+          // TODO :: API Abuse :: Warning -> Banned
+          break;
         default:
           break;
       }
