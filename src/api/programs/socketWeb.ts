@@ -83,7 +83,7 @@ function getRoomInfo(io: Server, roomId: string): RoomInfoResponse {
 
 function calculatePoints(data: RoomInfoInOut): number {
   let points = 1;
-  if (quiz[data.roomId].question.jlpt == 0) {
+  if (quiz[data.roomId].question.jlpt === 0) {
     points = 64;
   } else if (quiz[data.roomId].question.jlpt) {
     // n5 = 2, n4 = 4, n3 = 8, n2 = 16, n1 = 32

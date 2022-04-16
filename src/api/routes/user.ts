@@ -29,7 +29,7 @@ router.get('/', isLogin, async (req: UserRequest, res: Response, next: NextFunct
     let maxPage = 0;
     let maxRow = 10;
     if (req.user) {
-      if (req.user.role == Role.ADMIN || req.user.role == Role.MODERATOR) {
+      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
         maxPage = req.query.page || 0;
         maxRow = req.query.row || 10;
       }

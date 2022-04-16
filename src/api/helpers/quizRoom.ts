@@ -74,7 +74,7 @@ export async function getQuizKanji(school = null, jlpt = null) {
           INTO total_data
           FROM kanji
     `;
-    if (school == null && jlpt == null) {
+    if (school === null && jlpt === null) {
       sqlQuery += `
           WHERE translate <> '';
         max_select := total_data - select_count;
@@ -115,7 +115,7 @@ export async function getQuizKanji(school = null, jlpt = null) {
       END $$
     `;
     let kanjis = await manager.query(sqlQuery);
-    if (school == null && jlpt == null) {
+    if (school === null && jlpt === null) {
       sqlQuery = `SELECT * FROM kanji_all_quiz`;
     } else if (school != null) {
       sqlQuery = `SELECT * FROM kanji_s${school}_quiz`;
