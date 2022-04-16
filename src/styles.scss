@@ -8,13 +8,13 @@
 
 // Define the default theme (same as the example above).
 $light-primary: mat-palette($mat-indigo);
-$light-accent:  mat-palette($mat-pink);
+$light-accent:  mat-palette($mat-purple);
 $light-warn: mat-palette($mat-deep-orange);
 $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 
 // Define an alternate dark theme.
-$dark-primary: mat-palette($mat-purple);
-$dark-accent: mat-palette($mat-green);
+$dark-primary: mat-palette($mat-deep-purple);
+$dark-accent: mat-palette($mat-green, A200);
 $dark-warn: mat-palette($mat-deep-orange);
 $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 

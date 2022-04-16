@@ -42,7 +42,7 @@
     <mat-nav-list>
       <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of mainMenus" routerLinkActive="side-menu-link-active"
         (click)="onMouseHoverOut()">
-        <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="accent" matBadgePosition="before">{{ menu.icon }}</mat-icon>
+        <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before">{{ menu.icon }}</mat-icon>
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu.name }}</span>
       </a>
     </mat-nav-list>
@@ -51,7 +51,7 @@
 
     <mat-nav-list>
       <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of contentMenus" routerLinkActive="side-menu-link-active" (click)="onMouseHoverOut()">
-        <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="accent" matBadgePosition="before">{{ menu.icon }}</mat-icon>
+        <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before">{{ menu.icon }}</mat-icon>
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu.name }}</span>
       </a>
     </mat-nav-list>
@@ -64,7 +64,7 @@
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">Web Torrent</span>
       </a>
       <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of miscMenus" routerLinkActive="side-menu-link-active" (click)="onMouseHoverOut()">
-        <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="accent" matBadgePosition="before">{{ menu.icon }}</mat-icon>
+        <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before">{{ menu.icon }}</mat-icon>
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu.name }}</span>
       </a>
     </mat-nav-list>

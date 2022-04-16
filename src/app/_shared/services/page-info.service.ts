@@ -62,7 +62,7 @@ export class PageInfoService {
 
   updateStatusBarTheme(isDarkMode) {
     if (isDarkMode) {
-      this.m.updateTag({ name: 'theme-color', content: '#9c27b0' });
+      this.m.updateTag({ name: 'theme-color', content: '#673ab7' });
     } else {
       this.m.updateTag({ name: 'theme-color', content: '#3f51b5' });
     }
