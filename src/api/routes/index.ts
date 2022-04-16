@@ -142,45 +142,51 @@ router.get('/aktivasi', activationModule, (req: UserRequest, res: Response, next
 
 // Intercept Response
 router.use(interceptor((req: UserRequest, res: Response) => {
+  let intercept401 = false;
+  let interceptJsonXml = false;
+  const unAuthorized = () => {
+    log('[INTERCEPT-STATUS_CODE] 💠 401');
+    res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+      httpOnly: true,
+      secure: environment.production,
+      sameSite: 'strict',
+      maxAge: 0,
+      domain: environment.domain
+    });
+  };
+  const convertJsonToXml = (str: any) => {
+    log('[INTERCEPT-JSON_XML] 💠', str);
+    try {
+      const json = JSON.parse(str);
+      const xml = new XMLBuilder({}).build(json);
+      return `<?xml version="1.0" encoding="utf-8" ?><root>${xml}</root>`;
+    } catch (error) {
+      console.error(error);
+      return str;
+    }
+  };
   return {
     isInterceptable: () => {
-      const resStatusCode = res.statusCode;
-      switch (resStatusCode) {
+      switch (res.statusCode) {
         case 401:
-          log('[INTERCEPT-401] 💠', resStatusCode);
-          res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
-            httpOnly: true,
-            secure: environment.production,
-            sameSite: 'strict',
-            maxAge: 0,
-            domain: environment.domain
-          });
+          intercept401 = true;
         default:
           break;
       }
       try {
-        const resXml = ('xml' in req.query && JSON.parse(req.query.xml) === true);
-        log('[INTERCEPT-XML] 💠', resXml);
-        if (resXml) {
-          res.set('Content-Type', 'application/xml');
-          return true;
-        } else {
-          res.set('Content-Type', 'application/json');
-        }
+        interceptJsonXml = ('xml' in req.query && JSON.parse(req.query.xml) === true);
       } catch (error) {
         console.error(error);
       }
-      return false;
+      return true;
     },
     intercept: (body: any, send: any) => {
-      log('[INTERCEPT-BODY_JSON] 💠', body);
-      try {
-        body = JSON.parse(body);
-        body = new XMLBuilder({}).build(body);
-        body = `<?xml version="1.0" encoding="utf-8" ?><root>${body}</root>`;
-        log('[INTERCEPT-BODY_XML] 💠', body);
-      } catch (error) {
-        console.error(error);
+      if (intercept401) unAuthorized();
+      if (interceptJsonXml) {
+        res.set('Content-Type', 'application/xml');
+        body = convertJsonToXml(body);
+      } else {
+        res.set('Content-Type', 'application/json');
       }
       return send(body);
     }
