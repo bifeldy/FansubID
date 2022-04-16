@@ -35,82 +35,96 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
       return request(`
         ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${userIp}
       `.trim(), async (e1, r1, b1) => {
-        b1 = JSON.parse(b1);
-        if (b1 && b1.success) {
-          const registrationRepo = getRepository(Registration);
-          const selectedRegistration = await registrationRepo.find({
-            where: [
-              { username: ILike(req.body.username) },
-              { email: ILike(req.body.email) }
-            ]
-          });
-          const userRepo = getRepository(User);
-          const selectedUser = await userRepo.find({
-            where: [
-              { username: ILike(req.body.username) },
-              { email: ILike(req.body.email) }
-            ]
-          });
-          const userNotAvailable = [...selectedRegistration, ...selectedUser];
-          if (userNotAvailable.length === 0) {
-            const result: any = {};
-            req.body.username = req.body.username.replace(/\s/g, '').replace(/[^a-z0-9]/g, '');
-            if (req.body.username.length < 8) {
-              result.username = 'Nama Pengguna Minimal 8 Huruf';
-            }
-            if (!req.body.email.match(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)) {
-              result.email = 'Email Tidak Valid';
-            }
-            if (Object.keys(result).length > 0) {
-              result.message = 'Akun Tidak Dapat Digunakan!';
-              return res.status(400).json({
-                info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
-                result
+        try {
+          if (!e1) {
+            b1 = JSON.parse(b1);
+            if (b1 && b1.success) {
+              const registrationRepo = getRepository(Registration);
+              const selectedRegistration = await registrationRepo.find({
+                where: [
+                  { username: ILike(req.body.username) },
+                  { email: ILike(req.body.email) }
+                ]
+              });
+              const userRepo = getRepository(User);
+              const selectedUser = await userRepo.find({
+                where: [
+                  { username: ILike(req.body.username) },
+                  { email: ILike(req.body.email) }
+                ]
+              });
+              const userNotAvailable = [...selectedRegistration, ...selectedUser];
+              if (userNotAvailable.length === 0) {
+                const result: any = {};
+                req.body.username = req.body.username.replace(/\s/g, '').replace(/[^a-z0-9]/g, '');
+                if (req.body.username.length < 8) {
+                  result.username = 'Nama Pengguna Minimal 8 Huruf';
+                }
+                if (!req.body.email.match(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)) {
+                  result.email = 'Email Tidak Valid';
+                }
+                if (Object.keys(result).length > 0) {
+                  result.message = 'Akun Tidak Dapat Digunakan!';
+                  return res.status(400).json({
+                    info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
+                    result
+                  });
+                }
+                const pengguna = new Registration();
+                pengguna.username = req.body.username;
+                pengguna.email = req.body.email;
+                pengguna.password = hashPassword(req.body.password);
+                pengguna.nama = req.body.name;
+                let penggunaSave = await registrationRepo.save(pengguna);
+                const { password, activation_token, ...noPwdAcToken } = penggunaSave;
+                pengguna.activation_token = JwtEncrypt({ user: noPwdAcToken }, 5 * 60);
+                penggunaSave = await registrationRepo.save(pengguna);
+                req.user = (penggunaSave as any);
+                setTimeout(async () => {
+                  try {
+                    const registrationToBeDeleted = await registrationRepo.findOneOrFail({
+                      where: [
+                        { id: Equal(penggunaSave.id), activation_token: Equal(penggunaSave.activation_token) }
+                      ]
+                    });
+                    await registrationRepo.remove(registrationToBeDeleted);
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }, 3 * 60 * 1000);
+                return next();
+              } else {
+                const result: any = {};
+                for (const user of userNotAvailable) {
+                  if (user.username === req.body.username) {
+                    result.username = `${user.username} Sudah Terpakai`;
+                  }
+                  if (user.email === req.body.email) {
+                    result.email = `${user.email} Sudah Terpakai`;
+                  }
+                }
+                return res.status(400).json({
+                  info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
+                  result
+                });
+              }
+            } else {
+              return res.status(r1.statusCode).json({
+                info: `🙄 ${r1.statusCode} - Google API :: Captcha Bermasalah 😪`,
+                result: {
+                  message: 'Captcha Salah / Expired!'
+                }
               });
             }
-            const pengguna = new Registration();
-            pengguna.username = req.body.username;
-            pengguna.email = req.body.email;
-            pengguna.password = hashPassword(req.body.password);
-            pengguna.nama = req.body.name;
-            let penggunaSave = await registrationRepo.save(pengguna);
-            const { password, activation_token, ...noPwdAcToken } = penggunaSave;
-            pengguna.activation_token = JwtEncrypt({ user: noPwdAcToken }, 5 * 60);
-            penggunaSave = await registrationRepo.save(pengguna);
-            req.user = (penggunaSave as any);
-            setTimeout(async () => {
-              try {
-                const registrationToBeDeleted = await registrationRepo.findOneOrFail({
-                  where: [
-                    { id: Equal(penggunaSave.id), activation_token: Equal(penggunaSave.activation_token) }
-                  ]
-                });
-                await registrationRepo.remove(registrationToBeDeleted);
-              } catch (err) {
-                console.error(err);
-              }
-            }, 3 * 60 * 1000);
-            return next();
           } else {
-            const result: any = {};
-            for (const user of userNotAvailable) {
-              if (user.username === req.body.username) {
-                result.username = `${user.username} Sudah Terpakai`;
-              }
-              if (user.email === req.body.email) {
-                result.email = `${user.email} Sudah Terpakai`;
-              }
-            }
-            return res.status(400).json({
-              info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
-              result
-            });
+            throw e1;
           }
-        } else {
+        } catch (e) {
+          console.error(e);
           return res.status(r1.statusCode).json({
-            info: `🙄 ${r1.statusCode} - Google API :: Wrong Captcha 😪`,
+            info: `🙄 ${r1.statusCode} - Google API :: Captcha Bermasalah 😪`,
             result: {
-              message: 'Captcha Salah / Expired!'
+              message: 'Data Tidak Lengkap / Google API Down!'
             }
           });
         }

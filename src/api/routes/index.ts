@@ -187,7 +187,7 @@ router.use(async (req: UserRequest, res: Response, next: NextFunction) => {
       ]
     });
     if (o.includes(apiKey.ip_domain)) {
-      if (o == environment.domain || o == environment.ip || o == '127.0.0.1' || o == '::1') {
+      if (o === environment.domain || o === environment.ip || o === '127.0.0.1' || o === '::1') {
         return next();
       } else {
         return apiLimiter(req, res, next);
@@ -423,23 +423,28 @@ router.post('/image', isAuthorized, upload.single('file'), async (req: UserReque
     },
       headers: environment.nodeJsXhrHeader
   }, async (error, result, body) => {
-    if (!error) {
-      const data = JSON.parse(body).data;
-      return res.status(result.statusCode).json({
-        info: `😅 ${result.statusCode} - ImgBB API :: Upload Image 🤣`,
-        result: {
-          id: data.id,
-          title: data.title,
-          url: data.image.url,
-          mime: data.image.mime,
-          extension: data.image.extension,
-          size: data.size,
-          time: data.time,
-          expiration: data.expiration,
-        },
-        imageUrl: data.image.url
-      });
-    } else {
+    try {
+      if (!error) {
+        const data = JSON.parse(body).data;
+        return res.status(result.statusCode).json({
+          info: `😅 ${result.statusCode} - ImgBB API :: Upload Image 🤣`,
+          result: {
+            id: data.id,
+            title: data.title,
+            url: data.image.url,
+            mime: data.image.mime,
+            extension: data.image.extension,
+            size: data.size,
+            time: data.time,
+            expiration: data.expiration,
+          },
+          imageUrl: data.image.url
+        });
+      } else {
+        throw error;
+      }
+    } catch (err) {
+      console.error(err);
       return res.status(result.statusCode).json({
         info: `🙄 ${result.statusCode} - ImgBB API :: Upload Image Gagal 😪`,
         result: {
@@ -458,46 +463,56 @@ router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, ne
       return request(`
         ${environment.recaptchaApiUrl}?secret=${environment.reCaptchaSecretKey}&response=${req.body['g-recaptcha-response']}&remoteip=${userIp}
       `.trim(), (e1, r1, b1) => {
-        if (!e1) {
-          b1 = JSON.parse(b1);
-          if (b1 && b1.success) {
-            return request({
-              method: 'POST',
-              uri: environment.apiPemerintahKTPUrl,
-              body: JSON.stringify({
-                nik: req.body.nik,
-                nama: req.body.nama,
-                ck_kpu: environment.apiPemerintahKTPSecretKey
-              }),
-              headers: environment.nodeJsXhrHeader
-            }, (e2, r2, b2) => {
-              if (!e2) {
-                const resKPU = JSON.parse(b2);
-                if ('data' in resKPU && resKPU.data) {
-                  delete resKPU.data.tps;
-                }
-                return res.status(r2.statusCode).json({
-                  info: `😍 ${r2.statusCode} - KTP API :: Data Kartu Tanda Penduduk 🥰`,
-                  result: resKPU
-                });
-              } else {
-                return res.status(r2.statusCode).json({
-                  info: `🙄 ${r2.statusCode} - KTP API :: API Pemerintah Error 😪`,
-                  result: {
-                    message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya?'
+        try {
+          if (!e1) {
+            b1 = JSON.parse(b1);
+            if (b1 && b1.success) {
+              return request({
+                method: 'POST',
+                uri: environment.apiPemerintahKTPUrl,
+                body: JSON.stringify({
+                  nik: req.body.nik,
+                  nama: req.body.nama,
+                  ck_kpu: environment.apiPemerintahKTPSecretKey
+                }),
+                headers: environment.nodeJsXhrHeader
+              }, (e2, r2, b2) => {
+                try {
+                  if (!e2) {
+                    const resKPU = JSON.parse(b2);
+                    if ('data' in resKPU && resKPU.data) {
+                      delete resKPU.data.tps;
+                    }
+                    return res.status(r2.statusCode).json({
+                      info: `😍 ${r2.statusCode} - KTP API :: Data Kartu Tanda Penduduk 🥰`,
+                      result: resKPU
+                    });
+                  } else {
+                    throw e2;
                   }
-                });
-              }
-            });
+                } catch (err) {
+                  console.error(err);
+                  return res.status(r2.statusCode).json({
+                    info: `🙄 ${r2.statusCode} - KTP API :: API Pemerintah Error 😪`,
+                    result: {
+                      message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya?'
+                    }
+                  });
+                }
+              });
+            } else {
+              return res.status(r1.statusCode).json({
+                info: `🙄 ${r1.statusCode} - Google API :: Captcha Bermasalah 😪`,
+                result: {
+                  message: 'Captcha Salah / Expired!'
+                }
+              });
+            }
           } else {
-            return res.status(r1.statusCode).json({
-              info: `🙄 ${r1.statusCode} - Google API :: Captcha Bermasalah 😪`,
-              result: {
-                message: 'Captcha Salah / Expired!'
-              }
-            });
+            throw e1;
           }
-        } else {
+        } catch (e) {
+          console.error(e);
           return res.status(r1.statusCode).json({
             info: `🙄 ${r1.statusCode} - Google API :: Captcha Bermasalah 😪`,
             result: {
@@ -641,85 +656,95 @@ router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Respons
           },
           headers: environment.nodeJsXhrHeader
         }, async (er, rs, bd) => {
-          if (!er) {
-            const discordAuth = JSON.parse(bd);
-            return request({
-              method: 'GET',
-              uri: `${environment.discordApiUrl}/users/@me`,
-              headers: {
-                Authorization: `${discordAuth.token_type} ${discordAuth.access_token}`,
-                ...environment.nodeJsXhrHeader
-              }
-            }, async (e, r, b) => {
-              if (!e) {
+          try {
+            if (!er) {
+              const discordAuth = JSON.parse(bd);
+              return request({
+                method: 'GET',
+                uri: `${environment.discordApiUrl}/users/@me`,
+                headers: {
+                  Authorization: `${discordAuth.token_type} ${discordAuth.access_token}`,
+                  ...environment.nodeJsXhrHeader
+                }
+              }, async (e, r, b) => {
                 try {
-                  const discordProfile = JSON.parse(b);
-                  const sosmeds = await sosmedRepo.find({
-                    where: [
-                      {
-                        type: SosMed.DISCORD,
-                        user_: {
-                          id: Equal(req.user.id)
+                  if (!e) {
+                    try {
+                      const discordProfile = JSON.parse(b);
+                      const sosmeds = await sosmedRepo.find({
+                        where: [
+                          {
+                            type: SosMed.DISCORD,
+                            user_: {
+                              id: Equal(req.user.id)
+                            }
+                          }
+                        ],
+                        relations: ['user_']
+                      });
+                      if (sosmeds.length > 0) {
+                        await sosmedRepo.update({
+                          type: sosmeds[0].type,
+                          user_: {
+                            id: req.user.id
+                          }
+                        }, {
+                          id: discordProfile.id,
+                          refresh_token: discordAuth.refresh_token
+                        });
+                      } else {
+                        const sosmed = new SocialMedia();
+                        sosmed.id = discordProfile.id;
+                        sosmed.refresh_token = discordAuth.refresh_token;
+                        sosmed.type = SosMed.DISCORD;
+                        sosmed.user_ = user;
+                        await sosmedRepo.insert(sosmed);
+                      }
+                      user.discord = discordProfile.id;
+                      const resUserSave = await userRepo.save(user);
+                      delete resUserSave.password;
+                      delete resUserSave.session_token;
+                      delete resUserSave.kartu_tanda_penduduk_;
+                      delete resUserSave.profile_;
+                      return res.status(r.statusCode).json({
+                        info: `😅 ${r.statusCode} - Discord API :: Masuk & Verify 🤣`,
+                        result: {
+                          title: 'Kirim Token Ke Hikki Discord BOT Dalam 3 Menit! #🚮-bot-spam',
+                          message: '~verify DISCORD ' + JwtEncrypt({ discord: discordProfile, user: resUserSave }) + ' DELETE_CHAT'
                         }
-                      }
-                    ],
-                    relations: ['user_']
-                  });
-                  if (sosmeds.length > 0) {
-                    await sosmedRepo.update({
-                      type: sosmeds[0].type,
-                      user_: {
-                        id: req.user.id
-                      }
-                    }, {
-                      id: discordProfile.id,
-                      refresh_token: discordAuth.refresh_token
-                    });
-                  } else {
-                    const sosmed = new SocialMedia();
-                    sosmed.id = discordProfile.id;
-                    sosmed.refresh_token = discordAuth.refresh_token;
-                    sosmed.type = SosMed.DISCORD;
-                    sosmed.user_ = user;
-                    await sosmedRepo.insert(sosmed);
-                  }
-                  user.discord = discordProfile.id;
-                  const resUserSave = await userRepo.save(user);
-                  delete resUserSave.password;
-                  delete resUserSave.session_token;
-                  delete resUserSave.kartu_tanda_penduduk_;
-                  delete resUserSave.profile_;
-                  return res.status(r.statusCode).json({
-                    info: `😅 ${r.statusCode} - Discord API :: Masuk & Verify 🤣`,
-                    result: {
-                      title: 'Kirim Token Ke Hikki Discord BOT Dalam 3 Menit! #🚮-bot-spam',
-                      message: '~verify DISCORD ' + JwtEncrypt({ discord: discordProfile, user: resUserSave }) + ' DELETE_CHAT'
+                      });
+                    } catch (err) {
+                      console.error(err);
+                      return res.status(r.statusCode).json({
+                        info: `🙄 ${r.statusCode} - Discord API :: Gagal Masuk 😪`,
+                        result: {
+                          title: 'Kode oAuth Salah / Expired / Akun Telah Digunakan!',
+                          message: 'Silahkan Ulangi Langkah Sebelumnya Atau Coba Dengan Akun Yang Lain!'
+                        }
+                      });
                     }
-                  });
-                } catch (err) {
-                  console.error(err);
+                  } else {
+                    throw e;
+                  }
+                } catch (er2) {
+                  console.error(er2);
                   return res.status(r.statusCode).json({
-                    info: `🙄 ${r.statusCode} - Discord API :: Gagal Masuk 😪`,
+                    info: `🙄 ${r.statusCode} - Discord API :: Gagal Verify 😪`,
                     result: {
-                      title: 'Kode oAuth Salah / Expired / Akun Telah Digunakan!',
-                      message: 'Silahkan ulangi langkah sebelumnya atau coba dengan akun yang lain.'
+                      message: 'Koneksi Ke API Discord Error!'
                     }
                   });
                 }
-              } else {
-                return res.status(r.statusCode).json({
-                  info: `🙄 ${r.statusCode} - Discord API :: Gagal Verify 😪`,
-                  result: {
-                    message: 'Error koneksi ke api discord resmi!'
-                  }
-                });
-              }
-            });
-          } else {
+              });
+            } else {
+              throw er;
+            }
+          } catch (er1) {
+            console.error(er1);
             return res.status(rs.statusCode).json({
               info: `🙄 ${rs.statusCode} - Discord API :: Gagal Masuk 😪`,
               result: {
-                message: 'Kode token salah / tidak valid!'
+                message: 'Kode Token Salah / Tidak Valid!'
               }
             });
           }
