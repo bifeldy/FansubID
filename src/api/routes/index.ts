@@ -1,5 +1,5 @@
 import createError from 'http-errors';
-import fetch, { Blob, FormData } from 'node-fetch';
+import fetch from 'node-fetch';
 import multer from 'multer';
 import interceptor from 'express-interceptor';
 import rateLimit from 'express-rate-limit';
@@ -435,14 +435,16 @@ router.post('/promote', isAuthorized, async (req: UserRequest, res: Response, ne
 // POST `/api/image`
 router.post('/image', isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
+    const dateTime = new Date().getTime().toString();
+    const imgB64 = Buffer.from(req.file.buffer).toString('base64');
     const url = new URL(environment.externalApiImage);
-    const formData = new FormData();
-    formData.append('key', environment.imgbbKey);
-    formData.append('name', new Date().getTime().toString());
-    formData.append('image', new Blob([req.file.buffer], { type: req.file.mimetype }));
+    const form = new URLSearchParams();
+    form.append('key', environment.imgbbKey);
+    form.append('name', dateTime);
+    form.append('image', imgB64);
     const res_raw = await fetch(url.toString(), {
       method: 'POST',
-      body: formData,
+      body: form,
       headers: environment.nodeJsXhrHeader
     });
     const res_json: any = await res_raw.json();
@@ -497,13 +499,13 @@ router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, ne
       log(`[gCaptcha] 🎲 ${res_raw1.status}`, res_json1);
       if (res_raw1.ok) {
         const url = new URL(environment.apiPemerintahKTPUrl);
-        const formData = new URLSearchParams();
-        formData.append('nik', req.body.nik);
-        formData.append('nama', req.body.nama);
-        formData.append('ck_kpu', environment.apiPemerintahKTPSecretKey);
+        const form = new URLSearchParams();
+        form.append('nik', req.body.nik);
+        form.append('nama', req.body.nama);
+        form.append('ck_kpu', environment.apiPemerintahKTPSecretKey);
         const res_raw2 = await fetch(url.toString(), {
           method: 'POST',
-          body: formData,
+          body: form,
           headers: environment.nodeJsXhrHeader
         });
         const res_json2: any = await res_raw2.json();
@@ -655,16 +657,16 @@ router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Respons
       });
       if (req.body.app === SosMed.DISCORD) {
         const url = new URL(`${environment.discordApiUrl}/oauth2/token`);
-        const formData = new URLSearchParams();
-        formData.append('client_id', environment.discordClientId);
-        formData.append('client_secret', environment.discordClientSecret);
-        formData.append('grant_type', 'authorization_code');
-        formData.append('code', req.body.code);
-        formData.append('redirect_uri', `${environment.baseUrl}/verify?app=discord`);
-        formData.append('scope', 'identify email guilds.join');
+        const form = new URLSearchParams();
+        form.append('client_id', environment.discordClientId);
+        form.append('client_secret', environment.discordClientSecret);
+        form.append('grant_type', 'authorization_code');
+        form.append('code', req.body.code);
+        form.append('redirect_uri', `${environment.baseUrl}/verify?app=discord`);
+        form.append('scope', 'identify email guilds.join');
         const res_raw1 = await fetch(url.toString(), {
           method: 'POST',
-          body: formData,
+          body: form,
           headers: environment.nodeJsXhrHeader
         });
         const res_json1: any = await res_raw1.json();

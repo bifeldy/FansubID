@@ -19,15 +19,15 @@ const gcp = environment.gCloudPlatform;
 async function gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
   try {
     const url = new URL(gcp.serviceAccount.token_uri);
-    const formData = new URLSearchParams();
-    formData.append('grant_type', 'refresh_token');
-    formData.append('client_id', gcp.clientId);
-    formData.append('client_secret', gcp.clientSecret);
-    formData.append('refresh_token', refreshToken);
+    const form = new URLSearchParams();
+    form.append('grant_type', 'refresh_token');
+    form.append('client_id', gcp.clientId);
+    form.append('client_secret', gcp.clientSecret);
+    form.append('refresh_token', refreshToken);
     const googleClient = new google.auth.OAuth2(gcp.clientId, gcp.clientSecret);
     const res_raw = await fetch(url.toString(), {
       method: 'POST',
-      body: formData,
+      body: form,
       headers: environment.nodeJsXhrHeader
     });
     const res_json: any = await res_raw.json();
@@ -45,13 +45,13 @@ export async function gDrive(isUpload = false): Promise<drive_v3.Drive> {
     if (isUpload) {
       auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
     } else {
-      auth = new google.auth.GoogleAuth({
-        credentials: {
-          client_email: gcp.serviceAccount.client_email,
-          private_key: gcp.serviceAccount.private_key
-        },
-        scopes: gcp.gDrive.scopes
-      });
+      auth = new google.auth.JWT(
+        gcp.serviceAccount.client_email,
+        null,
+        gcp.serviceAccount.private_key,
+        gcp.gDrive.scopes,
+        null
+      );
     }
     // const auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
     const drive = google.drive({ version: 'v3', auth });
@@ -70,15 +70,15 @@ export async function gDrive(isUpload = false): Promise<drive_v3.Drive> {
 export async function mailSend(mailBody) {
   try {
     const url = new URL(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`);
-    const formData = new URLSearchParams();
-    formData.append('from', `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`);
-    formData.append('to', mailBody.to);
-    formData.append('subject', mailBody.subject);
-    formData.append('template', mailBody.template);
-    formData.append('h:X-Mailgun-Variables', JSON.stringify(mailBody.variables));
+    const form = new URLSearchParams();
+    form.append('from', `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`);
+    form.append('to', mailBody.to);
+    form.append('subject', mailBody.subject);
+    form.append('template', mailBody.template);
+    form.append('h:X-Mailgun-Variables', JSON.stringify(mailBody.variables));
     const res_raw = await fetch(url.toString(), {
       method: 'POST',
-      body: formData,
+      body: form,
       headers: {
         'Authorization': `Basic ${Buffer.from(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`).toString('base64')}`,
         ...environment.nodeJsXhrHeader

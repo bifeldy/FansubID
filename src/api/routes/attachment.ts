@@ -192,7 +192,7 @@ router.get('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
         const gdrive = await gDrive();
         const dfile = await gdrive.files.get(
           { fileId: attachment.google_drive, alt: 'media' },
-          { responseType: 'stream', headers: { range: req.headers.range } }
+          { responseType: 'stream', headers: { Range: req.headers.range } }
         );
         res.writeHead(dfile.status, dfile.headers);
         dfile.data.on('error', err => {
