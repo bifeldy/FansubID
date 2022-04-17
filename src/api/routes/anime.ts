@@ -1,6 +1,7 @@
-import request from 'postman-request';
+import fetch from 'node-fetch';
 import translate from '@iamtraction/google-translate';
 
+import { URL } from 'url';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
 
@@ -9,6 +10,7 @@ import { environment } from '../../environments/api/environment';
 import { UserRequest } from '../models/UserRequest';
 
 import { cacheGet, cachePut } from '../helpers/cache';
+import { log } from '../helpers/logger';
 
 import { isAuthorized, isLogin } from '../middlewares/auth';
 
@@ -30,38 +32,39 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
-    return request({
-      method: 'GET',
-      uri: `${environment.externalApiAnime}/anime?q=${searchQuery}&type=${searchType}`,
-      headers: environment.nodeJsXhrHeader
-    }, async (error, result, body) => {
-      if (error || !result) {
-        console.error(error);
-        return res.status(200).json({
-          info: `😅 200 - Anime API :: Search ${searchQuery} 🤣`,
-          results: []
-        });
-      } else {
-        const statusCode = result.statusCode;
-        let data = [];
-        try {
-          data = JSON.parse(body).data;
-          for (let i = 0; i < data.length; i++) {
-            data[i].image_url = data[i].images.jpg?.image_url || data[i].images.webp?.image_url;
-          }
-        } catch (e) {
-          console.error(e);
+    try {
+      const url = new URL(`${environment.externalApiAnime}/anime`);
+      url.searchParams.append('q', searchQuery);
+      url.searchParams.append('type', searchType);
+      const res_raw = await fetch(url, {
+        method: 'GET',
+        headers: environment.nodeJsXhrHeader
+      });
+      const res_json = await res_raw.json();
+      log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
+      if (res_raw.ok) {
+        let data = res_json.data;
+        for (let i = 0; i < data.length; i++) {
+          data[i].image_url = data[i].images.jpg?.image_url || data[i].images.webp?.image_url;
         }
         const responseBody = {
-          info: `😅 ${statusCode} - Anime API :: Search ${searchQuery} 🤣`,
+          info: `😅 ${res_raw.status} - Anime API :: Search ${searchQuery} 🤣`,
           results: data
         };
         if (data.length > 0) {
-          cachePut(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: res_raw.status, body: responseBody }, environment.externalApiCacheTime);
         }
-        return res.status(statusCode).json(responseBody);
+        return res.status(res_raw.status).json(responseBody);
+      } else {
+        throw new Error('Gagal Tarik Data Anime');
       }
-    });
+    } catch (error) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Anime API :: Search ${searchQuery} 🤣`,
+        results: []
+      });
+    }
   }
 });
 
@@ -134,38 +137,37 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
-    return request({
-      method: 'GET',
-      uri: `${environment.externalApiAnime}/seasons/${year}/${season}`,
-      headers: environment.nodeJsXhrHeader
-    }, async (error, result, body) => {
-      if (error || !result) {
-        console.error(error);
-        return res.status(200).json({
-          info: `😅 200 - Anime API :: Seasonal ${season} ${year} 🤣`,
-          results: []
-        });
-      } else {
-        const statusCode = result.statusCode;
-        let data = [];
-        try {
-          data = JSON.parse(body).data;
-          for (let i = 0; i < data.length; i++) {
-            data[i].image_url = data[i].images.jpg?.image_url || data[i].images.webp?.image_url;
-          }
-        } catch (e) {
-          console.error(e);
+    try {
+      const url = new URL(`${environment.externalApiAnime}/seasons/${year}/${season}`);
+      const res_raw = await fetch(url, {
+        method: 'GET',
+        headers: environment.nodeJsXhrHeader
+      });
+      const res_json = await res_raw.json();
+      log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
+      if (res_raw.ok) {
+        let data = res_json.data;
+        for (let i = 0; i < data.length; i++) {
+          data[i].image_url = data[i].images.jpg?.image_url || data[i].images.webp?.image_url;
         }
         const responseBody = {
-          info: `😅 ${statusCode} - Anime API :: Seasonal ${season} ${year} 🤣`,
+          info: `😅 ${res_raw.status} - Anime API :: Seasonal ${season} ${year} 🤣`,
           results: data
         };
         if (data.length > 0) {
-          cachePut(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: res_raw.status, body: responseBody }, environment.externalApiCacheTime);
         }
-        return res.status(statusCode).json(responseBody);
+        return res.status(res_raw.status).json(responseBody);
+      } else {
+        throw new Error('Gagal Tarik Data Anime');
       }
-    });
+    } catch (error) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Anime API :: Seasonal ${season} ${year} 🤣`,
+        results: []
+      });
+    }
   }
 });
 
@@ -327,36 +329,27 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
-    return request({
-      method: 'GET',
-      uri: `${environment.externalApiAnime}/anime/${malId}`,
-      headers: environment.nodeJsXhrHeader
-    }, async (error, result, body) => {
-      if (error || !result) {
-        console.error(error);
-        return res.status(200).json({
-          info: `😅 200 - Anime API :: Detail ${malId} 🤣`,
-          result: null
-        });
-      } else {
-        let animeDetail = null;
-        let httpStatusCode = 404;
+    try {
+      const url = new URL(`${environment.externalApiAnime}/anime/${malId}`);
+      const res_raw = await fetch(url, {
+        method: 'GET',
+        headers: environment.nodeJsXhrHeader
+      });
+      const res_json = await res_raw.json();
+      log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
+      if (res_raw.ok) {
+        let httpStatusCode = res_raw.status;
+        const animeDetail = res_json.data;
+        animeDetail.image_url = animeDetail.images.jpg?.image_url || animeDetail.images.webp?.image_url;
         try {
-          animeDetail = JSON.parse(body).data;
-          animeDetail.image_url = animeDetail.images.jpg?.image_url || animeDetail.images.webp?.image_url;
-          httpStatusCode = result.statusCode;
-          try {
-            if ('synopsis' in animeDetail && animeDetail.synopsis) {
-              const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
-              animeDetail.synopsis = translatedAnimeSynopsis.text;
-            }
-          } catch (e2) {
-            console.error(e2);
-            httpStatusCode = 202;
-            animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+          if ('synopsis' in animeDetail && animeDetail.synopsis) {
+            const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });
+            animeDetail.synopsis = translatedAnimeSynopsis.text;
           }
-        } catch (e1) {
-          console.error(e1);
+        } catch (err) {
+          console.error(err);
+          httpStatusCode = 202;
+          animeDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
         }
         const responseBody = {
           info: `😅 ${httpStatusCode} - Anime API :: Detail ${malId} 🤣`,
@@ -366,8 +359,16 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
           cachePut(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
         }
         return res.status(httpStatusCode).json(responseBody);
+      } else {
+        throw new Error('Gagal Tarik Data Anime');
       }
-    });
+    } catch (error) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Anime API :: Detail ${malId} 🤣`,
+        result: null
+      });
+    }
   }
 });
 

@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 
+import { URLSearchParams } from 'url';
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 
@@ -17,16 +18,19 @@ const gcp = environment.gCloudPlatform;
 // }
 async function gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
   try {
+    const formData = new URLSearchParams();
+    formData.append('grant_type', 'refresh_token');
+    formData.append('client_id', gcp.clientId);
+    formData.append('client_secret', gcp.clientSecret);
+    formData.append('refresh_token', refreshToken);
     const googleClient = new google.auth.OAuth2(gcp.clientId, gcp.clientSecret);
-    const res = await fetch(gcp.serviceAccount.token_uri, {
+    const res_raw = await fetch(gcp.serviceAccount.token_uri, {
       method: 'POST',
-      body: `grant_type=refresh_token&client_id=${encodeURIComponent(gcp.clientId)}&client_secret=${encodeURIComponent(gcp.clientSecret)}&refresh_token=${encodeURIComponent(refreshToken)}`,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      body: formData,
+      headers: environment.nodeJsXhrHeader
     });
-    const res_json = await res.json();
-    log(`[gApp] 🔑`, res_json);
+    const res_json = await res_raw.json();
+    log(`[gApp] 🔑 ${res_raw.status}`, res_json);
     googleClient.setCredentials(res_json);
     return googleClient;
   } catch (err) {
@@ -70,15 +74,16 @@ export async function mailSend(mailBody) {
     formData.append('subject', mailBody.subject);
     formData.append('template', mailBody.template);
     formData.append('h:X-Mailgun-Variables', JSON.stringify(mailBody.variables));
-    const res = await fetch(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`, {
+    const res_raw = await fetch(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`, {
       method: 'POST',
       body: formData,
       headers: {
         'Authorization': `Basic ${Buffer.from(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`).toString('base64')}`,
+        ...environment.nodeJsXhrHeader
       }
     });
-    const result = await res.json();
-    log(`[MAILGUN_SUCCESS] 💌`, result);
+    const res_json = await res_raw.json();
+    log(`[MAILGUN_SUCCESS] 💌 ${res_raw.status}`, res_json);
   } catch (err) {
     console.error(err);
   }

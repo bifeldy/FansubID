@@ -1,6 +1,7 @@
-import request from 'postman-request';
+import fetch from 'node-fetch';
 import translate from '@iamtraction/google-translate';
 
+import { URL } from 'url';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
 
@@ -11,6 +12,7 @@ import { UserRequest } from '../models/UserRequest';
 import { isLogin, isAuthorized } from '../middlewares/auth';
 
 import { cacheGet, cachePut } from '../helpers/cache';
+import { log } from '../helpers/logger';
 
 import { Berkas } from '../entities/Berkas';
 import { Dorama } from '../entities/Dorama';
@@ -30,35 +32,33 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
-    return request({
-      method: 'GET',
-      uri: `${environment.externalApiDorama}/search/q/${searchQuery}`,
-      headers: environment.nodeJsXhrHeader
-    }, async (error, result, body) => {
-      if (error || !result) {
-        console.error(error);
-        return res.status(200).json({
-          info: `😅 200 - Dorama API :: Search ${searchQuery} 🤣`,
-          results: []
-        });
-      } else {
-        const statusCode = result.statusCode;
-        let data = [];
-        try {
-          data = JSON.parse(body).results.filter(x => x.type.toLowerCase().includes(searchType));
-        } catch (e) {
-          console.error(e);
-        }
+    try {
+      const url = new URL(`${environment.externalApiDorama}/search/q/${searchQuery}`);
+      const res_raw = await fetch(url, {
+        method: 'GET',
+        headers: environment.nodeJsXhrHeader
+      });
+      const res_json = await res_raw.json();
+      log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
+      if (res_raw.ok) {
+        let data = res_json.results.filter(x => x.type.toLowerCase().includes(searchType));
         const responseBody = {
-          info: `😅 ${statusCode} - Dorama API :: Search ${searchQuery} 🤣`,
+          info: `😅 ${res_raw.status} - Dorama API :: Search ${searchQuery} 🤣`,
           results: data
         };
         if (data.length > 0) {
-          cachePut(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+          cachePut(req.originalUrl, { status: res_raw.status, body: responseBody }, environment.externalApiCacheTime);
         }
-        return res.status(statusCode).json(responseBody);
+        return res.status(res_raw.status).json(responseBody);
+      } else {
+        throw new Error('Gagal Tarik Data Dorama');
       }
-    });
+    } catch (error) {
+      return res.status(200).json({
+        info: `😅 200 - Dorama API :: Search ${searchQuery} 🤣`,
+        results: []
+      });
+    }
   }
 });
 
@@ -136,35 +136,33 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
-    return request({
-      method: 'GET',
-      uri: `${environment.externalApiDorama}/seasonal/${year}/${quarter}`,
-      headers: environment.nodeJsXhrHeader
-    }, async (error, result, body) => {
-      if (error || !result) {
-        console.error(error);
-        return res.status(200).json({
-          info: `😅 200 - Dorama API :: Seasonal ${season} ${year} 🤣`,
-          results: []
-        });
-      } else {
-        const statusCode = result.statusCode;
-        let data = [];
-        try {
-          data = JSON.parse(body);
-        } catch (e) {
-          console.error(e);
-        }
+    try {
+      const url = new URL(`${environment.externalApiDorama}/seasonal/${year}/${quarter}`);
+      const res_raw = await fetch(url, {
+        method: 'GET',
+        headers: environment.nodeJsXhrHeader
+      });
+      const res_json = await res_raw.json();
+      log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
+      if (res_raw.ok) {
         const responseBody = {
-          info: `😅 ${statusCode} - Dorama API :: Seasonal ${season} ${year} 🤣`,
-          results: data
+          info: `😅 ${res_raw.status} - Dorama API :: Seasonal ${season} ${year} 🤣`,
+          results: res_json
         };
-        if (data.length > 0) {
-          cachePut(req.originalUrl, { status: statusCode, body: responseBody }, environment.externalApiCacheTime);
+        if (res_json.length > 0) {
+          cachePut(req.originalUrl, { status: res_raw.status, body: responseBody }, environment.externalApiCacheTime);
         }
-        return res.status(statusCode).json(responseBody);
+        return res.status(res_raw.status).json(responseBody);
+      } else {
+        throw new Error('Gagal Tarik Data Dorama');
       }
-    });
+    } catch (error) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Dorama API :: Seasonal ${season} ${year} 🤣`,
+        results: []
+      });
+    }
   }
 });
 
@@ -326,35 +324,26 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
-    return request({
-      method: 'GET',
-      uri: `${environment.externalApiDorama}/id/${req.params.mdlSlug}`,
-      headers: environment.nodeJsXhrHeader
-    }, async (error, result, body) => {
-      if (error || !result) {
-        console.error(error);
-        return res.status(200).json({
-          info: `😅 200 - Dorama API :: Detail ${mdlId} 🤣`,
-          result: null
-        });
-      } else {
-        let dramaDetail = null;
-        let httpStatusCode = 404;
+    try {
+      const url = new URL(`${environment.externalApiDorama}/id/${req.params.mdlSlug}`);
+      const res_raw = await fetch(url, {
+        method: 'GET',
+        headers: environment.nodeJsXhrHeader
+      });
+      const res_json = await res_raw.json();
+      log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
+      if (res_raw.ok) {
+        let httpStatusCode = res_raw.status;
+        const dramaDetail = res_json.data;
         try {
-          dramaDetail = JSON.parse(body).data;
-          httpStatusCode = result.statusCode;
-          try {
-            if ('synopsis' in dramaDetail && dramaDetail.synopsis) {
-              const translatedDoramaSynopsis = await translate(dramaDetail.synopsis, { to: 'id' });
-              dramaDetail.synopsis = translatedDoramaSynopsis.text;
-            }
-          } catch (e2) {
-            console.error(e2);
-            httpStatusCode = 202;
-            dramaDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+          if ('synopsis' in dramaDetail && dramaDetail.synopsis) {
+            const translatedDoramaSynopsis = await translate(dramaDetail.synopsis, { to: 'id' });
+            dramaDetail.synopsis = translatedDoramaSynopsis.text;
           }
-        } catch (e1) {
-          console.error(e1);
+        } catch (err) {
+          console.error(err);
+          httpStatusCode = 202;
+          dramaDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
         }
         const responseBody = {
           info: `😅 ${httpStatusCode} - Dorama API :: Detail ${mdlId} 🤣`,
@@ -364,8 +353,16 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
           cachePut(req.originalUrl, { status: httpStatusCode, body: responseBody }, environment.externalApiCacheTime);
         }
         return res.status(httpStatusCode).json(responseBody);
+      } else {
+        throw new Error('Gagal Tarik Data Dorama');
       }
-    });
+    } catch (error) {
+      console.error(error);
+      return res.status(200).json({
+        info: `😅 200 - Dorama API :: Detail ${mdlId} 🤣`,
+        result: null
+      });
+    }
   }
 });
 
