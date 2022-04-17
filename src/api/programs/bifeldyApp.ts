@@ -18,18 +18,19 @@ const gcp = environment.gCloudPlatform;
 // }
 async function gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
   try {
+    const url = new URL(gcp.serviceAccount.token_uri);
     const formData = new URLSearchParams();
     formData.append('grant_type', 'refresh_token');
     formData.append('client_id', gcp.clientId);
     formData.append('client_secret', gcp.clientSecret);
     formData.append('refresh_token', refreshToken);
     const googleClient = new google.auth.OAuth2(gcp.clientId, gcp.clientSecret);
-    const res_raw = await fetch(gcp.serviceAccount.token_uri, {
+    const res_raw = await fetch(url.toString(), {
       method: 'POST',
       body: formData,
       headers: environment.nodeJsXhrHeader
     });
-    const res_json = await res_raw.json();
+    const res_json: any = await res_raw.json();
     log(`[gApp] 🔑 ${res_raw.status}`, res_json);
     googleClient.setCredentials(res_json);
     return googleClient;
@@ -68,13 +69,14 @@ export async function gDrive(callback, isUpload = false): Promise<void> {
 //
 export async function mailSend(mailBody) {
   try {
+    const url = new URL(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`);
     const formData = new URLSearchParams();
     formData.append('from', `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`);
     formData.append('to', mailBody.to);
     formData.append('subject', mailBody.subject);
     formData.append('template', mailBody.template);
     formData.append('h:X-Mailgun-Variables', JSON.stringify(mailBody.variables));
-    const res_raw = await fetch(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`, {
+    const res_raw = await fetch(url.toString(), {
       method: 'POST',
       body: formData,
       headers: {
@@ -82,7 +84,7 @@ export async function mailSend(mailBody) {
         ...environment.nodeJsXhrHeader
       }
     });
-    const res_json = await res_raw.json();
+    const res_json: any = await res_raw.json();
     log(`[MAILGUN_SUCCESS] 💌 ${res_raw.status}`, res_json);
   } catch (err) {
     console.error(err);

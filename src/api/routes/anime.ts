@@ -36,11 +36,11 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       const url = new URL(`${environment.externalApiAnime}/anime`);
       url.searchParams.append('q', searchQuery);
       url.searchParams.append('type', searchType);
-      const res_raw = await fetch(url, {
+      const res_raw = await fetch(url.toString(), {
         method: 'GET',
         headers: environment.nodeJsXhrHeader
       });
-      const res_json = await res_raw.json();
+      const res_json: any = await res_raw.json();
       log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
         let data = res_json.data;
@@ -139,11 +139,11 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   } else {
     try {
       const url = new URL(`${environment.externalApiAnime}/seasons/${year}/${season}`);
-      const res_raw = await fetch(url, {
+      const res_raw = await fetch(url.toString(), {
         method: 'GET',
         headers: environment.nodeJsXhrHeader
       });
-      const res_json = await res_raw.json();
+      const res_json: any = await res_raw.json();
       log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
         let data = res_json.data;
@@ -331,11 +331,11 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     try {
       const url = new URL(`${environment.externalApiAnime}/anime/${malId}`);
-      const res_raw = await fetch(url, {
+      const res_raw = await fetch(url.toString(), {
         method: 'GET',
         headers: environment.nodeJsXhrHeader
       });
-      const res_json = await res_raw.json();
+      const res_json: any = await res_raw.json();
       log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
         let httpStatusCode = res_raw.status;

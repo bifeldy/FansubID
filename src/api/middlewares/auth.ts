@@ -37,11 +37,11 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
       url.searchParams.append('secret', environment.reCaptchaSecretKey);
       url.searchParams.append('response', req.body['g-recaptcha-response']);
       url.searchParams.append('remoteip', req.header('x-real-ip') || req.socket.remoteAddress || '');
-      const res_raw = await fetch(url, {
+      const res_raw = await fetch(url.toString(), {
         method: 'GET',
         headers: environment.nodeJsXhrHeader
       });
-      const res_json = await res_raw.json();
+      const res_json: any = await res_raw.json();
       log(`[gCaptcha] 🎲 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
         const registrationRepo = getRepository(Registration);

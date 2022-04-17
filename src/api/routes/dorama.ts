@@ -34,11 +34,11 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   } else {
     try {
       const url = new URL(`${environment.externalApiDorama}/search/q/${searchQuery}`);
-      const res_raw = await fetch(url, {
+      const res_raw = await fetch(url.toString(), {
         method: 'GET',
         headers: environment.nodeJsXhrHeader
       });
-      const res_json = await res_raw.json();
+      const res_json: any = await res_raw.json();
       log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
         let data = res_json.results.filter(x => x.type.toLowerCase().includes(searchType));
@@ -138,11 +138,11 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   } else {
     try {
       const url = new URL(`${environment.externalApiDorama}/seasonal/${year}/${quarter}`);
-      const res_raw = await fetch(url, {
+      const res_raw = await fetch(url.toString(), {
         method: 'GET',
         headers: environment.nodeJsXhrHeader
       });
-      const res_json = await res_raw.json();
+      const res_json: any = await res_raw.json();
       log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
         const responseBody = {
@@ -326,11 +326,11 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     try {
       const url = new URL(`${environment.externalApiDorama}/id/${req.params.mdlSlug}`);
-      const res_raw = await fetch(url, {
+      const res_raw = await fetch(url.toString(), {
         method: 'GET',
         headers: environment.nodeJsXhrHeader
       });
-      const res_json = await res_raw.json();
+      const res_json: any = await res_raw.json();
       log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
         let httpStatusCode = res_raw.status;
