@@ -145,8 +145,6 @@ router.get('/aktivasi', activationModule, (req: UserRequest, res: Response, next
 
 // Intercept Response
 router.use(interceptor((req: UserRequest, res: Response) => {
-  let intercept401 = false;
-  let interceptJsonXml = false;
   const unAuthorized = () => {
     log('[INTERCEPT-STATUS_CODE] 💠 401');
     res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
@@ -170,30 +168,14 @@ router.use(interceptor((req: UserRequest, res: Response) => {
   };
   return {
     isInterceptable: () => {
-      switch (res.statusCode) {
-        case 401:
-          intercept401 = true;
-          break;
-        case 429:
-          // TODO :: API Abuse :: Warning -> Banned
-          break;
-        default:
-          break;
-      }
-      try {
-        interceptJsonXml = ('xml' in req.query && JSON.parse(req.query.xml) === true);
-      } catch (error) {
-        console.error(error);
-      }
-      return true;
+      if (res.statusCode == 401) unAuthorized();
+      if (res.getHeader('Content-Type') === 'application/octet-stream') return false;
+      return true
     },
     intercept: (body: any, send: any) => {
-      if (intercept401) unAuthorized();
-      if (interceptJsonXml) {
+      if (('xml' in req.query && JSON.parse(req.query.xml) === true)) {
         res.set('Content-Type', 'application/xml');
         body = convertJsonToXml(body);
-      } else {
-        res.set('Content-Type', 'application/json');
       }
       return send(body);
     }
