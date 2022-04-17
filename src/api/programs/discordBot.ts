@@ -48,14 +48,18 @@ export async function discordBot(io: Server, msg: Message): Promise<Message> {
                   .setColor('#43b581')
                   .setTitle(user.kartu_tanda_penduduk_.nama)
                   .setURL(`${environment.baseUrl}/user/${user.username}`)
-                  .setAuthor('Hikki - Verifikasi Pengguna', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+                  .setAuthor({
+                    name: 'Hikki - Verifikasi Pengguna',
+                    iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                    url: environment.baseUrl
+                  })
                   .setDescription(user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
                   .setThumbnail(user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url)
                   .setTimestamp(user.updated_at)
-                  .setFooter(
-                    user.username,
-                    user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url
-                  )
+                  .setFooter({
+                    text: user.username,
+                    iconURL: user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url
+                  })
               ]
             });
           } else {
