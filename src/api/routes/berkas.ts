@@ -295,7 +295,11 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
             .setColor('#0099ff')
             .setTitle(resFileSave.name)
             .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
-            .setAuthor('Hikki - Penambahan Berkas Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+            .setAuthor({
+              name: 'Hikki - Penambahan Berkas Baru',
+              iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+              url: environment.baseUrl
+            })
             .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
             .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
             .addField('Fansub', fansubEmbedData.join(', '), false)
@@ -306,10 +310,10 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
             )
             .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
             .setTimestamp(resFileSave.updated_at)
-            .setFooter(
-              resFileSave.user_.username,
-              resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
-            )
+            .setFooter({
+              text: resFileSave.user_.username,
+              iconURL: resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
+            })
         ]
       });
       if (!resFileSave.private) {
@@ -565,7 +569,11 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
                 .setColor('#ff4081')
                 .setTitle(resFileSave.name)
                 .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
-                .setAuthor('Hikki - Pembaharuan Data Berkas', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+                .setAuthor({
+                  name: 'Hikki - Pembaharuan Data Berkas',
+                  iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                  url: environment.baseUrl
+                })
                 .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
                 .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
                 .addField('Fansub', fansubEmbedData.join(', '), false)
@@ -576,10 +584,10 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
                 )
                 .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
                 .setTimestamp(resFileSave.updated_at)
-                .setFooter(
-                  resFileSave.user_.username,
-                  resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
-                )
+                .setFooter({
+                  text: resFileSave.user_.username,
+                  iconURL: resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
+                })
             ]
           });
           return res.status(200).json({

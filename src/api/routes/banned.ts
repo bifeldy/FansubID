@@ -200,14 +200,18 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
               .setColor('#c5e510')
               .setTitle(banned.user_.username)
               .setURL(`${environment.baseUrl}/user/${banned.user_.username}`)
-              .setAuthor('Hikki - Akun BANNED', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+              .setAuthor({
+                name: 'Hikki - Akun BANNED',
+                iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                url: environment.baseUrl
+              })
               .addField('Alasan', banned.reason, false)
               .setThumbnail(banned.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.user_.image_url)
               .setTimestamp(banned.updated_at)
-              .setFooter(
-                (banned.banned_by_ ? banned.banned_by_.username : 'AUTO_BANNED'),
-                (banned.banned_by_ ? (banned.banned_by_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
-              )
+              .setFooter({
+                text: (banned.banned_by_ ? banned.banned_by_.username : 'AUTO_BANNED'),
+                iconURL: (banned.banned_by_ ? (banned.banned_by_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
+              })
           ]
         });
         return res.status(200).json({

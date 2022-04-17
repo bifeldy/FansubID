@@ -128,14 +128,18 @@ router.get('/aktivasi', activationModule, (req: UserRequest, res: Response, next
         .setColor('#0099ff')
         .setTitle(req.user.kartu_tanda_penduduk_.nama)
         .setURL(`${environment.baseUrl}/user/${req.user.username}`)
-        .setAuthor('Hikki - Pendaftaran Pengguna Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+        .setAuthor({
+          name: 'Hikki - Pendaftaran Pengguna Baru',
+          iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+          url: environment.baseUrl
+        })
         .setDescription(req.user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
         .setThumbnail(req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url)
         .setTimestamp(req.user.updated_at)
-        .setFooter(
-          req.user.username,
-          req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
-        )
+        .setFooter({
+          text: req.user.username,
+          iconURL: req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
+        })
     ]
   });
   return res.redirect('/login');
@@ -396,14 +400,18 @@ router.post('/promote', isAuthorized, async (req: UserRequest, res: Response, ne
                 .setColor('#69f0ae')
                 .setTitle(resUserSave.kartu_tanda_penduduk_.nama)
                 .setURL(`${environment.baseUrl}/user/${resUserSave.username}`)
-                .setAuthor(`Hikki - Promosi Menjadi ${resUserSave.role}`, `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+                .setAuthor({
+                  name: `Hikki - Promosi Menjadi ${resUserSave.role}`,
+                  iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                  url: environment.baseUrl
+                })
                 .setDescription(resUserSave.profile_.description.replace(/<[^>]*>/g, ' ').trim())
                 .setThumbnail(resUserSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resUserSave.image_url)
                 .setTimestamp(resUserSave.updated_at)
-                .setFooter(
-                  `Diangkat promosi oleh :: ${req.user.username}`,
-                  req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
-                )
+                .setFooter({
+                  text: `Diangkat promosi oleh :: ${req.user.username}`,
+                  iconURL: req.user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : req.user.image_url
+                })
             ]
           });
           delete resUserSave.password;

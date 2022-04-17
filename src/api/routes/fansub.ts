@@ -195,14 +195,18 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
                 .setColor('#0099ff')
                 .setTitle(resFansubSave.name)
                 .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
-                .setAuthor('Hikki - Penambahan Fansub Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+                .setAuthor({
+                  name: 'Hikki - Penambahan Fansub Baru',
+                  iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                  url: environment.baseUrl
+                })
                 .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
                 .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
                 .setTimestamp(resFansubSave.updated_at)
-                .setFooter(
-                  resFansubSave.user_.username,
-                  resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
-                )
+                .setFooter({
+                  text: resFansubSave.user_.username,
+                  iconURL: resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
+                })
             ]
           });
           req.io.volatile.emit('new-fansub', resFansubSave);
@@ -573,14 +577,18 @@ router.put('/:slug', isAuthorized, async (req: UserRequest, res: Response, next:
               .setColor('#ff4081')
               .setTitle(resFansubSave.name)
               .setURL(`${environment.baseUrl}/fansub/${resFansubSave.slug}`)
-              .setAuthor('Hikki - Pembaharuan Data Fansub', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+              .setAuthor({
+                name: 'Hikki - Pembaharuan Data Fansub',
+                iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                url: environment.baseUrl
+              })
               .setDescription(resFansubSave.description.replace(/<[^>]*>/g, ' ').trim())
               .setThumbnail(resFansubSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.image_url)
               .setTimestamp(resFansubSave.updated_at)
-              .setFooter(
-                resFansubSave.user_.username,
-                resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
-              )
+              .setFooter({
+                text: resFansubSave.user_.username,
+                iconURL: resFansubSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFansubSave.user_.image_url
+              })
           ]
         });
         return res.status(200).json({

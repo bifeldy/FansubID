@@ -104,14 +104,18 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
               .setColor('#0099ff')
               .setTitle(resNewsSave.title)
               .setURL(`${environment.baseUrl}/news/${resNewsSave.id}`)
-              .setAuthor('Hikki - Penambahan Berita Baru', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+              .setAuthor({
+                name: 'Hikki - Penambahan Berita Baru',
+                iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                url: environment.baseUrl
+              })
               .setDescription(resNewsSave.content.replace(/<[^>]*>/g, ' ').trim())
               .setImage(resNewsSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.image_url)
               .setTimestamp(resNewsSave.updated_at)
-              .setFooter(
-                resNewsSave.user_.username,
-                resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
-              )
+              .setFooter({
+                text: resNewsSave.user_.username,
+                iconURL: resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
+              })
           ]
         });
         req.io.volatile.emit('new-news', resNewsSave);
@@ -213,14 +217,18 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
                   .setColor('#ff4081')
                   .setTitle(resNewsSave.title)
                   .setURL(`${environment.baseUrl}/news/${resNewsSave.id}`)
-                  .setAuthor('Hikki - Pembaharuan Data Berita', `${environment.baseUrl}/assets/img/favicon.png`, environment.baseUrl)
+                  .setAuthor({
+                    name: 'Hikki - Pembaharuan Data Berita',
+                    iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                    url: environment.baseUrl
+                  })
                   .setDescription(resNewsSave.content.replace(/<[^>]*>/g, ' ').trim())
                   .setImage(resNewsSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.image_url)
                   .setTimestamp(resNewsSave.updated_at)
-                  .setFooter(
-                    resNewsSave.user_.username,
-                    resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
-                  )
+                  .setFooter({
+                    text: resNewsSave.user_.username,
+                    iconURL: resNewsSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resNewsSave.user_.image_url
+                  })
               ]
             });
             return res.status(200).json({
