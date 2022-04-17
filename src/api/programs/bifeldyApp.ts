@@ -56,7 +56,6 @@ export async function gDrive(isUpload = false): Promise<drive_v3.Drive> {
     // const auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
     const drive = google.drive({ version: 'v3', auth });
     log(`[GDRIVE] ⛅`, drive);
-    // callback(null, drive);
     return drive;
   } catch (err) {
     throw err;
