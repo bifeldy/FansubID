@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 import { URLSearchParams } from 'url';
 import { OAuth2Client } from 'google-auth-library';
-import { google } from 'googleapis';
+import { drive_v3, google } from 'googleapis';
 
 import { environment } from '../../environments/api/environment';
 
@@ -39,27 +39,27 @@ async function gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
   }
 }
 
-export async function gDrive(callback, isUpload = false): Promise<void> {
+export async function gDrive(isUpload = false): Promise<drive_v3.Drive> {
   try {
-    // let auth = null;
-    // if (isUpload) {
-    //   auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
-    // } else {
-    //   auth = new google.auth.GoogleAuth({
-    //     credentials: {
-    //       client_email: gcp.serviceAccount.client_email,
-    //       private_key: gcp.serviceAccount.private_key
-    //     },
-    //     scopes: ['https://www.googleapis.com/auth/drive']
-    //   });
-    // }
-    const auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
+    let auth = null;
+    if (isUpload) {
+      auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
+    } else {
+      auth = new google.auth.GoogleAuth({
+        credentials: {
+          client_email: gcp.serviceAccount.client_email,
+          private_key: gcp.serviceAccount.private_key
+        },
+        scopes: gcp.gDrive.scopes
+      });
+    }
+    // const auth = await gAuthPersonalAccount(gcp.gDrive.refreshToken);
     const drive = google.drive({ version: 'v3', auth });
     log(`[GDRIVE] ⛅`, drive);
-    callback(null, drive);
+    // callback(null, drive);
+    return drive;
   } catch (err) {
-    console.error(err);
-    callback(err, null);
+    throw err;
   }
 }
 

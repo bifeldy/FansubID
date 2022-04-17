@@ -169,8 +169,8 @@ router.use(interceptor((req: UserRequest, res: Response) => {
   return {
     isInterceptable: () => {
       if (res.statusCode == 401) unAuthorized();
-      if (res.getHeader('Content-Type') === 'application/octet-stream') return false;
-      return true
+      if (res.getHeaders()['content-type']?.toString().toLowerCase().includes('application/json')) return true;
+      return false;
     },
     intercept: (body: any, send: any) => {
       if (('xml' in req.query && JSON.parse(req.query.xml) === true)) {

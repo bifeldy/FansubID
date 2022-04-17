@@ -70,7 +70,7 @@
     "ffmpeg-static": "^4.4.0",
     "file-saver": "^2.0.5",
     "find": "^0.3.0",
-    "googleapis": "^48.0.0",
+    "googleapis": "^100.0.0",
     "hammerjs": "^2.0.8",
     "http-errors": "^1.8.0",
     "idb": "^6.1.5",

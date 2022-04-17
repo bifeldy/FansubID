@@ -5,7 +5,6 @@ import find from 'find';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal, ILike } from 'typeorm';
-import { drive_v3 } from 'googleapis';
 
 import { environment } from '../../environments/api/environment';
 
@@ -190,27 +189,18 @@ router.get('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
         ]
       });
       if (attachment.google_drive) {
-        return gDrive(async (gAppError, d: drive_v3.Drive) => {
-          if (!gAppError) {
-            d.files.get(
-              { fileId: attachment.google_drive, alt: 'media' },
-              { responseType: 'stream', headers: { range: req.headers.range } },
-              (e, r: any) => {
-                if (e) {
-                  console.error(e);
-                } else {
-                  res.writeHead(r.status, r.headers);
-                  r.data.on('error', err => {
-                    console.error(err);
-                  }).on('end', async () => {
-                    attachment.download_count++;
-                    await attachmentRepo.save(attachment);
-                  }).pipe(res);
-                }
-              }
-            );
-          }
-        });
+        const gdrive = await gDrive();
+        const dfile = await gdrive.files.get(
+          { fileId: attachment.google_drive, alt: 'media' },
+          { responseType: 'stream', headers: { range: req.headers.range } }
+        );
+        res.writeHead(dfile.status, dfile.headers);
+        dfile.data.on('error', err => {
+          console.error(err);
+        }).on('end', async () => {
+          attachment.download_count++;
+          await attachmentRepo.save(attachment);
+        }).pipe(res);
       } else {
         return find.file(/$/, `${environment.uploadFolder}`, async (files) => {
           const fIdx = files.findIndex(f => f.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));

@@ -90,7 +90,8 @@ export const environment = {
     clientId: '',
     clientSecret: '',
     gDrive: {
-      refreshToken: ''
+      refreshToken: '',
+      scopes: ['https://www.googleapis.com/auth/drive']
     },
     serviceAccount: {
       type: 'service_account',
