@@ -49,7 +49,7 @@
         </div>
         <div class="col-12">
           <div class="row px-3">
-            <mat-slide-toggle class="col-12 col-md-6 col-xl-3" [disabled]="!ss.mySocket?.id"
+            <mat-slide-toggle class="my-2 col-12 col-md-6 col-xl-3" [disabled]="!ss.mySocket?.id"
              *ngFor="let s of settings | keyvalue" [(ngModel)]="settings[s.key]" (change)="toggleSetting(s.key, $event.checked)">
               {{ s.key }} - {{ s.value }}
             </mat-slide-toggle>

@@ -125,8 +125,9 @@ export const environment = {
   discordBotChannelBotId: '426384107795251206',
   discordBotLoginToken: '',
   nodeJsXhrHeader: {
-    'accept': 'application/json',
-    'user-agent': 'node.js'
+    Accept: 'application/json',
+    Connection: 'keep-alive',
+    'User-Agent': 'node.js'
   },
   externalApiCacheTime: 30 * 60 * 1000,
   externalApiAnime: 'http://api.jikan.moe/v4',

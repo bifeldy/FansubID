@@ -2,10 +2,12 @@ import { Response, NextFunction } from 'express';
 
 import { UserRequest } from '../models/UserRequest';
 
+import { serverGetConsoleLog } from '../settings';
+
 import { environment } from '../../environments/api/environment';
 
 export function log(text, data = null, forcePrint = false) {
-  if (!environment.production) {
+  if (!environment.production || serverGetConsoleLog()) {
     forcePrint = true;
   }
   if (forcePrint) {

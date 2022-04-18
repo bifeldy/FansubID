@@ -180,6 +180,10 @@ router.use(interceptor((req: UserRequest, res: Response) => {
         body = convertJsonToXml(body);
       }
       return send(body);
+    },
+    afterSend: (oldBody, newBody) => {
+      log('[INTERCEPT-AFTER_SEND_OLD] 💠', oldBody);
+      log('[INTERCEPT-AFTER_SEND_NEW] 💠', newBody);
     }
   };
 }));

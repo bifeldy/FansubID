@@ -3,6 +3,7 @@ import { ServerInfo } from '../app/_shared/models/ServerInfo';
 import { log } from './helpers/logger';
 
 let settings: ServerInfo = {
+  consoleLog: false,
   isMaintenance: false,
   winboxOpenLink: true,
   discordNotification: true,
@@ -20,6 +21,10 @@ export function serverSet(data): void {
       settings[key] = data[key];
     }
   }
+}
+
+export function serverGetConsoleLog(): boolean {
+  return settings.consoleLog;
 }
 
 export function serverGetMaintenance(): boolean {

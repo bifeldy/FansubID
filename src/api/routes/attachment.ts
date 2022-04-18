@@ -11,6 +11,8 @@ import { environment } from '../../environments/api/environment';
 import { UserRequest } from '../models/UserRequest';
 import { Role } from '../../app/_shared/models/Role';
 
+import { log } from '../helpers/logger';
+
 import { User } from '../entities/User';
 import { Attachment } from '../entities/Attachment';
 import { TempAttachment } from '../entities/TempAttachment';
@@ -191,10 +193,24 @@ router.get('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
       if (attachment.google_drive) {
         const gdrive = await gDrive();
         const dfile = await gdrive.files.get(
-          { fileId: attachment.google_drive, alt: 'media' },
-          { responseType: 'stream', headers: { Range: req.headers.range } }
+          {
+            fileId: attachment.google_drive,
+            alt: 'media'
+          },
+          {
+            responseType: 'stream',
+            headers: {
+              Range: req.headers.range,
+              ...environment.nodeJsXhrHeader
+            }
+          }
         );
         res.writeHead(dfile.status, dfile.headers);
+        res.on('pipe', src => {
+          log('[DRIVE-PIPE_FLOW] 💦', src.readableFlowing);
+        }).on('unpipe', src => {
+          log('[DRIVE-UNPIPE_FLOW] 💦', src.readableFlowing);
+        });
         dfile.data.on('error', err => {
           console.error(err);
         }).on('end', async () => {
