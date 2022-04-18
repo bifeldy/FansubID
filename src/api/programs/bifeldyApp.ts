@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 import { URLSearchParams } from 'url';
 import { OAuth2Client } from 'google-auth-library';
 import { drive_v3, google } from 'googleapis';
@@ -7,6 +5,8 @@ import { drive_v3, google } from 'googleapis';
 import { environment } from '../../environments/api/environment';
 
 import { log } from '../helpers/logger';
+import { NodeFetchPOST } from '../helpers/fetcher';
+import { ConvertToBase64 } from '../helpers/base64';
 
 const gcp = environment.gCloudPlatform;
 
@@ -25,11 +25,7 @@ async function gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
     form.append('client_secret', gcp.clientSecret);
     form.append('refresh_token', refreshToken);
     const googleClient = new google.auth.OAuth2(gcp.clientId, gcp.clientSecret);
-    const res_raw = await fetch(url.toString(), {
-      method: 'POST',
-      body: form,
-      headers: environment.nodeJsXhrHeader
-    });
+    const res_raw = await NodeFetchPOST(url, form, environment.nodeJsXhrHeader);
     const res_json: any = await res_raw.json();
     log(`[gApp] 🔑 ${res_raw.status}`, res_json);
     googleClient.setCredentials(res_json);
@@ -75,13 +71,9 @@ export async function mailSend(mailBody) {
     form.append('subject', mailBody.subject);
     form.append('template', mailBody.template);
     form.append('h:X-Mailgun-Variables', JSON.stringify(mailBody.variables));
-    const res_raw = await fetch(url.toString(), {
-      method: 'POST',
-      body: form,
-      headers: {
-        'Authorization': `Basic ${Buffer.from(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`).toString('base64')}`,
-        ...environment.nodeJsXhrHeader
-      }
+    const res_raw = await NodeFetchPOST(url, form, {
+      'Authorization': `Basic ${ConvertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
+      ...environment.nodeJsXhrHeader
     });
     const res_json: any = await res_raw.json();
     log(`[MAILGUN_SUCCESS] 💌 ${res_raw.status}`, res_json);

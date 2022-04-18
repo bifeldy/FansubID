@@ -1,17 +1,17 @@
+import { Buffer } from 'node:buffer';
+
 export const universalBtoa = str => {
-  try {
-    return btoa(str);
-  } catch (err) {
-    console.error(err);
-    return Buffer.from(str).toString('base64');
-  }
+  return ConvertToBase64(str);
 };
 
 export const universalAtob = b64Encoded => {
-  try {
-    return atob(b64Encoded);
-  } catch (err) {
-    console.error(err);
-    return Buffer.from(b64Encoded, 'base64').toString();
-  }
+  return ConvertFromBase64(b64Encoded);
+};
+
+export const ConvertToBase64 = str => {
+  return Buffer.from(str).toString('base64');
+};
+
+export const ConvertFromBase64 = b64Encoded => {
+  return Buffer.from(b64Encoded, 'base64').toString();
 };

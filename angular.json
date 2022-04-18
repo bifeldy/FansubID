@@ -202,8 +202,13 @@
             "bundleDependencies": true,
             "externalDependencies": [
               "@discordjs/opus",
+              "buffer", "node:buffer",
               "discord.js",
               "ffmpeg-static",
+              "fs", "node:fs",
+              "http", "node:http",
+              "https", "node:https",
+              "path", "node:path",
               "pg",
               "ytdl-core"
             ]
@@ -226,8 +231,13 @@
               "bundleDependencies": true,
               "externalDependencies": [
                 "@discordjs/opus",
+                "buffer", "node:buffer",
                 "discord.js",
                 "ffmpeg-static",
+                "fs", "node:fs",
+                "http", "node:http",
+                "https", "node:https",
+                "path", "node:path",
                 "pg",
                 "ytdl-core"
               ]

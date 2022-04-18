@@ -1,11 +1,11 @@
 import createError from 'http-errors';
-import fetch from 'node-fetch';
 import multer from 'multer';
 import interceptor from 'express-interceptor';
 import rateLimit from 'express-rate-limit';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal, ILike, In, Not } from 'typeorm';
+import { FormData,  } from 'node-fetch';
 import { URL, URLSearchParams } from 'url';
 import { XMLBuilder } from 'fast-xml-parser';
 
@@ -23,6 +23,7 @@ import { isAuthorized, registerModule, loginModule, logoutModule, activationModu
 
 import { CredentialEncode, JwtView, JwtEncrypt } from '../helpers/crypto';
 import { log, reqHeaderBodyCleanUp } from '../helpers/logger';
+import { NodeFetchGET, NodeFetchPOST } from '../helpers/fetcher';
 
 import { mailSend, composeRegisterMail } from '../programs/bifeldyApp';
 
@@ -50,6 +51,7 @@ import nihongoRouter from './nihongo';
 import { SosMed } from '../../app/_shared/models/SosMed';
 
 import { MessageEmbed } from 'discord.js';
+import { ConvertToBase64 } from '../helpers/base64';
 
 // Express rest api endpoints ~ 1 req/4s
 const apiLimiter = rateLimit({
@@ -436,16 +438,14 @@ router.post('/promote', isAuthorized, async (req: UserRequest, res: Response, ne
 router.post('/image', isAuthorized, upload.single('file'), async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const dateTime = new Date().getTime().toString();
-    const imgB64 = Buffer.from(req.file.buffer).toString('base64');
+    const imgB64 = ConvertToBase64(req.file.buffer);
     const url = new URL(environment.externalApiImage);
-    const form = new URLSearchParams();
+    const form = new FormData();
     form.append('key', environment.imgbbKey);
     form.append('name', dateTime);
     form.append('image', imgB64);
-    const res_raw = await fetch(url.toString(), {
-      method: 'POST',
-      body: form,
-      headers: environment.nodeJsXhrHeader
+    const res_raw = await NodeFetchPOST(url, form, {
+      ...environment.nodeJsXhrHeader
     });
     const res_json: any = await res_raw.json();
     log(`[imgBB] 🖼 ${res_raw.status}`, res_json);
@@ -491,10 +491,7 @@ router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, ne
       url.searchParams.append('secret', environment.reCaptchaSecretKey);
       url.searchParams.append('response', req.body['g-recaptcha-response']);
       url.searchParams.append('remoteip', req.header('x-real-ip') || req.socket.remoteAddress || '');
-      const res_raw1 = await fetch(url.toString(), {
-        method: 'GET',
-        headers: environment.nodeJsXhrHeader
-      });
+      const res_raw1 = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json1: any = await res_raw1.json();
       log(`[gCaptcha] 🎲 ${res_raw1.status}`, res_json1);
       if (res_raw1.ok) {
@@ -503,11 +500,7 @@ router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, ne
         form.append('nik', req.body.nik);
         form.append('nama', req.body.nama);
         form.append('ck_kpu', environment.apiPemerintahKTPSecretKey);
-        const res_raw2 = await fetch(url.toString(), {
-          method: 'POST',
-          body: form,
-          headers: environment.nodeJsXhrHeader
-        });
+        const res_raw2 = await NodeFetchPOST(url, form, environment.nodeJsXhrHeader);
         const res_json2: any = await res_raw2.json();
         log(`[apiKTP] 🆔 ${res_raw2.status}`, res_json2);
         if (res_raw2.ok) {
@@ -664,22 +657,12 @@ router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Respons
         form.append('code', req.body.code);
         form.append('redirect_uri', `${environment.baseUrl}/verify?app=discord`);
         form.append('scope', 'identify email guilds.join');
-        const res_raw1 = await fetch(url.toString(), {
-          method: 'POST',
-          body: form,
-          headers: environment.nodeJsXhrHeader
-        });
+        const res_raw1 = await NodeFetchPOST(url, form, environment.nodeJsXhrHeader);
         const res_json1: any = await res_raw1.json();
         log(`[oAuthDiscord] 🗝 ${res_raw1.status}`, res_json1);
         if (res_raw1.ok) {
           const url = new URL(`${environment.discordApiUrl}/users/@me`);
-          const res_raw2 = await fetch(url.toString(), {
-            method: 'GET',
-            headers: {
-              Authorization: `${res_json1.token_type} ${res_json1.access_token}`,
-              ...environment.nodeJsXhrHeader
-            }
-          });
+          const res_raw2 = await NodeFetchGET(url, environment.nodeJsXhrHeader);
           const res_json2: any = await res_raw2.json();
           log(`[apiDiscord] 🗝 ${res_raw2.status}`, res_json2);
           if (res_raw2.ok) {

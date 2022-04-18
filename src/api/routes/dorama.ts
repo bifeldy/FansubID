@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import translate from '@iamtraction/google-translate';
 
 import { URL } from 'url';
@@ -13,6 +12,7 @@ import { isLogin, isAuthorized } from '../middlewares/auth';
 
 import { cacheGet, cachePut } from '../helpers/cache';
 import { log } from '../helpers/logger';
+import { NodeFetchGET } from '../helpers/fetcher';
 
 import { Berkas } from '../entities/Berkas';
 import { Dorama } from '../entities/Dorama';
@@ -34,10 +34,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
   } else {
     try {
       const url = new URL(`${environment.externalApiDorama}/search/q/${searchQuery}`);
-      const res_raw = await fetch(url.toString(), {
-        method: 'GET',
-        headers: environment.nodeJsXhrHeader
-      });
+      const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
@@ -138,10 +135,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   } else {
     try {
       const url = new URL(`${environment.externalApiDorama}/seasonal/${year}/${quarter}`);
-      const res_raw = await fetch(url.toString(), {
-        method: 'GET',
-        headers: environment.nodeJsXhrHeader
-      });
+      const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
@@ -326,10 +320,7 @@ router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     try {
       const url = new URL(`${environment.externalApiDorama}/id/${req.params.mdlSlug}`);
-      const res_raw = await fetch(url.toString(), {
-        method: 'GET',
-        headers: environment.nodeJsXhrHeader
-      });
+      const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {

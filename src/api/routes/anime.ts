@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import translate from '@iamtraction/google-translate';
 
 import { URL } from 'url';
@@ -11,6 +10,7 @@ import { UserRequest } from '../models/UserRequest';
 
 import { cacheGet, cachePut } from '../helpers/cache';
 import { log } from '../helpers/logger';
+import { NodeFetchGET } from '../helpers/fetcher';
 
 import { isAuthorized, isLogin } from '../middlewares/auth';
 
@@ -36,10 +36,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
       const url = new URL(`${environment.externalApiAnime}/anime`);
       url.searchParams.append('q', searchQuery);
       url.searchParams.append('type', searchType);
-      const res_raw = await fetch(url.toString(), {
-        method: 'GET',
-        headers: environment.nodeJsXhrHeader
-      });
+      const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
@@ -139,10 +136,7 @@ router.patch('/seasonal', async (req: UserRequest, res: Response, next: NextFunc
   } else {
     try {
       const url = new URL(`${environment.externalApiAnime}/seasons/${year}/${season}`);
-      const res_raw = await fetch(url.toString(), {
-        method: 'GET',
-        headers: environment.nodeJsXhrHeader
-      });
+      const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {
@@ -331,10 +325,7 @@ router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFuncti
   } else {
     try {
       const url = new URL(`${environment.externalApiAnime}/anime/${malId}`);
-      const res_raw = await fetch(url.toString(), {
-        method: 'GET',
-        headers: environment.nodeJsXhrHeader
-      });
+      const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
       if (res_raw.ok) {

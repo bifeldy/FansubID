@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 import { getRepository, Equal, ILike } from 'typeorm';
 import { Response, NextFunction } from 'express';
 import { URL } from 'url';
@@ -16,8 +14,10 @@ import { Registration } from '../entities/Registration';
 
 import { JwtView, CredentialEncode, CredentialDecode, hashPassword, JwtEncrypt, JwtDecrypt } from '../helpers/crypto';
 import { log } from '../helpers/logger';
+import { NodeFetchGET } from '../helpers/fetcher';
 
 import { disconnectRoom } from '../programs/socketWeb';
+
 import { serverGetOpenForRegister } from '../settings';
 
 export async function registerModule(req: UserRequest, res: Response, next: NextFunction) {
@@ -37,10 +37,7 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
       url.searchParams.append('secret', environment.reCaptchaSecretKey);
       url.searchParams.append('response', req.body['g-recaptcha-response']);
       url.searchParams.append('remoteip', req.header('x-real-ip') || req.socket.remoteAddress || '');
-      const res_raw = await fetch(url.toString(), {
-        method: 'GET',
-        headers: environment.nodeJsXhrHeader
-      });
+      const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[gCaptcha] 🎲 ${res_raw.status}`, res_json);
       if (res_raw.ok) {

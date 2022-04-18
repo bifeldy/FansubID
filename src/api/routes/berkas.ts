@@ -1,6 +1,6 @@
 import createError from 'http-errors';
 import find from 'find';
-import fs from 'fs';
+import fs from 'node:fs';
 
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal, In } from 'typeorm';

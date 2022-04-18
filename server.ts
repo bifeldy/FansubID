@@ -2,13 +2,12 @@ import 'zone.js/node';
 import 'localstorage-polyfill';
 import 'reflect-metadata';
 
-import fs from 'fs';
-import http from 'http';
-import path from 'path';
+import fs from 'node:fs';
+import http from 'node:http';
+import path from 'node:path';
 
 import cors from 'cors';
 import compression from 'compression';
-import request from 'request';
 
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -16,6 +15,7 @@ import express from 'express';
 import MorganChalk from './src/api/helpers/morganChalk';
 
 import { log } from './src/api/helpers/logger';
+import { NodeFetchGET } from './src/api/helpers/fetcher';
 
 import { Server, Socket } from 'socket.io';
 
@@ -130,25 +130,19 @@ function startDiscordBot(): void {
       discordBot(io, msg).catch(console.error);
     }
   });
-  bot.once('ready', () => {
-    log(`[DISCORD_CONNECTED] 🎉 ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id} 🎶`);
-    updateVisitor();
-    request({
-      method: 'GET',
-      uri: `https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`,
-      headers: environment.nodeJsXhrHeader
-    }, async (error, result, body) => {
-      if (error || !result) {
-        console.error(error);
-      } else {
-        try {
-          github = JSON.parse(body)[0];
-        } catch (error) {
-          github = null;
-        }
-        bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(bot.user.id)?.setNickname(`Hikki - ${github?.sha?.slice(0, 7)}`);
-      }
-    });
+  bot.once('ready', async () => {
+    try {
+      log(`[DISCORD_CONNECTED] 🎉 ${bot.user.username}#${bot.user.discriminator} - ${bot.user.id} 🎶`);
+      updateVisitor();
+      const url = new URL(`https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`);
+      const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
+      const gh: any = await res_raw.json();
+      github = gh[0];
+      bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(bot.user.id)?.setNickname(`Hikki - ${github?.sha?.slice(0, 7)}`);
+    } catch (error) {
+      console.error(error);
+      github = null;
+    }
   });
   if (environment.production) {
     bot.login(environment.discordBotLoginToken).catch(console.error);

@@ -1,6 +1,6 @@
 import createError from 'http-errors';
 import multer from 'multer';
-import fs from 'fs';
+import fs from 'node:fs';
 import find from 'find';
 
 import { Router, Response, NextFunction } from 'express';
