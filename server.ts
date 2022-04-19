@@ -67,7 +67,7 @@ const typeOrmConfig: any = {
 import indexRouter from './src/api/routes/index';
 
 // CORS Options
-const corsOptions = {
+const corsOptions: cors.CorsOptions = {
   origin: async (origin, callback) => {
     try {
       let o = origin || '';
@@ -99,7 +99,7 @@ const corsOptions = {
       console.error(error);
       callback(new Error('Origin, Wheiy~ Siapa Nih ?'), false);
     }
-  }
+  },
 };
 
 // Standard server not serverless
@@ -115,7 +115,7 @@ async function updateVisitor(): Promise<any> {
         {
           name: `${io.sockets.sockets.size} Pengunjung`,
           type: 'WATCHING',
-          url: 'http://hikki.id'
+          url: environment.baseUrl
         }
       ]
     });

@@ -211,7 +211,9 @@ router.get('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
         }).on('unpipe', src => {
           log('[DRIVE-UNPIPE_FLOW] 💦', src.readableFlowing);
         });
-        dfile.data.on('error', err => {
+        dfile.data.on('data', chunk => {
+          log('[DRIVE-DATA_FLOW] 💦', chunk.length);
+        }).on('error', err => {
           console.error(err);
         }).on('end', async () => {
           attachment.download_count++;

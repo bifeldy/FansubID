@@ -10,6 +10,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
 import { VjsService } from '../../../_shared/services/vjs.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
+import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
 import { User } from '../../../_shared/models/User';
 
@@ -48,7 +49,8 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     public vjs: VjsService,
     public as: AuthService,
     public dm: DownloadManagerService,
-    private wb: WinboxService
+    private wb: WinboxService,
+    public ss: StatsServerService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;

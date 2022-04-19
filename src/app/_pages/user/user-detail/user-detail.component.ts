@@ -9,6 +9,7 @@ import { FabService } from '../../../_shared/services/fab.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
+import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -59,7 +60,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private fs: FabService,
     private pi: PageInfoService,
     private us: UserService,
-    private wb: WinboxService
+    private wb: WinboxService,
+    public ss: StatsServerService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;

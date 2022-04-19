@@ -8,6 +8,7 @@ import { FabService } from '../../../_shared/services/fab.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -79,7 +80,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     public gs: GlobalService,
     private fs: FabService,
     private pi: PageInfoService,
-    private fansub: FansubService
+    private fansub: FansubService,
+    public ss: StatsServerService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;
