@@ -20,19 +20,9 @@ export const environment = {
   iceServers: [
     {
       urls: [
-        'stun:stun-turn.hikki.id:5349',
-        'stun:relay.socket.dev:443'
+        'stun:tracker.hikki.id:3478',
+        'stun:tracker.hikki.id:5349'
       ]
-    },
-    {
-      urls: ['turn:stun-turn.hikki.id:5349'],
-      username: 'turn',
-      credential: 'hikki.id'
-    },
-    {
-      urls: ['turn:relay.socket.dev:443'],
-      username: 'relay.socket.dev',
-      credential: 'tears-whiplash-overall-diction'
     }
   ]
 };
