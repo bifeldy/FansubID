@@ -1,55 +1,28 @@
-export interface DialogNihongoData {
+import { NihongoModel } from "../../../models/req-res.model";
+
+export interface DialogDataModel {
+  confirmText?: string;
+  cancelText?: string;
+}
+
+export interface DialogNihongoDataModel extends DialogDataModel {
   title?: string;
   modeTampilan: string;
-  dataset?: {
-    id?: number;
-    kana?: string;
-    romaji?: string;
-    meaning?: string;
-    audio?: string;
-    category?: string;
-    image_url?: string;
-  };
+  dataset?: NihongoModel;
   htmlMessage?: string;
-  confirmText?: string;
-  cancelText?: string;
 }
 
-export interface DialogInputData {
+export interface DialogInputDataModel extends DialogDataModel {
   title?: string;
   input: any;
-  confirmText?: string;
-  cancelText?: string;
 }
 
-export interface DialogInfoData {
+export interface DialogInfoDataModel extends DialogDataModel {
   title?: string;
   htmlMessage?: string;
-  confirmText?: string;
-  cancelText?: string;
 }
 
-export interface DialogDmakData {
+export interface DialogDmakDataModel {
   romaji?: string;
   hiragana_katakana_kanji?: string;
-}
-
-export interface DialogEdictData {
-  character?: string;
-  context?: number;
-  freq?: number;
-  gakken?: number;
-  harlpern_kkld?: number;
-  harlpern_njecd?: number;
-  jlpt?: number;
-  maniette?: number;
-  nelson_c?: number;
-  nelson_n?: string;
-  remember?: number;
-  school?: number;
-  skip?: string;
-  stroke?: number;
-  translate?: string;
-  v_kunyomi?: string;
-  v_onyomi?: string;
 }

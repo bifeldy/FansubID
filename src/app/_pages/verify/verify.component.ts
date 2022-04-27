@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { SosMed } from '../../_shared/models/SosMed';
+import { SosMedModel } from '../../../models/req-res.model';
 
 import { AuthService } from '../../_shared/services/auth.service';
 import { GlobalService } from '../../_shared/services/global.service';
@@ -42,9 +42,9 @@ export class VerifyComponent implements OnInit, OnDestroy {
     private us: UserService,
     private bs: BusyService,
     private ds: DialogService,
-    public gs: GlobalService,
-    public route: ActivatedRoute,
-    public as: AuthService,
+    private gs: GlobalService,
+    private route: ActivatedRoute,
+    private as: AuthService,
     private wb: WinboxService
   ) {
     this.gs.bannerImg = null;
@@ -99,7 +99,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
               this.as.removeUser();
               this.router.navigateByUrl('/login');
             } else if (re === false) {
-              if (sosmedApp.toUpperCase() === SosMed.DISCORD) {
+              if (sosmedApp.toUpperCase() === SosMedModel.DISCORD) {
                 this.openVerifyDiscordUrl();
               }
               // TODO :: If Other SosMed
@@ -186,25 +186,25 @@ export class VerifyComponent implements OnInit, OnDestroy {
         next: res => {
           this.gs.log('[KPU_RI-CEK_NIK]', res);
           if (res.result.message === 'success') {
-            this.kpuRiUserData = { ...res.result.data, nik: this.fg1.value.nik};
+            this.kpuRiUserData = { ...res.result.data, nik: this.fg1.value.nik };
             this.verifyInfo = `
               ${this.kpuRiUserData.nama} - ${this.kpuRiUserData.jenis_kelamin} - ${this.kpuRiUserData.tempat_lahir} -
               ${this.kpuRiUserData.nik} - ${this.kpuRiUserData.namaKel} - ${this.kpuRiUserData.namaKec} -
               ${this.kpuRiUserData.namaKabko} - ${this.kpuRiUserData.namaPropinsi}
             `.replace(/\n/g, ' ').replace(/ +(?= )/g, '').trim();
-            this.fg2.controls.nik.patchValue(this.kpuRiUserData.nik);
-            this.fg2.controls.nama.patchValue(this.kpuRiUserData.nama);
-            this.fg2.controls.jenis_kelamin.patchValue(this.kpuRiUserData.jenis_kelamin);
-            this.fg2.controls.tempat_lahir.patchValue(this.kpuRiUserData.tempat_lahir);
-            this.fg2.controls.kelurahan_desa.patchValue(this.kpuRiUserData.namaKel);
-            this.fg2.controls.kecamatan.patchValue(this.kpuRiUserData.namaKec);
-            this.fg1.controls.completed.patchValue(true);
+            this.fg2.controls['nik'].patchValue(this.kpuRiUserData.nik);
+            this.fg2.controls['nama'].patchValue(this.kpuRiUserData.nama);
+            this.fg2.controls['jenis_kelamin'].patchValue(this.kpuRiUserData.jenis_kelamin);
+            this.fg2.controls['tempat_lahir'].patchValue(this.kpuRiUserData.tempat_lahir);
+            this.fg2.controls['kelurahan_desa'].patchValue(this.kpuRiUserData.namaKel);
+            this.fg2.controls['kecamatan'].patchValue(this.kpuRiUserData.namaKec);
+            this.fg1.controls['completed'].patchValue(true);
             stepper.next();
             captchaRef.reset();
           } else {
             this.verifyInfo = res.result.data.pesan;
             this.fg1.controls['g-recaptcha-response'].patchValue(null);
-            this.fg1.controls.completed.patchValue(null);
+            this.fg1.controls['completed'].patchValue(null);
             this.kpuRiUserData = null;
             captchaRef.reset();
           }

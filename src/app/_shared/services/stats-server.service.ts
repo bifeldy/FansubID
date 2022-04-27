@@ -5,12 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { ToastrService } from 'ngx-toastr';
 
-import { environment } from '../../../environments/app/environment';
-
-import { serverGet } from '../../../../src/api/settings';
-
-import { RoomInfoResponse } from '../models/RoomInfo';
-import { ServerInfo } from '../models/ServerInfo';
+import { RoomInfoModel, ServerInfoModel } from '../../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
 import { NotificationsService } from './notifications.service';
@@ -25,32 +20,32 @@ export class StatsServerService {
 
   mySocket: Socket = null;
 
-  public visitor = 0;
-  public latency = 0;
+  visitor = 0;
+  latency = 0;
 
-  public messageChatCount = 0;
+  messageChatCount = 0;
 
   intervalPingPong = null;
 
-  public badgeNews = [];
-  public badgeBerkas = [];
-  public badgeFansub = [];
+  badgeNews = [];
+  badgeBerkas = [];
+  badgeFansub = [];
 
-  public github = null;
+  github = null;
 
-  private currentServerSubject: BehaviorSubject<ServerInfo> = new BehaviorSubject<ServerInfo>(serverGet());
-  public currentServer: Observable<ServerInfo> = this.currentServerSubject.asObservable();
-  public currentServerValue: ServerInfo = serverGet();
+  currentServerSubject: BehaviorSubject<ServerInfoModel> = new BehaviorSubject<ServerInfoModel>(null);
+  currentServer: Observable<ServerInfoModel> = this.currentServerSubject.asObservable();
+  currentServerValue: ServerInfoModel = null;
 
-  private currentRoomSubject: BehaviorSubject<RoomInfoResponse> = new BehaviorSubject<RoomInfoResponse>(null);
-  public currentRoom: Observable<RoomInfoResponse> = this.currentRoomSubject.asObservable();
-  public currentChatRoom = [];
+  currentRoomSubject: BehaviorSubject<RoomInfoModel> = new BehaviorSubject<RoomInfoModel>(null);
+  currentRoom: Observable<RoomInfoModel> = this.currentRoomSubject.asObservable();
+  currentChatRoom = [];
 
-  private globalRoomSubject: BehaviorSubject<RoomInfoResponse> = new BehaviorSubject<RoomInfoResponse>(null);
-  public globalRoom: Observable<RoomInfoResponse> = this.globalRoomSubject.asObservable();
-  public globalChatRoom = [];
+  globalRoomSubject: BehaviorSubject<RoomInfoModel> = new BehaviorSubject<RoomInfoModel>(null);
+  globalRoom: Observable<RoomInfoModel> = this.globalRoomSubject.asObservable();
+  globalChatRoom = [];
 
-  public quizRoom = {};
+  quizRoom = {};
 
   subsServer = null;
   subsDialog = null;
@@ -58,16 +53,16 @@ export class StatsServerService {
   constructor(
     private as: AuthService,
     private router: Router,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private notif: NotificationsService,
     private lms: LeftMenuService,
     private toast: ToastrService,
     private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
-      this.mySocket = io(environment.baseUrl, {
+      this.mySocket = io('//', {
         extraHeaders: {
-          token: this.as.jwtToken
+          "x-access-token": this.as.jwtToken
         }
       });
       this.socketListen();
@@ -75,11 +70,11 @@ export class StatsServerService {
     }
   }
 
-  public get currentRoomValue(): any {
+  get currentRoomValue(): any {
     return this.currentRoomSubject?.value || null;
   }
 
-  public get globalRoomValue(): any {
+  get globalRoomValue(): any {
     return this.globalRoomSubject?.value || null;
   }
 

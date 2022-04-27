@@ -1,21 +1,21 @@
-<mat-tab-group class="px-0" dynamicHeight mat-stroked-button [color]="'accent'" [backgroundColor]="gs.isDarkMode ? 'gelap' : 'terang'"
+<mat-tab-group class="px-0" dynamicHeight mat-stroked-button [color]="'accent'" [backgroundColor]="backgroundColor"
   [selectedIndex]="selectedIndexTab" (swipeleft)="swipe($event.type)" (swiperight)="swipe($event.type)">
   <mat-tab *ngFor="let tab of tabData">
-    <div *ngIf="tab.type == 'html'">
+    <div *ngIf="tab.type === 'html'">
       <ng-template mat-tab-label>
         <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3" [innerHTML]="tab.data"></div>
     </div>
-    <div *ngIf="tab.type == 'grid'">
+    <div *ngIf="tab.type === 'grid'">
       <ng-template mat-tab-label>
         <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3" *ngIf="tab.data.length > 0">
         <mat-selection-list [multiple]="false" class="p-0">
-          <mat-grid-list [cols]="gs.gridListBreakpoint" rowHeight="72px">
+          <mat-grid-list [cols]="GS.gridListBreakpoint" rowHeight="72px">
             <mat-grid-tile *ngFor="let d of tab.data">
               <mat-list-option (click)="onGridClicked(d)">
                 <img matListAvatar src="{{ d.image }}" class="ms-3" style="border-radius: 0;" />
@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="tab.type == 'list'">
+    <div *ngIf="tab.type === 'list'">
       <ng-template mat-tab-label>
         <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="tab.type == 'table'">
+    <div *ngIf="tab.type === 'table'">
       <ng-template mat-tab-label>
         <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>

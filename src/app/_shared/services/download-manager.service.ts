@@ -11,10 +11,10 @@ import { ApiService } from './api.service';
 })
 export class DownloadManagerService {
 
-  public attachmentsDownload = {};
+  private attachmentsDownload = {};
 
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private toast: ToastrService,
     private api: ApiService
   ) {

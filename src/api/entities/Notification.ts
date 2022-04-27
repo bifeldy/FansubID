@@ -1,8 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
+
+import { NotificationModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'notification' })
-export class Notification {
+export class Notification implements NotificationModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -30,5 +33,6 @@ export class Notification {
 
   @ManyToOne(type => User)
   @JoinColumn()
-  user_: User;
+  user_: UserModel;
+
 }

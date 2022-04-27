@@ -1,9 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+import { NihongoModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'nihongo' })
-export class Nihongo {
+export class Nihongo implements NihongoModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -33,5 +35,6 @@ export class Nihongo {
   updated_at: number;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
+
 }

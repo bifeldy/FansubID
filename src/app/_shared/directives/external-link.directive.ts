@@ -14,7 +14,7 @@ export class ExternalLinkDirective implements OnChanges {
   @Input() href: string;
 
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private elementRef: ElementRef
   ) {
     if (this.gs.isBrowser) {

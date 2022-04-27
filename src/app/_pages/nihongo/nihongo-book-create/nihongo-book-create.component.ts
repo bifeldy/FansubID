@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProgressBarMode } from '@angular/material/progress-bar';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -38,7 +39,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
 
   attachmentPreviousLoaded = null;
   attachmentSpeed = 0;
-  attachmentMode = 'indeterminate';
+  attachmentMode: ProgressBarMode = 'indeterminate';
 
   timerTimeout = null;
 
@@ -57,12 +58,16 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
     private nihon: NihongoService,
     private toast: ToastrService,
     private berkas: BerkasService,
-    public gs: GlobalService,
-    public as: AuthService
+    private gs: GlobalService,
+    private as: AuthService
   ) {
     this.gs.bannerImg = '/assets/img/news-banner.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   ngOnInit(): void {
@@ -113,7 +118,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
   uploadImage(event, gambar): void {
     this.gambar = gambar;
     this.image = null;
-    this.fg.controls.image.patchValue(null);
+    this.fg.controls['image'].patchValue(null);
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -150,12 +155,12 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
-        this.fg.controls.image.patchValue(res.result.url);
+        this.fg.controls['image'].patchValue(res.result.url);
         this.submitted = false;
       },
       error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
-        this.fg.controls.image.patchValue(null);
+        this.fg.controls['image'].patchValue(null);
         this.submitted = false;
       }
     });
@@ -192,7 +197,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
     this.ddl = ddl;
     const file = event.target.files[0];
     this.gs.log('[ATTACHMENT_SELECTED]', file);
-    this.fg.controls.attachment_id.patchValue(null);
+    this.fg.controls['attachment_id'].patchValue(null);
     try {
       if (file.size <= this.gs.berkasUploadSizeLimit) {
         this.attachment = file;
@@ -246,7 +251,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
           this.attachmentMode = 'determinate';
           this.attachmentIsUploading = false;
           this.attachmentIsCompleted = true;
-          this.fg.controls.attachment_id.patchValue(e.result.id);
+          this.fg.controls['attachment_id'].patchValue(e.result.id);
           this.toast.remove(this.uploadToast.toastId);
           const timer = (2 * 60 * 1000) + (30 * 1000);
           this.uploadToast = this.toast.warning(
@@ -280,7 +285,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
     this.attachmentIsCompleted = false;
     this.attachment = null;
     this.attachmentErrorText = err?.error?.result?.message || err?.error?.info || '';
-    this.fg.controls.attachment_id.patchValue(null);
+    this.fg.controls['attachment_id'].patchValue(null);
     this.toast.remove(this.uploadToast.toastId);
     this.ddl.clear();
   }

@@ -6,7 +6,7 @@
   </button>
   <span matLine class="text-truncate" style="margin-left: 1rem; margin-right: 1rem;">
     <!-- <img src="/favicon.ico" width="32px" /> -->
-    {{ this.pi.getTitle }}
+    {{ this.PI.getTitle }}
   </span>
 
   <span class="spacer"></span>
@@ -21,12 +21,12 @@
   </button>
 
   <button mat-icon-button (click)="openLiveChat()" matTooltip="Obrolan">
-    <mat-icon [matBadge]="ss.messageChatCount" matBadgePosition="before" [matBadgeColor]="'warn'">
+    <mat-icon [matBadge]="SS.messageChatCount" matBadgePosition="before" [matBadgeColor]="'warn'">
       forum
     </mat-icon>
   </button>
 
-  <button mat-icon-button (click)="openAdminNavigation()" *ngIf="router.url.includes('/admin-mod/')">
+  <button mat-icon-button (click)="openAdminNavigation()" *ngIf="ROUTER.url.includes('/admin-mod/')">
     <mat-icon>apps</mat-icon>
   </button>
 
@@ -34,7 +34,7 @@
     <mat-icon>search</mat-icon>
   </button>
 
-  <button mat-icon-button (click)="reloadPage()" *ngIf="!ss.mySocket?.id" matTooltip="Refresh">
+  <button mat-icon-button (click)="reloadPage()" *ngIf="!SS.mySocket?.id" matTooltip="Refresh">
     <mat-icon>replay</mat-icon>
   </button>
 

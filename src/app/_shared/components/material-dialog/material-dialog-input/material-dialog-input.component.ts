@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { GlobalService } from '../../../../_shared/services/global.service';
+import { DialogInputDataModel } from '../../../models/Dialog';
 
-import { DialogInputData } from '../../../models/Dialog';
+import { GlobalService } from '../../../../_shared/services/global.service';
 
 @Component({
   selector: 'app-material-dialog-input',
@@ -13,12 +13,16 @@ import { DialogInputData } from '../../../models/Dialog';
 export class MaterialDialogInputComponent implements OnInit {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogInputData,
-    public gs: GlobalService
+    @Inject(MAT_DIALOG_DATA) private data: DialogInputDataModel,
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get DATA(): DialogInputDataModel {
+    return this.data;
   }
 
   ngOnInit(): void {

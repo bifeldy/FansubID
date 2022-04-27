@@ -3,8 +3,8 @@ import createError from 'http-errors';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal } from 'typeorm';
 
+import { NotificationModel, RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
-import { Role } from '../../app/_shared/models/Role';
 
 import { User } from '../entities/User';
 import { Notification } from '../entities/Notification';
@@ -16,7 +16,7 @@ const router = Router();
 // GET `/api/notification`
 router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const notificationRepo = getRepository(Notification);
       const [notifications, count] = await notificationRepo.findAndCount({
         where: [
@@ -72,13 +72,13 @@ router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: Next
 // POST `/api/notification`
 router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   if ('type' in req.body && 'title' in req.body && 'content' in req.body && 'dismissible' in req.body) {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
-      let notifTemplate = {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
+      let notifTemplate: NotificationModel = {
         id: new Date().getTime(),
         type: req.body.type.replace(/<[^>]*>/g, ' ').trim(),
         title: req.body.title.replace(/<[^>]*>/g, ' ').trim(),
         content: req.body.content.replace(/<[^>]*>/g, ' ').trim(),
-        dismissible: (req.body.dismissible === false && req.user.role === Role.ADMIN ? false : true),
+        dismissible: (req.body.dismissible === false && req.user.role === RoleModel.ADMIN ? false : true),
         user_: {
           username: req.user.username
         }
@@ -141,11 +141,11 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
 // DELETE `/api/notification/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const notificationRepo = getRepository(Notification);
       const notification = await notificationRepo.findOneOrFail({
         where: [
-          { id: req.params.id }
+          { id: req.params['id'] }
         ],
         relations: ['user_']
       });
@@ -158,7 +158,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete deletedNotification.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Notification API :: Berhasil Hapus Notifikasi ${req.params.id} 🤣`,
+        info: `😅 200 - Notification API :: Berhasil Hapus Notifikasi ${req.params['id']} 🤣`,
         result: deletedNotification
       });
     } else {

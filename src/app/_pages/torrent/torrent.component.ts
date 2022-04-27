@@ -11,7 +11,6 @@ import { saveAs } from 'file-saver';
 import { GlobalService } from '../../_shared/services/global.service';
 import { TorrentService } from '../../_shared/services/torrent.service';
 import { DialogService } from '../../_shared/services/dialog.service';
-import { AuthService } from '../../_shared/services/auth.service';
 import { StatsServerService } from '../../_shared/services/stats-server.service';
 import { BusyService } from '../../_shared/services/busy.service';
 
@@ -21,8 +20,8 @@ import { BusyService } from '../../_shared/services/busy.service';
   styleUrls: ['./torrent.component.css'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
@@ -60,9 +59,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
   subsTableDataRow = null;
 
   constructor(
-    public gs: GlobalService,
-    public as: AuthService,
-    public torrent: TorrentService,
+    private gs: GlobalService,
+    private torrent: TorrentService,
     private toast: ToastrService,
     private ds: DialogService,
     private ss: StatsServerService,
@@ -71,6 +69,10 @@ export class TorrentComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get TORRENT(): TorrentService {
+    return this.torrent;
   }
 
   ngOnInit(): void {
@@ -204,8 +206,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
     this.prepareFilesList($event);
   }
 
-  fileBrowseHandler(berkas) {
-    this.prepareFilesList(berkas);
+  fileBrowseHandler($event) {
+    this.prepareFilesList($event.target.files);
   }
 
   initGraph(torrent: any): void {

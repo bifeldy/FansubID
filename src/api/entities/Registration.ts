@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+import { RegistrationModel } from '../../models/req-res.model';
+
 @Entity({ name: 'registration' })
-export class Registration {
+export class Registration implements RegistrationModel {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -26,4 +28,5 @@ export class Registration {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
 }

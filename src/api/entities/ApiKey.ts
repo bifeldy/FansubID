@@ -1,8 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+
+import { ApiKeyModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'api_key' })
-export class ApiKey {
+export class ApiKey implements ApiKeyModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -23,5 +26,6 @@ export class ApiKey {
   updated_at: number;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
+
 }

@@ -68,7 +68,7 @@
                 <mat-label>Deadline</mat-label>
                 <input matInput [ngxMatDatetimePicker]="kalender" formControlName="deadline" (focus)="kalender.open()" placeholder="{{ currentDateTime | date:'d MMMM y, h:mm:ss'}}"
                   [min]="currentDateTime" [max]="maxDateTime" />
-                <mat-datepicker-toggle matSuffix [for]="kalender"></mat-datepicker-toggle>
+                <mat-datepicker-toggle matSuffix [for]="dateTimePicker"></mat-datepicker-toggle>
                 <ngx-mat-datetime-picker #kalender [showSpinners]="true" [showSeconds]="true" [enableMeridian]="true"></ngx-mat-datetime-picker>
                 <mat-hint align="end">Muncul Setiap Halaman Di Refresh</mat-hint>
                 <mat-error>

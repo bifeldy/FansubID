@@ -1,10 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+import { HirakataModel, UserModel } from '../../models/req-res.model';
+import { HirakataStatsModel } from '../../models/socket-io.model';
+
 import { Hirakata } from './Hirakata';
 import { User } from './User';
 
 @Entity({ name: 'hirakatastats' })
-export class HirakataStats {
+export class HirakataStats implements HirakataStatsModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -16,11 +19,12 @@ export class HirakataStats {
   updated_at: number;
 
   @ManyToOne(type => Hirakata)
-  question_: Hirakata;
+  question_: HirakataModel;
 
   @ManyToOne(type => Hirakata)
-  answer_: Hirakata;
+  answer_: HirakataModel;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
+
 }

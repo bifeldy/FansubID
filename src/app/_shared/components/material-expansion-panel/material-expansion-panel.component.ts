@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
 
 import { GlobalService } from '../../services/global.service';
@@ -9,6 +9,16 @@ import { GlobalService } from '../../services/global.service';
   styleUrls: ['./material-expansion-panel.component.css']
 })
 export class MaterialExpansionPanelComponent implements OnInit {
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event): void {
+    this.gs.onResize(event, 'MATERIAL_EXPANSION_PANEL');
+    if (this.gs.isDesktop) {
+      this.accordion.openAll();
+    } else {
+      this.accordion.closeAll();
+    }
+  };
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
@@ -22,25 +32,20 @@ export class MaterialExpansionPanelComponent implements OnInit {
   ];
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
+  get GS(): GlobalService {
+    return this.gs;
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       //
-    }
-  }
-
-  onResize(event): void {
-    this.gs.log('[WINDOW_RESIZE]', event);
-    if (this.gs.isDesktop) {
-      this.accordion.openAll();
-    } else {
-      this.accordion.closeAll();
     }
   }
 

@@ -17,7 +17,7 @@ export class NotFoundComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -26,7 +26,7 @@ export class NotFoundComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
+      this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
       if (this.returnUrl) {
         this.timedOut = setTimeout(() => {
           this.router.navigateByUrl(this.returnUrl);

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { ApiKeyModel, BannedModel, JsonResponse, JsonResponseArray, NotificationModel, UserModel } from '../../../models/req-res.model';
+
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
 
@@ -9,7 +11,7 @@ import { GlobalService } from './global.service';
 })
 export class AdminService {
 
-  public menuList = [
+  menuList = [
     {
       url: 'banned-list',
       name: 'Banned List',
@@ -63,46 +65,46 @@ export class AdminService {
 
   constructor(
     private api: ApiService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
-  getAllNotif(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getAllNotif(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<NotificationModel>> {
     return this.api.getData(`/notification?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  createNotif(notifData): Observable<any> {
+  createNotif(notifData): Observable<JsonResponse<NotificationModel>> {
     return this.api.postData('/notification', notifData);
   }
 
-  deleteNotif(notifId): Observable<any> {
+  deleteNotif(notifId): Observable<JsonResponse<NotificationModel>> {
     return this.api.deleteData(`/notification/${notifId}`);
   }
 
-  getAllBanned(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getAllBanned(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<BannedModel>> {
     return this.api.getData(`/banned?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  unBan(bannedId): Observable<any> {
+  unBan(bannedId): Observable<JsonResponse<BannedModel>> {
     return this.api.deleteData(`/banned/${bannedId}`);
   }
 
-  ban(bannedData): Observable<any> {
+  ban(bannedData): Observable<JsonResponse<BannedModel>> {
     return this.api.postData(`/banned`, bannedData);
   }
 
-  promote(promoteData): Observable<any> {
+  promote(promoteData): Observable<JsonResponse<UserModel>> {
     return this.api.postData(`/promote`, promoteData);
   }
 
-  getAllCors(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getAllCors(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<ApiKeyModel>> {
     return this.api.getData(`/cors?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  revokeCors(corsId): Observable<any> {
+  revokeCors(corsId): Observable<JsonResponse<ApiKeyModel>> {
     return this.api.deleteData(`/cors/${corsId}`);
   }
 

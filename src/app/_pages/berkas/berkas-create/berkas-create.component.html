@@ -104,7 +104,7 @@
                         <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
                           <mat-label>Fansub Terkait</mat-label>
                           <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" />
-                          <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i == 0">short_text</mat-icon>
+                          <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i === 0">short_text</mat-icon>
                           <button mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value && i > 0">
                             <mat-icon>close</mat-icon>
                           </button>
@@ -152,7 +152,7 @@
                       <strong *ngIf="fg.get('name').hasError('pattern')">Nama Berkas Hanya Boleh Huruf Standar Papan Ketik</strong>
                     </mat-error>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
+                  <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
                 </div>
                 <div class="row" *ngIf="currentUser && currentUser.verified">
                   <div class="col-12 p-3">
@@ -199,7 +199,7 @@
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'">
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="name" placeholder="Google Drive" />
-                        <mat-icon matSuffix *ngIf="dl.get('name').value || i == 0">web</mat-icon>
+                        <mat-icon matSuffix *ngIf="dl.get('name').value || i === 0">web</mat-icon>
                         <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && i > 0">
                           <mat-icon>close</mat-icon>
                         </button>
@@ -211,7 +211,7 @@
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
                         <mat-label>Tautan Luar</mat-label>
                         <input matInput formControlName="url" placeholder="https://drive.google.com/drive/u/2/folders/1KYTJZsmH9dyyHBXnQD4N0SjSBXcs8qD-" />
-                        <mat-icon matSuffix *ngIf="dl.get('url').value || i == 0">link</mat-icon>
+                        <mat-icon matSuffix *ngIf="dl.get('url').value || i === 0">link</mat-icon>
                         <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && i > 0">
                           <mat-icon>close</mat-icon>
                         </button>

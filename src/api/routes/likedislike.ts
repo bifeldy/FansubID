@@ -3,10 +3,8 @@ import createError from 'http-errors';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal } from 'typeorm';
 
+import { LikeAndDislikeModel, RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
-
-import { Role } from '../../app/_shared/models/Role';
-import { LikeAndDislike } from '../../app/_shared/models/LikeAndDislike';
 
 import { LikeDislike } from '../entities/LikeDislike';
 import { User } from '../entities/User';
@@ -22,7 +20,7 @@ const router = Router();
 // GET `/api/likedislike?tipe=&id=`
 router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const likedislikeRepo = getRepository(LikeDislike);
       const [likedislike, count] = await likedislikeRepo.findAndCount({
         where: [
@@ -112,38 +110,38 @@ router.get('/:type/:idSlugUsername', isLogin, async (req: UserRequest, res: Resp
   try {
     let selectedRepo = null;
     let selected = null;
-    if (req.params.type === 'berkas') {
+    if (req.params['type'] === 'berkas') {
       selectedRepo = getRepository(Berkas);
       selected = await selectedRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.idSlugUsername) }
+          { id: Equal(req.params['idSlugUsername']) }
         ]
       });
-    } else if (req.params.type === 'news') {
+    } else if (req.params['type'] === 'news') {
       selectedRepo = getRepository(News);
       selected = await selectedRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.idSlugUsername) }
+          { id: Equal(req.params['idSlugUsername']) }
         ]
       });
-    } else if (req.params.type === 'fansub') {
+    } else if (req.params['type'] === 'fansub') {
       selectedRepo = getRepository(Fansub);
       selected = await selectedRepo.findOneOrFail({
         where: [
-          { slug: ILike(req.params.idSlugUsername) }
+          { slug: ILike(req.params['idSlugUsername']) }
         ]
       });
-    } else if (req.params.type === 'user') {
+    } else if (req.params['type'] === 'user') {
       selectedRepo = getRepository(User);
       selected = await selectedRepo.findOneOrFail({
         where: [
-          { username: ILike(req.params.idSlugUsername) }
+          { username: ILike(req.params['idSlugUsername']) }
         ]
       });
     } else {
       // Other Url Target In Hikki API -- e.g '/news/:newsId'
     }
-    if (req.params.type === 'berkas' || req.params.type === 'fansub' || req.params.type === 'user') {
+    if (req.params['type'] === 'berkas' || req.params['type'] === 'fansub' || req.params['type'] === 'user') {
       const likedislikeRepo = getRepository(LikeDislike);
       const likedislike = await likedislikeRepo.query(`
         SELECT
@@ -151,7 +149,7 @@ router.get('/:type/:idSlugUsername', isLogin, async (req: UserRequest, res: Resp
         FROM
           public.like_dislike
         WHERE
-          ${req.params.type}_id = $1
+          ${req.params['type']}_id = $1
         GROUP BY type
         ORDER BY type ASC
       `, [selected.id]);
@@ -159,7 +157,7 @@ router.get('/:type/:idSlugUsername', isLogin, async (req: UserRequest, res: Resp
         const myReport = await likedislikeRepo.find({
           where: [
             {
-              [`${req.params.type}_`]: {
+              [`${req.params['type']}_`]: {
                 id: Equal(selected.id)
               },
               report_by_: {
@@ -244,32 +242,32 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
   try {
     let selectedRepo = null;
     let selected = null;
-    if (req.params.type === 'berkas') {
+    if (req.params['type'] === 'berkas') {
       selectedRepo = getRepository(Berkas);
       selected = await selectedRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.idSlugUsername) }
+          { id: Equal(req.params['idSlugUsername']) }
         ]
       });
-    } else if (req.params.type === 'news') {
+    } else if (req.params['type'] === 'news') {
       selectedRepo = getRepository(News);
       selected = await selectedRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.idSlugUsername) }
+          { id: Equal(req.params['idSlugUsername']) }
         ]
       });
-    } else if (req.params.type === 'fansub') {
+    } else if (req.params['type'] === 'fansub') {
       selectedRepo = getRepository(Fansub);
       selected = await selectedRepo.findOneOrFail({
         where: [
-          { slug: ILike(req.params.idSlugUsername) }
+          { slug: ILike(req.params['idSlugUsername']) }
         ]
       });
-    } else if (req.params.type === 'user') {
+    } else if (req.params['type'] === 'user') {
       selectedRepo = getRepository(User);
       selected = await selectedRepo.findOneOrFail({
         where: [
-          { username: ILike(req.params.idSlugUsername) }
+          { username: ILike(req.params['idSlugUsername']) }
         ],
         relations: ['profile_']
       });
@@ -280,7 +278,7 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
     const likedislike = await likedislikeRepo.find({
       where: [
         {
-          [`${req.params.type}_`]: {
+          [`${req.params['type']}_`]: {
             id: Equal(selected.id)
           },
           report_by_: {
@@ -293,7 +291,7 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
     let result = null;
     if (likedislike.length <= 0) {
       const ldl = new LikeDislike();
-      ldl[`${req.params.type}_`] = selected;
+      ldl[`${req.params['type']}_`] = selected;
       ldl.type = req.body.likedislike;
       const userRepo = getRepository(User);
       const visitorUser = await userRepo.findOneOrFail({
@@ -382,8 +380,8 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
     } else {
       throw new Error('Data Duplikat');
     }
-    if (req.params.type === 'berkas' || req.params.type === 'fansub' || req.params.type === 'user') {
-      if (req.params.type === 'user') {
+    if (req.params['type'] === 'berkas' || req.params['type'] === 'fansub' || req.params['type'] === 'user') {
+      if (req.params['type'] === 'user') {
         selectedRepo = getRepository(Profile);
         selected = await selectedRepo.findOneOrFail({
           where: [
@@ -394,10 +392,10 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
       const updatedLikeCount = await likedislikeRepo.count({
         where: [
           {
-            [`${req.params.type}_`]: {
+            [`${req.params['type']}_`]: {
               id: Equal(selected.id)
             },
-            type: Equal(LikeAndDislike.LIKE),
+            type: Equal(LikeAndDislikeModel.LIKE),
           }
         ],
       });
@@ -424,11 +422,11 @@ router.post('/:type/:idSlugUsername', isAuthorized, async (req: UserRequest, res
 // DELETE `/api/likedislike/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const likedislikeRepo = getRepository(LikeDislike);
       const likedislike = await likedislikeRepo.findOneOrFail({
         where: [
-          { id: req.params.id }
+          { id: req.params['id'] }
         ],
         relations: ['berkas_', 'fansub_', 'user_', 'report_by_']
       });
@@ -461,7 +459,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete deletedLikedislike.report_by_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Like Dislike API :: Berhasil Menghapus Like Dislike ${req.params.id} 🤣`,
+        info: `😅 200 - Like Dislike API :: Berhasil Menghapus Like Dislike ${req.params['id']} 🤣`,
         result: deletedLikedislike
       });
     } else {

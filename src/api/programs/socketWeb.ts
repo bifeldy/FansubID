@@ -3,9 +3,7 @@ import { Equal, getConnection, getRepository, ILike, IsNull, MoreThanOrEqual } f
 
 import { serverGet, serverSet } from '../settings';
 
-import { RoomInfoInOut, RoomInfoResponse, RoomChat } from '../../app/_shared/models/RoomInfo';
-
-import { Role } from '../../app/_shared/models/Role';
+import { RoomChatModel, RoomInfoInOutModel, RoomInfoModel } from '../../models/socket-io.model';
 
 import { JwtDecrypt } from '../helpers/crypto';
 import { getQuizHirakata, getQuizKanji } from '../helpers/quizRoom';
@@ -17,6 +15,7 @@ import { User } from '../entities/User';
 import { Fansub } from '../entities/Fansub';
 import { Profile } from '../entities/Profile';
 import { News } from '../entities/News';
+import { RoleModel } from '../../models/req-res.model';
 
 // Room Chat List
 const room = {};
@@ -65,7 +64,7 @@ async function getNewQuestion(roomId: string) {
   }
 }
 
-function sendChat(data: RoomChat) {
+function sendChat(data: RoomChatModel) {
   return {
     room_id: data.roomId,
     sender: data.user,
@@ -73,7 +72,7 @@ function sendChat(data: RoomChat) {
   };
 }
 
-function getRoomInfo(io: Server, roomId: string): RoomInfoResponse {
+function getRoomInfo(io: Server, roomId: string): RoomInfoModel {
   return {
     room_id: roomId,
     member_list: room[roomId],
@@ -81,7 +80,7 @@ function getRoomInfo(io: Server, roomId: string): RoomInfoResponse {
   };
 }
 
-function calculatePoints(data: RoomInfoInOut): number {
+function calculatePoints(data: RoomInfoInOutModel): number {
   let points = 1;
   if (quiz[data.roomId].question.jlpt === 0) {
     points = 64;
@@ -99,7 +98,7 @@ function calculatePoints(data: RoomInfoInOut): number {
   return points;
 }
 
-async function increasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut) {
+async function increasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOutModel) {
   const userRepo = getRepository(User);
   const selectedUser = await userRepo.findOneOrFail({
     where: [
@@ -120,7 +119,7 @@ async function increasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInO
   return points;
 }
 
-async function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOut) {
+async function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInOutModel) {
   const userRepo = getRepository(User);
   const selectedUser = await userRepo.findOneOrFail({
     where: [
@@ -146,7 +145,7 @@ async function decreasePlayerPoint(io: Server, socket: Socket, data: RoomInfoInO
   return (points * -1);
 }
 
-export async function checkMultipleConnection(io: Server, socket: Socket, data: RoomInfoInOut) {
+export async function checkMultipleConnection(io: Server, socket: Socket, data: RoomInfoInOutModel) {
   if (data.user) {
     const multipleSocketId = [];
     for (const socketId of Object.keys(room['GLOBAL_PUBLIK'])) {
@@ -172,7 +171,7 @@ export async function disconnectRoom(io: Server, socket: Socket) {
   }
 }
 
-export async function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
+export async function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOutModel) {
   if (data.oldRoom) {
     if (!room[data.oldRoom]) {
       room[data.oldRoom] = {};
@@ -187,7 +186,7 @@ export async function leaveRoom(io: Server, socket: Socket, data: RoomInfoInOut)
   }
 }
 
-export async function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOut) {
+export async function joinOrUpdateRoom(io: Server, socket: Socket, data: RoomInfoInOutModel) {
   if (data.newRoom) {
     if (!room[data.newRoom]) {
       room[data.newRoom] = {};
@@ -250,7 +249,7 @@ export async function socketBot(io: Server, socket: Socket) {
       if (data.jwtToken) {
         const decoded = JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
-        if (data.user.role === Role.ADMIN || data.user.role === Role.MODERATOR) {
+        if (data.user.role === RoleModel.ADMIN || data.user.role === RoleModel.MODERATOR) {
           serverSet(data);
           callback(serverGet());
         }
@@ -263,7 +262,7 @@ export async function socketBot(io: Server, socket: Socket) {
     callback(serverGet());
   });
   socket.on('track-set', async (data: any) => {
-    data.ip = socket.handshake.headers['x-real-ip'] || socket.handshake.address || socket.request.socket.remoteAddress;
+    data.ip = socket.handshake.headers['x-real-ip'] || socket.handshake.headers['x-forwarded-for'] || socket.handshake.address || socket.request.socket.remoteAddress;
     if (data.jwtToken) {
       try {
         const decoded = JwtDecrypt(data.jwtToken);
@@ -477,7 +476,7 @@ export async function socketBot(io: Server, socket: Socket) {
       });
     }
   });
-  socket.on('leave-join-room', async (data: RoomInfoInOut) => {
+  socket.on('leave-join-room', async (data: RoomInfoInOutModel) => {
     try {
       if (data.jwtToken) {
         const decoded = JwtDecrypt(data.jwtToken);
@@ -493,7 +492,7 @@ export async function socketBot(io: Server, socket: Socket) {
       console.error(error);
     }
   });
-  socket.on('room-info', async (data: RoomInfoInOut, callback: any) => {
+  socket.on('room-info', async (data: RoomInfoInOutModel, callback: any) => {
     if (data.roomId) {
       callback(getRoomInfo(io, data.roomId));
     }
@@ -503,7 +502,7 @@ export async function socketBot(io: Server, socket: Socket) {
       if (data.jwtToken) {
         const decoded = JwtDecrypt(data.jwtToken);
         data.user = decoded.user;
-        if (data.user.role === Role.ADMIN || data.user.role === Role.MODERATOR) {
+        if (data.user.role === RoleModel.ADMIN || data.user.role === RoleModel.MODERATOR) {
           const multipleSocketId = [];
           for (const socketId of Object.keys(room['GLOBAL_PUBLIK'])) {
             if (
@@ -522,7 +521,7 @@ export async function socketBot(io: Server, socket: Socket) {
       console.error(error);
     }
   });
-  socket.on('send-chat', async (data: RoomInfoInOut) => {
+  socket.on('send-chat', async (data: RoomInfoInOutModel) => {
     try {
       if (data.jwtToken) {
         const decoded = JwtDecrypt(data.jwtToken);
@@ -537,7 +536,7 @@ export async function socketBot(io: Server, socket: Socket) {
       console.error(error);
     }
   });
-  socket.on('quiz-answer', async (data: RoomInfoInOut) => {
+  socket.on('quiz-answer', async (data: RoomInfoInOutModel) => {
     try {
       if (data.jwtToken) {
         const decoded = JwtDecrypt(data.jwtToken);

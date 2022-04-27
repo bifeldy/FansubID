@@ -29,7 +29,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private fs: FabService,
     private pi: PageInfoService,
     private news: NewsService
@@ -48,7 +48,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {
-        this.newsId = Number(p.newsId);
+        this.newsId = Number(p['newsId']);
         this.bs.busy();
         this.subsNews = this.news.getNews(this.newsId).subscribe({
           next: res => {

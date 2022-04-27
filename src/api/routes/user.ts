@@ -6,8 +6,8 @@ import { MessageEmbed } from 'discord.js';
 
 import { environment } from '../../environments/api/environment';
 
+import { RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
-import { Role } from '../../app/_shared/models/Role';
 
 import { User } from '../entities/User';
 import { Berkas } from '../entities/Berkas';
@@ -29,7 +29,7 @@ router.get('/', isLogin, async (req: UserRequest, res: Response, next: NextFunct
     let maxPage = 0;
     let maxRow = 10;
     if (req.user) {
-      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
         maxPage = req.query.page || 0;
         maxRow = req.query.row || 10;
       }
@@ -104,7 +104,7 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: ILike(req.params.username) }
+        { username: ILike(req.params['username']) }
       ],
       relations: ['kartu_tanda_penduduk_', 'profile_']
     });
@@ -132,7 +132,7 @@ router.get('/:username', async (req: UserRequest, res: Response, next: NextFunct
       delete selectedUser.profile_.updated_at;
     }
     return res.status(200).json({
-      info: `😅 200 - User API :: Detail ${req.params.username} 🤣`,
+      info: `😅 200 - User API :: Detail ${req.params['username']} 🤣`,
       result: selectedUser
     });
   } catch (error) {
@@ -149,7 +149,7 @@ router.put('/:username', isAuthorized, async (req: UserRequest, res: Response, n
         const userRepo = getRepository(User);
         const selectedUser = await userRepo.findOneOrFail({
           where: [
-            { username: ILike(req.params.username) }
+            { username: ILike(req.params['username']) }
           ],
           relations: ['kartu_tanda_penduduk_', 'profile_']
         });
@@ -210,7 +210,7 @@ router.put('/:username', isAuthorized, async (req: UserRequest, res: Response, n
               domain: environment.domain
             });
             return res.status(200).json({
-              info: `😅 200 - User API :: Ubah ${req.params.username} 🤣`,
+              info: `😅 200 - User API :: Ubah ${req.params['username']} 🤣`,
               result: {
                 jwtToken: resUserSave.session_token
               }
@@ -237,7 +237,7 @@ router.put('/:username', isAuthorized, async (req: UserRequest, res: Response, n
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - User API :: Gagal Mengubah Profile ${req.params.id} 😪`,
+      info: `🙄 400 - User API :: Gagal Mengubah Profile ${req.params['id']} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -251,7 +251,7 @@ router.get('/:username/feed-berkas', async (req: UserRequest, res: Response, nex
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: ILike(req.params.username) }
+        { username: ILike(req.params['username']) }
       ]
     });
     const fileRepo = getRepository(Berkas);
@@ -305,7 +305,7 @@ router.get('/:username/feed-berkas', async (req: UserRequest, res: Response, nex
       }
     }
     return res.status(200).json({
-      info: `😅 200 - User API :: Berkas ${req.params.username} 🤣`,
+      info: `😅 200 - User API :: Berkas ${req.params['username']} 🤣`,
       count,
       pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: files
@@ -322,7 +322,7 @@ router.get('/:username/feed-comment', isAuthorized, async (req: UserRequest, res
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: ILike(req.params.username) }
+        { username: ILike(req.params['username']) }
       ]
     });
     const komenRepo = getRepository(Komentar);
@@ -357,7 +357,7 @@ router.get('/:username/feed-comment', isAuthorized, async (req: UserRequest, res
       }
     }
     return res.status(200).json({
-      info: `😅 200 - User API :: Feed Komentar ${req.params.username} 🤣`,
+      info: `😅 200 - User API :: Feed Komentar ${req.params['username']} 🤣`,
       count,
       pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: komens
@@ -374,7 +374,7 @@ router.get('/:username/feed-likedislike', isAuthorized, async (req: UserRequest,
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: ILike(req.params.username) }
+        { username: ILike(req.params['username']) }
       ]
     });
     const likedislikeRepo = getRepository(LikeDislike);
@@ -481,7 +481,7 @@ router.get('/:username/feed-likedislike', isAuthorized, async (req: UserRequest,
       }
     }
     return res.status(200).json({
-      info: `😅 200 - User API :: Feed Like Dislike ${req.params.username} 🤣`,
+      info: `😅 200 - User API :: Feed Like Dislike ${req.params['username']} 🤣`,
       count,
       pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: likedislikes
@@ -498,7 +498,7 @@ router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: 
     const userRepo = getRepository(User);
     const selectedUser = await userRepo.findOneOrFail({
       where: [
-        { username: ILike(req.params.username) }
+        { username: ILike(req.params['username']) }
       ]
     });
     const trackRepo = getRepository(Track);
@@ -554,7 +554,7 @@ router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: 
       take: (req.query.row > 0 && req.query.row <= 500) ? req.query.row : 10
     });
     for (const t of tracks) {
-      if (req.user.username != selectedUser.username && req.user.role != Role.ADMIN && req.user.role != Role.MODERATOR) {
+      if (req.user.username != selectedUser.username && req.user.role != RoleModel.ADMIN && req.user.role != RoleModel.MODERATOR) {
         delete t.ip;
       }
       if ('news_' in t && t.news_) {
@@ -608,7 +608,7 @@ router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: 
       }
     }
     return res.status(200).json({
-      info: `😅 200 - User API :: Feed Kunjungan ${req.params.username} 🤣`,
+      info: `😅 200 - User API :: Feed Kunjungan ${req.params['username']} 🤣`,
       count,
       pages: Math.ceil(count / (req.query.row ? req.query.row : 10)),
       results: tracks
@@ -622,13 +622,13 @@ router.get('/:username/feed-visit', isAuthorized, async (req: UserRequest, res: 
 // DELETE `/api/user/:username`
 router.delete('/:username', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const ktpRepo = getRepository(KartuTandaPenduduk);
       const profileRepo = getRepository(Profile);
       const userRepo = getRepository(User);
       const user =  await userRepo.findOneOrFail({
         where: [
-          { username: ILike(req.params.username) }
+          { username: ILike(req.params['username']) }
         ],
         relations: ['profile_']
       });
@@ -649,7 +649,7 @@ router.delete('/:username', isAuthorized, async (req: UserRequest, res: Response
       delete deletedUser.password;
       delete deletedUser.session_token;
       return res.status(200).json({
-        info: `😅 200 - User API :: Berhasil Menghapus User ${req.params.username} 🤣`,
+        info: `😅 200 - User API :: Berhasil Menghapus User ${req.params['username']} 🤣`,
         result: {
           user: deletedUser,
           ktp: deletedKtp,

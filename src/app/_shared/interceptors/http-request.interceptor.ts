@@ -13,7 +13,7 @@ import { environment } from '../../../environments/app/environment';
 export class HttpRequestInterceptor implements HttpInterceptor {
 
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private ss: StatsServerService,
     private as: AuthService
   ) {
@@ -38,7 +38,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       if (this.ss.mySocket?.id) {
         this.gs.log('[INTERCEPT_SOCKET]', this.ss.mySocket.id);
         request = request.clone({
-          headers: request.headers.append('Socket', this.ss.mySocket.id)
+          headers: request.headers.append('x-socket-io-id', this.ss.mySocket.id)
         });
       }
     }

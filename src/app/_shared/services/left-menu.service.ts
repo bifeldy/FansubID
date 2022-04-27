@@ -9,14 +9,14 @@ import { Menu } from '../models/Menu';
 })
 export class LeftMenuService {
 
-  public sideNav = null;
-  public sideNavExpanded = false;
+  sideNav = null;
+  sideNavExpanded = false;
 
   linkText = false;
 
-  public opened = true;
+  opened = true;
 
-  public mainMenus: Menu[] = [
+  mainMenus: Menu[] = [
     {
       name: 'Beranda',
       link: '/home',
@@ -43,7 +43,7 @@ export class LeftMenuService {
     // }
   ];
 
-  public contentMenus: Menu[] = [
+  contentMenus: Menu[] = [
     {
       name: 'Anime Musiman',
       link: '/anime',
@@ -70,7 +70,7 @@ export class LeftMenuService {
     }
   ];
 
-  public miscMenus: Menu[] = [
+  miscMenus: Menu[] = [
     {
       name: 'Admin & Mod Panel',
       link: '/admin-mod',
@@ -86,7 +86,7 @@ export class LeftMenuService {
   ];
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       this.opened = (window.innerWidth >= 992) ? true : false;

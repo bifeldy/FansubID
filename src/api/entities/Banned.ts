@@ -1,9 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 
+import { BannedModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'banned' })
-export class Banned {
+export class Banned implements BannedModel {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -19,8 +21,9 @@ export class Banned {
 
   @OneToOne(type => User)
   @JoinColumn()
-  user_: User;
+  user_: UserModel;
 
   @ManyToOne(type => User)
-  banned_by_: User;
+  banned_by_: UserModel;
+
 }

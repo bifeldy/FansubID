@@ -6,7 +6,9 @@
     "target": "es2019",
     "types": [
       "node"
-    ]
+    ],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "files": [
     "src/main.server.ts",

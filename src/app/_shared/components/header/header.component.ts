@@ -27,16 +27,28 @@ export class HeaderComponent implements OnInit {
   constructor(
     private lms: LeftMenuService,
     private rps: RightPanelService,
-    public router: Router,
-    public pi: PageInfoService,
-    public gs: GlobalService,
-    public ss: StatsServerService,
+    private router: Router,
+    private pi: PageInfoService,
+    private gs: GlobalService,
+    private ss: StatsServerService,
     private bs: BusyService,
     private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get ROUTER(): Router {
+    return this.router;
+  }
+
+  get PI(): PageInfoService {
+    return this.pi;
+  }
+
+  get SS(): StatsServerService {
+    return this.ss;
   }
 
   ngOnInit(): void {
@@ -50,7 +62,7 @@ export class HeaderComponent implements OnInit {
       });
       this.subsGlobalRoom = this.ss.globalRoom.subscribe({
         next: global => {
-          this.myPoints = global?.member_list[this.ss.mySocket.id]?.points || 0;
+          this.myPoints = global?.member_list[this.ss.mySocket.id]?.profile_?.points || 0;
         }
       });
     }

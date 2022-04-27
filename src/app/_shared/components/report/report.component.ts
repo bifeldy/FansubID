@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 
-import { User } from '../../models/User';
-import { LikeAndDislike } from '../../models/LikeAndDislike';
+import { LikeAndDislikeModel, UserModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../services/auth.service';
@@ -114,7 +113,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   reportTrackType = null;
   idSlugUsername = null;
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   subsUser = null;
   subsGetReport = null;
@@ -125,7 +124,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   constructor(
     private as: AuthService,
     private router: Router,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private ss: StatsServerService,
     private rs: ReportService,
     private bs: BusyService
@@ -143,11 +142,11 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   get LIKE(): string {
-    return LikeAndDislike.LIKE;
+    return LikeAndDislikeModel.LIKE;
   }
 
   get DISLIKE(): string {
-    return LikeAndDislike.DISLIKE;
+    return LikeAndDislikeModel.DISLIKE;
   }
 
   ngOnInit(): void {

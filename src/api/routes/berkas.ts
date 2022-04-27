@@ -8,6 +8,7 @@ import { MessageEmbed } from 'discord.js';
 
 import { environment } from '../../environments/api/environment';
 
+import { RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
 
 import { ProjectType } from '../entities/ProjectType';
@@ -18,8 +19,6 @@ import { Anime } from '../entities/Anime';
 import { Dorama } from '../entities/Dorama';
 import { Attachment } from '../entities/Attachment';
 import { TempAttachment } from '../entities/TempAttachment';
-
-import { Role } from '../../app/_shared/models/Role';
 
 import { gDrive } from '../programs/bifeldyApp';
 
@@ -338,7 +337,7 @@ router.get('/:id', isLogin, async (req: UserRequest, res: Response, next: NextFu
     const fileRepo = getRepository(Berkas);
     const file = await fileRepo.findOneOrFail({
       where: [
-        { id: Equal(req.params.id) }
+        { id: Equal(req.params['id']) }
       ],
       relations: ['project_type_', 'fansub_', 'user_', 'anime_', 'dorama_', 'attachment_'],
     });
@@ -436,7 +435,7 @@ router.get('/:id', isLogin, async (req: UserRequest, res: Response, next: NextFu
       file.attachment_ = null;
     }
     return res.status(200).json({
-      info: `😅 200 - Berkas API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - Berkas API :: Detail ${req.params['id']} 🤣`,
       result: file
     });
   } catch (error) {
@@ -458,7 +457,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
         const fileRepo = getRepository(Berkas);
         const file = await fileRepo.findOneOrFail({
           where: [
-            { id: Equal(req.params.id) }
+            { id: Equal(req.params['id']) }
           ],
           relations: ['user_', 'attachment_', 'anime_', 'dorama_', 'project_type_', 'fansub_']
         });
@@ -586,7 +585,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
             ]
           });
           return res.status(200).json({
-            info: `😅 200 - Berkas API :: Ubah ${req.params.id} 🤣`,
+            info: `😅 200 - Berkas API :: Ubah ${req.params['id']} 🤣`,
             result: resFileSave
           });
         } else {
@@ -607,7 +606,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Berkas API :: Gagal Mengubah Berkas ${req.params.id} 😪`,
+      info: `🙄 400 - Berkas API :: Gagal Mengubah Berkas ${req.params['id']} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -618,11 +617,11 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
 // DELETE `/api/berkas/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const berkasRepo = getRepository(Berkas);
       const berkas =  await berkasRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.id) }
+          { id: Equal(req.params['id']) }
         ]
       });
       const deletedBerkas = await berkasRepo.remove(berkas);
@@ -634,7 +633,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete deletedBerkas.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Berkas API :: Berhasil Menghapus Berkas ${req.params.id} 🤣`,
+        info: `😅 200 - Berkas API :: Berhasil Menghapus Berkas ${req.params['id']} 🤣`,
         result: deletedBerkas
       });
     } else {

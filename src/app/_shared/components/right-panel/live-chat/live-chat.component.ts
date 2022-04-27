@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { UserModel } from '../../../../../models/req-res.model';
+
 import { environment } from '../../../../../environments/app/environment';
 
 import { GlobalService } from '../../../services/global.service';
 import { AuthService } from '../../../services/auth.service';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { StatsServerService } from '../../../services/stats-server.service';
-
-import { User } from '../../../models/User';
 
 @Component({
   selector: 'app-live-chat',
@@ -19,7 +19,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   localStorageLiveChatKeyName = `${environment.siteName}_LiveChatResults`;
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   @Input() chatOnly = false;
   @Input() forcedCurrentRoom = null;
@@ -40,9 +40,9 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   subsGlobalRoom = null;
 
   constructor(
-    public as: AuthService,
-    public gs: GlobalService,
-    public ss: StatsServerService,
+    private as: AuthService,
+    private gs: GlobalService,
+    private ss: StatsServerService,
     private ls: LocalStorageService,
     private router: Router
   ) {
@@ -105,6 +105,10 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subsUser?.unsubscribe();
     this.subsCurrentRoom?.unsubscribe();
     this.subsGlobalRoom?.unsubscribe();
+  }
+
+  innerHtml(text: string): string {
+    return this.gs.linkify(this.gs.htmlToText(text));
   }
 
   scrollMessage(): void {

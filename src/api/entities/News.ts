@@ -1,9 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+import { NewsModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'news' })
-export class News {
+export class News implements NewsModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -33,5 +35,6 @@ export class News {
   updated_at: number;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
+
 }

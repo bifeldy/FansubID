@@ -9,9 +9,9 @@
             <img class="w-100" src="{{ userData.image_url }}" />
           </div>
           <div class="col-12 my-3">
-            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role == ADMIN" style="cursor: pointer;">handyman</mat-icon>
-            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role == MODERATOR" style="cursor: pointer;">security</mat-icon>
-            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role == FANSUBBER" style="cursor: pointer;">rate_review</mat-icon>
+            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === ADMIN" style="cursor: pointer;">handyman</mat-icon>
+            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === MODERATOR" style="cursor: pointer;">security</mat-icon>
+            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === FANSUBBER" style="cursor: pointer;">rate_review</mat-icon>
             <mat-icon class="mx-1" matTooltip="Terverifikasi" *ngIf="userData.verified" style="cursor: pointer;">verified</mat-icon>
             <mat-icon class="mx-1" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned" style="cursor: pointer;">lock</mat-icon>
             <mat-icon class="mx-1" matTooltip="{{ accountAge }} Years of Service" *ngIf="accountAge > 0" style="cursor: pointer;">military_tech</mat-icon>
@@ -48,7 +48,7 @@
         <div class="row py-3" *ngIf="panelData.length > 0">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
         </div>
-        <div class="row py-3" *ngIf="ss.mySocket?.id">
+        <div class="row py-3" *ngIf="SS.mySocket?.id">
           <div class="col-12">
             <app-report></app-report>
           </div>

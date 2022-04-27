@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Role } from '../../../_shared/models/Role';
+import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -55,17 +55,21 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService,
     private fs: FabService,
     private pi: PageInfoService,
     private us: UserService,
     private wb: WinboxService,
-    public ss: StatsServerService
+    private ss: StatsServerService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get SS(): StatsServerService {
+    return this.ss;
   }
 
   ngOnDestroy(): void {
@@ -76,15 +80,15 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   get ADMIN(): string {
-    return Role.ADMIN;
+    return RoleModel.ADMIN;
   }
 
   get MODERATOR(): string {
-    return Role.MODERATOR;
+    return RoleModel.MODERATOR;
   }
 
   get FANSUBBER(): string {
-    return Role.FANSUBBER;
+    return RoleModel.FANSUBBER;
   }
 
   get accountAge(): number {
@@ -96,7 +100,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {
-        this.username = p.username;
+        this.username = p['username'];
         this.bs.busy();
         this.subsUser = this.us.getUserData(this.username).subscribe({
           next: res => {

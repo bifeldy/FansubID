@@ -27,11 +27,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private route: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
-    public as: AuthService,
+    private as: AuthService,
     private cs: CryptoService
   ) {
     this.gs.bannerImg = null;
@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({
         next: user => {

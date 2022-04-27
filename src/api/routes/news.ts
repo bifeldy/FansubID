@@ -6,12 +6,11 @@ import { MessageEmbed } from 'discord.js';
 
 import { environment } from '../../environments/api/environment';
 
+import { RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
 
 import { News } from '../entities/News';
 import { User } from '../entities/User';
-
-import { Role } from '../../app/_shared/models/Role';
 
 import { isAuthorized } from '../middlewares/auth';
 
@@ -68,7 +67,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 // POST `/api/news`
 router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       if ('title' in req.body && 'content' in req.body) {
         const newsRepo = getRepository(News);
         const news = new News();
@@ -151,7 +150,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     const newsRepo = getRepository(News);
     const news = await newsRepo.findOneOrFail({
       where: [
-        { id: Equal(req.params.id) }
+        { id: Equal(req.params['id']) }
       ],
       relations: ['user_'],
     });
@@ -164,7 +163,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       delete news.user_.updated_at;
     }
     return res.status(200).json({
-      info: `😅 200 - News API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - News API :: Detail ${req.params['id']} 🤣`,
       result: news
     });
   } catch (error) {
@@ -176,7 +175,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 // PUT `/api/news/:id`
 router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       if (
         'title' in req.body || 'content' in req.body || 'image' in req.body ||
         ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0)
@@ -185,7 +184,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
           const newsRepo = getRepository(News);
           const news = await newsRepo.findOneOrFail({
             where: [
-              { id: Equal(req.params.id) }
+              { id: Equal(req.params['id']) }
             ],
             relations: ['user_']
           });
@@ -232,7 +231,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
               ]
             });
             return res.status(200).json({
-              info: `😅 200 - News API :: Ubah ${req.params.id} 🤣`,
+              info: `😅 200 - News API :: Ubah ${req.params['id']} 🤣`,
               result: resNewsSave
             });
           } else {
@@ -261,7 +260,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - News API :: Gagal Mengubah News ${req.params.id} 😪`,
+      info: `🙄 400 - News API :: Gagal Mengubah News ${req.params['id']} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -272,11 +271,11 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
 // DELETE `/api/news/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const newsRepo = getRepository(News);
       const news =  await newsRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.id) }
+          { id: Equal(req.params['id']) }
         ]
       });
       const deletedNews = await newsRepo.remove(news);
@@ -288,7 +287,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete deletedNews.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - News API :: Berhasil Menghapus News ${req.params.id} 🤣`,
+        info: `😅 200 - News API :: Berhasil Menghapus News ${req.params['id']} 🤣`,
         result: deletedNews
       });
     } else {

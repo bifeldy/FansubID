@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { WinBoxConstructor } from 'winbox';
 
-import { ServerInfo } from '../models/ServerInfo';
+import { ServerInfoModel } from '../../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
 import { DialogService } from './dialog.service';
@@ -15,7 +15,7 @@ declare const WinBox: WinBoxConstructor;
 })
 export class WinboxService {
 
-  currentServer: ServerInfo = null;
+  currentServer: ServerInfoModel = null;
 
   openedWindow = {};
 
@@ -23,9 +23,9 @@ export class WinboxService {
   subsServer = null;
 
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private ds: DialogService,
-    public ss: StatsServerService
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       this.subsServer = this.ss.currentServer.subscribe({ next: server => this.currentServer = server });
@@ -52,11 +52,15 @@ export class WinboxService {
     });
   }
 
-  winboxOpenUri(uriUrl: string, windowTarget = '_blank'): void {
+  winboxOpenUri(uriUrl: string, windowTarget = '_blank', force = false): void {
     if (uriUrl.startsWith('http://')) {
       uriUrl = 'https://' + uriUrl.slice(7, uriUrl.length);
     }
-    if (this.currentServer?.winboxOpenLink && !((uriUrl as any).includesOneOf(['ftp://', 'mailto:']))) {
+    if (
+      (this.currentServer?.winboxOpenLink &&
+      !this.gs.includesOneOf(uriUrl, ['ftp://', 'mailto:'])) ||
+      force
+    ) {
       const currentDateTime = new Date().getTime();
       this.openedWindow[currentDateTime] = new WinBox(uriUrl, {
         id: currentDateTime,

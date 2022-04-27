@@ -35,11 +35,15 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   searchQuery = '';
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   checkIsArray(data): boolean {

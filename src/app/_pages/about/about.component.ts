@@ -4,8 +4,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { environment } from '../../../environments/app/environment';
 
-import { GlobalService } from '../../_shared/services/global.service';
 import { FabService } from '../../_shared/services/fab.service';
+import { GlobalService } from '../../_shared/services/global.service';
 import { WinboxService } from '../../_shared/services/winbox.service';
 
 @Component({
@@ -52,13 +52,13 @@ export class AboutComponent implements OnInit {
     },
   ];
 
-  library = pkg.dependencies;
+  library = null;
 
   siteName = environment.siteName;
 
   constructor(
-    public gs: GlobalService,
     private fs: FabService,
+    private gs: GlobalService,
     private wb: WinboxService
   ) {
     this.gs.bannerImg = null;
@@ -68,6 +68,7 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      this. library = pkg.dependencies;
       this.fs.initializeFab(null, '/assets/img/discord-pink.png', 'Discord Server', environment.discordUrl, true);
     }
   }

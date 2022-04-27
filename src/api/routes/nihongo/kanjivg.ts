@@ -52,11 +52,11 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     const kanjivgRepo = getRepository(KanjiVg);
     const kanjivg = await kanjivgRepo.findOneOrFail({
       where: [
-        { id: Equal(req.params.id) }
+        { id: Equal(req.params['id']) }
       ]
     });
     return res.status(200).json({
-      info: `😅 200 - KanjiVg API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - KanjiVg API :: Detail ${req.params['id']} 🤣`,
       result: kanjivg
     });
   } catch (error) {

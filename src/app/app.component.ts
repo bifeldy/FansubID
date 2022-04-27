@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationStart } from '@angular/router';
+import { MatSidenav } from '@angular/material/sidenav';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
 
@@ -20,7 +21,7 @@ import { DialogService } from './_shared/services/dialog.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
   animations: [ onMainContentChange ]
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -31,8 +32,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:click', ['$event']) windowLeftClick;
   @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
 
-  @ViewChild('leftSideNav', { static: true }) leftSideNav: ElementRef;
-  @ViewChild('rightSidePanel', { static: true }) rightSidePanel: ElementRef;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.gs.onResize(event);
+  }
+
+  @ViewChild('leftSideNav', { static: true }) leftSideNav: MatSidenav;
+  @ViewChild('rightSidePanel', { static: true }) rightSidePanel: MatSidenav;
   @ViewChild('siteContent', { static: true }) siteContent;
 
   previousUrl = null;
@@ -44,23 +50,39 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   subsDialog = null;
 
   constructor(
-    public router: Router,
+    private router: Router,
     private route: ActivatedRoute,
     private bs: BusyService,
     private pi: PageInfoService,
     private as: AuthService,
     private fs: FabService,
     private ls: LocalStorageService,
-    public gs: GlobalService,
-    public lms: LeftMenuService,
-    public rps: RightPanelService,
-    public ss: StatsServerService,
+    private gs: GlobalService,
+    private lms: LeftMenuService,
+    private rps: RightPanelService,
+    private ss: StatsServerService,
     private wb: WinboxService,
     private ds: DialogService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get ROUTER(): Router {
+    return this.router;
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
+  }
+
+  get LMS(): LeftMenuService {
+    return this.lms;
+  }
+
+  get RPS(): RightPanelService {
+    return this.rps;
   }
 
   ngOnDestroy(): void {
@@ -131,9 +153,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               this.updateBackgroundImage();
               this.gs.routerData = e2;
               this.pi.updatePageMetaData(
-                e2.title,
-                e2.description,
-                e2.keywords,
+                e2['title'],
+                e2['description'],
+                e2['keywords'],
                 (this.gs.bgImgUrl || '/favicon.ico')
               );
               this.fs.removeFab();
@@ -209,7 +231,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       if (externalUri) {
         if (
           this.gs.gridListBreakpoint >= 2 &&
-          (externalUri as any).includesOneOf(['http', 'ftp', 'mailto']) &&
+          this.gs.includesOneOf(externalUri, ['http', 'ftp', 'mailto']) &&
           !externalUri.includes(environment.baseUrl)
         ) {
           this.winboxOpenUri(externalUri);

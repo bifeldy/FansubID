@@ -21,7 +21,7 @@ export class MaterialChipComponent implements OnInit {
   @Output() chipClicked = new EventEmitter();
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

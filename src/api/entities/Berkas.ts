@@ -1,14 +1,16 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
 
-import { User } from './User';
+import { AnimeModel, AttachmentModel, BerkasModel, DoramaModel, FansubModel, ProjectTypeModel, UserModel } from '../../models/req-res.model';
+
+import { Anime } from './Anime';
+import { Attachment } from './Attachment';
+import { Dorama } from './Dorama';
 import { Fansub } from './Fansub';
 import { ProjectType } from './ProjectType';
-import { Anime } from './Anime';
-import { Dorama } from './Dorama';
-import { Attachment } from './Attachment';
+import { User } from './User';
 
 @Entity({ name: 'berkas' })
-export class Berkas {
+export class Berkas implements BerkasModel {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -41,22 +43,23 @@ export class Berkas {
   updated_at: number;
 
   @ManyToOne(type => ProjectType)
-  project_type_: ProjectType;
+  project_type_: ProjectTypeModel;
 
   @ManyToOne(type => Anime)
-  anime_: Anime;
+  anime_: AnimeModel;
 
   @ManyToOne(type => Dorama)
-  dorama_: Dorama;
+  dorama_: DoramaModel;
 
   @ManyToMany(type => Fansub)
   @JoinTable()
-  fansub_: Fansub[];
+  fansub_: FansubModel[];
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
 
   @OneToOne(type => Attachment)
   @JoinColumn()
-  attachment_: Attachment;
+  attachment_: AttachmentModel;
+
 }

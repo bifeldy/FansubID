@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
+import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
 
 @Component({
   selector: 'app-admin-push-notification',
@@ -13,6 +13,8 @@ import { DialogService } from '../../../_shared/services/dialog.service';
   styleUrls: ['./admin-push-notification.component.css']
 })
 export class AdminPushNotificationComponent implements OnInit, OnDestroy {
+
+  @ViewChild('kalender', { static: true }) kalender: NgxMatDatetimePicker<any>;
 
   fg: FormGroup;
 
@@ -40,12 +42,11 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
   maxDateTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
   constructor(
-    public router: Router,
     private fb: FormBuilder,
     private bs: BusyService,
     private ds: DialogService,
-    public gs: GlobalService,
-    public adm: AdminService
+    private gs: GlobalService,
+    private adm: AdminService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -74,6 +75,10 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
       dismissible: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       deadline: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
     });
+  }
+
+  get dateTimePicker(): any {
+    return this.kalender;
   }
 
   getNotif(): void {

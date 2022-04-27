@@ -12,11 +12,15 @@ import { GlobalService } from '../../../_shared/services/global.service';
 export class BannerDiscordComponent implements OnInit {
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   ngOnInit(): void {
@@ -25,11 +29,11 @@ export class BannerDiscordComponent implements OnInit {
     }
   }
 
-  get discordUrl(): string{
+  get discordUrl(): string {
     return environment.discordUrl;
   }
 
-  get discordGuildId(): string{
+  get discordGuildId(): string {
     return environment.discordGuildId;
   }
 

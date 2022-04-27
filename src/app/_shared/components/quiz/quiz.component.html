@@ -4,7 +4,7 @@
       <div class="p-2" style="width: auto;" *ngFor="let p of participants | keyvalue: scoreOrder; let idx = index">
         <div class="card text-center border-0" style="width: 64px; background: transparent !important;">
           <div class="card-body p-0" (click)="openProfile(p.value.username)" style="cursor: pointer;">
-            <div [matBadge]="p?.value?.points" matBadgePosition="below" [matBadgeColor]="(idx == 0 ? 'warn' : (idx == 1 ? 'primary' : 'accent'))"
+            <div [matBadge]="p?.value?.profile_.points" matBadgePosition="below" [matBadgeColor]="(idx === 0 ? 'warn' : (idx === 1 ? 'primary' : 'accent'))"
               class="rounded-3" style="
                 background-image: url('{{ p.value.image_url }}');
                 width: 64px;
@@ -12,7 +12,7 @@
                 background-size: cover;
                 background-position: center;
             "></div>
-            <div class="pt-1 {{ idx == 0 ? 'gradient-text' : '' }}">{{ p.value.username }}</div>
+            <div class="pt-1 {{ idx === 0 ? 'gradient-text' : '' }}">{{ p.value.username }}</div>
           </div>
         </div>
       </div>
@@ -51,15 +51,15 @@
           <div class="col-12 p-4">
             <div class="row text-center">
               <div *ngFor="let o of getQuiz.options"
-                class="{{ router.url.includes('/kelas-') || router.url.includes('/jlpt-') || router.url.includes('/semua-kanji') ? '' : 'col-md-4' }} col-6 p-2">
+                class="{{ ROUTER.url.includes('/kelas-') || ROUTER.url.includes('/jlpt-') || ROUTER.url.includes('/semua-kanji') ? '' : 'col-md-4' }} col-6 p-2">
                 <div class="card p-3 m-1" (click)="selectAnswer(o)" style="cursor: pointer;">
-                  <div class="card-body {{ router.url.includes('/kelas-') || router.url.includes('/jlpt-') || router.url.includes('/semua-kanji') ? 'p-0' : 'px-0' }}"
-                    [style.font-size]="router.url.includes('/kelas-') || router.url.includes('/jlpt-') || router.url.includes('/semua-kanji') ? '100%' : '250%'">
+                  <div class="card-body {{ ROUTER.url.includes('/kelas-') || ROUTER.url.includes('/jlpt-') || ROUTER.url.includes('/semua-kanji') ? 'p-0' : 'px-0' }}"
+                    [style.font-size]="ROUTER.url.includes('/kelas-') || ROUTER.url.includes('/jlpt-') || ROUTER.url.includes('/semua-kanji') ? '100%' : '250%'">
                     {{ swapOptions ? o[options] : o[question] }}
                   </div>
                 </div>
               </div>
-              <div class="col-6 col-md-4 p-2" *ngIf="!router.url.includes('/kelas-') && !router.url.includes('/jlpt-') && !router.url.includes('/semua-kanji')">
+              <div class="col-6 col-md-4 p-2" *ngIf="!ROUTER.url.includes('/kelas-') && !ROUTER.url.includes('/jlpt-') && !ROUTER.url.includes('/semua-kanji')">
                 <div class="card p-3 m-1" matTooltip="Tukar Huruf" (click)="swapCharacter()" style="cursor: pointer;">
                   <div class="card-body px-0" style="font-size: 250%;">🎌</div>
                 </div>

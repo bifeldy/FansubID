@@ -39,7 +39,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService,
     private news: NewsService,
     private fs: FabService

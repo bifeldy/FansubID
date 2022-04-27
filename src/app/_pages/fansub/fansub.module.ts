@@ -7,10 +7,10 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { ChartsModule } from 'ng2-charts';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
+import { RoleModel } from '../../../models/req-res.model';
+
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
-
-import { Role } from '../../_shared/models/Role';
 
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
@@ -37,7 +37,7 @@ const routes: Routes = [
       title: 'Fansub - Buat Baru',
       description: 'Halaman Menambahkan Fansub Baru',
       keywords: 'Create Fansub',
-      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
@@ -48,7 +48,7 @@ const routes: Routes = [
       title: 'Fansub - Ubah Data',
       description: 'Halaman Pembaharuan Data Fansub',
       keywords: 'Ubah Fansub',
-      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {

@@ -26,9 +26,9 @@
         <div class="col-12">
           <div class="row px-3">
             <div class="col-12 col-sm-6 col-md-4 col-xl-3 p-2" *ngFor="let t of testNihongo">
-              <mat-card class="{{ t.name == 'Hiragana' || t.name == 'Katakana' ? 'gradient-border' : (
+              <mat-card class="{{ t.name === 'Hiragana' || t.name === 'Katakana' ? 'gradient-border' : (
                   t.name.startsWith('JLPT') ? 'rgb-border' : (
-                    t.name == 'All Kanji' ? 'gradient-border rgb-border' : ''
+                    t.name === 'All Kanji' ? 'gradient-border rgb-border' : ''
                   )
                 ) }}">
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">

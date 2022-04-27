@@ -11,11 +11,11 @@ export class DomChangeDirective implements OnDestroy {
 
   changes = null;
 
-  @Output() public domChange = new EventEmitter<any>();
+  @Output() private domChange = new EventEmitter<any>();
 
   constructor(
     private elementRef: ElementRef,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService,
     private furi: FuriganaService
   ) {

@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+import { EdictModel } from '../../models/req-res.model';
+
 @Entity({ name: 'edict' })
-export class Edict {
+export class Edict implements EdictModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;

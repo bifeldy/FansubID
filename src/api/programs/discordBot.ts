@@ -4,7 +4,7 @@ import { Equal, getRepository } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
-import { SosMed } from '../../app/_shared/models/SosMed';
+import { SosMedModel } from '../../models/req-res.model';
 
 import { JwtDecrypt } from '../helpers/crypto';
 
@@ -34,7 +34,7 @@ export async function discordBot(io: Server, msg: Message): Promise<Message> {
           });
           if (user.verified) {
             return msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
-          } else if (args[1] === SosMed.DISCORD) {
+          } else if (args[1] === SosMedModel.DISCORD) {
             user.verified = true;
             await userRepo.save(user);
             const laboratoryRatsRole = msg.guild.roles.cache.get(environment.laboratoryRatsRoleId);

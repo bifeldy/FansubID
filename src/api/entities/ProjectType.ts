@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+import { ProjectTypeModel } from '../../models/req-res.model';
+
 @Entity({ name: 'project_types' })
-export class ProjectType {
+export class ProjectType implements ProjectTypeModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -20,4 +22,5 @@ export class ProjectType {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
 }

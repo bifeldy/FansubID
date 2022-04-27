@@ -1,8 +1,8 @@
-import { ServerInfo } from '../app/_shared/models/ServerInfo';
+import { ServerInfoModel } from '../models/socket-io.model';
 
 import { log } from './helpers/logger';
 
-let settings: ServerInfo = {
+let settings: ServerInfoModel = {
   consoleLog: false,
   isMaintenance: false,
   winboxOpenLink: true,
@@ -10,7 +10,7 @@ let settings: ServerInfo = {
   openForRegister: true
 };
 
-export function serverGet(): ServerInfo {
+export function serverGet(): ServerInfoModel {
   return settings;
 }
 

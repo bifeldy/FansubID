@@ -52,11 +52,11 @@ export class TorrentService {
     store: idbChunkStore
   };
 
-  public webClient: Instance = null;
-  public expandedRow: Torrent = null;
+  webClient: Instance = null;
+  expandedRow: Torrent = null;
 
-  private tableDataRowSubject: BehaviorSubject<Torrent[]> = new BehaviorSubject<Torrent[]>([]);
-  public tableDataRow: Observable<Torrent[]> = this.tableDataRowSubject.asObservable();
+  tableDataRowSubject: BehaviorSubject<Torrent[]> = new BehaviorSubject<Torrent[]>([]);
+  tableDataRow: Observable<Torrent[]> = this.tableDataRowSubject.asObservable();
 
   error = null;
   refCallback = null;
@@ -64,7 +64,7 @@ export class TorrentService {
   flagResurrected = false;
 
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private api: ApiService,
     private toast: ToastrService,
     private ls: LocalStorageService
@@ -81,7 +81,7 @@ export class TorrentService {
     }
   }
 
-  public get tableDataRowValue(): Torrent[] {
+  private get tableDataRowValue(): Torrent[] {
     return this.tableDataRowSubject?.value || [];
   }
 
@@ -132,8 +132,8 @@ export class TorrentService {
   handleWebWire(wire: Wire, callback): any {
     this.gs.log('[TORRENT_WIRE_CONNECT]', wire);
     let wireName = wire.peerId || 'Unknown!';
-    if (wire.remoteAddress && wire.remotePort) {
-      wireName = `${wire.remoteAddress}:${wire.remotePort}`;
+    if (wire['remoteAddress'] && wire['remotePort']) {
+      wireName = `${wire['remoteAddress']}:${wire['remotePort']}`;
     }
     wire.once('close', () => {
       this.gs.log('[TORRENT_WIRE_DISCONNECT]', wireName);

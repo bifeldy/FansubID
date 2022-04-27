@@ -1,7 +1,9 @@
 import { Entity, Column } from 'typeorm';
 
+import { HirakataModel } from '../../models/req-res.model';
+
 @Entity({ name: 'hirakata' })
-export class Hirakata {
+export class Hirakata implements HirakataModel {
 
   @Column({ primary: true, type: 'varchar', length: 255 })
   romaji: string;
@@ -23,4 +25,5 @@ export class Hirakata {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
 }

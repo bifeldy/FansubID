@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { UserModel } from '../../../../models/req-res.model';
+
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -12,8 +14,6 @@ import { VjsService } from '../../../_shared/services/vjs.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
-import { User } from '../../../_shared/models/User';
-
 import { environment } from '../../../../environments/app/environment';
 
 @Component({
@@ -23,7 +23,7 @@ import { environment } from '../../../../environments/app/environment';
 })
 export class BerkasDetailComponent implements OnInit, OnDestroy {
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   berkasId = '';
   berkasData = null;
@@ -41,20 +41,24 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService,
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService,
-    public vjs: VjsService,
-    public as: AuthService,
-    public dm: DownloadManagerService,
+    private vjs: VjsService,
+    private as: AuthService,
+    private dm: DownloadManagerService,
     private wb: WinboxService,
-    public ss: StatsServerService
+    private ss: StatsServerService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get SS(): StatsServerService {
+    return this.ss;
   }
 
   ngOnDestroy(): void {
@@ -66,7 +70,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {
-        this.berkasId = p.berkasId;
+        this.berkasId = p['berkasId'];
         this.bs.busy();
         this.subsBerkas = this.berkas.getBerkas(this.berkasId).subscribe({
           next: res => {

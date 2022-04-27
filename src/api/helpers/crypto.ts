@@ -26,7 +26,7 @@ export function CredentialEncode(data: any, rememberMe = false): any {
 
 export function CredentialDecode(req: Request, res: Response, next: NextFunction): any {
   try {
-    let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
+    let token = req.cookies[environment.tokenName] || req.headers.authorization || req.header('x-access-token') || req.body.token || req.query['token'] || '';
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length);
     }

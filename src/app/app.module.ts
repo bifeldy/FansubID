@@ -40,11 +40,11 @@ import { MaterialDialogModule } from './_shared/components/material-dialog/mater
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     TransferHttpCacheModule,
     ReactiveFormsModule,
     HttpClientModule,
     SharedMaterialModule,
-    FlexLayoutModule,
     HammerModule,
     NgxSpinnerModule,
     ToastrModule.forRoot({

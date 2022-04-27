@@ -6,9 +6,10 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
+import { RoleModel } from '../../../models/req-res.model';
+
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
-import { Role } from '../../_shared/models/Role';
 
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
@@ -36,7 +37,7 @@ const routes: Routes = [
       title: 'Admin - List All Banned User',
       description: 'Kelola Banned User',
       keywords: 'Kelola Banned User',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
@@ -47,7 +48,7 @@ const routes: Routes = [
       title: 'CORS - List All Api Key',
       description: 'Kelola Api Key',
       keywords: 'Kelola Api Key',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
@@ -58,7 +59,7 @@ const routes: Routes = [
       title: 'Admin - List All Berkas DDL',
       description: 'Kelola Berkas DDL',
       keywords: 'Kelola Berkas DDL',
-      roles: [Role.ADMIN]
+      roles: [RoleModel.ADMIN]
     }
   },
   {
@@ -69,7 +70,7 @@ const routes: Routes = [
       title: 'Admin - List All Users',
       description: 'Atur Seluruh Member',
       keywords: 'BAN & UN-BAN User',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
@@ -80,7 +81,7 @@ const routes: Routes = [
       title: 'Admin - List All Project Type',
       description: 'Atur Kategori Garapan',
       keywords: 'Jenis Proyek Berkas',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
@@ -91,7 +92,7 @@ const routes: Routes = [
       title: 'Admin - List All Fansub Member',
       description: 'Atur Keanggotaan Fansub',
       keywords: 'Keanggotaan Fansub',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
@@ -102,7 +103,7 @@ const routes: Routes = [
       title: 'Admin - Push Notification',
       description: 'Buat Pengumuman Dadakan',
       keywords: 'Push Notification',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   }
 ];

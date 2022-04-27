@@ -14,13 +14,13 @@ export class DragDropDirective {
     this.fileOver = true;
   }
 
-  @HostListener('dragleave', ['$event']) public onDragLeave(evt) {
+  @HostListener('dragleave', ['$event']) onDragLeave(evt) {
     evt.preventDefault();
     evt.stopPropagation();
     this.fileOver = false;
   }
 
-  @HostListener('drop', ['$event']) public ondrop(evt) {
+  @HostListener('drop', ['$event']) ondrop(evt) {
     evt.preventDefault();
     evt.stopPropagation();
     this.fileOver = false;

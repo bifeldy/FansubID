@@ -6,6 +6,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
+import { RoleModel } from '../../../models/req-res.model';
+
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 
@@ -16,8 +18,6 @@ import { NotificationsModule } from '../../_shared/components/notifications/noti
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
-
-import { Role } from '../../_shared/models/Role';
 
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { UserListComponent } from './user-list/user-list.component';
@@ -33,7 +33,7 @@ const routes: Routes = [
       title: 'User - Dashboard Overview',
       description: 'Halaman Informasi Pengguna',
       keywords: 'User',
-      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
@@ -44,7 +44,7 @@ const routes: Routes = [
       title: 'User - Ubah Profil',
       description: 'Halaman Pembaharuan Profil Pengguna',
       keywords: 'Ubah Profil',
-      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {

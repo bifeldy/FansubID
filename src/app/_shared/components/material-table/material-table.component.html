@@ -10,41 +10,41 @@
 <table mat-table matSort [dataSource]="dataSource" class="bg-transparent">
   <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
     <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
-      tdc.toUpperCase() != 'NAMA BERKAS' && tdc.toUpperCase() != 'TANGGAL'  && tdc.toUpperCase() != 'NAMA FANSUB' && tdc.toUpperCase() != 'JUDUL DORAMA' &&
-      tdc.toUpperCase() != 'TOPIK' && tdc.toUpperCase() != 'JUDUL ANIME' && tdc.toUpperCase() != 'ANIME'  && tdc.toUpperCase() != 'DORAMA' &&
-      tdc.toUpperCase() != 'JENIS' && tdc.toUpperCase() != 'DEADLINE' && tdc.toUpperCase() != 'JUDUL' && tdc.toUpperCase() != 'KONTEN' &&
-      tdc.toUpperCase() != 'ID' && tdc.toUpperCase() != 'ALASAN' && tdc.toUpperCase() != 'NAMA API' && tdc.toUpperCase() != 'IP DOMAIN' &&
-      tdc.toUpperCase() != 'API KEY' && tdc.toUpperCase() != 'USERNAME' && tdc.toUpperCase() != 'EMAIL' && tdc.toUpperCase() != 'ROLE'
+      tdc.toUpperCase() !== 'NAMA BERKAS' && tdc.toUpperCase() !== 'TANGGAL'  && tdc.toUpperCase() !== 'NAMA FANSUB' && tdc.toUpperCase() !== 'JUDUL DORAMA' &&
+      tdc.toUpperCase() !== 'TOPIK' && tdc.toUpperCase() !== 'JUDUL ANIME' && tdc.toUpperCase() !== 'ANIME'  && tdc.toUpperCase() !== 'DORAMA' &&
+      tdc.toUpperCase() !== 'JENIS' && tdc.toUpperCase() !== 'DEADLINE' && tdc.toUpperCase() !== 'JUDUL' && tdc.toUpperCase() !== 'KONTEN' &&
+      tdc.toUpperCase() !== 'ID' && tdc.toUpperCase() !== 'ALASAN' && tdc.toUpperCase() !== 'NAMA API' && tdc.toUpperCase() !== 'IP DOMAIN' &&
+      tdc.toUpperCase() !== 'API KEY' && tdc.toUpperCase() !== 'USERNAME' && tdc.toUpperCase() !== 'EMAIL' && tdc.toUpperCase() !== 'ROLE'
     ">
       <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
     </th>
-    <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;" [style.background-color]="row.private || row.banned ? (gs.isDarkMode ? '#2f4f4f80' : '#2f4f4f20') : ''">
-      <div *ngIf="checkIsArray(row[tdc]) == false">
+    <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;" [style.background-color]="row.private || row.banned ? (GS.isDarkMode ? '#2f4f4f80' : '#2f4f4f20') : ''">
+      <div *ngIf="checkIsArray(row[tdc]) === false">
         <h3 class="m-0" [style.color]="
-          (tdc == 'Pemilik' || tdc == 'Penulis' || tdc == 'Status' || tdc == 'Korban') ? (gs.isDarkMode ? '#ffc107' : '#0d6efd') :
-            (tdc == 'Tanggal' || tdc == 'Pelaku' || tdc == 'Judul') ? '#28a745' :
-              (tdc == 'Jenis' || tdc == 'Proyek') ? '#7289da' :
-        (gs.isDarkMode ? '#acacac' : '#000000')">
-          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc == 'Pemilik' || tdc == 'Penulis'" />
-          <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc == 'Korban'" />
-          <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc == 'Pelaku'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc == 'Logo'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc == 'Image'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc == 'Poster'" />
-          <span *ngIf="tdc == 'Tanggal'">{{ row[tdc] | dateAgo }}</span>
-          <span *ngIf="tdc == 'Deadline'">{{ row[tdc] | date:'d/M/yy, h:mm:ss a' }}</span>
-          <span *ngIf="tdc == 'Anime'">{{ row[tdc] }} Anime</span>
-          <span *ngIf="tdc == 'Dorama'">{{ row[tdc] }} Dorama</span>
-          <span *ngIf="tdc == 'Kunjungan'">{{ row[tdc] }}x Dilihat</span>
-          <span *ngIf="tdc != 'Poster' && tdc != 'Logo' && tdc != 'Image' && tdc != 'Tanggal' && tdc != 'Deadline' && tdc != 'Anime' && tdc != 'Dorama' && tdc != 'Kunjungan'">
+          (tdc === 'Pemilik' || tdc === 'Penulis' || tdc === 'Status' || tdc === 'Korban') ? (GS.isDarkMode ? '#ffc107' : '#0d6efd') :
+            (tdc === 'Tanggal' || tdc === 'Pelaku' || tdc === 'Judul') ? '#28a745' :
+              (tdc === 'Jenis' || tdc === 'Proyek') ? '#7289da' :
+        (GS.isDarkMode ? '#acacac' : '#000000')">
+          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Pemilik' || tdc === 'Penulis'" />
+          <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Korban'" />
+          <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Pelaku'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc === 'Logo'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc === 'Image'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc === 'Poster'" />
+          <span *ngIf="tdc === 'Tanggal'">{{ row[tdc] | dateAgo }}</span>
+          <span *ngIf="tdc === 'Deadline'">{{ row[tdc] | date:'d/M/yy, h:mm:ss a' }}</span>
+          <span *ngIf="tdc === 'Anime'">{{ row[tdc] }} Anime</span>
+          <span *ngIf="tdc === 'Dorama'">{{ row[tdc] }} Dorama</span>
+          <span *ngIf="tdc === 'Kunjungan'">{{ row[tdc] }}x Dilihat</span>
+          <span *ngIf="tdc !== 'Poster' && tdc !== 'Logo' && tdc !== 'Image' && tdc !== 'Tanggal' && tdc !== 'Deadline' && tdc !== 'Anime' && tdc !== 'Dorama' && tdc !== 'Kunjungan'">
             {{ row[tdc] }}
           </span>
         </h3>
       </div>
-      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc].length > 0 && row[tdc][0].type == 'chip'" class="p-1">
+      <div *ngIf="checkIsArray(row[tdc]) === true && row[tdc].length > 0 && row[tdc][0].type === 'chip'" class="p-1">
         <app-material-chip (chipClicked)="onChipClicked($event); $event.stopPropagation()" [chipData]="row[tdc]"></app-material-chip>
       </div>
-      <div *ngIf="checkIsArray(row[tdc]) == true && row[tdc].length > 0 && row[tdc][0].type == 'button'">
+      <div *ngIf="checkIsArray(row[tdc]) === true && row[tdc].length > 0 && row[tdc][0].type === 'button'">
         <button mat-icon-button *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}" (click)="onButtonClicked(rt); $event.stopPropagation()">
           <mat-icon *ngIf="rt.icon">{{ rt.icon }}</mat-icon>
           <img src="{{ rt.image }}" width="24px" *ngIf="rt.image" />
@@ -53,15 +53,15 @@
     </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>
-  <tr mat-row matRipple [matRippleDisabled]="gs.isDesktop"
+  <tr mat-row matRipple [matRippleDisabled]="GS.isDesktop"
     *matRowDef="let row; columns: tableDataColumn;" (click)="onRowClicked(this.row)"></tr>
-  <tr class="mat-row" *matNoDataRow matRipple [matRippleDisabled]="gs.isDesktop">
+  <tr class="mat-row" *matNoDataRow matRipple [matRippleDisabled]="GS.isDesktop">
     <td class="mat-cell text-center align-items-center p-0" [attr.colspan]="tableDataColumn.length"
       style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
       <div class="row align-items-center h-100">
         <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
           <h3 class="m-0">
-            Tidak Ada Data <br *ngIf="!gs.isDesktop" /> ¯\_(ツ)_/¯
+            Tidak Ada Data <br *ngIf="!GS.isDesktop" /> ¯\_(ツ)_/¯
           </h3>
           <h3 class="m-0">{{ input.value ? '"' + input.value + '"' : ''  }}</h3>
         </div>

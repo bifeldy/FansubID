@@ -25,14 +25,14 @@ export class QuizComponent implements OnInit, OnDestroy {
   subsDialog = null;
 
   scoreOrder = (a: KeyValue<number, any>, b: KeyValue<number, any>): number => {
-    return a.value.points > b.value.points ? -1 : (
-      b.value.points > a.value.points ? 1 : 0
+    return a.value.profile_.points > b.value.profile_.points ? -1 : (
+      b.value.profile_.points > a.value.profile_.points ? 1 : 0
     );
   }
 
   constructor(
     private router: Router,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private rps: RightPanelService,
     private quiz: QuizService,
     private ds: DialogService
@@ -40,6 +40,10 @@ export class QuizComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get ROUTER(): Router {
+    return this.router;
   }
 
   get getQuiz(): any {

@@ -1,9 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+import { TempAttachmentModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'temp_attachment' })
-export class TempAttachment {
+export class TempAttachment implements TempAttachmentModel {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -27,5 +29,6 @@ export class TempAttachment {
   updated_at: number;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
+
 }

@@ -1,10 +1,12 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
+
+import { AttachmentModel, LessonModel, UserModel } from '../../models/req-res.model';
 
 import { User } from './User';
 import { Attachment } from './Attachment';
 
 @Entity({ name: 'lesson' })
-export class Lesson {
+export class Lesson implements LessonModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -26,11 +28,12 @@ export class Lesson {
 
   @OneToOne(type => Attachment)
   @JoinColumn()
-  attachment_: Attachment;
+  attachment_: AttachmentModel;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
 
   @ManyToOne(type => Lesson)
-  parent_lesson_: Lesson;
+  parent_lesson_: LessonModel;
+
 }

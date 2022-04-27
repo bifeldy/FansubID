@@ -1,9 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+import { FansubModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'fansub' })
-export class Fansub {
+export class Fansub implements FansubModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -45,10 +47,11 @@ export class Fansub {
   updated_at: number;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
 
   // TODO :: Fansub Members
   // @ManyToMany(type => User)
   // @JoinTable()
   // members_: User[];
+
 }

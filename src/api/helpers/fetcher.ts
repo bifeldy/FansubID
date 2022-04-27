@@ -1,8 +1,8 @@
 import http from 'node:http';
 import https from 'node:https';
+import { URL, URLSearchParams } from 'node:url';
 
 import fetch, { HeadersInit } from 'node-fetch';
-import { URL, URLSearchParams } from 'url';
 
 export async function NodeFetchGET(
   url: URL,

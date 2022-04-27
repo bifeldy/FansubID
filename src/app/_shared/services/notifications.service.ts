@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { User } from '../models/User';
+import { UserModel } from '../../../models/req-res.model';
 
 import { GlobalService } from './global.service';
 
@@ -9,7 +9,7 @@ import { GlobalService } from './global.service';
 })
 export class NotificationsService {
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   notifications = [
     {
@@ -31,7 +31,7 @@ export class NotificationsService {
   dissmissTimeout = {};
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

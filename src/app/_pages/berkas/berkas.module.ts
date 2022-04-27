@@ -6,6 +6,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
+import { RoleModel } from '../../../models/req-res.model';
+
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
@@ -15,7 +17,6 @@ import { ReportModule } from '../../_shared/components/report/report.module';
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
-import { Role } from '../../_shared/models/Role';
 
 import { BerkasCreateComponent } from './berkas-create/berkas-create.component';
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';
@@ -36,7 +37,7 @@ const routes: Routes = [
       title: 'Berkas - Buat Baru',
       description: 'Halaman Unggah Berkas Baru',
       keywords: 'Tambah Berkas Baru',
-      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
@@ -47,7 +48,7 @@ const routes: Routes = [
       title: 'Berkas - Ubah Data',
       description: 'Halaman Pembaharuan Data Fansub',
       keywords: 'Ubah Berkas',
-      roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {

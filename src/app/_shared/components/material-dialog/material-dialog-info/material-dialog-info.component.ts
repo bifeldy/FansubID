@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { GlobalService } from '../../../../_shared/services/global.service';
+import { DialogInfoDataModel } from '../../../models/Dialog';
 
-import { DialogInfoData } from '../../../models/Dialog';
+import { GlobalService } from '../../../../_shared/services/global.service';
 
 @Component({
   selector: 'app-material-dialog-info',
@@ -13,12 +13,16 @@ import { DialogInfoData } from '../../../models/Dialog';
 export class MaterialDialogInfoComponent implements OnInit {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogInfoData,
-    public gs: GlobalService
+    @Inject(MAT_DIALOG_DATA) private data: DialogInfoDataModel,
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get DATA(): DialogInfoDataModel {
+    return this.data;
   }
 
   ngOnInit(): void {

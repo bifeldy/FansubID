@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 import { MatTabGroup } from '@angular/material/tabs';
 
 import { GlobalService } from '../../services/global.service';
@@ -80,11 +81,15 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
   @Output() paginatorClicked = new EventEmitter();
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   ngOnInit(): void {
@@ -95,6 +100,10 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.totalTabsCount = this.tabData.length;
+  }
+
+  get backgroundColor(): ThemePalette {
+    return ((this.gs.isDarkMode ? 'gelap' : 'terang') as ThemePalette);
   }
 
   swipe(eType): void {

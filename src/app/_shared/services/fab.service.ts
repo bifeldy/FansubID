@@ -20,7 +20,7 @@ export class FabService {
 
   constructor(
     private router: Router,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private wb: WinboxService
   ) {
     if (this.gs.isBrowser) {

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { GlobalService } from '../../../_shared/services/global.service';
+
 @Component({
   selector: 'app-nihongo-chapter-detail',
   templateUrl: './nihongo-chapter-detail.component.html',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NihongoChapterDetailComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private gs: GlobalService
+  ) {
+    if (this.gs.isBrowser) {
+      //
+    }
+  }
 
   ngOnInit(): void {
+    //
   }
 
 }

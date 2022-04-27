@@ -47,12 +47,16 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private fansub: FansubService,
     private toast: ToastrService,
-    public as: AuthService,
-    public gs: GlobalService
+    private as: AuthService,
+    private gs: GlobalService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   ngOnDestroy(): void {
@@ -112,7 +116,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     if (input) {
       input.value = '';
     }
-    this.fg.controls.tags.patchValue(this.fg.value.tags.filter((a, b, c) => c.findIndex(d => (d === a)) === b));
+    this.fg.controls['tags'].patchValue(this.fg.value.tags.filter((a, b, c) => c.findIndex(d => (d === a)) === b));
   }
 
   removeTag(tag: any): void {
@@ -125,7 +129,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
   uploadImage(event, gambar): void {
     this.gambar = gambar;
     this.image = null;
-    this.fg.controls.image.patchValue(null);
+    this.fg.controls['image'].patchValue(null);
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -162,12 +166,12 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
-        this.fg.controls.image.patchValue(res.result.url);
+        this.fg.controls['image'].patchValue(res.result.url);
         this.submitted = false;
       },
       error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
-        this.fg.controls.image.patchValue(null);
+        this.fg.controls['image'].patchValue(null);
         this.submitted = false;
       }
     });

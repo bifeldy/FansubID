@@ -1,6 +1,7 @@
+import { URL } from 'node:url';
+
 import translate from '@iamtraction/google-translate';
 
-import { URL } from 'url';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
 
@@ -313,13 +314,13 @@ router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFuncti
 
 // GET `/api/dorama/:mdlSlug`
 router.get('/:mdlSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const mdlId = req.params.mdlSlug.split('-')[0];
+  const mdlId = req.params['mdlSlug'].split('-')[0];
   const cacheData = cacheGet(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);
   } else {
     try {
-      const url = new URL(`${environment.externalApiDorama}/id/${req.params.mdlSlug}`);
+      const url = new URL(`${environment.externalApiDorama}/id/${req.params['mdlSlug']}`);
       const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);

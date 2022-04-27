@@ -2,12 +2,12 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { DialogNihongoDataModel } from '../../../models/Dialog';
+
 import { GlobalService } from '../../../../_shared/services/global.service';
 import { ImgbbService } from '../../../services/imgbb.service';
 import { BusyService } from '../../../services/busy.service';
 import { NihongoService } from '../../../services/nihongo.service';
-
-import { DialogNihongoData } from '../../../models/Dialog';
 
 @Component({
   selector: 'app-material-dialog-belajar',
@@ -34,13 +34,17 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private imgbb: ImgbbService,
     private nihongo: NihongoService,
-    public dialogRef: MatDialogRef<MaterialDialogBelajarComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogNihongoData,
-    public gs: GlobalService
+    private dialogRef: MatDialogRef<MaterialDialogBelajarComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: DialogNihongoDataModel,
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get DATA(): DialogNihongoDataModel {
+    return this.data;
   }
 
   ngOnInit(): void {
@@ -66,7 +70,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
     if (data) {
       this.image_url = data?.image_url;
     } else {
-      this.fg.controls.image.setValidators([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]);
+      this.fg.controls['image'].setValidators([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]);
     }
     this.image_url_original = this.image_url;
   }
@@ -74,8 +78,8 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
   uploadImage(event, gambar): void {
     this.gambar = gambar;
     this.image = null;
-    this.fg.controls.image.patchValue(null);
-    this.fg.controls.image.markAsPristine();
+    this.fg.controls['image'].patchValue(null);
+    this.fg.controls['image'].markAsPristine();
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -112,14 +116,14 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
-        this.fg.controls.image.patchValue(res.result.url);
-        this.fg.controls.image.markAsDirty();
+        this.fg.controls['image'].patchValue(res.result.url);
+        this.fg.controls['image'].markAsDirty();
         this.submitted = false;
       },
       error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
-        this.fg.controls.image.patchValue(null);
-        this.fg.controls.image.markAsPristine();
+        this.fg.controls['image'].patchValue(null);
+        this.fg.controls['image'].markAsPristine();
         this.submitted = false;
       }
     });

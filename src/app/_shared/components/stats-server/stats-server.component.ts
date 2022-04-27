@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { ServerInfo } from '../../models/ServerInfo';
+import { ServerInfoModel } from '../../../../models/socket-io.model';
 
 import { GlobalService } from '../../services/global.service';
 import { StatsServerService } from '../../services/stats-server.service';
@@ -12,17 +12,21 @@ import { StatsServerService } from '../../services/stats-server.service';
 })
 export class StatsServerComponent implements OnInit, OnDestroy {
 
-  currentServer: ServerInfo = null;
+  currentServer: ServerInfoModel = null;
 
   subsServer = null;
 
   constructor(
-    public gs: GlobalService,
-    public ss: StatsServerService
+    private gs: GlobalService,
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get SS(): StatsServerService {
+    return this.ss;
   }
 
   ngOnInit(): void {

@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Kamus Dictionary '{{ data.character }}'</h1>
+<h1 mat-dialog-title>Kamus Dictionary '{{ DATA.character }}'</h1>
 <div mat-dialog-content class="p-4" class="text-break">
   <div class="row">
     <div class="col-md-4 col-xl-3">
@@ -7,19 +7,19 @@
           <div id="dmakElement" #dmakElement class="text-center"></div>
         </div>
         <div class="col-12 mt-3">
-          <p class="text-warning">{{ data.translate }}</p>
+          <p class="text-warning">{{ DATA.translate }}</p>
         </div>
         <div class="col-12">
           <div class="text-truncate">
-            JLPT Level :: <span class="text-success">N{{ data.jlpt }}</span>
+            JLPT Level :: <span class="text-success">N{{ DATA.jlpt }}</span>
           </div>
           <div class="text-truncate">
-            School Level :: <span class="text-success">{{ data.school }}</span>
+            School Level :: <span class="text-success">{{ DATA.school }}</span>
           </div>
           <div class="text-truncate mt-3">
             Kunyomi ::
             <ul class="text-success m-0">
-              <li *ngFor="let v of data.v_kunyomi.split(',')">
+              <li *ngFor="let v of DATA.v_kunyomi.split(',')">
                 {{ v }} ({{ getRomaji(v) }})
               </li>
             </ul>
@@ -27,7 +27,7 @@
           <div class="text-truncate">
             Onyomi :: 
             <ul class="text-success m-0">
-              <li *ngFor="let v of data.v_onyomi.split(',')">
+              <li *ngFor="let v of DATA.v_onyomi.split(',')">
                 {{ v }} ({{ getRomaji(v) }})
               </li>
             </ul>
@@ -53,7 +53,7 @@
             </mat-selection-list>
           </div>
           <div *ngIf="edict.length <= 0"
-            style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+            style="background-image: url('/assets/img/404-no-DATA.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
             <div class="row align-items-center h-100">
               <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
                 <h3 class="m-0">

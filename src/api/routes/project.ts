@@ -3,8 +3,8 @@ import createError from 'http-errors';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal } from 'typeorm';
 
+import { RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
-import { Role } from '../../app/_shared/models/Role';
 
 import { ProjectType } from '../entities/ProjectType';
 
@@ -31,7 +31,7 @@ router.get('/', async (req: UserRequest, res: Response, next: NextFunction) => {
 // POST `/api/project`
 router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       if (
         'name' in req.body
       ) {
@@ -76,16 +76,16 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
 // DELETE `/api/project/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const projectRepo = getRepository(ProjectType);
       const project =  await projectRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.id) }
+          { id: Equal(req.params['id']) }
         ]
       });
       const deletedProject = await projectRepo.remove(project);
       return res.status(200).json({
-        info: `😅 200 - Project API :: Berhasil Menghapus Project ${req.params.id} 🤣`,
+        info: `😅 200 - Project API :: Berhasil Menghapus Project ${req.params['id']} 🤣`,
         result: deletedProject
       });
     } else {

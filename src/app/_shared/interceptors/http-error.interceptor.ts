@@ -17,10 +17,8 @@ import { environment } from '../../../environments/app/environment';
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
 
-  currentUser = null;
-
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private router: Router,
     private as: AuthService,
     private toast: ToastrService,
@@ -34,11 +32,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    if (this.gs.isBrowser) {
-      this.as.currentUser.subscribe({ next: user => this.currentUser = user });
-    }
-
     return next.handle(request).pipe(
       tap((res) => {
         if (res instanceof HttpResponse && this.gs.isBrowser) {

@@ -1,5 +1,5 @@
-<mat-accordion class="example-headers-align" multi (window:resize)="onResize($event)" *ngIf="panelData.length > 0">
-  <mat-expansion-panel *ngFor="let d of panelData; first as isFirst" [expanded]="gs.isDesktop && isFirst">
+<mat-accordion class="example-headers-align" multi *ngIf="panelData.length > 0">
+  <mat-expansion-panel *ngFor="let d of panelData; first as isFirst" [expanded]="GS.isDesktop && isFirst">
 
     <!-- Header -->
     <mat-expansion-panel-header>

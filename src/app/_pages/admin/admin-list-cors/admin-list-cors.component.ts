@@ -32,8 +32,8 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
   constructor(
     private bs: BusyService,
     private ds: DialogService,
-    public gs: GlobalService,
-    public adm: AdminService
+    private gs: GlobalService,
+    private adm: AdminService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;

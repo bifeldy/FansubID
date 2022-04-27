@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { UserModel } from '../../../../models/req-res.model';
+
 import { onSideNavChange, animateText } from '../../animations/anim-side-menu';
 
 import { LeftMenuService } from '../../services/left-menu.service';
@@ -9,7 +11,6 @@ import { GlobalService } from '../../services/global.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { DialogService } from '../../services/dialog.service';
 
-import { User } from '../../models/User';
 import { Menu } from '../../models/Menu';
 
 @Component({
@@ -20,7 +21,7 @@ import { Menu } from '../../models/Menu';
 })
 export class LeftMenuComponent implements OnInit, OnDestroy {
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   subsUser = null;
   subsDialog = null;
@@ -29,13 +30,17 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     private router: Router,
     private lms: LeftMenuService,
     private as: AuthService,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private ds: DialogService,
     private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   get mainMenus(): Menu[] {

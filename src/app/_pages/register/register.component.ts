@@ -34,11 +34,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private router: Router,
     private bs: BusyService,
-    public route: ActivatedRoute,
-    public as: AuthService,
+    private route: ActivatedRoute,
+    private as: AuthService,
     private ds: DialogService,
     private cs: CryptoService
   ) {
@@ -56,7 +56,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/home';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({
         next: user => {
@@ -172,7 +172,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.subsDialog = this.ds.openAturanTatibDialog('Setuju', 'Tolak').afterClosed().subscribe({
         next: re => {
           this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
-          this.fg.controls.agree.patchValue(re);
+          this.fg.controls['agree'].patchValue(re);
           this.subsDialog.unsubscribe();
         }
       });

@@ -18,11 +18,11 @@
             <div class="col-6 p-0" *ngFor="let u of roomCurrentOrGlobal.member_list | keyvalue">
               <div class="card d-flex py-1 align-items-center p-1 text-success" routerLink="/user/Bifeldy" *ngIf="u.value">
                 <div class="flex-shrink-0">
-                  <img height="24" width="24" src="{{ u.value.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
+                  <img height="24" width="24" src="{{ u.value['image_url'] }}" class="ms-1 mt-1" style="border-radius: 0;" />
                 </div>
                 <div class="flex-grow-1 ms-1">
                   <h4 matLine class="m-0">
-                    <span>{{ u.value.username }}</span>
+                    <span>{{ u.value['username'] }}</span>
                   </h4>
                 </div>
               </div>
@@ -48,7 +48,7 @@
                 <span class="me-1 text-success" style="cursor: pointer;" (click)="openUserProfile(c.sender.username)">
                   {{ c.sender.username }}
                 </span>
-                <span class="text-warning" style="word-break: break-word;" [innerHtml]="gs.htmlToText(c.message).linkify()"></span>
+                <span class="text-warning" style="word-break: break-word;" [innerHtml]="innerHtml(c.message)"></span>
               </h5>
             </div>
           </div>

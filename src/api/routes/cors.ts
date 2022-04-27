@@ -3,8 +3,8 @@ import createError from 'http-errors';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal, In, Not, IsNull } from 'typeorm';
 
+import { RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
-import { Role } from '../../app/_shared/models/Role';
 
 import { User } from '../entities/User';
 import { ApiKey } from '../entities/ApiKey';
@@ -25,7 +25,7 @@ router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: Next
       if (Array.isArray(userId) && userId.length > 0) {
         if (
           (userId.length > 1) || (userId.length === 1 && userId[0] !== req.user.id) &&
-          req.user.role !== Role.ADMIN && req.user.role !== Role.MODERATOR
+          req.user.role !== RoleModel.ADMIN && req.user.role !== RoleModel.MODERATOR
         ) {
           return res.status(401).json({
             info: '🙄 401 - Cors API :: Authorisasi Pengguna Gagal 😪',
@@ -68,7 +68,7 @@ router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: Next
         throw new Error('Data Tidak Lengkap!');
       }
     } else {
-      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
         const [corss, count] = await corsRepo.findAndCount({
           where: [
             { name: ILike(`%${req.query.q ? req.query.q : ''}%`) },
@@ -140,9 +140,9 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
         });
         if (
           corss.length >= 1 &&
-          req.user.role !== Role.ADMIN &&
-          req.user.role !== Role.MODERATOR &&
-          req.user.role !== Role.FANSUBBER
+          req.user.role !== RoleModel.ADMIN &&
+          req.user.role !== RoleModel.MODERATOR &&
+          req.user.role !== RoleModel.FANSUBBER
         ) {
           return res.status(400).json({
             info: '🙄 400 - Cors API :: Gagal Menambah Cors Baru 😪',
@@ -206,7 +206,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
           const corsRepo = getRepository(ApiKey);
           const cors = await corsRepo.findOneOrFail({
             where: [
-              { id: Equal(req.params.id) }
+              { id: Equal(req.params['id']) }
             ],
             relations: ['user_']
           });
@@ -226,7 +226,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
               delete resCorsSave.user_.updated_at;
             }
             return res.status(200).json({
-              info: `😅 200 - Cors API :: Ubah ${req.params.id} 🤣`,
+              info: `😅 200 - Cors API :: Ubah ${req.params['id']} 🤣`,
               result: resCorsSave
             });
           } else {
@@ -246,7 +246,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
       }
     } else {
       return res.status(400).json({
-        info: `🙄 400 - Cors API :: Gagal Mengubah Cors ${req.params.id} 😪`,
+        info: `🙄 400 - Cors API :: Gagal Mengubah Cors ${req.params['id']} 😪`,
         result: {
           message: 'Khusus Pengguna Terverifikasi!'
         }
@@ -255,7 +255,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Cors API :: Gagal Mengubah Cors ${req.params.id} 😪`,
+      info: `🙄 400 - Cors API :: Gagal Mengubah Cors ${req.params['id']} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -266,12 +266,12 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
 // DELETE `/api/cors/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const corsRepo = getRepository(ApiKey);
       const cors = await corsRepo.findOneOrFail({
         where: [
           {
-            id: req.params.id,
+            id: req.params['id'],
             user_: Not(IsNull())
           },
         ],
@@ -286,7 +286,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete revokedUser.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Cors API :: Berhasil Revoke ${req.params.id} 🤣`,
+        info: `😅 200 - Cors API :: Berhasil Revoke ${req.params['id']} 🤣`,
         result: revokedUser
       });
     } else {

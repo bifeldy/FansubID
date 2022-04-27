@@ -14,13 +14,17 @@ import { WinboxService } from '../../services/winbox.service';
 export class FooterComponent implements OnInit {
 
   constructor(
-    public gs: GlobalService,
-    public ss: StatsServerService,
+    private gs: GlobalService,
+    private ss: StatsServerService,
     private wb: WinboxService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get SS(): StatsServerService {
+    return this.ss;
   }
 
   ngOnInit(): void {

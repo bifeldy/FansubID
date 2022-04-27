@@ -23,7 +23,7 @@
           <div class="col-12">
             <app-material-tab (gridClicked)="openFansub($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
               [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
-              [gridPageFinished]="fansubPageFinished" (gridLoadNextPage)="onFansubLoadNextPage($event)"></app-material-tab>
+              [gridPageFinished]="fansubPageFinished" (gridLoadNextPage)="onFansubLoadNextPage()"></app-material-tab>
           </div>
         </div>
       </div>

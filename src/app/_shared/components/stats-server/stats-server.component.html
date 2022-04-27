@@ -5,30 +5,30 @@
     </h2>
   </div>
   <div class="col-12">
-    <p class="px-2 text-truncate" *ngIf="ss.github?.sha">
+    <p class="px-2 text-truncate" *ngIf="SS.github?.sha">
       Portal ::
       <span class="text-success">
-        {{ ss.github?.sha }}
+        {{ SS.github?.sha }}
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.author?.date">
+    <p class="px-2 text-truncate" *ngIf="SS.github?.commit?.author?.date">
       Date ::
       <span class="text-success">
-        {{ ss.github?.commit?.author?.date | date:'d MMM y, h:mm:ss a' }}
+        {{ SS.github?.commit?.author?.date | date:'d MMM y, h:mm:ss a' }}
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.author?.name">
+    <p class="px-2 text-truncate" *ngIf="SS.github?.commit?.author?.name">
       Commiter ::
       <span class="text-warning">
-        <a href="https://github.com/{{ ss.github?.commit?.author?.name }}" target="_blank" class="text-warning text-decoration-none">
-          {{ ss.github?.commit?.author?.name }}
+        <a href="https://github.com/{{ SS.github?.commit?.author?.name }}" target="_blank" class="text-warning text-decoration-none">
+          {{ SS.github?.commit?.author?.name }}
         </a>
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.github?.commit?.message">
+    <p class="px-2 text-truncate" *ngIf="SS.github?.commit?.message">
       Message ::
       <span class="text-warning">
-        {{ ss.github?.commit?.message }}
+        {{ SS.github?.commit?.message }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="currentServer">
@@ -37,22 +37,22 @@
         {{ currentServer?.isMaintenance ? 'Dalam Perbaikan' : 'Berjalan Normal' }}
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.mySocket">
+    <p class="px-2 text-truncate" *ngIf="SS.mySocket">
       Socket ::
       <span class="text-success">
-        {{ ss.mySocket?.id ? ss.mySocket.id : 'Sambungan Terputus' }}
+        {{ SS.mySocket?.id ? SS.mySocket.id : 'Sambungan Terputus' }}
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.latency">
+    <p class="px-2 text-truncate" *ngIf="SS.latency">
       Latency ::
       <span class="text-success">
-        {{ ss.latency }} ms
+        {{ SS.latency }} ms
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="ss.visitor">
+    <p class="px-2 text-truncate" *ngIf="SS.visitor">
       Nodes ::
       <span class="text-success">
-        {{ ss.visitor }} Koneksi
+        {{ SS.visitor }} Koneksi
       </span>
     </p>
   </div>

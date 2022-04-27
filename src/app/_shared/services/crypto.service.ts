@@ -14,7 +14,7 @@ export class CryptoService {
   iterations = 100;
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

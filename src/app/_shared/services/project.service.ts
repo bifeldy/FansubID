@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
+import { JsonResponse, JsonResponseArray, ProjectTypeModel } from '../../../models/req-res.model';
+
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
 
@@ -12,22 +14,22 @@ export class ProjectService {
 
   constructor(
     private api: ApiService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
-  getProject(): Observable<any> {
+  getProject(): Observable<JsonResponseArray<ProjectTypeModel>> {
     return this.api.getData(`/project`);
   }
 
-  createProject(notifData): Observable<any> {
+  createProject(notifData): Observable<JsonResponse<ProjectTypeModel>> {
     return this.api.postData('/project', notifData);
   }
 
-  deleteProject(notifId): Observable<any> {
+  deleteProject(notifId): Observable<JsonResponse<ProjectTypeModel>> {
     return this.api.deleteData(`/project/${notifId}`);
   }
 

@@ -32,7 +32,7 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
   @Input() poster = '';
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

@@ -1,9 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+import { KomentarModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'komentar' })
-export class Komentar {
+export class Komentar implements KomentarModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -21,8 +23,9 @@ export class Komentar {
   updated_at: number;
 
   @ManyToOne(type => Komentar)
-  parent_komentar_: Komentar;
+  parent_komentar_: KomentarModel;
 
   @ManyToOne(type => User)
   user_: User;
+
 }

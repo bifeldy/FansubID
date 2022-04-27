@@ -22,8 +22,8 @@ export class UserListComponent implements OnInit, OnDestroy {
   subsFeedVisit = null;
 
   constructor(
-    public as: AuthService,
-    public gs: GlobalService,
+    private as: AuthService,
+    private gs: GlobalService,
     private fs: FabService,
     private bs: BusyService,
     private us: UserService

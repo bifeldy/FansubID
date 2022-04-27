@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { BannedModel, BerkasModel, JsonResponse, JsonResponseArray, KomentarModel, LikeDislikeModel, UserModel } from '../../../models/req-res.model';
+import { TrackModel } from '../../../models/socket-io.model';
+
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 import { GlobalService } from './global.service';
@@ -15,60 +18,60 @@ export class UserService {
   constructor(
     private api: ApiService,
     private as: AuthService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
-  checkBanned(userId): Observable<any> {
+  checkBanned(userId): Observable<JsonResponseArray<BannedModel>> {
     return this.api.getData(`/banned?id=${userId}`);
   }
 
-  getAllUser(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getAllUser(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<UserModel>> {
     return this.api.getData(`/user?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getUserData(username): Observable<any> {
+  getUserData(username): Observable<JsonResponse<UserModel>> {
     return this.api.getData(`/user/${username}`);
   }
 
-  updateUser(username, userData): Observable<any> {
+  updateUser(username, userData): Observable<JsonResponse<UserModel>> {
     return this.api.putData(`/user/${username}`, userData).pipe(map(respUpdateUser => {
       this.as.jwtToken = respUpdateUser.result.jwtToken;
       return respUpdateUser;
     }));
   }
 
-  getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<BerkasModel>> {
     return this.api.getData(`/user/${username}/feed-berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getUserFeedComment(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getUserFeedComment(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<KomentarModel>> {
     return this.api.getData(`/user/${username}/feed-comment?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getUserFeedLikeDislike(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getUserFeedLikeDislike(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<LikeDislikeModel>> {
     return this.api.getData(`/user/${username}/feed-likedislike?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getUserFeedVisit(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getUserFeedVisit(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<TrackModel>> {
     return this.api.getData(`/user/${username}/feed-visit?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  cekNik(userData): Observable<any> {
+  cekNik(userData): Observable<JsonResponse> {
     return this.api.postData('/cek-nik', userData);
   }
 
-  verifyKTP(userData): Observable<any> {
+  verifyKTP(userData): Observable<JsonResponse> {
     return this.api.putData('/verify-ktp', userData).pipe(map(respVerifyKTP => {
       this.as.jwtToken = respVerifyKTP.result.jwtToken;
       return respVerifyKTP;
     }));
   }
 
-  sosmedLogin(data): Observable<any> {
+  sosmedLogin(data): Observable<JsonResponse> {
     return this.api.putData('/verify-sosmed', data);
   }
 

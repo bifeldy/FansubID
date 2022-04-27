@@ -21,7 +21,7 @@ export class PageInfoService {
   constructor(
     private t: Title,
     private m: Meta,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private router: Router
   ) {
     this.m.updateTag({ property: 'og:site_name', content: this.siteName });

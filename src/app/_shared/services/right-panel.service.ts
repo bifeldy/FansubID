@@ -12,12 +12,12 @@ import { LiveChatComponent } from '../components/right-panel/live-chat/live-chat
 })
 export class RightPanelService {
 
-  public sidePanel = null;
+  sidePanel = null;
 
   componentView = null;
 
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {

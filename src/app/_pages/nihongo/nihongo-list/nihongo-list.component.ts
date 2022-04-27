@@ -292,7 +292,7 @@ export class NihongoListComponent implements OnInit {
   constructor(
     private router: Router,
     // private fs: FabService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;

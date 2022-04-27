@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { GlobalService } from '../../../../_shared/services/global.service';
+import { DialogDmakDataModel } from '../../../models/Dialog';
 
-import { DialogDmakData } from '../../../models/Dialog';
+import { GlobalService } from '../../../../_shared/services/global.service';
 
 declare const Dmak: any;
 
@@ -26,12 +26,16 @@ export class MaterialDialogDmakComponent implements OnInit, AfterViewInit {
   charToDraw = 'NO DATA';
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogDmakData,
-    public gs: GlobalService
+    @Inject(MAT_DIALOG_DATA) private data: DialogDmakDataModel,
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get DATA(): DialogDmakDataModel {
+    return this.data;
   }
 
   ngOnInit(): void {

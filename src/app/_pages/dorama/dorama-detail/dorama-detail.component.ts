@@ -72,7 +72,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService,
     private pi: PageInfoService,
     private dorama: DoramaService,
@@ -93,7 +93,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {
-        const paramDoramaId = p.doramaId;
+        const paramDoramaId = p['doramaId'];
         this.doramaId = paramDoramaId.split('-')[0];
         this.bs.busy();
         this.subsDorama = this.dorama.getDorama(paramDoramaId).subscribe({

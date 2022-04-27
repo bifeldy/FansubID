@@ -56,13 +56,17 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private fb: FormBuilder,
     private imgbb: ImgbbService,
-    public gs: GlobalService,
-    public as: AuthService,
+    private gs: GlobalService,
+    private as: AuthService,
     private cs: CryptoService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   togglePassword(): void {
@@ -134,8 +138,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   uploadPhotoImage(event, photoImage): void {
     this.photoImage = photoImage;
     this.imagePhoto = null;
-    this.fg.controls.image_photo.patchValue(null);
-    this.fg.controls.image_photo.markAsPristine();
+    this.fg.controls['image_photo'].patchValue(null);
+    this.fg.controls['image_photo'].markAsPristine();
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -172,14 +176,14 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: res => {
         this.gs.log('[IMAGE_PHOTO_SUCCESS]', res);
-        this.fg.controls.image_photo.patchValue(res.result.url);
-        this.fg.controls.image_photo.markAsDirty();
+        this.fg.controls['image_photo'].patchValue(res.result.url);
+        this.fg.controls['image_photo'].markAsDirty();
         this.submitted = false;
       },
       error: err => {
         this.gs.log('[IMAGE_PHOTO_ERROR]', err);
-        this.fg.controls.image_photo.patchValue(null);
-        this.fg.controls.image_photo.markAsPristine();
+        this.fg.controls['image_photo'].patchValue(null);
+        this.fg.controls['image_photo'].markAsPristine();
         this.submitted = false;
       }
     });
@@ -188,8 +192,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   uploadCoverImage(event, coverImage): void {
     this.coverImage = coverImage;
     this.imageCover = null;
-    this.fg.controls.image_cover.patchValue(null);
-    this.fg.controls.image_cover.markAsPristine();
+    this.fg.controls['image_cover'].patchValue(null);
+    this.fg.controls['image_cover'].markAsPristine();
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -226,14 +230,14 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: res => {
         this.gs.log('[IMAGE_COVER_SUCCESS]', res);
-        this.fg.controls.image_cover.patchValue(res.result.url);
-        this.fg.controls.image_cover.markAsDirty();
+        this.fg.controls['image_cover'].patchValue(res.result.url);
+        this.fg.controls['image_cover'].markAsDirty();
         this.submitted = false;
       },
       error: err => {
         this.gs.log('[IMAGE_COVER_ERROR]', err);
-        this.fg.controls.image_cover.patchValue(null);
-        this.fg.controls.image_cover.markAsPristine();
+        this.fg.controls['image_cover'].patchValue(null);
+        this.fg.controls['image_cover'].markAsPristine();
         this.submitted = false;
       }
     });

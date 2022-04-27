@@ -53,7 +53,7 @@ export class CardAnimeDoramaComponent implements OnInit {
   @Output() cardClicked = new EventEmitter();
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

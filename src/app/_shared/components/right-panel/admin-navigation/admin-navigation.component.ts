@@ -11,12 +11,16 @@ import { GlobalService } from '../../../services/global.service';
 export class AdminNavigationComponent implements OnInit {
 
   constructor(
-    public gs: GlobalService,
-    public adm: AdminService
+    private gs: GlobalService,
+    private adm: AdminService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get ADM(): AdminService {
+    return this.adm;
   }
 
   ngOnInit(): void {

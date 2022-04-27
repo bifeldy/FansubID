@@ -13,14 +13,14 @@ export class BusyService {
 
   constructor(
     private spinnerService: NgxSpinnerService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
-  public busy(): void {
+  busy(): void {
     if (this.gs.isBrowser) {
       this.busyRequestCount++;
       this.spinnerService.show();
@@ -28,7 +28,7 @@ export class BusyService {
     }
   }
 
-  public idle(): void {
+  idle(): void {
     if (this.gs.isBrowser) {
       this.busyRequestCount--;
       if (this.busyRequestCount <= 0) {
@@ -39,7 +39,7 @@ export class BusyService {
     }
   }
 
-  public clear(): void {
+  clear(): void {
     if (this.gs.isBrowser) {
       this.busyRequestCount = 0;
       this.spinnerService.hide();

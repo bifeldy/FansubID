@@ -77,15 +77,19 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private fs: FabService,
     private pi: PageInfoService,
     private fansub: FansubService,
-    public ss: StatsServerService
+    private ss: StatsServerService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get SS(): StatsServerService {
+    return this.ss;
   }
 
   ngOnDestroy(): void {
@@ -100,7 +104,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {
-        this.fansubSlug = p.fansubSlug;
+        this.fansubSlug = p['fansubSlug'];
         this.bs.busy();
         this.subsFansub = this.fansub.getFansub(this.fansubSlug).subscribe({
           next: res => {

@@ -7,7 +7,7 @@ import { MessageEmbed } from 'discord.js';
 import { environment } from '../../environments/api/environment';
 
 import { UserRequest } from '../models/UserRequest';
-import { Role } from '../../app/_shared/models/Role';
+import { RoleModel } from '../../models/req-res.model';
 
 import { User } from '../entities/User';
 import { Banned } from '../entities/Banned';
@@ -26,7 +26,7 @@ router.get('/', isLogin, async (req: UserRequest, res: Response, next: NextFunct
       if (Array.isArray(userId) && userId.length > 0) {
         if (userId.length > 1) {
           if (req.user) {
-            if (req.user.role !== Role.ADMIN && req.user.role !== Role.MODERATOR) {
+            if (req.user.role !== RoleModel.ADMIN && req.user.role !== RoleModel.MODERATOR) {
               return res.status(401).json({
                 info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
                 result: {
@@ -84,7 +84,7 @@ router.get('/', isLogin, async (req: UserRequest, res: Response, next: NextFunct
             message: 'Harap Login Terlebih Dahulu!'
           }
         });
-      } else if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      } else if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
         const [banneds, count] = await bannedRepo.findAndCount({
           where: [
             { reason: ILike(`%${req.query.q ? req.query.q : ''}%`) }
@@ -145,12 +145,12 @@ router.get('/', isLogin, async (req: UserRequest, res: Response, next: NextFunct
 router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('reason' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
-      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
         let excludedRole = [req.user.role];
-        if (req.user.role === Role.ADMIN) {
-          excludedRole = [Role.ADMIN];
+        if (req.user.role === RoleModel.ADMIN) {
+          excludedRole = [RoleModel.ADMIN];
         } else {
-          excludedRole = [Role.ADMIN, Role.MODERATOR];
+          excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
         }
         const userRepo = getRepository(User);
         const user =  await userRepo.findOneOrFail({
@@ -243,16 +243,16 @@ router.post('/', isAuthorized, async (req: UserRequest, res: Response, next: Nex
 // DELETE `/api/banned/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       let excludedRole = [req.user.role];
-      if (req.user.role === Role.MODERATOR) {
-        excludedRole = [Role.ADMIN, Role.MODERATOR];
+      if (req.user.role === RoleModel.MODERATOR) {
+        excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
       }
       const bannedRepo = getRepository(Banned);
       const banned = await bannedRepo.findOneOrFail({
         where: [
           {
-            id: req.params.id,
+            id: req.params['id'],
             user_: {
               role: Not(In(excludedRole))
             }
@@ -276,7 +276,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete unBannedUser.banned_by_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Banned API :: Berhasil UnBAN User ${req.params.id} 🤣`,
+        info: `😅 200 - Banned API :: Berhasil UnBAN User ${req.params['id']} 🤣`,
         result: unBannedUser
       });
     } else {

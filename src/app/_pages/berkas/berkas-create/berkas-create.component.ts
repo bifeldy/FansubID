@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProgressBarMode } from '@angular/material/progress-bar';
 
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
+
+import { UserModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -16,8 +19,6 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 
-import { User } from '../../../_shared/models/User';
-
 @Component({
   selector: 'app-berkas-create',
   templateUrl: './berkas-create.component.html',
@@ -25,7 +26,7 @@ import { User } from '../../../_shared/models/User';
 })
 export class BerkasCreateComponent implements OnInit, OnDestroy {
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   fg: FormGroup;
 
@@ -56,7 +57,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   attachmentPreviousLoaded = null;
   attachmentSpeed = 0;
-  attachmentMode = 'indeterminate';
+  attachmentMode: ProgressBarMode = 'indeterminate';
 
   timerTimeout = null;
 
@@ -89,12 +90,16 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     private berkas: BerkasService,
     private imgbb: ImgbbService,
     private toast: ToastrService,
-    public gs: GlobalService,
-    public as: AuthService
+    private gs: GlobalService,
+    private as: AuthService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   ngOnInit(): void {
@@ -211,41 +216,41 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       next: projectId => {
         this.gs.log('[BERKAS_CREATE_PROJECT_CHANGED]', projectId);
         const selectedProject = this.projectList.find(p => p.id === projectId);
-        this.fg.controls.anime_id.patchValue(null);
-        this.fg.controls.anime_name.patchValue(null);
-        this.fg.controls.dorama_id.patchValue(null);
-        this.fg.controls.dorama_name.patchValue(null);
-        this.fg.controls.anime_id.setErrors(null);
-        this.fg.controls.anime_name.setErrors(null);
-        this.fg.controls.dorama_id.setErrors(null);
-        this.fg.controls.dorama_name.setErrors(null);
-        this.fg.controls.anime_id.clearValidators();
-        this.fg.controls.anime_name.clearValidators();
-        this.fg.controls.dorama_id.clearValidators();
-        this.fg.controls.dorama_name.clearValidators();
-        this.fg.controls.anime_id.markAsPristine();
-        this.fg.controls.anime_name.markAsPristine();
-        this.fg.controls.dorama_id.markAsPristine();
-        this.fg.controls.dorama_name.markAsPristine();
-        this.fg.controls.anime_id.markAsUntouched();
-        this.fg.controls.anime_name.markAsUntouched();
-        this.fg.controls.dorama_id.markAsUntouched();
-        this.fg.controls.dorama_name.markAsUntouched();
+        this.fg.controls['anime_id'].patchValue(null);
+        this.fg.controls['anime_name'].patchValue(null);
+        this.fg.controls['dorama_id'].patchValue(null);
+        this.fg.controls['dorama_name'].patchValue(null);
+        this.fg.controls['anime_id'].setErrors(null);
+        this.fg.controls['anime_name'].setErrors(null);
+        this.fg.controls['dorama_id'].setErrors(null);
+        this.fg.controls['dorama_name'].setErrors(null);
+        this.fg.controls['anime_id'].clearValidators();
+        this.fg.controls['anime_name'].clearValidators();
+        this.fg.controls['dorama_id'].clearValidators();
+        this.fg.controls['dorama_name'].clearValidators();
+        this.fg.controls['anime_id'].markAsPristine();
+        this.fg.controls['anime_name'].markAsPristine();
+        this.fg.controls['dorama_id'].markAsPristine();
+        this.fg.controls['dorama_name'].markAsPristine();
+        this.fg.controls['anime_id'].markAsUntouched();
+        this.fg.controls['anime_name'].markAsUntouched();
+        this.fg.controls['dorama_id'].markAsUntouched();
+        this.fg.controls['dorama_name'].markAsUntouched();
         if (selectedProject.name.toLowerCase().includes('anime')) {
           this.berkasType = selectedProject.name;
-          this.fg.controls.anime_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-          this.fg.controls.anime_name.setValidators([Validators.required]);
+          this.fg.controls['anime_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+          this.fg.controls['anime_name'].setValidators([Validators.required]);
         } else if (selectedProject.name.toLowerCase().includes('dorama')) {
           this.berkasType = selectedProject.name;
-          this.fg.controls.dorama_id.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-          this.fg.controls.dorama_name.setValidators([Validators.required]);
+          this.fg.controls['dorama_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+          this.fg.controls['dorama_name'].setValidators([Validators.required]);
         } else {
           this.berkasType = '';
         }
-        this.fg.controls.anime_id.updateValueAndValidity();
-        this.fg.controls.anime_name.updateValueAndValidity();
-        this.fg.controls.dorama_id.updateValueAndValidity();
-        this.fg.controls.dorama_name.updateValueAndValidity();
+        this.fg.controls['anime_id'].updateValueAndValidity();
+        this.fg.controls['anime_name'].updateValueAndValidity();
+        this.fg.controls['dorama_id'].updateValueAndValidity();
+        this.fg.controls['dorama_name'].updateValueAndValidity();
       }
     });
   }
@@ -306,11 +311,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   resetSelectedAnime(): void {
-    this.fg.controls.anime_name.patchValue(null);
+    this.fg.controls['anime_name'].patchValue(null);
   }
 
   resetSelectedDorama(): void {
-    this.fg.controls.dorama_name.patchValue(null);
+    this.fg.controls['dorama_name'].patchValue(null);
   }
 
   resetSelectedFansub(i: number): any {
@@ -330,15 +335,15 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[ANIME_CHECK_ADD_SUCCESS]', res);
         this.animeCheckOrAddResponse = res.result;
         this.submitted = false;
-        this.fg.controls.anime_id.patchValue(res.result.id);
-        this.fg.controls.anime_name.patchValue(res.result.name);
+        this.fg.controls['anime_id'].patchValue(res.result.id);
+        this.fg.controls['anime_name'].patchValue(res.result.name);
       },
       error: err => {
         this.gs.log('[ANIME_CHECK_ADD_ERROR]', err);
         this.submitted = false;
         this.resetSelectedAnime();
-        this.fg.controls.anime_id.patchValue(null);
-        this.fg.controls.anime_name.patchValue(null);
+        this.fg.controls['anime_id'].patchValue(null);
+        this.fg.controls['anime_name'].patchValue(null);
       }
     });
   }
@@ -357,15 +362,15 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[DORAMA_CHECK_ADD_SUCCESS]', res);
         this.doramaCheckOrAddResponse = res.result;
         this.submitted = false;
-        this.fg.controls.dorama_id.patchValue(res.result.id);
-        this.fg.controls.dorama_name.patchValue(res.result.name);
+        this.fg.controls['dorama_id'].patchValue(res.result.id);
+        this.fg.controls['dorama_name'].patchValue(res.result.name);
       },
       error: err => {
         this.gs.log('[DORAMA_CHECK_ADD_ERROR]', err);
         this.submitted = false;
         this.resetSelectedDorama();
-        this.fg.controls.dorama_id.patchValue(null);
-        this.fg.controls.dorama_name.patchValue(null);
+        this.fg.controls['dorama_id'].patchValue(null);
+        this.fg.controls['dorama_name'].patchValue(null);
       }
     });
   }
@@ -379,7 +384,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   uploadImage(event, gambar): void {
     this.gambar = gambar;
     this.image = null;
-    this.fg.controls.image.patchValue(null);
+    this.fg.controls['image'].patchValue(null);
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -416,12 +421,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
-        this.fg.controls.image.patchValue(res.result.url);
+        this.fg.controls['image'].patchValue(res.result.url);
         this.submitted = false;
       },
       error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
-        this.fg.controls.image.patchValue(null);
+        this.fg.controls['image'].patchValue(null);
         this.submitted = false;
       }
     });
@@ -469,7 +474,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.ddl = ddl;
     const file = event.target.files[0];
     this.gs.log('[ATTACHMENT_SELECTED]', file);
-    this.fg.controls.attachment_id.patchValue(null);
+    this.fg.controls['attachment_id'].patchValue(null);
     try {
       if (file.size <= this.gs.berkasUploadSizeLimit) {
         this.attachment = file;
@@ -523,7 +528,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
           this.attachmentMode = 'determinate';
           this.attachmentIsUploading = false;
           this.attachmentIsCompleted = true;
-          this.fg.controls.attachment_id.patchValue(e.result.id);
+          this.fg.controls['attachment_id'].patchValue(e.result.id);
           this.toast.remove(this.uploadToast.toastId);
           const timer = (2 * 60 * 1000) + (30 * 1000);
           this.uploadToast = this.toast.warning(
@@ -557,7 +562,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.attachmentIsCompleted = false;
     this.attachment = null;
     this.attachmentErrorText = err?.error?.result?.message || err?.error?.info || '';
-    this.fg.controls.attachment_id.patchValue(null);
+    this.fg.controls['attachment_id'].patchValue(null);
     this.toast.remove(this.uploadToast.toastId);
     this.ddl.clear();
   }

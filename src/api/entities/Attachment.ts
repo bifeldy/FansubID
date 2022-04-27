@@ -1,9 +1,11 @@
 import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
+import { AttachmentModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
 @Entity({ name: 'attachment' })
-export class Attachment {
+export class Attachment implements AttachmentModel {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -30,8 +32,9 @@ export class Attachment {
   updated_at: number;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
 
   @ManyToOne(type => Attachment)
-  parent_attachment_: Attachment;
+  parent_attachment_: AttachmentModel;
+
 }

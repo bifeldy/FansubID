@@ -3,9 +3,8 @@ import createError from 'http-errors';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, Equal, IsNull } from 'typeorm';
 
+import { RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
-
-import { Role } from '../../app/_shared/models/Role';
 
 import { User } from '../entities/User';
 import { Komentar } from '../entities/Komentar';
@@ -127,7 +126,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     const [komens, count] = await komenRepo.findAndCount({
       where: [
         {
-          parent_komentar_: Equal(req.params.id),
+          parent_komentar_: Equal(req.params['id']),
           comment: ILike(`%${req.query.q ? req.query.q : ''}%`)
         }
       ],
@@ -177,11 +176,11 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
 // DELETE `/api/comment/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const komenRepo = getRepository(Komentar);
       const komen =  await komenRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.id) }
+          { id: Equal(req.params['id']) }
         ]
       });
       const deletedKomen = await komenRepo.remove(komen);
@@ -193,7 +192,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete deletedKomen.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Komentar API :: Berhasil Menghapus Komentar ${req.params.id} 🤣`,
+        info: `😅 200 - Komentar API :: Berhasil Menghapus Komentar ${req.params['id']} 🤣`,
         result: deletedKomen
       });
     } else {

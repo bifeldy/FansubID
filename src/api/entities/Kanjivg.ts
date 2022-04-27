@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+import { KanjiVgModel } from '../../models/req-res.model';
+
 @Entity({ name: 'kanjivg' })
-export class KanjiVg {
+export class KanjiVg implements KanjiVgModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -20,4 +22,5 @@ export class KanjiVg {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
 }

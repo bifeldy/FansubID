@@ -12,7 +12,7 @@ export class MaterialFabComponent implements OnInit {
 
   constructor(
     private fs: FabService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

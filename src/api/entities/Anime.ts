@@ -1,7 +1,9 @@
 import { Entity, Column } from 'typeorm';
 
+import { AnimeModel } from '../../models/req-res.model';
+
 @Entity({ name: 'anime' })
-export class Anime {
+export class Anime implements AnimeModel {
 
   @Column({ primary: true, type: 'int' })
   id: number;
@@ -20,4 +22,5 @@ export class Anime {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
 }

@@ -1,20 +1,20 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+import { BerkasModel, FansubModel, LikeAndDislikeModel, LikeDislikeModel, NewsModel, UserModel } from '../../models/req-res.model';
+
 import { Berkas } from './Berkas';
 import { Fansub } from './Fansub';
-import { User } from './User';
 import { News } from './News';
-
-import { LikeAndDislike } from '../../app/_shared/models/LikeAndDislike';
+import { User } from './User';
 
 @Entity({ name: 'like_dislike' })
-export class LikeDislike {
+export class LikeDislike implements LikeDislikeModel {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'enum', enum: [LikeAndDislike.LIKE, LikeAndDislike.DISLIKE] })
-  type: LikeAndDislike;
+  @Column({ type: 'enum', enum: LikeAndDislikeModel })
+  type: LikeAndDislikeModel;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number;
@@ -23,17 +23,18 @@ export class LikeDislike {
   updated_at: number;
 
   @ManyToOne(type => News)
-  news_: News;
+  news_: NewsModel;
 
   @ManyToOne(type => Berkas)
-  berkas_: Berkas;
+  berkas_: BerkasModel;
 
   @ManyToOne(type => Fansub)
-  fansub_: Fansub;
+  fansub_: FansubModel;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
 
   @ManyToOne(type => User)
-  report_by_: User;
+  report_by_: UserModel;
+
 }

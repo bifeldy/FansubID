@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { RoleModel } from '../models/req-res.model';
+
 import { AuthGuard } from './_shared/helpers/auth-guard';
-import { Role } from './_shared/models/Role';
 
 const routes: Routes = [
   {
@@ -18,7 +19,7 @@ const routes: Routes = [
       title: 'Admin & Moderator Panel Management',
       description: 'Halaman Khusus Untuk Administrasi & Moderasi',
       keywords: 'Admin Moderator Fansub Database',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
@@ -146,7 +147,7 @@ const routes: Routes = [
   //     title: 'API Documentation',
   //     description: 'Request & Response',
   //     keywords: 'API',
-  //     roles: [Role.ADMIN, Role.MODERATOR, Role.FANSUBBER, Role.USER]
+  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
   //   }
   // },
   {
@@ -165,11 +166,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    initialNavigation: 'enabled',
-    scrollPositionRestoration: 'enabled',
-    relativeLinkResolution: 'corrected'
-})],
+  imports: [
+    RouterModule.forRoot(routes, {
+      initialNavigation: 'enabledBlocking',
+      scrollPositionRestoration: 'enabled',
+      relativeLinkResolution: 'corrected'
+    })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

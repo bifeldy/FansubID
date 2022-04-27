@@ -1,3 +1,5 @@
+import { URL, URLSearchParams } from 'node:url';
+
 import createError from 'http-errors';
 import multer from 'multer';
 import interceptor from 'express-interceptor';
@@ -6,12 +8,11 @@ import rateLimit from 'express-rate-limit';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, Equal, ILike, In, Not } from 'typeorm';
 import { FormData,  } from 'node-fetch';
-import { URL, URLSearchParams } from 'url';
 import { XMLBuilder } from 'fast-xml-parser';
 
 import { environment } from '../../environments/api/environment';
 
-import { Role } from '../../app/_shared/models/Role';
+import { RoleModel, SosMedModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
 
 import { ApiKey } from '../entities/ApiKey';
@@ -47,8 +48,6 @@ import torrentRouter from './torrent';
 
 // Child router folder
 import nihongoRouter from './nihongo';
-
-import { SosMed } from '../../app/_shared/models/SosMed';
 
 import { MessageEmbed } from 'discord.js';
 import { ConvertToBase64 } from '../helpers/base64';
@@ -94,6 +93,7 @@ function checkServerSetting(req: UserRequest, res: Response, next: NextFunction)
   switch (req.method) {
     case 'POST':
     case 'PUT':
+    // @ts-ignore error TS7029: Fallthrough case in switch.
     case 'DELETE':
       if (serverGetMaintenance()) {
         return res.status(400).json({
@@ -191,7 +191,7 @@ router.use(interceptor((req: UserRequest, res: Response) => {
 // Check Api Key
 router.use(async (req: UserRequest, res: Response, next: NextFunction) => {
   const k = req.query.key || '';
-  let o = req.headers.origin || req.headers.referer || req.header('x-real-ip') || req.socket.remoteAddress || '';
+  let o = req.headers.origin || req.headers.referer || req.header('x-real-ip') || req.header('x-forwarded-for') || req.socket.remoteAddress || req.ip || '';
   if (o.startsWith('http://')) {
     o = o.slice(7, o.length);
   } else if (o.startsWith('https://')) {
@@ -322,7 +322,7 @@ router.delete('/logout', isAuthorized, logoutModule, (req: UserRequest, res: Res
 
 // PATCH `/api/verify` -- Verify Login Session
 router.patch('/verify', isAuthorized, (req: UserRequest, res: Response, next: NextFunction) => {
-  let token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
+  let token = req.cookies[environment.tokenName] || req.headers.authorization || req.header('x-access-token') || req.body.token || req.query.token || '';
   if (token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
   }
@@ -344,14 +344,14 @@ router.patch('/verify', isAuthorized, (req: UserRequest, res: Response, next: Ne
 router.post('/promote', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
-      if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+      if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
         let excludedRole = [];
-        if (req.user.role === Role.ADMIN) {
-          excludedRole = [Role.ADMIN];
+        if (req.user.role === RoleModel.ADMIN) {
+          excludedRole = [RoleModel.ADMIN];
         } else {
-          excludedRole = [Role.ADMIN, Role.MODERATOR];
+          excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
         }
-        if (req.user.role != Role.ADMIN && excludedRole.includes(req.body.role)) {
+        if (req.user.role != RoleModel.ADMIN && excludedRole.includes(req.body.role)) {
           return res.status(400).json({
             info: '🙄 400 - Promote API :: Authorisasi Pengguna Gagal 😪',
             result: {
@@ -494,7 +494,7 @@ router.post('/cek-nik', isAuthorized, async (req: UserRequest, res: Response, ne
       const url = new URL(environment.recaptchaApiUrl);
       url.searchParams.append('secret', environment.reCaptchaSecretKey);
       url.searchParams.append('response', req.body['g-recaptcha-response']);
-      url.searchParams.append('remoteip', req.header('x-real-ip') || req.socket.remoteAddress || '');
+      url.searchParams.append('remoteip', req.header('x-real-ip') || req.header('x-forwarded-for') || req.socket.remoteAddress || req.ip || '');
       const res_raw1 = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json1: any = await res_raw1.json();
       log(`[gCaptcha] 🎲 ${res_raw1.status}`, res_json1);
@@ -652,7 +652,7 @@ router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Respons
           { id: Equal(req.user.id) }
         ]
       });
-      if (req.body.app === SosMed.DISCORD) {
+      if (req.body.app === SosMedModel.DISCORD) {
         const url = new URL(`${environment.discordApiUrl}/oauth2/token`);
         const form = new URLSearchParams();
         form.append('client_id', environment.discordClientId);
@@ -674,7 +674,7 @@ router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Respons
               const sosmeds = await sosmedRepo.find({
                 where: [
                   {
-                    type: SosMed.DISCORD,
+                    type: SosMedModel.DISCORD,
                     user_: {
                       id: Equal(req.user.id)
                     }
@@ -696,7 +696,7 @@ router.put('/verify-sosmed', isAuthorized, async (req: UserRequest, res: Respons
                 const sosmed = new SocialMedia();
                 sosmed.id = res_json2.id;
                 sosmed.refresh_token = res_json1.refresh_token;
-                sosmed.type = SosMed.DISCORD;
+                sosmed.type = SosMedModel.DISCORD;
                 sosmed.user_ = user;
                 await sosmedRepo.insert(sosmed);
               }
@@ -769,8 +769,6 @@ router.use((req: UserRequest, res: Response, next: NextFunction) => {
 
 // Error handler
 router.use((err: any, req: UserRequest, res: Response, next: NextFunction) => {
-  res.locals.message = err.message;
-  res.locals.error = err;
   return res.status(err.status || 500).json({
     info: `😫 ${err.status || 500} - Error API :: Whoops Terjadi Kesalahan 💩`,
     result: err

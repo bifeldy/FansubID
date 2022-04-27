@@ -1,7 +1,9 @@
 import { Entity, Column } from 'typeorm';
 
+import { DoramaModel } from '../../models/req-res.model';
+
 @Entity({ name: 'dorama' })
-export class Dorama {
+export class Dorama implements DoramaModel {
 
   @Column({ primary: true, type: 'int' })
   id: number;
@@ -23,4 +25,5 @@ export class Dorama {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
 }

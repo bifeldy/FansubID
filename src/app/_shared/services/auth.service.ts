@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { User } from '../models/User';
+import { JsonResponse, UserModel } from '../../../models/req-res.model';
 
 import { GlobalService } from './global.service';
 import { ApiService } from './api.service';
@@ -14,31 +14,31 @@ import { LocalStorageService } from './local-storage.service';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
+  currentUserSubject: BehaviorSubject<UserModel>;
+  currentUser: Observable<UserModel>;
 
-  public jwtToken = null;
+  jwtToken = null;
 
   constructor(
     private router: Router,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService,
     private ls: LocalStorageService,
     private api: ApiService
   ) {
     if (this.gs.isBrowser) {
-      this.currentUserSubject = new BehaviorSubject<User>(null);
+      this.currentUserSubject = new BehaviorSubject<UserModel>(null);
       this.currentUser = this.currentUserSubject.asObservable();
       this.jwtToken = this.ls.getItem(this.gs.localStorageTokenKeyName);
       this.ls.removeItem(this.gs.localStorageTokenKeyName);
     }
   }
 
-  public get currentUserValue(): User {
+  get currentUserValue(): UserModel {
     return this.currentUserSubject?.value || null;
   }
 
-  verify(token: any): Observable<any> {
+  verify(token: any): Observable<JsonResponse<UserModel>> {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.patchData(`/verify`, { token }).pipe(map(respVerify => {
       this.currentUserSubject.next(respVerify.result);
@@ -47,26 +47,24 @@ export class AuthService {
     }));
   }
 
-  resendActivation(id: any): Observable<any> {
+  resendActivation(id: any): Observable<JsonResponse> {
     this.gs.log('[AUTH_ACTIVATION]', id);
-    return this.api.postData(`/aktivasi`, { id }).pipe(map(respActivation => {
-      return respActivation;
-    }));
+    return this.api.postData(`/aktivasi`, { id });
   }
 
-  login(loginData: any): Observable<any> {
+  login(loginData: any): Observable<JsonResponse> {
     this.gs.log('[AUTH_LOGIN]', loginData);
-    return this.api.postData(`/login`, loginData).pipe(map(respLogin => {
-      this.jwtToken = respLogin.result.jwtToken;
-      return respLogin;
-    }));
+    return this.api.postData(`/login`, loginData).pipe(
+      map(respLogin => {
+        this.jwtToken = respLogin.result.jwtToken;
+        return respLogin;
+      })
+    );
   }
 
-  register(registerData: any): Observable<any> {
+  register(registerData: any): Observable<JsonResponse> {
     this.gs.log('[AUTH_REGISTER]', registerData);
-    return this.api.postData(`/register`, registerData).pipe(map(respRegister => {
-      return respRegister;
-    }));
+    return this.api.postData(`/register`, registerData);
   }
 
   removeUser(): void {

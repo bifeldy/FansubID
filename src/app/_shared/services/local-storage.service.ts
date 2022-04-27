@@ -12,7 +12,7 @@ export class LocalStorageService {
 
   constructor(
     private crypt: CryptoService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

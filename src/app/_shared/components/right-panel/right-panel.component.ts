@@ -11,15 +11,20 @@ import { GlobalService } from '../../services/global.service';
 export class RightPanelComponent implements OnInit {
 
   constructor(
-    public rps: RightPanelService,
-    public gs: GlobalService
+    private rps: RightPanelService,
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
+  get RPS(): RightPanelService {
+    return this.rps;
+  }
+
   ngOnInit(): void {
+    //
   }
 
 }

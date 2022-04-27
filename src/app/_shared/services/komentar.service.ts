@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
+import { JsonResponse, JsonResponseArray, KomentarModel } from '../../../models/req-res.model';
+
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
 
@@ -12,26 +14,26 @@ export class KomentarService {
 
   constructor(
     private api: ApiService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
-  getAllComment(q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getAllComment(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<KomentarModel>> {
     return this.api.getData(`/comment?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getComment(path = '', q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getComment(path = '', q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<KomentarModel>> {
     return this.api.getData(`/comment?path=${path}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getReply(parentId: number, q = '', page = 1, row = 10, sort = '', order = ''): Observable<any> {
+  getReply(parentId: number, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<KomentarModel>> {
     return this.api.getData(`/comment/${parentId}?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  sendComment(commentData): Observable<any> {
+  sendComment(commentData): Observable<JsonResponse<KomentarModel>> {
     return this.api.postData(`/comment`, commentData);
   }
 

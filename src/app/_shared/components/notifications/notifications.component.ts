@@ -12,9 +12,9 @@ import { NotificationsService } from '../../services/notifications.service';
 export class NotificationsComponent implements OnInit {
 
   constructor(
-    public router: Router,
-    public gs: GlobalService,
-    public notif: NotificationsService
+    private router: Router,
+    private gs: GlobalService,
+    private notif: NotificationsService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -25,6 +25,18 @@ export class NotificationsComponent implements OnInit {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
+  }
+
+  get ROUTER(): Router {
+    return this.router;
+  }
+
+  get NOTIF(): NotificationsService {
+    return this.notif;
   }
 
   removeNotif(id): void {

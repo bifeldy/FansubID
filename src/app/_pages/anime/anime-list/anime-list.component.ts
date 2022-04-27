@@ -67,7 +67,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private fs: FabService,
     private anime: AnimeService
   ) {
@@ -99,22 +99,22 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     this.subsParam = this.activatedRoute.queryParams.subscribe({
       next: p => {
         this.bs.busy();
-        this.currentYear = p.year ? (
-          Number.isNaN(parseInt(p.year, 10)) ? this.currentYear : parseInt(p.year, 10)
+        this.currentYear = p['year'] ? (
+          Number.isNaN(parseInt(p['year'], 10)) ? this.currentYear : parseInt(p['year'], 10)
         ) : new Date().getFullYear();
-        this.fg.controls.currentDate.patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
+        this.fg.controls['currentDate'].patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
         this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
-        this.selectedSeasonName = p.season ? (
+        this.selectedSeasonName = p['season'] ? (
           [
             Seasons.WINTER,
             Seasons.SPRING,
             Seasons.SUMMER,
             Seasons.FALL
-          ].indexOf(p.season) >= 0 ? p.season : this.findSeasonNameByMonthNumber(this.currentMonth)
+          ].indexOf(p['season']) >= 0 ? p['season'] : this.findSeasonNameByMonthNumber(this.currentMonth)
         ) : this.findSeasonNameByMonthNumber(this.currentMonth);
         this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
         this.bs.idle();
-        this.getSeasonalAnime(p.year && p.season);
+        this.getSeasonalAnime(p['year'] && p['season']);
       }
     });
   }
@@ -126,7 +126,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   chosenYearHandler(normalizedYear: Moment, datepicker: MatDatepicker<Moment>): void {
     const ctrlValue = this.fg.value.currentDate;
     ctrlValue.year(normalizedYear.year());
-    this.fg.controls.currentDate.setValue(ctrlValue);
+    this.fg.controls['currentDate'].setValue(ctrlValue);
     this.currentMonth = new Date(this.fg.value.currentDate.format()).getMonth() + 1;
     this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
     datepicker.close();

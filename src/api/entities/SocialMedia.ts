@@ -1,11 +1,11 @@
 import { Entity, Column, PrimaryColumn, ManyToOne } from 'typeorm';
 
+import { SocialMediaModel, SosMedModel, UserModel } from '../../models/req-res.model';
+
 import { User } from './User';
 
-import { SosMed } from '../../app/_shared/models/SosMed';
-
 @Entity({ name: 'social_media' })
-export class SocialMedia {
+export class SocialMedia implements SocialMediaModel {
 
   @PrimaryColumn({ type: 'varchar', length: 255 })
   id: string;
@@ -13,11 +13,8 @@ export class SocialMedia {
   @PrimaryColumn({ type: 'varchar', length: 255 })
   refresh_token: string;
 
-  @PrimaryColumn({ type: 'enum', enum: [
-    SosMed.DISCORD, SosMed.DISQUS,
-    SosMed.GOOGLE, SosMed.FACEBOOK
-  ] })
-  type: SosMed;
+  @PrimaryColumn({ type: 'enum', enum: SosMedModel })
+  type: SosMedModel;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number;
@@ -26,5 +23,6 @@ export class SocialMedia {
   updated_at: number;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
+
 }

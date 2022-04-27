@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     private router: Router,
     private as: AuthService,
     private toast: ToastrService,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService
   ) {
     if (this.gs.isBrowser) {
@@ -28,8 +28,8 @@ export class AuthGuard implements CanActivate {
     if (this.gs.isBrowser) {
       const currentUser = this.as.currentUserValue;
       if (currentUser) {
-        if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
-          this.toast.error(`Membutuhkan Role :: ${route.data.roles.join(' / ')}`, 'Whoops, Akses Ditolak!');
+        if (route.data['roles'] && route.data['roles'].indexOf(currentUser.role) === -1) {
+          this.toast.error(`Membutuhkan Role :: ${route.data['roles'].join(' / ')}`, 'Whoops, Akses Ditolak!');
           this.bs.idle();
           this.router.navigateByUrl('/');
           return false;

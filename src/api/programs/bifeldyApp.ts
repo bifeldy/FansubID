@@ -1,4 +1,5 @@
-import { URLSearchParams } from 'url';
+import { URLSearchParams } from 'node:url';
+
 import { OAuth2Client } from 'google-auth-library';
 import { drive_v3, google } from 'googleapis';
 

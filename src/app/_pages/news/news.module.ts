@@ -6,10 +6,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
+import { RoleModel } from '../../../models/req-res.model';
+
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
-
-import { Role } from '../../_shared/models/Role';
 
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
@@ -37,7 +37,7 @@ const routes: Routes = [
       title: 'Berkas - Buat Baru',
       description: 'Halaman Unggah Berkas Baru',
       keywords: 'Tambah Berkas Baru',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
@@ -48,7 +48,7 @@ const routes: Routes = [
       title: 'Berkas - Ubah Data',
       description: 'Halaman Pembaharuan Data Fansub',
       keywords: 'Ubah Berkas',
-      roles: [Role.ADMIN, Role.MODERATOR]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {

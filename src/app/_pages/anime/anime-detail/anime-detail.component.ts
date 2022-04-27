@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Warna } from '../../../_shared/models/Warna';
 
 import { AnimeService } from '../../../_shared/services/anime.service';
+import { BusyService } from '../../../_shared/services/busy.service';
+import { FabService } from '../../../_shared/services/fab.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
-import { FabService } from '../../../_shared/services/fab.service';
-import { BusyService } from '../../../_shared/services/busy.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
 
 @Component({
@@ -65,7 +65,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService,
     private pi: PageInfoService,
     private anime: AnimeService,
@@ -87,7 +87,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {
-        const paramAnimeId = p.animeId;
+        const paramAnimeId = p['animeId'];
         this.animeId = paramAnimeId.split('-')[0];
         this.bs.busy();
         this.subsAnime = this.anime.getAnime(paramAnimeId).subscribe({

@@ -1,14 +1,14 @@
 <!-- Home Banner (1920px * 128px)-->
 <div class="container-fluid notif-banner align-items-center"
-  [style.background-size]="gs.sizeContain ? 'contain' : 'cover'"
-  [style.background-image]="'url(' + gs.bannerImg + ')'"
-  [style.background-repeat]="gs.bgRepeat ? 'repeat-x' : 'no-repeat'"
-  [style.height]="(router.url == '/home' || router.url == '/berkas') ? '192px' : '128px'"
-  [style.background-position-y]="router.url == '/berkas' ? '22.5%' : ''"
-  *ngIf="gs.bannerImg && (
-    router.url == '/home' || router.url == '/berkas' || router.url == '/fansub' || router.url == '/berkas' ||
-    router.url == '/anime' || router.url.includes('/anime?') ||
-    router.url == '/dorama' || router.url.includes('/dorama?')
+  [style.background-size]="GS.sizeContain ? 'contain' : 'cover'"
+  [style.background-image]="'url(' + GS.bannerImg + ')'"
+  [style.background-repeat]="GS.bgRepeat ? 'repeat-x' : 'no-repeat'"
+  [style.height]="(ROUTER.url === '/home' || ROUTER.url === '/berkas') ? '192px' : '128px'"
+  [style.background-position-y]="ROUTER.url === '/berkas' ? '22.5%' : ''"
+  *ngIf="GS.bannerImg && (
+    ROUTER.url === '/home' || ROUTER.url === '/berkas' || ROUTER.url === '/fansub' || ROUTER.url === '/berkas' ||
+    ROUTER.url === '/anime' || ROUTER.url.includes('/anime?') ||
+    ROUTER.url === '/dorama' || ROUTER.url.includes('/dorama?')
   )">
   <!-- <div class="row align-items-center h-100">
     <div class="col-9 mx-auto text-bifeldy text-center" style="background-color: rgba(0, 0, 0, 0.25);">
@@ -26,7 +26,7 @@
 <!-- Notification -->
 <div class="container">
   <div class="row pt-3">
-    <div class="col-12" *ngFor="let n of notif.notifications; let i = index">
+    <div class="col-12" *ngFor="let n of NOTIF.notifications; let i = index">
       <div class="alert alert-{{ n.notifData.type }} alert-dismissible fade show">
         <strong class="me-1">{{ n.notifData.title }}</strong>
         <span [innerHTML]="n.notifData.content"></span>

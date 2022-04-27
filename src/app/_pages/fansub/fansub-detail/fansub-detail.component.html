@@ -54,7 +54,7 @@
         <div class="row py-3" *ngIf="panelData.length > 0">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
         </div>
-        <div class="row py-3" *ngIf="ss.mySocket?.id">
+        <div class="row py-3" *ngIf="SS.mySocket?.id">
           <div class="col-12">
             <app-report></app-report>
           </div>
@@ -63,8 +63,8 @@
           <div class="col-12">
             <app-material-tab (listClicked)="openAnime($event)" (gridClicked)="openDorama($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
               [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
-              [gridPageFinished]="doramaPageFinished" (gridLoadNextPage)="onDoramaLoadNextPage($event)"
-              [listPageFinished]="animePageFinished" (listLoadNextPage)="onAnimeLoadNextPage($event)"></app-material-tab>
+              [gridPageFinished]="doramaPageFinished" (gridLoadNextPage)="onDoramaLoadNextPage()"
+              [listPageFinished]="animePageFinished" (listLoadNextPage)="onAnimeLoadNextPage()"></app-material-tab>
           </div>
         </div>
       </div>

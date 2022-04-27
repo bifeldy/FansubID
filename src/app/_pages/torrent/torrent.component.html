@@ -34,30 +34,30 @@
                   <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
                     <th mat-header-cell *matHeaderCellDef class="px-3 text-center" mat-sort-header>
                       <h3 class="m-0">
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'NAME'">🔖 NAME</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'LENGTH'">💾 SIZE</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'DOWNLOADED'">💿 DOWNLOADED</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'UPLOADED'">📀 UPLOADED</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'PROGRESS'">🔄 PROGRESS</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'DOWNLOADSPEED'">🔽 SPEED</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'UPLOADSPEED'">🔼 SPEED</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'TIMEREMAINING'">🕑 ~ETA.</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'NUMPEERS'">🧲 PEERS</span>
-                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() == 'RATIO'">🌐 RATIO</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'NAME'">🔖 NAME</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'LENGTH'">💾 SIZE</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'DOWNLOADED'">💿 DOWNLOADED</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'UPLOADED'">📀 UPLOADED</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'PROGRESS'">🔄 PROGRESS</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'DOWNLOADSPEED'">🔽 SPEED</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'UPLOADSPEED'">🔼 SPEED</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'TIMEREMAINING'">🕑 ~ETA.</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'NUMPEERS'">🧲 PEERS</span>
+                        <span [style.color]="'#ff4081'" *ngIf="tdc.toUpperCase() === 'RATIO'">🌐 RATIO</span>
                       </h3>
                     </th>
                     <td mat-cell *matCellDef="let row" class="px-3 text-center" style="cursor: pointer;">
-                      <h3 class="m-0 {{ tdc.toUpperCase() == 'NAME' ? 'text-start' : '' }}">
-                        <span *ngIf="tdc.toUpperCase() == 'NAME'">{{ row[tdc] }}</span>
-                        <span *ngIf="tdc.toUpperCase() == 'LENGTH'">{{ row[tdc] | bytes }}</span>
-                        <span *ngIf="tdc.toUpperCase() == 'DOWNLOADED'">{{ row[tdc] | bytes }}</span>
-                        <span *ngIf="tdc.toUpperCase() == 'UPLOADED'">{{ row[tdc] | bytes }}</span>
-                        <span *ngIf="tdc.toUpperCase() == 'PROGRESS'">{{ row['downloaded'] / row['length'] * 100 | number:'1.2-2' }} %</span>
-                        <span *ngIf="tdc.toUpperCase() == 'DOWNLOADSPEED'">{{ row[tdc] | bytes }}/s</span>
-                        <span *ngIf="tdc.toUpperCase() == 'UPLOADSPEED'">{{ row[tdc] | bytes }}/s</span>
-                        <span *ngIf="tdc.toUpperCase() == 'TIMEREMAINING'">{{ row[tdc] <= 0 ? 'COMPLETED' : (row[tdc] / 1000 | number:'1.0-0') + ' s' }}</span>
-                        <span *ngIf="tdc.toUpperCase() == 'NUMPEERS'">{{ row[tdc] }}</span>
-                        <span *ngIf="tdc.toUpperCase() == 'RATIO'">{{ row[tdc] | number:'1.4-4' }}</span>
+                      <h3 class="m-0 {{ tdc.toUpperCase() === 'NAME' ? 'text-start' : '' }}">
+                        <span *ngIf="tdc.toUpperCase() === 'NAME'">{{ row[tdc] }}</span>
+                        <span *ngIf="tdc.toUpperCase() === 'LENGTH'">{{ row[tdc] | bytes }}</span>
+                        <span *ngIf="tdc.toUpperCase() === 'DOWNLOADED'">{{ row[tdc] | bytes }}</span>
+                        <span *ngIf="tdc.toUpperCase() === 'UPLOADED'">{{ row[tdc] | bytes }}</span>
+                        <span *ngIf="tdc.toUpperCase() === 'PROGRESS'">{{ row['downloaded'] / row['length'] * 100 | number:'1.2-2' }} %</span>
+                        <span *ngIf="tdc.toUpperCase() === 'DOWNLOADSPEED'">{{ row[tdc] | bytes }}/s</span>
+                        <span *ngIf="tdc.toUpperCase() === 'UPLOADSPEED'">{{ row[tdc] | bytes }}/s</span>
+                        <span *ngIf="tdc.toUpperCase() === 'TIMEREMAINING'">{{ row[tdc] <= 0 ? 'COMPLETED' : (row[tdc] / 1000 | number:'1.0-0') + ' s' }}</span>
+                        <span *ngIf="tdc.toUpperCase() === 'NUMPEERS'">{{ row[tdc] }}</span>
+                        <span *ngIf="tdc.toUpperCase() === 'RATIO'">{{ row[tdc] | number:'1.4-4' }}</span>
                       </h3>
                     </td>
                   </ng-container>
@@ -65,7 +65,7 @@
                   <!-- Expanded Content Row -->
                   <ng-container matColumnDef="expandedDetail">
                     <td mat-cell *matCellDef="let row" [attr.colspan]="tableDataColumn.length">
-                      <div class="element-detail" [@detailExpand]="row == torrent.expandedRow ? 'expanded' : 'collapsed'">
+                      <div class="element-detail" [@detailExpand]="row === TORRENT.expandedRow ? 'expanded' : 'collapsed'">
                         <div class="py-3 row">
                           <div class="col-3">
                             <div class="p2p-graph graphP2p-{{ row.infoHash }}"></div>
@@ -138,7 +138,7 @@
 
                   <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>
                   <tr mat-row *matRowDef="let row; columns: tableDataColumn;"
-                    class="element-row" [class.expanded-row]="torrent.expandedRow === row"
+                    class="element-row" [class.expanded-row]="TORRENT.expandedRow === row"
                     (click)="toggleExpanded(row)"></tr>
                   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
                   <tr class="mat-row" *matNoDataRow>
@@ -165,7 +165,7 @@
   </div>
   
   <input type="file" #fileDropRef id="fileDropRef" multiple
-  (change)="fileBrowseHandler($event.target.files)" [disabled]="isProcessing" style="visibility: hidden;" />
+  (change)="fileBrowseHandler($event)" [disabled]="isProcessing" style="visibility: hidden;" />
   
   <button (click)="fileDropRef.click()" mat-fab color="warn" class="me-3 mb-5 fab-button animate__animated animate__bounce animate__infinite animate__slow" matTooltip="Seed Berkas"
   style="position: fixed; bottom: 0; right: 0;" [disabled]="isProcessing">

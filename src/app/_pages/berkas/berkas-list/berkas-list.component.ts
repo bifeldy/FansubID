@@ -39,7 +39,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService,
     private berkas: BerkasService,
     private fs: FabService

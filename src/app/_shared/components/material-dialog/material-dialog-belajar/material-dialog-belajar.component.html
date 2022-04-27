@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{ data.title }} '{{ data.dataset ? data.dataset.kana : data.modeTampilan }}'</h1>
+<h1 mat-dialog-title>{{ DATA.title }} '{{ DATA.dataset ? DATA.dataset.kana : DATA.modeTampilan }}'</h1>
 <div mat-dialog-content class="p-4" class="text-break text-warning">
   <form [formGroup]="fg" *ngIf="fg">
     <div class="row">
@@ -57,11 +57,11 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="row" *ngIf="data.dataset?.user_">
+        <div class="row" *ngIf="DATA.dataset?.user_">
           <div class="col text-end">
             Last Edit By ::
-            <a routerLink="/user/{{ data.dataset?.user_?.username }}" class="text-success" style="text-decoration: none;">
-              {{ data.dataset?.user_?.username }}
+            <a routerLink="/user/{{ DATA.dataset?.user_?.username }}" class="text-success" style="text-decoration: none;">
+              {{ DATA.dataset?.user_?.username }}
             </a>
           </div>
         </div>
@@ -71,7 +71,7 @@
 </div>
 <div mat-dialog-actions *ngIf="fg">
   <button mat-button (click)="saveData()" class="ms-auto text-success" [disabled]="submitted || fg.invalid || !fg.dirty">
-    {{ data.confirmText }}
+    {{ DATA.confirmText }}
   </button>
-  <button mat-button [mat-dialog-close]="null" *ngIf="data.cancelText">{{ data.cancelText }}</button>
+  <button mat-button [mat-dialog-close]="null" *ngIf="DATA.cancelText">{{ DATA.cancelText }}</button>
 </div>

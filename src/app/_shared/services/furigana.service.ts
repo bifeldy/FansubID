@@ -18,7 +18,7 @@ export class FuriganaService {
   ignoreNodes = [];
 
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private bs: BusyService
   ) {
     if (this.gs.isBrowser) {
@@ -63,7 +63,7 @@ export class FuriganaService {
           this.convertAndReplace(node);
         } else {
           const nodeList = [];
-          const walk = document.createTreeWalker(node,NodeFilter.SHOW_TEXT,null);
+          const walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null);
           while(walk.nextNode()) nodeList.push(walk.currentNode);
           this.gs.log('[KUROSHIRO_NODE_WATCHER_LIST]', nodeList);
           for (const node of nodeList) {

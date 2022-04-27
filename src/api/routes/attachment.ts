@@ -8,8 +8,8 @@ import { getRepository, Equal, ILike } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
+import { RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
-import { Role } from '../../app/_shared/models/Role';
 
 import { log } from '../helpers/logger';
 
@@ -57,7 +57,7 @@ function deleteAttachment(fileName) {
 // GET `/api/attachment`
 router.get('/', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const attachmentRepo = getRepository(Attachment);
       const [attachments, count] = await attachmentRepo.findAndCount({
         where: [
@@ -187,7 +187,7 @@ router.get('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
       const attachmentRepo = getRepository(Attachment);
       const attachment =  await attachmentRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.id) }
+          { id: Equal(req.params['id']) }
         ]
       });
       if (attachment.google_drive) {
@@ -253,11 +253,11 @@ router.get('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
 // DELETE `/api/attachment/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const attachmentRepo = getRepository(Attachment);
       const attachment =  await attachmentRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.id) }
+          { id: Equal(req.params['id']) }
         ]
       });
       deleteAttachment(attachment.name);
@@ -270,7 +270,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete deletedAttachment.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Attachment API :: Berhasil Menghapus DDL ${req.params.id} 🤣`,
+        info: `😅 200 - Attachment API :: Berhasil Menghapus DDL ${req.params['id']} 🤣`,
         result: deletedAttachment
       });
     } else {

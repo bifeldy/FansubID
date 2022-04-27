@@ -1,11 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { ProjectService } from '../../../_shared/services/project.service';
 import { BusyService } from '../../../_shared/services/busy.service';
-import { AdminService } from '../../../_shared/services/admin.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 
@@ -38,11 +36,9 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    public router: Router,
     private fb: FormBuilder,
     private bs: BusyService,
-    public gs: GlobalService,
-    public adm: AdminService,
+    private gs: GlobalService,
     private ds: DialogService,
     private imgbb: ImgbbService,
     private project: ProjectService
@@ -184,7 +180,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
   uploadImage(event, gambar): void {
     this.gambar = gambar;
     this.image = null;
-    this.fg.controls.image.patchValue(null);
+    this.fg.controls['image'].patchValue(null);
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -221,12 +217,12 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: res => {
         this.gs.log('[IMAGE_SUCCESS]', res);
-        this.fg.controls.image.patchValue(res.result.url);
+        this.fg.controls['image'].patchValue(res.result.url);
         this.submitted = false;
       },
       error: err => {
         this.gs.log('[IMAGE_ERROR]', err);
-        this.fg.controls.image.patchValue(null);
+        this.fg.controls['image'].patchValue(null);
         this.submitted = false;
       }
     });

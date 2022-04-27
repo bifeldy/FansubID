@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { RoleModel, UserModel } from '../../../../models/req-res.model';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -9,9 +11,6 @@ import { UserService } from '../../../_shared/services/user.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
-import { User } from '../../../_shared/models/User';
-import { Role } from '../../../_shared/models/Role';
-
 @Component({
   selector: 'app-admin-list-user',
   templateUrl: './admin-list-user.component.html',
@@ -19,7 +18,7 @@ import { Role } from '../../../_shared/models/Role';
 })
 export class AdminListUserComponent implements OnInit, OnDestroy {
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   subsUserGet = null;
   subsUserDelete = null;
@@ -45,11 +44,11 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     private router: Router,
     private bs: BusyService,
     private ds: DialogService,
-    public as: AuthService,
-    public gs: GlobalService,
-    public ss: StatsServerService,
-    public adm: AdminService,
-    public user: UserService
+    private as: AuthService,
+    private gs: GlobalService,
+    private ss: StatsServerService,
+    private adm: AdminService,
+    private user: UserService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -92,11 +91,11 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
             this.gs.log('[BANNED_LIST_SUCCESS]', res);
             const userDataRow = [];
             let excludedRole = [];
-            if (this.currentUser.role === Role.ADMIN) {
-              excludedRole = [Role.ADMIN];
+            if (this.currentUser.role === RoleModel.ADMIN) {
+              excludedRole = [RoleModel.ADMIN];
             }
-            if (this.currentUser.role === Role.MODERATOR) {
-              excludedRole = [Role.ADMIN, Role.MODERATOR];
+            if (this.currentUser.role === RoleModel.MODERATOR) {
+              excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
             }
             for (const r of res.results) {
               userDataRow.push({
@@ -110,7 +109,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 Aksi: (
                   (Object.keys(result.results[r.id]).length > 0) ||
                   (r.id == this.currentUser.id) ||
-                  (r.role.includesOneOf(excludedRole))
+                  this.gs.includesOneOf(r.role, excludedRole)
                 ) ? [] : [
                   { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username, email: r.email },
                   { type: 'button', icon: 'handyman', name: 'ADMIN', id: r.id, username: r.username, email: r.email },

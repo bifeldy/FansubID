@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
+import { JsonResponse, JsonResponseArray, LikeDislikeModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -12,26 +13,26 @@ export class ReportService {
 
   constructor(
     private api: ApiService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
-  getAllReport(): Observable<any> {
+  getAllReport(): Observable<JsonResponseArray<LikeDislikeModel>> {
     return this.api.getData(`/likedislike`);
   }
 
-  getReport(type: string, idSludUsername: string): Observable<any> {
+  getReport(type: string, idSludUsername: string): Observable<JsonResponse> {
     return this.api.getData(`/likedislike/${type}/${idSludUsername}`);
   }
 
-  setReport(type: string, idSludUsername: string, reportData): Observable<any> {
+  setReport(type: string, idSludUsername: string, reportData): Observable<JsonResponse<LikeDislikeModel>> {
     return this.api.postData(`/likedislike/${type}/${idSludUsername}`, reportData);
   }
 
-  deleteReport(reportId): Observable<any> {
+  deleteReport(reportId): Observable<JsonResponse<LikeDislikeModel>> {
     return this.api.deleteData(`/likedislike/${reportId}`);
   }
 

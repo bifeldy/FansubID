@@ -23,7 +23,7 @@ export class BannerNihongoComponent implements OnInit {
   ];
 
   constructor(
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

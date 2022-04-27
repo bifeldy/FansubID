@@ -41,15 +41,15 @@ import { ApiKey } from './src/api/entities/ApiKey';
 
 const currentWorkingDir = process.cwd();
 
-const dbType = process.env.DB_TYPE || environment.dbType;
-const dbHost = process.env.DB_HOST || environment.dbHost;
-const dbPort = process.env.DB_PORT || environment.dbPort;
-const dbName = process.env.DB_NAME || environment.dbName;
-const dbUsername = process.env.DB_USERNAME || environment.dbUsername;
-const dbPassword = process.env.DB_PASSWORD || environment.dbPassword;
-const dbEntities = process.env.DB_ENTITIES || environment.dbEntities;
-const dbSync = process.env.DB_SYNC || environment.dbSync;
-const dbLog = process.env.DB_LOG || environment.dbLog;
+const dbType = process.env['DB_TYPE'] || environment.dbType;
+const dbHost = process.env['DB_HOST'] || environment.dbHost;
+const dbPort = process.env['DB_PORT'] || environment.dbPort;
+const dbName = process.env['DB_NAME'] || environment.dbName;
+const dbUsername = process.env['DB_USERNAME'] || environment.dbUsername;
+const dbPassword = process.env['DB_PASSWORD'] || environment.dbPassword;
+const dbEntities = process.env['DB_ENTITIES'] || environment.dbEntities;
+const dbSync = process.env['DB_SYNC'] || environment.dbSync;
+const dbLog = process.env['DB_LOG'] || environment.dbLog;
 
 const typeOrmConfig: any = {
   type: dbType,
@@ -282,7 +282,7 @@ createConnection({
 }).then(async connection => {
   const c: any = connection;
   log(`[DB] 📚 ${c.options.type} Database ~ ${c.options.username}@${c.options.host}:${c.options.port}/${c.options.database} 🎀`, null, true);
-  const port = process.env.PORT || 4000;
+  const port = process.env['PORT'] || 4000;
   const listener: any = app().listen(port, () => {
     log(`[HTTP] ✨ Node Angular TypeORM Express Socket ~ ${listener.address().address}:${listener.address().port} 💘`, null, true);
   });

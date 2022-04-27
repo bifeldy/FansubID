@@ -1,12 +1,12 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 
+import { KartuTandaPendudukModel, ProfileModel, RoleModel, UserModel } from '../../models/req-res.model';
+
 import { KartuTandaPenduduk } from './KartuTandaPenduduk';
 import { Profile } from './Profile';
 
-import { Role } from '../../app/_shared/models/Role';
-
 @Entity({ name: 'users' })
-export class User {
+export class User implements UserModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -20,11 +20,8 @@ export class User {
   @Column({ type: 'text', nullable: true })
   image_url: string;
 
-  @Column({ type: 'enum', enum: [
-    Role.ADMIN, Role.MODERATOR,
-    Role.FANSUBBER, Role.USER
-  ], default: Role.USER })
-  role: Role;
+  @Column({ type: 'enum', enum: RoleModel, default: RoleModel.USER })
+  role: RoleModel;
 
   @Column({ type: 'varchar', length: 255 })
   password: string;
@@ -46,9 +43,9 @@ export class User {
 
   @OneToOne(type => KartuTandaPenduduk)
   @JoinColumn()
-  kartu_tanda_penduduk_: KartuTandaPenduduk;
+  kartu_tanda_penduduk_: KartuTandaPendudukModel;
 
   @OneToOne(type => Profile)
   @JoinColumn()
-  profile_: Profile;
+  profile_: ProfileModel;
 }

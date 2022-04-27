@@ -63,7 +63,7 @@
                       <strong *ngIf="fg.get('slug').hasError('pattern')">Singkatan Hanya Boleh Huruf Dan 一</strong>
                     </mat-error>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="description" [config]="gs.angularEditorConfig"></angular-editor>
+                  <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-6" [color]="'accent'">
                     <mat-label>Mulai Ada Sejak</mat-label>
                     <input matInput [matDatepicker]="kalender" formControlName="born" (focus)="kalender.open()" placeholder="{{ currentDate | date:'d MMMM y'}}" />
@@ -99,7 +99,7 @@
                         {{ t }}
                         <mat-icon matChipRemove>cancel</mat-icon>
                       </mat-chip>
-                      <input placeholder="Label Tag / Kategori" [matChipInputSeparatorKeyCodes]="gs.separatorKeysCodes"
+                      <input placeholder="Label Tag / Kategori" [matChipInputSeparatorKeyCodes]="GS.separatorKeysCodes"
                         [matChipInputFor]="tag" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addTag($event)" />
                       <mat-icon matSuffix>loyalty</mat-icon>
                     </mat-chip-list>

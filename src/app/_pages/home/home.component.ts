@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   subsKomenGet = null;
 
   constructor(
-    public gs: GlobalService,
+    private gs: GlobalService,
     private news: NewsService,
     private komen: KomentarService,
     private bs: BusyService
@@ -27,6 +27,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.gs.bannerImg = '/assets/img/home-banner.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   ngOnDestroy(): void {

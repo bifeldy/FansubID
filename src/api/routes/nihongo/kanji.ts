@@ -61,11 +61,11 @@ router.get('/:character', async (req: UserRequest, res: Response, next: NextFunc
     const kanjiRepo = getRepository(Kanji);
     const kanji = await kanjiRepo.findOneOrFail({
       where: [
-        { character: ILike(req.params.character) }
+        { character: ILike(req.params['character']) }
       ]
     });
     return res.status(200).json({
-      info: `😅 200 - Kanji API :: Detail ${req.params.character} 🤣`,
+      info: `😅 200 - Kanji API :: Detail ${req.params['character']} 🤣`,
       result: kanji
     });
   } catch (error) {

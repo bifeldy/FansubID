@@ -29,19 +29,19 @@
               <mat-icon class="me-1">vpn_key</mat-icon>
               Klik Untuk Login
             </button>
-            <button mat-flat-button color="accent" class="mx-1 shiny" (click)="likeOrDislike(LIKE)" *ngIf="currentUser && myReport?.type == LIKE">
+            <button mat-flat-button color="accent" class="mx-1 shiny" (click)="likeOrDislike(LIKE)" *ngIf="currentUser && myReport?.type === LIKE">
               <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
               Suka
             </button>
-            <button mat-stroked-button color="accent" class="mx-1 shiny" (click)="likeOrDislike(LIKE)" *ngIf="currentUser && myReport?.type != LIKE">
+            <button mat-stroked-button color="accent" class="mx-1 shiny" (click)="likeOrDislike(LIKE)" *ngIf="currentUser && myReport?.type !== LIKE">
               <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
               Suka
             </button>
-            <button mat-stroked-button color="accent" class="mx-1" (click)="likeOrDislike(DISLIKE)" *ngIf="currentUser && myReport?.type != DISLIKE">
+            <button mat-stroked-button color="accent" class="mx-1" (click)="likeOrDislike(DISLIKE)" *ngIf="currentUser && myReport?.type !== DISLIKE">
               <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
               Tidak Suka
             </button>
-            <button mat-flat-button color="accent" class="mx-1" (click)="likeOrDislike(DISLIKE)" *ngIf="currentUser && myReport?.type == DISLIKE">
+            <button mat-flat-button color="accent" class="mx-1" (click)="likeOrDislike(DISLIKE)" *ngIf="currentUser && myReport?.type === DISLIKE">
               <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
               Tidak Suka
             </button>

@@ -1,6 +1,7 @@
+import { URL } from 'node:url';
+
 import translate from '@iamtraction/google-translate';
 
-import { URL } from 'url';
 import { Router, Response, NextFunction } from 'express';
 import { getRepository, ILike, In, Equal, FindManyOptions } from 'typeorm';
 
@@ -318,7 +319,7 @@ router.patch('/fansub', async (req: UserRequest, res: Response, next: NextFuncti
 
 // GET `/api/anime/:malSlug`
 router.get('/:malSlug', async (req: UserRequest, res: Response, next: NextFunction) => {
-  const malId = req.params.malSlug.split('-')[0];
+  const malId = req.params['malSlug'].split('-')[0];
   const cacheData = cacheGet(req.originalUrl);
   if (cacheData) {
     return res.status(cacheData.status).json(cacheData.body);

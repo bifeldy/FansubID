@@ -16,12 +16,16 @@ export class NihongoTesComponent implements OnInit {
   constructor(
     private router: Router,
     private toast: ToastrService,
-    public gs: GlobalService,
+    private gs: GlobalService,
     private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
   }
 
   ngOnInit(): void {

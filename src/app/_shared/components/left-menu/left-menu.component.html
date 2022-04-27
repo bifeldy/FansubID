@@ -77,7 +77,7 @@
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">
           Dev. Log
           <span style="right: 1em !important; position: absolute;">
-            <mat-slide-toggle [(ngModel)]="gs.forceEnableDebugLog" (click)="$event.stopPropagation()" (change)="toggleDebugLog($event)"></mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="GS.forceEnableDebugLog" (click)="$event.stopPropagation()" (change)="toggleDebugLog($event)"></mat-slide-toggle>
           </span>
         </span>
       </a>

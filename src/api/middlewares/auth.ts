@@ -1,6 +1,7 @@
+import { URL } from 'node:url';
+
 import { getRepository, Equal, ILike } from 'typeorm';
 import { Response, NextFunction } from 'express';
-import { URL } from 'url';
 
 import { environment } from '../../environments/api/environment';
 
@@ -36,7 +37,7 @@ export async function registerModule(req: UserRequest, res: Response, next: Next
       const url = new URL(environment.recaptchaApiUrl);
       url.searchParams.append('secret', environment.reCaptchaSecretKey);
       url.searchParams.append('response', req.body['g-recaptcha-response']);
-      url.searchParams.append('remoteip', req.header('x-real-ip') || req.socket.remoteAddress || '');
+      url.searchParams.append('remoteip', req.header('x-real-ip') || req.header('x-forwarded-for') || req.socket.remoteAddress || req.ip || '');
       const res_raw = await NodeFetchGET(url, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       log(`[gCaptcha] 🎲 ${res_raw.status}`, res_json);
@@ -294,7 +295,7 @@ export async function isAuthorized(req: UserRequest, res: Response, next: NextFu
 
 export async function isLogin(req: UserRequest, res: Response, next: NextFunction) {
   try {
-    const token = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query.token || '';
+    const token = req.cookies[environment.tokenName] || req.headers.authorization || req.header('x-access-token') || req.body.token || req.query.token || '';
     if (token) {
       return isAuthorized(req, res, next);
     } else {
@@ -320,7 +321,7 @@ export async function logoutModule(req: UserRequest, res: Response, next: NextFu
       const resUserSave = await userRepo.save(selectedUser);
       const { password, session_token, ...noPwdSsToken } = resUserSave;
       req.user = (noPwdSsToken as any);
-      const socketId = req.headers.socket || '';
+      const socketId = req.header('x-socket-io-id') || '';
       if (socketId) {
         disconnectRoom(req.io, req.io.sockets.sockets.get(socketId as string));
       }

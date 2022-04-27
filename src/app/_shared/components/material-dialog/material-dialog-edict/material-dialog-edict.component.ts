@@ -3,11 +3,12 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { toRomaji } from 'wanakana';
 
+import { KanjiModel } from '../../../../../models/req-res.model';
+
 import { GlobalService } from '../../../../_shared/services/global.service';
 import { NihongoService } from '../../../../_shared/services/nihongo.service';
 // import { RightPanelService } from '../../../../_shared/services/right-panel.service';
 
-import { DialogEdictData } from '../../../models/Dialog';
 
 declare const Dmak: any;
 
@@ -33,14 +34,18 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
   subsEdict = null;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogEdictData,
+    @Inject(MAT_DIALOG_DATA) private data: KanjiModel,
     private nihon: NihongoService,
     // private rps: RightPanelService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get DATA(): KanjiModel {
+    return this.data;
   }
 
   getRomaji(kana: string): string {

@@ -53,11 +53,11 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     const tatoebaRepo = getRepository(Tatoeba);
     const tatoeba = await tatoebaRepo.findOneOrFail({
       where: [
-        { id: Equal(req.params.id) }
+        { id: Equal(req.params['id']) }
       ]
     });
     return res.status(200).json({
-      info: `😅 200 - Tatoeba API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - Tatoeba API :: Detail ${req.params['id']} 🤣`,
       result: tatoeba
     });
   } catch (error) {

@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { UserModel } from '../../../../models/req-res.model';
+
 import { AuthService } from '../../../_shared/services/auth.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { NihongoService } from '../../../_shared/services/nihongo.service';
-
-import { User } from '../../../_shared/models/User';
 
 @Component({
   selector: 'app-belajar',
@@ -19,7 +19,7 @@ import { User } from '../../../_shared/models/User';
 })
 export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -98,8 +98,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private toast: ToastrService,
-    public as: AuthService,
-    public gs: GlobalService,
+    private as: AuthService,
+    private gs: GlobalService,
     private bs: BusyService,
     private ds: DialogService,
     private nihon: NihongoService
@@ -146,7 +146,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     this.gs.log('[BELAJAR_PAGINATOR_VALUE_CHANGED]', data);
     this.page = data.pageIndex + 1;
     this.row = data.pageSize;
-    if (!(this.modeTampilan as any).includesOneOf(['hiragana', 'katakana', 'angka'])) {
+    if (!this.gs.includesOneOf(this.modeTampilan, ['hiragana', 'katakana', 'angka'])) {
       this.daftarNihongo = [];
       this.getData();
     }

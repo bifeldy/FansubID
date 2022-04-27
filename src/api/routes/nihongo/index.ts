@@ -3,8 +3,7 @@ import createError from 'http-errors';
 import { Router, Response, NextFunction } from 'express';
 import { Equal, getRepository, ILike } from 'typeorm';
 
-import { Role } from '../../../app/_shared/models/Role';
-
+import { RoleModel } from '../../../models/req-res.model';
 import { UserRequest } from '../../models/UserRequest';
 
 import { Nihongo } from '../../entities/Nihongo';
@@ -153,7 +152,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
     const kanaRepo = getRepository(Nihongo);
     const kana = await kanaRepo.findOneOrFail({
       where: [
-        { id: Equal(req.params.id) }
+        { id: Equal(req.params['id']) }
       ],
       relations: ['user_'],
     });
@@ -165,7 +164,7 @@ router.get('/:id', async (req: UserRequest, res: Response, next: NextFunction) =
       delete kana.user_.updated_at;
     }
     return res.status(200).json({
-      info: `😅 200 - Nihongo Kana API :: Detail ${req.params.id} 🤣`,
+      info: `😅 200 - Nihongo Kana API :: Detail ${req.params['id']} 🤣`,
       result: kana
     });
   } catch (error) {
@@ -188,7 +187,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
         const kanaRepo = getRepository(Nihongo);
         const kana = await kanaRepo.findOneOrFail({
           where: [
-            { id: Equal(req.params.id) }
+            { id: Equal(req.params['id']) }
           ],
           relations: ['user_']
         });
@@ -226,7 +225,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
           delete resKanaSave.user_.updated_at;
         }
         return res.status(200).json({
-          info: `😅 200 - Nihongo Kana API :: Ubah ${req.params.id} 🤣`,
+          info: `😅 200 - Nihongo Kana API :: Ubah ${req.params['id']} 🤣`,
           result: resKanaSave
         });
       } else {
@@ -234,7 +233,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
       }
     } else {
       return res.status(400).json({
-        info: `🙄 400 - Nihongo Kana API :: Gagal Mengubah Kana ${req.params.slug} 😪`,
+        info: `🙄 400 - Nihongo Kana API :: Gagal Mengubah Kana ${req.params['slug']} 😪`,
         result: {
           message: 'Khusus Pengguna Terverifikasi!'
         }
@@ -243,7 +242,7 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Nihongo Kana API :: Gagal Mengubah Kana ${req.params.slug} 😪`,
+      info: `🙄 400 - Nihongo Kana API :: Gagal Mengubah Kana ${req.params['slug']} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -254,11 +253,11 @@ router.put('/:id', isAuthorized, async (req: UserRequest, res: Response, next: N
 // DELETE `/api/nihongo/:id`
 router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const kanaRepo = getRepository(Nihongo);
       const kana =  await kanaRepo.findOneOrFail({
         where: [
-          { id: Equal(req.params.id) }
+          { id: Equal(req.params['id']) }
         ]
       });
       const deletedKana = await kanaRepo.remove(kana);
@@ -270,7 +269,7 @@ router.delete('/:id', isAuthorized, async (req: UserRequest, res: Response, next
         delete deletedKana.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Nihongo Kana API :: Berhasil Menghapus Kana ${req.params.id} 🤣`,
+        info: `😅 200 - Nihongo Kana API :: Berhasil Menghapus Kana ${req.params['id']} 🤣`,
         result: deletedKana
       });
     } else {

@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+import { ProfileModel } from '../../models/req-res.model';
+
 @Entity({ name: 'profile' })
-export class Profile {
+export class Profile implements ProfileModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -26,4 +28,5 @@ export class Profile {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
 }

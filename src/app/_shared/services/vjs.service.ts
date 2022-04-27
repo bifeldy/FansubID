@@ -10,7 +10,7 @@ export class VjsService {
 
   constructor(
     private api: ApiService,
-    public gs: GlobalService
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       //

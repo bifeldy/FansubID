@@ -17,8 +17,8 @@ export class DialogService {
   maxWidth = '80vw';
 
   constructor(
-    public dialog: MatDialog,
-    public gs: GlobalService
+    private dialog: MatDialog,
+    private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
       this.maxWidth = (this.gs.gridListBreakpoint == 4) ? '45vw' : ((this.gs.gridListBreakpoint == 3) ? '50vw' : ((this.gs.gridListBreakpoint == 2) ? '60vw' : '80vw'));

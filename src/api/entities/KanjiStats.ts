@@ -1,10 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+import { KanjiModel, UserModel } from '../../models/req-res.model';
+import { KanjiStatsModel } from '../../models/socket-io.model';
+
 import { Kanji } from './Kanji';
 import { User } from './User';
 
 @Entity({ name: 'kanjistats' })
-export class KanjiStats {
+export class KanjiStats implements KanjiStatsModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -16,11 +19,12 @@ export class KanjiStats {
   updated_at: number;
 
   @ManyToOne(type => Kanji)
-  question_: Kanji;
+  question_: KanjiModel;
 
   @ManyToOne(type => Kanji)
-  answer_: Kanji;
+  answer_: KanjiModel;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
+
 }

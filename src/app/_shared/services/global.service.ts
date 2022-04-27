@@ -24,29 +24,29 @@ export class GlobalService {
 
   readonly emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
-  public routerData = null;
+  routerData = null;
 
-  public bgImgUrlPath = null;
-  public bannerImg = null;
-  public sizeContain = false;
-  public bgRepeat = false;
+  bgImgUrlPath = null;
+  bannerImg = null;
+  sizeContain = false;
+  bgRepeat = false;
 
-  public leftMenuImage = null;
-  public rightMenuImage = null;
+  leftMenuImage = null;
+  rightMenuImage = null;
 
-  public isBrowser = null;
-  public document: Document = null;
+  isBrowser = null;
+  document: Document = null;
 
-  public gridListBreakpoint = 1;
-  public isDesktop = true;
+  gridListBreakpoint = 1;
+  isDesktop = true;
 
-  public isDevMode = true;
-  public isDarkMode = false;
+  isDevMode = true;
+  isDarkMode = false;
 
-  public gambarUploadSizeLimit = 256 * 1000;
-  public berkasUploadSizeLimit = 256 * 1000 * 1000;
+  gambarUploadSizeLimit = 256 * 1000;
+  berkasUploadSizeLimit = 256 * 1000 * 1000;
 
-  public angularEditorConfig: AngularEditorConfig = {
+  angularEditorConfig: AngularEditorConfig = {
     editable: true,
     minHeight: '256px',
     placeholder: 'Deskripsi, Informasi, Atau Keterangan Lainnya ...',
@@ -78,8 +78,6 @@ export class GlobalService {
     this.isDevMode = isDevMode();
     if (this.isBrowser) {
       this.onResize(null);
-      this.setupStringArrayIncludes();
-      this.setupLinkify();
     }
   }
 
@@ -94,8 +92,12 @@ export class GlobalService {
         } else {
           console.log(message);
         }
+      } else if (type === 'warn') {
+        console.warn(message, data);
       } else if (type === 'error') {
         console.error(message, data);
+      } else if (type === 'table') {
+        console.table(message);
       }
     }
   }
@@ -122,9 +124,9 @@ export class GlobalService {
     return null;
   }
 
-  onResize(event): void {
+  onResize(event, source = 'APP_COMPONENT'): void {
     if (event) {
-      this.log('[WINDOW_RESIZE]', event);
+      this.log(`[WINDOW_RESIZE-${source}]`, event);
     }
     if (this.isBrowser) {
       const browserWindow = event?.target?.window || window;
@@ -172,29 +174,26 @@ export class GlobalService {
     }
   }
 
-  setupStringArrayIncludes(): void {
-    if (!String['includesOneOf']) {
-      String.prototype['includesOneOf'] = function(arrayOfStrings: string[]): boolean {
-        return arrayOfStrings.some(str => this.includes(str));
-      };
+  includesOneOf(text: string, arr: string[]): boolean {
+    for (const a of arr) {
+      if (text.includes(a)) {
+        return true;
+      }
     }
+    return false;
   }
 
-  setupLinkify(): void {
-    if (!String['linkify']) {
-      String.prototype['linkify'] = function(): void {
-        // http://, https://, ftp://
-        const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
-        // www. sans http:// or https://
-        const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-        // Email addresses
-        const emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
-        return this
-          .replace(urlPattern, '<a class="text-decoration-none" href="$&" target="_blank">$&</a>')
-          .replace(pseudoUrlPattern, '$1<a class="text-decoration-none" href="http://$2" target="_blank">$2</a>')
-          .replace(emailAddressPattern, '<a class="text-decoration-none" href="mailto:$&" target="_blank">$&</a>');
-      };
-    }
+  linkify(text: string): string {
+    // http://, https://, ftp://
+    const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+    // www. sans http:// or https://
+    const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    // Email addresses
+    const emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
+    text = text.replace(urlPattern, '<a class="text-decoration-none" href="$&" target="_blank">$&</a>')
+      .replace(pseudoUrlPattern, '$1<a class="text-decoration-none" href="http://$2" target="_blank">$2</a>')
+      .replace(emailAddressPattern, '<a class="text-decoration-none" href="mailto:$&" target="_blank">$&</a>');
+    return text;
   }
 
   toggleDarkTheme(firstRun = false): void {

@@ -82,11 +82,11 @@ router.get('/:romaji', async (req: UserRequest, res: Response, next: NextFunctio
     const hirakataRepo = getRepository(Hirakata);
     const hirakata = await hirakataRepo.findOneOrFail({
       where: [
-        { romaji: ILike(req.params.romaji) }
+        { romaji: ILike(req.params['romaji']) }
       ]
     });
     return res.status(200).json({
-      info: `😅 200 - Hirakata API :: Detail ${req.params.romaji} 🤣`,
+      info: `😅 200 - Hirakata API :: Detail ${req.params['romaji']} 🤣`,
       result: hirakata
     });
   } catch (error) {

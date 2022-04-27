@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { KomentarModel, UserModel } from '../../../../models/req-res.model';
+
 import { GlobalService } from '../../services/global.service';
 import { KomentarService } from '../../services/komentar.service';
 import { AuthService } from '../../services/auth.service';
-
-import { Komentar } from '../../models/Komentar';
-
-import { User } from '../../models/User';
 
 @Component({
   selector: 'app-discussion',
@@ -16,7 +14,7 @@ import { User } from '../../models/User';
 })
 export class DiscussionComponent implements OnInit, OnDestroy {
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   urlPath = null;
 
@@ -29,7 +27,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
 
   @Input() parent = null;
 
-  @Input() komentar: Komentar[] = [];
+  @Input() komentar: KomentarModel[] = [];
 
   subsUser = null;
   subsKomenSend = null;
@@ -39,8 +37,8 @@ export class DiscussionComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private komen: KomentarService,
-    public gs: GlobalService,
-    public as: AuthService
+    private gs: GlobalService,
+    private as: AuthService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -63,7 +61,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     this.urlPath = null;
   }
 
-  sendComment(k: Komentar): void {
+  sendComment(k: KomentarModel): void {
     this.gs.log('[KOMENTAR_PARENT_CREATE_REPLY]', k);
     const commentData = (k) ? {
       path: this.urlPath,
@@ -117,7 +115,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     }
   }
 
-  getReply(k: Komentar, fresh = false): void {
+  getReply(k: KomentarModel, fresh = false): void {
     this.gs.log('[KOMENTAR_PARENT_LOAD_REPLY]', k);
     if (fresh) {
       k.reply_page = 1;
@@ -143,7 +141,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     });
   }
 
-  showHideComment(k: Komentar): void {
+  showHideComment(k: KomentarModel): void {
     if (k.show_reply === undefined || k.show_reply === null) {
       k.show_reply = true;
     } else {
@@ -154,7 +152,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     }
   }
 
-  showHideCommentBox(k: Komentar): void {
+  showHideCommentBox(k: KomentarModel): void {
     if (k.reply_mode === undefined || k.reply_mode === null) {
       k.reply_mode = true;
     } else {
@@ -177,7 +175,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadNextPageReply(k: Komentar): void {
+  loadNextPageReply(k: KomentarModel): void {
     if (!k.reply_page_finised) {
       if (!k.reply_page) {
         k.reply_page = 1;
@@ -187,7 +185,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     }
   }
 
-  openUserProfile(k: Komentar): void {
+  openUserProfile(k: KomentarModel): void {
     this.router.navigateByUrl(`/user/${k.user_.username}`);
   }
 

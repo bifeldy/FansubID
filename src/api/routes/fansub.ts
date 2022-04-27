@@ -6,9 +6,8 @@ import { MessageEmbed } from 'discord.js';
 
 import { environment } from '../../environments/api/environment';
 
+import { RoleModel } from '../../models/req-res.model';
 import { UserRequest } from '../models/UserRequest';
-
-import { Role } from '../../app/_shared/models/Role';
 
 import { Fansub } from '../entities/Fansub';
 import { Berkas } from '../entities/Berkas';
@@ -470,7 +469,7 @@ router.get('/:slug', async (req: UserRequest, res: Response, next: NextFunction)
     const fansubRepo = getRepository(Fansub);
     const fansub = await fansubRepo.findOneOrFail({
       where: [
-        { slug: ILike(req.params.slug) }
+        { slug: ILike(req.params['slug']) }
       ],
       relations: ['user_']
     });
@@ -484,7 +483,7 @@ router.get('/:slug', async (req: UserRequest, res: Response, next: NextFunction)
       delete fansub.user_.updated_at;
     }
     return res.status(200).json({
-      info: `😅 200 - Fansub API :: Detail ${req.params.slug} 🤣`,
+      info: `😅 200 - Fansub API :: Detail ${req.params['slug']} 🤣`,
       result: fansub
     });
   } catch (error) {
@@ -506,7 +505,7 @@ router.put('/:slug', isAuthorized, async (req: UserRequest, res: Response, next:
         const fansubRepo = getRepository(Fansub);
         const fansub = await fansubRepo.findOneOrFail({
           where: [
-            { slug: ILike(req.params.slug) }
+            { slug: ILike(req.params['slug']) }
           ],
           relations: ['user_']
         });
@@ -521,7 +520,7 @@ router.put('/:slug', isAuthorized, async (req: UserRequest, res: Response, next:
             fansub.slug = newSlug;
           } else {
             return res.status(400).json({
-              info: `😅 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.id} 🥰`,
+              info: `😅 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['id']} 🥰`,
               result: {
                 message: `'${newSlug}' Sudah Terpakai`
               }
@@ -592,7 +591,7 @@ router.put('/:slug', isAuthorized, async (req: UserRequest, res: Response, next:
           ]
         });
         return res.status(200).json({
-          info: `😅 200 - Fansub API :: Ubah ${req.params.id} 🤣`,
+          info: `😅 200 - Fansub API :: Ubah ${req.params['id']} 🤣`,
           result: resFansubSave
         });
       } else {
@@ -600,7 +599,7 @@ router.put('/:slug', isAuthorized, async (req: UserRequest, res: Response, next:
       }
     } else {
       return res.status(400).json({
-        info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.slug} 😪`,
+        info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
         result: {
           message: 'Khusus Pengguna Terverifikasi!'
         }
@@ -609,7 +608,7 @@ router.put('/:slug', isAuthorized, async (req: UserRequest, res: Response, next:
   } catch (error) {
     console.error(error);
     return res.status(400).json({
-      info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params.slug} 😪`,
+      info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
       result: {
         message: 'Data Tidak Lengkap!'
       }
@@ -620,11 +619,11 @@ router.put('/:slug', isAuthorized, async (req: UserRequest, res: Response, next:
 // DELETE `/api/fansub/:slug`
 router.delete('/:slug', isAuthorized, async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role === Role.ADMIN || req.user.role === Role.MODERATOR) {
+    if (req.user.role === RoleModel.ADMIN || req.user.role === RoleModel.MODERATOR) {
       const fansubRepo = getRepository(Fansub);
       const fansub =  await fansubRepo.findOneOrFail({
         where: [
-          { slug: ILike(req.params.slug) }
+          { slug: ILike(req.params['slug']) }
         ]
       });
       const deletedFansub = await fansubRepo.remove(fansub);
@@ -636,7 +635,7 @@ router.delete('/:slug', isAuthorized, async (req: UserRequest, res: Response, ne
         delete deletedFansub.user_.updated_at;
       }
       return res.status(200).json({
-        info: `😅 200 - Fansub API :: Berhasil Menghapus Fansub ${req.params.slug} 🤣`,
+        info: `😅 200 - Fansub API :: Berhasil Menghapus Fansub ${req.params['slug']} 🤣`,
         result: deletedFansub
       });
     } else {

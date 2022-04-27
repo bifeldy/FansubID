@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { RoomInfoResponse } from '../models/RoomInfo';
+import { RoomInfoModel } from '../../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
 import { StatsServerService } from './stats-server.service';
@@ -13,15 +13,15 @@ import { StatsServerService } from './stats-server.service';
 export class QuizService {
 
   constructor(
-    public gs: GlobalService,
-    public ss: StatsServerService
+    private gs: GlobalService,
+    private ss: StatsServerService
   ) {
     if (this.gs.isBrowser) {
       //
     }
   }
 
-  getCurrentQuizRoom(): Observable<RoomInfoResponse> {
+  getCurrentQuizRoom(): Observable<RoomInfoModel> {
     return this.ss.currentRoom;
   }
 

@@ -5,9 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
-import { AuthGuard } from '../../_shared/helpers/auth-guard';
+import { RoleModel } from '../../../models/req-res.model';
 
-import { Role } from '../../_shared/models/Role';
+import { AuthGuard } from '../../_shared/helpers/auth-guard';
 
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
 
@@ -20,7 +20,7 @@ const routes: Routes = [
     component: VerifyComponent,
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.ADMIN, Role.FANSUBBER, Role.MODERATOR, Role.USER]
+      roles: [RoleModel.ADMIN, RoleModel.FANSUBBER, RoleModel.MODERATOR, RoleModel.USER]
     }
   }
 ];

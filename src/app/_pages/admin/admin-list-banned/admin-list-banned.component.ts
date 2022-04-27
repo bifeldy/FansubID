@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { GlobalService } from '../../../_shared/services/global.service';
+import { UserModel, RoleModel } from '../../../../models/req-res.model';
+
 import { AdminService } from '../../../_shared/services/admin.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
-import { AuthService } from '../../../_shared/services/auth.service';
-
-import { User } from '../../../_shared/models/User';
-import { Role } from '../../../_shared/models/Role';
+import { GlobalService } from '../../../_shared/services/global.service';
 
 @Component({
   selector: 'app-admin-list-banned',
@@ -17,7 +16,7 @@ import { Role } from '../../../_shared/models/Role';
 })
 export class AdminListBannedComponent implements OnInit, OnDestroy {
 
-  currentUser: User = null;
+  currentUser: UserModel = null;
 
   subsBannedGet = null;
   subsBannedDelete = null;
@@ -39,11 +38,11 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    public as: AuthService,
+    private adm: AdminService,
+    private as: AuthService,
     private bs: BusyService,
     private ds: DialogService,
-    public gs: GlobalService,
-    public adm: AdminService
+    private gs: GlobalService,
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -78,11 +77,11 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
         this.count = res.count;
         const bannedDataRow = [];
         let excludedRole = [];
-        if (this.currentUser.role === Role.ADMIN) {
-          excludedRole = [Role.ADMIN];
+        if (this.currentUser.role === RoleModel.ADMIN) {
+          excludedRole = [RoleModel.ADMIN];
         }
-        if (this.currentUser.role === Role.MODERATOR) {
-          excludedRole = [Role.ADMIN, Role.MODERATOR];
+        if (this.currentUser.role === RoleModel.MODERATOR) {
+          excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
         }
         for (const r of res.results) {
           bannedDataRow.push({
@@ -92,7 +91,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
             Korban: r.user_.username,
             Pelaku: (r.banned_by_?.username || 'AUTO_BANNED'),
             Alasan: r.reason,
-            Aksi: (r.user_.role.includesOneOf(excludedRole)) ? [] : [{
+            Aksi: this.gs.includesOneOf(r.user_.role, excludedRole) ? [] : [{
               type: 'button',
               icon: 'lock_open',
               name: 'UnBAN',

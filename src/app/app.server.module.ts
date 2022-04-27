@@ -12,7 +12,6 @@ import { AppComponent } from './app.component';
     ServerTransferStateModule,
     FlexLayoutServerModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppServerModule { }
+export class AppServerModule {}

@@ -1,7 +1,9 @@
 import { Entity, Column } from 'typeorm';
 
+import { KanjiModel } from '../../models/req-res.model';
+
 @Entity({ name: 'kanji' })
-export class Kanji {
+export class Kanji implements KanjiModel {
 
   @Column({ primary: true, type: 'varchar', length: 255 })
   character: string;
@@ -59,4 +61,5 @@ export class Kanji {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: number;
+
 }
