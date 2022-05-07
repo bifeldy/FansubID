@@ -65,6 +65,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   subsUser = null;
   subsDialog = null;
+  subsHirakata = null;
+  subsAllNihongo = null;
 
   dummyDataset = [
     { category: 'number', meaning: 0, kana: '零／ゼロ', romaji: 'Rei/Zero' },
@@ -124,6 +126,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsUser?.unsubscribe();
     this.subsDialog?.unsubscribe();
+    this.subsHirakata?.unsubscribe();
+    this.subsAllNihongo?.unsubscribe();
   }
 
   changeModeTampilan(data): void {
@@ -177,7 +181,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   getHirakata(): void {
     this.bs.busy();
-    this.nihon.getHirakata().subscribe({
+    this.subsHirakata = this.nihon.getHirakata().subscribe({
       next: res => {
         this.gs.log('[BELAJAR_HIRAKATA_SUCCESS]', res);
         const huruf = {};
@@ -195,6 +199,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
           });
         }
         this.daftarHuruf = huruf;
+        console.clear()
+        console.log(this.daftarHuruf);
         this.bs.idle();
       },
       error: err => {
@@ -218,7 +224,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   getData(): void {
     this.bs.busy();
-    this.nihon.getAllNihongo(this.modeTampilan, this.q, this.page, this.row).subscribe({
+    this.subsAllNihongo = this.nihon.getAllNihongo(this.modeTampilan, this.q, this.page, this.row).subscribe({
       next: res => {
         this.gs.log('[BELAJAR_KANA_LIST_SUCCESS]', res);
         this.count = res.count;
