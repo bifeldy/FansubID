@@ -47,6 +47,7 @@ export class LogoutMiddleware implements NestMiddleware {
       return next();
     } catch (error) {
       this.gs.log('[LOGOUT_MIDDLEWARE-ERROR] 🔪', error, 'error');
+      if (error instanceof HttpException) throw error;
       throw new HttpException({
         info: '🙄 401 - Authentication API :: Logout Gagal 😪',
         result: {

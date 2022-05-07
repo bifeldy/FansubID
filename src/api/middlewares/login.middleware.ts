@@ -59,6 +59,7 @@ export class LoginMiddleware implements NestMiddleware {
       }
     } catch (error) {
       this.gs.log('[LOGIN_MIDDLEWARE-ERROR] 🎃', error, 'error');
+      if (error instanceof HttpException) throw error;
       throw new HttpException({
         info: '🙄 400 - Authentication API :: Login Gagal! 😪',
         result: {

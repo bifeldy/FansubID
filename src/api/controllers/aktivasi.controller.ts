@@ -26,7 +26,7 @@ export class AktivasiController {
   @HttpCode(301)
   @Redirect()
   async activateAccount(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-    const userActivated = await this.as.activateAccount(req.query['token'] as string);
+    const userActivated = await this.as.activateAccount(res.locals['token'] as string);
     if (userActivated) {
       res.cookie(environment.tokenName, userActivated.session_token, {
         httpOnly: true,

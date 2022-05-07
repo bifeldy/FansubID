@@ -25,6 +25,9 @@ export class BannedMiddleware implements NestMiddleware {
       const decoded = this.cs.credentialDecode(req);
       const user: UserModel = await this.as.getUserRequest(decoded.user.id, decoded.token);
       this.gs.log('[BANNED_MIDDLEWARE-USER] 🧨', user);
+      if (!user) {
+        throw new Error('User Not Login!');
+      }
       const banned = await this.as.isAccountBanned(user.id);
       if (banned) {
         throw new HttpException({
@@ -37,6 +40,7 @@ export class BannedMiddleware implements NestMiddleware {
       res.locals['user'] = user;
       res.locals['token'] = decoded.token;
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       res.locals['user'] = null;
       res.locals['token'] = req.cookies[environment.tokenName] || req.header('Authorization') || req.header('X-Access-Token') || req.body.token || req.query['token'] || '';
       res.locals['error'] = error;

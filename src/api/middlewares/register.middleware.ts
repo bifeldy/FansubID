@@ -134,6 +134,7 @@ export class RegisterMiddleware implements NestMiddleware {
       }
     } catch (error) {
       this.gs.log('[REGISTER_MIDDLEWARE-ERROR] 🎃', error, 'error');
+      if (error instanceof HttpException) throw error;
       throw new HttpException({
         info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
         result: {
