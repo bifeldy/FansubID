@@ -91,9 +91,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
       this.subsKanji.unsubscribe();
       this.bs.idle();
     }
-    this.subsKanji = this.nihon.getAllKanji(
-      this.jlpt, this.school, this.q, this.page, this.row, 'context', 'asc'
-    ).subscribe({
+    this.subsKanji = this.nihon.getAllKanji(this.jlpt, this.school, this.q, this.page, this.row, 'context', 'asc').subscribe({
       next: res => {
         this.gs.log('[KANJI_LIST_SUCCESS]', res);
         this.count = res.count;

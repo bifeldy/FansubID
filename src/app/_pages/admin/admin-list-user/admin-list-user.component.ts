@@ -77,16 +77,12 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
       this.subsUserGet.unsubscribe();
       this.bs.idle();
     }
-    this.subsUserGet = this.user.getAllUser(
-      this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsUserGet = this.user.getAllUser(this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[USER_LIST_SUCCESS]', res);
         this.count = res.count;
         this.bs.busy();
-        this.subsBannedGet = this.user.checkBanned(
-          res.results.map(r => r.id)
-        ).subscribe({
+        this.subsBannedGet = this.user.checkBanned(res.results.map(r => r.id)).subscribe({
           next: result => {
             this.gs.log('[BANNED_LIST_SUCCESS]', res);
             const userDataRow = [];

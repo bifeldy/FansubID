@@ -58,9 +58,7 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
       this.subsCorsGet.unsubscribe();
       this.bs.idle();
     }
-    this.subsCorsGet = this.adm.getAllCors(
-      this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsCorsGet = this.adm.getAllCors(this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[CORS_LIST_SUCCESS]', res);
         this.count = res.count;

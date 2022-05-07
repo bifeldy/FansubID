@@ -159,9 +159,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   getBerkasFansub(): void {
     this.bs.busy();
-    this.subsBerkas = this.fansub.getBerkasFansub(
-      [this.fansubData.id], this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsBerkas = this.fansub.getBerkasFansub([this.fansubData.id], this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;

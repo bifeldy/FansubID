@@ -65,9 +65,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
       this.subsBerkas.unsubscribe();
       this.bs.idle();
     }
-    this.subsBerkas = this.berkas.getAllBerkas(
-      this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsBerkas = this.berkas.getAllBerkas(this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;

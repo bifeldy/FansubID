@@ -87,9 +87,7 @@ export class AdminPushNotificationComponent implements OnInit, OnDestroy {
       this.subsNotifGet.unsubscribe();
       this.bs.idle();
     }
-    this.subsNotifGet = this.adm.getAllNotif(
-      this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsNotifGet = this.adm.getAllNotif(this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[NOTIFICATION_LIST_SUCCESS]', res);
         this.count = res.count;

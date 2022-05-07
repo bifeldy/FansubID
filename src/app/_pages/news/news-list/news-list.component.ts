@@ -65,9 +65,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
       this.subsNews.unsubscribe();
       this.bs.idle();
     }
-    this.subsNews = this.news.getAllNews(
-      this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsNews = this.news.getAllNews(this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[NEWS_LIST_SUCCESS]', res);
         this.count = res.count;

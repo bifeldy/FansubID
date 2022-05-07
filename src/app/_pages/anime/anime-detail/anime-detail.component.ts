@@ -159,9 +159,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
 
   getBerkasAnime(): void {
     this.bs.busy();
-    this.subsBerkas = this.anime.getBerkasAnime(
-      [this.animeId], this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsBerkas = this.anime.getBerkasAnime([this.animeId], this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;

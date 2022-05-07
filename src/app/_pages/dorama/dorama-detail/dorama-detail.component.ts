@@ -201,9 +201,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
 
   getBerkasDorama(): void {
     this.bs.busy();
-    this.subsBerkas = this.dorama.getBerkasDorama(
-      [this.doramaId], this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsBerkas = this.dorama.getBerkasDorama([this.doramaId], this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[BERKAS_DORAMA_SUCCESS]', res);
         this.count = res.count;

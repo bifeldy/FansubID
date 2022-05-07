@@ -69,9 +69,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
       this.subsBannedGet.unsubscribe();
       this.bs.idle();
     }
-    this.subsBannedGet = this.adm.getAllBanned(
-      this.q, this.page, this.row, this.sort, this.order
-    ).subscribe({
+    this.subsBannedGet = this.adm.getAllBanned(this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[BANNED_LIST_SUCCESS]', res);
         this.count = res.count;
