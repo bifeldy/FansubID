@@ -1,3 +1,8 @@
+export interface JsonCache {
+  status?: number;
+  body?: any;
+}
+
 export interface JsonDefault {
   id?: string;
   title?: string;
@@ -36,6 +41,22 @@ export interface JsonResponseMulti<T> {
   count?: number;
   pages?: number;
 }
+
+export interface MailModel {
+  to?: string;
+  subject?: string;
+  template?: string;
+  variables?: {
+    nama?: string;
+    username?: string;
+    baseUrl?: string;
+    siteName?: string;
+    activationToken?: string;
+    id?: string;
+  };
+  html?: string;
+  text?: string;
+};
 
 export enum RoleModel {
   ADMIN = 'ADMIN',

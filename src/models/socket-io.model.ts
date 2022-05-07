@@ -1,5 +1,33 @@
 import { BerkasModel, FansubModel, HirakataModel, KanjiModel, NewsModel, UserModel } from "./req-res.model";
 
+export interface PayloadModel {
+  jwtToken?: string;
+  user?: UserModel;
+  ip?: string;
+  pathUrl?: string;
+  idSlugUsername?: string;
+  trackType?: string;
+  roomId?: string;
+  username?: string;
+  reason?: string;
+  message?: string;
+  randomInteger: number;
+  answer: string;
+  [data: string]: any;
+}
+
+export interface CallbackModel {
+  unique_ip?: number;
+  unique_user?: number;
+  verified_user?: number;
+  un_verified_user?: number;
+  visitor?: {
+    visitor_date?: number | Date;
+    visitor_count?: number;
+  };
+  [data: string]: any;
+}
+
 export interface ServerInfoModel {
   consoleLog: boolean;
   isMaintenance: boolean;

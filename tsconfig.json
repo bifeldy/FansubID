@@ -16,8 +16,9 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2017",
+    "target": "es2018",
     "module": "es2020",
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
@@ -29,6 +30,9 @@
     "paths": {
       "crypto": [
         "./node_modules/crypto-js"
+      ],
+      "swiper_angular": [
+        "./node_modules/swiper/angular"
       ]
     }
   },

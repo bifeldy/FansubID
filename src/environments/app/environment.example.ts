@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   siteName: 'Hikki',
   author: 'Bifeldy',
-  baseUrl: 'http://localhost:4000',
+  baseUrl: 'http://localhost:4200',
   apiUrl: '/api',
   apiKey: 'hikki_api_key',
   discordUrl: 'https://discord.gg/xGWdExk',

@@ -2,35 +2,34 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-// Database Entities
-import { Profile } from '../../api/entities/Profile';
-import { KartuTandaPenduduk } from '../../api/entities/KartuTandaPenduduk';
-import { User } from '../../api/entities/User';
-import { ProjectType } from '../../api/entities/ProjectType';
-import { Fansub } from '../../api/entities/Fansub';
 import { Anime } from '../../api/entities/Anime';
-import { Dorama } from '../../api/entities/Dorama';
-import { Berkas } from '../../api/entities/Berkas';
 import { Attachment } from '../../api/entities/Attachment';
-import { TempAttachment } from '../../api/entities/TempAttachment';
 import { ApiKey } from '../../api/entities/ApiKey';
-import { News } from '../../api/entities/News';
-import { SocialMedia } from '../../api/entities/SocialMedia';
+import { Banned } from '../../api/entities/Banned';
+import { Berkas } from '../../api/entities/Berkas';
+import { Dorama } from '../../api/entities/Dorama';
 import { Edict } from '../../api/entities/Edict';
+import { Fansub } from '../../api/entities/Fansub';
+import { Hirakata } from '../../api/entities/Hirakata';
+import { HirakataStats } from '../../api/entities/HirakataStats';
 import { Kanji } from '../../api/entities/Kanji';
 import { KanjiVg } from '../../api/entities/KanjiVg';
 import { KanjiStats } from '../../api/entities/KanjiStats';
-import { Tatoeba } from '../../api/entities/Tatoeba';
-import { Banned } from '../../api/entities/Banned';
-import { Notification } from '../../api/entities/Notification';
-import { Lesson } from '../../api/entities/Lesson';
-import { Track } from '../../api/entities/Track';
-import { LikeDislike } from '../../api/entities/LikeDislike';
-import { Hirakata } from '../../api/entities/Hirakata';
-import { HirakataStats } from '../../api/entities/HirakataStats';
-import { Nihongo } from '../../api/entities/Nihongo';
+import { KartuTandaPenduduk } from '../../api/entities/KartuTandaPenduduk';
 import { Komentar } from '../../api/entities/Komentar';
+import { Lesson } from '../../api/entities/Lesson';
+import { LikeDislike } from '../../api/entities/LikeDislike';
+import { News } from '../../api/entities/News';
+import { Nihongo } from '../../api/entities/Nihongo';
+import { Notification } from '../../api/entities/Notification';
+import { Profile } from '../../api/entities/Profile';
+import { ProjectType } from '../../api/entities/ProjectType';
 import { Registration } from '../../api/entities/Registration';
+import { SocialMedia } from '../../api/entities/SocialMedia';
+import { Tatoeba } from '../../api/entities/Tatoeba';
+import { TempAttachment } from '../../api/entities/TempAttachment';
+import { Track } from '../../api/entities/Track';
+import { User } from '../../api/entities/User';
 
 export const environment = {
   production: false,
@@ -40,45 +39,47 @@ export const environment = {
   tokenName: 'Hikki_Token',
   domain: 'localhost',
   ip: '127.0.0.1',
-  baseUrl: 'http://localhost:4000',
-  dbType: 'postgres',
-  dbHost: 'localhost',
-  dbPort: 5432,
-  dbName: 'hikki',
-  dbUsername: 'postgres',
-  dbPassword: 'postgres',
-  dbSync: true,
-  dbLog: true,
-  dbEntities: [
-    User,
-    KartuTandaPenduduk,
-    Profile,
-    ProjectType,
-    Fansub,
-    Anime,
-    Dorama,
-    Berkas,
-    Attachment,
-    TempAttachment,
-    ApiKey,
-    News,
-    Lesson,
-    SocialMedia,
-    Edict,
-    Kanji,
-    KanjiVg,
-    KanjiStats,
-    Tatoeba,
-    Banned,
-    Notification,
-    Track,
-    LikeDislike,
-    Hirakata,
-    HirakataStats,
-    Nihongo,
-    Komentar,
-    Registration
-  ],
+  baseUrl: 'http://localhost:4200',
+  typeorm: {
+    type: 'postgres',
+    host: 'localhost',
+    port: 5432,
+    database: 'hikki',
+    username: 'postgres',
+    password: 'postgres',
+    synchronize: true,
+    logging: true,
+    entities: [
+      Anime,
+      Attachment,
+      ApiKey,
+      Banned,
+      Berkas,
+      Dorama,
+      Edict,
+      Fansub,
+      Hirakata,
+      HirakataStats,
+      Kanji,
+      KanjiVg,
+      KanjiStats,
+      KartuTandaPenduduk,
+      Komentar,
+      Lesson,
+      LikeDislike,
+      News,
+      Nihongo,
+      Notification,
+      Profile,
+      ProjectType,
+      Registration,
+      SocialMedia,
+      Tatoeba,
+      TempAttachment,
+      Track,
+      User
+    ],
+  },
   uploadFolder: 'dist/hikki/uploads',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',
   recaptchaApiUrl: 'https://www.google.com/recaptcha/api/siteverify',
@@ -89,6 +90,7 @@ export const environment = {
   gCloudPlatform: {
     clientId: '',
     clientSecret: '',
+    clientEmail: '',
     gDrive: {
       refreshToken: '',
       scopes: ['https://www.googleapis.com/auth/drive']

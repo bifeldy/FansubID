@@ -38,7 +38,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       if (this.ss.mySocket?.id) {
         this.gs.log('[INTERCEPT_SOCKET]', this.ss.mySocket.id);
         request = request.clone({
-          headers: request.headers.append('x-socket-io-id', this.ss.mySocket.id)
+          headers: request.headers.append('X-Socket-Id', this.ss.mySocket.id)
         });
       }
     }

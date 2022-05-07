@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
-import { io, Socket } from 'socket.io-client';
+// import { io, Socket } from 'socket.io-client';
 import { ToastrService } from 'ngx-toastr';
 
 import { RoomInfoModel, ServerInfoModel } from '../../../models/socket-io.model';
@@ -13,14 +13,17 @@ import { LeftMenuService } from './left-menu.service';
 import { AuthService } from './auth.service';
 import { DialogService } from './dialog.service';
 
+declare const io: any;
+
 @Injectable({
   providedIn: 'root'
 })
 export class StatsServerService {
 
-  mySocket: Socket = null;
+  mySocket = null;
 
   visitor = 0;
+
   latency = 0;
 
   messageChatCount = 0;
@@ -62,7 +65,7 @@ export class StatsServerService {
     if (this.gs.isBrowser) {
       this.mySocket = io('//', {
         extraHeaders: {
-          "x-access-token": this.as.jwtToken
+          "X-Access-Token": this.as.jwtToken
         }
       });
       this.socketListen();
@@ -98,10 +101,8 @@ export class StatsServerService {
   }
 
   pingPong(): void {
-    const start = Date.now();
     this.socketEmitVolatile('ping-pong', {}, (response: any) => {
-      this.latency = Date.now() - start;
-      this.gs.log('[SOCKET_PING-PONG]', this.latency);
+      this.gs.log('[SOCKET_PING_PONG]', response);
       if ('github' in response && response.github) {
         this.github = response.github;
       }
@@ -119,9 +120,9 @@ export class StatsServerService {
       setTimeout(() => {
         this.socketLeaveAndJoinNewRoom(null, this.router.url);
       }, 1234);
-      this.intervalPingPong = setInterval(() => {
-        this.pingPong();
-      }, 10000);
+      // this.intervalPingPong = setInterval(() => {
+      //   this.pingPong();
+      // }, 10000);
     });
     this.mySocket.on('disconnect', reason => {
       this.gs.log('[SOCKET_DISCONNECTED]', reason);
@@ -136,6 +137,14 @@ export class StatsServerService {
       if (this.intervalPingPong) {
         clearInterval(this.intervalPingPong);
       }
+    });
+    this.mySocket.on('ping', () => {
+      this.gs.log('[SOCKET_PING]', Date.now());
+    });
+    this.mySocket.on('pong', (data) => {
+      this.latency = data;
+      this.gs.log('[SOCKET_PONG]', `${Date.now()} => ${data} ms`);
+      this.pingPong();
     });
     this.mySocket.on('visitors', visitors => {
       this.gs.log('[SOCKET_VISITOR]', this.visitor);
@@ -241,14 +250,15 @@ export class StatsServerService {
   }
 
   socketEmitVolatile(eventName: string, eventData: any = {}, callback = null): void {
-    if (this.as.jwtToken) {
-      eventData.jwtToken = this.as.jwtToken;
-    }
-    if (callback) {
-      this.mySocket.volatile.emit(eventName, eventData, callback);
-    } else {
-      this.mySocket.volatile.emit(eventName, eventData);
-    }
+    this.socketEmit(eventName, eventData, callback);
+    // if (this.as.jwtToken) {
+    //   eventData.jwtToken = this.as.jwtToken;
+    // }
+    // if (callback) {
+    //   this.mySocket.volatile.emit(eventName, eventData, callback);
+    // } else {
+    //   this.mySocket.volatile.emit(eventName, eventData);
+    // }
   }
 
   socketLeaveAndJoinNewRoom(previousUrl: string, currentNewUrl: string): void {

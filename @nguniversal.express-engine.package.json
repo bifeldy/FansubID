@@ -1,0 +1,78 @@
+{
+  "name": "@nguniversal/express-engine",
+  "version": "13.0.1",
+  "description": "Express Engine for running Server Angular Apps",
+  "license": "MIT",
+  "keywords": [
+    "express",
+    "ssr",
+    "universal"
+  ],
+  "engines": {
+    "node": "^12.20.0 || ^14.15.0 || >=16.10.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "^13.0.1",
+    "@angular/core": "^13.0.1",
+    "@angular/platform-server": "^13.0.1",
+    "express": "^4.15.2"
+  },
+  "dependencies": {
+    "@nguniversal/common": "13.0.1",
+    "tslib": "^2.3.0"
+  },
+  "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "packageGroup": [
+      "@nguniversal/aspnetcore-engine",
+      "@nguniversal/builders",
+      "@nguniversal/common",
+      "@nguniversal/express-engine",
+      "@nguniversal/hapi-engine"
+    ],
+    "packageGroupName": "@nguniversal/express-engine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/universal"
+  },
+  "bugs": {
+    "url": "https://github.com/angular/universal/issues"
+  },
+  "homepage": "https://github.com/angular/universal",
+  "fesm2020": "./fesm2020/express-engine.mjs",
+  "fesm2015": "./fesm2015/express-engine.mjs",
+  "esm2020": "./esm2020/express-engine.mjs",
+  "typings": "./express-engine.d.ts",
+  "module": "./fesm2015/express-engine.mjs",
+  "es2020": "./fesm2020/express-engine.mjs",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./express-engine.d.ts",
+      "esm2020": "./esm2020/express-engine.mjs",
+      "es2020": "./fesm2020/express-engine.mjs",
+      "es2015": "./fesm2015/express-engine.mjs",
+      "node": "./fesm2015/express-engine.mjs",
+      "default": "./fesm2020/express-engine.mjs"
+    },
+    "./tokens": {
+      "types": "./tokens/tokens.d.ts",
+      "esm2020": "./esm2020/tokens/tokens.mjs",
+      "es2020": "./fesm2020/tokens.mjs",
+      "es2015": "./fesm2015/tokens.mjs",
+      "node": "./fesm2015/tokens.mjs",
+      "default": "./fesm2020/tokens.mjs"
+    },
+    "./schematics/utils": {
+      "types": "./schematics/utils/index.d.ts",
+      "esm2020": "./schematics/utils/index.js",
+      "es2020": "./schematics/utils/index.js",
+      "es2015": "./schematics/utils/index.js",
+      "node": "./schematics/utils/index.js",
+      "default": "./schematics/utils/index.js"
+    }
+  }
+}

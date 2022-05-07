@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
-import { KomentarModel } from '../../models/req-res.model';
+import { KomentarModel, UserModel } from '../../models/req-res.model';
 
 import { User } from './User';
 
@@ -26,6 +26,6 @@ export class Komentar implements KomentarModel {
   parent_komentar_: KomentarModel;
 
   @ManyToOne(type => User)
-  user_: User;
+  user_: UserModel;
 
 }

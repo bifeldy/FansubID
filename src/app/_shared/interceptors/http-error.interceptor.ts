@@ -49,12 +49,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               }
             }
           }
-          if ((res as any).status === 202) {
-            this.toast.info(okMessage, okTitle);
-          } else if ((res as any).status === 200) {
-            this.toast.success(okMessage, okTitle);
-          } else {
-            this.toast.warning(okMessage, okTitle);
+          switch ((res as any).status) {
+            case 200:
+              this.toast.success(okMessage, okTitle);
+              break;
+            case 201:
+            case 202:
+              this.toast.info(okMessage, okTitle);
+              break;
+            default:
+              this.toast.warning(okMessage, okTitle);
+              break;
           }
           if (request.method === 'GET') {
             this.gs.log(`[SOCKET_TRACK-SET]`, request.url);

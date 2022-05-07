@@ -62,7 +62,7 @@ export class HeaderComponent implements OnInit {
       });
       this.subsGlobalRoom = this.ss.globalRoom.subscribe({
         next: global => {
-          this.myPoints = global?.member_list[this.ss.mySocket.id]?.profile_?.points || 0;
+          this.myPoints = global?.member_list[this.ss.mySocket.id]?.profile_.points || 0;
         }
       });
     }

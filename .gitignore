@@ -57,3 +57,4 @@ Thumbs.db
 /stderr.log
 /report.*
 /bifeldy.ovpn
+/.angular/*

@@ -22,15 +22,15 @@ export class ProjectService {
   }
 
   getProject(): Observable<JsonResponseArray<ProjectTypeModel>> {
-    return this.api.getData(`/project`);
+    return this.api.getData(`/project-type`);
   }
 
   createProject(notifData): Observable<JsonResponse<ProjectTypeModel>> {
-    return this.api.postData('/project', notifData);
+    return this.api.postData('/project-type', notifData);
   }
 
   deleteProject(notifId): Observable<JsonResponse<ProjectTypeModel>> {
-    return this.api.deleteData(`/project/${notifId}`);
+    return this.api.deleteData(`/project-type/${notifId}`);
   }
 
 }

@@ -61,18 +61,18 @@ export class UserService {
   }
 
   cekNik(userData): Observable<JsonResponse> {
-    return this.api.postData('/cek-nik', userData);
+    return this.api.postData('/verify-nik', userData);
   }
 
   verifyKTP(userData): Observable<JsonResponse> {
-    return this.api.putData('/verify-ktp', userData).pipe(map(respVerifyKTP => {
+    return this.api.postData('/verify-ktp', userData).pipe(map(respVerifyKTP => {
       this.as.jwtToken = respVerifyKTP.result.jwtToken;
       return respVerifyKTP;
     }));
   }
 
   sosmedLogin(data): Observable<JsonResponse> {
-    return this.api.putData('/verify-sosmed', data);
+    return this.api.postData('/verify-sosmed', data);
   }
 
 }

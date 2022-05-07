@@ -34,42 +34,42 @@ export class NihongoService {
   }
 
   getHirakata(): Observable<JsonResponseArray<HirakataModel>> {
-    return this.api.patchData(`/nihongo/hirakata/list-all`);
+    return this.api.getData(`/nihongo-hirakata-all`);
   }
 
   getAllKanji(jlpt = '', school = '', q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<KanjiModel>> {
-    return this.api.getData(`/nihongo/kanji?jlpt=${jlpt}&school=${school}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.getData(`/nihongo-kanji?jlpt=${jlpt}&school=${school}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   getAllEdict(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<EdictModel>> {
-    return this.api.getData(`/nihongo/edict?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.getData(`/nihongo-edict?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   getAllBook(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<LessonModel>> {
-    return this.api.getData(`/nihongo/books?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.getData(`/nihongo-lesson?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   createBook(bookData): Observable<JsonResponse<LessonModel>> {
-    return this.api.postData(`/nihongo/books`, bookData);
+    return this.api.postData(`/nihongo-lesson`, bookData);
   }
 
   getBookDetailAndChapterList(bookId): Observable<JsonResponseMulti<LessonModel>> {
-    return this.api.getData(`/nihongo/books/${bookId}`);
+    return this.api.getData(`/nihongo-lesson/${bookId}`);
   }
 
   updateBook(bookId, bookData): Observable<JsonResponse<LessonModel>> {
-    return this.api.putData(`/nihongo/books/${bookId}`, bookData);
+    return this.api.putData(`/nihongo-lesson/${bookId}`, bookData);
   }
 
   createChapter(bookId, chapterData): Observable<JsonResponse<LessonModel>> {
-    return this.api.postData(`/nihongo/books/${bookId}`, chapterData);
+    return this.api.postData(`/nihongo-lesson/${bookId}`, chapterData);
   }
 
   getChapterDetail(bookId, chapterId): Observable<JsonResponse<LessonModel>> {
-    return this.api.getData(`/nihongo/books/${bookId}/${chapterId}`);
+    return this.api.getData(`/nihongo-lesson/${bookId}/${chapterId}`);
   }
 
   updateChapter(bookId, chapterId, chapterData): Observable<JsonResponse<LessonModel>> {
-    return this.api.putData(`/nihongo/books/${bookId}/${chapterId}`, chapterData);
+    return this.api.putData(`/nihongo-lesson/${bookId}/${chapterId}`, chapterData);
   }
 }

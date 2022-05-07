@@ -37,23 +37,23 @@ export class FansubService {
   }
 
   getAllFansub(): Observable<JsonResponseArray<FansubModel>> {
-    return this.api.patchData(`/fansub/list-all`);
+    return this.api.getData(`/fansub-all`);
   }
 
   cekSlug(fansubData): Observable<JsonResponse> {
-    return this.api.postData(`/fansub/cek-slug`, fansubData);
+    return this.api.patchData(`/fansub-slug`, fansubData);
   }
 
   getBerkasFansub(fansubId = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray> {
-    return this.api.patchData(`/fansub/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: fansubId });
+    return this.api.patchData(`/fansub-berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: fansubId });
   }
 
   getAnimeFansub(fansubId = [], page = 1, row = 10): Observable<JsonResponseArray> {
-    return this.api.patchData(`/fansub/anime?page=${page}&row=${row}`, { id: fansubId });
+    return this.api.patchData(`/fansub-anime?page=${page}&row=${row}`, { id: fansubId });
   }
 
   getDoramaFansub(fansubId = [], page = 1, row = 10): Observable<JsonResponseArray> {
-    return this.api.patchData(`/fansub/dorama?page=${page}&row=${row}`, { id: fansubId });
+    return this.api.patchData(`/fansub-dorama?page=${page}&row=${row}`, { id: fansubId });
   }
 
 }

@@ -145,7 +145,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   openVerifyDiscordUrl(): void {
-    this.wb.winboxOpenUri(`${environment.baseUrl}/verify-discord`, '_self');
+    this.wb.winboxOpenUri(`${environment.baseUrl}/discord-verifikasi`, '_self');
   }
 
   initKTP(): void {

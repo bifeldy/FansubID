@@ -33,15 +33,15 @@ export class DoramaService {
   }
 
   getSeasonalDorama(year: number, season: string): Observable<JsonResponseArray<any>> {
-    return this.api.patchData(`/dorama/seasonal?year=${year}&season=${season}`);
+    return this.api.getData(`/dorama-seasonal?year=${year}&season=${season}`);
   }
 
   getBerkasDorama(doramaId = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<BerkasModel>> {
-    return this.api.patchData(`/dorama/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: doramaId });
+    return this.api.patchData(`/dorama-berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: doramaId });
   }
 
   getFansubDorama(doramaId = [], page = 1, row = 10): Observable<JsonResponseArray<FansubModel>> {
-    return this.api.patchData(`/dorama/fansub?page=${page}&row=${row}`, { id: doramaId });
+    return this.api.patchData(`/dorama-fansub?page=${page}&row=${row}`, { id: doramaId });
   }
 
 }

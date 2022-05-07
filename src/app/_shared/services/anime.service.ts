@@ -29,19 +29,19 @@ export class AnimeService {
   }
 
   addNewAnime(animeData): Observable<JsonResponse<AnimeModel>> {
-    return this.api.postData(`/anime`, animeData);
+    return this.api.patchData(`/anime`, animeData);
   }
 
   getSeasonalAnime(year: number, season: string): Observable<JsonResponseArray<any>> {
-    return this.api.patchData(`/anime/seasonal?year=${year}&season=${season}`);
+    return this.api.getData(`/anime-seasonal?year=${year}&season=${season}`);
   }
 
   getBerkasAnime(animeId = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<BerkasModel>> {
-    return this.api.patchData(`/anime/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: animeId });
+    return this.api.patchData(`/anime-berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: animeId });
   }
 
   getFansubAnime(animeId = [], page = 1, row = 10): Observable<JsonResponseArray<FansubModel>> {
-    return this.api.patchData(`/anime/fansub?page=${page}&row=${row}`, { id: animeId });
+    return this.api.patchData(`/anime-fansub?page=${page}&row=${row}`, { id: animeId });
   }
 
 }

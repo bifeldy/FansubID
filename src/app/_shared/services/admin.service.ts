@@ -101,11 +101,11 @@ export class AdminService {
   }
 
   getAllCors(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<ApiKeyModel>> {
-    return this.api.getData(`/cors?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+    return this.api.getData(`/api-key?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
   revokeCors(corsId): Observable<JsonResponse<ApiKeyModel>> {
-    return this.api.deleteData(`/cors/${corsId}`);
+    return this.api.deleteData(`/api-key/${corsId}`);
   }
 
 }
