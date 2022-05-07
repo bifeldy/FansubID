@@ -10,6 +10,8 @@ export class ConfigService {
   // Prevent Circular Dependency Injection
   gs = null;
 
+  github = null;
+
   mailSMTP = {
     mailgun: true,
     ymail: false,

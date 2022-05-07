@@ -28,16 +28,16 @@ import { GlobalService } from './global.service';
 import { SocketIoService } from './socket-io.service';
 
 import { UserService } from '../repository/user.service';
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class DiscordService {
 
   bot: Client = null;
 
-  github = null;
-
   constructor(
     private api: ApiService,
+    private cfg: ConfigService,
     private cs: CryptoService,
     private gs: GlobalService,
     private sis: SocketIoService,
@@ -89,14 +89,14 @@ export class DiscordService {
         const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);
         if (res_raw.ok) {
           const gh: any = await res_raw.json();
-          this.github = gh[0];
-          this.bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(this.bot.user.id)?.setNickname(`Hikki - ${this.github?.sha?.slice(0, 7)}`);
+          this.cfg.github = gh[0];
+          this.bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(this.bot.user.id)?.setNickname(`Hikki - ${this.cfg.github?.sha?.slice(0, 7)}`);
         } else {
           throw new Error('Github API Error');
         }
       } catch (error) {
         this.gs.log('[DISCORD_SERVICE-FAILED] 🎉', error, 'error')
-        this.github = null;
+        this.cfg.github = null;
       }
     });
     this.bot.login(environment.discordBotLoginToken).catch(err => this.gs.log('[DISCORD_SERVICE-LOGIN] 🎉', err, 'error'));

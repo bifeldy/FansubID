@@ -19,9 +19,7 @@ import { UserService } from '../repository/user.service';
 import { QuizService } from '../services/quiz.service';
 
 @WebSocketGateway()
-export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {;
-
-  github = null;
+export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
     private cfg: ConfigService,
@@ -58,7 +56,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   @SubscribeMessage('ping-pong')
   pingPong(client: Socket, payload: PayloadModel): PingPongModel {
     return {
-      github: this.github,
+      github: this.cfg.github,
       server: this.cfg.serverGet()
     }
   }
