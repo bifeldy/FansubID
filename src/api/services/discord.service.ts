@@ -23,12 +23,12 @@ import { environment } from '../../environments/api/environment';
 import { SosMedModel } from '../../models/req-res.model';
 
 import { ApiService } from './api.service';
+import { ConfigService } from './config.service';
 import { CryptoService } from './crypto.service';
 import { GlobalService } from './global.service';
 import { SocketIoService } from './socket-io.service';
 
 import { UserService } from '../repository/user.service';
-import { ConfigService } from './config.service';
 
 @Injectable()
 export class DiscordService {
