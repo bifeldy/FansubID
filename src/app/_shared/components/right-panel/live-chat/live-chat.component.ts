@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 
 import { UserModel } from '../../../../../models/req-res.model';
 
-import { environment } from '../../../../../environments/app/environment';
-
 import { GlobalService } from '../../../services/global.service';
 import { AuthService } from '../../../services/auth.service';
 import { LocalStorageService } from '../../../services/local-storage.service';
@@ -16,8 +14,6 @@ import { StatsServerService } from '../../../services/stats-server.service';
   styleUrls: ['./live-chat.component.css']
 })
 export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  localStorageLiveChatKeyName = `${environment.siteName}_LiveChatResults`;
 
   currentUser: UserModel = null;
 
@@ -54,7 +50,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
-      this.liveChatResult = this.ls.getItem(this.localStorageLiveChatKeyName, true) || this.liveChatResult;
+      this.liveChatResult = this.ls.getItem(this.gs.localStorageKeys.LiveChatResults, true) || this.liveChatResult;
       if (this.forcedCurrentRoom) {
         this.liveChatResult.isGlobalRoom = !this.forcedCurrentRoom;
         this.liveChatResult.messageToSend = '';
@@ -101,7 +97,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.ls.setItem(this.localStorageLiveChatKeyName, this.liveChatResult);
+    this.ls.setItem(this.gs.localStorageKeys.LiveChatResults, this.liveChatResult);
     this.subsUser?.unsubscribe();
     this.subsCurrentRoom?.unsubscribe();
     this.subsGlobalRoom?.unsubscribe();

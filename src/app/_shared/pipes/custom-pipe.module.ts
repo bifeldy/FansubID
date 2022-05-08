@@ -4,12 +4,14 @@ import { CommonModule } from '@angular/common';
 import { BytesPipe } from './bytes.pipe';
 import { DateAgoPipe } from './date-ago.pipe';
 import { SafeUrlPipe } from './safe-url.pipe';
+import { SafeInnerHtmlPipe } from './safe-inner-html.pipe';
 
 @NgModule({
   declarations: [
     BytesPipe,
     DateAgoPipe,
-    SafeUrlPipe
+    SafeUrlPipe,
+    SafeInnerHtmlPipe
   ],
   imports: [
     CommonModule
@@ -17,7 +19,8 @@ import { SafeUrlPipe } from './safe-url.pipe';
   exports: [
     BytesPipe,
     DateAgoPipe,
-    SafeUrlPipe
+    SafeUrlPipe,
+    SafeInnerHtmlPipe
   ]
 })
 export class CustomPipeModule { }

@@ -227,13 +227,18 @@ export class AttachmentController {
         }
       }
     } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException({
+      const body: any = {
         info: `🙄 404 - Temp Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }
-      }, HttpStatus.NOT_FOUND);
+      };
+      res.status(404);
+      if (req.query['xml'] === 'true') {
+        res.set('Content-Type', 'application/xml');
+        return res.send(this.gs.OBJ2XML(body));
+      }
+      return res.json(body);
     }
   }
 

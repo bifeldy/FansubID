@@ -1,7 +1,6 @@
-import Graph from 'p2p-graph';
-
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -13,6 +12,9 @@ import { TorrentService } from '../../_shared/services/torrent.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 import { StatsServerService } from '../../_shared/services/stats-server.service';
 import { BusyService } from '../../_shared/services/busy.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+declare const P2PGraph: any;
 
 @Component({
   selector: 'app-torrent',
@@ -23,8 +25,8 @@ import { BusyService } from '../../_shared/services/busy.service';
       state('collapsed', style({ height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+    ])
+  ]
 })
 export class TorrentComponent implements OnInit, OnDestroy {
 
@@ -59,6 +61,8 @@ export class TorrentComponent implements OnInit, OnDestroy {
   subsTableDataRow = null;
 
   constructor(
+    private snackBar: MatSnackBar,
+    private clipboard: Clipboard,
     private gs: GlobalService,
     private torrent: TorrentService,
     private toast: ToastrService,
@@ -94,6 +98,13 @@ export class TorrentComponent implements OnInit, OnDestroy {
     this.subsDialog?.unsubscribe();
     this.subsUser?.unsubscribe();
     this.subsTableDataRow?.unsubscribe();
+  }
+
+  copyMagnetHashToClipboard(magnetHash: string): void {
+    const copyResult = this.clipboard.copy(magnetHash);
+    if (copyResult) {
+      this.snackBar.open('Link Magnet Hash Berhasil Disalin!');
+    }
   }
 
   toggleExpanded(row: any): void {
@@ -213,7 +224,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
   initGraph(torrent: any): void {
     if (!this.torrentsGraph[torrent.infoHash] && this.dataSource.data.length > 0) {
       this.gs.log('[TORRENT_WIRE_INIT_GRAPH]', torrent);
-      this.torrentsGraph[torrent.infoHash] = new Graph(`.graphP2p-${torrent.infoHash}`);
+      this.torrentsGraph[torrent.infoHash] = new P2PGraph(`.graphP2p-${torrent.infoHash}`);
       this.torrentsGraph[torrent.infoHash].add({
         id: (this.torrent.webClient as any).peerId,
         me: true,

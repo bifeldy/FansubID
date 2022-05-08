@@ -26,15 +26,7 @@
     "lib": [
       "es2020",
       "dom"
-    ],
-    "paths": {
-      "crypto": [
-        "./node_modules/crypto-js"
-      ],
-      "swiper_angular": [
-        "./node_modules/swiper/angular"
-      ]
-    }
+    ]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

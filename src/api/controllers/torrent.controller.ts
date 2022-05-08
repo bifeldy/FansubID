@@ -1,23 +1,25 @@
 // 3rd Party Library
 import webtorrentHealth from 'webtorrent-health';
 
-import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Controller, HttpCode, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 import { environment } from '../../environments/api/environment';
+
+import { GlobalService } from '../services/global.service';
 
 @Controller('/torrent')
 export class TorrentController {
 
   constructor(
-    //
+    private gs: GlobalService
   ) {
     //
   }
 
   @Post('/')
   @HttpCode(201)
-  async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async addNew(@Req() req: Request, @Res(/* { passthrough: true } */) res: Response): Promise<any> {
     try {
       if ('magnetHash' in req.body) {
         return webtorrentHealth(req.body.magnetHash, {
@@ -25,29 +27,40 @@ export class TorrentController {
           timeout: req.body.trackTimeout || 1234
         }, (err, data) => {
           if (err) {
-            throw new HttpException({
+            const body: any = {
               info: `🙄 400 - Torrent Tracker API :: Gagal Mendapatkan Torrent 😪`,
               result: {
                 message: err.message
               }
-            }, HttpStatus.BAD_REQUEST);
+            };
+            res.status(400);
+            if (req.query['xml'] === 'true') {
+              res.set('Content-Type', 'application/xml');
+              return res.send(this.gs.OBJ2XML(body));
+            }
+            return res.json(body);
           }
-          return {
-            info: `😅 201 - Torrent Tracker API :: Berhasil Mendapatkan ${req.body.magnetHash} 🤣`,
+          return res.status(201).json({
+            info: `😅 200 - Torrent Tracker API :: Berhasil Mendapatkan ${req.body.magnetHash} 🤣`,
             result: data
-          };
+          });
         });
       } else {
         throw new Error('Data Tidak Lengkap!');
       }
     } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException({
+      const body: any = {
         info: '🙄 400 - Torrent Tracker API :: Gagal Mendapatkan Torrent 😪',
         result: {
           message: 'Data Tidak Lengkap!'
         }
-      }, HttpStatus.BAD_REQUEST);
+      };
+      res.status(400);
+      if (req.query['xml'] === 'true') {
+        res.set('Content-Type', 'application/xml');
+        return res.send(this.gs.OBJ2XML(body));
+      }
+      return res.json(body);
     }
   }
 

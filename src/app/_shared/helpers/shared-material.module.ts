@@ -25,6 +25,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 
 // import { A11yModule } from '@angular/cdk/a11y';
@@ -40,7 +41,6 @@ import { MatSortModule } from '@angular/material/sort';
 // import { MatMenuModule } from '@angular/material/menu';
 // import { MatRadioModule } from '@angular/material/radio';
 // import { MatSliderModule } from '@angular/material/slider';
-// import { MatSnackBarModule } from '@angular/material/snack-bar';
 // import { MatTreeModule } from '@angular/material/tree';
 // import { OverlayModule } from '@angular/cdk/overlay';
 
@@ -72,6 +72,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatSnackBarModule,
     MatSortModule
   ]
 })

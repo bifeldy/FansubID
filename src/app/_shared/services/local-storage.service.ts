@@ -59,13 +59,11 @@ export class LocalStorageService {
   clear(): void {
     if (this.gs.isBrowser) {
       // localStorage.clear();
-      this.removeItem(`${environment.siteName}_AturanTatib`);
-      this.removeItem(`${environment.siteName}_DebugLogs`);
-      this.removeItem(`${environment.siteName}_DarkMode`);
-      this.removeItem(`${environment.siteName}_JwtToken`);
-      this.removeItem(`${environment.siteName}_LiveChatResults`);
-      this.removeItem(`${environment.siteName}_SearchResults`);
-      // this.removeItem(`${environment.siteName}_Torrents`);
+      for (const lsKey of Object.keys(this.gs.localStorageKeys)) {
+        if (lsKey !== 'Torrents') {
+          this.removeItem(this.gs.localStorageKeys[lsKey]);
+        }
+      }
     }
   }
 

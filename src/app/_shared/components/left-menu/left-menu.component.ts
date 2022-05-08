@@ -118,7 +118,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   toggleDebugLog($event): void {
     this.gs.forceEnableDebugLog = $event.checked;
-    this.ls.setItem(this.gs.localStorageLoggingKeyName, JSON.stringify($event.checked));
+    this.ls.setItem(this.gs.localStorageKeys.DebugLogs, JSON.stringify($event.checked));
   }
 
 }

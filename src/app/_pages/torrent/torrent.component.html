@@ -79,9 +79,9 @@
                             </p>
                             <p class="px-2 text-truncate" *ngIf="row.magnetURI">
                               Magnet URI ::
-                              <a class="text-primary text-decoration-none" [href]="row.magnetURI | safeUrl">
+                              <span class="text-primary text-decoration-none" matTooltip="Klik Untuk Menyalin!" (click)="copyMagnetHashToClipboard(row.magnetURI)">
                                 {{ row.magnetURI }}
-                              </a>
+                              </span>
                             </p>
                             <div class="px-2 text-truncate">
                               Announce Trackers ::

@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { environment } from '../../../../../environments/app/environment';
-
 import { GlobalService } from '../../../services/global.service';
 import { NewsService } from '../../../services/news.service';
 import { DialogService } from '../../../services/dialog.service';
@@ -19,8 +17,6 @@ import { LocalStorageService } from '../../../services/local-storage.service';
   styleUrls: ['./search-all.component.css']
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
-
-  localStorageSearchKeyName = `${environment.siteName}_SearchResults`;
 
   searchResult = {
     q: '',
@@ -61,12 +57,12 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.searchResult = this.ls.getItem(this.localStorageSearchKeyName, true) || this.searchResult;
+      this.searchResult = this.ls.getItem(this.gs.localStorageKeys.SearchResults, true) || this.searchResult;
     }
   }
 
   ngOnDestroy(): void {
-    this.ls.setItem(this.localStorageSearchKeyName, this.searchResult);
+    this.ls.setItem(this.gs.localStorageKeys.SearchResults, this.searchResult);
     this.subsBerita?.unsubscribe();
     this.subsKanji?.unsubscribe();
     this.subsAnime?.unsubscribe();

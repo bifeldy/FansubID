@@ -26,8 +26,6 @@ import { DialogService } from './_shared/services/dialog.service';
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  localStorageAturanTatibKeyName = `${environment.siteName}_AturanTatib`;
-
   @HostListener('window:contextmenu', ['$event']) windowRightClick;
   @HostListener('window:click', ['$event']) windowLeftClick;
   @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
@@ -176,14 +174,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.windowRightClick = this.onWindowRightClick;
       this.windowLeftClick = this.onWindowLeftClick;
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
-      const aturanTatib = this.ls.getItem(this.localStorageAturanTatibKeyName) === 'true';
+      const aturanTatib = this.ls.getItem(this.gs.localStorageKeys.AturanTatib) === 'true';
       if (!aturanTatib) {
         setTimeout(() => {
           this.subsDialog = this.ds.openAturanTatibDialog().afterClosed().subscribe({
             next: re => {
               this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
               if (typeof re === 'boolean') {
-                this.ls.setItem(this.localStorageAturanTatibKeyName, JSON.stringify(re));
+                this.ls.setItem(this.gs.localStorageKeys.AturanTatib, JSON.stringify(re));
               }
               this.subsDialog.unsubscribe();
             }
@@ -247,7 +245,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   onWindowBeforeUnloaded(ev): any {
     if (this.as.jwtToken) {
       this.gs.log('[BROWSER_EXIT_CLOSE_SAVE_JWT]', this.as.jwtToken);
-      this.ls.setItem(this.gs.localStorageTokenKeyName, this.as.jwtToken);
+      this.ls.setItem(this.gs.localStorageKeys.JwtToken, this.as.jwtToken);
     }
   }
 

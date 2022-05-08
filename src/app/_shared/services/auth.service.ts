@@ -29,8 +29,8 @@ export class AuthService {
     if (this.gs.isBrowser) {
       this.currentUserSubject = new BehaviorSubject<UserModel>(null);
       this.currentUser = this.currentUserSubject.asObservable();
-      this.jwtToken = this.ls.getItem(this.gs.localStorageTokenKeyName);
-      this.ls.removeItem(this.gs.localStorageTokenKeyName);
+      this.jwtToken = this.ls.getItem(this.gs.localStorageKeys.JwtToken);
+      this.ls.removeItem(this.gs.localStorageKeys.JwtToken);
     }
   }
 

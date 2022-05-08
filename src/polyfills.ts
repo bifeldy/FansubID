@@ -17,6 +17,7 @@
 /***************************************************************************************************
  * BROWSER POLYFILLS
  */
+(window as any).global = window;
 
 /**
  * By default, zone.js will patch all possible macroTask and DomEvents
@@ -51,3 +52,6 @@ import 'zone.js';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+import { Buffer } from 'buffer';
+
+(window as any).Buffer = window.Buffer || Buffer;

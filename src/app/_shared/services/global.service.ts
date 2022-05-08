@@ -11,8 +11,15 @@ import { environment } from '../../../environments/app/environment';
 })
 export class GlobalService {
 
-  localStorageTokenKeyName = `${environment.siteName}_JwtToken`;
-  localStorageLoggingKeyName = `${environment.siteName}_DebugLogs`;
+  localStorageKeys = {
+    AturanTatib: `${environment.siteName}_AturanTatib`,
+    DebugLogs: `${environment.siteName}_DebugLogs`,
+    DarkMode: `${environment.siteName}_DarkMode`,
+    JwtToken: `${environment.siteName}_JwtToken`,
+    LiveChatResults: `${environment.siteName}_LiveChatResults`,
+    SearchResults: `${environment.siteName}_SearchResults`,
+    Torrents : `${environment.siteName}_Torrents`
+  };
 
   forceEnableDebugLog = null;
 
@@ -83,7 +90,7 @@ export class GlobalService {
 
   log(message: string, data: any = null, type: string = 'log'): void {
     if (this.isBrowser) {
-      this.forceEnableDebugLog = localStorage.getItem(this.localStorageLoggingKeyName) === 'true';
+      this.forceEnableDebugLog = localStorage.getItem(this.localStorageKeys.DebugLogs) === 'true';
     }
     if (this.isDevMode || this.forceEnableDebugLog) {
       if (type === 'log') {

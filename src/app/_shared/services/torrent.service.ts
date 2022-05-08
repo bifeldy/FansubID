@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Options, Instance, Torrent, TorrentOptions } from 'webtorrent';
 import { Wire } from 'bittorrent-protocol';
 import { openDB } from 'idb';
+import { Buffer } from 'buffer'; 
 
 import { environment } from '../../../environments/app/environment';
 
@@ -21,8 +22,6 @@ declare const WebTorrent: typeof webTorrent;
   providedIn: 'root'
 })
 export class TorrentService {
-
-  localStorageTorrentKeyName = `${environment.siteName}_Torrents`;
 
   trackerAnnounce = environment.trackerAnnounce;
 
@@ -70,7 +69,7 @@ export class TorrentService {
     private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
-      this.torrentsQueue = this.ls.getItem(this.localStorageTorrentKeyName, true) || this.torrentsQueue;
+      this.torrentsQueue = this.ls.getItem(this.gs.localStorageKeys.Torrents, true) || this.torrentsQueue;
       if (WebTorrent.WEBRTC_SUPPORT) {
         this.webClient = new WebTorrent(this.clientOptions);
         this.gs.log('[TORRENT_CLIENT_WEB_MODE_INITIALIZED]', this.webClient);
@@ -114,7 +113,7 @@ export class TorrentService {
       this.gs.log('[TORRENT_FILE_DONE]', torrent);
       this.toast.success(`Ada Torrent Yang Sudah Selesai Di Download`, 'Yeay, Selesai!');
       this.torrentsQueue[torrent.infoHash].completed = true;
-      this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
+      this.ls.setItem(this.gs.localStorageKeys.Torrents, this.torrentsQueue);
     });
     torrent.on('warning', warn => {
       this.gs.log('[TORRENT_FILE_WARNING]', warn);
@@ -201,7 +200,7 @@ export class TorrentService {
         length: tf.length
       });
     }
-    this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
+    this.ls.setItem(this.gs.localStorageKeys.Torrents, this.torrentsQueue);
     this.handleWebTorrent(torrent, callback);
   }
 
@@ -260,7 +259,7 @@ export class TorrentService {
       }
       delete this.torrentsQueue[torrentId];
       if (saveLocalStorage) {
-        this.ls.setItem(this.localStorageTorrentKeyName, this.torrentsQueue);
+        this.ls.setItem(this.gs.localStorageKeys.Torrents, this.torrentsQueue);
       }
       if (callback) {
         callback(err);

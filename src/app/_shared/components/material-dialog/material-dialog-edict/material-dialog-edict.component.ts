@@ -9,7 +9,6 @@ import { GlobalService } from '../../../../_shared/services/global.service';
 import { NihongoService } from '../../../../_shared/services/nihongo.service';
 // import { RightPanelService } from '../../../../_shared/services/right-panel.service';
 
-
 declare const Dmak: any;
 
 @Component({

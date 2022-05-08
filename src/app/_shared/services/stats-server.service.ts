@@ -1,8 +1,9 @@
+import io, { Socket } from 'socket.io-client';
+
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
-// import { io, Socket } from 'socket.io-client';
 import { ToastrService } from 'ngx-toastr';
 
 import { RoomInfoModel, ServerInfoModel } from '../../../models/socket-io.model';
@@ -13,14 +14,12 @@ import { LeftMenuService } from './left-menu.service';
 import { AuthService } from './auth.service';
 import { DialogService } from './dialog.service';
 
-declare const io: any;
-
 @Injectable({
   providedIn: 'root'
 })
 export class StatsServerService {
 
-  mySocket = null;
+  mySocket: typeof Socket = null;
 
   visitor = 0;
 
@@ -64,8 +63,15 @@ export class StatsServerService {
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io('//', {
-        extraHeaders: {
-          "X-Access-Token": this.as.jwtToken
+        query: {
+          token: this.as.jwtToken
+        },
+        transportOptions: {
+          polling: {
+            extraHeaders: {
+              'X-Access-Token': this.as.jwtToken
+            }
+          }
         }
       });
       this.socketListen();
