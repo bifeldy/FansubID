@@ -114,10 +114,16 @@ export class TorrentService {
       this.toast.success(`Ada Torrent Yang Sudah Selesai Di Download`, 'Yeay, Selesai!');
       this.torrentsQueue[torrent.infoHash].completed = true;
       this.ls.setItem(this.gs.localStorageKeys.Torrents, this.torrentsQueue);
+      if (callback) {
+        callback(null, null);
+      }
     });
     torrent.on('warning', warn => {
       this.gs.log('[TORRENT_FILE_WARNING]', warn);
       this.toast.warning(warn.toString(), 'Yuhuu! Warning.');
+      if (callback) {
+        callback(warn, null);
+      }
     });
     torrent.on('error', err => {
       this.gs.log('[TORRENT_FILE_ERROR]', err);
