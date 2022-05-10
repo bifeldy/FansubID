@@ -7,7 +7,9 @@ import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel, ServerInfoMo
 
 import { ConfigService } from '../services/config.service';
 import { CryptoService } from '../services/crypto.service';
+import { DiscordService } from '../services/discord.service';
 import { GlobalService } from '../services/global.service';
+import { QuizService } from '../services/quiz.service';
 import { SocketIoService } from '../services/socket-io.service';
 
 import { BerkasService } from '../repository/berkas.service';
@@ -16,7 +18,6 @@ import { NewsService } from '../repository/news.service';
 import { ProfileService } from '../repository/profile.service';
 import { TrackService } from '../repository/track.service';
 import { UserService } from '../repository/user.service';
-import { QuizService } from '../services/quiz.service';
 
 @WebSocketGateway()
 export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -25,6 +26,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     private cfg: ConfigService,
     private berkasRepo: BerkasService,
     private cs:CryptoService,
+    private ds: DiscordService,
     private fansubRepo: FansubService,
     private gs: GlobalService,
     private newsRepo: NewsService,
@@ -45,12 +47,14 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_CONNECTED] 🌟', client.id);
     this.sis.emitToBroadcast('visitors', this.sis.getAllClientsSocket().size);
     this.sis.checkNewNotification(client);
+    this.ds.updateVisitor();
   }
 
   handleDisconnect(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_DISCONNECTED] 🌟', client.id);
     this.sis.emitToBroadcast('visitors', this.sis.getAllClientsSocket().size);
     this.sis.disconnectRoom(client);
+    this.ds.updateVisitor();
   }
 
   @SubscribeMessage('ping-pong')
