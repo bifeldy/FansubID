@@ -35,6 +35,8 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   subsCurrentRoom = null;
   subsGlobalRoom = null;
 
+  firstTimeOpen = true;
+
   constructor(
     private as: AuthService,
     private gs: GlobalService,
@@ -45,6 +47,10 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get SS(): StatsServerService {
+    return this.ss;
   }
 
   ngOnInit(): void {
@@ -82,17 +88,15 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.messageHistory = this.ss.currentChatRoom;
     }
-    this.scrollMessage();
-    this.ss.messageChatCount = 0;
+    if (this.ss.messageChatUnreadCount > 0) {
+      this.scrollMessage();
+    }
     return this.messageHistory;
   }
 
   ngAfterViewInit(): void {
     if (this.gs.isBrowser) {
       this.scrollMessage();
-      if (this.currentUser) {
-        this.ss.messageChatCount = 0;
-      }
     }
   }
 
@@ -107,9 +111,21 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.gs.linkify(this.gs.htmlToText(text));
   }
 
+  scrollToBottom(): void {
+    setTimeout(() => {
+      this.ss.messageChatUnreadCount = 0;
+      this.liveChatScroll.nativeElement.scrollTop = this.liveChatScroll.nativeElement.scrollHeight;
+    }, 0);
+  }
+
   scrollMessage(): void {
     if (this.liveChatScroll) {
-      this.liveChatScroll.nativeElement.scrollTop = this.liveChatScroll.nativeElement.scrollHeight || 0;
+      if (this.firstTimeOpen) {
+        this.firstTimeOpen = false;
+        this.scrollToBottom();
+      } else if (this.liveChatScroll.nativeElement.scrollTop + this.liveChatScroll.nativeElement.clientHeight === this.liveChatScroll.nativeElement.scrollHeight) {
+        this.scrollToBottom();
+      }
     }
   }
 

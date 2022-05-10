@@ -25,7 +25,7 @@ export class StatsServerService {
 
   latency = 0;
 
-  messageChatCount = 0;
+  messageChatUnreadCount = 0;
 
   intervalPingPong = null;
 
@@ -215,7 +215,7 @@ export class StatsServerService {
       } else {
         this.currentChatRoom.push(msg);
       }
-      this.messageChatCount++;
+      this.messageChatUnreadCount++;
     });
     this.mySocket.on('room-info', roomInfo => {
       this.gs.log('[SOCKET_ROOM-INFO]', roomInfo);

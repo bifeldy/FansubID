@@ -116,6 +116,7 @@ $dark-theme: mat.define-dark-theme((
 html, body {
   height: 100%;
   overscroll-behavior-x: none;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -323,12 +324,30 @@ re-captcha > div {
   background-color: transparent !important;
 }
 
-.mat-drawer-backdrop.mat-drawer-shown {
-  background: rgba(0, 0, 0, 0.75) !important;
-}
-
+.mat-drawer-backdrop.mat-drawer-shown,
 .cdk-overlay-dark-backdrop {
   background: rgba(0, 0, 0, 0.75) !important;
+  background-repeat: no-repeat !important;
+  background-blend-mode: hard-light !important;
+}
+
+.mat-drawer-container.mat-drawer-container-has-open >
+.mat-drawer-backdrop.mat-drawer-shown {
+    background-position: left bottom !important;
+    background-size: 50vh !important;
+    background-image: url('/assets/img/router/bg-register.png') !important;
+}
+
+.mat-drawer-container.mat-drawer-container-explicit-backdrop >
+.mat-drawer-backdrop.mat-drawer-shown {
+    background-position: right bottom !important;
+    background-size: 60vh !important;
+    background-image: url('/assets/img/router/bg-login.png') !important;
+}
+
+.mat-drawer-transition .mat-drawer-backdrop {
+  transition-duration: 500ms !important;
+  transition-property: background, visibility !important;
 }
 
 #sourceText {

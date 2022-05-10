@@ -12,7 +12,7 @@
   <span class="spacer"></span>
 
   <button mat-stroked-button matTooltip="Points">
-    <mat-icon class="me-1">account_balance_wallet</mat-icon>
+    <mat-icon class="me-1">sports_score</mat-icon>
     {{ myPoints }}
   </button>
 
@@ -21,7 +21,7 @@
   </button>
 
   <button mat-icon-button (click)="openLiveChat()" matTooltip="Obrolan">
-    <mat-icon [matBadge]="SS.messageChatCount" matBadgePosition="before" [matBadgeColor]="'warn'">
+    <mat-icon [matBadge]="SS.messageChatUnreadCount" matBadgePosition="before" [matBadgeColor]="'warn'">
       forum
     </mat-icon>
   </button>

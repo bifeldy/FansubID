@@ -123,7 +123,9 @@ export class VerifyComponent implements OnInit, OnDestroy {
           <div class="text-center p-3">
             <img src="/favicon.ico" class="mb-4">
             <p class="text-warning">
-              Karena masalah kebocoran data pemerintah terungkap, saat ini metode verifikasi dengan menggunakan KTP ditutup untuk sementara!
+              Karena masalah kebocoran data pemerintah terungkap, <br />
+              Saat ini metode verifikasi dengan menggunakan KTP ditutup untuk sementara! <br />
+              Silahkan gunakan metode verifikasi lainnya.
             </p>
           </div>
         `,
@@ -145,7 +147,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   openVerifyDiscordUrl(): void {
-    this.wb.winboxOpenUri(`${environment.baseUrl}/discord-verifikasi`, '_self');
+    this.wb.winboxOpenUri(`${environment.baseUrl}/api/discord-verifikasi`, '_self');
   }
 
   initKTP(): void {
