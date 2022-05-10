@@ -108,7 +108,7 @@ export class DiscordService {
         status: 'idle',
         activities: [
           {
-            name: `${this.sis.io.sockets.sockets.size} Pengunjung`,
+            name: `${this.sis.getAllClientsSocket().size} Pengunjung`,
             type: 'WATCHING',
             url: environment.baseUrl
           }
