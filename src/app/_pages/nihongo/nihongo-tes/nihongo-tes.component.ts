@@ -34,6 +34,9 @@ export class NihongoTesComponent implements OnInit {
         this.toast.warning('Tidak dapat terhubung melalui socket', 'Whoops!');
         this.router.navigateByUrl('/nihongo');
       }
+      if (!this.gs.isDarkMode) {
+        this.gs.toggleDarkTheme();
+      }
     }
   }
 

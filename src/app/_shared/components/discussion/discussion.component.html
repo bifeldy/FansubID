@@ -28,7 +28,7 @@
         </p>
         <p class="mb-1" style="line-height: normal;">{{ k.comment }}</p>
       </div>
-      <mat-form-field appearance="outline" class="mt-2 col-12" [color]="'accent'" *ngIf="k.reply_mode && currentUser">
+      <mat-form-field appearance="outline" class="mt-2 col-12" [color]="'accent'" *ngIf="k.reply_mode && currentUser && recursionCount === 0">
         <mat-label>Balas / Tanggapi</mat-label>
         <input matInput placeholder="Balas ..." [(ngModel)]="k.reply_to_send" />
         <mat-icon matSuffix>quickreply</mat-icon>
@@ -42,13 +42,13 @@
           </button>
         </div>
         <div class="col-6 text-end">
-          <button mat-button color="accent" *ngIf="k.reply_mode && currentUser" (click)="sendComment(k)">
+          <button mat-button color="accent" *ngIf="k.reply_mode && currentUser && recursionCount === 0" (click)="sendComment(k)">
             Kirim
             <mat-icon class="ms-1">send</mat-icon>
           </button>
         </div>
       </div>
-      <app-discussion [parent]="k" [komentar]="k.reply" *ngIf="k.show_reply"></app-discussion>
+      <app-discussion [parent]="k" [komentar]="k.reply" *ngIf="k.show_reply" [recursionCount]="recursionCount + 1"></app-discussion>
     </div>
   </div>
   <div class="col-12"*ngIf="(count >= 10 && !pageFinished) || (parent?.reply_count >= 10 && !parent?.reply_page_finised)">

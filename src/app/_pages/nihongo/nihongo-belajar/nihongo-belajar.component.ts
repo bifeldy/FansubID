@@ -120,6 +120,9 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
       });
       this.getHirakata();
       this.getAngka();
+      if (!this.gs.isDarkMode) {
+        this.gs.toggleDarkTheme();
+      }
     }
   }
 

@@ -22,6 +22,8 @@ export class DiscussionComponent implements OnInit, OnDestroy {
   page = 1;
   pageFinished = false;
 
+  @Input() recursionCount = 0;
+
   @Input() rootCommentBox = false;
   commentToSend = null;
 

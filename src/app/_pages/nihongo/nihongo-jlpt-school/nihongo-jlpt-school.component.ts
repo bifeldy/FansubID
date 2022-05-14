@@ -47,6 +47,9 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.getKanji();
+      if (!this.gs.isDarkMode) {
+        this.gs.toggleDarkTheme();
+      }
     }
   }
 
