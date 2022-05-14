@@ -97,6 +97,10 @@ export class FansubController {
           fansub.name = req.body.name;
           fansub.born = new Date(req.body.born);
           fansub.slug = slug;
+          const rssFeed: string = req.body.rss_feed;
+          if (rssFeed.match(this.gs.urlRegex)) {
+            fansub.rss_feed = rssFeed;
+          }
           const filteredUrls = [];
           for (const u of req.body.urls) {
             if ('url' in u && 'name' in u && u.url && u.name) {
@@ -258,6 +262,12 @@ export class FansubController {
         }
         if (req.body.image) {
           fansub.image_url = req.body.image;
+        }
+        if (req.body.rss_feed) {
+          const rssFeed: string = req.body.rss_feed;
+          if (rssFeed.match(this.gs.urlRegex)) {
+            fansub.rss_feed = rssFeed;
+          }
         }
         if (req.body.tags) {
           const filteredTagsUnique = [...new Set(req.body.tags)];
