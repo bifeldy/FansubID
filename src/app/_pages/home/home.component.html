@@ -79,7 +79,7 @@
             <mat-list-option *ngFor="let r of rssFeedData | slice:0:10" class="h-100">
               <mat-icon mat-list-icon class="ps-3">rss_feed</mat-icon>
               <a class="text-truncate text-decoration-none" href="{{ rssLink(r.item?.link) }}">
-                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ (r.item?.published || r.item?.created) | dateAgo }}</span>
+                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ (r.item?.created || r.item?.published) | dateAgo }}</span>
                 <span class="me-3 text-success">{{ r.slug }}</span>
                 <span class="text-warning">{{ r.item?.title }}</span>
               </a>

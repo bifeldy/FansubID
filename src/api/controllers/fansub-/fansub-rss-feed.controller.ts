@@ -63,8 +63,8 @@ export class FansubRssFeedController {
               const feed = await parse(rssUrl, null);
               let i = 0;
               while (i < rssFeed.length) {
-                const dateFeedNew = feed.items[0].published || feed.items[0].created;
-                const dateFeedOld = rssFeed[i].item.published || rssFeed[i].item.created;
+                const dateFeedNew = feed.items[0].created || feed.items[0].published;
+                const dateFeedOld = rssFeed[i].item.created || rssFeed[i].item.published;
                 if (dateFeedNew > dateFeedOld) {
                   break;
                 }

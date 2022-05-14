@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (typeof links === 'string') {
       return links;
     }
-    let idx = links.findIndex(l => l.type === 'text/html' || l.rel === 'alternate');
+    let idx = links.findIndex(l => l.rel === 'alternate' && l.type === 'text/html');
     if (idx < 0) {
       if (links.length > 0) {
         return links[links.length - 1].href;

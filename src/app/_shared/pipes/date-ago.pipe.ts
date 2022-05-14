@@ -20,7 +20,7 @@ export class DateAgoPipe implements PipeTransform {
       let counter;
       for (const i of Object.keys(intervals)) {
         counter = Math.floor(detik / intervals[i]);
-        if (counter > 0) {
+        if (counter >= 0) {
           return counter + ' ' + i + ' lalu';
         }
       }
