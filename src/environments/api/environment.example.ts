@@ -131,7 +131,7 @@ export const environment = {
     Connection: 'keep-alive',
     'User-Agent': 'node.js'
   },
-  externalApiCacheTime: 30 * 60 * 1000,
+  externalApiCacheTime: 30 * 60 * 1,
   externalApiAnime: 'http://api.jikan.moe/v4',
   externalApiDorama: 'https://bifeldy-kuryana.vercel.app',
   externalApiImage: 'https://api.imgbb.com/1/upload',
