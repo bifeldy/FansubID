@@ -117,7 +117,7 @@
                     <mat-icon matSuffix>web</mat-icon>
                     <mat-error>
                       <strong *ngIf="fg.get('web').hasError('required')">Website Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('web').hasError('pattern')">Website Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <strong *ngIf="fg.get('web').hasError('pattern')">Website Link Tidak Valid</strong>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
