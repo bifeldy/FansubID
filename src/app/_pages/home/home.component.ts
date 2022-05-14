@@ -78,6 +78,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  rssLink(links: string | Array<any>): string {
+    if (typeof links === 'string') {
+      return links;
+    }
+    let idx = links.findIndex(l => l.type === 'text/html' || l.rel === 'alternate');
+    if (idx < 0) {
+      if (links.length > 0) {
+        return links[links.length - 1].href;
+      }
+      return '';
+    }
+    return links[idx].href;
+  }
+
   getRssFeedAll(): void {
     this.subsRssFeed = this.fansub.getRssFeedFansubAll().subscribe({
       next: res => {

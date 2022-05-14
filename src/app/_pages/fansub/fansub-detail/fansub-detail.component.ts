@@ -161,6 +161,20 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  rssLink(links: string | Array<any>): string {
+    if (typeof links === 'string') {
+      return links;
+    }
+    let idx = links.findIndex(l => l.type === 'text/html' || l.rel === 'alternate');
+    if (idx < 0) {
+      if (links.length > 0) {
+        return links[links.length - 1].href;
+      }
+      return '';
+    }
+    return links[idx].href;
+  }
+
   getRssFeed(): void {
     this.subsRssFeed = this.fansub.getRssFeedFansub(this.fansubSlug).subscribe({
       next: res => {
