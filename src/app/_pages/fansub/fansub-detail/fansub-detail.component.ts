@@ -19,6 +19,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   fansubSlug = '';
   fansubData = null;
+  rssFeedData = null;
 
   count = 0;
   page = 1;
@@ -72,6 +73,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   subsAnime = null;
   subsDorama = null;
   subsParam = null;
+  subsRssFeed = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -99,6 +101,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.subsAnime?.unsubscribe();
     this.subsDorama?.unsubscribe();
     this.subsParam?.unsubscribe();
+    this.subsRssFeed?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -132,6 +135,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
               this.getAnimeFansub();
               this.getDoramaFansub();
               this.getBerkasFansub();
+              this.getRssFeed();
             }
           },
           error: err => {
@@ -155,6 +159,18 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     } else {
       return null;
     }
+  }
+
+  getRssFeed(): void {
+    this.subsRssFeed = this.fansub.getRssFeedFansub(this.fansubSlug).subscribe({
+      next: res => {
+        this.gs.log('[RSS_FEED_LIST_SUCCESS]', res);
+        this.rssFeedData = res.result;
+      },
+      error: err => {
+        this.gs.log('[RSS_FEED_LIST_ERROR]', err);
+      }
+    });
   }
 
   getBerkasFansub(): void {

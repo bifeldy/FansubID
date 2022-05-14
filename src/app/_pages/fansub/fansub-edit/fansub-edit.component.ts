@@ -121,10 +121,11 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [data.tags, Validators.compose([])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      web: [(WEB?.url || null), Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
+      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      web: [(WEB?.url || null), Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      rss_feed: [data.rss_feed, Validators.compose([Validators.pattern(this.gs.urlRegex)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),

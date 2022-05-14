@@ -54,6 +54,37 @@
         <div class="row py-3" *ngIf="panelData.length > 0">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
         </div>
+        <div class="row py-3" *ngIf="rssFeedData">
+          <div class="col-12 sticky-top bg-bifeldy">
+            <h2 class="pt-3 border-bottom-dotted">
+              <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getRssFeed()">
+                Refresh
+              </span>
+              <b class="text-bifeldy">RSS Feed Fansub</b>
+            </h2>
+          </div>
+          <div class="col-12" *ngIf="rssFeedData.items.length > 0">
+            <mat-selection-list [multiple]="false">
+              <mat-list-option *ngFor="let r of rssFeedData.items | slice:0:5" class="h-100">
+                <mat-icon mat-list-icon class="ps-3">rss_feed</mat-icon>
+                <a class="text-truncate text-decoration-none" href="{{ $any(r).link }}">
+                  <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ ($any(r).published || $any(r).created) | dateAgo }}</span>
+                  <span class="text-warning">{{ $any(r).title }}</span>
+                </a>
+              </mat-list-option>
+            </mat-selection-list>
+          </div>
+          <div class="col-12 p-3" *ngIf="rssFeedData.items.length <= 0"
+            style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+            <div class="row align-items-center h-100">
+              <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
+                <h3 class="m-0">
+                  Tidak Ada Data ¯\_(ツ)_/¯
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row py-3" *ngIf="SS.mySocket?.id">
           <div class="col-12">
             <app-report></app-report>

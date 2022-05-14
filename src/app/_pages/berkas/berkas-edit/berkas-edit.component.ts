@@ -185,7 +185,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       dorama_id: [(data.dorama_?.id || null), Validators.compose([])],
       dorama_name: [data.dorama_?.name || null, Validators.compose([])],
       fansub_list: this.fb.array([]),
-      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
       download_url: this.fb.array([]),
       private: [data.private, Validators.compose([Validators.required])]
     });
@@ -292,7 +292,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   createDownloadLink(dataName = null, dataUrl = null): any {
     return this.fb.group({
       name: [dataName, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      url: [dataUrl, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
+      url: [dataUrl, Validators.compose([Validators.required, Validators.pattern(this.gs.urlRegex)])]
     });
   }
 

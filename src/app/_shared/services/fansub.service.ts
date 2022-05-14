@@ -56,4 +56,12 @@ export class FansubService {
     return this.api.patchData(`/fansub-dorama?page=${page}&row=${row}`, { id: fansubId });
   }
 
+  getRssFeedFansubAll(): Observable<JsonResponseArray> {
+    return this.api.getData('/fansub-rss-feed');
+  }
+
+  getRssFeedFansub(fansubSlug: string): Observable<JsonResponse> {
+    return this.api.getData(`/fansub/${fansubSlug}/rss`);
+  }
+
 }

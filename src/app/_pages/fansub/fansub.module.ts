@@ -11,6 +11,7 @@ import { RoleModel } from '../../../models/req-res.model';
 
 import { AuthGuard } from '../../_shared/helpers/auth-guard';
 import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
@@ -77,7 +78,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     MaterialFileInputModule,
     AngularEditorModule,
-    ReportModule
+    ReportModule,
+    CustomPipeModule
   ]
 })
 export class FansubModule { }

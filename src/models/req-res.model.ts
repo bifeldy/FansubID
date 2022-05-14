@@ -219,6 +219,7 @@ export interface FansubModel {
   born?: Date;
   active?: boolean;
   urls?: string;
+  rss_feed?: string;
   tags?: string;
   image_url?: string;
   view_count?: number;

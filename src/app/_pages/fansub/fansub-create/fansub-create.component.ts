@@ -88,10 +88,11 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       active: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       slug: [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [[], Validators.compose([])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      web: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      facebook: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      discord: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
+      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      web: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      facebook: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      discord: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      rss_feed: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),
@@ -206,7 +207,8 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       active: this.fg.value.active,
       tags: this.fg.value.tags,
       slug: this.fg.value.slug,
-      urls
+      urls,
+      rss_feed: this.fg.value.rss_feed
     }).subscribe({
       next: res => {
         this.gs.log('[FANSUB_CREATE_SUCCESS]', res);

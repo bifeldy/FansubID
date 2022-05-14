@@ -111,7 +111,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
       name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       attachment_id: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
+      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])]
     });
   }
 

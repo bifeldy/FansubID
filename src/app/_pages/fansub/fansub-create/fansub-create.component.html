@@ -117,7 +117,7 @@
                     <mat-icon matSuffix>web</mat-icon>
                     <mat-error>
                       <strong *ngIf="fg.get('web').hasError('required')">Website Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('web').hasError('pattern')">Website Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <strong *ngIf="fg.get('web').hasError('pattern')">Website Link Tidak Valid</strong>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
@@ -125,21 +125,31 @@
                     <input matInput formControlName="facebook" placeholder="http://www.facebook.com" />
                     <mat-icon matSuffix>facebook</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('facebook').hasError('pattern')">Facebook Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <strong *ngIf="fg.get('facebook').hasError('pattern')">Facebook Link Tidak Valid</strong>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                     <mat-label>Tautan Discord</mat-label>
                     <input matInput formControlName="discord" placeholder="http://www.discord.gg" />
                     <mat-icon matSuffix>
-                      <img src="/assets/img/discord-black.png" width="24px" />
+                      <img src="/assets/img/discord-{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" />
                     </mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('discord').hasError('pattern')">Discord Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <strong *ngIf="fg.get('discord').hasError('pattern')">Discord Link Tidak Valid</strong>
                     </mat-error>
                   </mat-form-field>
                 </div>
               </div>
+            </div>
+            <div class="row">
+              <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                <mat-label>URI / URL RSS v2.0 Feed</mat-label>
+                <input matInput formControlName="rss_feed" placeholder="http://my-site.blogspot.com/feeds/posts/default?alt=rss" />
+                <mat-icon matSuffix>rss_feed</mat-icon>
+                <mat-error>
+                  <strong *ngIf="fg.get('rss_feed').hasError('pattern')">RSS Link Tidak Valid</strong>
+                </mat-error>
+              </mat-form-field>
             </div>
             <div class="row">
               <div class="col-12">

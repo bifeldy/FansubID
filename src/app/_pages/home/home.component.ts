@@ -4,6 +4,7 @@ import { GlobalService } from '../../_shared/services/global.service';
 import { NewsService } from '../../_shared/services/news.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { KomentarService } from '../../_shared/services/komentar.service';
+import { FansubService } from '../../_shared/services/fansub.service';
 
 @Component({
   selector: 'app-home',
@@ -14,14 +15,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   newsData = [];
   komentarData = [];
+  rssFeedData = [];
 
   subsNews = null;
   subsKomenGet = null;
+  subsRssFeed = null;
 
   constructor(
     private gs: GlobalService,
     private news: NewsService,
     private komen: KomentarService,
+    private fansub: FansubService,
     private bs: BusyService
   ) {
     this.gs.bannerImg = '/assets/img/home-banner.png';
@@ -36,12 +40,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsNews?.unsubscribe();
     this.subsKomenGet?.unsubscribe();
+    this.subsRssFeed?.unsubscribe();
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.getNews();
       this.getComment();
+      this.getRssFeedAll();
     }
   }
 
@@ -68,6 +74,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[HOME_KOMENTAR_LIST_ERROR]', err);
+      }
+    });
+  }
+
+  getRssFeedAll(): void {
+    this.subsRssFeed = this.fansub.getRssFeedFansubAll().subscribe({
+      next: res => {
+        this.gs.log('[HOME_RSS_FEED_LIST_SUCCESS]', res);
+        this.rssFeedData = res.results;
+      },
+      error: err => {
+        this.gs.log('[HOME_RSS_FEED_LIST_ERROR]', err);
       }
     });
   }

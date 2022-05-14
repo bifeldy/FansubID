@@ -66,6 +66,28 @@
           <app-banner-nihongo></app-banner-nihongo>
         </div>
       </div> -->
+      <div class="row" *ngIf="rssFeedData.length > 0">
+        <div class="col-12 sticky-top bg-bifeldy">
+          <h2 class="pt-3 border-bottom-dotted">
+            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getRssFeedAll()">
+              Refresh
+            </span>
+            <b class="text-bifeldy">RSS Feed Fansub</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <mat-selection-list [multiple]="false">
+            <mat-list-option *ngFor="let r of rssFeedData | slice:0:10" class="h-100">
+              <mat-icon mat-list-icon class="ps-3">rss_feed</mat-icon>
+              <a class="text-truncate text-decoration-none" href="{{ r.item?.link }}">
+                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ (r.item?.published || r.item?.created) | dateAgo }}</span>
+                <span class="me-3 text-success">{{ r.slug }}</span>
+                <span class="text-warning">{{ r.item?.title }}</span>
+              </a>
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </div>
       <div class="row" *ngIf="komentarData.length > 0">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">

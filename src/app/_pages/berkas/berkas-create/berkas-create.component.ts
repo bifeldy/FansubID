@@ -171,7 +171,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       dorama_id: [null, Validators.compose([])],
       dorama_name: [null, Validators.compose([])],
       fansub_list: this.fb.array([this.createFansub()]),
-      image: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
       attachment_id: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
       download_url: this.fb.array([this.createDownloadLink()]),
       private: [false, Validators.compose([Validators.required])]
@@ -262,7 +262,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   createDownloadLink(): any {
     return this.fb.group({
       name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      url: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
+      url: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.urlRegex)])]
     });
   }
 

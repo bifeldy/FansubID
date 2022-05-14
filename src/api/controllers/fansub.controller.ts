@@ -1,6 +1,9 @@
+// 3rd Party Library
+import { parse } from 'rss-to-json';
+
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ILike } from 'typeorm';
+import { ILike, IsNull, Not } from 'typeorm';
 
 import { environment } from '../../environments/api/environment'
 ;
@@ -13,6 +16,7 @@ import { DiscordService } from '../services/discord.service';
 import { SocketIoService } from '../services/socket-io.service';
 
 import { FansubService } from '../repository/fansub.service';
+import { GlobalService } from '../services/global.service';
 
 @Controller('/fansub')
 export class FansubController {
@@ -20,6 +24,7 @@ export class FansubController {
   constructor(
     private ds: DiscordService,
     private fansubRepo: FansubService,
+    private gs: GlobalService,
     private sis: SocketIoService
   ) {
     //
@@ -348,6 +353,80 @@ export class FansubController {
           message: 'Fansub Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  // GET `/api/fansub/:slug/rss`
+  @Get('/:slug/rss')
+  @HttpCode(200)
+  async getFansubFeedBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    try {
+      const rssFeed: any = {};
+      const fansub = await this.fansubRepo.findOneOrFail({
+        where: [
+          {
+            slug: ILike(req.params['slug']),
+            rss_feed: Not(IsNull())
+          }
+        ],
+        order: {
+          updated_at: 'DESC'
+        }
+      });
+      const rgx = new RegExp(this.gs.urlRegex);
+      if (fansub.rss_feed.match(rgx)) {
+        try {
+          let rssUrl = fansub.rss_feed;
+          if (!rssUrl.includes('?')) {
+            rssUrl += '?';
+          }
+          if (rssUrl[rssUrl.length - 1] !== '?') {
+            rssUrl += '&';
+          }
+          if (!rssUrl.includes('alt=rss')) {
+            rssUrl += 'alt=rss';
+          }
+          const feed = await parse(rssUrl, null);
+          rssFeed.slug = fansub.slug;
+          rssFeed.title = feed.title;
+          // rssFeed.description: feed.description;
+          rssFeed.link = feed.link;
+          // rssFeed.image: feed.image;
+          // rssFeed.category: feed.category;
+          rssFeed.items = [];
+          for (const f of feed.items) {
+            rssFeed.items.push({
+              title: f.title,
+              // description: f.description,
+              link: f.link,
+              published: f.published,
+              created: f.created,
+              author: f.author,
+              // category: f.category,
+              // enclosures: f.enclosures,
+              // media: f.media
+            });
+          }
+        } catch (e) {
+          this.gs.log('[FANSUB_RSS_FEED] 🐾', e, 'error');
+        }
+      }
+      return {
+        info: `😅 200 - Fansub API :: RSS Feed 🤣`,
+        count: rssFeed.items.length,
+        pages: 1,
+        result: rssFeed
+      };
+    } catch (error) {
+      return {
+        info: `😅 200 - Fansub API :: RSS Feed 🤣`,
+        count: 0,
+        pages: 1,
+        result: {
+          slug: req.params['slug'],
+          items: []
+        }
+      };
     }
   }
 

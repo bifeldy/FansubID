@@ -125,8 +125,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
           Validators.pattern(this.gs.englishKeyboardKeysRegex)
         ])
       ],
-      image_photo: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      image_cover: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
+      image_photo: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      image_cover: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])]
     });
     this.image_photo = data.image_url;
     this.image_photo_original = this.image_photo;

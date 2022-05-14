@@ -29,6 +29,9 @@ export class Fansub implements FansubModel {
   urls: string;
 
   @Column({ type: 'text', nullable: true })
+  rss_feed: string;
+
+  @Column({ type: 'text', nullable: true })
   tags: string;
 
   @Column({ type: 'text', nullable: true })
