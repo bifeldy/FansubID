@@ -40,9 +40,9 @@
         "/api/**"
       ],
       "cacheConfig": {
-        "maxSize": 5,
-        "maxAge": "25m",
-        "timeout": "15s",
+        "maxSize": 64,
+        "maxAge": "1d",
+        "timeout": "0u",
         "strategy": "freshness"
       }
     }
