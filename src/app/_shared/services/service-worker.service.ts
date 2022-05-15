@@ -93,7 +93,7 @@ export class ServiceWorkerService {
         if (event.type === 'VERSION_READY') {
           this.dialogRef = this.ds.openInfoDialog({
             data: {
-              title: 'Ada Pembaharuan Tersedia ...',
+              title: 'Ada Pembaharuan Tersedia',
               htmlMessage: `
                 <div>Versi Sekarang :: ${event.currentVersion.hash}</div>
                 <div>Versi Tersedia :: ${event.latestVersion.hash}</div>
@@ -106,7 +106,7 @@ export class ServiceWorkerService {
         if (event.type === 'VERSION_INSTALLATION_FAILED') {
           this.dialogRef = this.ds.openInfoDialog({
             data: {
-              title: 'Pembaharuan Gagal ...',
+              title: 'Pembaharuan Gagal',
               htmlMessage: `
                 <div>Versi :: ${event.version.hash}</div>
                 <div>Error :: ${event.error}</div>
@@ -136,7 +136,7 @@ export class ServiceWorkerService {
         this.subsDialog?.unsubscribe();
         this.dialogRef = this.ds.openInfoDialog({
           data: {
-            title: 'Service Worker Bermasalah !!',
+            title: 'Service Worker Bermasalah',
             htmlMessage: `Kesalahan :: ${event.reason}`,
             confirmText: 'Refresh Halaman'
           },
