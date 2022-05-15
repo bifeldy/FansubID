@@ -46,6 +46,7 @@
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/platform-server": "~13.3.0",
     "@angular/router": "~13.3.0",
+    "@angular/service-worker": "~13.3.0",
     "@discordjs/opus": "^0.7.0",
     "@iamtraction/google-translate": "^1.1.2",
     "@kolkov/angular-editor": "^2.0.0",

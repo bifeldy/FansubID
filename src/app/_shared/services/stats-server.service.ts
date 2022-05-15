@@ -13,6 +13,7 @@ import { NotificationsService } from './notifications.service';
 import { LeftMenuService } from './left-menu.service';
 import { AuthService } from './auth.service';
 import { DialogService } from './dialog.service';
+import { ServiceWorkerService } from './service-worker.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,6 @@ export class StatsServerService {
   latency = 0;
 
   messageChatUnreadCount = 0;
-
-  intervalPingPong = null;
 
   badgeNews = [];
   badgeBerkas = [];
@@ -59,7 +58,8 @@ export class StatsServerService {
     private notif: NotificationsService,
     private lms: LeftMenuService,
     private toast: ToastrService,
-    private ds: DialogService
+    private ds: DialogService,
+    private sw: ServiceWorkerService
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io('//', {
@@ -126,9 +126,6 @@ export class StatsServerService {
       setTimeout(() => {
         this.socketLeaveAndJoinNewRoom(null, this.router.url);
       }, 1234);
-      // this.intervalPingPong = setInterval(() => {
-      //   this.pingPong();
-      // }, 10000);
     });
     this.mySocket.on('disconnect', reason => {
       this.gs.log('[SOCKET_DISCONNECTED]', reason);
@@ -140,9 +137,7 @@ export class StatsServerService {
         'Tidak dapat terhubung dengan <i>Server</i> melalui <i>WebSocket</i> !!',
         false
       );
-      if (this.intervalPingPong) {
-        clearInterval(this.intervalPingPong);
-      }
+      this.sw.isUpdateAvailable = false;
     });
     this.mySocket.on('ping', () => {
       this.gs.log('[SOCKET_PING]', Date.now());
@@ -151,6 +146,7 @@ export class StatsServerService {
       this.latency = data;
       this.gs.log('[SOCKET_PONG]', `${Date.now()} => ${data} ms`);
       this.pingPong();
+      this.sw.checkForUpdate();
     });
     this.mySocket.on('visitors', visitors => {
       this.gs.log('[SOCKET_VISITOR]', this.visitor);

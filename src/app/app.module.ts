@@ -9,6 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
@@ -32,6 +33,8 @@ import { RightPanelModule } from './_shared/components/right-panel/right-panel.m
 import { MaterialFabModule } from './_shared/components/material-fab/material-fab.module';
 import { FooterModule } from './_shared/components/footer/footer.module';
 import { MaterialDialogModule } from './_shared/components/material-dialog/material-dialog.module';
+
+import { environment } from '../environments/app/environment';
 
 @NgModule({
   declarations: [
@@ -62,7 +65,14 @@ import { MaterialDialogModule } from './_shared/components/material-dialog/mater
     RightPanelModule,
     MaterialFabModule,
     FooterModule,
-    MaterialDialogModule
+    MaterialDialogModule,
+    ServiceWorkerModule.register(
+      '/ngsw-worker.js',
+      {
+        enabled: environment.production,
+        registrationStrategy: 'registerWhenStable:30000'
+      }
+    )
   ],
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
