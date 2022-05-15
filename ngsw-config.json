@@ -20,13 +20,13 @@
       "installMode": "lazy",
       "resources": {
         "files": [
-          "/assets/**",
           "/*.(ico|svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ],
         "urls": [
+          "/assets/**",
           "https://i.ibb.co/**",
-          "https://i.mydramalist.com/**",
           "https://fonts.gstatic.com/**",
+          "https://i.mydramalist.com/**",
           "https://cdn.myanimelist.net/**",
           "https://fonts.googleapis.com/**"
         ]
