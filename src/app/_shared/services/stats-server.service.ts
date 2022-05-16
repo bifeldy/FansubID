@@ -245,9 +245,9 @@ export class StatsServerService {
       eventData.jwtToken = this.as.jwtToken;
     }
     if (callback) {
-      this.mySocket.emit(eventName, eventData, callback);
+      this.mySocket?.emit(eventName, eventData, callback);
     } else {
-      this.mySocket.emit(eventName, eventData);
+      this.mySocket?.emit(eventName, eventData);
     }
   }
 
@@ -257,9 +257,9 @@ export class StatsServerService {
     //   eventData.jwtToken = this.as.jwtToken;
     // }
     // if (callback) {
-    //   this.mySocket.volatile.emit(eventName, eventData, callback);
+    //   this.mySocket?.volatile.emit(eventName, eventData, callback);
     // } else {
-    //   this.mySocket.volatile.emit(eventName, eventData);
+    //   this.mySocket?.volatile.emit(eventName, eventData);
     // }
   }
 
