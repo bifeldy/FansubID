@@ -4,7 +4,7 @@ import { saveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from './global.service';
-import { ApiService } from './api.service';
+import { DdlLampiranService } from './ddl-lampiran.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class DownloadManagerService {
   constructor(
     private gs: GlobalService,
     private toast: ToastrService,
-    private api: ApiService
+    private dls: DdlLampiranService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -59,11 +59,7 @@ export class DownloadManagerService {
     );
     if (!attachment.isCompleted) {
       attachment.isDownloading = true;
-      attachment.handler = this.api.getData(`/attachment/${attachmentId}`, {
-        responseType: 'blob',
-        observe: 'events',
-        reportProgress: true
-      }).subscribe({
+      attachment.handler = this.dls.downloadLampiran(attachmentId).subscribe({
         next: event => {
           this.gs.log('[DOWNLOAD_EVENTS]', event);
           if ((event as any).loaded) {

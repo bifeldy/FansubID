@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { JsonResponse, BerkasModel, JsonResponseArray, AttachmentModel } from '../../../models/req-res.model';
+import { JsonResponse, BerkasModel, JsonResponseArray } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -35,13 +35,6 @@ export class BerkasService {
 
   updateBerkas(berkasId, berkasData): Observable<JsonResponse<BerkasModel>> {
     return this.api.putData(`/berkas/${berkasId}`, berkasData);
-  }
-
-  uploadLampiran(attachment): Observable<JsonResponse<AttachmentModel>> {
-    return this.api.postData(`/attachment`, attachment, true, {
-      observe: 'events',
-      reportProgress: true
-    });
   }
 
 }

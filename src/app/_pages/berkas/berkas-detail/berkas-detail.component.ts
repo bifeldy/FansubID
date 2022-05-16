@@ -148,7 +148,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   ddlUrlLink(id): string {
-    return `${environment.apiUrl}/attachment/${id}`;
+    return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
   }
 
   get ddlVideo(): string {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
+import { DdlLampiranService } from './ddl-lampiran.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,8 @@ import { GlobalService } from './global.service';
 export class VjsService {
 
   constructor(
-    private api: ApiService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private dls: DdlLampiranService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -22,11 +22,7 @@ export class VjsService {
     if (subtitleUrls.length > 0) {
       for (const s of subtitleUrls) {
         this.gs.log('[DOWNLOAD_SUBTITLE]', s.id);
-        const handler = this.api.getData(`/attachment/${s.id}`, {
-          responseType: 'blob',
-          observe: 'events',
-          reportProgress: true
-        }).subscribe({
+        const handler = this.dls.downloadLampiran(s.id).subscribe({
           next: event => {
             if ((event as any).body) {
               const e = (event as any);
@@ -49,11 +45,7 @@ export class VjsService {
     if (fontUrls.length > 0) {
       for (const f of fontUrls) {
         this.gs.log('[DOWNLOAD_SUBTITLE]', f.id);
-        const handler = this.api.getData(`/attachment/${f.id}`, {
-          responseType: 'blob',
-          observe: 'events',
-          reportProgress: true
-        }).subscribe({
+        const handler = this.dls.downloadLampiran(f.id).subscribe({
           next: event => {
             if ((event as any).body) {
               const e = (event as any);

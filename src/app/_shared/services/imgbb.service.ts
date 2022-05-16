@@ -22,6 +22,11 @@ export class ImgbbService {
   }
 
   uploadImage(image): Observable<JsonResponse> {
-    return this.api.postData(`/image`, image, true);
+    return this.api.postData(`/image`, image, true, {
+      headers: {
+        'ngsw-bypass': 'true'
+      }
+    });
   }
+
 }

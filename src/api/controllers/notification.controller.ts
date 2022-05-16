@@ -10,7 +10,7 @@ import { NotificationService } from '../repository/notification.service';
 
 import { SocketIoService } from '../services/socket-io.service';
 
-@Controller('notification')
+@Controller('/notification')
 export class NotificationController {
 
   constructor(

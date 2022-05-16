@@ -13,7 +13,7 @@ import { NewsService } from '../repository/news.service';
 import { ProfileService } from '../repository/profile.service';
 import { UserService } from '../repository/user.service';
 
-@Controller('likedislike')
+@Controller('/likedislike')
 export class LikedislikeController {
 
   constructor(

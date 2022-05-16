@@ -203,7 +203,6 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         }
         this.daftarHuruf = huruf;
         console.clear()
-        console.log(this.daftarHuruf);
         this.bs.idle();
       },
       error: err => {

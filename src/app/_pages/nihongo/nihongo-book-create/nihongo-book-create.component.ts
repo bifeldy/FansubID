@@ -10,8 +10,8 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { NihongoService } from '../../../_shared/services/nihongo.service';
-import { BerkasService } from '../../../_shared/services/berkas.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { DdlLampiranService } from '../../../_shared/services/ddl-lampiran.service';
 
 @Component({
   selector: 'app-nihongo-book-create',
@@ -57,9 +57,9 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private nihon: NihongoService,
     private toast: ToastrService,
-    private berkas: BerkasService,
     private gs: GlobalService,
-    private as: AuthService
+    private as: AuthService,
+    private dls: DdlLampiranService
   ) {
     this.gs.bannerImg = '/assets/img/news-banner.png';
     this.gs.sizeContain = false;
@@ -226,7 +226,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
         tapToDismiss: false
       }
     );
-    this.uploadHandler = this.berkas.uploadLampiran({
+    this.uploadHandler = this.dls.uploadLampiran({
       file: this.attachment
     }).subscribe({
       next: event => {
