@@ -22,7 +22,7 @@ export class DdlLampiranService {
   }
 
   downloadLampiran(attachmentId): Observable<any> {
-    return this.api.getData(`/attachment/${attachmentId}`, {
+    return this.api.getData(`/attachment/${attachmentId}?ngsw-bypass=true`, {
       responseType: 'blob',
       observe: 'events',
       reportProgress: true,

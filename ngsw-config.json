@@ -18,6 +18,7 @@
     {
       "name": "assets",
       "installMode": "lazy",
+      "updateMode": "prefetch",
       "resources": {
         "files": [
           "/*.(ico|svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
@@ -37,49 +38,7 @@
     {
       "name": "api",
       "urls": [
-        "/api/aktivasi/**",
-        "/api/anime/**",
-        "/api/anime-berkas/**",
-        "/api/anime-fansub/**",
-        "/api/anime-seasonal/**",
-        "/api/api-key/**",
-        "/api/banned/**",
-        "/api/berkas/**",
-        "/api/comment/**",
-        "/api/dorama/**",
-        "/api/dorama-berkas/**",
-        "/api/dorama-fansub/**",
-        "/api/dorama-seasonal/**",
-        "/api/fansub/**",
-        "/api/fansub-all/**",
-        "/api/fansub-anime/**",
-        "/api/fansub-berkas/**",
-        "/api/fansub-dorama/**",
-        "/api/fansub-rss-feed/**",
-        "/api/fansub-slug/**",
-        "/api/image/**",
-        "/api/likedislike/**",
-        "/api/login/**",
-        "/api/logout/**",
-        "/api/news/**",
-        "/api/nihongo/**",
-        "/api/nihongo-edict/**",
-        "/api/nihongo-hirakata/**",
-        "/api/nihongo-hirakata-all/**",
-        "/api/nihongo-kanji/**",
-        "/api/nihongo-kanjivg/**",
-        "/api/nihongo-lesson/**",
-        "/api/nihongo-tatoeba/**",
-        "/api/notification/**",
-        "/api/project-type/**",
-        "/api/promote/**",
-        "/api/register/**",
-        "/api/torrent/**",
-        "/api/user/**",
-        "/api/verify/**",
-        "/api/verify-ktp/**",
-        "/api/verify-nik/**",
-        "/api/verify-sosmed/**"
+        "/api/**"
       ],
       "cacheConfig": {
         "maxSize": 64,
@@ -88,5 +47,13 @@
         "strategy": "freshness"
       }
     }
-  ]
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**",
+    "!/api/**"
+  ],
+  "navigationRequestStrategy": "freshness"
 }
