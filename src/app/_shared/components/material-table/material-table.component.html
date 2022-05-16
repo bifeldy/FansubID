@@ -33,8 +33,8 @@
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc === 'Poster'" />
           <span *ngIf="tdc === 'Tanggal'">{{ row[tdc] | dateAgo }}</span>
           <span *ngIf="tdc === 'Deadline'">{{ row[tdc] | date:'d/M/yy, h:mm:ss a' }}</span>
-          <span *ngIf="tdc === 'Anime'">{{ row[tdc] }} Anime</span>
-          <span *ngIf="tdc === 'Dorama'">{{ row[tdc] }} Dorama</span>
+          <span *ngIf="tdc === 'Anime'">{{ row[tdc] || 0 }} Anime</span>
+          <span *ngIf="tdc === 'Dorama'">{{ row[tdc] || 0 }} Dorama</span>
           <span *ngIf="tdc === 'Kunjungan'">{{ row[tdc] }}x Dilihat</span>
           <span *ngIf="tdc !== 'Poster' && tdc !== 'Logo' && tdc !== 'Image' && tdc !== 'Tanggal' && tdc !== 'Deadline' && tdc !== 'Anime' && tdc !== 'Dorama' && tdc !== 'Kunjungan'">
             {{ row[tdc] }}

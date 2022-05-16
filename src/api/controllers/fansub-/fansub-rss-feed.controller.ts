@@ -1,7 +1,7 @@
 // 3rd Party Library
 import { parse } from 'rss-to-json';
 
-import { Controller, HttpCode, Get, Req, Res, Inject, CACHE_MANAGER } from '@nestjs/common';
+import { Controller, HttpCode, Get, Req, Res, Inject, CACHE_MANAGER, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { IsNull, Not } from 'typeorm';
 import { Cache } from 'cache-manager';
@@ -12,6 +12,7 @@ import { JsonCache } from '../../../models/req-res.model';
 
 import { FansubService } from '../../repository/fansub.service';
 
+import { ConfigService } from '../../services/config.service';
 import { GlobalService } from '../../services/global.service';
 
 @Controller('/fansub-rss-feed')
@@ -19,6 +20,7 @@ export class FansubRssFeedController {
 
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
+    private cfg: ConfigService,
     private fansubRepo: FansubService,
     private gs: GlobalService
   ) {
@@ -29,11 +31,20 @@ export class FansubRssFeedController {
   @Get('/')
   @HttpCode(200)
   async getFansubFeed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-    try {
-      const cacheData: JsonCache = await this.cm.get(req.originalUrl);
-      if (cacheData) {
-        return cacheData.body;
-      } else {
+    const responseBody = {
+      info: `😅 200 - Fansub API :: RSS Feed All Fansubs 🤣`,
+      count: 0,
+      pages: 1,
+      results: []
+    };
+    const cacheData: JsonCache = await this.cm.get(req.originalUrl);
+    if (cacheData) {
+      return cacheData.body;
+    } else if (this.cfg.isUpdatingFansubFeedRss) {
+      return responseBody;
+    } else {
+      this.cfg.isUpdatingFansubFeedRss = true;
+      try {
         const rssFeed = [];
         const fansubs = await this.fansubRepo.find({
           where: [
@@ -94,22 +105,14 @@ export class FansubRssFeedController {
             }
           }
         }
-        const responseBody = {
-          info: `😅 200 - Fansub API :: RSS Feed All Fansubs 🤣`,
-          count: rssFeed.length,
-          pages: 1,
-          results: rssFeed
-        };
-        this.cm.set(req.originalUrl, { status: 200, body: responseBody }, { ttl: environment.externalApiCacheTime / 2 });
-        return responseBody;
+        responseBody.count = rssFeed.length;
+        responseBody.results = rssFeed;
+        this.cm.set(req.originalUrl, { status: 200, body: responseBody }, { ttl: environment.externalApiCacheTime });
+      } catch (error) {
+        if (error instanceof HttpException) throw error;
       }
-    } catch (error) {
-      return {
-        info: `😅 200 - Fansub API :: RSS Feed All Fansubs 🤣`,
-        count: 0,
-        pages: 1,
-        result: []
-      };
+      this.cfg.isUpdatingFansubFeedRss = false;
+      return responseBody;
     }
   }
 
