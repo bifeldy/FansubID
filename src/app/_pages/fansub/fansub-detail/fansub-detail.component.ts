@@ -9,6 +9,7 @@ import { FansubService } from '../../../_shared/services/fansub.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
+import { WinboxService } from '../../../_shared/services/winbox.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -83,7 +84,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     private fs: FabService,
     private pi: PageInfoService,
     private fansub: FansubService,
-    private ss: StatsServerService
+    private ss: StatsServerService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
     this.gs.sizeContain = false;
@@ -185,6 +187,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.gs.log('[RSS_FEED_LIST_ERROR]', err);
       }
     });
+  }
+
+  openRssFeed(link: string): void {
+    this.wb.winboxOpenUri(this.rssLink(link));
   }
 
   getBerkasFansub(): void {

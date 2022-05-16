@@ -5,6 +5,7 @@ import { NewsService } from '../../_shared/services/news.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { KomentarService } from '../../_shared/services/komentar.service';
 import { FansubService } from '../../_shared/services/fansub.service';
+import { WinboxService } from '../../_shared/services/winbox.service';
 
 @Component({
   selector: 'app-home',
@@ -26,7 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private news: NewsService,
     private komen: KomentarService,
     private fansub: FansubService,
-    private bs: BusyService
+    private bs: BusyService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = '/assets/img/home-banner.png';
     this.gs.sizeContain = false;
@@ -102,6 +104,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.gs.log('[HOME_RSS_FEED_LIST_ERROR]', err);
       }
     });
+  }
+
+  openRssFeed(link: string): void {
+    this.wb.winboxOpenUri(this.rssLink(link));
   }
 
 }
