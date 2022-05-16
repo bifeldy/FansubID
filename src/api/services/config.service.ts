@@ -10,12 +10,7 @@ export class ConfigService {
   // Prevent Circular Dependency Injection
   gs = null;
 
-  isUpdatingFansubAnime = false;
-  isUpdatingFansubDorama = false;
   isUpdatingFansubFeedRss = false;
-
-  isUpdatingAnimeFansub = false;
-  isUpdatingDoramaFansub = false;
 
   github = null;
 
