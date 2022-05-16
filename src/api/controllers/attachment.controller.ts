@@ -1,3 +1,6 @@
+// 3rd Party Library
+import { AbortController } from 'abort-controller';
+
 // NodeJS Library
 import { unlink, readdirSync } from 'node:fs';
 
@@ -19,7 +22,7 @@ import { TempAttachmentService } from '../repository/temp-attachment.service';
 import { GdriveService } from '../services/gdrive.service';
 import { GlobalService } from '../services/global.service';
 
-@Controller('attachment')
+@Controller('/attachment')
 export class AttachmentController {
 
   constructor(
@@ -182,6 +185,7 @@ export class AttachmentController {
         ]
       });
       if (attachment.google_drive) {
+        const abortController = new AbortController();
         const gdrive = await this.gdrive.gDrive();
         const dfile = await gdrive.files.get(
           {
@@ -193,14 +197,21 @@ export class AttachmentController {
             headers: {
               Range: req.headers.range,
               ...environment.nodeJsXhrHeader
-            }
+            },
+            signal: abortController.signal
           }
         );
+        req.on('close', () => {
+          this.gs.log('[REQ-COMPLETED] 💦', res.writableEnded);
+          if (!dfile.data.readableEnded) {
+            abortController.abort();
+          }
+        });
         res.writeHead(dfile.status, dfile.headers);
         res.on('pipe', src => {
-          this.gs.log('[DRIVE-PIPE_FLOW] 💦', src.readableFlowing);
+          this.gs.log('[RES-PIPE_FLOW] 💦', src.readableFlowing);
         }).on('unpipe', src => {
-          this.gs.log('[DRIVE-UNPIPE_FLOW] 💦', src.readableFlowing);
+          this.gs.log('[RES-UNPIPE_FLOW] 💦', src.readableFlowing);
         });
         dfile.data.on('data', chunk => {
           this.gs.log('[DRIVE-DATA_FLOW] 💦', chunk.length);
