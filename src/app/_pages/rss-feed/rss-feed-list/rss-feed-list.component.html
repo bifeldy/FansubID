@@ -1,0 +1,24 @@
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-lg-8 col-xl-9">
+      <div class="row">
+        <app-material-tab (tableRowClicked)="openRssFeed($event)" [tabData]="tabData"></app-material-tab>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xl-3">
+      <div class="row sticky-top">
+        <div class="col-12">
+          <app-banner-discord></app-banner-discord>
+          <app-stats-server></app-stats-server>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

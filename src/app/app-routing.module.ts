@@ -131,6 +131,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'rss-feed',
+    loadChildren: () => import('./_pages/rss-feed/rss-feed.module').then(m => m.RssFeedModule),
+    data: {
+      title: 'Loper Koran RSS Feed',
+      description: 'Halaman Rangkuman Berita Acara Fansub Indonesia',
+      keywords: 'RSS Feed'
+    }
+  },
+  {
     path: 'torrent',
     loadChildren: () => import('./_pages/torrent/torrent.module').then(m => m.TorrentModule),
     data: {

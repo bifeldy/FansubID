@@ -37,6 +37,7 @@ import { FansubAnimeController } from './controllers/fansub-/fansub-anime.contro
 import { FansubBerkasController } from './controllers/fansub-/fansub-berkas.controller';
 import { FansubDoramaController } from './controllers/fansub-/fansub-dorama.controller';
 import { FansubRssFeedController } from './controllers/fansub-/fansub-rss-feed.controller';
+import { FansubRssFeedAllController } from './controllers/fansub-/fansub-rss-feed-all.controller';
 import { FansubSlugController } from './controllers/fansub-/fansub-slug.controller';
 import { ImageController } from './controllers/image.controller';
 import { LikedislikeController } from './controllers/likedislike.controller';
@@ -154,6 +155,7 @@ import { UserService } from './repository/user.service';
     FansubBerkasController,
     FansubDoramaController,
     FansubRssFeedController,
+    FansubRssFeedAllController,
     FansubSlugController,
     ImageController,
     LikedislikeController,

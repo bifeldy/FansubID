@@ -69,45 +69,37 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getComment(): void {
+    this.bs.busy();
     this.subsKomenGet = this.komen.getAllComment().subscribe({
       next: res => {
         this.gs.log('[HOME_KOMENTAR_LIST_SUCCESS]', res);
         this.komentarData = res.results;
+        this.bs.idle();
       },
       error: err => {
         this.gs.log('[HOME_KOMENTAR_LIST_ERROR]', err);
+        this.bs.idle();
       }
     });
   }
 
-  rssLink(links: string | Array<any>): string {
-    if (typeof links === 'string') {
-      return links;
-    }
-    let idx = links.findIndex(l => l.rel === 'alternate' && l.type === 'text/html');
-    if (idx < 0) {
-      if (links.length > 0) {
-        return links[links.length - 1].href;
-      }
-      return '';
-    }
-    return links[idx].href;
-  }
-
   getRssFeedAll(): void {
-    this.subsRssFeed = this.fansub.getRssFeedFansubAll().subscribe({
+    this.bs.busy();
+    this.subsRssFeed = this.fansub.getRssFeedFansubAllActiveOnly().subscribe({
       next: res => {
         this.gs.log('[HOME_RSS_FEED_LIST_SUCCESS]', res);
         this.rssFeedData = res.results;
+        this.bs.idle();
       },
       error: err => {
         this.gs.log('[HOME_RSS_FEED_LIST_ERROR]', err);
+        this.bs.idle();
       }
     });
   }
 
   openRssFeed(link: string): void {
-    this.wb.winboxOpenUri(this.rssLink(link));
+    this.wb.winboxOpenUri(this.gs.rssLink(link));
   }
 
 }

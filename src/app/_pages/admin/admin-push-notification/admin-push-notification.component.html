@@ -66,7 +66,7 @@
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Deadline</mat-label>
-                <input matInput [ngxMatDatetimePicker]="kalender" formControlName="deadline" (focus)="kalender.open()" placeholder="{{ currentDateTime | date:'d MMMM y, h:mm:ss'}}"
+                <input matInput [ngxMatDatetimePicker]="kalender" formControlName="deadline" (focus)="kalender.open()" placeholder="{{ currentDateTime | date:'d MMMM y, h:mm:ss' }}"
                   [min]="currentDateTime" [max]="maxDateTime" />
                 <mat-datepicker-toggle matSuffix [for]="dateTimePicker"></mat-datepicker-toggle>
                 <ngx-mat-datetime-picker #kalender [showSpinners]="true" [showSeconds]="true" [enableMeridian]="true"></ngx-mat-datetime-picker>

@@ -34,13 +34,7 @@ export class LeftMenuService {
       link: '/nihongo',
       icon: 'translate',
       badge: null
-    },
-    // {
-    //   name: 'RSS Feed',
-    //   link: '/rss',
-    //   icon: 'rss_feed',
-    //   badge: null
-    // }
+    }
   ];
 
   contentMenus: Menu[] = [
@@ -71,6 +65,12 @@ export class LeftMenuService {
   ];
 
   miscMenus: Menu[] = [
+    {
+      name: 'RSS Feed',
+      link: '/rss-feed',
+      icon: 'rss_feed',
+      badge: null
+    },
     {
       name: 'Admin & Mod Panel',
       link: '/admin-mod',

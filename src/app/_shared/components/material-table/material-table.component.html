@@ -21,7 +21,7 @@
     <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;" [style.background-color]="row.private || row.banned ? (GS.isDarkMode ? '#2f4f4f80' : '#2f4f4f20') : ''">
       <div *ngIf="checkIsArray(row[tdc]) === false">
         <h3 class="m-0" [style.color]="
-          (tdc === 'Pemilik' || tdc === 'Penulis' || tdc === 'Status' || tdc === 'Korban') ? (GS.isDarkMode ? '#ffc107' : '#0d6efd') :
+          (tdc === 'Pemilik' || tdc === 'Penulis' || tdc === 'Status' || tdc === 'Korban' || tdc === 'Fansub') ? (GS.isDarkMode ? '#ffc107' : '#0d6efd') :
             (tdc === 'Tanggal' || tdc === 'Pelaku' || tdc === 'Judul') ? '#28a745' :
               (tdc === 'Jenis' || tdc === 'Proyek') ? '#7289da' :
         (GS.isDarkMode ? '#acacac' : '#000000')">
@@ -31,7 +31,7 @@
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc === 'Logo'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc === 'Image'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc === 'Poster'" />
-          <span *ngIf="tdc === 'Tanggal'">{{ row[tdc] | dateAgo }}</span>
+          <span *ngIf="tdc === 'Tanggal'" matTooltip="{{ row[tdc] | date:'d MMMM y' }}">{{ row[tdc] | dateAgo }}</span>
           <span *ngIf="tdc === 'Deadline'">{{ row[tdc] | date:'d/M/yy, h:mm:ss a' }}</span>
           <span *ngIf="tdc === 'Anime'">{{ row[tdc] || 0 }} Anime</span>
           <span *ngIf="tdc === 'Dorama'">{{ row[tdc] || 0 }} Dorama</span>
