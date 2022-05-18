@@ -1,12 +1,17 @@
 // 3rd Party Library
 import { parse } from 'rss-to-json';
 
+// NodeJS Library
+import { readFileSync, writeFile, rename, unlink } from 'node:fs';
+
 import { Controller, HttpCode, Get, Req, Res, Inject, CACHE_MANAGER, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { IsNull, Not } from 'typeorm';
 import { Cache } from 'cache-manager';
 
 import { environment } from '../../../environments/api/environment';
+
+import { JsonCache } from '../../../models/req-res.model';
 
 import { FansubService } from '../../repository/fansub.service';
 
@@ -29,13 +34,31 @@ export class FansubRssFeedAllController {
   @Get('/')
   @HttpCode(200)
   async getFansubFeed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    let reqUrl = req.originalUrl.split('?')[0];
+    if (reqUrl.startsWith('/api')) {
+      reqUrl = reqUrl.substring(4);
+    }
+    if (reqUrl.startsWith('/')) {
+      reqUrl = reqUrl.substring(1);
+    }
     const responseBody = {
-      info: `😅 200 - Fansub API :: RSS Feed All Complete Fansubs 🤣`,
+      info: `😅 200 - Fansub API :: RSS Feed All Full Fansubs 🤣`,
       count: 0,
       pages: 1,
       results: []
     };
-    if (this.cfg.isUpdatingFansubFeedRssAll) {
+    const cacheData: JsonCache = await this.cm.get(`/api/${reqUrl}`);
+    if (cacheData) {
+      return cacheData.body;
+    } else if (this.cfg.isUpdatingFansubFeedRssAll) {
+      try {
+        const jsonFile = readFileSync(`${environment.jsonCacheFolder}/${reqUrl}.old.json`, 'utf8');
+        const jsonData = JSON.parse(jsonFile);
+        responseBody.count = jsonData.count;
+        responseBody.results = jsonData.results;
+      } catch (e) {
+        this.gs.log('[NODE_FS_READ_FILE_SYNC-ERROR] 📖', e, 'error');
+      }
       return responseBody;
     } else {
       this.cfg.isUpdatingFansubFeedRssAll = true;
@@ -101,7 +124,23 @@ export class FansubRssFeedAllController {
         }
         responseBody.count = rssFeed.length;
         responseBody.results = rssFeed;
-        this.cm.set(req.originalUrl, { status: 200, body: responseBody }, { ttl: environment.externalApiCacheTime });
+        this.cm.set(`/api/${reqUrl}`, { status: 200, body: responseBody }, { ttl: environment.externalApiCacheTime });
+        writeFile(`${environment.jsonCacheFolder}/${reqUrl}.new.json`, JSON.stringify(responseBody), 'utf8', (e1) => {
+          if (e1) {
+            this.gs.log('[NODE_FS_WRITE_FILE-ERROR] 📝', e1, 'error');
+          } else {
+            unlink(`${environment.jsonCacheFolder}/${reqUrl}.old.json`, (e2) => {
+              if (e2) {
+                this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e2, 'error');
+              }
+              rename(`${environment.jsonCacheFolder}/${reqUrl}.new.json`, `${environment.jsonCacheFolder}/${reqUrl}.old.json`, (e3) => {
+                if (e3) {
+                  this.gs.log('[NODE_FS_RENAME-ERROR] 📛', e3, 'error');
+                }
+              });
+            });
+          }
+        });
       } catch (error) {
         if (error instanceof HttpException) throw error;
       }
