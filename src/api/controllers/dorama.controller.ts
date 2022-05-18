@@ -13,7 +13,7 @@ import { environment } from '../../environments/api/environment';
 
 import { Roles } from '../decorators/roles.decorator';
 
-import { JsonCache, RoleModel } from '../../models/req-res.model';
+import { RoleModel } from '../../models/req-res.model';
 
 import { ApiService } from '../services/api.service';
 import { GlobalService } from '../services/global.service';
@@ -37,34 +37,29 @@ export class DoramaController {
   async searchDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     const searchType = req.query['type'] || '';
-    const cacheData: JsonCache = await this.cm.get(req.originalUrl);
-    if (cacheData) {
-      return cacheData.body;
-    } else {
-      try {
-        const url = new URL(`${environment.externalApiDorama}/search/q/${searchQuery}`);
-        const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);
-        if (res_raw.ok) {
-          const res_json: any = await res_raw.json();
-          this.gs.log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
-          let data = res_json.results.filter(x => x.type.toLowerCase().includes(searchType));
-          const responseBody = {
-            info: `😅 ${res_raw.status} - Dorama API :: Search ${searchQuery} 🤣`,
-            results: data
-          };
-          if (data.length > 0) {
-            this.cm.set(req.originalUrl, { status: res_raw.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
-          }
-          return responseBody;
-        } else {
-          throw new Error('Gagal Tarik Data Dorama');
-        }
-      } catch (error) {
-        return {
-          info: `😅 200 - Dorama API :: Search ${searchQuery} 🤣`,
-          results: []
+    try {
+      const url = new URL(`${environment.externalApiDorama}/search/q/${searchQuery}`);
+      const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);
+      if (res_raw.ok) {
+        const res_json: any = await res_raw.json();
+        this.gs.log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
+        let data = res_json.results.filter(x => x.type.toLowerCase().includes(searchType));
+        const responseBody = {
+          info: `😅 ${res_raw.status} - Dorama API :: Search ${searchQuery} 🤣`,
+          results: data
         };
+        if (data.length > 0) {
+          this.cm.set(req.originalUrl, { status: res_raw.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
+        }
+        return responseBody;
+      } else {
+        throw new Error('Gagal Tarik Data Dorama');
       }
+    } catch (error) {
+      return {
+        info: `😅 200 - Dorama API :: Search ${searchQuery} 🤣`,
+        results: []
+      };
     }
   }
 
@@ -137,44 +132,39 @@ export class DoramaController {
   @HttpCode(200)
   async getDetailDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const mdlId = req.params['mdlSlug'].split('-')[0];
-    const cacheData: JsonCache = await this.cm.get(req.originalUrl);
-    if (cacheData) {
-      return cacheData.body;
-    } else {
-      try {
-        const url = new URL(`${environment.externalApiDorama}/id/${req.params['mdlSlug']}`);
-        const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);
-        if (res_raw.ok) {
-          const res_json: any = await res_raw.json();
-          this.gs.log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
-          let httpStatusCode = res_raw.status;
-          const dramaDetail = res_json.data;
-          try {
-            if ('synopsis' in dramaDetail && dramaDetail.synopsis) {
-              const translatedDoramaSynopsis = await translate(dramaDetail.synopsis, { to: 'id' });
-              dramaDetail.synopsis = translatedDoramaSynopsis.text;
-            }
-          } catch (err) {
-            httpStatusCode = 202;
-            dramaDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
+    try {
+      const url = new URL(`${environment.externalApiDorama}/id/${req.params['mdlSlug']}`);
+      const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);
+      if (res_raw.ok) {
+        const res_json: any = await res_raw.json();
+        this.gs.log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
+        let httpStatusCode = res_raw.status;
+        const dramaDetail = res_json.data;
+        try {
+          if ('synopsis' in dramaDetail && dramaDetail.synopsis) {
+            const translatedDoramaSynopsis = await translate(dramaDetail.synopsis, { to: 'id' });
+            dramaDetail.synopsis = translatedDoramaSynopsis.text;
           }
-          const responseBody = {
-            info: `😅 ${httpStatusCode} - Dorama API :: Detail ${mdlId} 🤣`,
-            result: dramaDetail
-          };
-          if (dramaDetail) {
-            this.cm.set(req.originalUrl, { status: httpStatusCode, body: responseBody }, { ttl: environment.externalApiCacheTime });
-          }
-          return responseBody;
-        } else {
-          throw new Error('Gagal Tarik Data Dorama');
+        } catch (err) {
+          httpStatusCode = 202;
+          dramaDetail.message = 'Penerjemah / Alih Bahasa Gagal!';
         }
-      } catch (error) {
-        return {
-          info: `😅 200 - Dorama API :: Detail ${mdlId} 🤣`,
-          result: null
+        const responseBody = {
+          info: `😅 ${httpStatusCode} - Dorama API :: Detail ${mdlId} 🤣`,
+          result: dramaDetail
         };
+        if (dramaDetail) {
+          this.cm.set(req.originalUrl, { status: httpStatusCode, body: responseBody }, { ttl: environment.externalApiCacheTime });
+        }
+        return responseBody;
+      } else {
+        throw new Error('Gagal Tarik Data Dorama');
       }
+    } catch (error) {
+      return {
+        info: `😅 200 - Dorama API :: Detail ${mdlId} 🤣`,
+        result: null
+      };
     }
   }
 

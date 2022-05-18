@@ -34,7 +34,7 @@ export class TorrentController {
               }
             };
             res.status(400);
-            if (req.query['xml'] === 'true') {
+            if (res.locals['xml']) {
               res.set('Content-Type', 'application/xml');
               return res.send(this.gs.OBJ2XML(body));
             }
@@ -56,7 +56,7 @@ export class TorrentController {
         }
       };
       res.status(400);
-      if (req.query['xml'] === 'true') {
+      if (res.locals['xml']) {
         res.set('Content-Type', 'application/xml');
         return res.send(this.gs.OBJ2XML(body));
       }

@@ -62,11 +62,13 @@ import { VerifyKtpController } from './controllers/verify-/verify-ktp.controller
 import { VerifyNikController } from './controllers/verify-/verify-nik.controller';
 import { VerifySosmedController } from './controllers/verify-/verify-sosmed.controller';
 
+import { UrlXmlMiddleware } from './middlewares/url-xml.middleware';
 import { ApiKeyMiddleware } from './middlewares/api-key.middleware';
 import { BannedMiddleware } from './middlewares/banned.middleware';
 import { LoginMiddleware } from './middlewares/login.middleware';
 import { RegisterMiddleware } from './middlewares/register.middleware';
 import { LogoutMiddleware } from './middlewares/logout.middleware';
+import { CacheMiddleware } from './middlewares/cache.middleware';
 
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { RolesGuard } from './guards/roles.guard';
@@ -246,6 +248,7 @@ import { UserService } from './repository/user.service';
 export class AppModule {
 
   configure(mc: MiddlewareConsumer) {
+    mc.apply(UrlXmlMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
     mc.apply(ApiKeyMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
     mc.apply(BannedMiddleware).exclude(
       { path:'/login', method: RequestMethod.POST },
@@ -254,6 +257,7 @@ export class AppModule {
     mc.apply(LoginMiddleware).forRoutes({ path:'/login', method: RequestMethod.POST });
     mc.apply(RegisterMiddleware).forRoutes({ path:'/register', method: RequestMethod.POST });
     mc.apply(LogoutMiddleware).forRoutes({ path:'/logout', method: RequestMethod.DELETE });
+    mc.apply(CacheMiddleware).forRoutes({ path: '*', method: RequestMethod.GET });
   }
 
 }

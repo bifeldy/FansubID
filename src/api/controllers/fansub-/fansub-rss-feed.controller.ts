@@ -8,8 +8,6 @@ import { Cache } from 'cache-manager';
 
 import { environment } from '../../../environments/api/environment';
 
-import { JsonCache } from '../../../models/req-res.model';
-
 import { FansubService } from '../../repository/fansub.service';
 
 import { ConfigService } from '../../services/config.service';
@@ -27,20 +25,17 @@ export class FansubRssFeedController {
     //
   }
 
-  // GET `/api/fansub-feed/`
+  // GET `/api/fansub-rss-feed`
   @Get('/')
   @HttpCode(200)
   async getFansubFeed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const responseBody = {
-      info: `😅 200 - Fansub API :: RSS Feed All Fansubs 🤣`,
+      info: `😅 200 - Fansub API :: RSS Feed All One Fansubs 🤣`,
       count: 0,
       pages: 1,
       results: []
     };
-    const cacheData: JsonCache = await this.cm.get(req.originalUrl);
-    if (cacheData) {
-      return cacheData.body;
-    } else if (this.cfg.isUpdatingFansubFeedRss) {
+    if (this.cfg.isUpdatingFansubFeedRss) {
       return responseBody;
     } else {
       this.cfg.isUpdatingFansubFeedRss = true;

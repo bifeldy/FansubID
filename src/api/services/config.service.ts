@@ -11,6 +11,7 @@ export class ConfigService {
   gs = null;
 
   isUpdatingFansubFeedRss = false;
+  isUpdatingFansubFeedRssAll = false;
 
   github = null;
 

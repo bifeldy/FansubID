@@ -245,7 +245,7 @@ export class AttachmentController {
         }
       };
       res.status(404);
-      if (req.query['xml'] === 'true') {
+      if (res.locals['xml']) {
         res.set('Content-Type', 'application/xml');
         return res.send(this.gs.OBJ2XML(body));
       }
