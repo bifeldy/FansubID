@@ -51,29 +51,27 @@ export class ServiceWorkerService {
       try {
         au = await this.su.activateUpdate();
         this.isUpdateAvailable = false;
-        if (au) {
-          this.dialogRef?.close(null);
-          this.subsDialog?.unsubscribe();
-          this.dialogRef = this.ds.openInfoDialog({
-            data: {
-              title: 'Pembaharuan Berhasil',
-              htmlMessage: `Ingin Refresh Halaman Sekarang (?)`,
-              confirmText: 'Ya',
-              cancelText: 'Tidak'
-            },
-            disableClose: true
-          });
-          this.subsDialog = this.dialogRef?.afterClosed().subscribe({
-            next: re => {
-              this.gs.log('[INFO_DIALOG_CLOSED]', re);
-              this.dialogRef = null;
-              this.subsDialog.unsubscribe();
-              if (re === true) {
-                window.location.reload();
-              }
+        this.dialogRef?.close(null);
+        this.subsDialog?.unsubscribe();
+        this.dialogRef = this.ds.openInfoDialog({
+          data: {
+            title: `Pembaharuan ${au ? 'Berhasil' : 'Gagal'}`,
+            htmlMessage: `Ingin Refresh Halaman (?)`,
+            confirmText: 'Ya',
+            cancelText: 'Tidak'
+          },
+          disableClose: true
+        });
+        this.subsDialog = this.dialogRef?.afterClosed().subscribe({
+          next: re => {
+            this.gs.log('[INFO_DIALOG_CLOSED]', re);
+            this.dialogRef = null;
+            this.subsDialog.unsubscribe();
+            if (re === true) {
+              window.location.reload();
             }
-          });
-        }
+          }
+        });
       } catch (e) {
         this.gs.log('[SERVICE_WORKER_ACTIVATE_UPDATE_ERROR]', e);
       }
