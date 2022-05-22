@@ -81,6 +81,7 @@ export const environment = {
       User
     ],
   },
+  viewFolder: 'dist/hikki/browser',
   uploadFolder: 'dist/hikki/uploads',
   jsonCacheFolder: 'dist/hikki/caches',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',
