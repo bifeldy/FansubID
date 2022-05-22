@@ -95,7 +95,9 @@ export class VerifySosmedController {
                   sosmed.user_ = user;
                   await this.sosmedRepo.insert(sosmed);
                 }
+                user.verified = false;
                 user.discord = res_json2.id;
+                user.role = RoleModel.USER;
                 const resUserSave = await this.userRepo.save(user as User);
                 delete resUserSave.password;
                 delete resUserSave.session_token;

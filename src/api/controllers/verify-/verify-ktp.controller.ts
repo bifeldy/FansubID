@@ -69,6 +69,7 @@ export class VerifyKtpController {
           const resKtpSave = await this.ktpRepo.save(ktp);
           user.kartu_tanda_penduduk_ = resKtpSave;
           user.verified = true;
+          user.role = RoleModel.USER;
           let resUserSave = await this.userRepo.save(user as User);
           delete resUserSave.password;
           delete resUserSave.session_token;

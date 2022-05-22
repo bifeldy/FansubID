@@ -212,6 +212,7 @@ export class DiscordService {
             await msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
           } else if (args[1] === SosMedModel.DISCORD) {
             user.verified = true;
+            user.role = RoleModel.USER;
             await this.userRepo.save(user);
             const laboratoryRatsRole = msg.guild.roles.cache.get(environment.laboratoryRatsRoleId);
             if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
