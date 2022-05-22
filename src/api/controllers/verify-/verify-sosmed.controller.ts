@@ -106,7 +106,7 @@ export class VerifySosmedController {
                 return {
                   info: `😅 201 - Discord API :: Masuk & Verify 🤣`,
                   result: {
-                    title: 'Kirim Token Ke Hikki Discord BOT Dalam 3 Menit! #🚮-bot-spam',
+                    title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam 3 Menit! #🚮-bot-spam`,
                     message: '~verify DISCORD ' + this.cs.jwtEncrypt({ discord: res_json2, user: resUserSave }) + ' DELETE_CHAT'
                   }
                 };

@@ -64,7 +64,7 @@ export class PromoteController {
               resUserSave.kartu_tanda_penduduk_.nama,
               `${environment.baseUrl}/user/${resUserSave.username}`,
               {
-                name: `Hikki - Promosi Menjadi ${resUserSave.role}`,
+                name: `${environment.siteName} - Promosi Menjadi ${resUserSave.role}`,
                 iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                 url: environment.baseUrl
               },

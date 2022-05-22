@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
+import { environment } from '../../../environments/app/environment';
+
 import { RoomInfoModel, ServerInfoModel } from '../../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
@@ -122,7 +124,7 @@ export class StatsServerService {
     this.mySocket.on('connect', () => {
       this.gs.log('[SOCKET_CONNECTED]', this.mySocket.id);
       this.pingPong();
-      this.notif.removeNotif('HIKKI_SOCKET_DISCONNECTED');
+      this.notif.removeNotif(`${environment.siteName.toUpperCase()}_SOCKET_DISCONNECTED`);
       setTimeout(() => {
         this.socketLeaveAndJoinNewRoom(null, this.router.url);
       }, 1234);
@@ -131,7 +133,7 @@ export class StatsServerService {
       this.gs.log('[SOCKET_DISCONNECTED]', reason);
       this.notif.addNotif(
         null,
-        'HIKKI_SOCKET_DISCONNECTED',
+        `${environment.siteName.toUpperCase()}_SOCKET_DISCONNECTED`,
         'warning',
         'Sambungan Terputus',
         'Tidak dapat terhubung dengan <i>Server</i> melalui <i>WebSocket</i> !!',

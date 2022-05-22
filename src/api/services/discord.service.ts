@@ -148,7 +148,7 @@ export class DiscordService {
   async handleMessage(msg: Message): Promise<void> {
     try {
       if (msg.content === '~about') {
-        await msg.reply({ content: `<@${msg.author.id}> https://github.com/bifeldy/Hikki` });
+        await msg.reply({ content: `<@${msg.author.id}> https://github.com/${environment.author}/${environment.siteName}` });
       } else if (msg.content === '~ping') {
         const latency = new Date().getTime() - new Date(msg.createdTimestamp).getTime();
         await msg.reply({ content: `<@${msg.author.id}> Pong ${latency} ms late!` });
@@ -184,7 +184,7 @@ export class DiscordService {
       if (res_raw.ok) {
         const gh: any = await res_raw.json();
         this.cfg.github = gh[0];
-        this.bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(this.bot.user.id)?.setNickname(`Hikki - ${this.cfg.github?.sha?.slice(0, 7)}`);
+        this.bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(this.bot.user.id)?.setNickname(`${environment.siteName} - ${this.cfg.github?.sha?.slice(0, 7)}`);
       } else {
         throw new Error('Github API Error');
       }
@@ -226,7 +226,7 @@ export class DiscordService {
                   .setTitle(user.kartu_tanda_penduduk_.nama)
                   .setURL(`${environment.baseUrl}/user/${user.username}`)
                   .setAuthor({
-                    name: 'Hikki - Verifikasi Pengguna',
+                    name: `${environment.siteName} - Verifikasi Pengguna`,
                     iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                     url: environment.baseUrl
                   })

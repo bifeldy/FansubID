@@ -41,7 +41,7 @@ export class AktivasiController {
           userActivated.kartu_tanda_penduduk_.nama,
           `${environment.baseUrl}/user/${userActivated.username}`,
           {
-            name: 'Hikki - Pendaftaran Pengguna Baru',
+            name: `${environment.siteName} - Pendaftaran Pengguna Baru`,
             iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
             url: environment.baseUrl
           },

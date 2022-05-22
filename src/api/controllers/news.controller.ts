@@ -108,7 +108,7 @@ export class NewsController {
             resNewsSave.title,
             `${environment.baseUrl}/news/${resNewsSave.id}`,
             {
-              name: 'Hikki - Penambahan Berita Baru',
+              name: `${environment.siteName} - Penambahan Berita Baru`,
               iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
               url: environment.baseUrl
             },
@@ -217,7 +217,7 @@ export class NewsController {
               resNewsSave.title,
               `${environment.baseUrl}/news/${resNewsSave.id}`,
               {
-                name: 'Hikki - Pembaharuan Data Berita',
+                name: `${environment.siteName} - Pembaharuan Data Berita`,
                 iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                 url: environment.baseUrl
               },

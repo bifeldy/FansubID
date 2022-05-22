@@ -314,7 +314,7 @@ export class BerkasController {
               .setTitle(resFileSave.name)
               .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
               .setAuthor({
-                name: 'Hikki - Penambahan Berkas Baru',
+                name: `${environment.siteName} - Penambahan Berkas Baru`,
                 iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                 url: environment.baseUrl
               })
@@ -590,7 +590,7 @@ export class BerkasController {
                 .setTitle(resFileSave.name)
                 .setURL(`${environment.baseUrl}/berkas/${resFileSave.id}`)
                 .setAuthor({
-                  name: 'Hikki - Pembaharuan Data Berkas',
+                  name: `${environment.siteName} - Pembaharuan Data Berkas`,
                   iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                   url: environment.baseUrl
                 })

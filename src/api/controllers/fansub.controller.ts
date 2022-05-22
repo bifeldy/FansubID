@@ -137,7 +137,7 @@ export class FansubController {
               resFansubSave.name,
               `${environment.baseUrl}/fansub/${resFansubSave.slug}`,
               {
-                name: 'Hikki - Penambahan Fansub Baru',
+                name: `${environment.siteName} - Penambahan Fansub Baru`,
                 iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                 url: environment.baseUrl
               },
@@ -297,7 +297,7 @@ export class FansubController {
             resFansubSave.name,
             `${environment.baseUrl}/fansub/${resFansubSave.slug}`,
             {
-              name: 'Hikki - Pembaharuan Data Fansub',
+              name: `${environment.siteName} - Pembaharuan Data Fansub`,
               iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
               url: environment.baseUrl
             },

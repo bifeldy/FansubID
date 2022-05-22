@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { environment } from '../../../environments/app/environment';
+
 import { UserModel } from '../../../models/req-res.model';
 
 import { GlobalService } from './global.service';
@@ -15,7 +17,7 @@ export class NotificationsService {
     {
       notifCreator: null,
       notifData: {
-        id: 'HIKKI_UNDER_DEVELOPMENT',
+        id: `${environment.siteName.toUpperCase()}_UNDER_DEVELOPMENT`,
         type: 'info',
         title: 'Pemberitahuan!',
         content: `

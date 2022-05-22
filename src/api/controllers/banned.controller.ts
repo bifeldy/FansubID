@@ -207,7 +207,7 @@ export class BannedController {
               .setTitle(banned.user_.username)
               .setURL(`${environment.baseUrl}/user/${banned.user_.username}`)
               .setAuthor({
-                name: 'Hikki - Akun BANNED',
+                name: `${environment.siteName} - Akun BANNED`,
                 iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                 url: environment.baseUrl
               })

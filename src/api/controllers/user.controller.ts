@@ -200,7 +200,7 @@ export class UserController {
               resUserSave.kartu_tanda_penduduk_.nama,
               `${environment.baseUrl}/user/${resUserSave.username}`,
               {
-                name: 'Hikki - Pembaharuan Data Pengguna',
+                name: `${environment.siteName} - Pembaharuan Data Pengguna`,
                 iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                 url: environment.baseUrl
               },

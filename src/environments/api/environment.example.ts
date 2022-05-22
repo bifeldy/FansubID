@@ -34,6 +34,7 @@ import { User } from '../../api/entities/User';
 export const environment = {
   production: false,
   siteName: 'Hikki',
+  siteDescription: 'Di Kamar Saja!',
   author: 'Bifeldy',
   jwtSecretKey: '',
   tokenName: 'Hikki_Token',

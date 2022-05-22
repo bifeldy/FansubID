@@ -102,9 +102,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.gs.log(`[APP_BUILD_STATUS] 💘 ${environment.siteName} :: ${environment.production ? 'Production' : 'Development'} With Logging Enabled 📌`);
     this.gs.log(`[SERVICE_WORKER_STATUS] 💘 isEnabled :: ${this.sw.swEnabled} 📌`);
     this.pi.updatePageMetaData(
-      '「💤 Hikki」',
-      '「✨ Di Kamar Saja!」',
-      '「💤 Hikki」, 「🌞 Hikikomori」',
+      `「💤 ${environment.siteName}」`,
+      `「✨ ${environment.siteDescription}」`,
+      `「💤 ${environment.siteName} ✨🌞」`,
       '/favicon.ico'
     );
     this.subsRouter = this.router.events.subscribe({

@@ -124,7 +124,7 @@ import { UserService } from './repository/user.service';
   imports: [
     AngularUniversalModule.forRoot({
       bootstrap: AppServerModule,
-      viewsPath: join(process.cwd(), 'dist/hikki/browser')
+      viewsPath: join(process.cwd(), `dist/${environment.siteName.toLowerCase()}/browser`)
     }),
     TypeOrmModule.forRoot(environment.typeorm as TypeOrmModuleOptions),
     TypeOrmModule.forFeature(environment.typeorm.entities),

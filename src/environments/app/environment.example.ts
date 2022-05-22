@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   siteName: 'Hikki',
+  siteDescription: 'Di Kamar Saja!',
   author: 'Bifeldy',
   baseUrl: 'http://localhost:4200',
   apiUrl: '/api',
