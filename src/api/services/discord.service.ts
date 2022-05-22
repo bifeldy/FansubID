@@ -9,18 +9,20 @@ import {
   MessageEmbed,
   ColorResolvable,
   EmbedAuthorData,
-  EmbedFooterData
+  EmbedFooterData,
+  GuildMember,
+  PartialGuildMember
 } from 'discord.js';
 
 // NodeJS Library
 import { URL } from 'node:url';
 
 import { Injectable } from '@nestjs/common';
-import { Equal } from 'typeorm';
+import { Equal, In, Not } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
-import { SosMedModel } from '../../models/req-res.model';
+import { RoleModel, SosMedModel } from '../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { ConfigService } from './config.service';
@@ -77,49 +79,34 @@ export class DiscordService {
     });
     this.bot.on('messageCreate', (msg: Message) => {
       if (msg.channel.id === environment.discordBotChannelBotId && msg.content.startsWith('~')) {
-        this.gs.log(`[${msg.guild.name}] 🎉 [${(msg.channel as TextChannel).name}] 🎉 [${msg.author.username}#${msg.author.discriminator}] 🎉 ${msg.content}`);
-        this.handleMessage(msg).catch(e => this.gs.log('[DISCORD_SERVICE-HANDLE_MESSAGE] 🎉', e, 'error'));
+        this.gs.log(`[${msg.guild.name}] 🎉 [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content} 🎶`);
+        this.handleMessage(msg);
       }
     });
     this.bot.once('ready', async () => {
       try {
         this.gs.log(`[DISCORD_SERVICE-READY] 🎉 ${this.bot.user.username}#${this.bot.user.discriminator} - ${this.bot.user.id} 🎶`);
+        this.changeBotNickname();
         this.updateVisitor();
-        const url = new URL(`https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`);
-        const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);
-        if (res_raw.ok) {
-          const gh: any = await res_raw.json();
-          this.cfg.github = gh[0];
-          this.bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(this.bot.user.id)?.setNickname(`Hikki - ${this.cfg.github?.sha?.slice(0, 7)}`);
-        } else {
-          throw new Error('Github API Error');
-        }
       } catch (error) {
         this.gs.log('[DISCORD_SERVICE-FAILED] 🎉', error, 'error')
         this.cfg.github = null;
       }
     });
+    this.bot.on('guildMemberRemove', async member => {
+      this.gs.log(`[DISCORD_SERVICE-MEMBER_LEAVE] 🎉 ${member.user.username}#${member.user.discriminator} - ${member.user.id} 🎶`);
+      this.memberLeftRemoveVerifiedDemote(member);
+    });
     this.bot.login(environment.discordBotLoginToken).catch(err => this.gs.log('[DISCORD_SERVICE-LOGIN] 🎉', err, 'error'));
   }
 
-  async updateVisitor(): Promise<any> {
-    if (this.bot && this.sis.io) {
-      this.bot?.user?.setPresence({
-        status: 'idle',
-        activities: [
-          {
-            name: `${this.sis.getAllClientsSocket().size} Pengunjung`,
-            type: 'WATCHING',
-            url: environment.baseUrl
-          }
-        ]
-      });
+  async sendNews(message: MessageOptions): Promise<void> {
+    try {
+      const botNewsChannel = this.bot ? (this.bot.channels.cache.get(environment.discordBotChannelEventId) as NewsChannel) : null;
+      await botNewsChannel?.send(message);
+    }  catch (error) {
+      this.gs.log('[DISCORD_SERVICE-SEND_NEWS] 🎉', error, 'error')
     }
-  }
-
-  async sendNews(message: MessageOptions): Promise<void | Message<boolean>> {
-    const botNewsChannel = this.bot ? (this.bot.channels.cache.get(environment.discordBotChannelEventId) as NewsChannel) : null;
-    return botNewsChannel?.send(message).catch(err => this.gs.log('[DISCORD_SERVICE-SEND_NEWS] 🎉', err, 'error'));
   }
 
   createEmbedMessageEmptyRawTemplate(): MessageEmbed {
@@ -158,71 +145,136 @@ export class DiscordService {
     };
   }
 
-  async handleMessage(msg: Message): Promise<Message> {
-    if (msg.content === '~about') {
-      return msg.reply({ content: `<@${msg.author.id}> https://github.com/bifeldy/Hikki` });
-    } else if (msg.content === '~ping') {
-      const latency = new Date().getTime() - new Date(msg.createdTimestamp).getTime();
-      return msg.reply({ content: `<@${msg.author.id}> Pong ${latency} ms late!` });
-    } else if (msg.content.startsWith('~verify ')) {
+  async handleMessage(msg: Message): Promise<void> {
+    try {
+      if (msg.content === '~about') {
+        await msg.reply({ content: `<@${msg.author.id}> https://github.com/bifeldy/Hikki` });
+      } else if (msg.content === '~ping') {
+        const latency = new Date().getTime() - new Date(msg.createdTimestamp).getTime();
+        await msg.reply({ content: `<@${msg.author.id}> Pong ${latency} ms late!` });
+      } else if (msg.content.startsWith('~verify ')) {
+        this.verifyAccount(msg);
+      } else {
+        await msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/documentation 💩` });
+      }
+    } catch (error) {
+      this.gs.log('[DISCORD_SERVICE-HANDLE_MESSAGE] 🎉', error, 'error')
+    }
+  }
+
+  updateVisitor(): void {
+    if (this.bot && this.sis.io) {
+      this.bot?.user?.setPresence({
+        status: 'idle',
+        activities: [
+          {
+            name: `${this.sis.getAllClientsSocket().size} Pengunjung`,
+            type: 'WATCHING',
+            url: environment.baseUrl
+          }
+        ]
+      });
+    }
+  }
+
+  async changeBotNickname(): Promise<void> {
+    try {
+      const url = new URL(`https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`);
+      const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);
+      if (res_raw.ok) {
+        const gh: any = await res_raw.json();
+        this.cfg.github = gh[0];
+        this.bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(this.bot.user.id)?.setNickname(`Hikki - ${this.cfg.github?.sha?.slice(0, 7)}`);
+      } else {
+        throw new Error('Github API Error');
+      }
+    } catch (error) {
+      this.gs.log('[DISCORD_SERVICE-CHANGE_BOT_NICKNAME] 🎉', error, 'error')
+    }
+  }
+
+  async verifyAccount(msg: Message): Promise<void> {
+    try {
       const args = msg.content.split(' ');
       if (args.length >= 3 && args.length <= 4) {
-        try {
-          if (args[3] === 'DELETE_CHAT') {
-            await msg.delete();
-          }
-          const decoded = this.cs.jwtDecrypt(args[2]);
-          if (decoded.discord.id === msg.author.id) {
-            const user = await this.userRepo.findOneOrFail({
-              where: [
-                { id: Equal(decoded.user.id) }
-              ],
-              relations: ['kartu_tanda_penduduk_', 'profile_']
-            });
-            if (user.verified) {
-              return msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
-            } else if (args[1] === SosMedModel.DISCORD) {
-              user.verified = true;
-              await this.userRepo.save(user);
-              const laboratoryRatsRole = msg.guild.roles.cache.get(environment.laboratoryRatsRoleId);
-              if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
-                await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
-              }
-              await msg.reply({ content: `<@${msg.author.id}> Berhasil 😚 Enjoy! 🤩` });
-              return (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
-                embeds: [
-                  new MessageEmbed()
-                    .setColor('#43b581')
-                    .setTitle(user.kartu_tanda_penduduk_.nama)
-                    .setURL(`${environment.baseUrl}/user/${user.username}`)
-                    .setAuthor({
-                      name: 'Hikki - Verifikasi Pengguna',
-                      iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
-                      url: environment.baseUrl
-                    })
-                    .setDescription(user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
-                    .setThumbnail(user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url)
-                    .setTimestamp(user.updated_at)
-                    .setFooter({
-                      text: user.username,
-                      iconURL: user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url
-                    })
-                ]
-              });
-            } else {
-              throw new Error('Format Data Salah / Token Expired!');
+        if (args[3] === 'DELETE_CHAT') {
+          await msg.delete();
+        }
+        const decoded = this.cs.jwtDecrypt(args[2]);
+        if (decoded.discord.id === msg.author.id) {
+          const user = await this.userRepo.findOneOrFail({
+            where: [
+              { id: Equal(decoded.user.id) }
+            ],
+            relations: ['kartu_tanda_penduduk_', 'profile_']
+          });
+          if (user.verified) {
+            await msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
+          } else if (args[1] === SosMedModel.DISCORD) {
+            user.verified = true;
+            await this.userRepo.save(user);
+            const laboratoryRatsRole = msg.guild.roles.cache.get(environment.laboratoryRatsRoleId);
+            if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
+              await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
             }
+            await msg.reply({ content: `<@${msg.author.id}> Berhasil 😚 Enjoy! 🤩` });
+            await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
+              embeds: [
+                new MessageEmbed()
+                  .setColor('#43b581')
+                  .setTitle(user.kartu_tanda_penduduk_.nama)
+                  .setURL(`${environment.baseUrl}/user/${user.username}`)
+                  .setAuthor({
+                    name: 'Hikki - Verifikasi Pengguna',
+                    iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                    url: environment.baseUrl
+                  })
+                  .setDescription(user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
+                  .setThumbnail(user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url)
+                  .setTimestamp(user.updated_at)
+                  .setFooter({
+                    text: user.username,
+                    iconURL: user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url
+                  })
+              ]
+            });
           } else {
-            return msg.reply({ content: `<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔` });
+            throw new Error('Format Data Salah / Token Expired!');
           }
-        } catch (error) {
-          return msg.reply({ content: `<@${msg.author.id}> Format data salah atau token expired 🤔` });
+        } else {
+          await msg.reply({ content: `<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔` });
         }
       } else {
-        return msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
+        await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
       }
-    } else {
-      return msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/documentation 💩` });
+    } catch (error) {
+      try {
+        await msg.reply({ content: `<@${msg.author.id}> Format data salah atau token expired 🤔` });
+      } catch (e) {
+        this.gs.log('[DISCORD_SERVICE-VERIFY_ACCOUNT] 🎉', e, 'error')
+      }
+    }
+  }
+
+  async memberLeftRemoveVerifiedDemote(member: GuildMember | PartialGuildMember): Promise<void> {
+    try {
+      const users = await this.userRepo.find({
+        where: [
+          {
+            verified: true,
+            discord: Equal(member.user.id),
+            role: Not(In([RoleModel.ADMIN]))
+          }
+        ]
+      });
+      for (const u of users) {
+        u.verified = false;
+        u.discord = null;
+        u.role = RoleModel.USER;
+        await this.userRepo.save(u);
+      }
+    } catch (e) {
+      this.gs.log('[DISCORD_SERVICE-MEMBER_LEAVE] 🎉', e, 'error');
     }
   }
 

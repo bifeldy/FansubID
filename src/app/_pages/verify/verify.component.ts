@@ -118,14 +118,22 @@ export class VerifyComponent implements OnInit, OnDestroy {
   verifyByKtpDisabled(): void {
     this.subsDialog = this.ds.openInfoDialog({
       data: {
-        title: 'Dalam Perbaikan',
+        title: 'Metode Verifikasi Baru (｡>﹏<｡)',
         htmlMessage: `
           <div class="text-center p-3">
             <img src="/favicon.ico" class="mb-4">
             <p class="text-warning">
-              Karena masalah kebocoran data pemerintah terungkap, <br />
-              Saat ini metode verifikasi dengan menggunakan KTP ditutup untuk sementara! <br />
-              Silahkan gunakan metode verifikasi lainnya.
+              Saat ini metode verifikasi dengan menggunakan KTP ditutup! <br />
+              <br />
+              Silahkan gunakan metode verifikasi Discord. <br />
+              <br />
+              Cukup dengan menghubungkan akun Discord kamu. <br />
+              Akun akan terverifikasi secara otomatis. <br />
+              <br />
+              Akun terverifikas hanya selama berada dalam server. <br />
+              Saat keluar, status verifikasi akan hilang. <br />
+              <br />
+              Terima kasih.
             </p>
           </div>
         `,
