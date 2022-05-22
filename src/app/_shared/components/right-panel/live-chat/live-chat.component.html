@@ -39,7 +39,7 @@
       </div>
       <div class="col-12">
         <div style="overflow-y: auto;" #liveChatScroll [ngStyle]="{ 'height': (chatOnly ? '320px' : 'calc(50vh - 139px)') }">
-          <div class="d-flex py-1 {{ i == chatCurrentOrGlobal.length - SS.messageChatUnreadCount ? 'border-top' : '' }}" *ngFor="let c of chatCurrentOrGlobal; let i = index">
+          <div class="d-flex py-1 {{ i === chatCurrentOrGlobal.length - SS.messageChatUnreadCount ? 'border-top' : '' }}" *ngFor="let c of chatCurrentOrGlobal; let i = index">
             <div class="flex-shrink-0" *ngIf="c.sender.image_url">
               <img height="24" width="24" src="{{ c.sender.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
             </div>
