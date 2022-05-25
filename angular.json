@@ -57,6 +57,7 @@
               "./node_modules/winbox/dist/css/winbox.min.css",
               "./node_modules/animate.css/animate.min.css",
               "./node_modules/ngx-spinner/animations/square-jelly-box.css",
+              "./node_modules/sakura-js/dist/sakura.min.css",
               "src/styles.scss"
             ],
             "scripts": [
@@ -69,7 +70,8 @@
               "./node_modules/webtorrent/webtorrent.min.js",
               "./node_modules/kuroshiro/dist/kuroshiro.js",
               "./node_modules/kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.js",
-              "./node_modules/p2p-graph/example/p2p-graph.js"
+              "./node_modules/p2p-graph/example/p2p-graph.js",
+              "./node_modules/sakura-js/dist/sakura.min.js"
             ],
             "allowedCommonJsDependencies": [
               "@videojs/xhr",
@@ -162,6 +164,7 @@
               "./node_modules/winbox/dist/css/winbox.min.css",
               "./node_modules/animate.css/animate.min.css",
               "./node_modules/ngx-spinner/animations/square-jelly-box.css",
+              "./node_modules/sakura-js/dist/sakura.min.css",
               "src/styles.scss"
             ],
             "scripts": [
@@ -174,7 +177,8 @@
               "./node_modules/webtorrent/webtorrent.min.js",
               "./node_modules/kuroshiro/dist/kuroshiro.js",
               "./node_modules/kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.js",
-              "./node_modules/p2p-graph/example/p2p-graph.js"
+              "./node_modules/p2p-graph/example/p2p-graph.js",
+              "./node_modules/sakura-js/dist/sakura.min.js"
             ]
           }
         },

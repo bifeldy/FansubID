@@ -99,6 +99,7 @@
     "reflect-metadata": "^0.1.13",
     "rss-to-json": "^2.0.2",
     "rxjs": "~7.5.0",
+    "sakura-js": "^1.1.1",
     "socket.io-client": "^2.4.0",
     "swiper": "^6.8.4",
     "tslib": "^2.4.0",

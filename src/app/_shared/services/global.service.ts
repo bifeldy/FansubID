@@ -6,6 +6,8 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 import { environment } from '../../../environments/app/environment';
 
+declare const Sakura: any;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -51,6 +53,8 @@ export class GlobalService {
   isDevMode = true;
   isDarkMode = false;
 
+  sakura = null;
+
   gambarUploadSizeLimit = 256 * 1000;
   berkasUploadSizeLimit = 256 * 1000 * 1000;
 
@@ -86,6 +90,8 @@ export class GlobalService {
     this.isDevMode = isDevMode();
     if (this.isBrowser) {
       this.onResize(null);
+      this.sakura = new Sakura('body', { delay: 1234, fallSpeed: 2 });
+      this.sakura.stop();
     }
   }
 
