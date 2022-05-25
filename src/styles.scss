@@ -113,6 +113,11 @@ $dark-theme: mat.define-dark-theme((
 
 /* Custom SCSS Below */
 
+* {
+  scrollbar-color: #ff4081 #69f0ae;
+  scrollbar-width: thin;
+}
+
 html, body {
   height: 100%;
   overscroll-behavior-x: none;
@@ -222,8 +227,8 @@ swiper
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
