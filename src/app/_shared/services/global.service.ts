@@ -91,7 +91,6 @@ export class GlobalService {
     if (this.isBrowser) {
       this.onResize(null);
       this.sakura = new Sakura('body', { delay: 1234, fallSpeed: 2 });
-      this.sakura.stop();
     }
   }
 
