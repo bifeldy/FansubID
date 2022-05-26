@@ -150,7 +150,6 @@ export class InformationController {
         throw new Error('Data Tidak Lengkap!');
       }
     } catch (error) {
-      console.error(error);
       if (error instanceof HttpException) throw error;
       throw new HttpException({
         info: '🙄 400 - Information API :: Gagal Membuat Informasi 😪',

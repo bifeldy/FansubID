@@ -44,7 +44,7 @@ export class SocketIoService {
   emitToRoomOrId(socketOrRoomId: string, key: string, data: any, callback = null): boolean {
     this.gs.log('[SOCKET_IO_SERVICE-EMIT_PRIVATE] 📢', { socketOrRoomId, key, data });
     if (callback) {
-      return this.io.to(socketOrRoomId).emit(key, data, callback);
+      return this.getClientSocket(socketOrRoomId).emit(key, data, callback);
     }
     return this.io.to(socketOrRoomId).emit(key, data);
   }
