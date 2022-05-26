@@ -45,8 +45,6 @@ export class ProjectTypeController {
         project.name = req.body.name;
         if (req.body.image) {
           project.image_url = req.body.image;
-        } else {
-          project.image_url = '/favicon.ico';
         }
         if (req.body.description) {
           project.description = req.body.description;

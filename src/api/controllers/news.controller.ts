@@ -86,8 +86,6 @@ export class NewsController {
         news.content = req.body.content;
         if (req.body.image) {
           news.image_url = req.body.image;
-        } else {
-          news.image_url = '/favicon.ico';
         }
         if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
           const filteredTagsUnique = [...new Set(req.body.tags)];

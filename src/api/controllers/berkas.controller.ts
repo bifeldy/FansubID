@@ -151,8 +151,6 @@ export class BerkasController {
         }
         if (req.body.image) {
           berkas.image_url = req.body.image;
-        } else {
-          berkas.image_url = '/favicon.ico';
         }
         if (req.body.anime_id) {
           const anime = await this.animeRepo.findOneOrFail({

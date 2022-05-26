@@ -10,7 +10,7 @@ export class Attachment implements AttachmentModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
   name: string;
 
   @Column({ type: 'varchar', length: 255 })
@@ -22,7 +22,7 @@ export class Attachment implements AttachmentModel {
   @Column({ type: 'int', default: 0 })
   download_count: number;
 
-  @Column({ type: 'text', nullable: true, default: null })
+  @Column({ type: 'text', nullable: true })
   google_drive: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

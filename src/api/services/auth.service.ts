@@ -71,13 +71,10 @@ export class AuthService {
       newUserKtp.nama = selectedRegistration.nama;
       const resKtpSave = await this.kartuTandaPendudukRepo.save(newUserKtp);
       const newUserProfile = this.profileRepo.new();
-      newUserProfile.description = '// No Description';
-      newUserProfile.cover_url = '/favicon.ico';
       const resProfileSave = await this.profileRepo.save(newUserProfile);
       const newUser = this.userRepo.new();
       newUser.username = selectedRegistration.username;
       newUser.email = selectedRegistration.email;
-      newUser.image_url = '/favicon.ico';
       newUser.password = selectedRegistration.password;
       newUser.kartu_tanda_penduduk_ = resKtpSave;
       newUser.profile_ = resProfileSave;

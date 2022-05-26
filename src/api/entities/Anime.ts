@@ -14,7 +14,7 @@ export class Anime implements AnimeModel {
   @Column({ type: 'varchar', length: 255 })
   type: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '/favicon.ico' })
   image_url: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

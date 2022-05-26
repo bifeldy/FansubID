@@ -10,7 +10,7 @@ export class TempAttachment implements TempAttachmentModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
   name: string;
 
   @Column({ type: 'varchar', length: 255 })

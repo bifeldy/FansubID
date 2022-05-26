@@ -17,7 +17,7 @@ export class User implements UserModel {
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '/favicon.ico' })
   image_url: string;
 
   @Column({ type: 'enum', enum: RoleModel, default: RoleModel.USER })

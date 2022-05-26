@@ -195,7 +195,7 @@ export class AttachmentController {
           {
             responseType: 'stream',
             headers: {
-              Range: req.headers.range,
+              Range: req.headers.range || 'bytes=0-',
               ...environment.nodeJsXhrHeader
             },
             signal: abortController.signal

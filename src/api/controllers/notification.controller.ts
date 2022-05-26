@@ -62,7 +62,7 @@ export class NotificationController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Notification API :: Gagal Mendapatkan All Notif 😪`,
+        info: `🙄 400 - Notification API :: Gagal Mendapatkan All Notifikasi 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }
@@ -84,9 +84,9 @@ export class NotificationController {
         const user: UserModel = res.locals['user'];
         let notifTemplate: NotificationModel = {
           id: new Date().getTime(),
-          type: req.body.type.replace(/<[^>]*>/g, ' ').trim(),
-          title: req.body.title.replace(/<[^>]*>/g, ' ').trim(),
-          content: req.body.content.replace(/<[^>]*>/g, ' ').trim(),
+          type: req.body.type,
+          title: req.body.title,
+          content: req.body.content,
           dismissible: (req.body.dismissible === false && user.role === RoleModel.ADMIN ? false : true),
           user_: {
             username: user.username

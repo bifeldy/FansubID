@@ -11,10 +11,10 @@ export class ProjectType implements ProjectTypeModel {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '// No Description' })
   description: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '/favicon.ico' })
   image_url: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

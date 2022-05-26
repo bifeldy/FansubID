@@ -8,10 +8,10 @@ export class Profile implements ProfileModel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '// No Description' })
   description: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '/favicon.ico' })
   cover_url: string;
 
   @Column({ type: 'int', default: 0 })

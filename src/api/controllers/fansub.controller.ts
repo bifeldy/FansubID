@@ -110,8 +110,6 @@ export class FansubController {
           fansub.urls = JSON.stringify(filteredUrls);
           if (req.body.image) {
             fansub.image_url = req.body.image;
-          } else {
-            fansub.image_url = '/favicon.ico';
           }
           if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
             const filteredTagsUnique = [...new Set(req.body.tags)];

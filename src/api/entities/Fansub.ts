@@ -13,7 +13,7 @@ export class Fansub implements FansubModel {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '// No Description' })
   description: string;
 
   @Column({ type: 'varchar', length: 255, unique: true })
@@ -31,10 +31,10 @@ export class Fansub implements FansubModel {
   @Column({ type: 'text', nullable: true })
   rss_feed: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '[]' })
   tags: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', default: '/favicon.ico' })
   image_url: string;
 
   @Column({ type: 'int', default: 0 })
