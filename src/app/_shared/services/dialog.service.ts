@@ -41,6 +41,9 @@ export class DialogService {
     if (!('disableClose' in dataInfo)) {
       dataInfo.disableClose = true;
     }
+    if (!('maxWidth' in dataInfo)) {
+      dataInfo.maxWidth = this.maxWidth;
+    }
     return this.dialog.open(MaterialDialogInfoComponent, dataInfo);
   }
 

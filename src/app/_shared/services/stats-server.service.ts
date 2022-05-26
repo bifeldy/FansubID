@@ -170,6 +170,23 @@ export class StatsServerService {
         notifObj.notifData.dismissible
       );
     });
+    this.mySocket.on('new-information', async (notifObj: any) => {
+      this.gs.log('[SOCKET_INFORMATION]', notifObj);
+      this.subsDialog = this.ds.openInfoDialog({
+        data: {
+          title: notifObj.infoData.title,
+          htmlMessage: notifObj.infoData.content,
+          confirmText: notifObj.infoData.confirm,
+          cancelText: notifObj.infoData.cancel
+        },
+        disableClose: notifObj.infoData.close
+      }).afterClosed().subscribe({
+        next: re => {
+          this.gs.log('[INFO_DIALOG_CLOSED]', re);
+          this.subsDialog.unsubscribe();
+        }
+      });
+    });
     this.mySocket.on('new-berkas', (berkasObj: any) => {
       this.gs.log('[SOCKET_BERKAS]', berkasObj);
       this.badgeBerkas.push(berkasObj);
