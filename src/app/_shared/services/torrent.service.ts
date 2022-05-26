@@ -84,7 +84,7 @@ export class TorrentService {
     return this.tableDataRowSubject?.value || [];
   }
 
-  checkHealthOnHikkiTracker(torrentInfo: any): Observable<any> {
+  checkHealthOnTracker(torrentInfo: any): Observable<any> {
     return this.api.postData(`/torrent`, torrentInfo);
   }
 
@@ -213,7 +213,7 @@ export class TorrentService {
   downloadFiles(magnetHash: string, callback, opts = this.torrentOptions): void {
     this.gs.log('[TORRENT_CLIENT_QUEUE_DOWNLOAD]', magnetHash);
     this.refCallback = callback;
-    this.checkHealthOnHikkiTracker({
+    this.checkHealthOnTracker({
       magnetHash,
       trackTimeout: 1234
     }).subscribe({
