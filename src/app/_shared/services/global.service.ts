@@ -6,6 +6,8 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 import { environment } from '../../../environments/app/environment';
 
+import { Seasons } from '../models/Seasons';
+
 declare const Sakura: any;
 
 @Injectable({
@@ -20,7 +22,8 @@ export class GlobalService {
     JwtToken: `${environment.siteName}_JwtToken`,
     LiveChatResults: `${environment.siteName}_LiveChatResults`,
     SearchResults: `${environment.siteName}_SearchResults`,
-    Torrents : `${environment.siteName}_Torrents`
+    Torrents : `${environment.siteName}_Torrents`,
+    WeatherJS: `${environment.siteName}_WeatherJS`
   };
 
   forceEnableDebugLog = null;
@@ -53,7 +56,7 @@ export class GlobalService {
   isDevMode = true;
   isDarkMode = false;
 
-  sakura = null;
+  weatherEffect = null;
 
   gambarUploadSizeLimit = 256 * 1000;
   berkasUploadSizeLimit = 256 * 1000 * 1000;
@@ -81,6 +84,13 @@ export class GlobalService {
     ],
   };
 
+  seasonalWeather = [
+    { id: 1, name: Seasons.WINTER, cssClassName: 'snow', img: '/assets/img/season/winter.png' },
+    { id: 2, name: Seasons.SPRING, cssClassName: null, img: '/assets/img/season/spring.png' },
+    { id: 3, name: Seasons.SUMMER, cssClassName: null, img: '/assets/img/season/summer.png' },
+    { id: 4, name: Seasons.FALL, cssClassName: 'sakura', img: '/assets/img/season/fall.png' }
+  ];
+
   constructor(
     @Inject(PLATFORM_ID) platformId: string,
     @Inject(DOCUMENT) document: Document
@@ -90,7 +100,7 @@ export class GlobalService {
     this.isDevMode = isDevMode();
     if (this.isBrowser) {
       this.onResize(null);
-      this.sakura = new Sakura('body', { delay: 1234, fallSpeed: 2 });
+      this.weatherJS();
     }
   }
 
@@ -239,6 +249,15 @@ export class GlobalService {
       return '';
     }
     return links[idx].href;
+  }
+
+  weatherJS(): void {
+    const currentMonth = new Date().getMonth() + 1;
+    const weather = this.seasonalWeather.find(sB => sB.id === Math.ceil(currentMonth / 3));
+    if (weather?.cssClassName) {
+      this.weatherEffect = new Sakura('body', { className: weather.cssClassName, lifeTime: 12589 });
+      this.weatherEffect.stop();
+    }
   }
 
 }

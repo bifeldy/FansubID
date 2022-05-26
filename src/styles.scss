@@ -367,10 +367,6 @@ re-captcha > div {
   background: #424242 !important;
 }
 
-.sakura {
-  z-index: 999999999 !important;
-}
-
 .gradient-border {
   background: rgb(255, 255, 255, 0.875) !important;
   position: relative;
@@ -469,4 +465,27 @@ re-captcha > div {
   0% {
     background-position: right;
   }
+}
+
+.sakura {
+  z-index: 999999999;
+  pointer-events: none;
+  position: absolute;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 183, 197, 0.75),
+    rgba(255, 197, 208, 0.75)
+  );
+}
+
+.snow {
+  z-index: 999999999;
+  pointer-events: none;
+  position: absolute;
+  background: linear-gradient(
+    120deg,
+    darkgray,
+    lightgray
+  ) !important;
+  border-radius: 50% !important;
 }

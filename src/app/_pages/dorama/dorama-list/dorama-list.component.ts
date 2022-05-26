@@ -29,13 +29,6 @@ export class DoramaListComponent implements OnInit, OnDestroy {
 
   fg: FormGroup;
 
-  seasonalBanner = [
-    { id: 1, name: Seasons.WINTER, img: '/assets/img/season/winter.png' },
-    { id: 2, name: Seasons.SPRING, img: '/assets/img/season/spring.png' },
-    { id: 3, name: Seasons.SUMMER, img: '/assets/img/season/summer.png' },
-    { id: 4, name: Seasons.FALL, img: '/assets/img/season/fall.png' }
-  ];
-
   currentMonth = null;
   currentYear = null;
 
@@ -116,7 +109,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
             Seasons.FALL
           ].indexOf(p['season']) >= 0 ? p['season'] : this.findSeasonNameByMonthNumber(this.currentMonth)
         ) : this.findSeasonNameByMonthNumber(this.currentMonth);
-        this.gs.bannerImg = this.seasonalBanner.find(sB => sB.name === this.selectedSeasonName).img;
+        this.gs.bannerImg = this.gs.seasonalWeather.find(sB => sB.name === this.selectedSeasonName).img;
         this.bs.idle();
         this.getSeasonalDorama(p['year'] && p['season']);
       }
@@ -124,7 +117,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
   }
 
   findSeasonNameByMonthNumber(monthNumber: number): string {
-    return this.seasonalBanner.find(sB => sB.id === Math.ceil(monthNumber / 3)).name;
+    return this.gs.seasonalWeather.find(sB => sB.id === Math.ceil(monthNumber / 3)).name;
   }
 
   chosenYearHandler(normalizedYear: Moment, datepicker: MatDatepicker<Moment>): void {
