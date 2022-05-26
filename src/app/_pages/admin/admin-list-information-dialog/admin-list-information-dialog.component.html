@@ -58,7 +58,7 @@
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
-                    <mat-label>Jangan Klik Tutup Dimana Saja</mat-label>
+                    <mat-label>Cegah Klik Tutup Dimana Saja</mat-label>
                     <mat-select formControlName="close" placeholder="Ya / Tidak">
                       <mat-option value="0">Tidak</mat-option>
                       <mat-option value="1">Ya</mat-option>
@@ -70,12 +70,12 @@
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
-                    <mat-label>Hanya Broadcast Saja</mat-label>
+                    <mat-label>Langsung Disiarkan Saja</mat-label>
                     <mat-select formControlName="broadcast" placeholder="Ya / Tidak">
                       <mat-option value="0">Tidak</mat-option>
                       <mat-option value="1">Ya</mat-option>
                     </mat-select>
-                    <mat-hint align="end">Live Popup Message Tanpa Disimpan</mat-hint>
+                    <mat-hint align="end">Live Popup Message Tidak Disimpan</mat-hint>
                     <mat-error>
                       <strong *ngIf="fg.get('broadcast').hasError('required')">Mohon Pilih Salah Satu</strong>
                       <strong *ngIf="fg.get('broadcast').hasError('pattern')">Status Hanya Boleh Huruf Standar Papan Ketik</strong>
