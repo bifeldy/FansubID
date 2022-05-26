@@ -167,9 +167,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   }
 
-  openAturanTatib(): void {
+  async openAturanTatib(): Promise<void> {
     if (this.fg.value.agree) {
-      this.subsDialog = this.ds.openAturanTatibDialog('Setuju', 'Tolak').afterClosed().subscribe({
+      this.subsDialog = (await this.ds.openAturanTatibDialog(true)).afterClosed().subscribe({
         next: re => {
           this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
           this.fg.controls['agree'].patchValue(re);

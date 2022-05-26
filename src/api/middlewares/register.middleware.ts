@@ -43,7 +43,7 @@ export class RegisterMiddleware implements NestMiddleware {
         'name' in req.body &&
         'email' in req.body &&
         'password' in req.body &&
-        'agree' in req.body && (JSON.parse(req.body.agree) === true) &&
+        'agree' in req.body && (req.body.agree === true) &&
         'g-recaptcha-response' in req.body
       ) {
         const url = new URL(environment.recaptchaApiUrl);

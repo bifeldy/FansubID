@@ -40,6 +40,7 @@ import { FansubRssFeedController } from './controllers/fansub-/fansub-rss-feed.c
 import { FansubRssFeedAllController } from './controllers/fansub-/fansub-rss-feed-all.controller';
 import { FansubSlugController } from './controllers/fansub-/fansub-slug.controller';
 import { ImageController } from './controllers/image.controller';
+import { InformationController } from './controllers/information.controller';
 import { LikedislikeController } from './controllers/likedislike.controller';
 import { LoginController } from './controllers/login.controller';
 import { LogoutController } from './controllers/logout.controller';
@@ -102,6 +103,7 @@ import { DoramaService } from './repository/dorama.service';
 import { EdictService } from './repository/edict.service';
 import { FansubService } from './repository/fansub.service';
 import { HirakataService } from './repository/hirakata.service';
+import { InformationService } from './repository/information.service';
 import { KanjiService } from './repository/kanji.service';
 import { KanjivgService } from './repository/kanjivg.service';
 import { KartuTandaPendudukService } from './repository/kartu-tanda-penduduk.service';
@@ -158,6 +160,7 @@ import { UserService } from './repository/user.service';
     FansubRssFeedAllController,
     FansubSlugController,
     ImageController,
+    InformationController,
     LikedislikeController,
     LoginController,
     LogoutController,
@@ -228,6 +231,7 @@ import { UserService } from './repository/user.service';
     EdictService,
     FansubService,
     HirakataService,
+    InformationService,
     KanjiService,
     KanjivgService,
     KartuTandaPendudukService,

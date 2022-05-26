@@ -147,7 +147,7 @@ export class BerkasController {
         berkas.download_url = JSON.stringify(filteredUrls);
         berkas.description = req.body.description;
         if ('private' in req.body) {
-          berkas.private = (JSON.parse(req.body.private) === true);
+          berkas.private = (req.body.private === true);
         }
         if (req.body.image) {
           berkas.image_url = req.body.image;
@@ -500,7 +500,7 @@ export class BerkasController {
             file.image_url = req.body.image;
           }
           if ('private' in req.body) {
-            file.private = (JSON.parse(req.body.private) === true);
+            file.private = (req.body.private === true);
           }
           if (req.body.anime_id) {
             const anime = await this.animeRepo.findOneOrFail({

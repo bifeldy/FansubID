@@ -33,7 +33,7 @@ export class LoginMiddleware implements NestMiddleware {
           ]
         });
         const { password, session_token, ...noPwdSsToken } = selectedUser;
-        const rememberMe = ('rememberMe' in req.body && JSON.parse(req.body.rememberMe) === true);
+        const rememberMe = ('rememberMe' in req.body && (req.body.rememberMe === true));
         selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSsToken }, rememberMe);
         const resUserSave = await this.userRepo.save(selectedUser);
         const banned = await this.as.isAccountBanned(resUserSave.id);

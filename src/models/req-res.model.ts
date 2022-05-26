@@ -367,6 +367,18 @@ export interface NihongoModel {
   user_?: UserModel;
 }
 
+export interface InformationModel {
+  id?: string;
+  title?: string;
+  content?: string;
+  confirm?: string;
+  cancel?: string;
+  close?: boolean;
+  created_at?: number | Date;
+  updated_at?: number | Date;
+  user_?: UserModel;
+}
+
 export interface NotificationModel {
   id?: number;
   type?: string;

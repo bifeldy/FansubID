@@ -1,18 +1,18 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
-import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
 
 @Component({
-  selector: 'app-admin-push-notification',
-  templateUrl: './admin-push-notification.component.html',
-  styleUrls: ['./admin-push-notification.component.css']
+  selector: 'app-admin-list-push-notification',
+  templateUrl: './admin-list-push-notification.component.html',
+  styleUrls: ['./admin-list-push-notification.component.css']
 })
-export class AdminPushNotificationComponent implements OnInit, OnDestroy {
+export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
 
   @ViewChild('kalender', { static: true }) kalender: NgxMatDatetimePicker<any>;
 

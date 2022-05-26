@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ApiKeyModel, BannedModel, JsonResponse, JsonResponseArray, NotificationModel, UserModel } from '../../../models/req-res.model';
+import { ApiKeyModel, BannedModel, InformationModel, JsonResponse, JsonResponseArray, NotificationModel, UserModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -39,6 +39,13 @@ export class AdminService {
       image_url: null,
       icon: 'stars',
       deskripsi: 'Keanggotaan Fansub'
+    },
+    {
+      url: 'information',
+      name: 'Informasi Dialog',
+      image_url: null,
+      icon: 'live_help',
+      deskripsi: 'Popup Info Dialog'
     },
     {
       url: 'project-type',
@@ -106,6 +113,18 @@ export class AdminService {
 
   revokeCors(corsId): Observable<JsonResponse<ApiKeyModel>> {
     return this.api.deleteData(`/api-key/${corsId}`);
+  }
+
+  getAllInfo(q: string, page: number, row: number, sort: string, order: string): Observable<JsonResponseArray<InformationModel>> {
+    return this.api.getData(`/information?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  }
+
+  createUpdateInfo(infoData): Observable<JsonResponse<InformationModel>> {
+    return this.api.postData(`/information`, infoData);
+  }
+
+  deleteInfo(infoId): Observable<JsonResponse<InformationModel>> {
+    return this.api.deleteData(`/information/${infoId}`);
   }
 
 }

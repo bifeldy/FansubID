@@ -12,6 +12,7 @@ import { Edict } from '../../api/entities/Edict';
 import { Fansub } from '../../api/entities/Fansub';
 import { Hirakata } from '../../api/entities/Hirakata';
 import { HirakataStats } from '../../api/entities/HirakataStats';
+import { Information } from '../../api/entities/Information';
 import { Kanji } from '../../api/entities/Kanji';
 import { KanjiVg } from '../../api/entities/KanjiVg';
 import { KanjiStats } from '../../api/entities/KanjiStats';
@@ -61,6 +62,7 @@ export const environment = {
       Fansub,
       Hirakata,
       HirakataStats,
+      Information,
       Kanji,
       KanjiVg,
       KanjiStats,

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { lastValueFrom } from 'rxjs';
 
+import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
 
 import { MaterialDialogInfoComponent } from '../components/material-dialog/material-dialog-info/material-dialog-info.component';
@@ -8,6 +10,8 @@ import { MaterialDialogDmakComponent } from '../components/material-dialog/mater
 import { MaterialDialogEdictComponent } from '../components/material-dialog/material-dialog-edict/material-dialog-edict.component';
 import { MaterialDialogBelajarComponent } from '../components/material-dialog/material-dialog-belajar/material-dialog-belajar.component';
 import { MaterialDialogInputComponent } from '../components/material-dialog/material-dialog-input/material-dialog-input.component';
+
+import { JsonResponse, InformationModel } from '../../../models/req-res.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +21,7 @@ export class DialogService {
   maxWidth = '80vw';
 
   constructor(
+    private api: ApiService,
     private dialog: MatDialog,
     private gs: GlobalService
   ) {
@@ -60,8 +65,9 @@ export class DialogService {
     return this.dialog.open(MaterialDialogBelajarComponent, dataInfo);
   }
 
-  openMaintenanceDialog(): MatDialogRef<MaterialDialogInfoComponent> {
-    return this.openInfoDialog({
+  async openMaintenanceDialog(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
+    const defaultData = {
+      id: 'MAINTENANCE',
       data: {
         title: `Informasi Perbaikan Web & Server`,
         htmlMessage: `
@@ -82,51 +88,45 @@ export class DialogService {
       },
       disableClose: true,
       maxWidth: this.maxWidth
-    });
+    };
+    try {
+      const res: JsonResponse<InformationModel> = await lastValueFrom(this.api.getData(`/information/${defaultData.id}`));
+      defaultData.data.title = res.result.title;
+      defaultData.data.htmlMessage = res.result.content;
+      defaultData.data.confirmText = res.result.confirm;
+      defaultData.data.cancelText = res.result.cancel;
+      defaultData.disableClose = res.result.close;
+    } catch (e) {
+      this.gs.log('[DIALOG_SERVICE-MAINTENANCE_DIALOG_ERROR]', e.error);
+    }
+    return this.openInfoDialog(defaultData);
   }
 
-  openAturanTatibDialog(confirmText = 'OK', cancelText = null): MatDialogRef<MaterialDialogInfoComponent> {
-    return this.openInfoDialog({
+  async openAturanTatibDialog(registerMode = false): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
+    const defaultData = {
+      id: 'ATURAN-TATA-TERTIB',
       data: {
-        title: `Aturan Dan Tata Tertib Komunitas`,
-        htmlMessage: `
-          <div class="row align-items-center">
-            <div class="col-12 text-center">
-              <img class="w-50" src="/assets/img/dialog.png">
-            </div>
-            <div class="col-12 my-3">
-              <h3 class="text-success mb-0">KEWAJIBAN</h3>
-              <ol>
-                <li>Dilarang berkata yang senonoh, jika terpaksa setidaknya mohon diplesetkan.</li>
-                <li>Jangan menyinggung hal-hal berbau <b>SARA</b>, <b>RASIS</b>, dan hal-hal serupa lainnya.</li>
-                <li>Jagalah ketertiban dan kerukunan antar pengguna.</li>
-                <li>Dilarang melakukan <i>SPAM</i> / menyampah.</li>
-                <li>Unggah berkas yang berbau <b>NSFW</b> harap mengaktifkan fitur <i>private</i>.</li>
-              </ol>
-              <br />
-              <h3 class="text-success mb-0">NORMA UMUM</h3>
-              <ul>
-                <li>Kami beranggapan bahwa anda sudah cukup umur (13+).</li>
-                <li>Silahkan beradaptasi secara mandiri.</li>
-                <li>Untuk pembuatan entri data baru silahkan menyesuaikan.</li>
-                <li>Mohon Kerjasamanya.</li>
-                <li>Terima kasih dan semoga harimu menyenangkan!</li>
-              </ul>
-              <br />
-              <h3 class="text-success mb-0">AKIBAT</h3>
-              <ul>
-                <li>Mengingkari kewajiban = <i>Manual BAN</i> dengan peringatan berupa teguran.</li>
-                <li>Mendapat banyak <i>Report</i> = <i>Auto BAN</i>.</li>
-              </ul>
-            </div>
-          </div>
-        `,
-        confirmText,
-        cancelText
+        title: 'Aturan Dan Tata Tertib Komunitas',
+        htmlMessage: 'Gagal Memuat Aturan Dan Tata Tertib Komunitas',
+        confirmText: 'Ok, Saya Mengerti!',
+        cancelText: null
       },
       disableClose: false,
       maxWidth: this.maxWidth
-    });
+    };
+    try {
+      const res: JsonResponse<InformationModel> = await lastValueFrom(this.api.getData(`/information/${defaultData.id}`));
+      defaultData.data.title = res.result.title;
+      defaultData.data.htmlMessage = res.result.content;
+      if (registerMode) {
+        defaultData.data.confirmText = res.result.confirm;
+        defaultData.data.cancelText = res.result.cancel;
+        defaultData.disableClose = res.result.close;
+      }
+    } catch (e) {
+      this.gs.log('[DIALOG_SERVICE-ATURAN_TATA_TERTIB_DIALOG_ERROR]', e.error);
+    }
+    return this.openInfoDialog(defaultData);
   }
 
 }

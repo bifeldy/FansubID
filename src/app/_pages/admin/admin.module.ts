@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
@@ -18,10 +19,11 @@ import { AdminMenuComponent } from './admin-menu/admin-menu.component';
 import { AdminListDdlComponent } from './admin-list-ddl/admin-list-ddl.component';
 import { AdminListUserComponent } from './admin-list-user/admin-list-user.component';
 import { AdminListProjectTypeComponent } from './admin-list-project-type/admin-list-project-type.component';
-import { AdminPushNotificationComponent } from './admin-push-notification/admin-push-notification.component';
+import { AdminListPushNotificationComponent } from './admin-list-push-notification/admin-list-push-notification.component';
 import { AdminListFansubMemberComponent } from './admin-list-fansub-member/admin-list-fansub-member.component';
 import { AdminListBannedComponent } from './admin-list-banned/admin-list-banned.component';
 import { AdminListCorsComponent } from './admin-list-cors/admin-list-cors.component';
+import { AdminListInformationDialogComponent } from './admin-list-information-dialog/admin-list-information-dialog.component';
 
 const routes: Routes = [
   {
@@ -97,12 +99,23 @@ const routes: Routes = [
   },
   {
     path: 'push-notification',
-    component: AdminPushNotificationComponent,
+    component: AdminListPushNotificationComponent,
     canActivate: [AuthGuard],
     data: {
       title: 'Admin - Push Notification',
       description: 'Buat Pengumuman Dadakan',
       keywords: 'Push Notification',
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+    }
+  },
+  {
+    path: 'information',
+    component: AdminListInformationDialogComponent,
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Admin - List All Information',
+      description: 'Atur Informasi Dialog',
+      keywords: 'Informations',
       roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   }
@@ -114,10 +127,11 @@ const routes: Routes = [
     AdminListDdlComponent,
     AdminListUserComponent,
     AdminListProjectTypeComponent,
-    AdminPushNotificationComponent,
+    AdminListPushNotificationComponent,
     AdminListFansubMemberComponent,
     AdminListBannedComponent,
-    AdminListCorsComponent
+    AdminListCorsComponent,
+    AdminListInformationDialogComponent
   ],
   imports: [
     CommonModule,
@@ -130,7 +144,8 @@ const routes: Routes = [
     NgxMatNativeDateModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
-    MaterialFileInputModule
+    MaterialFileInputModule,
+    AngularEditorModule
   ]
 })
 export class AdminModule { }

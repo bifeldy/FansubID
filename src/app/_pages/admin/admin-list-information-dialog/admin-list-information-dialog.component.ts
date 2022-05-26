@@ -1,0 +1,221 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { GlobalService } from '../../../_shared/services/global.service';
+import { AdminService } from '../../../_shared/services/admin.service';
+import { BusyService } from '../../../_shared/services/busy.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
+
+@Component({
+  selector: 'app-admin-list-information-dialog',
+  templateUrl: './admin-list-information-dialog.component.html',
+  styleUrls: ['./admin-list-information-dialog.component.css']
+})
+export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
+
+  fg: FormGroup;
+
+  submitted = false;
+
+  count = 0;
+  page = 1;
+  row = 10;
+
+  q = '';
+  sort = '';
+  order = '';
+
+  infoData = {
+    column: ['Id', 'Judul', 'Pemilik', 'Aksi'],
+    row: []
+  };
+
+  subsInfoGet = null;
+  subsInfoCreateOrUpdate = null;
+  subsInfoDelete = null;
+  subsDialog = null;
+
+  constructor(
+    private fb: FormBuilder,
+    private bs: BusyService,
+    private ds: DialogService,
+    private gs: GlobalService,
+    private adm: AdminService
+  ) {
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
+  }
+
+  ngOnInit(): void {
+    if (this.gs.isBrowser) {
+      this.initForm();
+      this.getInfo();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subsInfoGet?.unsubscribe();
+    this.subsInfoCreateOrUpdate?.unsubscribe();
+    this.subsInfoDelete?.unsubscribe();
+    this.subsDialog?.unsubscribe();
+  }
+
+  get GS(): GlobalService {
+    return this.gs;
+  }
+
+  initForm(): void {
+    this.fg = this.fb.group({
+      id: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      title: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      content: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      confirm: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      cancel: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      close: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      broadcast: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
+    });
+  }
+
+  getInfo(): void {
+    this.bs.busy();
+    if (this.subsInfoGet) {
+      this.subsInfoGet.unsubscribe();
+      this.bs.idle();
+    }
+    this.subsInfoGet = this.adm.getAllInfo(this.q, this.page, this.row, this.sort, this.order).subscribe({
+      next: res => {
+        this.gs.log('[INFORMATION_LIST_SUCCESS]', res);
+        this.count = res.count;
+        const infoDataRow = [];
+        for (const r of res.results) {
+          infoDataRow.push({
+            content: r.content,
+            confirm: r.confirm,
+            cancel: r.cancel,
+            close: r.close,
+            foto: r.user_.image_url,
+            Id: r.id,
+            Judul: r.title,
+            Pemilik: r.user_.username,
+            Aksi: [{
+              type: 'button',
+              icon: 'close',
+              name: 'Hapus',
+              id: r.id,
+              title: r.title
+            }]
+          });
+        }
+        this.infoData.row = infoDataRow;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[INFORMATION_LIST_ERROR]', err);
+        this.bs.idle();
+      }
+    });
+  }
+
+  onSubmit(): void {
+    this.bs.busy();
+    this.submitted = true;
+    if (this.fg.invalid) {
+      this.submitted = false;
+      this.bs.idle();
+      return;
+    }
+    this.subsInfoCreateOrUpdate = this.adm.createUpdateInfo({
+      id: this.fg.value.id,
+      title: this.fg.value.title,
+      content: this.fg.value.content,
+      confirm: this.fg.value.confirm,
+      cancel: this.fg.value.cancel,
+      close: (this.fg.value.dismissible === '1'),
+      broadcast: (this.fg.value.broadcast === '1')
+    }).subscribe({
+      next: res => {
+        this.gs.log('[INFORMATION_CREATE_UPDATE_SUCCESS]', res);
+        this.submitted = false;
+        this.bs.idle();
+        for (const c in this.fg.controls) {
+          if (this.fg.controls[c]) {
+            this.fg.controls[c].patchValue(null);
+            this.fg.controls[c].updateValueAndValidity();
+            this.fg.controls[c].setErrors(null);
+            this.fg.controls[c].markAsUntouched();
+            this.fg.controls[c].markAsPristine();
+          }
+        }
+        this.getInfo();
+      },
+      error: err => {
+        this.gs.log('[INFORMATION_CREATE_UPDATE_ERROR]', err);
+        this.submitted = false;
+        this.bs.idle();
+        this.getInfo();
+      }
+    });
+  }
+
+  deleteInfo(data): void {
+    this.gs.log('[INFORMATION_LIST_CLICK_DELETE]', data);
+    this.subsDialog = this.ds.openInfoDialog({
+      data: {
+        title: `Hapus Info -- '${data.id}' :: '${data.title}'`,
+        htmlMessage: 'Yakin Akan Menghapus Informasi Ini ?',
+        confirmText: 'Ya, Hapus',
+        cancelText: 'Tidak, Batal'
+      },
+      disableClose: false
+    }).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.bs.busy();
+          this.subsInfoDelete = this.adm.deleteInfo(data.id).subscribe({
+            next: res => {
+              this.gs.log('[INFORMATION_LIST_CLICK_DELETE_SUCCESS]', res);
+              this.bs.idle();
+              this.getInfo();
+            },
+            error: err => {
+              this.gs.log('[INFORMATION_LIST_CLICK_DELETE_ERROR]', err);
+              this.bs.idle();
+              this.getInfo();
+            }
+          });
+        } else if (re === false) {
+          this.getInfo();
+        }
+        this.subsDialog.unsubscribe();
+      }
+    });
+  }
+
+  onPaginatorClicked(data): void {
+    this.gs.log('[INFORMATION_LIST_CLICK_PAGINATOR]', data);
+    this.page = data.pageIndex + 1;
+    this.row = data.pageSize;
+    this.getInfo();
+  }
+
+  onServerSideFilter(data: any): void {
+    this.gs.log('[INFORMATION_LIST_ENTER_FILTER]', data);
+    this.q = data;
+    this.getInfo();
+  }
+
+  onServerSideOrder(data: any): void {
+    this.gs.log('[INFORMATION_LIST_CLICK_ORDER]', data);
+    this.q = data.q;
+    this.sort = data.active;
+    this.order = data.direction;
+    this.getInfo();
+  }
+
+  editInfo(data): void {
+    this.gs.log('[INFORMATION_LIST_CLICK_INFORMATION]', data);
+  }
+
+}

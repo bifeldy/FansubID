@@ -1,0 +1,128 @@
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+  
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-12">
+      <div class="row">
+        <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
+          <div class="col-12 sticky-top bg-bifeldy">
+            <h2 class="pt-3 border-bottom-dotted">
+              <b class="text-bifeldy">Tambah / Ubah Informasi Dialog Pop-Up!</b>
+            </h2>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
+                <mat-label>Kode ID</mat-label>
+                <input matInput formControlName="id" placeholder="ID_DIALOG" />
+                <mat-icon matSuffix>short_text</mat-icon>
+                <mat-hint align="end">ID Untuk Request API</mat-hint>
+                <mat-error>
+                  <strong *ngIf="fg.get('id').hasError('required')">Judul Tidak Boleh Kosong</strong>
+                  <strong *ngIf="fg.get('id').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-8" [color]="'accent'">
+                <mat-label>Judul Dialog</mat-label>
+                <input matInput formControlName="title" placeholder="Judul Dialog" />
+                <mat-icon matSuffix>short_text</mat-icon>
+                <mat-error>
+                  <strong *ngIf="fg.get('title').hasError('required')">Judul Tidak Boleh Kosong</strong>
+                  <strong *ngIf="fg.get('title').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-5 col-xl-4 p-3">
+                <div class="row">
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                    <mat-label>Tombol OK</mat-label>
+                    <input matInput formControlName="confirm" placeholder="OK!" />
+                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-error>
+                      <strong *ngIf="fg.get('confirm').hasError('required')">Judul Tidak Boleh Kosong</strong>
+                      <strong *ngIf="fg.get('confirm').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                    <mat-label>Tombol Cancel</mat-label>
+                    <input matInput formControlName="cancel" placeholder="Batal!" />
+                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-error>
+                      <strong *ngIf="fg.get('cancel').hasError('required')">Judul Tidak Boleh Kosong</strong>
+                      <strong *ngIf="fg.get('cancel').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                    <mat-label>Jangan Klik Tutup Dimana Saja</mat-label>
+                    <mat-select formControlName="close" placeholder="Ya / Tidak">
+                      <mat-option value="0">Tidak</mat-option>
+                      <mat-option value="1">Ya</mat-option>
+                    </mat-select>
+                    <mat-hint align="end">Antisipasi Kesalahan Klik</mat-hint>
+                    <mat-error>
+                      <strong *ngIf="fg.get('close').hasError('required')">Mohon Pilih Salah Satu</strong>
+                      <strong *ngIf="fg.get('close').hasError('pattern')">Status Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                    <mat-label>Hanya Broadcast Saja</mat-label>
+                    <mat-select formControlName="broadcast" placeholder="Ya / Tidak">
+                      <mat-option value="0">Tidak</mat-option>
+                      <mat-option value="1">Ya</mat-option>
+                    </mat-select>
+                    <mat-hint align="end">Live Popup Message Tanpa Disimpan</mat-hint>
+                    <mat-error>
+                      <strong *ngIf="fg.get('broadcast').hasError('required')">Mohon Pilih Salah Satu</strong>
+                      <strong *ngIf="fg.get('broadcast').hasError('pattern')">Status Hanya Boleh Huruf Standar Papan Ketik</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-12 col-md-7 col-xl-8 pt-3">
+                <div class="row">
+                  <angular-editor class="p-3 w-100" formControlName="content" [config]="GS.angularEditorConfig"></angular-editor>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-12 col-md-3 pb-3">
+                    <a mat-stroked-button routerLink="../" class="w-100" [disabled]="submitted">
+                      <mat-icon class="me-1">undo</mat-icon>
+                      Batal
+                    </a>
+                  </div>
+                  <div class="col-12 col-md-3 pb-3">
+                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid">
+                      Simpan
+                      <mat-icon class="ms-1">save</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-bifeldy">Informasi Dialog Pop-Up Tersimpan</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <app-material-table [tableDataColumn]="infoData.column" [tableDataRow]="infoData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
+            (buttonClicked)="deleteInfo($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (rowClicked)="editInfo($event)"></app-material-table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

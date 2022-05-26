@@ -91,12 +91,12 @@ export class StatsServerService {
 
   checkServerMaintenance(): void {
     this.subsServer = this.currentServer.subscribe({
-      next: server => {
+      next: async server => {
         if (
           server && server.isMaintenance &&
           (this.currentServerValue?.isMaintenance !== server.isMaintenance)
         ) {
-          this.subsDialog = this.ds.openMaintenanceDialog().afterClosed().subscribe({
+          this.subsDialog = (await this.ds.openMaintenanceDialog()).afterClosed().subscribe({
             next: re => {
               this.gs.log('[INFO_DIALOG_CLOSED]', re);
               this.subsDialog.unsubscribe();

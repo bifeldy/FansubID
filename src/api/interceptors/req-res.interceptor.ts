@@ -20,7 +20,7 @@ export class ReqResInterceptor implements NestInterceptor {
     const req = http.getRequest<Request>();
     const res = http.getResponse<Response>();
     for (const propName in req.body) {
-      if (!req.body[propName]) {
+      if (req.body[propName] === '' || req.body[propName] === undefined || req.body[propName] === null) {
         delete req.body[propName];
       }
     }
