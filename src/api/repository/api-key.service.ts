@@ -81,7 +81,7 @@ export class ApiKeyService {
   getOriginIp(req: Request, ipOnly = false): string {
     let originIp = '';
     if (!ipOnly) {
-      originIp = originIp || req.header('Origin') || req.header('Referer');
+      originIp = originIp || req.header('Origin') || '';
     }
     originIp = originIp || req.header('X-Real-Ip') || req.header('X-Forwarded-For') || req.socket.remoteAddress || '';
     return originIp || (req.ips.length ? req.ips[0] : req.ip);
