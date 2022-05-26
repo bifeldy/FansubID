@@ -210,10 +210,10 @@ export class ApiKeyController {
           relations: ['user_']
         });
         if (user.id === cors.user_.id) {
-          if (req.body.name) {
+          if ('name' in req.body) {
             cors.name = req.body.name;
           }
-          if (req.body.ip_domain) {
+          if ('ip_domain' in req.body) {
             cors.ip_domain = req.body.ip_domain;
           }
           const resCorsSave = await this.apiKeyRepo.save(cors);

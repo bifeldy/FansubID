@@ -43,10 +43,10 @@ export class ProjectTypeController {
       ) {
         const project = this.projectTypeRepo.new();
         project.name = req.body.name;
-        if (req.body.image) {
+        if ('image' in req.body) {
           project.image_url = req.body.image;
         }
-        if (req.body.description) {
+        if ('description' in req.body) {
           project.description = req.body.description;
         }
         const resProjectSave = await this.projectTypeRepo.save(project);
@@ -105,13 +105,13 @@ export class ProjectTypeController {
             { id: Equal(parseInt(req.params['id'])) }
           ]
         });
-        if (req.body.name) {
+        if ('name' in req.body) {
           projectType.name = req.body.neam;
         }
-        if (req.body.description) {
+        if ('description' in req.body) {
           projectType.description = req.body.description;
         }
-        if (req.body.image) {
+        if ('image' in req.body) {
           projectType.image_url = req.body.image;
         }
         const resProjectTypeSave = await this.projectTypeRepo.save(projectType);

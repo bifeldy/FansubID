@@ -108,17 +108,17 @@ export class FansubController {
             }
           }
           fansub.urls = JSON.stringify(filteredUrls);
-          if (req.body.image) {
+          if ('image' in req.body) {
             fansub.image_url = req.body.image;
           }
-          if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
+          if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
             const filteredTagsUnique = [...new Set(req.body.tags)];
             fansub.tags = JSON.stringify(filteredTagsUnique);
           }
-          if (req.body.description) {
+          if ('description' in req.body) {
             fansub.description = req.body.description;
           }
-          if (req.body.active) {
+          if ('active' in req.body) {
             fansub.active = req.body.active;
           }
           const resFansubSave = await this.fansubRepo.save(fansub);
@@ -228,7 +228,7 @@ export class FansubController {
           ],
           relations: ['user_']
         });
-        if (req.body.slug) {
+        if ('slug' in req.body) {
           const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
           const selectedFansub = await this.fansubRepo.find({
             where: [
@@ -246,32 +246,32 @@ export class FansubController {
             }, HttpStatus.BAD_REQUEST);
           }
         }
-        if (req.body.name) {
+        if ('name' in req.body) {
           fansub.name = req.body.name;
         }
-        if (req.body.born) {
+        if ('born' in req.body) {
           fansub.born = req.body.born;
         }
-        if (req.body.description) {
+        if ('description' in req.body) {
           fansub.description = req.body.description;
         }
-        if (req.body.active) {
+        if ('active' in req.body) {
           fansub.active = req.body.active;
         }
-        if (req.body.image) {
+        if ('image' in req.body) {
           fansub.image_url = req.body.image;
         }
-        if (req.body.rss_feed) {
+        if ('rss_feed' in req.body) {
           const rssFeed: string = req.body.rss_feed;
           if (rssFeed.match(this.gs.urlRegex)) {
             fansub.rss_feed = rssFeed;
           }
         }
-        if (req.body.tags) {
+        if ('tags' in req.body) {
           const filteredTagsUnique = [...new Set(req.body.tags)];
           fansub.tags = JSON.stringify(filteredTagsUnique);
         }
-        if (req.body.urls) {
+        if ('urls' in req.body) {
           const filteredUrls = [];
           for (const u of req.body.urls) {
             if ('url' in u && 'name' in u && u.url && u.name) {

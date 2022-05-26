@@ -70,19 +70,7 @@ export class DialogService {
       id: 'MAINTENANCE',
       data: {
         title: `Informasi Perbaikan Web & Server`,
-        htmlMessage: `
-          <div class="row align-items-center">
-            <div class="col-12 text-center">
-              <img class="w-50" src="/assets/img/dialog.png">
-            </div>
-            <div class="col-12 my-3 text-center">
-              Saat Ini Sedang Dalam Tahap Perbaikan. <br />
-              Sehingga Semua Pengguna Berada Dalam Mode Menjelajah Saja. <br />
-              Tidak Dapat Menambah Atau Mengubah Data Yang Sudah Ada. <br />
-              Silahkan Tunggu Hingga Perbaikan Selesai, Terima Kasih.
-            </div>
-          </div>
-        `,
+        htmlMessage: 'Gagal Memuat Perbaikan Web & Server',
         confirmText: 'Ok, Saya Mengerti!',
         cancelText: null
       },
@@ -118,10 +106,11 @@ export class DialogService {
       const res: JsonResponse<InformationModel> = await lastValueFrom(this.api.getData(`/information/${defaultData.id}`));
       defaultData.data.title = res.result.title;
       defaultData.data.htmlMessage = res.result.content;
+      defaultData.disableClose = res.result.close;
       if (registerMode) {
         defaultData.data.confirmText = res.result.confirm;
         defaultData.data.cancelText = res.result.cancel;
-        defaultData.disableClose = res.result.close;
+        defaultData.disableClose = true;
       }
     } catch (e) {
       this.gs.log('[DIALOG_SERVICE-ATURAN_TATA_TERTIB_DIALOG_ERROR]', e.error);

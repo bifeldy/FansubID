@@ -88,19 +88,19 @@ export class DoramaController {
           };
         } else if (doramas.length === 1) {
           const dorama = doramas[0];
-          if (req.body.id) {
+          if ('id' in req.body) {
             dorama.id = req.body.id;
           }
-          if (req.body.slug) {
+          if ('slug' in req.body) {
             dorama.slug = req.body.slug;
           }
-          if (req.body.name) {
+          if ('name' in req.body) {
             dorama.name = req.body.name;
           }
-          if (req.body.image_url) {
+          if ('image_url' in req.body) {
             dorama.image_url = req.body.image_url;
           }
-          if (req.body.type) {
+          if ('type' in req.body) {
             dorama.type = req.body.type;
           }
           const resultSaveDorama = await this.doramaRepo.save(dorama);

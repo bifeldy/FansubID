@@ -131,7 +131,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
       content: this.fg.value.content,
       confirm: this.fg.value.confirm,
       cancel: this.fg.value.cancel,
-      close: (this.fg.value.dismissible === '1'),
+      close: (this.fg.value.close === '1'),
       broadcast: (this.fg.value.broadcast === '1')
     }).subscribe({
       next: res => {
@@ -216,6 +216,13 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
 
   editInfo(data): void {
     this.gs.log('[INFORMATION_LIST_CLICK_INFORMATION]', data);
+    this.fg.controls['id'].patchValue(data.Id);
+    this.fg.controls['title'].patchValue(data.Judul);
+    this.fg.controls['content'].patchValue(data.content);
+    this.fg.controls['confirm'].patchValue(data.confirm);
+    this.fg.controls['cancel'].patchValue(data.cancel);
+    this.fg.controls['close'].patchValue(`${+data?.close}`);
+    this.fg.controls['broadcast'].patchValue(`${+data?.broadcast}`);
   }
 
 }

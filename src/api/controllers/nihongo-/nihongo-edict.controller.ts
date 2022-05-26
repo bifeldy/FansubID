@@ -76,7 +76,7 @@ export class NihongoEdictController {
   //       edict.kanji = req.body.kanji;
   //       edict.meaning = req.body.meaning;
   //       edict.reading = req.body.reading;
-  //       if (req.body.flags) {
+  //       if ('flags' in req.body) {
   //         edict.flags = req.body.flags;
   //       }
   //       const resKanaSave = await this.edictRepo.save(edict);
@@ -138,19 +138,19 @@ export class NihongoEdictController {
   //           { id: Equal(parseInt(req.params['id'])) }
   //         ]
   //       });
-  //       if (req.body.jlpt) {
+  //       if ('jlpt' in req.body) {
   //         edict.jlpt = req.body.jlpt;
   //       }
-  //       if (req.body.kanji) {
+  //       if ('kanji' in req.body) {
   //         edict.kanji = req.body.kanji;
   //       }
-  //       if (req.body.meaning) {
+  //       if ('meaning' in req.body) {
   //         edict.meaning = req.body.meaning;
   //       }
-  //       if (req.body.reading) {
+  //       if ('reading' in req.body) {
   //         edict.reading = req.body.reading;
   //       }
-  //       if (req.body.flags) {
+  //       if ('flags' in req.body) {
   //         edict.flags = req.body.flags;
   //       }
   //       const resEdictSave = await this.edictRepo.save(edict);

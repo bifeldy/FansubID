@@ -97,7 +97,7 @@ export class NihongoController {
         kana.meaning = req.body.meaning;
         kana.category = req.body.category;
         kana.image_url = req.body.image;
-        if (req.body.audio) {
+        if ('audio' in req.body) {
           kana.audio = req.body.audio;
         }
         kana.user_ = user;
@@ -179,22 +179,22 @@ export class NihongoController {
           ],
           relations: ['user_']
         });
-        if (req.body.romaji) {
+        if ('romaji' in req.body) {
           kana.romaji = req.body.romaji;
         }
-        if (req.body.kana) {
+        if ('kana' in req.body) {
           kana.kana = req.body.kana;
         }
-        if (req.body.meaning) {
+        if ('meaning' in req.body) {
           kana.meaning = req.body.meaning;
         }
-        if (req.body.category) {
+        if ('category' in req.body) {
           kana.category = req.body.category;
         }
-        if (req.body.image) {
+        if ('image' in req.body) {
           kana.image_url = req.body.image;
         }
-        if (req.body.audio) {
+        if ('audio' in req.body) {
           kana.audio = req.body.audio;
         }
         kana.user_ = user;

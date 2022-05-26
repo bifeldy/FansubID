@@ -92,16 +92,16 @@ export class AnimeController {
           };
         } else if (animes.length === 1) {
           const anime = animes[0];
-          if (req.body.id) {
+          if ('id' in req.body) {
             anime.id = req.body.id;
           }
-          if (req.body.name) {
+          if ('name' in req.body) {
             anime.name = req.body.name;
           }
-          if (req.body.image_url) {
+          if ('image_url' in req.body) {
             anime.image_url = req.body.image_url;
           }
-          if (req.body.type) {
+          if ('type' in req.body) {
             anime.type = req.body.type;
           }
           const resultSaveAnime = await this.animeRepo.save(anime);

@@ -149,10 +149,10 @@ export class BerkasController {
         if ('private' in req.body) {
           berkas.private = (req.body.private === true);
         }
-        if (req.body.image) {
+        if ('image' in req.body) {
           berkas.image_url = req.body.image;
         }
-        if (req.body.anime_id) {
+        if ('anime_id' in req.body) {
           const anime = await this.animeRepo.findOneOrFail({
             where: [
               { id: Equal(req.body.anime_id) }
@@ -161,7 +161,7 @@ export class BerkasController {
           berkas.anime_ = anime;
           berkas.dorama_ = null;
         }
-        if (req.body.dorama_id) {
+        if ('dorama_id' in req.body) {
           const dorama = await this.doramaRepo.findOneOrFail({
             where: [
               { id: Equal(req.body.dorama_id) }
@@ -183,7 +183,7 @@ export class BerkasController {
         });
         berkas.project_type_ = project;
         berkas.user_ = user;
-        if (req.body.attachment_id) {
+        if ('attachment_id' in req.body) {
           const tempAttachment = await this.tempAttachmentRepo.findOneOrFail({
             relations: ['user_'],
             where: [
@@ -490,19 +490,19 @@ export class BerkasController {
           relations: ['user_', 'attachment_', 'anime_', 'dorama_', 'project_type_', 'fansub_']
         });
         if (user.id === file.user_.id) {
-          if (req.body.name) {
+          if ('name' in req.body) {
             file.name = req.body.name;
           }
-          if (req.body.description) {
+          if ('description' in req.body) {
             file.description = req.body.description;
           }
-          if (req.body.image) {
+          if ('image' in req.body) {
             file.image_url = req.body.image;
           }
           if ('private' in req.body) {
             file.private = (req.body.private === true);
           }
-          if (req.body.anime_id) {
+          if ('anime_id' in req.body) {
             const anime = await this.animeRepo.findOneOrFail({
               where: [
                 { id: Equal(req.body.anime_id) }
@@ -511,7 +511,7 @@ export class BerkasController {
             file.anime_ = anime;
             file.dorama_ = null;
           }
-          if (req.body.dorama_id) {
+          if ('dorama_id' in req.body) {
             const dorama = await this.doramaRepo.findOneOrFail({
               where: [
                 { id: Equal(req.body.dorama_id) }
@@ -520,7 +520,7 @@ export class BerkasController {
             file.anime_ = null;
             file.dorama_ = dorama;
           }
-          if (req.body.download_url) {
+          if ('download_url' in req.body) {
             const filteredUrls = [];
             for (const u of req.body.download_url) {
               if ('url' in u && 'name' in u && u.url && u.name) {
@@ -529,7 +529,7 @@ export class BerkasController {
             }
             file.download_url = JSON.stringify(filteredUrls);
           }
-          if (req.body.fansub_id) {
+          if ('fansub_id' in req.body) {
             const fansub = await this.fansubRepo.find({
               where: [
                 { id: In(req.body.fansub_id) }
@@ -537,7 +537,7 @@ export class BerkasController {
             });
             file.fansub_ = fansub;
           }
-          if (req.body.projectType_id) {
+          if ('projectType_id' in req.body) {
             const project = await this.projectTypeRepo.findOneOrFail({
               where: [
                 { id: Equal(req.body.projectType_id) }

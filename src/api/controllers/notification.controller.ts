@@ -87,12 +87,12 @@ export class NotificationController {
           type: req.body.type,
           title: req.body.title,
           content: req.body.content,
-          dismissible: (req.body.dismissible === false && user.role === RoleModel.ADMIN ? false : true),
+          dismissible: ((req.body.dismissible === false) && user.role === RoleModel.ADMIN ? false : true),
           user_: {
             username: user.username
           }
         };
-        if (req.body.deadline) {
+        if ('deadline' in req.body) {
           const notif = this.notificationRepo.new();
           notif.type = notifTemplate.type;
           notif.title = notifTemplate.title;

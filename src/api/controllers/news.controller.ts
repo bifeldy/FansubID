@@ -84,10 +84,10 @@ export class NewsController {
         const news = this.newsRepo.new();
         news.title = req.body.title;
         news.content = req.body.content;
-        if (req.body.image) {
+        if ('image' in req.body) {
           news.image_url = req.body.image;
         }
-        if (req.body.tags && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
+        if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
           const filteredTagsUnique = [...new Set(req.body.tags)];
           news.tags = JSON.stringify(filteredTagsUnique);
         }
@@ -188,16 +188,16 @@ export class NewsController {
           relations: ['user_']
         });
         if (user.id === news.user_.id) {
-          if (req.body.title) {
+          if ('title' in req.body) {
             news.title = req.body.title;
           }
-          if (req.body.content) {
+          if ('content' in req.body) {
             news.content = req.body.content;
           }
-          if (req.body.image) {
+          if ('image' in req.body) {
             news.image_url = req.body.image;
           }
-          if (req.body.tags) {
+          if ('tags' in req.body) {
             const filteredTagsUnique = [...new Set(req.body.tags)];
             news.tags = JSON.stringify(filteredTagsUnique);
           }

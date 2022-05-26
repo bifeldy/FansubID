@@ -174,10 +174,10 @@ export class UserController {
           relations: ['kartu_tanda_penduduk_', 'profile_']
         });
         if (user.id === selectedUser.id) {
-          if (req.body.image_photo) {
+          if ('image_photo' in req.body) {
             selectedUser.image_url = req.body.image_photo;
           }
-          if (req.body.new_password) {
+          if ('new_password' in req.body) {
             selectedUser.password = this.cs.hashPassword(req.body.new_password);
           }
           const selectedProfile = await this.profileRepo.findOneOrFail({
@@ -185,10 +185,10 @@ export class UserController {
               { id: selectedUser.profile_.id }
             ]
           });
-          if (req.body.image_cover) {
+          if ('image_cover' in req.body) {
             selectedProfile.cover_url = req.body.image_cover;
           }
-          if (req.body.description) {
+          if ('description' in req.body) {
             selectedProfile.description = req.body.description;
           }
           const resProfileSave = await this.profileRepo.save(selectedProfile);

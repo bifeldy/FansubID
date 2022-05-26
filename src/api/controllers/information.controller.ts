@@ -109,19 +109,19 @@ export class InformationController {
         } else {
           throw new Error('Data Duplikat');
         }
-        if (infoTemplate.title) {
+        if ('title' in req.body) {
           infoCreateOrUpdate.title = infoTemplate.title;
         }
-        if (infoTemplate.content) {
+        if ('content' in req.body) {
           infoCreateOrUpdate.content = infoTemplate.content;
         }
-        if (infoTemplate.confirm) {
+        if ('confirm' in req.body) {
           infoCreateOrUpdate.confirm = infoTemplate.confirm;
         }
-        if (infoTemplate.cancel) {
+        if ('cancel' in req.body) {
           infoCreateOrUpdate.cancel = infoTemplate.cancel;
         }
-        if (infoTemplate.close) {
+        if ('close' in req.body) {
           infoCreateOrUpdate.close = infoTemplate.close;
         }
         infoCreateOrUpdate.user_ = user;
