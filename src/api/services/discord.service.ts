@@ -83,7 +83,7 @@ export class DiscordService {
         this.handleMessage(msg);
       }
     });
-    this.bot.once('ready', async () => {
+    this.bot.on('ready', async () => {
       try {
         this.gs.log(`[DISCORD_SERVICE-READY] 🎉 ${this.bot.user.username}#${this.bot.user.discriminator} - ${this.bot.user.id} 🎶`);
         this.changeBotNickname();

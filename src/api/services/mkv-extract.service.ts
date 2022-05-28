@@ -168,7 +168,7 @@ export class MkvExtractService {
           const endTimestamp = formatFn(chunkTimestamp + lineTimestamp + duration);
           let fixedLine: any;
           if (isASS) {
-            fixedLine = 'Diathis.gs.logue: ' + [lineParts[1], startTimestamp, endTimestamp].concat(lineParts.slice(2)).join(',');
+            fixedLine = 'Dialogue: ' + [lineParts[1], startTimestamp, endTimestamp].concat(lineParts.slice(2)).join(',');
           } else {
             fixedLine = lineIndex + 1 + '\r\n' + startTimestamp.replace('.', ',') + ' --> ' + endTimestamp.replace('.', ',') + '\r\n' + line + '\r\n';
           }

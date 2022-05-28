@@ -2,23 +2,34 @@ import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, N
 import { map, Observable } from 'rxjs';
 import { Request, Response } from 'express';
 
+import { ApiKeyService } from '../repository/api-key.service';
 import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
+import { SocketIoService } from '../services/socket-io.service';
 
 @Injectable()
 export class ReqResInterceptor implements NestInterceptor {
 
   constructor(
+    private aks: ApiKeyService,
     private cfg: ConfigService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private sis: SocketIoService
   ) {
     //
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const timeStart = new Date();
     const http = context.switchToHttp();
     const req = http.getRequest<Request>();
     const res = http.getResponse<Response>();
+    req.on('close', () => {
+      const remoteAddress = this.aks.getOriginIp(req, true);
+      const timeEnd = new Date().getTime() - timeStart.getTime();
+      const reqResInfo = `${remoteAddress} ~ ${timeStart.toISOString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
+      this.sis.emitToRoomOrId(this.gs.orangPentingSocketRoomName, 'console-log', reqResInfo);
+    });
     for (const propName in req.body) {
       if (req.body[propName] === '' || req.body[propName] === undefined || req.body[propName] === null) {
         delete req.body[propName];
@@ -39,6 +50,7 @@ export class ReqResInterceptor implements NestInterceptor {
           }, HttpStatus.SERVICE_UNAVAILABLE);
         }
       case 'GET':
+      case 'HEAD':
       case 'PATCH':
       case 'DELETE':
       default:

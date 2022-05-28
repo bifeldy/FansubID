@@ -140,7 +140,7 @@ export class TorrentService {
     if (wire['remoteAddress'] && wire['remotePort']) {
       wireName = `${wire['remoteAddress']}:${wire['remotePort']}`;
     }
-    wire.once('close', () => {
+    wire.on('close', () => {
       this.gs.log('[TORRENT_WIRE_DISCONNECT]', wireName);
       if (callback) {
         callback(null, wire);

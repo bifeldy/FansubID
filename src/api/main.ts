@@ -11,11 +11,9 @@ import { SocketIoAdapter } from './adapters/socket-io.adapter';
 import { AppModule } from './app.module';
 
 import { ApiKeyService } from './repository/api-key.service';
-import { ConfigService } from './services/config.service';
 import { GlobalService } from './services/global.service';
 
 let aks: ApiKeyService = null;
-let cfg: ConfigService = null;
 let gs: GlobalService = null;
 
 async function bootstrap() {
@@ -40,10 +38,7 @@ async function bootstrap() {
     // xssFilter: true,
   }));
   aks = app.select(AppModule).get(ApiKeyService);
-  cfg = app.select(AppModule).get(ConfigService);
   gs = app.select(AppModule).get(GlobalService);
-  cfg.appInstance = app;
-  cfg.gs = gs;
   app.enableCors(aks.getCorsOptions());
   app.use(compression());
   app.use(cookieParser());

@@ -29,7 +29,6 @@ export interface CallbackModel {
 }
 
 export interface ServerInfoModel {
-  consoleLog: boolean;
   isMaintenance: boolean;
   winboxOpenLink: boolean;
   discordNotification: boolean;

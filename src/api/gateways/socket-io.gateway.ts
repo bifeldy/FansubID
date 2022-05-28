@@ -297,8 +297,18 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       }
       await this.sis.leaveRoom(client, payload);
       await this.sis.joinOrUpdateRoom(client, payload);
-      await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: 'GLOBAL_PUBLIK' });
+      await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: this.gs.globalPublicSocketRoomName });
       this.sis.checkMultipleConnection(client, payload);
+      if (payload.user) {
+        const selectedUser = await this.userRepo.findOneOrFail({
+          where: [
+            { id: Equal(payload.user.id) }
+          ]
+        });
+        if (selectedUser.role === RoleModel.ADMIN || selectedUser.role === RoleModel.MODERATOR) {
+          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: this.gs.orangPentingSocketRoomName });
+        }
+      }
     } catch (error) {
       this.gs.log('[SOCKET_IO_LEAVE_JOIN_ROOM-ERROR] 🌟', error, 'error');
     }
@@ -319,10 +329,10 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
         payload.user = decoded.user;
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           const multipleSocketId = [];
-          for (const socketId of Object.keys(this.sis.rooms['GLOBAL_PUBLIK'])) {
+          for (const socketId of Object.keys(this.sis.rooms[this.gs.globalPublicSocketRoomName])) {
             if (
-              socketId !== client.id && this.sis.rooms['GLOBAL_PUBLIK'][socketId] &&
-              this.sis.rooms['GLOBAL_PUBLIK'][socketId].username === payload.username
+              socketId !== client.id && this.sis.rooms[this.gs.globalPublicSocketRoomName][socketId] &&
+              this.sis.rooms[this.gs.globalPublicSocketRoomName][socketId].username === payload.username
             ) {
               multipleSocketId.push(socketId);
             }
@@ -348,7 +358,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           sender: payload.user,
           message: payload.message
         };
-        if (payload.roomId === 'GLOBAL_PUBLIK') {
+        if (payload.roomId === this.gs.globalPublicSocketRoomName) {
           this.sis.emitToBroadcast('receive-chat', chatData);
         } else {
           this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', chatData);

@@ -2,15 +2,16 @@ import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { ConfigService } from './config.service';
-
 @Injectable()
 export class GlobalService {
 
   readonly urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 
+  readonly globalPublicSocketRoomName = 'GLOBAL_PUBLIK';
+  readonly orangPentingSocketRoomName = 'ORANG_PENTING';
+
   constructor(
-    private cfg: ConfigService 
+    //
   ) {
     //
   }
@@ -20,7 +21,7 @@ export class GlobalService {
   }
 
   log(message: any, data: any = null, type: string = 'log'): void {
-    if (!environment.production || this.cfg.serverGetConsoleLog()) {
+    if (!environment.production) {
       if (type === 'log') {
         if (data != null) {
           console.log(message, data);

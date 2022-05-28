@@ -74,10 +74,10 @@ export class SocketIoService {
   checkMultipleConnection(socket: Socket, data: RoomInfoInOutModel): void {
     if (data.user) {
       const multipleSocketId = [];
-      for (const socketId of Object.keys(this.rooms['GLOBAL_PUBLIK'])) {
+      for (const socketId of Object.keys(this.rooms[this.gs.globalPublicSocketRoomName])) {
         if (
-          socketId !== socket.id && this.rooms['GLOBAL_PUBLIK'][socketId] &&
-          this.rooms['GLOBAL_PUBLIK'][socketId].username === data.user.username
+          socketId !== socket.id && this.rooms[this.gs.globalPublicSocketRoomName][socketId] &&
+          this.rooms[this.gs.globalPublicSocketRoomName][socketId].username === data.user.username
         ) {
           multipleSocketId.push(socketId);
         }

@@ -1,14 +1,11 @@
-import { INestApplication, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { ServerInfoModel } from '../../models/socket-io.model';
 
+import { GlobalService } from './global.service';
+
 @Injectable()
 export class ConfigService {
-
-  appInstance: INestApplication = null;
-
-  // Prevent Circular Dependency Injection
-  gs = null;
 
   isUpdatingFansubFeedRss = false;
   isUpdatingFansubFeedRssAll = false;
@@ -22,7 +19,6 @@ export class ConfigService {
   };
 
   settings: ServerInfoModel = {
-    consoleLog: false,
     isMaintenance: false,
     winboxOpenLink: true,
     discordNotification: true,
@@ -30,7 +26,7 @@ export class ConfigService {
   }
 
   constructor(
-    //
+    private gs: GlobalService
   ) {
     //
   }
@@ -55,10 +51,6 @@ export class ConfigService {
         this.settings[key] = data[key];
       }
     }
-  }
-
-  serverGetConsoleLog(): boolean {
-    return this.serverGet().consoleLog;
   }
 
   serverGetMaintenance(): boolean {

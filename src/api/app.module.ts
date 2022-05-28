@@ -1,8 +1,8 @@
-// NodeJS Library
-import { join } from 'node:path';
-
 // 3rd Party Library
 import { Chalk } from 'chalk';
+
+// NodeJS Library
+import { join } from 'node:path';
 
 import { CacheModule, MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AngularUniversalModule } from '@nestjs/ng-universal';
