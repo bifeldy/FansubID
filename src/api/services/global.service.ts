@@ -16,10 +16,6 @@ export class GlobalService {
     //
   }
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   log(message: any, data: any = null, type: string = 'log'): void {
     if (!environment.production) {
       if (type === 'log') {
