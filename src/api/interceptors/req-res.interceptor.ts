@@ -2,6 +2,8 @@ import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, N
 import { map, Observable } from 'rxjs';
 import { Request, Response } from 'express';
 
+import { CONSTANTS } from '../../constants';
+
 import { ApiKeyService } from '../repository/api-key.service';
 import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
@@ -28,7 +30,7 @@ export class ReqResInterceptor implements NestInterceptor {
       const remoteAddress = this.aks.getOriginIp(req, true);
       const timeEnd = new Date().getTime() - timeStart.getTime();
       const reqResInfo = `${remoteAddress} ~ ${timeStart.toISOString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
-      this.sis.emitToRoomOrId(this.gs.orangPentingSocketRoomName, 'console-log', reqResInfo);
+      this.sis.emitToRoomOrId(CONSTANTS.orangPentingSocketRoomName, 'console-log', reqResInfo);
     });
     for (const propName in req.body) {
       if (req.body[propName] === '' || req.body[propName] === undefined || req.body[propName] === null) {

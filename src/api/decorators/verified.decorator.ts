@@ -1,3 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
 
-export const VerifiedOnly = (isVerifiedRequired = true) => SetMetadata('verified-only', isVerifiedRequired);
+import { CONSTANTS } from '../../constants';
+
+export const VerifiedOnly = (isVerifiedRequired = true) => SetMetadata(CONSTANTS.decoratorVerifiedOnly, isVerifiedRequired);

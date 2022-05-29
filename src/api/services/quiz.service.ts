@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
 
+import { CONSTANTS } from '../../constants';
+
 import { QuizHirakataModel, QuizKanjiModel } from '../../models/quiz.model';
 import { RoomInfoInOutModel } from '../../models/socket-io.model';
 
@@ -9,9 +11,6 @@ import { GlobalService } from './global.service';
 
 @Injectable()
 export class QuizService {
-
-  hirakataQuizOptionsCount = 5;
-  kanjiQuizOptionsCount = 6;
 
   quiz = {};
 
@@ -36,7 +35,7 @@ export class QuizService {
         DO $$
         DECLARE
           random_number DOUBLE PRECISION;
-          select_count BIGINT := ${this.hirakataQuizOptionsCount};
+          select_count BIGINT := ${CONSTANTS.hirakataQuizOptionsCount};
           total_data BIGINT;
           max_select BIGINT;
         BEGIN
@@ -83,7 +82,7 @@ export class QuizService {
         DO $$
         DECLARE
           random_number DOUBLE PRECISION;
-          select_count BIGINT := ${this.kanjiQuizOptionsCount};
+          select_count BIGINT := ${CONSTANTS.kanjiQuizOptionsCount};
           total_data BIGINT;
           max_select BIGINT;
         BEGIN

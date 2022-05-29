@@ -2,6 +2,8 @@ import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessa
 import { Server, Socket  } from 'socket.io';
 import { Equal, ILike, IsNull } from 'typeorm';
 
+import { CONSTANTS } from '../../constants';
+
 import { RoleModel } from '../../models/req-res.model';
 import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel, ServerInfoModel } from '../../models/socket-io.model';
 
@@ -297,7 +299,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       }
       await this.sis.leaveRoom(client, payload);
       await this.sis.joinOrUpdateRoom(client, payload);
-      await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: this.gs.globalPublicSocketRoomName });
+      await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.globalPublicSocketRoomName });
       this.sis.checkMultipleConnection(client, payload);
       if (payload.user) {
         const selectedUser = await this.userRepo.findOneOrFail({
@@ -306,7 +308,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           ]
         });
         if (selectedUser.role === RoleModel.ADMIN || selectedUser.role === RoleModel.MODERATOR) {
-          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: this.gs.orangPentingSocketRoomName });
+          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.orangPentingSocketRoomName });
         }
       }
     } catch (error) {
@@ -329,10 +331,10 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
         payload.user = decoded.user;
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           const multipleSocketId = [];
-          for (const socketId of Object.keys(this.sis.rooms[this.gs.globalPublicSocketRoomName])) {
+          for (const socketId of Object.keys(this.sis.rooms[CONSTANTS.globalPublicSocketRoomName])) {
             if (
-              socketId !== client.id && this.sis.rooms[this.gs.globalPublicSocketRoomName][socketId] &&
-              this.sis.rooms[this.gs.globalPublicSocketRoomName][socketId].username === payload.username
+              socketId !== client.id && this.sis.rooms[CONSTANTS.globalPublicSocketRoomName][socketId] &&
+              this.sis.rooms[CONSTANTS.globalPublicSocketRoomName][socketId].username === payload.username
             ) {
               multipleSocketId.push(socketId);
             }
@@ -358,7 +360,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           sender: payload.user,
           message: payload.message
         };
-        if (payload.roomId === this.gs.globalPublicSocketRoomName) {
+        if (payload.roomId === CONSTANTS.globalPublicSocketRoomName) {
           this.sis.emitToBroadcast('receive-chat', chatData);
         } else {
           this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', chatData);

@@ -2,8 +2,8 @@ import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req
 import { Request, Response } from 'express';
 import { Equal, ILike, In, Not } from 'typeorm';
 
-import { environment } from '../../environments/api/environment'
-;
+import { environment } from '../../environments/api/environment';
+
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';

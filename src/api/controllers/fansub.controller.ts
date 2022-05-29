@@ -5,8 +5,10 @@ import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put
 import { Request, Response } from 'express';
 import { ILike, IsNull, Not } from 'typeorm';
 
-import { environment } from '../../environments/api/environment'
-;
+import { CONSTANTS } from '../../constants';
+
+import { environment } from '../../environments/api/environment';
+
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';
@@ -98,7 +100,7 @@ export class FansubController {
           fansub.born = new Date(req.body.born);
           fansub.slug = slug;
           const rssFeed: string = req.body.rss_feed;
-          if (rssFeed.match(this.gs.urlRegex)) {
+          if (rssFeed.match(CONSTANTS.urlRegex)) {
             fansub.rss_feed = rssFeed;
           }
           const filteredUrls = [];
@@ -263,7 +265,7 @@ export class FansubController {
         }
         if ('rss_feed' in req.body) {
           const rssFeed: string = req.body.rss_feed;
-          if (rssFeed.match(this.gs.urlRegex)) {
+          if (rssFeed.match(CONSTANTS.urlRegex)) {
             fansub.rss_feed = rssFeed;
           }
         }
@@ -381,7 +383,7 @@ export class FansubController {
           updated_at: 'DESC'
         }
       });
-      const rgx = new RegExp(this.gs.urlRegex);
+      const rgx = new RegExp(CONSTANTS.urlRegex);
       if (fansub.rss_feed.match(rgx)) {
         try {
           let rssUrl = fansub.rss_feed;

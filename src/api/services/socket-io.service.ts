@@ -3,6 +3,8 @@ import { WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Equal, MoreThanOrEqual } from 'typeorm';
 
+import { CONSTANTS } from '../../constants';
+
 import { RoomModel, RoomInfoInOutModel, RoomInfoModel, PayloadModel } from '../../models/socket-io.model';
 import { NotificationService } from '../repository/notification.service';
 
@@ -74,10 +76,10 @@ export class SocketIoService {
   checkMultipleConnection(socket: Socket, data: RoomInfoInOutModel): void {
     if (data.user) {
       const multipleSocketId = [];
-      for (const socketId of Object.keys(this.rooms[this.gs.globalPublicSocketRoomName])) {
+      for (const socketId of Object.keys(this.rooms[CONSTANTS.globalPublicSocketRoomName])) {
         if (
-          socketId !== socket.id && this.rooms[this.gs.globalPublicSocketRoomName][socketId] &&
-          this.rooms[this.gs.globalPublicSocketRoomName][socketId].username === data.user.username
+          socketId !== socket.id && this.rooms[CONSTANTS.globalPublicSocketRoomName][socketId] &&
+          this.rooms[CONSTANTS.globalPublicSocketRoomName][socketId].username === data.user.username
         ) {
           multipleSocketId.push(socketId);
         }

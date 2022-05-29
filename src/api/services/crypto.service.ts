@@ -8,6 +8,8 @@ import { sign, verify, decode, Algorithm } from 'jsonwebtoken';
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
+import { CONSTANTS } from '../../constants';
+
 import { environment } from '../../environments/api/environment';
 
 import { GlobalService } from './global.service';
@@ -15,11 +17,11 @@ import { GlobalService } from './global.service';
 @Injectable()
 export class CryptoService {
 
-  jwtAlgorithm: Algorithm = 'HS512';
+  jwtAlgorithm = (CONSTANTS.jwtAlgorithm as Algorithm);
   jwtIssuer = environment.author;
   jwtAudience = environment.siteName;
   jwtSecretKey = this.hashPassword(environment.jwtSecretKey);
-  jwtExpiredIn = 24 * 60 * 60;
+  jwtExpiredIn = CONSTANTS.jwtExpiredIn;
 
   constructor(
     private gs: GlobalService
