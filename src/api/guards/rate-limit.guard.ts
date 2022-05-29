@@ -30,7 +30,7 @@ export class RateLimitGuard extends ThrottlerGuard {
     const ws = context.switchToWs();
     const req = http.getRequest<Request>();
     const client = ws.getClient();
-    const origin = this.aks.getOriginIp(req, true) || client.conn.remoteAddress || '';
+    const origin = this.aks.getOriginIp(req) || client.conn.remoteAddress || '';
     if (this.bypassRateLimitWhiteList.includes(origin)) {
       return true;
     }
