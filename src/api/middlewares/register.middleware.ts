@@ -2,8 +2,11 @@
 import { URL } from 'node:url';
 
 import { HttpException, HttpStatus, Injectable, NestMiddleware, Next, Req, Res } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { Request, Response, NextFunction } from 'express';
 import { Equal, ILike } from 'typeorm';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -19,6 +22,7 @@ import { UserService } from '../repository/user.service';
 export class RegisterMiddleware implements NestMiddleware {
 
   constructor(
+    private sr: SchedulerRegistry,
     private api: ApiService,
     private cfg: ConfigService,
     private cs: CryptoService,
@@ -93,18 +97,21 @@ export class RegisterMiddleware implements NestMiddleware {
             pengguna.activation_token = this.cs.jwtEncrypt({ user: noPwdAcToken }, 5 * 60);
             penggunaSave = await this.registrationRepo.save(pengguna);
             res.locals['registration'] = penggunaSave;
-            setTimeout(async () => {
-              try {
-                const registrationToBeDeleted = await this.registrationRepo.findOneOrFail({
-                  where: [
-                    { id: Equal(penggunaSave.id), activation_token: Equal(penggunaSave.activation_token) }
-                  ]
-                });
-                await this.registrationRepo.remove(registrationToBeDeleted);
-              } catch (err) {
-                this.gs.log('[REGISTER_MIDDLEWARE-ERROR] 🎃', err, 'error');
-              }
-            }, 3 * 60 * 1000);
+            this.sr.addTimeout(
+              CONSTANTS.timeoutCancelRegister,
+              setTimeout(async () => {
+                try {
+                  const registrationToBeDeleted = await this.registrationRepo.findOneOrFail({
+                    where: [
+                      { id: Equal(penggunaSave.id), activation_token: Equal(penggunaSave.activation_token) }
+                    ]
+                  });
+                  await this.registrationRepo.remove(registrationToBeDeleted);
+                } catch (err) {
+                  this.gs.log('[REGISTER_MIDDLEWARE-ERROR] 🎃', err, 'error');
+                }
+              }, 3 * 60 * 1000)
+            );
             return next();
           } else {
             const result: any = {};

@@ -5,9 +5,12 @@ import { AbortController } from 'abort-controller';
 import { unlink, readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -26,6 +29,7 @@ import { GlobalService } from '../services/global.service';
 export class AttachmentController {
 
   constructor(
+    private sr: SchedulerRegistry,
     private attachmentRepo: AttachmentService,
     private gdrive: GdriveService,
     private gs: GlobalService,
@@ -141,19 +145,22 @@ export class AttachmentController {
           delete resAttachmentSave.user_.created_at;
           delete resAttachmentSave.user_.updated_at;
         }
-        setTimeout(async () => {
-          try {
-            const attachmentToBeDeleted = await this.tempAttachmentRepo.findOneOrFail({
-              where: [
-                { id: Equal(resAttachmentSave.id), name: ILike(resAttachmentSave.name) }
-              ]
-            });
-            this.deleteAttachment(attachmentToBeDeleted.name);
-            await this.tempAttachmentRepo.remove(attachmentToBeDeleted);
-          } catch (e) {
-            this.gs.log('[TEMP_ATTACHMENT_DELETE-ERROR] 🚮', e, 'error');
-          }
-        }, 3 * 60 * 1000);
+        this.sr.addTimeout(
+          CONSTANTS.timeoutDeleteTempAttachment,
+          setTimeout(async () => {
+            try {
+              const attachmentToBeDeleted = await this.tempAttachmentRepo.findOneOrFail({
+                where: [
+                  { id: Equal(resAttachmentSave.id), name: ILike(resAttachmentSave.name) }
+                ]
+              });
+              this.deleteAttachment(attachmentToBeDeleted.name);
+              await this.tempAttachmentRepo.remove(attachmentToBeDeleted);
+            } catch (e) {
+              this.gs.log('[TEMP_ATTACHMENT_DELETE-ERROR] 🚮', e, 'error');
+            }
+          }, 3 * 60 * 1000)
+        );
         return {
           info: `😅 201 - Temp Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
           result: resAttachmentSave

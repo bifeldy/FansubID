@@ -10,6 +10,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MorganInterceptor, MorganModule } from 'nest-morgan';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { environment } from '../environments/api/environment';
 
@@ -93,6 +94,7 @@ import { MailService } from './services/mail.service';
 import { MkvExtractService } from './services/mkv-extract.service';
 import { QuizService } from './services/quiz.service';
 import { SocketIoService } from './services/socket-io.service';
+import { TasksService } from './services/tasks.service';
 
 import { AnimeService } from './repository/anime.service';
 import { ApiKeyService } from './repository/api-key.service';
@@ -132,7 +134,8 @@ import { UserService } from './repository/user.service';
     TypeOrmModule.forFeature(environment.typeorm.entities),
     ThrottlerModule.forRoot({ ttl: 60, limit: 15 }),
     MorganModule,
-    CacheModule.register()
+    CacheModule.register(),
+    ScheduleModule.forRoot()
   ],
   controllers: [
     AppController,
@@ -221,6 +224,7 @@ import { UserService } from './repository/user.service';
     MailService,
     QuizService,
     SocketIoService,
+    TasksService,
     // Services Entities
     AnimeService,
     ApiKeyService,
