@@ -48,6 +48,8 @@ export class StatsServerService {
   globalRoom: Observable<RoomInfoModel> = this.globalRoomSubject.asObservable();
   globalChatRoom = [];
 
+  serverLog = '// Tidak Ada Catatan Log~';
+
   quizRoom = {};
 
   subsServer = null;
@@ -153,6 +155,10 @@ export class StatsServerService {
     this.mySocket.on('visitors', visitors => {
       this.gs.log('[SOCKET_VISITOR]', this.visitor);
       this.visitor = visitors;
+    });
+    this.mySocket.on('console-log', log => {
+      this.gs.log('[SOCKET_CONSOLE_LOG]', log);
+      this.serverLog = `${log}\r\n${this.serverLog}`;
     });
     this.mySocket.on('force-logout', reason => {
       this.gs.log('[SOCKET_EXIT]', reason);

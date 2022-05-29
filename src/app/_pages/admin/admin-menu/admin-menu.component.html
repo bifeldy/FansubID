@@ -56,6 +56,17 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-bifeldy">Request & Response Logs</b>
+          </h2>
+        </div>
+        <mat-form-field class="p-3 col-12" appearance="outline" [color]="'accent'">
+          <mat-label>Request & Response Logs</mat-label>
+          <textarea matInput rows="10" [(ngModel)]="SS.serverLog"></textarea>
+        </mat-form-field>
+      </div>
     </div>
   </div>
 
