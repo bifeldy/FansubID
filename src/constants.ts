@@ -1,7 +1,6 @@
 export const CONSTANTS = {
   jwtAlgorithm: 'HS512',
   jwtExpiredIn: 24 * 60 * 60,
-  urlRegex: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
   globalPublicSocketRoomName: 'GLOBAL_PUBLIK',
   orangPentingSocketRoomName: 'ORANG_PENTING',
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
@@ -11,5 +10,11 @@ export const CONSTANTS = {
   hirakataQuizOptionsCount: 5,
   kanjiQuizOptionsCount: 6,
   decoratorRoles: 'roles',
-  decoratorVerifiedOnly: 'verified-only'
+  decoratorVerifiedOnly: 'verified-only',
+
+  allKeyboardKeysRegex: /^[\P{Cc}\P{Cn}\P{Cs}]*$/,
+  japaneseKeyboardKeysRegex: /[一-龠ぁ-ゔァ-ヴーａ-ｚＡ-Ｚ０-９々〆〤、。]+/u,
+  englishKeyboardKeysRegex: /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/,
+  emailRegex: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+  urlRegex: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
 };

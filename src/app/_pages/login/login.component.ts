@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { CONSTANTS } from '../../../constants';
+
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { BusyService } from '../../_shared/services/busy.service';
@@ -66,8 +68,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      userNameOrEmail: [null, [Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
-      password: [null, [Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
+      userNameOrEmail: [null, [Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
+      password: [null, [Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
       rememberMe: [false, []]
     });
   }

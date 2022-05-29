@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { CONSTANTS } from '../../../constants';
+
 import { GlobalService } from '../../_shared/services/global.service';
 import { AuthService } from '../../_shared/services/auth.service';
 import { BusyService } from '../../_shared/services/busy.service';
@@ -78,10 +80,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.fg = this.fb.group({
       username: [null, [Validators.required, Validators.minLength(8), Validators.pattern('^[a-z0-9]+$')]],
       name: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
-      email: [null, [Validators.required, Validators.email, Validators.pattern(this.gs.emailRegex)]],
-      password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
+      email: [null, [Validators.required, Validators.email, Validators.pattern(CONSTANTS.emailRegex)]],
+      password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
       agree: [null, [Validators.required]],
-      'g-recaptcha-response': [null, [Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
+      'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
     });
   }
 

@@ -5,6 +5,8 @@ import { ProgressBarMode } from '@angular/material/progress-bar';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { CONSTANTS } from '../../../../constants';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
@@ -108,10 +110,10 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      attachment_id: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])]
+      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      description: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])]
     });
   }
 

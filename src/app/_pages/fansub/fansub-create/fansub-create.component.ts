@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, retry, switchMap, tap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 
+import { CONSTANTS } from '../../../../constants';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
@@ -82,17 +84,17 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      born: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      active: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      description: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      born: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      active: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
       slug: [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [[], Validators.compose([])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
-      web: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
-      facebook: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
-      discord: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
-      rss_feed: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])]
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
+      web: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
+      facebook: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
+      discord: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
+      rss_feed: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),

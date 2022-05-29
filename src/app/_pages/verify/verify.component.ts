@@ -13,6 +13,8 @@ import { WinboxService } from '../../_shared/services/winbox.service';
 
 import { environment } from '../../../environments/app/environment';
 
+import { CONSTANTS } from '../../../constants';
+
 @Component({
   selector: 'app-verify',
   templateUrl: './verify.component.html',
@@ -163,23 +165,23 @@ export class VerifyComponent implements OnInit, OnDestroy {
       nik: [null, [Validators.required, Validators.pattern(/^\d+$/)]],
       nama: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
       completed: [null, [Validators.required]],
-      'g-recaptcha-response': [null, [Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
+      'g-recaptcha-response': [null, [Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
     });
     this.fg2 = this.fb.group({
       nik: [null, [Validators.pattern(/^\d+$/)]],
       nama: [null, [Validators.pattern('^[a-zA-Z. ]+$')]],
       tempat_lahir: [null, [Validators.pattern('^[a-zA-Z ]+$')]],
-      tanggal_lahir: [null, [Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
+      tanggal_lahir: [null, [Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
       jenis_kelamin: [null, [Validators.pattern('^[LP]+$')]],
       golongan_darah: [null, [Validators.pattern('^[ABO]+$')]],
-      alamat: [null, [Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
+      alamat: [null, [Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
       rt: [null, [Validators.pattern(/^\d+$/)]],
       rw: [null, [Validators.pattern(/^\d+$/)]],
-      kelurahan_desa: [null, [Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
-      kecamatan: [null, [Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
-      agama: [null, [Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
-      status_perkawinan: [null, [Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
-      pekerjaan: [null, [Validators.pattern(this.gs.englishKeyboardKeysRegex)]],
+      kelurahan_desa: [null, [Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
+      kecamatan: [null, [Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
+      agama: [null, [Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
+      status_perkawinan: [null, [Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
+      pekerjaan: [null, [Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
       kewarganegaraan: [null, [Validators.pattern('^[WNIA]+$')]],
     });
   }

@@ -6,6 +6,8 @@ import { ProgressBarMode } from '@angular/material/progress-bar';
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 
+import { CONSTANTS } from '../../../../constants';
+
 import { UserModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -165,16 +167,16 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      description: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      description: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
       anime_id: [null, Validators.compose([])],
       anime_name: [null, Validators.compose([])],
       dorama_id: [null, Validators.compose([])],
       dorama_name: [null, Validators.compose([])],
       fansub_list: this.fb.array([this.createFansub()]),
-      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
-      attachment_id: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
+      attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
       download_url: this.fb.array([this.createDownloadLink()]),
       private: [false, Validators.compose([Validators.required])]
     });
@@ -263,8 +265,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   createDownloadLink(): any {
     return this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      url: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.urlRegex)])]
+      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      url: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.urlRegex)])]
     });
   }
 

@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
 
+import { CONSTANTS } from '../../../../constants';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -69,11 +71,11 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      title: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      content: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      type: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      dismissible: [null, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      deadline: [null, Validators.compose([Validators.pattern(this.gs.englishKeyboardKeysRegex)])]
+      title: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      content: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      type: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      dismissible: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      deadline: [null, Validators.compose([Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])]
     });
   }
 

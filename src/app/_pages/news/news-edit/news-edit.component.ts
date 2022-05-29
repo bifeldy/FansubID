@@ -5,6 +5,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { CONSTANTS } from '../../../../constants';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -102,9 +104,9 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     this.image_url = data.image_url;
     this.image_url_original = this.image_url;
     this.fg = this.fb.group({
-      title: [data.title, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      content: [data.content, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      title: [data.title, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      content: [data.content, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
       tags: [data.tags, Validators.compose([])],
     });
   }

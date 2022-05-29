@@ -2,6 +2,8 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { CONSTANTS } from '../../../../../constants';
+
 import { DialogNihongoDataModel } from '../../../models/Dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
@@ -61,16 +63,16 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
 
   initForm(data): void {
     this.fg = this.fb.group({
-      kana: [data?.kana, Validators.compose([Validators.required, Validators.pattern(this.gs.japaneseKeyboardKeysRegex)])],
-      romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
+      kana: [data?.kana, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.japaneseKeyboardKeysRegex)])],
+      romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
     });
     if (data) {
       this.image_url = data?.image_url;
     } else {
-      this.fg.controls['image'].setValidators([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)]);
+      this.fg.controls['image'].setValidators([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]);
     }
     this.image_url_original = this.image_url;
   }

@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { CONSTANTS } from '../../../../constants';
+
 import { BusyService } from '../../../_shared/services/busy.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -116,17 +118,17 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   initForm(data): void {
     this.fg = this.fb.group({
-      description: [data.profile_.description, Validators.compose([Validators.required, Validators.pattern(this.gs.englishKeyboardKeysRegex)])],
+      description: [data.profile_.description, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
       new_password: [
         null,
         Validators.compose([
           Validators.required,
           Validators.minLength(5),
-          Validators.pattern(this.gs.englishKeyboardKeysRegex)
+          Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)
         ])
       ],
-      image_photo: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])],
-      image_cover: [null, Validators.compose([Validators.pattern(this.gs.urlRegex)])]
+      image_photo: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
+      image_cover: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])]
     });
     this.image_photo = data.image_url;
     this.image_photo_original = this.image_photo;

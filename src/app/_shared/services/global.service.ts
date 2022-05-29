@@ -30,13 +30,6 @@ export class GlobalService {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  readonly allKeyboardKeysRegex = /^[\P{Cc}\P{Cn}\P{Cs}]*$/;
-  readonly japaneseKeyboardKeysRegex = /[一-龠ぁ-ゔァ-ヴーａ-ｚＡ-Ｚ０-９々〆〤、。]+/u;
-  readonly englishKeyboardKeysRegex = /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/;
-
-  readonly emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
-  readonly urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-
   routerData = null;
 
   bgImgUrlPath = null;
