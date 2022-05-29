@@ -148,7 +148,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(file);
       reader.onload = e => {
         this.gs.log('[IMAGE_PHOTO_SELECTED]', e);
-        if (file.size < this.gs.gambarUploadSizeLimit) {
+        if (file.size <= CONSTANTS.fileSizeImageLimit) {
           const img = this.gs.document.createElement('img');
           img.onload = () => {
             this.imagePhoto = file;
@@ -159,7 +159,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         } else {
           this.imagePhoto = null;
           this.image_photo = '/assets/img/form-image-error.png';
-          this.imagePhotoErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.imagePhotoErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.photoImage.clear(event);
         }
       };
@@ -202,7 +202,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(file);
       reader.onload = e => {
         this.gs.log('[IMAGE_COVER_SELECTED]', e);
-        if (file.size < this.gs.gambarUploadSizeLimit) {
+        if (file.size <= CONSTANTS.fileSizeImageLimit) {
           const img = this.gs.document.createElement('img');
           img.onload = () => {
             this.imageCover = file;
@@ -213,7 +213,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         } else {
           this.imageCover = null;
           this.image_cover = '/assets/img/form-image-error.png';
-          this.imageCoverErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.imageCoverErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.coverImage.clear(event);
         }
       };

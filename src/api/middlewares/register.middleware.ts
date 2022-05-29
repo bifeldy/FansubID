@@ -94,11 +94,11 @@ export class RegisterMiddleware implements NestMiddleware {
             pengguna.nama = req.body.name;
             let penggunaSave = await this.registrationRepo.save(pengguna);
             const { password, activation_token, ...noPwdAcToken } = penggunaSave;
-            pengguna.activation_token = this.cs.jwtEncrypt({ user: noPwdAcToken }, 5 * 60);
+            pengguna.activation_token = this.cs.jwtEncrypt({ user: noPwdAcToken }, CONSTANTS.timeRegisterActivation);
             penggunaSave = await this.registrationRepo.save(pengguna);
             res.locals['registration'] = penggunaSave;
             this.sr.addTimeout(
-              CONSTANTS.timeoutCancelRegister,
+              CONSTANTS.timeoutCancelRegisterKey,
               setTimeout(async () => {
                 try {
                   const registrationToBeDeleted = await this.registrationRepo.findOneOrFail({
@@ -110,7 +110,7 @@ export class RegisterMiddleware implements NestMiddleware {
                 } catch (err) {
                   this.gs.log('[REGISTER_MIDDLEWARE-ERROR] 🎃', err, 'error');
                 }
-              }, 3 * 60 * 1000)
+              }, CONSTANTS.timeoutCancelRegisterTime)
             );
             return next();
           } else {

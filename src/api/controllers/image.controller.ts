@@ -9,6 +9,8 @@ import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInt
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 
+import { CONSTANTS } from '../../constants';
+
 import { environment } from '../../environments/api/environment';
 
 import { RoleModel } from '../../models/req-res.model';
@@ -51,7 +53,7 @@ export class ImageController {
         },
         storage: multer.memoryStorage(),
         limits: {
-          fileSize: 256 * 1000
+          fileSize: CONSTANTS.fileSizeImageLimit
         },
       }
     )

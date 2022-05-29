@@ -57,7 +57,7 @@ export class CryptoService {
         algorithm: this.jwtAlgorithm,
         issuer: this.jwtIssuer,
         audience: this.jwtAudience,
-        expiresIn: rememberMe ? (7 * 24 * 60 * 60) : (expiresIn || this.jwtExpiredIn),
+        expiresIn: rememberMe ? CONSTANTS.timeLoginRememberMe : (expiresIn || this.jwtExpiredIn),
       }
     );
   }

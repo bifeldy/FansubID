@@ -51,9 +51,6 @@ export class GlobalService {
 
   weatherEffect = null;
 
-  gambarUploadSizeLimit = 256 * 1000;
-  berkasUploadSizeLimit = 256 * 1000 * 1000;
-
   angularEditorConfig: AngularEditorConfig = {
     editable: true,
     minHeight: '256px',

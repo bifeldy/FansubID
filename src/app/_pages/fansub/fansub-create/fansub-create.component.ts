@@ -139,7 +139,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(file);
       reader.onload = e => {
         this.gs.log('[IMAGE_SELECTED]', e);
-        if (file.size < this.gs.gambarUploadSizeLimit) {
+        if (file.size <= CONSTANTS.fileSizeImageLimit) {
           const img = this.gs.document.createElement('img');
           img.onload = () => {
             this.image = file;
@@ -150,7 +150,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
         } else {
           this.image = null;
           this.image_url = '/assets/img/form-image-error.png';
-          this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.imageErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.gambar.clear(event);
         }
       };

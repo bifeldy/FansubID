@@ -41,7 +41,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
   };
 
   currentDateTime = new Date();
-  maxDateTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  maxDateTime = new Date(Date.now() + CONSTANTS.timeMaxDaysNotification);
 
   constructor(
     private fb: FormBuilder,

@@ -127,7 +127,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
       reader.readAsDataURL(file);
       reader.onload = e => {
         this.gs.log('[IMAGE_SELECTED]', e);
-        if (file.size < this.gs.gambarUploadSizeLimit) {
+        if (file.size <= CONSTANTS.fileSizeImageLimit) {
           const img = this.gs.document.createElement('img');
           img.onload = () => {
             this.image = file;
@@ -138,7 +138,7 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
         } else {
           this.image = null;
           this.image_url = '/assets/img/form-image-error.png';
-          this.imageErrorText = 'Ukuran Upload File Melebihi Batas 256 KB!';
+          this.imageErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.gambar.clear(event);
         }
       };
@@ -201,12 +201,12 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
     this.gs.log('[ATTACHMENT_SELECTED]', file);
     this.fg.controls['attachment_id'].patchValue(null);
     try {
-      if (file.size <= this.gs.berkasUploadSizeLimit) {
+      if (file.size <= CONSTANTS.fileSizeAttachmentLimit) {
         this.attachment = file;
         this.attachmentErrorText = '';
       } else {
         this.attachment = null;
-        this.attachmentErrorText = 'Ukuran File DDL Melebihi Batas 32 MB!';
+        this.attachmentErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeAttachmentLimit} Bytes!`;
         this.ddl.clear(event);
       }
     } catch (error) {
@@ -255,23 +255,22 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
           this.attachmentIsCompleted = true;
           this.fg.controls['attachment_id'].patchValue(e.result.id);
           this.toast.remove(this.uploadToast.toastId);
-          const timer = (2 * 60 * 1000) + (30 * 1000);
           this.uploadToast = this.toast.warning(
             `Segera Kirim Data Berkas Anda!`,
             `Lampiran Akan Dihapus ...`,
             {
               closeButton: false,
-              timeOut: timer,
+              timeOut: CONSTANTS.timeoutDeleteTempAttachmentTime,
               disableTimeOut: 'extendedTimeOut',
               tapToDismiss: false,
               progressAnimation: 'decreasing'
             }
           );
           this.timerTimeout = setTimeout(() => {
-            this.gs.log('[UPLOAD_TIMEOUT]', timer);
+            this.gs.log('[UPLOAD_TIMEOUT]', CONSTANTS.timeoutDeleteTempAttachmentTime);
             this.attachmentMode = 'determinate';
             this.failOrCancelUpload();
-          }, timer);
+          }, CONSTANTS.timeoutDeleteTempAttachmentTime);
         }
       },
       error: err => {

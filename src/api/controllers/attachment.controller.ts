@@ -122,7 +122,7 @@ export class AttachmentController {
           return cb(null, false);
         },
         limits: {
-          fileSize: 256 * 1000 * 1000
+          fileSize: CONSTANTS.fileSizeAttachmentLimit
         }
       }
     )
@@ -146,7 +146,7 @@ export class AttachmentController {
           delete resAttachmentSave.user_.updated_at;
         }
         this.sr.addTimeout(
-          CONSTANTS.timeoutDeleteTempAttachment,
+          CONSTANTS.timeoutDeleteTempAttachmentKey,
           setTimeout(async () => {
             try {
               const attachmentToBeDeleted = await this.tempAttachmentRepo.findOneOrFail({
@@ -159,7 +159,7 @@ export class AttachmentController {
             } catch (e) {
               this.gs.log('[TEMP_ATTACHMENT_DELETE-ERROR] 🚮', e, 'error');
             }
-          }, 3 * 60 * 1000)
+          }, CONSTANTS.timeoutDeleteTempAttachmentTime)
         );
         return {
           info: `😅 201 - Temp Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
