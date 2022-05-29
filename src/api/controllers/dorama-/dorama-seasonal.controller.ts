@@ -13,11 +13,6 @@ import { GlobalService } from '../../services/global.service';
 @Controller('/dorama-seasonal')
 export class DoramaSeasonalController {
 
-  seasonal = [
-    { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
-    { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
-  ];
-
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
     private api: ApiService,
@@ -32,8 +27,8 @@ export class DoramaSeasonalController {
   async seasonalDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const currDate = new Date();
     const year = req.query['year'] || currDate.getFullYear();
-    const season = req.query['season'] || this.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
-    const quarter = this.seasonal.find(sB => sB.name === season).id || Math.ceil((currDate.getMonth() + 1) / 3);
+    const season = req.query['season'] || this.gs.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
+    const quarter = this.gs.seasonal.find(sB => sB.name === season).id || Math.ceil((currDate.getMonth() + 1) / 3);
     try {
       const url = new URL(`${environment.externalApiDorama}/seasonal/${year}/${quarter}`);
       const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);

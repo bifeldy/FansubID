@@ -13,11 +13,6 @@ import { GlobalService } from '../../services/global.service';
 @Controller('/anime-seasonal')
 export class AnimeSeasonalController {
 
-  seasonal = [
-    { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
-    { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
-  ];
-
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
     private api: ApiService,
@@ -32,7 +27,7 @@ export class AnimeSeasonalController {
   async seasonalAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const currDate = new Date();
     const year = req.query['year'] || currDate.getFullYear();
-    const season = req.query['season'] || this.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
+    const season = req.query['season'] || this.gs.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
     try {
       const url = new URL(`${environment.externalApiAnime}/seasons/${year}/${season}`);
       const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);

@@ -5,6 +5,11 @@ import { environment } from '../../environments/api/environment';
 @Injectable()
 export class GlobalService {
 
+  seasonal = [
+    { id: 1, name: 'winter' }, { id: 2, name: 'spring' },
+    { id: 3, name: 'summer' }, { id: 4, name: 'fall' }
+  ];
+
   constructor(
     //
   ) {
