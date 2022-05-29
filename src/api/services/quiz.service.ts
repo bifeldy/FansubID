@@ -35,7 +35,7 @@ export class QuizService {
         DO $$
         DECLARE
           random_number DOUBLE PRECISION;
-          select_count BIGINT := ${CONSTANTS.hirakataQuizOptionsCount};
+          select_count BIGINT := ${CONSTANTS.quizOptionsCountHirakata};
           total_data BIGINT;
           max_select BIGINT;
         BEGIN
@@ -82,7 +82,7 @@ export class QuizService {
         DO $$
         DECLARE
           random_number DOUBLE PRECISION;
-          select_count BIGINT := ${CONSTANTS.kanjiQuizOptionsCount};
+          select_count BIGINT := ${CONSTANTS.quizOptionsCountKanji};
           total_data BIGINT;
           max_select BIGINT;
         BEGIN

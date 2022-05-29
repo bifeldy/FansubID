@@ -100,7 +100,7 @@ export class FansubController {
           fansub.born = new Date(req.body.born);
           fansub.slug = slug;
           const rssFeed: string = req.body.rss_feed;
-          if (rssFeed.match(CONSTANTS.urlRegex)) {
+          if (rssFeed.match(CONSTANTS.regexUrl)) {
             fansub.rss_feed = rssFeed;
           }
           const filteredUrls = [];
@@ -265,7 +265,7 @@ export class FansubController {
         }
         if ('rss_feed' in req.body) {
           const rssFeed: string = req.body.rss_feed;
-          if (rssFeed.match(CONSTANTS.urlRegex)) {
+          if (rssFeed.match(CONSTANTS.regexUrl)) {
             fansub.rss_feed = rssFeed;
           }
         }
@@ -383,7 +383,7 @@ export class FansubController {
           updated_at: 'DESC'
         }
       });
-      const rgx = new RegExp(CONSTANTS.urlRegex);
+      const rgx = new RegExp(CONSTANTS.regexUrl);
       if (fansub.rss_feed.match(rgx)) {
         try {
           let rssUrl = fansub.rss_feed;

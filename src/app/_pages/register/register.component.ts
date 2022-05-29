@@ -80,10 +80,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.fg = this.fb.group({
       username: [null, [Validators.required, Validators.minLength(8), Validators.pattern('^[a-z0-9]+$')]],
       name: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
-      email: [null, [Validators.required, Validators.email, Validators.pattern(CONSTANTS.emailRegex)]],
-      password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
+      email: [null, [Validators.required, Validators.email, Validators.pattern(CONSTANTS.regexEmail)]],
+      password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
       agree: [null, [Validators.required]],
-      'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]],
+      'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
     });
   }
 

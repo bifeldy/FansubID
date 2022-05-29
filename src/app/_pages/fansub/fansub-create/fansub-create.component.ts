@@ -84,17 +84,17 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      description: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      born: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      active: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      description: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      born: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      active: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       slug: [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [[], Validators.compose([])],
-      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
-      web: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
-      facebook: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
-      discord: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
-      rss_feed: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])]
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      web: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      facebook: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      discord: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      rss_feed: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),

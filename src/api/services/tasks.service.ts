@@ -129,7 +129,7 @@ export class TasksService {
             updated_at: 'DESC'
           }
         });
-        const rgx = new RegExp(CONSTANTS.urlRegex);
+        const rgx = new RegExp(CONSTANTS.regexUrl);
         for (const fs of fansubs) {
           if (fs.rss_feed.match(rgx)) {
             try {
@@ -178,7 +178,7 @@ export class TasksService {
             updated_at: 'DESC'
           }
         });
-        const rgx = new RegExp(CONSTANTS.urlRegex);
+        const rgx = new RegExp(CONSTANTS.regexUrl);
         for (const fs of fansubs) {
           if (fs.rss_feed.match(rgx)) {
             try {

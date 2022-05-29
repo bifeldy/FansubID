@@ -63,16 +63,16 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
 
   initForm(data): void {
     this.fg = this.fb.group({
-      kana: [data?.kana, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.japaneseKeyboardKeysRegex)])],
-      romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
+      kana: [data?.kana, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexJapaneseKeyboardKeys)])],
+      romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
     });
     if (data) {
       this.image_url = data?.image_url;
     } else {
-      this.fg.controls['image'].setValidators([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)]);
+      this.fg.controls['image'].setValidators([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]);
     }
     this.image_url_original = this.image_url;
   }

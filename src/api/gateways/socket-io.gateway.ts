@@ -299,7 +299,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       }
       await this.sis.leaveRoom(client, payload);
       await this.sis.joinOrUpdateRoom(client, payload);
-      await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.globalPublicSocketRoomName });
+      await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameGlobalPublic });
       this.sis.checkMultipleConnection(client, payload);
       if (payload.user) {
         const selectedUser = await this.userRepo.findOneOrFail({
@@ -308,7 +308,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           ]
         });
         if (selectedUser.role === RoleModel.ADMIN || selectedUser.role === RoleModel.MODERATOR) {
-          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.orangPentingSocketRoomName });
+          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameOrangPenting });
         }
       }
     } catch (error) {
@@ -331,10 +331,10 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
         payload.user = decoded.user;
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           const multipleSocketId = [];
-          for (const socketId of Object.keys(this.sis.rooms[CONSTANTS.globalPublicSocketRoomName])) {
+          for (const socketId of Object.keys(this.sis.rooms[CONSTANTS.socketRoomNameGlobalPublic])) {
             if (
-              socketId !== client.id && this.sis.rooms[CONSTANTS.globalPublicSocketRoomName][socketId] &&
-              this.sis.rooms[CONSTANTS.globalPublicSocketRoomName][socketId].username === payload.username
+              socketId !== client.id && this.sis.rooms[CONSTANTS.socketRoomNameGlobalPublic][socketId] &&
+              this.sis.rooms[CONSTANTS.socketRoomNameGlobalPublic][socketId].username === payload.username
             ) {
               multipleSocketId.push(socketId);
             }
@@ -360,7 +360,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           sender: payload.user,
           message: payload.message
         };
-        if (payload.roomId === CONSTANTS.globalPublicSocketRoomName) {
+        if (payload.roomId === CONSTANTS.socketRoomNameGlobalPublic) {
           this.sis.emitToBroadcast('receive-chat', chatData);
         } else {
           this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', chatData);

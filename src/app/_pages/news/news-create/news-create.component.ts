@@ -67,9 +67,9 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      title: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      content: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
+      title: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      content: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       tags: [[], Validators.compose([])]
     });
   }

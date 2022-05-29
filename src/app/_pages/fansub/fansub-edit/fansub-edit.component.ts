@@ -117,17 +117,17 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     const DISCORD = urls.find(u => u.name === 'discord');
     const ACTIVE = data.active === true ? '1' : '0';
     this.fg = this.fb.group({
-      name: [data.name, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      description: [data.description, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      born: [data.born, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
-      active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.englishKeyboardKeysRegex)])],
+      name: [data.name, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      description: [data.description, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      born: [data.born, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [data.tags, Validators.compose([])],
-      image: [null, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
-      web: [(WEB?.url || null), Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
-      facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
-      discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])],
-      rss_feed: [data.rss_feed, Validators.compose([Validators.pattern(CONSTANTS.urlRegex)])]
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      web: [(WEB?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      rss_feed: [data.rss_feed, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),
