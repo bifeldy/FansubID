@@ -15,7 +15,7 @@ export const CONSTANTS = {
   regexJapaneseKeyboardKeys: /[一-龠ぁ-ゔァ-ヴーａ-ｚＡ-Ｚ０-９々〆〤、。]+/u,
   regexUrl: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
   socketRoomNameGlobalPublic: 'GLOBAL_PUBLIK',
-  socketRoomNameOrangPenting: 'ORANG_PENTING',
+  socketRoomNameServerLogs: 'SERVER_LOGS',
   timeoutCancelRegisterKey: 'TIMEOUT_CANCEL_REGISTER',
   timeoutCancelRegisterTime: 3 * 60 * 1000,
   timeoutDeleteTempAttachmentKey: 'TIMEOUT_DELETE_TEMP_ATTACHMENT',

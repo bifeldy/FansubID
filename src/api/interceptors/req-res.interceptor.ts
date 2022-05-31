@@ -30,7 +30,7 @@ export class ReqResInterceptor implements NestInterceptor {
       const remoteAddress = this.aks.getOriginIp(req, true);
       const timeEnd = new Date().getTime() - timeStart.getTime();
       const reqResInfo = `${remoteAddress} ~ ${timeStart.toISOString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
-      this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameOrangPenting, 'console-log', reqResInfo);
+      this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
     });
     for (const propName in req.body) {
       if (req.body[propName] === '' || req.body[propName] === undefined || req.body[propName] === null) {

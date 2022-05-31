@@ -241,7 +241,7 @@ export class StatsServerService {
       if (msg.room_id === CONSTANTS.socketRoomNameGlobalPublic) {
         this.globalChatRoom.push(msg);
       } else {
-        if (msg.room_id !== CONSTANTS.socketRoomNameOrangPenting) {
+        if (msg.room_id !== CONSTANTS.socketRoomNameServerLogs) {
           this.currentChatRoom.push(msg);
         }
       }
@@ -253,7 +253,7 @@ export class StatsServerService {
       if (roomInfo.room_id === CONSTANTS.socketRoomNameGlobalPublic) {
         this.globalRoomSubject.next(roomInfo);
       } else {
-        if (roomInfo.room_id !== CONSTANTS.socketRoomNameOrangPenting) {
+        if (roomInfo.room_id !== CONSTANTS.socketRoomNameServerLogs) {
           this.currentRoomSubject.next(roomInfo);
         }
       }

@@ -308,7 +308,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           ]
         });
         if (selectedUser.role === RoleModel.ADMIN || selectedUser.role === RoleModel.MODERATOR) {
-          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameOrangPenting });
+          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameServerLogs });
         }
       }
     } catch (error) {
