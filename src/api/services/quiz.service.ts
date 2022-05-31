@@ -4,7 +4,7 @@ import { EntityManager } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
-import { QuizHirakataModel, QuizKanjiModel } from '../../models/quiz.model';
+import { QuizHirakataModel, QuizKanjiModel, QuizRoom } from '../../models/quiz.model';
 import { RoomInfoInOutModel } from '../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
@@ -12,7 +12,7 @@ import { GlobalService } from './global.service';
 @Injectable()
 export class QuizService {
 
-  quiz = {};
+  quiz: QuizRoom = {};
 
   constructor(
     @InjectEntityManager() private manager: EntityManager,
@@ -67,6 +67,7 @@ export class QuizService {
       const randomInteger = this.getRandomInt(0, hirakatas.length - 1);
       return {
         randomInteger,
+        isAnswering: false,
         question: hirakatas[randomInteger],
         options: hirakatas
       };
@@ -148,6 +149,7 @@ export class QuizService {
       const randomInteger = this.getRandomInt(0, kanjis.length - 1);
       return {
         randomInteger,
+        isAnswering: false,
         question: kanjis[randomInteger],
         options: kanjis
       };
@@ -199,12 +201,13 @@ export class QuizService {
   }
 
   calculatePoints(data: RoomInfoInOutModel): number {
+    const question: any = this.quiz[data.roomId].question;
     let points = 1;
-    if (this.quiz[data.roomId].question.jlpt === 0) {
+    if (question.jlpt === 0) {
       points = 64;
-    } else if (this.quiz[data.roomId].question.jlpt) {
+    } else if (question.jlpt) {
       // n5 = 2, n4 = 4, n3 = 8, n2 = 16, n1 = 32
-      const totalPangkat = (Math.abs(this.quiz[data.roomId].question.jlpt - 5) + 1);
+      const totalPangkat = (Math.abs(question.jlpt - 5) + 1);
       let hasilPangkatDua = 1;
       for (let i = 0; i < totalPangkat; i++) {
         hasilPangkatDua = hasilPangkatDua * 2;

@@ -375,7 +375,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
         const decoded = this.cs.jwtDecrypt(payload.jwtToken);
         payload.user = decoded.user;
         if (this.qs.quiz[payload.roomId]) {
-          if (this.qs.quiz[payload.roomId].randomInteger === payload.randomInteger) {
+          if (this.qs.quiz[payload.roomId].randomInteger === payload.randomInteger && !this.qs.quiz[payload.roomId].isAnswering) {
+            this.qs.quiz[payload.roomId].isAnswering = true;
             let answer = 0;
             if (Object.entries(this.qs.quiz[payload.roomId].question).toString() === Object.entries(payload.answer).toString()) {
               answer = await this.sis.increasePlayerPoint(client, payload);
