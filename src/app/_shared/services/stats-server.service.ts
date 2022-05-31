@@ -16,6 +16,7 @@ import { LeftMenuService } from './left-menu.service';
 import { AuthService } from './auth.service';
 import { DialogService } from './dialog.service';
 import { ServiceWorkerService } from './service-worker.service';
+import { CONSTANTS } from '../../../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -237,20 +238,24 @@ export class StatsServerService {
     });
     this.mySocket.on('receive-chat', msg => {
       this.gs.log('[SOCKET_RECEIVE-CHAT]', msg);
-      if (msg.room_id === 'GLOBAL_PUBLIK') {
+      if (msg.room_id === CONSTANTS.socketRoomNameGlobalPublic) {
         this.globalChatRoom.push(msg);
       } else {
-        this.currentChatRoom.push(msg);
+        if (msg.room_id !== CONSTANTS.socketRoomNameOrangPenting) {
+          this.currentChatRoom.push(msg);
+        }
       }
       this.messageChatUnreadCount++;
     });
     this.mySocket.on('room-info', roomInfo => {
       this.gs.log('[SOCKET_ROOM-INFO]', roomInfo);
       this.gs.cleanObject(roomInfo?.member_list);
-      if (roomInfo.room_id === 'GLOBAL_PUBLIK') {
+      if (roomInfo.room_id === CONSTANTS.socketRoomNameGlobalPublic) {
         this.globalRoomSubject.next(roomInfo);
       } else {
-        this.currentRoomSubject.next(roomInfo);
+        if (roomInfo.room_id !== CONSTANTS.socketRoomNameOrangPenting) {
+          this.currentRoomSubject.next(roomInfo);
+        }
       }
     });
     this.mySocket.on('multiple-connection', (multipleConnection, callback) => {
