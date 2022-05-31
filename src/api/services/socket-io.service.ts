@@ -94,8 +94,7 @@ export class SocketIoService {
 
   disconnectRoom(socket: Socket) {
     for (const roomId of Object.keys(this.rooms)) {
-      delete this.rooms[roomId][socket.id];
-      this.emitToRoomOrId(roomId, 'room-info', this.getRoomInfo(roomId));
+      this.leaveRoom(socket, { oldRoom: roomId });
     }
   }
 

@@ -26,11 +26,6 @@ export class LogoutMiddleware implements NestMiddleware {
   async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
     try {
       const user: UserModel = res.locals['user'];
-      // const user = await this.userRepo.findOneOrFail({
-      //   where: [
-      //     { id: Equal(user.id), session_token: Equal(token) }
-      //   ]
-      // });
       user.session_token = null;
       await this.userRepo.save(user as User);
       const socketId = req.header('X-Socket-Id') || '';

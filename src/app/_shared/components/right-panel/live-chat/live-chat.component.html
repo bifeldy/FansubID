@@ -4,10 +4,11 @@
       <div class="col-12 sticky-top bg-bifeldy">
         <h3 class="border-bottom-dotted row">
           <mat-form-field class="pt-3 col-12" [color]="'accent'">
-            <mat-label>Ruangan</mat-label>
-            <mat-select [(value)]="liveChatResult.isGlobalRoom" (valueChange)="changeRoom($event)">
-              <mat-option [value]="false">Halaman Ini</mat-option>
-              <mat-option [value]="true">Global Publik</mat-option>
+            <mat-label>Ruang Obrolan</mat-label>
+            <mat-select [(value)]="liveChatResult.roomId" (valueChange)="changeRoom($event)">
+              <mat-option [value]="ROUTER.url">Halaman Ini</mat-option>
+              <mat-option [value]="CONSTANTS.socketRoomNameGlobalPublic">Global Publik</mat-option>
+              <mat-option [value]="CONSTANTS.socketRoomNameGlobalFansub" *ngIf="isAdminModFansubber">Global Fansubber</mat-option>
             </mat-select>
           </mat-form-field>
         </h3>
@@ -58,7 +59,7 @@
         <mat-form-field class="mt-3 col-12" [color]="'accent'" *ngIf="currentUser">
           <mat-label>Kirim Pesan Obrolan Disini ...</mat-label>
           <input matInput maxlength="200" placeholder="Ex. Hello 世界！" (keyup.enter)="applyFilter($event)"
-            [(ngModel)]="liveChatResult.messageToSend" [disabled]="!currentUser" />
+            [(ngModel)]="liveChatResult.messageToSend" [disabled]="!canChat" />
           <mat-icon matSuffix>send</mat-icon>
         </mat-form-field>
         <button class="mt-4 col-12 text-light" mat-flat-button color="accent" (click)="login()" *ngIf="!currentUser">

@@ -250,13 +250,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           const track = this.trackRepo.new();
           track.ip = payload.ip;
           track[`${trackType}_`] = selected;
-          if (payload.user && payload.user.id) {
-            const visitorUser = await this.userRepo.findOneOrFail({
-              where: [
-                { id: Equal(payload.user.id) }
-              ]
-            });
-            track.track_by_ = visitorUser;
+          if (payload.user) {
+            track.track_by_ = payload.user;
           }
           await this.trackRepo.save(track);
           if (trackType === 'user') {
@@ -302,13 +297,11 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameGlobalPublic });
       this.sis.checkMultipleConnection(client, payload);
       if (payload.user) {
-        const selectedUser = await this.userRepo.findOneOrFail({
-          where: [
-            { id: Equal(payload.user.id) }
-          ]
-        });
-        if (selectedUser.role === RoleModel.ADMIN || selectedUser.role === RoleModel.MODERATOR) {
-          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameServerLogs });
+        if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR || payload.user.role === RoleModel.FANSUBBER) {
+          if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR){
+            await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameServerLogs });
+          }
+          await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameGlobalFansub });
         }
       }
     } catch (error) {
@@ -361,7 +354,11 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           message: payload.message
         };
         if (payload.roomId === CONSTANTS.socketRoomNameGlobalPublic) {
-          this.sis.emitToBroadcast('receive-chat', chatData);
+          this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameGlobalPublic, 'receive-chat', chatData);
+        } else if (payload.roomId === CONSTANTS.socketRoomNameGlobalFansub) {
+          if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR || payload.user.role === RoleModel.FANSUBBER) {
+            this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameGlobalFansub, 'receive-chat', chatData);
+          }
         } else {
           this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', chatData);
         }

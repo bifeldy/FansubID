@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { UserModel } from '../../../../../models/req-res.model';
+import { CONSTANTS } from '../../../../../constants';
+
+import { RoleModel, UserModel } from '../../../../../models/req-res.model';
 
 import { GlobalService } from '../../../services/global.service';
 import { AuthService } from '../../../services/auth.service';
@@ -18,22 +20,23 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   currentUser: UserModel = null;
 
   @Input() chatOnly = false;
-  @Input() forcedCurrentRoom = null;
 
   @ViewChild('liveChatScroll') private liveChatScroll: ElementRef;
 
   liveChatResult = {
     messageToSend: '',
-    isGlobalRoom: false
+    roomId: ''
   };
 
   globalRoom = null;
+  fansubRoom = null;
   currentRoom = null;
   messageHistory = [];
 
   subsUser = null;
   subsCurrentRoom = null;
   subsGlobalRoom = null;
+  subsFansubRoom = null;
 
   firstTimeOpen = true;
 
@@ -49,6 +52,10 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  get ROUTER(): Router {
+    return this.router;
+  }
+
   get SS(): StatsServerService {
     return this.ss;
   }
@@ -57,10 +64,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.liveChatResult = this.ls.getItem(this.gs.localStorageKeys.LiveChatResults, true) || this.liveChatResult;
-      if (this.forcedCurrentRoom) {
-        this.liveChatResult.isGlobalRoom = !this.forcedCurrentRoom;
-        this.liveChatResult.messageToSend = '';
-      }
+      this.liveChatResult.roomId = this.router.url;
       this.subsCurrentRoom = this.ss.currentRoom.subscribe({
         next: current => {
           this.currentRoom = current;
@@ -71,20 +75,42 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
           this.globalRoom = global;
         }
       });
+      this.subsFansubRoom = this.ss.fansubRoom.subscribe({
+        next: fansub => {
+          this.fansubRoom = fansub;
+        }
+      });
     }
   }
 
+  get CONSTANTS(): any {
+    return CONSTANTS;
+  }
+
+  get isAdminModFansubber(): any {
+    if (this.currentUser) {
+      if (this.currentUser.role === RoleModel.ADMIN || this.currentUser.role === RoleModel.MODERATOR || this.currentUser.role === RoleModel.FANSUBBER) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   get roomCurrentOrGlobal(): any {
-    if (this.liveChatResult.isGlobalRoom) {
+    if (this.liveChatResult.roomId === CONSTANTS.socketRoomNameGlobalPublic) {
       return this.globalRoom;
+    } else if (this.liveChatResult.roomId === CONSTANTS.socketRoomNameGlobalFansub) {
+      return this.fansubRoom;
     } else {
       return this.currentRoom;
     }
   }
 
   get chatCurrentOrGlobal(): any {
-    if (this.liveChatResult.isGlobalRoom) {
+    if (this.liveChatResult.roomId === CONSTANTS.socketRoomNameGlobalPublic) {
       this.messageHistory = this.ss.globalChatRoom;
+    } else if (this.liveChatResult.roomId === CONSTANTS.socketRoomNameGlobalFansub) {
+      this.messageHistory = this.ss.fansubChatRoom;
     } else {
       this.messageHistory = this.ss.currentChatRoom;
     }
@@ -92,6 +118,16 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
       this.scrollMessage();
     }
     return this.messageHistory;
+  }
+
+  get canChat(): boolean {
+    if (this.currentUser) {
+      if (this.liveChatResult.roomId !== CONSTANTS.socketRoomNameGlobalFansub) {
+        return true;
+      }
+      return this.isAdminModFansubber;
+    }
+    return false;
   }
 
   ngAfterViewInit(): void {
@@ -147,7 +183,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   changeRoom(data): void {
     this.gs.log('[MESSAGE_ROOM_CHANGED]', data);
-    this.liveChatResult.isGlobalRoom = data;
+    this.liveChatResult.roomId = data;
     this.scrollMessage();
   }
 

@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
+import { CONSTANTS } from '../../../constants';
+
 import { environment } from '../../../environments/app/environment';
 
 import { RoomInfoModel, ServerInfoModel } from '../../../models/socket-io.model';
@@ -16,7 +18,6 @@ import { LeftMenuService } from './left-menu.service';
 import { AuthService } from './auth.service';
 import { DialogService } from './dialog.service';
 import { ServiceWorkerService } from './service-worker.service';
-import { CONSTANTS } from '../../../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,10 @@ export class StatsServerService {
   globalRoomSubject: BehaviorSubject<RoomInfoModel> = new BehaviorSubject<RoomInfoModel>(null);
   globalRoom: Observable<RoomInfoModel> = this.globalRoomSubject.asObservable();
   globalChatRoom = [];
+
+  fansubRoomSubject: BehaviorSubject<RoomInfoModel> = new BehaviorSubject<RoomInfoModel>(null);
+  fansubRoom: Observable<RoomInfoModel> = this.fansubRoomSubject.asObservable();
+  fansubChatRoom = [];
 
   serverLog = '// Tidak Ada Catatan Log~';
 
@@ -240,6 +245,8 @@ export class StatsServerService {
       this.gs.log('[SOCKET_RECEIVE-CHAT]', msg);
       if (msg.room_id === CONSTANTS.socketRoomNameGlobalPublic) {
         this.globalChatRoom.push(msg);
+      } else if (msg.room_id === CONSTANTS.socketRoomNameGlobalFansub) {
+        this.fansubChatRoom.push(msg);
       } else {
         if (msg.room_id !== CONSTANTS.socketRoomNameServerLogs) {
           this.currentChatRoom.push(msg);
@@ -252,6 +259,8 @@ export class StatsServerService {
       this.gs.cleanObject(roomInfo?.member_list);
       if (roomInfo.room_id === CONSTANTS.socketRoomNameGlobalPublic) {
         this.globalRoomSubject.next(roomInfo);
+      } else if (roomInfo.room_id === CONSTANTS.socketRoomNameGlobalFansub) {
+        this.fansubRoomSubject.next(roomInfo);
       } else {
         if (roomInfo.room_id !== CONSTANTS.socketRoomNameServerLogs) {
           this.currentRoomSubject.next(roomInfo);
