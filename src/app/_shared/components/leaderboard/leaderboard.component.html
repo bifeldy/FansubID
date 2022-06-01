@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-12 sticky-top bg-bifeldy">
+    <h2 class="pt-3 border-bottom-dotted">
+      <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getLeaderboard()">
+        Refresh
+      </span>
+      <b class="text-bifeldy">Rank Points</b>
+    </h2>
+  </div>
+  <div class="col-12">
+    <mat-selection-list [multiple]="false">
+      <mat-list-option *ngFor="let l of leaderboardData | slice:0:10" class="h-100">
+        <img matListAvatar src="{{ l.image_url }}" class="ms-3" />
+        <a class="text-truncate text-decoration-none" href="/user/{{ l.username }}">
+          <span class="bg-bifeldy ps-3 pe-2 me-1 text-warning" style="position: absolute; right: 0;">
+            {{ l.points }}
+          </span>
+          <span class="me-3 text-danger">{{ l.rank }}</span>
+          <span class="text-success">{{ l.username }}</span>
+        </a>
+      </mat-list-option>
+    </mat-selection-list>
+    <div class="row">
+      <div class="col-12 text-end">
+        <button mat-button color="accent" (click)="prevBoard()" [disabled]="leaderboardPage <= 1">
+          <mat-icon>navigate_before</mat-icon>
+        </button>
+        <button mat-button color="accent" (click)="nextBoard()" [disabled]="leaderboardData.length < 10">
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

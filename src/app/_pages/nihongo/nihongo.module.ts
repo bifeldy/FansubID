@@ -28,6 +28,7 @@ import { MaterialTabModule } from '../../_shared/components/material-tab/materia
 import { RightPanelModule } from '../../_shared/components/right-panel/right-panel.module';
 import { QuizModule } from '../../_shared/components/quiz/quiz.module';
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
+import { LeaderboardModule } from '../../_shared/components/leaderboard/leaderboard.module';
 
 import { CustomDirectivesModule } from '../../_shared/directives/custom-directive.module';
 
@@ -585,7 +586,8 @@ const routes: Routes = [
     RightPanelModule,
     QuizModule,
     MaterialTableModule,
-    CustomDirectivesModule
+    CustomDirectivesModule,
+    LeaderboardModule
   ]
 })
 export class NihongoModule { }
