@@ -81,7 +81,7 @@ export class StatsServerService {
         transportOptions: {
           polling: {
             extraHeaders: {
-              'X-Access-Token': this.as.token
+              'x-access-token': this.as.token
             }
           }
         }

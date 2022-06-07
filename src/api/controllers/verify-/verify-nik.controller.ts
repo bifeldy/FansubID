@@ -32,7 +32,7 @@ export class VerifyNikController {
         const url = new URL(environment.recaptchaApiUrl);
         url.searchParams.append('secret', environment.reCaptchaSecretKey);
         url.searchParams.append('response', req.body['g-recaptcha-response']);
-        url.searchParams.append('remoteip', (req.headers['X-Real-Ip'] || req.headers['X-Forwarded-For'] || req.socket.remoteAddress || req.ip || '').toString());
+        url.searchParams.append('remoteip', (req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip || '').toString());
         const res_raw1 = await this.api.get(url, environment.nodeJsXhrHeader);
         if (res_raw1.ok) {
           const res_json1: any = await res_raw1.json();

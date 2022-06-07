@@ -64,7 +64,7 @@ export class CryptoService {
 
   credentialDecode(req: Request): any {
     try {
-      let token: string = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['X-Access-Token'] || req.body.token || req.query['token'] || '';
+      let token: string = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query['token'] || '';
       if (token.startsWith('Bearer ')) {
         token = token.slice(7, token.length);
       }

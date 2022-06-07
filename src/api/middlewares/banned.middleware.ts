@@ -42,7 +42,7 @@ export class BannedMiddleware implements NestMiddleware {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       res.locals['user'] = null;
-      res.locals['token'] = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['X-Access-Token'] || req.body.token || req.query['token'] || '';
+      res.locals['token'] = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query['token'] || '';
       res.locals['error'] = error;
     }
     return next();

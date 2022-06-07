@@ -83,7 +83,7 @@ export class ApiKeyService {
     if (!ipOnly) {
       originIp = originIp || req.headers.origin || '';
     }
-    originIp = (originIp || req.headers['X-Real-Ip'] || req.headers['X-Forwarded-For'] || req.socket.remoteAddress || '').toString();
+    originIp = (originIp || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString();
     return originIp || (req.ips?.length ? req.ips[0] : req.ip);
   }
 

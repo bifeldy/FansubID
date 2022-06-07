@@ -28,7 +28,7 @@ export class LogoutMiddleware implements NestMiddleware {
       const user: UserModel = res.locals['user'];
       user.session_token = null;
       await this.userRepo.save(user as User);
-      const socketId = (req.headers['X-Socket-Id'] || '').toString();
+      const socketId = (req.headers['x-socket-id'] || '').toString();
       if (socketId) {
         const socket = this.sis.getClientSocket(socketId);
         if (socket) {

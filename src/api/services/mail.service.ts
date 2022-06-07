@@ -32,7 +32,7 @@ export class MailService {
       form.append('to', mailBody.to);
       form.append('subject', mailBody.subject);
       form.append('template', mailBody.template);
-      form.append('h:X-Mailgun-Variables', JSON.stringify(mailBody.variables));
+      form.append('h:x-mailgun-variables', JSON.stringify(mailBody.variables));
       const res_raw = await this.api.post(url, form, {
         'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
         ...environment.nodeJsXhrHeader

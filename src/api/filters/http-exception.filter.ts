@@ -25,7 +25,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let body: any = exception.getResponse();
 
     if (statusCode === HttpStatus.UNAUTHORIZED) {
-      const socketId = (req.headers['X-Socket-Id'] || '').toString();
+      const socketId = (req.headers['x-socket-id'] || '').toString();
       if (socketId) {
         const socket = this.sis.getClientSocket(socketId);
         if (socket) {
