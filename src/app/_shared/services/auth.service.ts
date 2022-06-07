@@ -17,7 +17,7 @@ export class AuthService {
   currentUserSubject: BehaviorSubject<UserModel>;
   currentUser: Observable<UserModel>;
 
-  jwtToken = null;
+  token = null;
 
   constructor(
     private router: Router,
@@ -29,8 +29,8 @@ export class AuthService {
     if (this.gs.isBrowser) {
       this.currentUserSubject = new BehaviorSubject<UserModel>(null);
       this.currentUser = this.currentUserSubject.asObservable();
-      this.jwtToken = this.ls.getItem(this.gs.localStorageKeys.JwtToken);
-      this.ls.removeItem(this.gs.localStorageKeys.JwtToken);
+      this.token = this.ls.getItem(this.gs.localStorageKeys.token);
+      this.ls.removeItem(this.gs.localStorageKeys.token);
     }
   }
 
@@ -42,7 +42,7 @@ export class AuthService {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.patchData(`/verify`, { token }).pipe(map(respVerify => {
       this.currentUserSubject.next(respVerify.result);
-      this.jwtToken = respVerify.jwtToken;
+      this.token = respVerify.token;
       return respVerify;
     }));
   }
@@ -56,7 +56,7 @@ export class AuthService {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(
       map(respLogin => {
-        this.jwtToken = respLogin.result.jwtToken;
+        this.token = respLogin.result.token;
         return respLogin;
       })
     );
@@ -69,11 +69,11 @@ export class AuthService {
 
   removeUser(): void {
     this.currentUserSubject.next(null);
-    this.jwtToken = null;
+    this.token = null;
   }
 
   logout(): void {
-    this.gs.log('[AUTH_LOGOUT]', this.jwtToken);
+    this.gs.log('[AUTH_LOGOUT]', this.token);
     this.bs.busy();
     this.api.deleteData(`/logout`).subscribe({
       next: (res: any) => {

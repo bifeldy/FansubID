@@ -40,7 +40,7 @@ export class VerifyController {
       return {
         info: '😍 202 - Verifikasi API :: Token Selesai Di Verifikasi UwUu 🥰',
         result: user,
-        jwtToken: token
+        token
       };
     }
     if (token) {

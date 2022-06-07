@@ -19,7 +19,7 @@ export class LoginController {
     return {
       info: '😚 201 - Login API :: Berhasil Masuk Yeay 🤩',
       result: {
-        jwtToken: user.session_token
+        token: user.session_token
       }
     };
   }

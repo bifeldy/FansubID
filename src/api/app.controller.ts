@@ -48,7 +48,7 @@ export class AppController {
   //   return {
   //     info: '😚 200 - Reset API :: Berhasil Reset Password Yeay 🤩',
   //     result: {
-  //       jwtToken: user.session_token
+  //       token: user.session_token
   //     }
   //   };
   // }

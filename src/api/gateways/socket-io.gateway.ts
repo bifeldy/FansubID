@@ -75,8 +75,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   @SubscribeMessage('server-set')
   serverSet(client: Socket, payload: PayloadModel): ServerInfoModel | void {
     try {
-      if (payload.jwtToken) {
-        const decoded = this.cs.jwtDecrypt(payload.jwtToken);
+      if (payload.token) {
+        const decoded = this.cs.jwtDecrypt(payload.token);
         payload.user = decoded.user;
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           this.cfg.serverSet(payload);
@@ -286,8 +286,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   @SubscribeMessage('leave-join-room')
   async leaveJoinRoom(client: Socket, payload: PayloadModel): Promise<void> {
     try {
-      if (payload.jwtToken) {
-        const decoded = this.cs.jwtDecrypt(payload.jwtToken);
+      if (payload.token) {
+        const decoded = this.cs.jwtDecrypt(payload.token);
         payload.user = decoded.user;
       } else {
         payload.user = null;
@@ -319,8 +319,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   @SubscribeMessage('force-logout')
   forceLogout(client: Socket, payload: PayloadModel): void {
     try {
-      if (payload.jwtToken) {
-        const decoded = this.cs.jwtDecrypt(payload.jwtToken);
+      if (payload.token) {
+        const decoded = this.cs.jwtDecrypt(payload.token);
         payload.user = decoded.user;
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           const multipleSocketId = [];
@@ -345,8 +345,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   @SubscribeMessage('send-chat')
   sendChat(client: Socket, payload: PayloadModel): void {
     try {
-      if (payload.jwtToken) {
-        const decoded = this.cs.jwtDecrypt(payload.jwtToken);
+      if (payload.token) {
+        const decoded = this.cs.jwtDecrypt(payload.token);
         payload.user = decoded.user;
         const chatData = {
           room_id: payload.roomId,
@@ -371,8 +371,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   @SubscribeMessage('quiz-answer')
   async quizAnswer(client: Socket, payload: PayloadModel): Promise<void> {
     try {
-      if (payload.jwtToken) {
-        const decoded = this.cs.jwtDecrypt(payload.jwtToken);
+      if (payload.token) {
+        const decoded = this.cs.jwtDecrypt(payload.token);
         payload.user = decoded.user;
         if (this.qs.quiz[payload.roomId]) {
           if (this.qs.quiz[payload.roomId].randomInteger === payload.randomInteger && !this.qs.quiz[payload.roomId].isAnswering) {

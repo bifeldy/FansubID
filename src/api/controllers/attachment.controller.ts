@@ -1,6 +1,3 @@
-// 3rd Party Library
-import { AbortController } from 'abort-controller';
-
 // NodeJS Library
 import { unlink, readdirSync } from 'node:fs';
 
@@ -192,7 +189,6 @@ export class AttachmentController {
         ]
       });
       if (attachment.google_drive) {
-        const abortController = new AbortController();
         const gdrive = await this.gdrive.gDrive();
         const dfile = await gdrive.files.get(
           {
@@ -205,15 +201,9 @@ export class AttachmentController {
               Range: req.headers.range || 'bytes=0-',
               ...environment.nodeJsXhrHeader
             },
-            signal: abortController.signal
+            signal: res.locals['abort-controller'].signal
           }
         );
-        req.on('close', () => {
-          this.gs.log('[REQ-COMPLETED] 💦', res.writableEnded);
-          if (!dfile.data.readableEnded) {
-            abortController.abort();
-          }
-        });
         res.writeHead(dfile.status, dfile.headers);
         res.on('pipe', src => {
           this.gs.log('[RES-PIPE_FLOW] 💦', src.readableFlowing);

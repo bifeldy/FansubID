@@ -201,7 +201,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkStorage(): void {
     this.bs.busy();
-    this.subsVerify = this.as.verify(this.as.jwtToken).subscribe({
+    this.subsVerify = this.as.verify(this.as.token).subscribe({
       next: success => {
         this.gs.log('[VERIFY_SUCCESS]', success);
         this.ss.socketLeaveAndJoinNewRoom(this.previousUrl, this.router.url);
@@ -246,9 +246,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onWindowBeforeUnloaded(ev): any {
-    if (this.as.jwtToken) {
-      this.gs.log('[BROWSER_EXIT_CLOSE_SAVE_JWT]', this.as.jwtToken);
-      this.ls.setItem(this.gs.localStorageKeys.JwtToken, this.as.jwtToken);
+    if (this.as.token) {
+      this.gs.log('[BROWSER_EXIT_CLOSE_SAVE_JWT]', this.as.token);
+      this.ls.setItem(this.gs.localStorageKeys.token, this.as.token);
     }
   }
 

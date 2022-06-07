@@ -22,8 +22,8 @@ export class SocketIoAdapter extends IoAdapter {
   override createIOServer(port: number, options?: ServerOptions): Server {
     options.allowEIO3 = true;
     options.cors = this.aks.getCorsOptions();
-    options.allowRequest = (request, allowFunction) => {
-      this.gs.log('[SOCKET_IO_ADAPTER-REQUEST] 📏', request.headers);
+    options.allowRequest = (req, allowFunction) => {
+      this.gs.log('[SOCKET_IO_ADAPTER-REQUEST] 📏', req.headers);
       return allowFunction(null, true);
     };
     const server = super.createIOServer(port, options);

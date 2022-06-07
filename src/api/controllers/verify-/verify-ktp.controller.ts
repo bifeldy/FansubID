@@ -91,7 +91,7 @@ export class VerifyKtpController {
           return {
             info: `😍 201 - Verifikasi API :: Verifikasi Berhasil 🥰`,
             result: {
-              jwtToken: resUserSave.session_token
+              token: resUserSave.session_token
             }
           };
         }

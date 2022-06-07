@@ -1,7 +1,7 @@
 import { BerkasModel, FansubModel, HirakataModel, KanjiModel, NewsModel, UserModel } from "./req-res.model";
 
 export interface PayloadModel {
-  jwtToken?: string;
+  token?: string;
   user?: UserModel;
   ip?: string;
   pathUrl?: string;
@@ -63,7 +63,7 @@ export interface RoomInfoModel {
 export interface RoomInfoInOutModel {
   oldRoom?: string;
   newRoom?: string;
-  jwtToken?: string;
+  token?: string;
   roomId?: string;
   randomInteger?: number;
   user?: UserModel;

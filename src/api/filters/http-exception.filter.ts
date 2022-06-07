@@ -1,6 +1,8 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+import { environment } from '../../environments/api/environment';
+
 import { GlobalService } from '../services/global.service';
 import { SocketIoService } from '../services/socket-io.service';
 
@@ -23,10 +25,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let body: any = exception.getResponse();
 
     if (statusCode === HttpStatus.UNAUTHORIZED) {
-      const socketId = req.header('X-Socket-Id') || '';
+      const socketId = (req.headers['X-Socket-Id'] || '').toString();
       if (socketId) {
-        this.sis.disconnectRoom(this.sis.getClientSocket(socketId));
+        const socket = this.sis.getClientSocket(socketId);
+        if (socket) {
+          this.sis.disconnectRoom(socket);
+        }
       }
+      res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+        httpOnly: true,
+        secure: environment.production,
+        sameSite: 'strict',
+        maxAge: 0,
+        domain: environment.domain
+      });
     }
 
     this.gs.log(`[HTTP_EXCEPTION-RESPONSE_HEADER_${statusCode}] 🏹`, res.getHeaders());

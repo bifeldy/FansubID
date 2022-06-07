@@ -39,7 +39,7 @@ export class UserService {
 
   updateUser(username, userData): Observable<JsonResponse<UserModel>> {
     return this.api.putData(`/user/${username}`, userData).pipe(map(respUpdateUser => {
-      this.as.jwtToken = respUpdateUser.result.jwtToken;
+      this.as.token = respUpdateUser.result.token;
       return respUpdateUser;
     }));
   }
@@ -66,7 +66,7 @@ export class UserService {
 
   verifyKTP(userData): Observable<JsonResponse> {
     return this.api.postData('/verify-ktp', userData).pipe(map(respVerifyKTP => {
-      this.as.jwtToken = respVerifyKTP.result.jwtToken;
+      this.as.token = respVerifyKTP.result.token;
       return respVerifyKTP;
     }));
   }

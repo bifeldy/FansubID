@@ -8,7 +8,7 @@ export interface JsonDefault {
   title?: string;
   name?: string;
   message?: string;
-  jwtToken?: string;
+  token?: string;
   url?: string;
   mime?: string;
   extension?: string;
@@ -23,7 +23,7 @@ export interface JsonDefault {
 export interface JsonResponse<T = JsonDefault> {
   info: string;
   result?: T;
-  jwtToken?: string;
+  token?: string;
   imageUrl?: string;
 }
 

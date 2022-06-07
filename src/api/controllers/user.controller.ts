@@ -229,7 +229,7 @@ export class UserController {
           return {
             info: `😅 201 - User API :: Ubah ${req.params['username']} 🤣`,
             result: {
-              jwtToken: resUserSave.session_token
+              token: resUserSave.session_token
             }
           };
         } else {

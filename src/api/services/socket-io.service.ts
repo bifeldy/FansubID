@@ -46,7 +46,7 @@ export class SocketIoService {
   emitToRoomOrId(socketOrRoomId: string, key: string, data: any, callback = null): boolean {
     this.gs.log('[SOCKET_IO_SERVICE-EMIT_PRIVATE] 📢', { socketOrRoomId, key, data });
     if (callback) {
-      return this.getClientSocket(socketOrRoomId).emit(key, data, callback);
+      return this.getClientSocket(socketOrRoomId)?.emit(key, data, callback);
     }
     return this.io.to(socketOrRoomId).emit(key, data);
   }
@@ -59,7 +59,7 @@ export class SocketIoService {
 
   getClientSocket(socketId: string): Socket {
     const socket = this.getAllClientsSocket().get(socketId);
-    this.gs.log('[SOCKET_IO_SERVICE-GET_CLIENT_SOCKET] 📢', socket.id);
+    this.gs.log('[SOCKET_IO_SERVICE-GET_CLIENT_SOCKET] 📢', socket?.id);
     return socket;
   }
 
@@ -86,7 +86,7 @@ export class SocketIoService {
       }
       for (const id of multipleSocketId) {
         this.emitToRoomOrId(id, 'multiple-connection', [...multipleSocketId, socket.id], () => {
-          this.getClientSocket(id).disconnect(true);
+          this.getClientSocket(id)?.disconnect(true);
         });
       }
     }
@@ -103,9 +103,9 @@ export class SocketIoService {
       if (!this.rooms[data.oldRoom]) {
         this.rooms[data.oldRoom] = {};
       }
-      delete this.rooms[data.oldRoom][socket.id];
       try {
         await socket.leave(data.oldRoom);
+        delete this.rooms[data.oldRoom][socket.id];
       } catch (err) {
         this.gs.log('[SOCKET_IO-LEAVE_ROOM] 📢', err, 'error');
       }
@@ -118,9 +118,9 @@ export class SocketIoService {
       if (!this.rooms[data.newRoom]) {
         this.rooms[data.newRoom] = {};
       }
-      this.rooms[data.newRoom][socket.id] = data.user;
       try {
         await socket.join(data.newRoom);
+        this.rooms[data.newRoom][socket.id] = data.user;
       } catch (err) {
         this.gs.log('[SOCKET_IO-JOIN_UPDATE_ROOM] 📢', err, 'error');
       }
@@ -196,11 +196,11 @@ export class SocketIoService {
   }
 
   checkUserLogin(client: Socket, payload: PayloadModel): void {
-    const ip = client.handshake.headers['x-real-ip'] || client.handshake.headers['x-forwarded-for'] || client.handshake.address || client.request.socket.remoteAddress || '';
+    const ip = client.handshake.headers['X-Real-Ip'] || client.handshake.headers['X-Forwarded-For'] || client.handshake.address || client.request.socket.remoteAddress || '';
     payload.ip = ip as string;
-    if (payload.jwtToken) {
+    if (payload.token) {
       try {
-        const decoded = this.cs.jwtDecrypt(payload.jwtToken);
+        const decoded = this.cs.jwtDecrypt(payload.token);
         payload.user = decoded.user;
       } catch (error) {
         payload.user = null;

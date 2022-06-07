@@ -19,7 +19,7 @@ export class GlobalService {
     AturanTatib: `${environment.siteName}_AturanTatib`,
     DebugLogs: `${environment.siteName}_DebugLogs`,
     DarkMode: `${environment.siteName}_DarkMode`,
-    JwtToken: `${environment.siteName}_JwtToken`,
+    token: `${environment.siteName}_Token`,
     LiveChatResults: `${environment.siteName}_LiveChatResults`,
     SearchResults: `${environment.siteName}_SearchResults`,
     Torrents : `${environment.siteName}_Torrents`,

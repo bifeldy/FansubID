@@ -75,13 +75,13 @@ export class StatsServerService {
       this.mySocket = io('//', {
         query: {
           'ngsw-bypass': true,
-          token: this.as.jwtToken
+          token: this.as.token
         },
         transports: ['websocket', 'polling'],
         transportOptions: {
           polling: {
             extraHeaders: {
-              'X-Access-Token': this.as.jwtToken
+              'X-Access-Token': this.as.token
             }
           }
         }
@@ -286,8 +286,8 @@ export class StatsServerService {
   }
 
   socketEmit(eventName: string, eventData: any = {}, callback = null): void {
-    if (this.as.jwtToken) {
-      eventData.jwtToken = this.as.jwtToken;
+    if (this.as.token) {
+      eventData.token = this.as.token;
     }
     if (callback) {
       this.mySocket?.emit(eventName, eventData, callback);
@@ -298,8 +298,8 @@ export class StatsServerService {
 
   socketEmitVolatile(eventName: string, eventData: any = {}, callback = null): void {
     this.socketEmit(eventName, eventData, callback);
-    // if (this.as.jwtToken) {
-    //   eventData.jwtToken = this.as.jwtToken;
+    // if (this.as.token) {
+    //   eventData.token = this.as.token;
     // }
     // if (callback) {
     //   this.mySocket?.volatile.emit(eventName, eventData, callback);

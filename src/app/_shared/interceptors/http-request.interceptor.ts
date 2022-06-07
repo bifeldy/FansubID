@@ -27,12 +27,12 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       request = request.clone({
         withCredentials: !this.gs.isDevMode
       });
-      if (this.as.jwtToken) {
-        const tokenLength = this.as.jwtToken.length;
-        const shortToken = this.as.jwtToken.slice(0, 5) + '.....' + this.as.jwtToken.slice(tokenLength - 5, tokenLength);
+      if (this.as.token) {
+        const tokenLength = this.as.token.length;
+        const shortToken = this.as.token.slice(0, 5) + '.....' + this.as.token.slice(tokenLength - 5, tokenLength);
         this.gs.log('[INTERCEPT_JWT]', shortToken);
         request = request.clone({
-          headers: request.headers.append('Authorization', `Bearer ${this.as.jwtToken}`)
+          headers: request.headers.append('Authorization', `Bearer ${this.as.token}`)
         });
       }
       if (this.ss.mySocket?.id) {
