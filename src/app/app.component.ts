@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationStart } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 
@@ -49,6 +49,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   subsDialog = null;
 
   constructor(
+    private renderer: Renderer2,
     private router: Router,
     private route: ActivatedRoute,
     private bs: BusyService,
@@ -96,6 +97,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.lms.sideNav = this.leftSideNav;
     this.rps.sidePanel = this.rightSidePanel;
+    if (this.gs.isBrowser) {
+      const appLoading = this.renderer.selectRootElement('#app-loading');
+      if (appLoading) {
+        appLoading.style.visibility = 'hidden';
+        appLoading.style.opacity = 0;
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -161,7 +169,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               );
               this.fs.removeFab();
               if (this.gs.isBrowser) {
-                this.siteContent.elementRef.nativeElement.scrollTop = 0;
+                if (this.siteContent) {
+                  this.siteContent.elementRef.nativeElement.scrollTop = 0;
+                }
                 const nextUrl = e1.url.split('?')[0];
                 this.ss.currentChatRoom = [];
                 this.ss.socketLeaveAndJoinNewRoom(this.previousUrl, nextUrl);
