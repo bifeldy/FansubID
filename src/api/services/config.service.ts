@@ -8,7 +8,6 @@ import { GlobalService } from './global.service';
 export class ConfigService {
 
   isUpdatingFansubFeedRss = false;
-  isUpdatingFansubFeedRssAll = false;
 
   github = null;
 

@@ -1,6 +1,5 @@
 export const CONSTANTS = {
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
-  cronFansubRssFeedAll: 'CRON_FANSUB_RSS_FEED_ALL',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
   fileSizeAttachmentLimit: 256 * 1000 * 1000,

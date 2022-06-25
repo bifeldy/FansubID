@@ -57,7 +57,7 @@ export class FansubService {
   }
 
   getRssFeedFansubAllActiveOnly(): Observable<JsonResponseArray> {
-    return this.api.getData('/fansub-rss-feed');
+    return this.api.getData('/fansub-rss-feed-active');
   }
 
   getRssFeedFansubAll(): Observable<JsonResponseArray> {

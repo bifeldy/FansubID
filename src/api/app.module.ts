@@ -37,7 +37,7 @@ import { FansubAllController } from './controllers/fansub-/fansub-all.controller
 import { FansubAnimeController } from './controllers/fansub-/fansub-anime.controller';
 import { FansubBerkasController } from './controllers/fansub-/fansub-berkas.controller';
 import { FansubDoramaController } from './controllers/fansub-/fansub-dorama.controller';
-import { FansubRssFeedController } from './controllers/fansub-/fansub-rss-feed.controller';
+import { FansubRssFeedActiveController } from './controllers/fansub-/fansub-rss-feed-active.controller';
 import { FansubRssFeedAllController } from './controllers/fansub-/fansub-rss-feed-all.controller';
 import { FansubSlugController } from './controllers/fansub-/fansub-slug.controller';
 import { ImageController } from './controllers/image.controller';
@@ -95,7 +95,8 @@ import { MailService } from './services/mail.service';
 import { MkvExtractService } from './services/mkv-extract.service';
 import { QuizService } from './services/quiz.service';
 import { SocketIoService } from './services/socket-io.service';
-import { TasksService } from './services/tasks.service';
+
+import { RssFeedTasksService } from './scheduler/rss-feed-tasks.service';
 
 import { AnimeService } from './repository/anime.service';
 import { ApiKeyService } from './repository/api-key.service';
@@ -160,7 +161,7 @@ import { UserService } from './repository/user.service';
     FansubAnimeController,
     FansubBerkasController,
     FansubDoramaController,
-    FansubRssFeedController,
+    FansubRssFeedActiveController,
     FansubRssFeedAllController,
     FansubSlugController,
     ImageController,
@@ -202,7 +203,7 @@ import { UserService } from './repository/user.service';
         const chlk = new Chalk({ level: 3 });
         return [
           chlk.yellow(tokens['remote-addr'](req, res)),
-          chlk.cyan(tokens['date'](req, res)),
+          chlk.cyan(new Date(tokens['date'](req, res)).toString()),
           chlk.greenBright(tokens['method'](req, res)),
           chlk.redBright(tokens['status'](req, res)),
           chlk.white(tokens['url'](req, res)),
@@ -226,8 +227,9 @@ import { UserService } from './repository/user.service';
     MailService,
     QuizService,
     SocketIoService,
-    TasksService,
-    // Services Entities
+    // Service Task Schedulers
+    RssFeedTasksService,
+    // Service Entities
     AnimeService,
     ApiKeyService,
     AttachmentService,

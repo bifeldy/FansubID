@@ -11,8 +11,8 @@ import { JsonCache } from '../../../models/req-res.model';
 
 import { GlobalService } from '../../services/global.service';
 
-@Controller('/fansub-rss-feed')
-export class FansubRssFeedController {
+@Controller('/fansub-rss-feed-active')
+export class FansubRssFeedActiveController {
 
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
@@ -21,7 +21,7 @@ export class FansubRssFeedController {
     //
   }
 
-  // GET `/api/fansub-rss-feed`
+  // GET `/api/fansub-rss-feed-active`
   @Get('/')
   @HttpCode(200)
   async getFansubFeed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
