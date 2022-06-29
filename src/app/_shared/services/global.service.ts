@@ -31,6 +31,7 @@ export class GlobalService {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   routerData = null;
+  previousUrl = null;
 
   bgImgUrlPath = null;
   bannerImg = null;

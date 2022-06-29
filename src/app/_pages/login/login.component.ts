@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.gs.previousUrl || '/home';
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({
         next: user => {

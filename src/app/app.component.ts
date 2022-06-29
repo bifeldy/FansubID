@@ -40,8 +40,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('rightSidePanel', { static: true }) rightSidePanel: MatSidenav;
   @ViewChild('siteContent', { static: true }) siteContent;
 
-  previousUrl = null;
-
   subsRouter = null;
   subsRouterChild = null;
   subsUrl = null;
@@ -149,6 +147,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                   }
                 }
               }
+              this.gs.previousUrl = this.router.url.split('?')[0];
             }
           }
         }
@@ -173,9 +172,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.siteContent.elementRef.nativeElement.scrollTop = 0;
                 }
                 const nextUrl = e1.url.split('?')[0];
-                this.ss.currentChatRoom = [];
-                this.ss.socketLeaveAndJoinNewRoom(this.previousUrl, nextUrl);
-                this.previousUrl = nextUrl;
+                if (this.gs.previousUrl !== nextUrl) {
+                  this.ss.currentChatRoom = [];
+                }
+                this.ss.socketLeaveAndJoinNewRoom(this.gs.previousUrl, nextUrl);
               }
             }
           });
@@ -205,7 +205,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateBackgroundImage(): void {
-    const urlPath = this.router.url.substr(1).split('/')[0].split('?')[0];
+    const urlPath = this.router.url.substring(1).split('/')[0].split('?')[0];
     this.gs.bgImgUrlPath = urlPath ? `/assets/img/router/bg-${urlPath}.png` : '';
   }
 
@@ -214,7 +214,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subsVerify = this.as.verify(this.as.token).subscribe({
       next: success => {
         this.gs.log('[VERIFY_SUCCESS]', success);
-        this.ss.socketLeaveAndJoinNewRoom(this.previousUrl, this.router.url);
+        this.ss.socketLeaveAndJoinNewRoom(this.gs.previousUrl, this.router.url);
         this.bs.idle();
       },
       error: error => {
