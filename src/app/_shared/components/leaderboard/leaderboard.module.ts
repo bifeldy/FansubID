@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { SharedMaterialModule } from '../../helpers/shared-material.module';
 
@@ -9,7 +10,8 @@ import { LeaderboardComponent } from './leaderboard.component';
   declarations: [LeaderboardComponent],
   imports: [
     CommonModule,
-    SharedMaterialModule
+    SharedMaterialModule,
+    RouterModule
   ],
   exports: [LeaderboardComponent]
 })
