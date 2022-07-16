@@ -56,6 +56,32 @@
           </div>
         </div>
       </div>
+      <div class="row" *ngIf="cronJobs.length > 0">
+        <div class="col-12 sticky-top bg-bifeldy">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-bifeldy">Cron & Task Scheduler</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <div class="row px-3">
+            <mat-selection-list [multiple]="false" class="p-0">
+              <mat-grid-list [cols]="GS.gridListBreakpoint" rowHeight="72px">
+                <mat-grid-tile *ngFor="let t of cronJobs">
+                  <mat-list-option (click)="toggleCronJob(t)" class="text-{{ t.running ? 'warning' : 'danger' }}">
+                    <mat-icon mat-list-icon class="ps-3">update</mat-icon>
+                    <h4 matLine>{{ t.id }}</h4>
+                    <p matLine>
+                      last: {{ t.last_date | date:'d MMMM y, HH:mm:ss z' }}
+                      <br />
+                      next: {{ t.next_date | date:'d MMMM y, HH:mm:ss z' }}
+                    </p>
+                  </mat-list-option>
+                </mat-grid-tile>
+              </mat-grid-list>
+            </mat-selection-list>
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">

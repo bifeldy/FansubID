@@ -431,3 +431,10 @@ export interface TempAttachmentModel {
   updated_at?: number | Date;
   user_?: UserModel;
 }
+
+export interface TaskCronJobModel {
+  id?: string;
+  last_date?: number | Date;
+  next_date?: number | Date;
+  running?: boolean;
+} 

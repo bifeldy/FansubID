@@ -111,10 +111,10 @@ export class RssFeedTasksService {
     }
   )
   async fansubRssFeedAll(): Promise<void> {
-    if (!this.cfg.isUpdatingFansubFeedRss) {
+    if (!this.cfg.CRON[CONSTANTS.cronFansubRssFeed]) {
       const startTime = new Date();
       this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-START] 🐾', `${startTime}`);
-      this.cfg.isUpdatingFansubFeedRss = true;
+      this.cfg.CRON[CONSTANTS.cronFansubRssFeed] = true;
       try {
         const rssFeedAll = [];
         const rssFeedActive = [];
@@ -155,7 +155,7 @@ export class RssFeedTasksService {
       } catch (error) {
         this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR] 🐾', error, 'error');
       }
-      this.cfg.isUpdatingFansubFeedRss = false;
+      this.cfg.CRON[CONSTANTS.cronFansubRssFeed] = false;
       const endTime = new Date();
       const elapsedTime = endTime.getTime() - startTime.getTime();
       this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-END] 🐾', `${endTime} @ ${elapsedTime} ms`);

@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import { CONSTANTS } from '../../constants';
+
 import { ServerInfoModel } from '../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
@@ -7,7 +9,9 @@ import { GlobalService } from './global.service';
 @Injectable()
 export class ConfigService {
 
-  isUpdatingFansubFeedRss = false;
+  CRON = {
+    [CONSTANTS.cronFansubRssFeed]: false
+  };
 
   github = null;
 
