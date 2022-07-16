@@ -20,14 +20,7 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
   currentUser: UserModel = null;
   settings: ServerInfoModel = null;
 
-  cronJobs: TaskCronJobModel[] = [
-    {
-      id: "CRON_FANSUB_RSS_FEED",
-      last_date: new Date(),
-      next_date: new Date().setDate(new Date().getDate() + 1),
-      running: true
-    }
-  ];
+  cronJobs: TaskCronJobModel[] = [];
 
   subsUser = null;
   subsCronJobsGet = null;

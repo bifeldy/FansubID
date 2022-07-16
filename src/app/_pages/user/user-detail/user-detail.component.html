@@ -34,7 +34,7 @@
           </button>
           <button mat-stroked-button matLine class="col-12 col-md-8 text-truncate" *ngIf="userData.created_at" matTooltip="Tanggal Bergabung" color="accent" style="overflow: hidden;">
             <mat-icon class="me-1">access_time</mat-icon>
-            {{ userData.created_at | date:'d/M/yyyy, h:mm a' }}
+            {{ userData.created_at | date:'d/M/yyyy, hh:mm:ss a z' }}
           </button>
           <button mat-stroked-button matLine class="col text-truncate" *ngIf="userData.kartu_tanda_penduduk_.tempat_lahir" matTooltip="Kota Kelahiran" color="accent" style="overflow: hidden;">
             <mat-icon class="me-1">location_on</mat-icon>

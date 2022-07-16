@@ -14,7 +14,7 @@
     <p class="px-2 text-truncate" *ngIf="SS.github?.commit?.author?.date">
       Date ::
       <span class="text-success">
-        {{ SS.github?.commit?.author?.date | date:'d MMM y, h:mm:ss a' }}
+        {{ SS.github?.commit?.author?.date | date:'d MMM y, hh:mm:ss a z' }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="SS.github?.commit?.author?.name">

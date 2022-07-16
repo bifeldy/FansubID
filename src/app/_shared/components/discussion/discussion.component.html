@@ -22,7 +22,7 @@
           <b class="text-warning" style="cursor: pointer;" (click)="openUserProfile(k); $event.stopPropagation()">
             {{ k.user_.username }}
           </b>
-          <small class="ms-3 text-bifeldy" matTooltip="{{ k.created_at | date:'d MMMM y, h:mm:ss a z' }}">
+          <small class="ms-3 text-bifeldy" matTooltip="{{ k.created_at | date:'d MMMM y, hh:mm:ss a z' }}">
             {{ k.created_at | dateAgo }}
           </small>
         </p>

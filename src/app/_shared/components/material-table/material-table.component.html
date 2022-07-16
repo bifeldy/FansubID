@@ -31,8 +31,8 @@
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc === 'Logo'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc === 'Image'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc === 'Poster'" />
-          <span *ngIf="tdc === 'Tanggal'" matTooltip="{{ row[tdc] | date:'d MMMM y' }}">{{ row[tdc] | dateAgo }}</span>
-          <span *ngIf="tdc === 'Deadline'">{{ row[tdc] | date:'d/M/yy, h:mm:ss a' }}</span>
+          <span *ngIf="tdc === 'Tanggal'" matTooltip="{{ row[tdc] | date:'d MMMM y, hh:mm:ss a z' }}">{{ row[tdc] | dateAgo }}</span>
+          <span *ngIf="tdc === 'Deadline'">{{ row[tdc] | date:'d/M/yy, HH:mm:ss' }}</span>
           <span *ngIf="tdc === 'Anime'">{{ row[tdc] || 0 }} Anime</span>
           <span *ngIf="tdc === 'Dorama'">{{ row[tdc] || 0 }} Dorama</span>
           <span *ngIf="tdc === 'Kunjungan'">{{ row[tdc] }}x Dilihat</span>

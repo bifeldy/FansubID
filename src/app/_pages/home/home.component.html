@@ -44,7 +44,7 @@
                       <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-warning mb-1" style="cursor: pointer;">
                         <h3 class="mb-0">{{ n.user_.username }}</h3>
                       </mat-card-title>
-                      <mat-card-subtitle class="mb-0">{{ n.created_at | date:'d MMM y' }}</mat-card-subtitle>
+                      <mat-card-subtitle class="mb-0">{{ n.created_at | date:'d MMMM y, HH:mm:ss z' }}</mat-card-subtitle>
                     </mat-card-header>
                   </mat-card>
                 </div>
@@ -82,7 +82,7 @@
             <mat-list-option *ngFor="let r of rssFeedData | slice:0:10" class="h-100">
               <mat-icon mat-list-icon class="ps-3">rss_feed</mat-icon>
               <a class="text-truncate text-decoration-none" (click)="openRssFeed(r.item?.link)">
-                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;" matTooltip="{{ (r.item?.created || r.item?.published) | date:'d MMMM y' }}">
+                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;" matTooltip="{{ (r.item?.created || r.item?.published) | date:'d MMMM y, hh:mm:ss a z' }}">
                   {{ (r.item?.created || r.item?.published) | dateAgo }}
                 </span>
                 <span class="me-3 text-success">{{ r.slug }}</span>
@@ -106,7 +106,7 @@
             <mat-list-option *ngFor="let k of komentarData | slice:0:5" class="h-100">
               <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
               <a class="text-truncate text-decoration-none" routerLink="{{ k.path }}">
-                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;" matTooltip="{{ k.created_at | date:'d MMMM y' }}">
+                <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;" matTooltip="{{ k.created_at | date:'d MMMM y, hh:mm:ss a z' }}">
                   {{ k.created_at | dateAgo }}
                 </span>
                 <span class="me-3 text-success">{{ k.user_.username }}</span>
