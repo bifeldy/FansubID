@@ -53,8 +53,9 @@ export class ReqResInterceptor implements NestInterceptor {
 
     switch (req.method) {
       case 'POST':
-        // @ts-ignore error TS7029: Fallthrough case in switch.
       case 'PUT':
+      // @ts-ignore error TS7029: Fallthrough case in switch.
+      case 'DELETE':
         if (this.cfg.serverGetMaintenance()) {
           throw new HttpException({
             info: '🤧 400 - Settings API :: Server Maintenance 😷',
@@ -66,7 +67,6 @@ export class ReqResInterceptor implements NestInterceptor {
       case 'GET':
       case 'HEAD':
       case 'PATCH':
-      case 'DELETE':
       default:
         break;
     }
