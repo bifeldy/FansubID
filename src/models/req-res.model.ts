@@ -229,6 +229,16 @@ export interface FansubModel {
   user_?: UserModel;
 }
 
+export interface FansubMemberModel {
+  id?: string;
+  approved?: boolean;
+  created_at?: number | Date;
+  updated_at?: number | Date;
+  user_?: UserModel;
+  fansub_?: FansubModel;
+  approved_by_?: UserModel;
+}
+
 export interface BerkasModel {
   id?: string;
   name?: string;

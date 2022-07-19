@@ -10,6 +10,7 @@ import { Berkas } from '../../api/entities/Berkas';
 import { Dorama } from '../../api/entities/Dorama';
 import { Edict } from '../../api/entities/Edict';
 import { Fansub } from '../../api/entities/Fansub';
+import { FansubMember } from '../../api/entities/FansubMember';
 import { Hirakata } from '../../api/entities/Hirakata';
 import { HirakataStats } from '../../api/entities/HirakataStats';
 import { Information } from '../../api/entities/Information';
@@ -60,6 +61,7 @@ export const environment = {
       Dorama,
       Edict,
       Fansub,
+      FansubMember,
       Hirakata,
       HirakataStats,
       Information,

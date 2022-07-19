@@ -52,9 +52,4 @@ export class Fansub implements FansubModel {
   @ManyToOne(type => User)
   user_: UserModel;
 
-  // TODO :: Fansub Members
-  // @ManyToMany(type => User)
-  // @JoinTable()
-  // members_: User[];
-
 }
