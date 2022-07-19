@@ -108,6 +108,7 @@ import { BerkasService } from './repository/berkas.service';
 import { DoramaService } from './repository/dorama.service';
 import { EdictService } from './repository/edict.service';
 import { FansubService } from './repository/fansub.service';
+import { FansubMemberService } from './repository/fansub-member.service';
 import { HirakataService } from './repository/hirakata.service';
 import { InformationService } from './repository/information.service';
 import { KanjiService } from './repository/kanji.service';
@@ -242,6 +243,7 @@ import { UserService } from './repository/user.service';
     DoramaService,
     EdictService,
     FansubService,
+    FansubMemberService,
     HirakataService,
     InformationService,
     KanjiService,

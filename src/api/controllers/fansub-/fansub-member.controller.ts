@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Post, Put, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 import { Roles } from '../../decorators/roles.decorator';
@@ -6,13 +6,13 @@ import { VerifiedOnly } from '../../decorators/verified.decorator';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { FansubMemberService } from '../../repository/fansub-member.service';
+// import { FansubMemberService } from '../../repository/fansub-member.service';
 
 @Controller('fansub-member')
 export class FansubMemberController {
 
   constructor(
-    private fansubMemberRepo: FansubMemberService
+    // private fansubMemberRepo: FansubMemberService
   ) {
     //
   }
