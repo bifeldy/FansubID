@@ -1,7 +1,7 @@
 // NodeJS Library
 import { URL } from 'node:url';
 
-import { CACHE_MANAGER, Controller, Get, HttpCode, Inject, Req, Res } from '@nestjs/common';
+import { CACHE_MANAGER, Controller, Get, HttpCode, HttpException, HttpStatus, Inject, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
 
@@ -50,10 +50,13 @@ export class AnimeSeasonalController {
         throw new Error('Gagal Tarik Data Anime');
       }
     } catch (error) {
-      return {
-        info: `😅 200 - Anime API :: Seasonal ${season} ${year} 🤣`,
-        results: []
-      };
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: `🙄 400 - Anime API :: Gagal Menarik Data 😪`,
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 

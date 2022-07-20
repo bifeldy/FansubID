@@ -190,8 +190,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       retry(-1)
     ).subscribe({
       next: res => {
-        this.gs.log('[BERKAS_CREATE_SEARCH_ANIME_RESULT]', res);
+        this.gs.log('[BERKAS_CREATE_SEARCH_ANIME_RESULT_SUCCESS]', res);
         this.filteredAnime = (res as any).results;
+      },
+      error: err => {
+        this.gs.log('[BERKAS_CREATE_SEARCH_ANIME_RESULT_ERROR]', err);
       }
     });
     this.subsDoramaDetail = this.fg.get('dorama_id').valueChanges.pipe(
@@ -204,12 +207,15 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       retry(-1)
     ).subscribe({
       next: res => {
-        this.gs.log('[BERKAS_CREATE_SEARCH_DORAMA_RESULT]', res);
+        this.gs.log('[BERKAS_CREATE_SEARCH_DORAMA_RESULT_SUCCESS]', res);
         for (const r of (res as any).results) {
           r.mdl_id = r.mdl_id.split('-')[1];
           r.image_url = r.thumb;
         }
         this.filteredDorama = (res as any).results;
+      },
+      error: err => {
+        this.gs.log('[BERKAS_CREATE_SEARCH_DORAMA_RESULT_ERROR]', err);
       }
     });
     this.subsProjectDetail = this.fg.get('projectType_id').valueChanges.pipe(

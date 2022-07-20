@@ -136,7 +136,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[NEWS_SEARCH_ERROR]', err);
-        this.searchResult.beritaResults = [];
       }
     });
   }
@@ -152,7 +151,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[KANJI_SEARCH_ERROR]', err);
-        this.searchResult.kanjiResults = [];
       }
     });
   }
@@ -172,7 +170,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[ANIME_SEARCH_ERROR]', err);
-        this.searchResult.animeResults = [];
       }
     });
   }
@@ -188,7 +185,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[DORAMA_SEARCH_ERROR]', err);
-        this.searchResult.doramaResults = [];
       }
     });
   }
@@ -204,7 +200,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[FANSUB_SEARCH_ERROR]', err);
-        this.searchResult.fansubResults = [];
       }
     });
   }
@@ -220,7 +215,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[BERKAS_SEARCH_ERROR]', err);
-        this.searchResult.berkasResults = [];
       }
     });
   }
@@ -236,7 +230,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[PENGGUNA_SEARCH_ERROR]', err);
-        this.searchResult.penggunaResults = [];
       }
     });
   }

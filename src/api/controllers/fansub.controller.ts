@@ -497,15 +497,13 @@ export class FansubController {
         result: rssFeed
       };
     } catch (error) {
-      return {
-        info: `😅 200 - Fansub API :: RSS Feed 🤣`,
-        count: 0,
-        pages: 1,
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: `🙄 400 - Fansub API :: Gagal Menarik Data 😪`,
         result: {
-          slug: req.params['slug'],
-          items: []
+          message: 'Data Tidak Lengkap!'
         }
-      };
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 

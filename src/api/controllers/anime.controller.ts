@@ -61,10 +61,13 @@ export class AnimeController {
         throw new Error('Gagal Tarik Data Anime');
       }
     } catch (error) {
-      return {
-        info: `😅 200 - Anime API :: Search ${searchQuery} 🤣`,
-        results: []
-      };
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: '🙄 400 - Anime API :: Gagal Menarik Data 😪',
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -163,10 +166,13 @@ export class AnimeController {
         throw new Error('Gagal Tarik Data Anime');
       }
     } catch (error) {
-      return {
-        info: `😅 200 - Anime API :: Detail ${malId} 🤣`,
-        result: null
-      };
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: '🙄 400 - Anime API :: Gagal Menarik Data 😪',
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 
