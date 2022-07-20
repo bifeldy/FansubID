@@ -140,7 +140,7 @@ export const environment = {
   },
   externalApiCacheTime: 30 * 60 * 1,
   externalApiAnime: 'http://api.jikan.moe/v4',
-  externalApiDorama: 'https://bifeldy-kuryana.vercel.app',
+  externalApiDorama: 'https://kuryana.vercel.app',
   externalApiImage: 'https://api.imgbb.com/1/upload',
   trackerAnnounce: [
     'wss://tracker.hikki.id'

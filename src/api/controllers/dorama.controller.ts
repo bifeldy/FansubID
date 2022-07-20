@@ -43,7 +43,7 @@ export class DoramaController {
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);
-        let data = res_json.results.filter(x => x.type.toLowerCase().includes(searchType));
+        let data = res_json.results.dramas.filter(x => x.type.toLowerCase().includes(searchType));
         const responseBody = {
           info: `😅 ${res_raw.status} - Dorama API :: Search ${searchQuery} 🤣`,
           results: data
@@ -56,10 +56,13 @@ export class DoramaController {
         throw new Error('Gagal Tarik Data Dorama');
       }
     } catch (error) {
-      return {
-        info: `😅 200 - Dorama API :: Search ${searchQuery} 🤣`,
-        results: []
-      };
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: '🙄 400 - Dorama API :: Gagal Menarik Data 😪',
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -161,10 +164,13 @@ export class DoramaController {
         throw new Error('Gagal Tarik Data Dorama');
       }
     } catch (error) {
-      return {
-        info: `😅 200 - Dorama API :: Detail ${mdlId} 🤣`,
-        result: null
-      };
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: '🙄 400 - Dorama API :: Gagal Menarik Data 😪',
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 
