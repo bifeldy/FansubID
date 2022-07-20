@@ -9,9 +9,9 @@
   </div>
   <div class="col-12">
     <mat-selection-list [multiple]="false">
-      <mat-list-option *ngFor="let l of leaderboardData | slice:0:10" class="h-100">
+      <mat-list-option class="h-100" *ngFor="let l of leaderboardData | slice:0:10" routerLink="/user/{{ l.username }}">
         <img matListAvatar src="{{ l.image_url }}" class="ms-3" />
-        <a class="text-truncate text-decoration-none" routerLink="/user/{{ l.username }}">
+        <a class="text-truncate text-decoration-none">
           <span class="bg-bifeldy ps-3 pe-2 me-1 text-warning" style="position: absolute; right: 0;">
             {{ l.points }}
           </span>
