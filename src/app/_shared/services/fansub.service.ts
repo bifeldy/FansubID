@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { JsonResponse, FansubModel, JsonResponseArray } from '../../../models/req-res.model';
+import { JsonResponse, FansubModel, JsonResponseArray, FansubMemberModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -66,6 +66,26 @@ export class FansubService {
 
   getRssFeedFansub(fansubSlug: string): Observable<JsonResponse> {
     return this.api.getData(`/fansub/${fansubSlug}/rss`);
+  }
+
+  getFansubMember(fansubSlug: string): Observable<JsonResponseArray<FansubMemberModel>> {
+    return this.api.getData(`/fansub/${fansubSlug}/member`);
+  }
+
+  getAllFansubMember(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<FansubMemberModel>> {
+    return this.api.getData(`/fansub-member?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  }
+
+  requestJoinFansubMember(fansubMemberData): Observable<JsonResponse<FansubMemberModel>> {
+    return this.api.postData(`/fansub-member`, fansubMemberData);
+  }
+
+  approveRejectFansubMember(fansubMemberId: string, fansubMemberData): Observable<JsonResponse<FansubMemberModel>> {
+    return this.api.putData(`/fansub-member/${fansubMemberId}`, fansubMemberData);
+  }
+
+  leaveFansubMember(fansubMemberId: string): Observable<JsonResponse<FansubMemberModel>> {
+    return this.api.deleteData(`/fansub-member/${fansubMemberId}`);
   }
 
 }

@@ -231,6 +231,7 @@ export interface FansubModel {
 
 export interface FansubMemberModel {
   id?: string;
+  keterangan?: string;
   approved?: boolean;
   created_at?: number | Date;
   updated_at?: number | Date;

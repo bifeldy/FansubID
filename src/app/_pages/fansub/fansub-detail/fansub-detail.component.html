@@ -35,6 +35,66 @@
               Perbaharui Informasi
             </button>
           </div>
+          <div class="col-12">
+            <div class="row py-3">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+                <h2 class="border-bottom-dotted">
+                  <a class="float-end text-decoration-none text-warning" style="font-size: small; cursor: pointer;"
+                    (click)="joinLeaveMember()" *ngIf="!showPendingMember">
+                    {{ joinedAsMember ? 'Keluar' : 'Gabung' }}
+                  </a>
+                  <b class="text-bifeldy" (click)="togglePendingMembers()" style="cursor: pointer;"
+                    matTooltip="Lihat Permintaan Gabung Keanggotaan">
+                    {{ showPendingMember ? 'Permintaan Gabung' : 'Anggota' }}
+                  </b>
+                </h2>
+              </div>
+              <div class="col-12" style="height: 288px;">
+                <div class="h-100" style="overflow-y: auto;">
+                  <div *ngIf="(!showPendingMember && approvedMembers.length <= 0) || (showPendingMember && pendingMembers.length <= 0)"
+                    style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px; overflow: hidden;">
+                    <div class="row align-items-center h-100">
+                      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
+                        <h3 class="m-0">
+                          Tidak Ada Data ¯\_(ツ)_/¯
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                  <mat-selection-list [multiple]="false" *ngIf="!showPendingMember && approvedMembers.length > 0">
+                    <mat-list-option class="h-100" *ngFor="let m of approvedMembers" routerLink="/user/{{ m.user_.username }}">
+                      <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" />
+                      <a class="text-truncate text-decoration-none">
+                        <span class="bg-bifeldy ps-3 pe-2 me-1 text-warning" style="position: absolute; right: 0;">
+                          {{ m.keterangan }}
+                        </span>
+                        <span class="text-success">{{ m.user_.username }}</span>
+                      </a>
+                    </mat-list-option>
+                  </mat-selection-list>
+                  <mat-selection-list [multiple]="false" *ngIf="showPendingMember && pendingMembers.length > 0">
+                    <mat-list-option class="h-100" *ngFor="let m of pendingMembers">
+                      <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" />
+                      <a class="text-truncate text-decoration-none">
+                        <span class="bg-bifeldy ps-3 pe-2 me-1" style="position: absolute; right: 0;">
+                          <small class="text-success" (click)="approveMember(m)" style="cursor: pointer;">
+                            Terima
+                          </small>
+                          |
+                          <small class="text-danger" (click)="rejectMember(m)" style="cursor: pointer;">
+                            Tolak
+                          </small>
+                        </span>
+                        <span class="text-warning" routerLink="/user/{{ m.user_.username }}">
+                          {{ m.user_.username }}
+                        </span>
+                      </a>
+                    </mat-list-option>
+                  </mat-selection-list>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

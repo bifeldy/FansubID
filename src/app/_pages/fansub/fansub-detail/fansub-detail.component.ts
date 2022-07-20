@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { FansubMemberModel } from '../../../../models/req-res.model';
 import { Warna } from '../../../_shared/models/Warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -10,6 +11,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -21,6 +23,11 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   fansubSlug = '';
   fansubData = null;
   rssFeedData = null;
+
+  approvedMembers: FansubMemberModel[] = [];
+  pendingMembers: FansubMemberModel[] = [];
+  joinedAsMember = null;
+  showPendingMember = false;
 
   count = 0;
   page = 1;
@@ -75,11 +82,16 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   subsDorama = null;
   subsParam = null;
   subsRssFeed = null;
+  subsFansubMemberGet = null;
+  subsFansubMemberJoin = null;
+  subsFansubMemberApproveReject = null;
+  subsFansubMemberLeave = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
+    private as: AuthService,
     private gs: GlobalService,
     private fs: FabService,
     private pi: PageInfoService,
@@ -104,6 +116,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.subsDorama?.unsubscribe();
     this.subsParam?.unsubscribe();
     this.subsRssFeed?.unsubscribe();
+    this.subsFansubMemberGet?.unsubscribe();
+    this.subsFansubMemberJoin?.unsubscribe();
+    this.subsFansubMemberApproveReject?.unsubscribe();
+    this.subsFansubMemberLeave?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -138,6 +154,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
               this.getDoramaFansub();
               this.getBerkasFansub();
               this.getRssFeed();
+              this.getFansubMember();
             }
           },
           error: err => {
@@ -164,13 +181,16 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   getRssFeed(): void {
+    this.bs.busy();
     this.subsRssFeed = this.fansub.getRssFeedFansub(this.fansubSlug).subscribe({
       next: res => {
         this.gs.log('[RSS_FEED_LIST_SUCCESS]', res);
         this.rssFeedData = res.result;
+        this.bs.idle();
       },
       error: err => {
         this.gs.log('[RSS_FEED_LIST_ERROR]', err);
+        this.bs.idle();
       }
     });
   }
@@ -315,6 +335,97 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
       this.doramaPage++;
       this.getDoramaFansub();
     }
+  }
+
+  togglePendingMembers(): void {
+    this.showPendingMember = !this.showPendingMember;
+    this.getFansubMember();
+  }
+
+  getFansubMember(): void {
+    this.bs.busy();
+    this.subsFansubMemberGet = this.fansub.getFansubMember(this.fansubSlug).subscribe({
+      next: res => {
+        this.gs.log('[FANSUB_MEMBER_LIST_SUCCESS]', res);
+        this.approvedMembers = [];
+        this.pendingMembers = [];
+        for (const m of res.results) {
+          if (m.approved) {
+            this.approvedMembers.push(m);
+          } else {
+            this.pendingMembers.push(m);
+          }
+        }
+        if (this.as.currentUserValue) {
+          const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserValue.id);
+          this.joinedAsMember = index >= 0 ? this.approvedMembers[index] : null;
+        }
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[FANSUB_MEMBER_LIST_ERROR]', err);
+        this.bs.idle();
+      }
+    });
+  }
+
+  joinLeaveMember(): void {
+    this.bs.busy();
+    if (this.joinedAsMember) {
+      this.subsFansubMemberLeave = this.fansub.leaveFansubMember(this.joinedAsMember.id).subscribe({
+        next: res => {
+          this.gs.log('[FANSUB_MEMBER_LEAVE_SUCCESS]', res);
+          this.getFansubMember();
+          this.bs.idle();
+        },
+        error: err => {
+          this.gs.log('[FANSUB_MEMBER_LEAVE_ERROR]', err);
+          this.getFansubMember();
+          this.bs.idle();
+        }
+      });
+    } else {
+      this.subsFansubMemberJoin = this.fansub.requestJoinFansubMember({
+        slug: this.fansubSlug
+      }).subscribe({
+        next: res => {
+          this.gs.log('[FANSUB_MEMBER_JOIN_SUCCESS]', res);
+          this.getFansubMember();
+          this.bs.idle();
+        },
+        error: err => {
+          this.gs.log('[FANSUB_MEMBER_JOIN_ERROR]', err);
+          this.getFansubMember();
+          this.bs.idle();
+        }
+      });
+    }
+  }
+
+  approveOrRejectFansubMember(m: FansubMemberModel, ac: boolean): void {
+    this.bs.busy();
+    this.subsFansubMemberApproveReject = this.fansub.approveRejectFansubMember(m.id, {
+      approved: ac
+    }).subscribe({
+      next: res => {
+        this.gs.log('[FANSUB_MEMBER_APPROVE_REJECT_SUCCESS]', res);
+        this.getFansubMember();
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[FANSUB_MEMBER_APPROVE_REJECT_ERROR]', err);
+        this.getFansubMember();
+        this.bs.idle();
+      }
+    });
+  }
+
+  approveMember(member: FansubMemberModel): void {
+    this.approveOrRejectFansubMember(member, true);
+  }
+
+  rejectMember(member): void {
+    this.approveOrRejectFansubMember(member, false);
   }
 
 }

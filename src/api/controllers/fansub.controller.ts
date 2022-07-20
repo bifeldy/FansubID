@@ -368,37 +368,33 @@ export class FansubController {
     }
   }
 
-  // GET `/api/fansub/:slug/members`
-  @Get('/:slug/members')
+  // GET `/api/fansub/:slug/member`
+  @Get('/:slug/member')
   @HttpCode(200)
   async getFansubMembers(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const queryPage = parseInt(req.query['page'] as string);
-      const queryRow = parseInt(req.query['row'] as string);
       const [members, count] = await this.fansubMemberRepo.findAndCount({
         where: [
           {
             fansub_: {
               slug: ILike(req.params['slug'])
-            },
-            user_: {
-              username: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
             }
           }
         ],
         order: {
-          ...((req.query['sort'] && req.query['order']) ? {
-            [req.query['sort'] as string]: (req.query['order'] as string).toUpperCase()
-          } : {
-            created_at: 'DESC'
-          })
+          keterangan: 'ASC',
+          created_at: 'DESC'
         },
-        skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
-        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10,
         relations: ['fansub_', 'user_', 'approved_by_']
       });
       for (const member of members) {
         if ('fansub_' in member && member.fansub_) {
+          delete member.fansub_.urls;
+          delete member.fansub_.tags;
+          delete member.fansub_.view_count;
+          delete member.fansub_.like_count;
+          delete member.fansub_.description;
+          delete member.fansub_.rss_feed;
           delete member.fansub_.created_at;
           delete member.fansub_.updated_at;
           delete member.fansub_.user_;
@@ -419,9 +415,9 @@ export class FansubController {
         }
       }
       return {
-        info: `😅 200 - Fansub API :: All Members 🤣`,
+        info: `😅 200 - Fansub API :: ${req.params['slug']} Members 🤣`,
         count,
-        pages: Math.ceil(count / (queryRow ? queryRow : 10)),
+        pages: 1,
         results: members
       };
     } catch (error) {

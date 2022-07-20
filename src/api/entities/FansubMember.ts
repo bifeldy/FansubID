@@ -11,6 +11,9 @@ export class FansubMember implements FansubMemberModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'text', nullable: true })
+  keterangan: string;
+
   @Column({ type: 'boolean', default: false })
   approved: boolean;
 
