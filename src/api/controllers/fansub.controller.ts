@@ -3,7 +3,7 @@ import { parse } from 'rss-to-json';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ILike, IsNull, Not } from 'typeorm';
+import { ILike } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -439,17 +439,14 @@ export class FansubController {
       const rssFeed: any = {};
       const fansub = await this.fansubRepo.findOneOrFail({
         where: [
-          {
-            slug: ILike(req.params['slug']),
-            rss_feed: Not(IsNull())
-          }
+          { slug: ILike(req.params['slug']) }
         ],
         order: {
           updated_at: 'DESC'
         }
       });
       const rgx = new RegExp(CONSTANTS.regexUrl);
-      if (fansub.rss_feed.match(rgx)) {
+      if (fansub.rss_feed && fansub.rss_feed.match(rgx)) {
         try {
           let rssUrl = fansub.rss_feed;
           if (!rssUrl.includes('?')) {
@@ -485,6 +482,9 @@ export class FansubController {
         } catch (e) {
           this.gs.log('[FANSUB_RSS_FEED] 🐾', e, 'error');
         }
+      } else {
+        rssFeed.slug = fansub.slug;
+        rssFeed.items = [];
       }
       return {
         info: `😅 200 - Fansub API :: RSS Feed 🤣`,
