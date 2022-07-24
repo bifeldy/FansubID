@@ -117,7 +117,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           ]
         });
       } else {
-        // Other Url Target In Hikki API -- e.g '/news/:newsId'
+        // Other Url Target In FansubID API -- e.g '/news/:newsId'
       }
       let tracks = null;
       const result: any = {};
@@ -222,7 +222,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
             ]
           });
         } else {
-          // Other Url Target In Hikki API -- e.g '/news/:newsId'
+          // Other Url Target In FansubID API -- e.g '/news/:newsId'
         }
         const tracks = await this.trackRepo.find({
           where: [
@@ -279,7 +279,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
         this.gs.log('[SOCKET_IO_TRACK_SET-ERROR] 🌟', error, 'error');
       }
     } else {
-      // Url Target Is Other Web API -- e.g 'https://api.github.com/repos/Bifeldy/Hikki/commits'
+      // Url Target Is Other Web API -- e.g 'https://api.github.com/repos/Bifeldy/fansubid/commits'
     }
   }
 

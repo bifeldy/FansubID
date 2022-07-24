@@ -7,7 +7,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "hikki": {
+    "fansubid": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -39,7 +39,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/hikki/browser",
+            "outputPath": "dist/fansubid/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -130,10 +130,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "hikki:build:production"
+              "browserTarget": "fansubid:build:production"
             },
             "development": {
-              "browserTarget": "hikki:build:development"
+              "browserTarget": "fansubid:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -141,7 +141,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "hikki:build"
+            "browserTarget": "fansubid:build"
           }
         },
         "test": {
@@ -185,7 +185,7 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/hikki/server",
+            "outputPath": "dist/fansubid/server",
             "main": "server.ts",
             "tsConfig": "tsconfig.server.json",
             "inlineStyleLanguage": "scss",
@@ -231,12 +231,12 @@
           "builder": "@nguniversal/builders:ssr-dev-server",
           "configurations": {
             "development": {
-              "browserTarget": "hikki:build:development",
-              "serverTarget": "hikki:server:development"
+              "browserTarget": "fansubid:build:development",
+              "serverTarget": "fansubid:server:development"
             },
             "production": {
-              "browserTarget": "hikki:build:production",
-              "serverTarget": "hikki:server:production"
+              "browserTarget": "fansubid:build:production",
+              "serverTarget": "fansubid:server:production"
             }
           },
           "defaultConfiguration": "development"
@@ -262,12 +262,12 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "hikki:build:production",
-              "serverTarget": "hikki:server:production"
+              "browserTarget": "fansubid:build:production",
+              "serverTarget": "fansubid:server:production"
             },
             "development": {
-              "browserTarget": "hikki:build:development",
-              "serverTarget": "hikki:server:development"
+              "browserTarget": "fansubid:build:development",
+              "serverTarget": "fansubid:server:development"
             }
           },
           "defaultConfiguration": "production"
@@ -284,5 +284,5 @@
       }
     }
   },
-  "defaultProject": "hikki"
+  "defaultProject": "fansubid"
 }

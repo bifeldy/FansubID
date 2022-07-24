@@ -1,4 +1,4 @@
-# <img src="src/assets/img/favicon.png" width="24px" /> [Hikki | Database Fansub Indonesia](https://hikki.id)
+# <img src="src/assets/img/favicon.png" width="24px" /> [FansubID | Database Fansub Indonesia](https://www.fansub.id)
 
 Proyek ini awalnya dibuat menggunakan [Angular CLI](https://github.com/angular/angular-cli) dengan versi 7.1.0 yaitu [PTI-TugasAkhir](https://github.com/bifeldy/PTI-TugasAkhir). <br />
 => Live Demo :: https://bifeldy.github.io/PTI-TugasAkhir (Archived).
@@ -11,11 +11,14 @@ Proyek ini awalnya dibuat menggunakan [Angular CLI](https://github.com/angular/a
 
 ## *Build & Run*
 
-Jalankan `npm run bifeldy:prod` untuk *build* seluruh proyek (*frontend* & *backend*) dalam *production*. <br />
-Hasil akan tersimpan di folder `dist/`.
+* Buat salinan `environment.example.ts` dengan nama `environment.ts` dan  `environment.prod.ts`. <br />
+  Lengkapi data untuk *configurasi environment*.
+
+* Jalankan `npm run bifeldy:prod` untuk *build* seluruh proyek (*frontend* & *backend*) dalam *production*. <br />
+  Hasil akan tersimpan di folder `dist/`.
 
 * Jalankan `npm run bifeldy:dev` untuk *serve* SSR dalam *development*. <br />
-  Lalu buka situs di `http://localhost:4000` portnya dapat dilihat pada terminal.
+  Lalu buka situs di `http://localhost:4200` portnya dapat dilihat pada terminal.
   
 * Untuk perintah lainnya, misalnya `npm run bifeldy:lint` dapat dilihat pada berkas [package.json](package.json)
 

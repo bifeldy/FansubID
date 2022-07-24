@@ -35,11 +35,11 @@ import { User } from '../../api/entities/User';
 
 export const environment = {
   production: false,
-  siteName: 'Hikki',
+  siteName: 'FansubID',
   siteDescription: 'Di Kamar Saja!',
   author: 'Bifeldy',
   jwtSecretKey: '',
-  tokenName: 'Hikki_Token',
+  tokenName: 'FansubID_Token',
   domain: 'localhost',
   ip: '127.0.0.1',
   baseUrl: 'http://localhost:4200',
@@ -47,7 +47,7 @@ export const environment = {
     type: 'postgres',
     host: 'localhost',
     port: 5432,
-    database: 'hikki',
+    database: 'fansubid',
     username: 'postgres',
     password: 'postgres',
     synchronize: true,
@@ -85,9 +85,9 @@ export const environment = {
       User
     ],
   },
-  viewFolder: 'dist/hikki/browser',
-  uploadFolder: 'dist/hikki/uploads',
-  jsonCacheFolder: 'dist/hikki/caches',
+  viewFolder: 'dist/fansubid/browser',
+  uploadFolder: 'dist/fansubid/uploads',
+  jsonCacheFolder: 'dist/fansubid/caches',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',
   recaptchaApiUrl: 'https://www.google.com/recaptcha/api/siteverify',
   reCaptchaSecretKey: '',
@@ -104,7 +104,7 @@ export const environment = {
     },
     serviceAccount: {
       type: 'service_account',
-      project_id: 'hikki-bifeldy',
+      project_id: 'fansubid-bifeldy',
       private_key_id: '',
       private_key: '',
       client_email: '',
@@ -121,9 +121,8 @@ export const environment = {
       key: '',
       url: 'https://api.mailgun.net',
     },
-    fullName: `Hikki | No-Reply`,
-    domain: 'hikki.id',
-    password: ''
+    fullName: `FansubID | No-Reply`,
+    domain: 'fansub.id'
   },
   discordApiUrl: 'https://discord.com/api',
   discordGuildId: '342220398022098944',
@@ -143,7 +142,7 @@ export const environment = {
   externalApiDorama: 'https://kuryana.vercel.app',
   externalApiImage: 'https://api.imgbb.com/1/upload',
   trackerAnnounce: [
-    'wss://tracker.hikki.id'
+    'wss://tracker.fansub.id'
   ]
 };
 

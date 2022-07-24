@@ -201,7 +201,7 @@ export class LikedislikeController {
           relations: ['profile_']
         });
       } else {
-        // Other Url Target In Hikki API -- e.g '/news/:newsId'
+        // Other Url Target In FansubID API -- e.g '/news/:newsId'
       }
       const likedislike = await this.likedislikeRepo.find({
         where: [
@@ -370,7 +370,7 @@ export class LikedislikeController {
           ]
         });
       } else {
-        // Other Url Target In Hikki API -- e.g '/news/:newsId'
+        // Other Url Target In FansubID API -- e.g '/news/:newsId'
       }
       if (req.params['type'] === 'berkas' || req.params['type'] === 'fansub' || req.params['type'] === 'user') {
         const likedislike = await this.likedislikeRepo.query(`

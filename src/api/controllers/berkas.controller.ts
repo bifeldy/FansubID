@@ -237,7 +237,7 @@ export class BerkasController {
               const dfile = await gdrive.files.create({
                 requestBody: {
                   name: `${attachment.name.toString().toLowerCase()}.${attachment.ext.toString().toLowerCase()}`,
-                  parents: [environment.gdriveFolderId],  // Hikki ひきこもり - Folder
+                  parents: [environment.gdriveFolderId],  // FansubID ひきこもり - Folder
                   mimeType
                 },
                 media: {
