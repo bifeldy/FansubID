@@ -31,7 +31,7 @@ export class DoramaSeasonalController {
     const quarter = this.gs.seasonal.find(sB => sB.name === season).id || Math.ceil((currDate.getMonth() + 1) / 3);
     try {
       const url = new URL(`${environment.externalApiDorama}/seasonal/${year}/${quarter}`);
-      const res_raw = await this.api.get(url, environment.nodeJsXhrHeader);
+      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[apiDorama] 🔥 ${res_raw.status}`, res_json);

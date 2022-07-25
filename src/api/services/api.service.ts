@@ -15,7 +15,7 @@ export class ApiService {
     //
   }
 
-  async get(
+  async getData(
     url: URL,
     headers: HeadersInit
   ) {
@@ -25,7 +25,7 @@ export class ApiService {
     });
   }
 
-  async post(
+  async postData(
     url: URL,
     form: FormData | URLSearchParams,
     headers: HeadersInit

@@ -39,7 +39,7 @@ export class GdriveService {
       form.append('client_secret', this.gcp.clientSecret);
       form.append('refresh_token', refreshToken);
       const googleClient = new google.auth.OAuth2(this.gcp.clientId, this.gcp.clientSecret);
-      const res_raw = await this.api.post(url, form, environment.nodeJsXhrHeader);
+      const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
       const res_json: any = await res_raw.json();
       this.gs.log(`[gApp] 🔑 ${res_raw.status}`, res_json);
       googleClient.setCredentials(res_json);

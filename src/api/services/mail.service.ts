@@ -27,7 +27,7 @@ export class MailService {
   //** MailGun Need To Allow / Whitelist From Public IP Server Origin */
   // https://app.mailgun.com/app/account/security/api_keys
 
-  async mailGunDeleteForwarding(id): Promise<boolean> {
+  async mailGunDeleteForwarding(id): Promise<any> {
     try {
       const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes/${id}`);
       const res_raw = await this.api.deleteData(url, {
@@ -49,7 +49,7 @@ export class MailService {
   async mailGunGetAllForwarding(): Promise<any> {
     try {
       const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes`);
-      const res_raw = await this.api.get(url, {
+      const res_raw = await this.api.getData(url, {
         'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
         ...environment.nodeJsXhrHeader
       });
@@ -70,7 +70,7 @@ export class MailService {
     return res.items.find(item => item.description === username);
   }
 
-  async mailGunAddForwarding(username, emailTarget): Promise<boolean> {
+  async mailGunAddForwarding(username, emailTarget): Promise<any> {
     try {
       if (!(await this.mailGunGetUserForwarding(username))) {
         const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes`);
@@ -80,7 +80,7 @@ export class MailService {
         form.append('expression', `match_recipient("${username}@${environment.mailGun.domain}")`);
         form.append('action', `forward("${emailTarget}")`);
         form.append('action', 'stop()');
-        const res_raw = await this.api.post(url, form, {
+        const res_raw = await this.api.postData(url, form, {
           'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
           ...environment.nodeJsXhrHeader
         });
@@ -97,7 +97,7 @@ export class MailService {
     }
   }
 
-  async mailGunSend(mailBody: MailModel): Promise<boolean> {
+  async mailGunSend(mailBody: MailModel): Promise<any> {
     try {
       const url = new URL(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`);
       const form = new URLSearchParams();
@@ -106,7 +106,7 @@ export class MailService {
       form.append('subject', mailBody.subject);
       form.append('template', mailBody.template);
       form.append('h:x-mailgun-variables', JSON.stringify(mailBody.variables));
-      const res_raw = await this.api.post(url, form, {
+      const res_raw = await this.api.postData(url, form, {
         'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
         ...environment.nodeJsXhrHeader
       });
@@ -122,12 +122,12 @@ export class MailService {
     }
   }
 
-  // async yMailSend(mailBody: any): Promise<boolean> {
+  // async yMailSend(mailBody: any): Promise<any> {
   //   this.gs.log('[MAIL_SERVICE-ERROR] 💌', 'No Mail Service Configured!', 'error');
   //   return false;
   // }
 
-  // async gMailSend(mailBody: any): Promise<boolean> {
+  // async gMailSend(mailBody: any): Promise<any> {
   //   this.gs.log('[MAIL_SERVICE-ERROR] 💌', 'No Mail Service Configured!', 'error');
   //   return false;
   // }

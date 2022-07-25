@@ -66,7 +66,7 @@ export class AktivasiController {
   async reSendActivation(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const registration: RegistrationModel = await this.as.reSendActivation(req.body);
     if (registration) {
-      const status = await this.ms.sendRegisterActivationMail(registration);
+      this.ms.sendRegisterActivationMail(registration);
       return {
         info: '😚 201 - Register API :: Berhasil Kirim Ulang Aktivasi 🤩',
         result: {
@@ -76,8 +76,7 @@ export class AktivasiController {
             Silahkan Periksa Kembali Email Anda. <br />
             '<span class="text-danger">${registration.email}</span>' <br />
             .: ${registration.id} :.
-          `,
-          status
+          `
         }
       };
     }

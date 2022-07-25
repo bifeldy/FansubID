@@ -18,7 +18,7 @@ export class RegisterController {
   @HttpCode(201)
   async register(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const registration: RegistrationModel = res.locals['registration'];
-    const status = await this.ms.sendRegisterActivationMail(registration);
+    this.ms.sendRegisterActivationMail(registration);
     return {
       info: '😚 201 - Register API :: Berhasil Mendaftar Yeay 🤩',
       result: {
@@ -28,8 +28,7 @@ export class RegisterController {
           Silahkan Periksa Email Untuk Menyelesaikan Pendaftaran. <br />
           Petunjuk Sudah Dikirimkan Ke '<span class="text-danger">${registration.email}</span>'. <br />
           .: ${registration.id} :.
-        `,
-        status
+        `
       }
     }
   }
