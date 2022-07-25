@@ -42,7 +42,7 @@ export class MailService {
       throw new Error('Mailgun API Error');
     } catch (err) {
       this.gs.log('[MAILGUN_SERVICE-DELETE_FORWARDING_ERROR] 💌', err, 'error');
-      return false;
+      return null;
     }
   }
 
@@ -61,7 +61,7 @@ export class MailService {
       throw new Error('Mailgun API Error');
     } catch (err) {
       this.gs.log('[MAILGUN_SERVICE-GET_ALL_FORWARDING_ERROR] 💌', err, 'error');
-      return false;
+      return null;
     }
   }
 
@@ -93,7 +93,7 @@ export class MailService {
       throw new Error('Mailgun API Error');
     } catch (err) {
       this.gs.log('[MAILGUN_SERVICE-ADD_FORWARDING_ERROR] 💌', err, 'error');
-      return false;
+      return null;
     }
   }
 
@@ -118,22 +118,22 @@ export class MailService {
       throw new Error('Mailgun API Error');
     } catch (err) {
       this.gs.log('[MAILGUN_SERVICE-SEND_EMAIL_ERROR] 💌', err, 'error');
-      return false;
+      return null;
     }
   }
 
   // async yMailSend(mailBody: any): Promise<any> {
   //   this.gs.log('[MAIL_SERVICE-ERROR] 💌', 'No Mail Service Configured!', 'error');
-  //   return false;
+  //   return null;
   // }
 
   // async gMailSend(mailBody: any): Promise<any> {
   //   this.gs.log('[MAIL_SERVICE-ERROR] 💌', 'No Mail Service Configured!', 'error');
-  //   return false;
+  //   return null;
   // }
 
   async sendMail(mailBody: any): Promise<any> {
-    let mailStatus = false;
+    let mailStatus = null;
     if (!mailStatus && this.cfg.mailSMTP.mailgun) {
       mailStatus = await this.mailGunSend(mailBody);
     }
