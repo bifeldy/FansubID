@@ -67,11 +67,6 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     }
   }
 
-  @SubscribeMessage('server-get')
-  serverGet(client: Socket, payload: PayloadModel): ServerInfoModel {
-    return this.cfg.serverGet();
-  }
-
   @SubscribeMessage('server-set')
   serverSet(client: Socket, payload: PayloadModel): ServerInfoModel | void {
     try {
@@ -80,7 +75,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
         payload.user = decoded.user;
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           this.cfg.serverSet(payload);
-          return this.cfg.serverGet();
+          this.sis.emitToBroadcast('server-config', this.cfg.serverGet());
         }
       }
     } catch (error) {

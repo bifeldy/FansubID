@@ -25,6 +25,7 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
   subsUser = null;
   subsCronJobsGet = null;
   subsCronJobsPut = null;
+  subsServer = null;
 
   constructor(
     private bs: BusyService,
@@ -54,7 +55,7 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
-      this.getServerSettings();
+      this.subsServer = this.ss.currentServer.subscribe({ next: async server => this.settings = server });
       this.getAllTaskCronJobs();
     }
   }
@@ -63,22 +64,11 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
     this.subsUser?.unsubscribe();
     this.subsCronJobsGet?.unsubscribe();
     this.subsCronJobsPut?.unsubscribe();
-  }
-
-  getServerSettings(): void {
-    this.ss.socketEmit('server-get', {}, (response: any) => {
-      this.gs.log(`[SOCKET_SERVER-GET]`, response);
-      this.settings = response;
-    });
+    this.subsServer?.unsubscribe();
   }
 
   toggleSetting(key: string, checked: boolean): void {
-    this.ss.socketEmit('server-set', {
-      [key]: checked
-    }, (response: any) => {
-      this.gs.log(`[SOCKET_SERVER-SET]`, response);
-      this.settings = response;
-    });
+    this.ss.socketEmit('server-set', { [key]: checked });
   }
 
   getAllTaskCronJobs(): void {

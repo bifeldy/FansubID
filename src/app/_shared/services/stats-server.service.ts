@@ -158,6 +158,9 @@ export class StatsServerService {
     this.mySocket.on('ping', () => {
       this.gs.log('[SOCKET_PING]', Date.now());
     });
+    this.mySocket.on('server-config', (data) => {
+      this.currentServerSubject.next(data);
+    });
     this.mySocket.on('pong', (data) => {
       this.latency = data;
       this.gs.log('[SOCKET_PONG]', `${Date.now()} => ${data} ms`);
