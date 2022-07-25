@@ -5,7 +5,7 @@ import { Equal, ILike, IsNull } from 'typeorm';
 import { CONSTANTS } from '../../constants';
 
 import { RoleModel } from '../../models/req-res.model';
-import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel, ServerInfoModel } from '../../models/socket-io.model';
+import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel } from '../../models/socket-io.model';
 
 import { ConfigService } from '../services/config.service';
 import { CryptoService } from '../services/crypto.service';
@@ -68,7 +68,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   }
 
   @SubscribeMessage('server-set')
-  serverSet(client: Socket, payload: PayloadModel): ServerInfoModel | void {
+  serverSet(client: Socket, payload: PayloadModel): void {
     try {
       if (payload.token) {
         const decoded = this.cs.jwtDecrypt(payload.token);
