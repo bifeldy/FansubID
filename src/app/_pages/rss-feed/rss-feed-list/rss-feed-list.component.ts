@@ -70,6 +70,7 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
         this.rssFeedData = [];
         for (const r of res.results) {
           this.rssFeedData.push({
+            foto_fansub: r.image_url,
             link: r.item?.link,
             Fansub: r.slug,
             Tanggal: r.item?.created || r.item?.published,

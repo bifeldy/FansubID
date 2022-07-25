@@ -14,7 +14,7 @@
       tdc.toUpperCase() !== 'TOPIK' && tdc.toUpperCase() !== 'JUDUL ANIME' && tdc.toUpperCase() !== 'ANIME'  && tdc.toUpperCase() !== 'DORAMA' &&
       tdc.toUpperCase() !== 'JENIS' && tdc.toUpperCase() !== 'DEADLINE' && tdc.toUpperCase() !== 'JUDUL' && tdc.toUpperCase() !== 'KONTEN' &&
       tdc.toUpperCase() !== 'ID' && tdc.toUpperCase() !== 'ALASAN' && tdc.toUpperCase() !== 'NAMA API' && tdc.toUpperCase() !== 'IP DOMAIN' &&
-      tdc.toUpperCase() !== 'API KEY' && tdc.toUpperCase() !== 'USERNAME' && tdc.toUpperCase() !== 'EMAIL' && tdc.toUpperCase() !== 'ROLE'
+      tdc.toUpperCase() !== 'API KEY' && tdc.toUpperCase() !== 'USERNAME' && tdc.toUpperCase() !== 'EMAIL' && tdc.toUpperCase() !== 'ROLE' && tdc.toUpperCase() !== 'KETERANGAN'
     ">
       <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
     </th>
@@ -22,12 +22,14 @@
       <div *ngIf="checkIsArray(row[tdc]) === false">
         <h3 class="m-0" [style.color]="
           (tdc === 'Pemilik' || tdc === 'Penulis' || tdc === 'Status' || tdc === 'Korban' || tdc === 'Fansub') ? (GS.isDarkMode ? '#ffc107' : '#0d6efd') :
-            (tdc === 'Tanggal' || tdc === 'Pelaku' || tdc === 'Judul') ? '#28a745' :
+            (tdc === 'Tanggal' || tdc === 'Pelaku' || tdc === 'Judul' || tdc === 'Anggota') ? '#28a745' :
               (tdc === 'Jenis' || tdc === 'Proyek') ? '#7289da' :
         (GS.isDarkMode ? '#acacac' : '#000000')">
           <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Pemilik' || tdc === 'Penulis'" />
           <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Korban'" />
           <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Pelaku'" />
+          <img matListAvatar [src]="row.foto_fansub" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Fansub'" />
+          <img matListAvatar [src]="row.foto_anggota" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Anggota'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc === 'Logo'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc === 'Image'" />
           <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc === 'Poster'" />

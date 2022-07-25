@@ -60,6 +60,7 @@ export class RssFeedTasksService {
         j++;
       }
       rssFeed.splice(j, 0, {
+        image_url: fansub.image_url,
         slug: fansub.slug,
         title: feed.title,
         // description: feed.description,

@@ -233,7 +233,7 @@ export class FansubMemberController {
           let resInfo = null;
           if (req.body.approved) {
             if (req.body.keterangan) {
-              member.keterangan = req.body.keterangan;
+              member.keterangan = req.body.keterangan.substring(0, 10);
             }
             member.approved = true;
             member.approved_by_ = approver.user_;
