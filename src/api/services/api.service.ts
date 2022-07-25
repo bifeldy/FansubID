@@ -37,4 +37,26 @@ export class ApiService {
     });
   }
 
+  async putData(
+    url: URL,
+    form: FormData | URLSearchParams,
+    headers: HeadersInit
+  ) {
+    return fetch(url.toString(), {
+      method: 'POST',
+      body: form,
+      headers
+    });
+  }
+
+  async deleteData(
+    url: URL,
+    headers: HeadersInit
+  ) {
+    return fetch(url.toString(), {
+      method: 'DELETE',
+      headers
+    });
+  }
+
 }

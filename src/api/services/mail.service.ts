@@ -24,6 +24,79 @@ export class MailService {
     //
   }
 
+  //** MailGun Need To Allow / Whitelist From Public IP Server Origin */
+  // https://app.mailgun.com/app/account/security/api_keys
+
+  async mailGunDeleteForwarding(id): Promise<boolean> {
+    try {
+      const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes/${id}`);
+      const res_raw = await this.api.deleteData(url, {
+        'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
+        ...environment.nodeJsXhrHeader
+      });
+      if (res_raw.ok) {
+        const res_json: any = await res_raw.json();
+        this.gs.log(`[MAILGUN_SERVICE-DELETE_FORWARDING_SUCCESS] 💌 ${res_raw.status}`, res_json);
+        return res_json;
+      }
+      throw new Error('Mailgun API Error');
+    } catch (err) {
+      this.gs.log('[MAILGUN_SERVICE-DELETE_FORWARDING_ERROR] 💌', err, 'error');
+      return false;
+    }
+  }
+
+  async mailGunGetAllForwarding(): Promise<any> {
+    try {
+      const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes`);
+      const res_raw = await this.api.get(url, {
+        'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
+        ...environment.nodeJsXhrHeader
+      });
+      if (res_raw.ok) {
+        const res_json: any = await res_raw.json();
+        this.gs.log(`[MAILGUN_SERVICE-GET_ALL_FORWARDING_SUCCESS] 💌 ${res_raw.status}`, res_json);
+        return res_json;
+      }
+      throw new Error('Mailgun API Error');
+    } catch (err) {
+      this.gs.log('[MAILGUN_SERVICE-GET_ALL_FORWARDING_ERROR] 💌', err, 'error');
+      return false;
+    }
+  }
+
+  async mailGunGetUserForwarding(username): Promise<any> {
+    const res = await this.mailGunGetAllForwarding();
+    return res.items.find(item => item.description === username);
+  }
+
+  async mailGunAddForwarding(username, emailTarget): Promise<boolean> {
+    try {
+      if (!(await this.mailGunGetUserForwarding(username))) {
+        const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes`);
+        const form = new URLSearchParams();
+        form.append('priority', '0');
+        form.append('description', username);
+        form.append('expression', `match_recipient("${username}@${environment.mailGun.domain}")`);
+        form.append('action', `forward("${emailTarget}")`);
+        form.append('action', 'stop()');
+        const res_raw = await this.api.post(url, form, {
+          'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
+          ...environment.nodeJsXhrHeader
+        });
+        if (res_raw.ok) {
+          const res_json: any = await res_raw.json();
+          this.gs.log(`[MAILGUN_SERVICE-ADD_FORWARDING_SUCCESS] 💌 ${res_raw.status}`, res_json);
+          return res_json;
+        }
+      }
+      throw new Error('Mailgun API Error');
+    } catch (err) {
+      this.gs.log('[MAILGUN_SERVICE-ADD_FORWARDING_ERROR] 💌', err, 'error');
+      return false;
+    }
+  }
+
   async mailGunSend(mailBody: MailModel): Promise<boolean> {
     try {
       const url = new URL(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`);
@@ -39,13 +112,12 @@ export class MailService {
       });
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
-        this.gs.log(`[MAILGUN_SERVICE-SUCCESS] 💌 ${res_raw.status}`, res_json);
-      } else {
-        throw new Error('Mailgun API Error');
+        this.gs.log(`[MAILGUN_SERVICE-SEND_EMAIL_SUCCESS] 💌 ${res_raw.status}`, res_json);
+        return res_json;
       }
-      return true;
+      throw new Error('Mailgun API Error');
     } catch (err) {
-      this.gs.log('[MAILGUN_SERVICE-ERROR] 💌', err, 'error');
+      this.gs.log('[MAILGUN_SERVICE-SEND_EMAIL_ERROR] 💌', err, 'error');
       return false;
     }
   }
@@ -60,7 +132,7 @@ export class MailService {
   //   return false;
   // }
 
-  async sendMail(mailBody: any): Promise<void> {
+  async sendMail(mailBody: any): Promise<any> {
     let mailStatus = false;
     if (!mailStatus && this.cfg.mailSMTP.mailgun) {
       mailStatus = await this.mailGunSend(mailBody);
@@ -71,9 +143,10 @@ export class MailService {
     // if (!mailStatus && this.cfg.mailSMTP.gmail) {
     //   mailStatus = await this.gMailSend(mailBody);
     // }
+    return mailStatus;
   }
 
-  sendRegisterActivationMail(user: RegistrationModel): void {
+  async sendRegisterActivationMail(user: RegistrationModel): Promise<any> {
     const content: MailModel = {
       to: user.email,
       subject: `${environment.siteName} | Aktivasi Akun`,
@@ -123,7 +196,8 @@ export class MailService {
         .: ${user.id} :.
       `.replace(/\s\s+/g, ' ').trim()
     };
-    this.sendMail(content);
+    const res = await this.sendMail(content);
+    return res;
   }
 
 }
