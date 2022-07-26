@@ -88,15 +88,27 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           }
           this.toast.error(errorMessage, errorTitle);
         }
-        if (e.status === 401) {
-          this.as.removeUser();
-          this.ls.clear();
-          this.bs.idle();
-          this.router.navigate(['/login'], {
-            queryParams: {
-              returnUrl: this.router.url
-            }
-          });
+        switch (e.status) {
+          case 401:
+            this.as.removeUser();
+            this.ls.clear();
+            this.bs.idle();
+            this.router.navigate(['/login'], {
+              queryParams: {
+                returnUrl: this.router.url
+              }
+            });
+            break;
+          case 418:
+            this.bs.idle();
+            this.router.navigate(['/verify'], {
+              queryParams: {
+                returnUrl: this.router.url
+              }
+            });
+            break;
+          default:
+            break;
         }
         return throwError(() => e);
       }

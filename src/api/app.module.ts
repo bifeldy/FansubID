@@ -36,6 +36,7 @@ import { FansubController } from './controllers/fansub.controller';
 import { FansubAllController } from './controllers/fansub-/fansub-all.controller';
 import { FansubAnimeController } from './controllers/fansub-/fansub-anime.controller';
 import { FansubBerkasController } from './controllers/fansub-/fansub-berkas.controller';
+import { FansubCnameController } from './controllers/fansub-/fansub-cname.controller';
 import { FansubDoramaController } from './controllers/fansub-/fansub-dorama.controller';
 import { FansubMemberController } from './controllers/fansub-/fansub-member.controller';
 import { FansubRssFeedActiveController } from './controllers/fansub-/fansub-rss-feed-active.controller';
@@ -88,6 +89,7 @@ import { SocketIoGateway } from './gateways/socket-io.gateway';
 
 import { ApiService } from './services/api.service';
 import { AuthService } from './services/auth.service';
+import { CloudflareService } from './services/cloudflare.service';
 import { ConfigService } from './services/config.service';
 import { CryptoService } from './services/crypto.service';
 import { DiscordService } from './services/discord.service';
@@ -163,6 +165,7 @@ import { UserService } from './repository/user.service';
     FansubAllController,
     FansubAnimeController,
     FansubBerkasController,
+    FansubCnameController,
     FansubDoramaController,
     FansubMemberController,
     FansubRssFeedActiveController,
@@ -223,6 +226,7 @@ import { UserService } from './repository/user.service';
     // https://docs.nestjs.com/modules#global-modules
     ApiService,
     AuthService,
+    CloudflareService,
     ConfigService,
     CryptoService,
     DiscordService,

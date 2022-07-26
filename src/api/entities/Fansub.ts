@@ -43,6 +43,12 @@ export class Fansub implements FansubModel {
   @Column({ type: 'int', default: 0 })
   like_count: number;
 
+  @Column({ type: 'text', nullable: true })
+  cname_id: string;
+
+  @Column({ type: 'boolean', default: true })
+  editable: boolean;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number;
 

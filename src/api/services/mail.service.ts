@@ -21,15 +21,13 @@ export class MailService {
     private cs: CryptoService,
     private gs: GlobalService
   ) {
-    //
+    //** MailGun Need To Allow / Whitelist From Public IP Server Origin */
+    // https://app.mailgun.com/app/account/security/api_keys
   }
-
-  //** MailGun Need To Allow / Whitelist From Public IP Server Origin */
-  // https://app.mailgun.com/app/account/security/api_keys
 
   async mailGunDeleteForwarding(id): Promise<any> {
     try {
-      const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes/${id}`);
+      const url = new URL(`${environment.mailGun.clientOptions.url}/routes/${id}`);
       const res_raw = await this.api.deleteData(url, {
         'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
         ...environment.nodeJsXhrHeader
@@ -48,7 +46,7 @@ export class MailService {
 
   async mailGunGetAllForwarding(): Promise<any> {
     try {
-      const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes`);
+      const url = new URL(`${environment.mailGun.clientOptions.url}/routes`);
       const res_raw = await this.api.getData(url, {
         'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
         ...environment.nodeJsXhrHeader
@@ -73,7 +71,7 @@ export class MailService {
   async mailGunAddForwarding(username, emailTarget): Promise<any> {
     try {
       if (!(await this.mailGunGetUserForwarding(username))) {
-        const url = new URL(`${environment.mailGun.clientOptions.url}/v3/routes`);
+        const url = new URL(`${environment.mailGun.clientOptions.url}/routes`);
         const form = new URLSearchParams();
         form.append('priority', '0');
         form.append('description', username);
@@ -99,7 +97,7 @@ export class MailService {
 
   async mailGunSend(mailBody: MailModel): Promise<any> {
     try {
-      const url = new URL(`${environment.mailGun.clientOptions.url}/v3/${environment.mailGun.domain}/messages`);
+      const url = new URL(`${environment.mailGun.clientOptions.url}/${environment.mailGun.domain}/messages`);
       const form = new URLSearchParams();
       form.append('from', `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`);
       form.append('to', mailBody.to);

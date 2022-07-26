@@ -261,6 +261,11 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         });
       } else {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
+        this.router.navigate(['/verify'], {
+          queryParams: {
+            returnUrl: this.router.url
+          }
+        });
       }
     } else {
       this.router.navigate(['/login'], {

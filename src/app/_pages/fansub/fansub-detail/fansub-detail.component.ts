@@ -346,7 +346,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.subsFansubMemberGet = this.fansub.getFansubMember(this.fansubSlug).subscribe({
       next: res => {
-        this.gs.log('[FANSUB_MEMBER_LIST_SUCCESS]', res);
+        this.gs.log('[FANSUB_DETAIL_MEMBER_LIST_SUCCESS]', res);
         this.approvedMembers = [];
         this.pendingMembers = [];
         for (const m of res.results) {
@@ -363,7 +363,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_MEMBER_LIST_ERROR]', err);
+        this.gs.log('[FANSUB_DETAIL_MEMBER_LIST_ERROR]', err);
         this.bs.idle();
       }
     });
@@ -374,12 +374,12 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     if (this.joinedAsMember) {
       this.subsFansubMemberLeave = this.fansub.leaveFansubMember(this.joinedAsMember.id).subscribe({
         next: res => {
-          this.gs.log('[FANSUB_MEMBER_LEAVE_SUCCESS]', res);
+          this.gs.log('[FANSUB_DETAIL_MEMBER_LEAVE_SUCCESS]', res);
           this.getFansubMember();
           this.bs.idle();
         },
         error: err => {
-          this.gs.log('[FANSUB_MEMBER_LEAVE_ERROR]', err);
+          this.gs.log('[FANSUB_DETAIL_MEMBER_LEAVE_ERROR]', err);
           this.getFansubMember();
           this.bs.idle();
         }
@@ -389,12 +389,12 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         slug: this.fansubSlug
       }).subscribe({
         next: res => {
-          this.gs.log('[FANSUB_MEMBER_JOIN_SUCCESS]', res);
+          this.gs.log('[FANSUB_DETAIL_MEMBER_JOIN_SUCCESS]', res);
           this.getFansubMember();
           this.bs.idle();
         },
         error: err => {
-          this.gs.log('[FANSUB_MEMBER_JOIN_ERROR]', err);
+          this.gs.log('[FANSUB_DETAIL_MEMBER_JOIN_ERROR]', err);
           this.getFansubMember();
           this.bs.idle();
         }
@@ -408,12 +408,12 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
       approved: ac
     }).subscribe({
       next: res => {
-        this.gs.log('[FANSUB_MEMBER_APPROVE_REJECT_SUCCESS]', res);
+        this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_SUCCESS]', res);
         this.getFansubMember();
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_MEMBER_APPROVE_REJECT_ERROR]', err);
+        this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_ERROR]', err);
         this.getFansubMember();
         this.bs.idle();
       }

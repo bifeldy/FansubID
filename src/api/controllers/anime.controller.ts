@@ -45,7 +45,7 @@ export class AnimeController {
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
-        let data = res_json.data;
+        const data = res_json.data;
         for (let i = 0; i < data.length; i++) {
           data[i].image_url = data[i].images.jpg?.image_url || data[i].images.webp?.image_url;
         }

@@ -114,7 +114,7 @@
         <div class="row py-3" *ngIf="panelData.length > 0">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
         </div>
-        <div class="row py-3" *ngIf="rssFeedData">
+        <div class="row py-3" *ngIf="rssFeedData && fansubSlug !== 'null'">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">
               <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getRssFeed()">

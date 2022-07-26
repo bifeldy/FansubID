@@ -88,23 +88,22 @@ export class FansubController {
         'name' in req.body && 'born' in req.body && 'slug' in req.body &&
         ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
       ) {
-        let user: UserModel = res.locals['user'];
+        const user: UserModel = res.locals['user'];
         const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
+        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
         const selectedFansub = await this.fansubRepo.find({
           where: [
             { slug: ILike(slug) }
           ]
         });
+        console.log(selectedFansub);
+        console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBB');
         if (selectedFansub.length === 0) {
           const fansub = this.fansubRepo.new();
           fansub.user_ = user;
           fansub.name = req.body.name;
           fansub.born = new Date(req.body.born);
           fansub.slug = slug;
-          const rssFeed: string = req.body.rss_feed;
-          if (rssFeed.match(CONSTANTS.regexUrl)) {
-            fansub.rss_feed = rssFeed;
-          }
           const filteredUrls = [];
           for (const u of req.body.urls) {
             if ('url' in u && 'name' in u && u.url && u.name) {
@@ -112,6 +111,12 @@ export class FansubController {
             }
           }
           fansub.urls = JSON.stringify(filteredUrls);
+          if ('rss_feed' in req.body) {
+            const rssFeed: string = req.body.rss_feed;
+            if (rssFeed.match(CONSTANTS.regexUrl)) {
+              fansub.rss_feed = rssFeed;
+            }
+          }
           if ('image' in req.body) {
             fansub.image_url = req.body.image;
           }
@@ -125,6 +130,7 @@ export class FansubController {
           if ('active' in req.body) {
             fansub.active = req.body.active;
           }
+          console.log('===================');
           const resFansubSave = await this.fansubRepo.save(fansub);
           if ('user_' in resFansubSave && resFansubSave.user_) {
             delete resFansubSave.user_.role;
@@ -228,10 +234,38 @@ export class FansubController {
         let user: UserModel = res.locals['user'];
         const fansub = await this.fansubRepo.findOneOrFail({
           where: [
-            { slug: ILike(req.params['slug']) }
+            {
+              slug: ILike(req.params['slug']),
+              editable: true
+            }
           ],
           relations: ['user_']
         });
+        if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR && fansub.user_.id !== user.id) {
+          try {
+            const member = await this.fansubMemberRepo.findOneOrFail({
+              where: [
+                {
+                  fansub_ : {
+                    id: fansub.id
+                  },
+                  user_ : {
+                    id: user.id
+                  }
+                }
+              ],
+              relations: ['fansub_', 'user_']
+            });
+            user = member.user_;
+          } catch (e) {
+            throw new HttpException({
+              info: `😅 403 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 🥰`,
+              result: {
+                message: `Anda Harus Menjadi Anggota Untuk Mengubah Data!`
+              }
+            }, HttpStatus.FORBIDDEN);
+          }
+        }
         if ('slug' in req.body) {
           const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
           const selectedFansub = await this.fansubRepo.find({
@@ -239,13 +273,13 @@ export class FansubController {
               { slug: ILike(newSlug) }
             ]
           });
-          if (selectedFansub.length === 0) {
+          if (selectedFansub.length === 0 && !fansub.cname_id) {
             fansub.slug = newSlug;
           } else {
             throw new HttpException({
               info: `😅 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 🥰`,
               result: {
-                message: `'${newSlug}' Sudah Terpakai`
+                message: `'${newSlug}' Sudah Terpakai / Terikat Domain`
               }
             }, HttpStatus.BAD_REQUEST);
           }

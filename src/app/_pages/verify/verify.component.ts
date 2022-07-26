@@ -27,6 +27,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
 
   submitted = false;
 
+  returnUrl = '/';
   verifyImg = '/assets/img/verify.png';
   verifyInfo = 'Verifikasi akunmu dan dapatkan fitur menarik lainnya~';
 
@@ -63,6 +64,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.gs.previousUrl || '/home';
     if (this.gs.isBrowser) {
       this.initKTP();
       const app = this.route.snapshot.queryParamMap.get('app');
@@ -70,7 +72,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
       if (app && code) {
         this.sosmedVerify(app, code);
       } else if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl(this.returnUrl);
       } else {
         this.verifyByKtpDisabled();
       }
@@ -99,7 +101,11 @@ export class VerifyComponent implements OnInit, OnDestroy {
             this.gs.log('[INFO_DIALOG_CLOSED]', re);
             if (re === true) {
               this.as.removeUser();
-              this.router.navigateByUrl('/login');
+              this.router.navigate(['/login'], {
+                queryParams: {
+                  returnUrl: this.returnUrl
+                }
+              });
             } else if (re === false) {
               if (sosmedApp.toUpperCase() === SosMedModel.DISCORD) {
                 this.openVerifyDiscordUrl();
@@ -149,7 +155,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         if (re === true) {
           this.openVerifyDiscordUrl();
         } else if (re === false) {
-          this.router.navigateByUrl('/home');
+          this.router.navigateByUrl(this.returnUrl);
         }
         this.subsDialog.unsubscribe();
       }
@@ -247,13 +253,13 @@ export class VerifyComponent implements OnInit, OnDestroy {
           next: success => {
             this.gs.log('[VERIFY_LOGIN_SUCCESS]', success);
             this.bs.idle();
-            this.router.navigateByUrl(`/home`);
+            this.router.navigateByUrl(this.returnUrl);
           },
           error: error => {
             this.gs.log('[VERIFY_LOGIN_ERROR]', error);
             this.bs.idle();
             this.as.removeUser();
-            this.router.navigateByUrl(`/home`);
+            this.router.navigateByUrl(this.returnUrl);
           }
         });
       },

@@ -30,11 +30,11 @@ export class VerifiedGuard implements CanActivate {
         return true;
       }
       throw new HttpException({
-        info: '😡 403 - Authorization :: Whoops, Akses Ditolak 😤',
+        info: '😡 418 - Authorization :: Whoops, Akses Ditolak 😤',
         result: {
           message: `💩 Khusus Pengguna Terverifikasi! 🤬`
         }
-      }, HttpStatus.FORBIDDEN);
+      }, HttpStatus.I_AM_A_TEAPOT);
     }
     throw new HttpException({
       info: '😡 401 - Authorization :: Whoops, Akses Ditolak 😤',

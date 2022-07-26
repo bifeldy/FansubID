@@ -81,7 +81,11 @@ export class NihongoBookCreateComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       if (!this.as.currentUserValue.verified) {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.router.navigateByUrl(`/nihongo`);
+        this.router.navigate(['/verify'], {
+          queryParams: {
+            returnUrl: '/nihongo'
+          }
+        });
       } else {
         this.initForm();
       }

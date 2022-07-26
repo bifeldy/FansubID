@@ -9,13 +9,15 @@ import { RoleModel, UserModel } from '../../../models/req-res.model';
 
 import { FansubService } from '../../repository/fansub.service';
 import { FansubMemberService } from '../../repository/fansub-member.service';
+import { UserService } from '../../repository/user.service';
 
-@Controller('fansub-member')
+@Controller('/fansub-member')
 export class FansubMemberController {
 
   constructor(
     private fansubRepo: FansubService,
-    private fansubMemberRepo: FansubMemberService
+    private fansubMemberRepo: FansubMemberService,
+    private userRepo: UserService
   ) {
     //
   }
@@ -105,7 +107,7 @@ export class FansubMemberController {
   async requestJoinFansubMember(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('slug' in req.body) {
-        let user: UserModel = res.locals['user'];
+        const user: UserModel = res.locals['user'];
         const fansub = await this.fansubRepo.findOneOrFail({
           where: [
             { slug: ILike(req.body.slug) }
@@ -204,6 +206,7 @@ export class FansubMemberController {
         const approvedMember = await this.fansubMemberRepo.find({
           where: [
             {
+              approved: true,
               fansub_: {
                 slug: ILike(member.fansub_.slug)
               },
@@ -213,6 +216,11 @@ export class FansubMemberController {
             }
           ],
           relations: ['fansub_', 'user_', 'approved_by_']
+        });
+        const targetUser = await this.userRepo.findOneOrFail({
+          where: [
+            { id: Equal(member.user_.id) }
+          ]
         });
         if (approvedMember.length === 1 || otherMember.role === RoleModel.ADMIN || otherMember.role === RoleModel.MODERATOR) {
           let approver = null;
@@ -237,11 +245,15 @@ export class FansubMemberController {
             }
             member.approved = true;
             member.approved_by_ = approver.user_;
-            resMember = await this.fansubMemberRepo.save(member);
             resInfo = `😅 201 - Fansub API :: Berhasil Menyetujui Keanggotaan 🤣`;
+            resMember = await this.fansubMemberRepo.save(member);
+            if (targetUser.role === RoleModel.USER) {
+              targetUser.role = RoleModel.FANSUBBER;
+              await this.userRepo.save(targetUser);
+            }
           } else {
-            resMember = await this.fansubMemberRepo.remove(member);
             resInfo = `😅 201 - Fansub API :: Berhasil Menolak Keanggotaan 🤣`;
+            resMember = await this.fansubMemberRepo.remove(member);
           }
           if ('fansub_' in resMember && resMember.fansub_) {
             delete resMember.fansub_.urls;
@@ -301,7 +313,7 @@ export class FansubMemberController {
   @VerifiedOnly()
   async leaveFansubMember(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      let user: UserModel = res.locals['user'];
+      const user: UserModel = res.locals['user'];
       const member = await this.fansubMemberRepo.findOneOrFail({
         where: [
           { id: Equal(req.params['id']) }

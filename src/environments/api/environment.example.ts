@@ -119,10 +119,15 @@ export const environment = {
     clientOptions: {
       username: 'noreply',
       key: '',
-      url: 'https://api.mailgun.net',
+      url: 'https://api.mailgun.net/v3',
     },
     fullName: `FansubID | No-Reply`,
     domain: 'fansub.id'
+  },
+  cloudflare: {
+    url: 'https://api.cloudflare.com/client/v4',
+    key: '',
+    zoneId: ''
   },
   discordApiUrl: 'https://discord.com/api',
   discordGuildId: '342220398022098944',

@@ -37,7 +37,7 @@ export class VerifySosmedController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async verifySosmed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      let user: UserModel = res.locals['user'];
+      const user: UserModel = res.locals['user'];
       if (user.verified) {
         return {
           info: `😅 201 - Verifikasi API :: User Telah Diverifikasi 🤣`,

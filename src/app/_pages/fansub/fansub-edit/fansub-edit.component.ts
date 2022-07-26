@@ -8,6 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
+import { RoleModel } from '../../../../models/req-res.model';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
@@ -44,8 +46,11 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   subsFansubDetail = null;
   subsImgbb = null;
   subsCekFansubSlug = null;
+  subsFansubMemberGet = null;
 
   slugInfo = '';
+  editable = true;
+  approvedMembers = [];
 
   constructor(
     private fb: FormBuilder,
@@ -73,6 +78,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     this.subsFansubUpdate?.unsubscribe();
     this.subsFansubDetail?.unsubscribe();
     this.subsImgbb?.unsubscribe();
+    this.subsFansubMemberGet?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -88,8 +94,42 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe({
           next: res => {
             this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
-            this.initForm(res.result);
             this.bs.idle();
+            this.editable = res.result.editable;
+            if (!this.editable) {
+              this.toast.warning('Data Fansub Ini Tidak Dapat Diubah', 'Whoops!');
+              this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
+            } else {
+              this.bs.busy();
+              this.subsFansubMemberGet = this.fansub.getFansubMember(this.fansubSlug).subscribe({
+                next: r => {
+                  this.gs.log('[FANSUB_EDIT_MEMBER_LIST_SUCCESS]', r);
+                  this.bs.idle();
+                  this.approvedMembers = [];
+                  for (const m of r.results) {
+                    if (m.approved) {
+                      this.approvedMembers.push(m);
+                    }
+                  }
+                  const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserValue.id);
+                  if (index >= 0 || this.as.currentUserValue.role === RoleModel.ADMIN || this.as.currentUserValue.role === RoleModel.MODERATOR || this.as.currentUserValue.id === res.result.user_.id) {
+                    this.initForm(res.result);
+                  } else {
+                    this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!');
+                    this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
+                  }
+                },
+                error: err => {
+                  this.gs.log('[FANSUB_EDIT_MEMBER_LIST_ERROR]', err);
+                  this.bs.idle();
+                  this.router.navigate(['/error'], {
+                    queryParams: {
+                      returnUrl: `/fansub/${this.fansubSlug}`
+                    }
+                  });
+                }
+              });
+            }
           },
           error: err => {
             this.gs.log('[FANSUB_DETAIL_ERROR]', err);
@@ -103,7 +143,11 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         });
       } else {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
+        this.router.navigate(['/verify'], {
+          queryParams: {
+            returnUrl: `/fansub/${this.fansubSlug}`
+          }
+        });
       }
     }
   }
@@ -121,7 +165,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       description: [data.description, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       born: [data.born, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      slug: [data.slug, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
+      slug: [{ value: data.slug, disabled: data.cname_id }, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [data.tags, Validators.compose([])],
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       web: [(WEB?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
