@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { JsonResponse, FansubModel, JsonResponseArray, FansubMemberModel } from '../../../models/req-res.model';
+import { JsonResponse, FansubModel, JsonResponseArray, UserFansubGroupMemberModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -68,23 +68,23 @@ export class FansubService {
     return this.api.getData(`/fansub/${fansubSlug}/rss`);
   }
 
-  getFansubMember(fansubSlug: string): Observable<JsonResponseArray<FansubMemberModel>> {
+  getFansubMember(fansubSlug: string): Observable<JsonResponseArray<UserFansubGroupMemberModel>> {
     return this.api.getData(`/fansub/${fansubSlug}/member`);
   }
 
-  getAllFansubMember(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<FansubMemberModel>> {
+  getAllFansubMember(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<UserFansubGroupMemberModel>> {
     return this.api.getData(`/fansub-member?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  requestJoinFansubMember(fansubMemberData): Observable<JsonResponse<FansubMemberModel>> {
+  requestJoinFansubMember(fansubMemberData): Observable<JsonResponse<UserFansubGroupMemberModel>> {
     return this.api.postData(`/fansub-member`, fansubMemberData);
   }
 
-  approveRejectFansubMember(fansubMemberId: string, fansubMemberData): Observable<JsonResponse<FansubMemberModel>> {
+  approveRejectFansubMember(fansubMemberId: string, fansubMemberData): Observable<JsonResponse<UserFansubGroupMemberModel>> {
     return this.api.putData(`/fansub-member/${fansubMemberId}`, fansubMemberData);
   }
 
-  leaveFansubMember(fansubMemberId: string): Observable<JsonResponse<FansubMemberModel>> {
+  leaveFansubMember(fansubMemberId: string): Observable<JsonResponse<UserFansubGroupMemberModel>> {
     return this.api.deleteData(`/fansub-member/${fansubMemberId}`);
   }
 

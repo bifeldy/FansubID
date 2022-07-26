@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FansubMemberModel } from '../../../../models/req-res.model';
+import { UserFansubGroupMemberModel } from '../../../../models/req-res.model';
 import { Warna } from '../../../_shared/models/Warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -24,8 +24,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   fansubData = null;
   rssFeedData = null;
 
-  approvedMembers: FansubMemberModel[] = [];
-  pendingMembers: FansubMemberModel[] = [];
+  approvedMembers: UserFansubGroupMemberModel[] = [];
+  pendingMembers: UserFansubGroupMemberModel[] = [];
   joinedAsMember = null;
   showPendingMember = false;
 
@@ -402,7 +402,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  approveOrRejectFansubMember(m: FansubMemberModel, ac: boolean): void {
+  approveOrRejectFansubMember(m: UserFansubGroupMemberModel, ac: boolean): void {
     this.bs.busy();
     this.subsFansubMemberApproveReject = this.fansub.approveRejectFansubMember(m.id, {
       approved: ac
@@ -420,7 +420,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  approveMember(member: FansubMemberModel): void {
+  approveMember(member: UserFansubGroupMemberModel): void {
     this.approveOrRejectFansubMember(member, true);
   }
 

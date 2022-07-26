@@ -17,6 +17,40 @@
             <mat-icon class="mx-1" matTooltip="{{ accountAge }} Years of Service" *ngIf="accountAge > 0" style="cursor: pointer;">military_tech</mat-icon>
             <mat-icon class="mx-1" matTooltip="Sharing is Caring" *ngIf="count > 0" style="cursor: pointer;">volunteer_activism</mat-icon>
           </div>
+          <div class="col-12">
+            <div class="row py-3">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+                <h2 class="border-bottom-dotted">
+                  <b class="text-bifeldy">Group Fansub</b>
+                </h2>
+              </div>
+              <div class="col-12" style="max-height: 288px;">
+                <div class="h-100" style="overflow-y: auto;">
+                  <div *ngIf="groupFansub.length <= 0"
+                    style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px; overflow: hidden;">
+                    <div class="row align-items-center h-100">
+                      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
+                        <h3 class="m-0">
+                          Tidak Ada Data ¯\_(ツ)_/¯
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                  <mat-selection-list [multiple]="false" *ngIf="groupFansub.length > 0">
+                    <mat-list-option class="h-100" *ngFor="let f of groupFansub" routerLink="/fansub/{{ f.fansub_.slug }}">
+                      <img matListAvatar src="{{ f.fansub_.image_url }}" class="ms-3" />
+                      <a class="text-truncate text-decoration-none">
+                        <span class="bg-bifeldy ps-3 pe-2 me-1 text-warning" style="position: absolute; right: 0;">
+                          {{ f.keterangan }}
+                        </span>
+                        <span class="text-success">{{ f.fansub_.slug }}</span>
+                      </a>
+                    </mat-list-option>
+                  </mat-selection-list>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -1,12 +1,12 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
-import { FansubModel, FansubMemberModel, UserModel } from '../../models/req-res.model';
+import { FansubModel, UserFansubGroupMemberModel, UserModel } from '../../models/req-res.model';
 
 import { Fansub } from './Fansub';
 import { User } from './User';
 
 @Entity({ name: 'fansub_member' })
-export class FansubMember implements FansubMemberModel {
+export class FansubMember implements UserFansubGroupMemberModel {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;

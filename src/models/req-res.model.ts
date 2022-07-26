@@ -231,7 +231,7 @@ export interface FansubModel {
   user_?: UserModel;
 }
 
-export interface FansubMemberModel {
+export interface UserFansubGroupMemberModel {
   id?: string;
   keterangan?: string;
   approved?: boolean;

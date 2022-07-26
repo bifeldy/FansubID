@@ -9,6 +9,7 @@ import { RoleModel, UserModel } from '../../models/req-res.model';
 import { Roles } from '../decorators/roles.decorator';
 
 import { BerkasService } from '../repository/berkas.service';
+import { FansubMemberService } from '../repository/fansub-member.service';
 import { KartuTandaPendudukService } from '../repository/kartu-tanda-penduduk.service';
 import { KomentarService } from '../repository/komentar.service';
 import { LikedislikeService } from '../repository/likedislike.service';
@@ -26,6 +27,7 @@ export class UserController {
     private berkasRepo: BerkasService,
     private cs: CryptoService,
     private ds: DiscordService,
+    private fansubMemberRepo: FansubMemberService,
     private ktpRepo: KartuTandaPendudukService,
     private komentarRepo: KomentarService,
     private likeDislikeRepo: LikedislikeService,
@@ -701,6 +703,70 @@ export class UserController {
           message: 'User Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  // GET `/api/user/:username/group`
+  @Get('/:username/group')
+  @HttpCode(200)
+  async getFansubMembers(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    try {
+      const [groups, count] = await this.fansubMemberRepo.findAndCount({
+        where: [
+          {
+            approved: true,
+            user_: {
+              username: ILike(req.params['username'])
+            }
+          }
+        ],
+        order: {
+          keterangan: 'ASC',
+          created_at: 'DESC'
+        },
+        relations: ['fansub_', 'user_', 'approved_by_']
+      });
+      for (const group of groups) {
+        if ('fansub_' in group && group.fansub_) {
+          delete group.fansub_.urls;
+          delete group.fansub_.tags;
+          delete group.fansub_.view_count;
+          delete group.fansub_.like_count;
+          delete group.fansub_.description;
+          delete group.fansub_.rss_feed;
+          delete group.fansub_.created_at;
+          delete group.fansub_.updated_at;
+          delete group.fansub_.user_;
+        }
+        if ('user_' in group && group.user_) {
+          delete group.user_.role;
+          delete group.user_.password;
+          delete group.user_.session_token;
+          delete group.user_.created_at;
+          delete group.user_.updated_at;
+        }
+        if ('approved_by_' in group && group.approved_by_) {
+          delete group.approved_by_.role;
+          delete group.approved_by_.password;
+          delete group.approved_by_.session_token;
+          delete group.approved_by_.created_at;
+          delete group.approved_by_.updated_at;
+        }
+      }
+      return {
+        info: `😅 200 - User API :: ${req.params['username']} Groups 🤣`,
+        count,
+        pages: 1,
+        results: groups
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: `🙄 400 - User API :: Gagal Mendapatkan All Groups 😪`,
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 

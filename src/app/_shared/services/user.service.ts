@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { BannedModel, BerkasModel, JsonResponse, JsonResponseArray, KomentarModel, LikeDislikeModel, UserModel } from '../../../models/req-res.model';
+import { BannedModel, BerkasModel, JsonResponse, JsonResponseArray, KomentarModel, LikeDislikeModel, UserFansubGroupMemberModel, UserModel } from '../../../models/req-res.model';
 import { TrackModel } from '../../../models/socket-io.model';
 
 import { ApiService } from './api.service';
@@ -73,6 +73,10 @@ export class UserService {
 
   sosmedLogin(data): Observable<JsonResponse> {
     return this.api.postData('/verify-sosmed', data);
+  }
+
+  getUserGroup(username: string): Observable<JsonResponseArray<UserFansubGroupMemberModel>> {
+    return this.api.getData(`/user/${username}/group`);
   }
 
 }

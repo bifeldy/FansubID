@@ -23,6 +23,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   userBanned = null;
 
+  groupFansub = [];
   berkasData = [];
 
   panelData = [];
@@ -51,6 +52,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   subsBerkas = null;
   subsBanned = null;
   subsParam = null;
+  subsGroupGet = null;
 
   constructor(
     private router: Router,
@@ -77,6 +79,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.subsBerkas?.unsubscribe();
     this.subsBanned?.unsubscribe();
     this.subsParam?.unsubscribe();
+    this.subsGroupGet?.unsubscribe();
   }
 
   get ADMIN(): string {
@@ -119,6 +122,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
               this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
               this.checkBanned();
               this.getUserBerkas();
+              this.getUserGroup();
             }
           },
           error: err => {
@@ -209,6 +213,21 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   openDiscordProfile(): void {
     this.wb.winboxOpenUri(`https://discordapp.com/users/${this.userData.discord}`);
+  }
+
+  getUserGroup(): void {
+    this.bs.busy();
+    this.subsGroupGet = this.us.getUserGroup(this.username).subscribe({
+      next: res => {
+        this.gs.log('[USER_DETAIL_GROUP_LIST_SUCCESS]', res);
+        this.groupFansub = res.results;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[USER_DETAIL_GROUP_LIST_ERROR]', err);
+        this.bs.idle();
+      }
+    });
   }
 
 }
