@@ -13,6 +13,7 @@ import { DialogService } from '../../_shared/services/dialog.service';
 import { StatsServerService } from '../../_shared/services/stats-server.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../../environments/app/environment';
 
 declare const P2PGraph: any;
 
@@ -73,6 +74,10 @@ export class TorrentComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get ENV(): any {
+    return environment;
   }
 
   get TORRENT(): TorrentService {
