@@ -131,15 +131,17 @@ export class VerifyComponent implements OnInit, OnDestroy {
           <div class="text-center p-3">
             <img src="/favicon.ico" class="mb-4">
             <p class="text-warning">
-              Saat ini metode verifikasi dengan menggunakan KTP ditutup! <br />
+              Silahkan gunakan metode verifikasi yang tersedia pada tombol dibawah. <br />
               <br />
-              Silahkan gunakan metode verifikasi Discord. <br />
-              <br />
-              Cukup dengan menghubungkan akun Discord kamu. <br />
-              Akun akan terverifikasi secara otomatis. <br />
-              <br />
-              Akun terverifikas hanya selama berada dalam server. <br />
-              Saat keluar, status verifikasi akan hilang. <br />
+              === <i>Connect With</i> Discord (?) === <br />
+              Cukup dengan menghubungkan akun kamu. <br />
+              Lalu kirimkan kode yang muncul disini ke
+              <a href="https://discord.gg/xGWdExk" target="_blank" class="text-decoration-none">
+                <i>Channel</i> Khusus BOT
+              </a>. <br />
+              Status akunmu akan berubah menjadi terverifikasi. <br />
+              Akun terverifikasi hanya selama kamu berada dalam server. <br />
+              Saat keluar, kemungkinan status verifikasimu akan hilang. <br />
               <br />
               Terima kasih.
             </p>
