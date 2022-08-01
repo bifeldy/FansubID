@@ -59,11 +59,11 @@ export class FansubCnameController {
               const idx = fansubUrls.findIndex(u => u.name === 'web');
               if (idx >= 0) {
                 if (fansubUrls[idx].url !== c.name) {
-                  fansubUrls[idx].url = c.name;
+                  fansubUrls[idx].url = `https://${c.name}`;
                   isFansubUrlChanged = true;
                 }
               } else {
-                fansubUrls.push({ name: 'web', url: c.name });
+                fansubUrls.push({ name: 'web', url: `https://${c.name}` });
                 isFansubUrlChanged = true;
               }
             }
@@ -166,9 +166,9 @@ export class FansubCnameController {
           if (fansubUrls && Array.isArray(fansubUrls)) {
             const idx = fansubUrls.findIndex(u => u.name === 'web');
             if (idx >= 0) {
-              fansubUrls[idx].url = cname.result.name;
+              fansubUrls[idx].url = `https://${cname.result.name}`;
             } else {
-              fansubUrls.push({ name: 'web', url: cname.result.name });
+              fansubUrls.push({ name: 'web', url: `https://${cname.result.name}` });
             }
           }
           fansub.urls = JSON.stringify(fansubUrls);
