@@ -27,7 +27,7 @@ export class ApiService {
 
   async postData(
     url: URL,
-    form: FormData | URLSearchParams,
+    form: FormData | URLSearchParams | String | any,
     headers: HeadersInit
   ) {
     return fetch(url.toString(), {
@@ -39,7 +39,7 @@ export class ApiService {
 
   async putData(
     url: URL,
-    form: FormData | URLSearchParams,
+    form: FormData | URLSearchParams | String | any,
     headers: HeadersInit
   ) {
     return fetch(url.toString(), {

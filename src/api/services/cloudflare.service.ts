@@ -1,5 +1,5 @@
 // NodeJS Library
-import { URL, URLSearchParams } from 'node:url';
+import { URL } from 'node:url';
 
 import { Injectable } from '@nestjs/common';
 
@@ -31,12 +31,14 @@ export class CloudflareService {
         pages: 1,
         results: []
       };
+      const res_json: any = await res_raw.json();
       if (res_raw.ok) {
-        const res_json: any = await res_raw.json();
         this.gs.log(`[CLOUDFLARE_SERVICE-LIST_CNAME_SUCCESS] 🔥 ${res_raw.status}`, res_json);
         res.count = res_json.result_info?.total_count || 0;
         res.pages = res_json.result_info?.total_pages || 1;
         res.results = res_json.result;
+      } else {
+        this.gs.log(`[CLOUDFLARE_SERVICE-LIST_CNAME_SUCCESS] 🔥 ${res_raw.status}`, res_json);
       }
       return res;
     } catch (err) {
@@ -48,25 +50,28 @@ export class CloudflareService {
   async createCname(name: string, content: string, type = 'CNAME'): Promise<any> {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records`);
-      const form = new URLSearchParams();
-      form.append('name', name.includes(environment.domain) ? name : `${name}.${environment.domain}`);
-      form.append('type', type);
-      form.append('content', content);
-      form.append('ttl', '1');
-      form.append('proxied', content === environment.domain ? 'false' : 'true');
-      const res_raw = await this.api.postData(url, form, {
+      const data = {
+        name: name.includes(`.${environment.domain}`) ? name : `${name}.${environment.domain}`,
+        type, content, ttl: 1,
+        proxied: content === environment.domain ? false : true
+      };
+      const res_raw = await this.api.postData(url, JSON.stringify(data), {
         'Authorization': `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
       });
+      const res = {
+        status: res_raw.status,
+        result: null
+      };
+      const res_json: any = await res_raw.json();
       if (res_raw.ok) {
-        const res_json: any = await res_raw.json();
         this.gs.log(`[CLOUDFLARE_SERVICE-CREATE_CNAME_SUCCESS] 🔥 ${res_raw.status}`, res_json);
-        return {
-          info: `😅 ${res_raw.status} - Cloudflare API :: Tambah Sub-Domain Baru 🤣`,
-          result: res_json.result
-        };
+        res.result = res_json.result;
+      } else {
+        this.gs.log(`[CLOUDFLARE_SERVICE-CREATE_CNAME_FAIL] 🔥 ${res_raw.status}`, res_json);
+        res.result = res_json.errors[0]?.message;
       }
-      throw new Error('Cloudflare API Error');
+      return res;
     } catch (err) {
       this.gs.log('[CLOUDFLARE_SERVICE-CREATE_CNAME_ERROR] 🔥', err, 'error');
       return null;
