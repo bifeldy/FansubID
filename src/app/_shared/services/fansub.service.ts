@@ -88,4 +88,8 @@ export class FansubService {
     return this.api.deleteData(`/fansub-member/${fansubMemberId}`);
   }
 
+  claimSubDomain(cnameData): Observable<JsonResponse<any>> {
+    return this.api.postData(`/fansub-cname`, cnameData);
+  }
+
 }

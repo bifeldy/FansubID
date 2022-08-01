@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 import { environment } from '../../../../environments/app/environment';
 
-import { UserFansubGroupMemberModel } from '../../../../models/req-res.model';
+import { RoleModel, UserFansubGroupMemberModel } from '../../../../models/req-res.model';
 import { Warna } from '../../../_shared/models/Warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -14,6 +15,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -88,17 +90,21 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   subsFansubMemberJoin = null;
   subsFansubMemberApproveReject = null;
   subsFansubMemberLeave = null;
+  subsDialog = null;
+  subsClaimSubDomain = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
     private as: AuthService,
+    private ds: DialogService,
     private gs: GlobalService,
     private fs: FabService,
     private pi: PageInfoService,
     private fansub: FansubService,
     private ss: StatsServerService,
+    private toast: ToastrService,
     private wb: WinboxService
   ) {
     this.gs.bannerImg = '/assets/img/fansub-banner.png';
@@ -126,51 +132,57 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.subsFansubMemberJoin?.unsubscribe();
     this.subsFansubMemberApproveReject?.unsubscribe();
     this.subsFansubMemberLeave?.unsubscribe();
+    this.subsDialog?.unsubscribe();
+    this.subsClaimSubDomain?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {
         this.fansubSlug = p['fansubSlug'];
-        this.bs.busy();
-        this.subsFansub = this.fansub.getFansub(this.fansubSlug).subscribe({
-          next: res => {
-            this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
-            this.fansubData = res.result;
-            this.pi.updatePageMetaData(
-              `${this.fansubData.name}`,
-              `${this.fansubData.description}`,
-              `${Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name}`,
-              this.fansubData.image_url
-            );
-            this.bs.idle();
-            if (this.gs.isBrowser) {
-              if (Array.isArray(this.fansubData.tags)) {
-                for (let i = 0; i < this.fansubData.tags.length; i++) {
-                  this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
-                }
-              }
-              this.panelData = [];
-              this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
-              const webUrl = this.getUrlByName('web');
-              if (webUrl) {
-                this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
-              }
-              this.getAnimeFansub();
-              this.getDoramaFansub();
-              this.getBerkasFansub();
-              this.getRssFeed();
-              this.getFansubMember();
+        this.getFansubDetail();
+      }
+    });
+  }
+
+  getFansubDetail(): void {
+    this.bs.busy();
+    this.subsFansub = this.fansub.getFansub(this.fansubSlug).subscribe({
+      next: res => {
+        this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
+        this.fansubData = res.result;
+        this.pi.updatePageMetaData(
+          `${this.fansubData.name}`,
+          `${this.fansubData.description}`,
+          `${Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name}`,
+          this.fansubData.image_url
+        );
+        this.bs.idle();
+        if (this.gs.isBrowser) {
+          if (Array.isArray(this.fansubData.tags)) {
+            for (let i = 0; i < this.fansubData.tags.length; i++) {
+              this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
             }
-          },
-          error: err => {
-            this.gs.log('[FANSUB_DETAIL_ERROR]', err);
-            this.bs.idle();
-            this.router.navigate(['/error'], {
-              queryParams: {
-                returnUrl: '/fansub'
-              }
-            });
+          }
+          this.panelData = [];
+          this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
+          const webUrl = this.getUrlByName('web');
+          if (webUrl) {
+            this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
+          }
+          this.getAnimeFansub();
+          this.getDoramaFansub();
+          this.getBerkasFansub();
+          this.getRssFeed();
+          this.getFansubMember();
+        }
+      },
+      error: err => {
+        this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+        this.bs.idle();
+        this.router.navigate(['/error'], {
+          queryParams: {
+            returnUrl: '/fansub'
           }
         });
       }
@@ -435,7 +447,66 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   getSubDomain(): void {
-    //
+    if (this.joinedAsMember || this.as.currentUserValue.role === RoleModel.ADMIN || this.as.currentUserValue.role === RoleModel.MODERATOR) {
+      const userInput = {
+        server_target: {
+          inputLabel: 'Server Target',
+          inputText: `ghs.google.com`,
+        }
+      };
+      this.subsDialog = this.ds.openInputDialog({
+        data: {
+          title: `Destinasi Server Terget`,
+          input: userInput,
+          confirmText: 'OK',
+          cancelText: 'Batal'
+        },
+        disableClose: true
+      }).afterClosed().subscribe({
+        next: re => {
+          this.gs.log('[INPUT_DIALOG_CLOSED]', re);
+          if (re) {
+            this.bs.busy();
+            this.subsClaimSubDomain = this.fansub.claimSubDomain({
+              slug: this.fansubSlug,
+              server_target: re.server_target?.inputText || null
+            }).subscribe({
+              next: res => {
+                this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_SUCCESS]', res);
+                this.bs.idle();
+                this.subsDialog = this.ds.openInfoDialog({
+                  data: {
+                    title: `Klaim Berhasil`,
+                    htmlMessage: `
+                      Domain '${res.result.name}' sudah didaftarkan dan dapat digunakan,
+                      silahkan migrasi domain pada situs penyedia layanan anda (ex. Blogger / Wordpress / etc.)
+                      kemudian tunggu hingga propagasi DNS selesai.
+                      Terima Kasih.
+                    `,
+                    confirmText: 'Tutup'
+                  },
+                  disableClose: true
+                }).afterClosed().subscribe({
+                  next: r => {
+                    this.gs.log('[INFO_DIALOG_CLOSED]', r);
+                    this.getFansubDetail();
+                    this.subsDialog.unsubscribe();
+                  }
+                });
+              },
+              error: err => {
+                this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_ERROR]', err);
+                this.bs.idle();
+                this.getFansubDetail();
+              }
+            });
+          }
+          this.subsDialog.unsubscribe();
+        }
+      });
+    } else {
+      this.toast.warning('Anda Harus Menjadi Anggota Untuk Klaim SubDomain!', 'Whoops!');
+    }
   }
 
 }

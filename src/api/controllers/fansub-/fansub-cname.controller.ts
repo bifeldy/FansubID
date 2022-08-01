@@ -159,7 +159,16 @@ export class FansubCnameController {
             }, HttpStatus.FORBIDDEN);
           }
         }
-        const cname = await this.cfs.createCname(fansub.slug, req.body.server_target);
+        let serverTarget: string = req.body.server_target;
+        if (serverTarget.startsWith('http://')) {
+          serverTarget = serverTarget.slice(7, serverTarget.length);
+        } else if (serverTarget.startsWith('https://')) {
+          serverTarget = serverTarget.slice(8, serverTarget.length);
+        }
+        if (serverTarget.startsWith('www.')) {
+          serverTarget = serverTarget.slice(4, serverTarget.length);
+        }
+        const cname = await this.cfs.createCname(fansub.slug, serverTarget);
         if (cname.status >= 200 && cname.status < 300) {
           fansub.cname_id = cname.result.id;
           const fansubUrls = JSON.parse(fansub.urls);

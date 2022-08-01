@@ -53,7 +53,7 @@ export class CloudflareService {
       const data = {
         name: name.includes(`.${environment.domain}`) ? name : `${name}.${environment.domain}`,
         type, content, ttl: 1,
-        proxied: content === environment.domain ? false : true
+        proxied: false
       };
       const res_raw = await this.api.postData(url, JSON.stringify(data), {
         'Authorization': `Bearer ${environment.cloudflare.key}`,
