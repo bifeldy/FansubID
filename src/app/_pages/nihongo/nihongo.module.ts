@@ -15,10 +15,6 @@ import { NihongoListComponent } from './nihongo-list/nihongo-list.component';
 import { NihongoBelajarComponent } from './nihongo-belajar/nihongo-belajar.component';
 import { NihongoJlptSchoolComponent } from './nihongo-jlpt-school/nihongo-jlpt-school.component';
 import { NihongoTesComponent } from './nihongo-tes/nihongo-tes.component';
-import { NihongoBookDetailComponent } from './nihongo-book-detail/nihongo-book-detail.component';
-import { NihongoBookCreateComponent } from './nihongo-book-create/nihongo-book-create.component';
-import { NihongoChapterCreateComponent } from './nihongo-chapter-create/nihongo-chapter-create.component';
-import { NihongoChapterDetailComponent } from './nihongo-chapter-detail/nihongo-chapter-detail.component';
 
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
@@ -490,69 +486,13 @@ const routes: Routes = [
     }
   },
   // {
-  //   path: 'create',
-  //   component: NihongoBookCreateComponent,
-  //   canActivate: [AuthGuard],
+  //   path: ':category',
+  //   component: NihongoPracticeComponent,
   //   data: {
-  //     title: 'Buku Pendukung - Buat Baru',
-  //     description: 'Halaman Menambahkan Pendukung Belajar',
-  //     keywords: 'Create Book',
+  //     title: 'Latihan Nama-Nama Warna, Buah & Sayur, Dan Lingkungan Sekitar',
+  //     description: 'Tebak Gambar Nama-Nama Warna, Buah & Sayur, Dan Lingkungan Sekitar',
+  //     keywords: 'Objek Di Sekitar Kita',
   //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: null,
-  //     options: null
-  //   }
-  // },
-  // {
-  //   path: ':bookId/edit',
-  //   component: NihongoBookEditComponent,
-    // canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Buku Pendukung - Ubah Buku',
-  //     description: 'Ubah Buku Pendukung Belajar',
-  //     keywords: 'Book',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: null,
-  //     options: null
-  //   }
-  // },
-  // {
-  //   path: ':bookId/create',
-  //   component: NihongoChapterCreateComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Bagian Buku - Buat Baru',
-  //     description: 'Halaman Menambahkan Bagian Dalam Buku',
-  //     keywords: 'Create Chapter',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: null,
-  //     options: null
-  //   }
-  // },
-  // {
-  //   path: ':bookId/:chapterId/edit',
-  //   component: NihongoChapterEditComponent,
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'Bagian Buku - Ubah Bab',
-  //     description: 'Tambah Bab Bagian Dalam Buku',
-  //     keywords: 'Chapter',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: null,
-  //     options: null
-  //   }
-  // },
-  // {
-  //   path: ':bookId/:chapterId',
-  //   component: NihongoChapterDetailComponent,
-  //   data: {
-  //     question: null,
-  //     options: null
-  //   }
-  // },
-  // {
-  //   path: ':bookId',
-  //   component: NihongoBookDetailComponent,
-  //   data: {
   //     question: null,
   //     options: null
   //   }
@@ -564,11 +504,7 @@ const routes: Routes = [
     NihongoListComponent,
     NihongoBelajarComponent,
     NihongoJlptSchoolComponent,
-    NihongoTesComponent,
-    NihongoBookDetailComponent,
-    NihongoBookCreateComponent,
-    NihongoChapterCreateComponent,
-    NihongoChapterDetailComponent
+    NihongoTesComponent
   ],
   imports: [
     CommonModule,

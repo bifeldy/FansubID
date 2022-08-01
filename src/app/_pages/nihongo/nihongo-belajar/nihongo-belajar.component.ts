@@ -170,7 +170,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
       data: {
         romaji: kana.romaji,
         hiragana_katakana_kanji: (
-          this.modeTampilan === 'hiragana' ?　kana.hiragana :　kana.katakana
+          this.modeTampilan === 'hiragana' ? kana.hiragana : kana.katakana
         )
       },
       disableClose: false
@@ -239,26 +239,32 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     });
   }
 
-  addOrEditDataset(dataset): void {
+  editDataset(dataset): void {
     this.gs.log('[BELAJAR_DATASET_ADD_OR_EDIT_CLICK]', dataset);
+    if (this.currentUser?.verified) {
+      this.subsDialog = this.ds.openBelajarDialog({
+        data: {
+          title: (dataset ? `Edit Data` : `Tambah Dataset`),
+          modeTampilan: this.modeTampilan,
+          dataset,
+          confirmText: 'Simpan',
+          cancelText: 'Tutup'
+        },
+        disableClose: true
+      }).afterClosed().subscribe({
+        next: re => {
+          this.gs.log('[BELAJAR_DATASET_DIALOG_CLOSED]', re);
+          this.getData();
+          this.subsDialog.unsubscribe();
+        }
+      });
+    }
+  }
+
+  addDataset(): void {
     if (this.currentUser) {
       if (this.currentUser.verified) {
-        this.subsDialog = this.ds.openBelajarDialog({
-          data: {
-            title: (dataset ? `Edit Data` : `Tambah Dataset`),
-            modeTampilan: this.modeTampilan,
-            dataset,
-            confirmText: 'Simpan',
-            cancelText: 'Tutup'
-          },
-          disableClose: true
-        }).afterClosed().subscribe({
-          next: re => {
-            this.gs.log('[BELAJAR_DATASET_DIALOG_CLOSED]', re);
-            this.getData();
-            this.subsDialog.unsubscribe();
-          }
-        });
+        this.editDataset(null);
       } else {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
         this.router.navigate(['/verify'], {
@@ -274,7 +280,6 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         }
       });
     }
-
   }
 
 }

@@ -131,6 +131,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
           <div class="text-center p-3">
             <img src="/favicon.ico" class="mb-4">
             <p class="text-warning">
+              <br />
               Silahkan gunakan metode verifikasi yang tersedia pada tombol dibawah. <br />
               <br />
               === <i>Connect With</i> Discord (?) === <br />

@@ -115,7 +115,7 @@
             <div class="col-12" *ngIf="daftarNihongo.length > 0; else noData;">
               <div class="row px-3" appDomChange>
                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 p-2" *ngFor="let d of daftarNihongo">
-                  <mat-card class="card" (click)="addOrEditDataset(d)">
+                  <mat-card class="card" (click)="editDataset(d)">
                     <mat-card-header class="me-0" style="cursor: pointer;">
                       <div mat-card-avatar
                         style="background-size: contain; border-radius: 0; background-position: center; background-repeat: no-repeat;"
@@ -166,7 +166,7 @@
   </div>
 </ng-template>
 
-<button (click)="addOrEditDataset(null)" mat-fab color="warn" class="me-3 mb-5 fab-button animate__animated animate__bounce animate__infinite animate__slow" matTooltip="Tambah Dataset"
+<button (click)="addDataset()" mat-fab color="warn" class="me-3 mb-5 fab-button animate__animated animate__bounce animate__infinite animate__slow" matTooltip="Tambah Dataset"
   *ngIf="modeTampilan !== 'hiragana' && modeTampilan !== 'katakana' && modeTampilan !== 'angka'"
   style="position: fixed; bottom: 0; right: 0; z-index: 999999;">
   <mat-icon>add</mat-icon>
