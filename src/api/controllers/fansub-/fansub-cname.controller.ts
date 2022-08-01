@@ -41,19 +41,30 @@ export class FansubCnameController {
                 { slug: ILike(fansubSlug) }
               ]
             });
-            if (!fansub.cname_id) {
+            let isFansubCnameChanged = false;
+            if (fansub.cname_id !== c.id) {
               fansub.cname_id = c.id;
-              fansub = await this.fansubRepo.save(fansub);
+              isFansubCnameChanged = true;
             }
+            let isFansubUrlChanged = false;
             const fansubUrls = JSON.parse(fansub.urls);
             if (fansubUrls && Array.isArray(fansubUrls)) {
               const idx = fansubUrls.findIndex(u => u.name === 'web');
-              if (idx) {
-                fansubUrls[idx].url = c.name;
+              if (idx >= 0) {
+                if (fansubUrls[idx].url !== c.name) {
+                  fansubUrls[idx].url = c.name;
+                  isFansubUrlChanged = true;
+                }
               } else {
                 fansubUrls.push({ name: 'web', url: c.name });
+                isFansubUrlChanged = true;
               }
-              fansub.urls = JSON.stringify(fansubUrls);
+            }
+            if (isFansubCnameChanged || isFansubUrlChanged) {
+              if (isFansubUrlChanged) {
+                fansub.urls = JSON.stringify(fansubUrls);
+              }
+              fansub = await this.fansubRepo.save(fansub);
             }
             delete fansub.urls;
             delete fansub.tags;
