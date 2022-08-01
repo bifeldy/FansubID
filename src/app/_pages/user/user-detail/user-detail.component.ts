@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -98,6 +100,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     return Math.abs(new Date(
       new Date().getTime() - new Date(this.userData.created_at).getTime()
     ).getUTCFullYear() - 1970);
+  }
+
+  get ENV(): any {
+    return environment;
   }
 
   ngOnInit(): void {
