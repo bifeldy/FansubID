@@ -2,12 +2,22 @@ import { Injectable } from '@nestjs/common';
 
 import { CONSTANTS } from '../../constants';
 
+import { environment } from '../../environments/api/environment';
+
 import { ServerInfoModel } from '../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
 
 @Injectable()
 export class ConfigService {
+
+  bypassApiKeyRateLimit = [
+    environment.domain,
+    environment.ip,
+    '127.0.0.1',
+    '::1',
+    'localhost'
+  ];
 
   CRON = {
     [CONSTANTS.cronFansubRssFeed]: false

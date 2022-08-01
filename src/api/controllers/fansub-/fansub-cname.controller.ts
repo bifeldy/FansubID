@@ -172,6 +172,7 @@ export class FansubCnameController {
             }
           }
           fansub.urls = JSON.stringify(fansubUrls);
+          fansub.user_ = user;
           fansub = await this.fansubRepo.save(fansub);
           delete fansub.urls;
           delete fansub.tags;

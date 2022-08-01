@@ -37,17 +37,17 @@
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="accent" (click)="openSeasonalDorama()"
               matTooltip="Lihat Semua Dorama Pada Musim '{{ seasonDorama }} {{ yearDorama.getFullYear() || '' }}'">
-              <mat-icon>dynamic_feed</mat-icon> {{ (doramaData.details?.type === 'Movie' ? '1' : doramaData.details?.episodes) || '?' }} Eps &nbsp;
-              <mat-icon>star_half</mat-icon> {{ doramaData.rating || '?' }} <br />
-              <mat-icon>date_range</mat-icon> {{ doramaData.details?.release_date || doramaData.details?.aired || '?' }}
+              <mat-icon class="me-1">dynamic_feed</mat-icon> {{ (doramaData.details?.type === 'Movie' ? '1' : doramaData.details?.episodes) || '?' }} Eps &nbsp;
+              <mat-icon class="me-1">star_half</mat-icon> {{ doramaData.rating || '?' }} <br />
+              <mat-icon class="me-1">date_range</mat-icon> {{ doramaData.details?.release_date || doramaData.details?.aired || '?' }}
             </button>
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyDramaList"
               (click)="openRank()">
-              <mat-icon>timeline</mat-icon> {{ doramaData.details?.ranked || '?' }} &nbsp;
-              <mat-icon>local_fire_department</mat-icon> {{ doramaData.details?.popularity || '?' }} <br />
-              <mat-icon>label</mat-icon> {{ doramaData.details?.type || '?' }}
+              <mat-icon class="me-1">timeline</mat-icon> {{ doramaData.details?.ranked || '?' }} &nbsp;
+              <mat-icon class="me-1">local_fire_department</mat-icon> {{ doramaData.details?.popularity || '?' }} <br />
+              <mat-icon class="me-1">label</mat-icon> {{ doramaData.details?.type || '?' }}
             </button>
           </div>
         </div>

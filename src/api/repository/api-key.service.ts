@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { InjectRepository } from '@nestjs/typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { EntityMetadata, Equal, FindManyOptions, FindOneOptions, FindConditions, ILike, InsertResult, Repository, UpdateResult } from 'typeorm';
 import { Request } from 'express';
 
 import { ApiKey } from '../entities/ApiKey';
 
+import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class ApiKeyService {
 
   constructor(
     @InjectRepository(ApiKey) private apiKeyRepo: Repository<ApiKey>,
+    private cfg: ConfigService,
     private gs: GlobalService
   ) {
     //
@@ -81,7 +83,7 @@ export class ApiKeyService {
   getOriginIp(req: Request, ipOnly = false): string {
     let originIp = '';
     if (!ipOnly) {
-      originIp = originIp || req.headers.origin || '';
+      originIp = originIp || req.headers.origin || req.headers.referer || '';
     }
     originIp = (originIp || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString();
     return originIp || (req.ips?.length ? req.ips[0] : req.ip);
@@ -90,41 +92,18 @@ export class ApiKeyService {
   getCorsOptions(): CorsOptions {
     return {
       origin: async (origin, callback) => {
-        const isAllowed = await this.checkOrigin(origin || '');
-        return callback(null, isAllowed);
+        return callback(null, true);
       },
       credentials: true,
-      methods: ['GET', 'OPTIONS']
+      methods: ['GET', 'OPTIONS', 'PATCH']
     };
-  }
-
-  async checkOrigin(origin: string): Promise<boolean> {
-    let isAllowed = false;
-    try {
-      if (origin.startsWith('http://')) {
-        origin = origin.slice(7, origin.length);
-      } else if (origin.startsWith('https://')) {
-        origin = origin.slice(8, origin.length);
-      }
-      if (origin.startsWith('www.')) {
-        origin = origin.slice(4, origin.length);
-      }
-      origin = origin.split(':')[0];
-      const apiKey = await this.findOneOrFail({
-        where: [
-          { ip_domain: Equal(origin) }
-        ]
-      });
-      this.gs.log('[API_KEY_SERVICE-CHECK_ORIGIN_SUCCESS] 🏓', apiKey);
-      isAllowed = true;
-    } catch (error) {
-      this.gs.log('[API_KEY_SERVICE-CHECK_ORIGIN_ERROR] 🏓', error, 'error');
-    }
-    return isAllowed;
   }
 
   async checkKey(origin: string, key: string): Promise<boolean> {
     let isAllowed = false;
+    if (origin.startsWith('::ffff:')) {
+      origin = origin.slice(7, origin.length);
+    }
     if (origin.startsWith('http://')) {
       origin = origin.slice(7, origin.length);
     } else if (origin.startsWith('https://')) {
@@ -133,12 +112,26 @@ export class ApiKeyService {
     if (origin.startsWith('www.')) {
       origin = origin.slice(4, origin.length);
     }
-    origin = origin.split('/')[0];
-    origin = origin.split(':')[0];
+    if (origin.includes('/') && !origin.startsWith('/')) {
+      origin = origin.split('/')[0];
+    }
+    if (origin.includes(':') && !origin.startsWith(':')) {
+      origin = origin.split(':')[0];
+    }
+    if (this.cfg.bypassApiKeyRateLimit.includes(origin)) {
+      return true;
+    }
     try {
       const apiKey = await this.findOneOrFail({
         where: [
-          { api_key: ILike(key) }
+          {
+            ip_domain: ILike(origin),
+            api_key: Equal(key)
+          },
+          {
+            ip_domain: '',
+            api_key: Equal(key)
+          }
         ]
       });
       this.gs.log('[API_KEY_SERVICE-CHECK_KEY_SUCCESS] 🏓', apiKey);

@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { UserFansubGroupMemberModel } from '../../../../models/req-res.model';
 import { Warna } from '../../../_shared/models/Warna';
 
@@ -106,6 +108,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   get SS(): StatsServerService {
     return this.ss;
+  }
+
+  get ENV(): any {
+    return environment;
   }
 
   ngOnDestroy(): void {
@@ -426,6 +432,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   rejectMember(member): void {
     this.approveOrRejectFansubMember(member, false);
+  }
+
+  getSubDomain(): void {
+    //
   }
 
 }

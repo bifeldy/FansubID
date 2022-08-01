@@ -18,8 +18,10 @@ export class ApiKeyMiddleware implements NestMiddleware {
     const key = req.query['key'] || '';
     const origin = this.aks.getOriginIp(req);
     this.gs.log('[API_KEY_MIDDLEWARE-ORIGIN_KEY] 🌸', `${key} @ ${origin}`);
-    const isAllowed = await this.aks.checkKey(origin, key as any);
-    if (isAllowed) {
+    if (!req.originalUrl.includes('/api')) {
+      return next();
+    }
+    if (await this.aks.checkKey(origin, key as any)) {
       return next();
     }
     throw new HttpException({

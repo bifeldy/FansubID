@@ -37,17 +37,17 @@
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="accent" (click)="openSeasonalAnime()"
               matTooltip="Lihat Semua Anime Pada Musim '{{ animeData.season }} {{ animeData.year }}'">
-              <mat-icon>dynamic_feed</mat-icon> {{ animeData.episodes || '?' }} Eps &nbsp;
-              <mat-icon>star_half</mat-icon> {{ animeData.score || '?' }} <br />
-              <mat-icon>date_range</mat-icon> {{ animeData.aired?.string || '?' }}
+              <mat-icon class="me-1">dynamic_feed</mat-icon> {{ animeData.episodes || '?' }} Eps &nbsp;
+              <mat-icon class="me-1">star_half</mat-icon> {{ animeData.score || '?' }} <br />
+              <mat-icon class="me-1">date_range</mat-icon> {{ animeData.aired?.string || '?' }}
             </button>
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyAnimeList"
               (click)="openRank()">
-              <mat-icon>timeline</mat-icon> {{ animeData.rank || '?' }} &nbsp;
-              <mat-icon>local_fire_department</mat-icon> {{ animeData.popularity || '?' }} <br />
-              <mat-icon>label</mat-icon> {{ animeData.status || '?' }} - {{ animeData.type }}
+              <mat-icon class="me-1">timeline</mat-icon> {{ animeData.rank || '?' }} &nbsp;
+              <mat-icon class="me-1">local_fire_department</mat-icon> {{ animeData.popularity || '?' }} <br />
+              <mat-icon class="me-1">label</mat-icon> {{ animeData.status || '?' }} - {{ animeData.type }}
             </button>
           </div>
         </div>

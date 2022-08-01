@@ -2,24 +2,16 @@ import { ExecutionContext, HttpException, HttpStatus, Inject, Injectable } from 
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request } from 'express';
 
-import { environment } from '../../environments/api/environment';
-
 import { ApiKeyService } from '../repository/api-key.service';
+import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
 
 @Injectable()
 export class RateLimitGuard extends ThrottlerGuard {
 
   @Inject(ApiKeyService) private aks: ApiKeyService;
+  @Inject(ConfigService) private cfg: ConfigService;
   @Inject(GlobalService) private gs: GlobalService;
-
-  bypassRateLimitWhiteList = [
-    environment.domain,
-    environment.ip,
-    '127.0.0.1',
-    '::1',
-    'localhost'
-  ];
 
   override getTracker(req: Request): string {
     return this.aks.getOriginIp(req, true);
@@ -31,7 +23,7 @@ export class RateLimitGuard extends ThrottlerGuard {
     const req = http.getRequest<Request>();
     const client = ws.getClient();
     const origin = this.aks.getOriginIp(req) || client.conn.remoteAddress || '';
-    if (this.bypassRateLimitWhiteList.includes(origin)) {
+    if (this.cfg.bypassApiKeyRateLimit.includes(origin)) {
       return true;
     }
     const key = this.generateKey(context, origin);

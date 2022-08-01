@@ -10,15 +10,15 @@
           </div>
           <div class="col-12 text-center pt-3">
             <button mat-button class="w-100" color="warn" matTooltip="Berdiri Sejak">
-              <mat-icon>calendar_today</mat-icon> {{ fansubData.born | date:'d MMMM y' }}
+              <mat-icon class="me-1">calendar_today</mat-icon> {{ fansubData.born | date:'d MMMM y' }}
             </button>
             <button mat-button class="w-100" color="accent" matTooltip="Status Fansub">
-              <mat-icon>history</mat-icon> {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}
+              <mat-icon class="me-1">history</mat-icon> {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}
             </button>
           </div>
           <div class="col-12 text-center pt-3" *ngIf="getUrlByName('facebook')">
             <a [href]="getUrlByName('facebook')" mat-stroked-button class="w-100" matTooltip="Kunjungi Halaman Fanpage" style="color: rgb(114, 137, 218);">
-              <mat-icon>facebook</mat-icon>
+              <mat-icon class="me-1">facebook</mat-icon>
               Facebook Fanpage
             </a>
           </div>
@@ -31,7 +31,7 @@
           <div class="col-12 text-center pt-3">
             <button mat-button class="w-100 text-success" (click)="editFansubData()" style="color: rgb(255, 64, 129) !important;"
               matTooltip="{{ fansubData.user_ ? 'Terakhir Di Ubah Oleh :: ' + fansubData.user_.username : 'Perbaharui Data Fansub' }}">
-              <mat-icon>edit</mat-icon>
+              <mat-icon class="me-1">edit</mat-icon>
               Perbaharui Informasi
             </button>
           </div>
@@ -95,6 +95,11 @@
               </div>
             </div>
           </div>
+          <div class="col-12 text-center pt-3" *ngIf="!fansubData.cname_id">
+            <button mat-button class="w-100" color="accent" matTooltip="Ambil / Klaim / Dapatkan SubDomain Ini" (click)="getSubDomain()">
+              <mat-icon class="me-1">dns</mat-icon> 'https://{{ fansubData.slug }}.{{ ENV.domain }}'
+            </button>
+          </div>
         </div>
       </div>
 
@@ -114,7 +119,7 @@
         <div class="row py-3" *ngIf="panelData.length > 0">
           <app-material-expansion-panel [panelData]="panelData"></app-material-expansion-panel>
         </div>
-        <div class="row py-3" *ngIf="rssFeedData && fansubSlug !== 'null'">
+        <div class="row py-3" *ngIf="rssFeedData?.items.length > 0 && fansubSlug !== 'null'">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">
               <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getRssFeed()">
@@ -123,7 +128,7 @@
               <b class="text-bifeldy">RSS Feed Fansub</b>
             </h2>
           </div>
-          <div class="col-12" *ngIf="rssFeedData.items.length > 0">
+          <div class="col-12">
             <mat-selection-list [multiple]="false">
               <mat-list-option *ngFor="let r of rssFeedData.items | slice:0:5" class="h-100">
                 <mat-icon mat-list-icon class="ps-3">rss_feed</mat-icon>
@@ -133,16 +138,6 @@
                 </a>
               </mat-list-option>
             </mat-selection-list>
-          </div>
-          <div class="col-12 p-3" *ngIf="rssFeedData.items.length <= 0"
-            style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
-            <div class="row align-items-center h-100">
-              <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
-                <h3 class="m-0">
-                  Tidak Ada Data ¯\_(ツ)_/¯
-                </h3>
-              </div>
-            </div>
           </div>
         </div>
         <div class="row py-3" *ngIf="SS.mySocket?.id">

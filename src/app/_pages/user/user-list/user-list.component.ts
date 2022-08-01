@@ -1,5 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { environment } from '../../../../environments/app/environment';
+
+import { UserModel } from '../../../../models/req-res.model';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -13,10 +17,13 @@ import { UserService } from '../../../_shared/services/user.service';
 })
 export class UserListComponent implements OnInit, OnDestroy {
 
+  currentUser: UserModel = null;
+
   feedKomentarData = [];
   feedLikeDislikeData = [];
   feedVisitData = [];
 
+  subsUser = null;
   subsFeedKomentar = null;
   subsFeedLikeDislike = null;
   subsFeedVisit = null;
@@ -33,8 +40,13 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get ENV(): any {
+    return environment;
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.getUserFeedComment();
       this.getUserFeedLikeDislike();
       this.getUserFeedVisit();
@@ -49,6 +61,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subsUser?.unsubscribe();
     this.subsFeedKomentar?.unsubscribe();
     this.subsFeedLikeDislike?.unsubscribe();
     this.subsFeedVisit?.unsubscribe();
