@@ -2,7 +2,7 @@ export const CONSTANTS = {
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
-  fileSizeAttachmentLimit: 256 * 1000 * 1000,
+  fileSizeAttachmentLimit: 100 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileSizeImageLimit: 256 * 1000,
   jwtAlgorithm: 'HS512',
   jwtExpiredIn: 24 * 60 * 60,

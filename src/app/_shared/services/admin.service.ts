@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/app/environment';
+
 import { ApiKeyModel, BannedModel, InformationModel, JsonResponse, JsonResponseArray, NotificationModel, UserModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
@@ -27,11 +29,25 @@ export class AdminService {
       deskripsi: 'Kelola Berkas DDL'
     },
     {
+      url: 'cnames',
+      name: 'CNAME SubDomain',
+      image_url: null,
+      icon: 'badge',
+      deskripsi: `sub-domain.${environment.domain}`
+    },
+    {
       url: 'cors-list',
       name: 'CORS & API Key',
       image_url: null,
       icon: 'privacy_tip',
       deskripsi: 'Cross-Origin API'
+    },
+    {
+      url: 'email',
+      name: 'Email',
+      image_url: null,
+      icon: 'alternate_email',
+      deskripsi: `email.address@${environment.domain}`
     },
     {
       url: 'fansub-member',

@@ -90,14 +90,11 @@ export class FansubController {
       ) {
         const user: UserModel = res.locals['user'];
         const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
-        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
         const selectedFansub = await this.fansubRepo.find({
           where: [
             { slug: ILike(slug) }
           ]
         });
-        console.log(selectedFansub);
-        console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBB');
         if (selectedFansub.length === 0) {
           const fansub = this.fansubRepo.new();
           fansub.user_ = user;
@@ -130,7 +127,6 @@ export class FansubController {
           if ('active' in req.body) {
             fansub.active = req.body.active;
           }
-          console.log('===================');
           const resFansubSave = await this.fansubRepo.save(fansub);
           if ('user_' in resFansubSave && resFansubSave.user_) {
             delete resFansubSave.user_.role;

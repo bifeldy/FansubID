@@ -7,6 +7,7 @@ export const environment = {
   siteName: 'FansubID',
   siteDescription: 'Di Kamar Saja!',
   author: 'Bifeldy',
+  domain: 'localhost',
   baseUrl: 'http://localhost:4200',
   apiUrl: '/api',
   apiKey: 'fansubid_api_key',
