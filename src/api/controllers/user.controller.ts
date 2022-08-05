@@ -285,9 +285,9 @@ export class UserController {
       const deletedUser = await this.userRepo.remove(user);
       const deletedKtp = await this.ktpRepo.remove(ktp);
       const deletedProfile = await this.profileRepo.remove(profile);
-      delete deletedUser.role;
-      delete deletedUser.password;
-      delete deletedUser.session_token;
+      delete (deletedUser as any).role;
+      delete (deletedUser as any).password;
+      delete (deletedUser as any).session_token;
       return {
         info: `😅 202 - User API :: Berhasil Menghapus User ${req.params['username']} 🤣`,
         result: {
