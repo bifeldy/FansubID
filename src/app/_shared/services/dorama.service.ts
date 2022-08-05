@@ -29,7 +29,7 @@ export class DoramaService {
   }
 
   addNewDorama(doramaData): Observable<JsonResponse<DoramaModel>> {
-    return this.api.postData(`/dorama`, doramaData);
+    return this.api.patchData(`/dorama`, doramaData);
   }
 
   getSeasonalDorama(year: number, season: string): Observable<JsonResponseArray<any>> {
