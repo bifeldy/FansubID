@@ -80,11 +80,6 @@ export class VerifySosmedController {
                   ],
                   relations: ['user_']
                 });
-                console.log('============================================================');
-                console.log(sosmeds);
-                console.log('============================================================');
-                console.log(sosmeds.length);
-                console.log(typeof sosmeds.length);
                 if (sosmeds.length === 0) {
                   const sosmed = this.sosmedRepo.new();
                   sosmed.id = res_json2.id;

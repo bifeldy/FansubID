@@ -64,8 +64,15 @@ export class MailService {
   }
 
   async mailGunGetUserForwarding(username): Promise<any> {
-    const res = await this.mailGunGetAllForwarding();
-    return res.items.find(item => item.description === username);
+    try {
+      const res = await this.mailGunGetAllForwarding();
+      const user = res.items.find(item => item.description === username);
+      this.gs.log('[MAILGUN_SERVICE-GET_USER_FORWARDING_SUCCESS] 💌', user);
+      return user;
+    } catch (err) {
+      this.gs.log('[MAILGUN_SERVICE-GET_USER_FORWARDING_ERROR] 💌', err, 'error');
+      return null;
+    }
   }
 
   async mailGunAddForwarding(username, emailTarget): Promise<any> {

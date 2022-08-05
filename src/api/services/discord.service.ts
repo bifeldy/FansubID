@@ -199,9 +199,6 @@ export class DiscordService {
     try {
       const args = msg.content.split(' ');
       if (args.length >= 3 && args.length <= 4) {
-        if (args[3] === 'DELETE_CHAT') {
-          await msg.delete();
-        }
         const decoded = this.cs.jwtDecrypt(args[2]);
         if (decoded.discord.id === msg.author.id) {
           const user = await this.userRepo.findOneOrFail({
@@ -247,6 +244,9 @@ export class DiscordService {
           }
         } else {
           await msg.reply({ content: `<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔` });
+        }
+        if (args[3] === 'DELETE_CHAT') {
+          await msg.delete();
         }
       } else {
         await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
