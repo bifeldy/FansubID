@@ -149,11 +149,11 @@ const routes: Routes = [
     }
   },
   // {
-  //   path: 'documentation',
-  //   loadChildren: () => import('./_pages/documentation/documentation.module').then(m => m.DocumentationModule),
+  //   path: 'docs',
+  //   loadChildren: () => import('./_pages/docs/docs.module').then(m => m.DocsModule),
   //   canActivate: [AuthGuard],
   //   data: {
-  //     title: 'API Documentation',
+  //     title: 'API Docs',
   //     description: 'Request & Response',
   //     keywords: 'API',
   //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]

@@ -21,7 +21,7 @@ export class AppController {
   @Redirect()
   async index(): Promise<any> {
     return {
-      url: '/dokumentasi',
+      url: '/docs',
       statusCode: 301
     };
   }

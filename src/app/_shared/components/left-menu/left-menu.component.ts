@@ -88,7 +88,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   openDocumentation(): void {
     this.onMouseHoverOut();
-    this.router.navigateByUrl('/documentation');
+    this.router.navigateByUrl('/docs');
   }
 
   openWebTorrent(): void {
