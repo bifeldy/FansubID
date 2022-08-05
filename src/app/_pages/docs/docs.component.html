@@ -1,0 +1,119 @@
+<div class="p-0 m-0" style="background-image: url('https://mhwc.myanimelist.net/assets/img/lp_prize-bg.6de920c.png'); background-size: contain;">
+
+  <div class="container-fluid p-0">
+    <div class="wrapper">
+      <ul class="bg-bubbles align-items-center p-0">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+        <div class="row align-items-center h-100">
+          <div class="col-12 mx-auto">
+            <div class="container text-light">
+              <h2 class="mb-1" style="line-height: normal;">
+                Developers Documentation
+              </h2>
+              <p class="mb-0">Hadiah Spesial &amp; Khusus Untuk Kamu ...</p>
+            </div>
+          </div>
+        </div>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Notification -->
+  <app-notifications></app-notifications>
+  
+  <!-- Content -->
+  <div class="container">
+  
+    <!-- Detail -->
+    <div class="row pb-3 px-0">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12 align-items-center mt-5 mx-auto">
+            <h1 class="text-warning">Dapatkan alamat URL khusus untuk website Fansub Kamu !!</h1>
+          </div>
+          <div class="col-12 align-items-center mx-auto">
+            <ngx-typed-js
+              [strings]="['ShiroSubs', 'AkaSubs', 'MidoriSubs', 'KuroSubs', 'AoSubs', 'KiiroSubs', 'OrenjiSubs', 'PinkuSubs']"
+              [shuffle]="true" [loop]="true" [smartBackspace]="true" [backDelay]="1000">
+              <h1 class="text-light">
+                <span class="arrow-right p-3">
+                  https://
+                  <span class="typing"></span>
+                  .{{ ENV.domain }}
+                </span>
+              </h1>
+            </ngx-typed-js>
+          </div>
+          <div class="col-12 align-items-center mb-5 mx-auto">
+            <h1 class="text-warning">(｡&gt;﹏&lt;｡)</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+  
+  <!-- Content -->
+  <div class="container">
+  
+    <!-- Detail -->
+    <div class="row pb-3 px-0">
+      <div class="col-lg-8 col-xl-9">
+        <div class="row pb-3" *ngIf="tutorialData">
+          <div class="col-12 sticky-top bg-bifeldy">
+            <h2 class="pt-3 border-bottom-dotted">
+              <b class="text-bifeldy">Tutorial Klaim *.Fansub.ID</b>
+            </h2>
+          </div>
+          <div class="col-12">
+            <div class="row px-3 pb-3" [innerHTML]="tutorialData"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 sticky-top bg-bifeldy">
+            <h2 class="pt-3 border-bottom-dotted">
+              <b class="text-bifeldy">Sub-Domain *.Fansub.ID Aktif</b>
+            </h2>
+          </div>
+          <div class="col-12">
+            <div class="row px-3">
+              <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let c of cnameData">
+                <mat-card class="gradient-border rgb-border">
+                  <mat-card-header routerLink="/fansub/{{ c.fansub_?.slug }}" style="cursor: pointer;">
+                    <div mat-card-avatar style="background-size: cover;"
+                      [style.background-image]="'url(' + (c.fansub_?.image_url || '/favicon.ico') + ')'">
+                    </div>
+                    <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
+                      <h3 class="mb-0">{{ c.name }}</h3>
+                    </mat-card-title>
+                    <mat-card-subtitle class="mb-0">{{ c.content }}</mat-card-subtitle>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 text-end">
+                <button mat-button color="accent" (click)="prevCname()" [disabled]="cnamePage <= 1">
+                  <mat-icon>navigate_before</mat-icon>
+                </button>
+                <button mat-button color="accent" (click)="nextCname()" [disabled]="cnameData.length < 10">
+                  <mat-icon>navigate_next</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-xl-3">
+        <div class="row sticky-top">
+          <div class="col-12">
+            <app-banner-discord></app-banner-discord>
+            <app-stats-server></app-stats-server>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+</div>

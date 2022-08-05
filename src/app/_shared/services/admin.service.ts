@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/app/environment';
 
-import { ApiKeyModel, BannedModel, InformationModel, JsonResponse, JsonResponseArray, NotificationModel, UserModel } from '../../../models/req-res.model';
+import { ApiKeyModel, BannedModel, JsonResponse, JsonResponseArray, NotificationModel, UserModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -129,18 +129,6 @@ export class AdminService {
 
   revokeCors(corsId): Observable<JsonResponse<ApiKeyModel>> {
     return this.api.deleteData(`/api-key/${corsId}`);
-  }
-
-  getAllInfo(q: string, page: number, row: number, sort: string, order: string): Observable<JsonResponseArray<InformationModel>> {
-    return this.api.getData(`/information?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
-  }
-
-  createUpdateInfo(infoData): Observable<JsonResponse<InformationModel>> {
-    return this.api.postData(`/information`, infoData);
-  }
-
-  deleteInfo(infoId): Observable<JsonResponse<InformationModel>> {
-    return this.api.deleteData(`/information/${infoId}`);
   }
 
 }

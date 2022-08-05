@@ -94,6 +94,7 @@
     "ngx-spinner": "^13.1.1",
     "ngx-swiper-wrapper": "^10.0.0",
     "ngx-toastr": "^14.3.0",
+    "ngx-typed-js": "^2.1.1",
     "node-fetch": "^3.2.3",
     "p2p-graph": "^2.0.0",
     "pg": "^8.7.3",

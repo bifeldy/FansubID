@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CONSTANTS } from '../../../../constants';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { AdminService } from '../../../_shared/services/admin.service';
+import { InformationService } from '../../../_shared/services/information.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 
@@ -42,7 +42,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private ds: DialogService,
     private gs: GlobalService,
-    private adm: AdminService
+    private info: InformationService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -85,7 +85,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
       this.subsInfoGet.unsubscribe();
       this.bs.idle();
     }
-    this.subsInfoGet = this.adm.getAllInfo(this.q, this.page, this.row, this.sort, this.order).subscribe({
+    this.subsInfoGet = this.info.getAllInfo(this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[INFORMATION_LIST_SUCCESS]', res);
         this.count = res.count;
@@ -127,7 +127,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
       this.bs.idle();
       return;
     }
-    this.subsInfoCreateOrUpdate = this.adm.createUpdateInfo({
+    this.subsInfoCreateOrUpdate = this.info.createUpdateInfo({
       id: this.fg.value.id,
       title: this.fg.value.title,
       content: this.fg.value.content,
@@ -175,7 +175,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsInfoDelete = this.adm.deleteInfo(data.id).subscribe({
+          this.subsInfoDelete = this.info.deleteInfo(data.id).subscribe({
             next: res => {
               this.gs.log('[INFORMATION_LIST_CLICK_DELETE_SUCCESS]', res);
               this.bs.idle();

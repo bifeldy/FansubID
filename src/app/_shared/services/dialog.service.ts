@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { lastValueFrom } from 'rxjs';
 
-import { ApiService } from './api.service';
-import { GlobalService } from './global.service';
+import { JsonResponse, InformationModel } from '../../../models/req-res.model';
 
 import { MaterialDialogInfoComponent } from '../components/material-dialog/material-dialog-info/material-dialog-info.component';
 import { MaterialDialogDmakComponent } from '../components/material-dialog/material-dialog-dmak/material-dialog-dmak.component';
@@ -11,7 +10,8 @@ import { MaterialDialogEdictComponent } from '../components/material-dialog/mate
 import { MaterialDialogBelajarComponent } from '../components/material-dialog/material-dialog-belajar/material-dialog-belajar.component';
 import { MaterialDialogInputComponent } from '../components/material-dialog/material-dialog-input/material-dialog-input.component';
 
-import { JsonResponse, InformationModel } from '../../../models/req-res.model';
+import { GlobalService } from './global.service';
+import { InformationService } from './information.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +21,9 @@ export class DialogService {
   maxWidth = '80vw';
 
   constructor(
-    private api: ApiService,
     private dialog: MatDialog,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private info: InformationService
   ) {
     if (this.gs.isBrowser) {
       this.maxWidth = (this.gs.gridListBreakpoint == 4) ? '45vw' : ((this.gs.gridListBreakpoint == 3) ? '50vw' : ((this.gs.gridListBreakpoint == 2) ? '60vw' : '80vw'));
@@ -81,7 +81,7 @@ export class DialogService {
       maxWidth: this.maxWidth
     };
     try {
-      const res: JsonResponse<InformationModel> = await lastValueFrom(this.api.getData(`/information/${defaultData.id}`));
+      const res: JsonResponse<InformationModel> = await lastValueFrom(this.info.getInfo(defaultData.id));
       defaultData.data.title = res.result.title;
       defaultData.data.htmlMessage = res.result.content;
       defaultData.data.confirmText = res.result.confirm;
@@ -106,7 +106,7 @@ export class DialogService {
       maxWidth: this.maxWidth
     };
     try {
-      const res: JsonResponse<InformationModel> = await lastValueFrom(this.api.getData(`/information/${defaultData.id}`));
+      const res: JsonResponse<InformationModel> = await lastValueFrom(this.info.getInfo(defaultData.id));
       defaultData.data.title = res.result.title;
       defaultData.data.htmlMessage = res.result.content;
       defaultData.disableClose = res.result.close;

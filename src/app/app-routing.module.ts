@@ -148,17 +148,15 @@ const routes: Routes = [
       keywords: 'Web Torrent'
     }
   },
-  // {
-  //   path: 'docs',
-  //   loadChildren: () => import('./_pages/docs/docs.module').then(m => m.DocsModule),
-  //   canActivate: [AuthGuard],
-  //   data: {
-  //     title: 'API Docs',
-  //     description: 'Request & Response',
-  //     keywords: 'API',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
-  //   }
-  // },
+  {
+    path: 'docs',
+    loadChildren: () => import('./_pages/docs/docs.module').then(m => m.DocsModule),
+    data: {
+      title: 'Developers Documentation',
+      description: 'For Developers Only',
+      keywords: 'Domain & API Keys'
+    }
+  },
   {
     path: 'error',
     loadChildren: () => import('./_pages/not-found/not-found.module').then(m => m.NotFoundModule),

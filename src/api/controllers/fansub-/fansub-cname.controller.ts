@@ -35,8 +35,8 @@ export class FansubCnameController {
       const queryName = `${req.query['q'] ? req.query['q'] : ''}`;
       const queryPage = parseInt(req.query['page'] as string) || 1;
       const queryRow = parseInt(req.query['row'] as string) || 10;
-      const querySort = `${req.query['sort'] ? req.query['sort'] : ''}`;
-      const queryOrder = `${req.query['order'] ? req.query['order'] : ''}`;
+      const querySort = `${req.query['sort'] ? req.query['sort'] : 'name'}`;
+      const queryOrder = `${req.query['order'] ? req.query['order'] : 'asc'}`;
       const cnames = await this.cfs.getCnames(queryName, queryPage, queryRow, querySort, queryOrder);
       if (cnames) {
         const cns = [];
