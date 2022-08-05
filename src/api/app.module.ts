@@ -54,7 +54,6 @@ import { NihongoHirakataController } from './controllers/nihongo-/nihongo-hiraka
 import { NihongoHirakataAllController } from './controllers/nihongo-/nihongo-hirakata-/nihongo-hirakata-all.controller';
 import { NihongoKanjiController } from './controllers/nihongo-/nihongo-kanji.controller';
 import { NihongoKanjivgController } from './controllers/nihongo-/nihongo-kanjivg.controller';
-import { NihongoLessonController } from './controllers/nihongo-/nihongo-lesson.controller';
 import { NihongoTatoebaController } from './controllers/nihongo-/nihongo-tatoeba.controller';
 import { NotificationController } from './controllers/notification.controller';
 import { ProjectTypeController } from './controllers/project-type.controller';
@@ -117,7 +116,6 @@ import { KanjiService } from './repository/kanji.service';
 import { KanjivgService } from './repository/kanjivg.service';
 import { KartuTandaPendudukService } from './repository/kartu-tanda-penduduk.service';
 import { KomentarService } from './repository/komentar.service';
-import { LessonService } from './repository/lesson.service';
 import { LikedislikeService } from './repository/likedislike.service';
 import { NewsService } from './repository/news.service';
 import { NihongoService } from './repository/nihongo.service';
@@ -183,7 +181,6 @@ import { UserService } from './repository/user.service';
     NihongoHirakataAllController,
     NihongoKanjiController,
     NihongoKanjivgController,
-    NihongoLessonController,
     NihongoTatoebaController,
     NotificationController,
     ProjectTypeController,
@@ -254,7 +251,6 @@ import { UserService } from './repository/user.service';
     KanjivgService,
     KartuTandaPendudukService,
     KomentarService,
-    LessonService,
     LikedislikeService,
     NewsService,
     NihongoService,

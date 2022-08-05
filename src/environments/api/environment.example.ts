@@ -19,7 +19,6 @@ import { KanjiVg } from '../../api/entities/KanjiVg';
 import { KanjiStats } from '../../api/entities/KanjiStats';
 import { KartuTandaPenduduk } from '../../api/entities/KartuTandaPenduduk';
 import { Komentar } from '../../api/entities/Komentar';
-import { Lesson } from '../../api/entities/Lesson';
 import { LikeDislike } from '../../api/entities/LikeDislike';
 import { News } from '../../api/entities/News';
 import { Nihongo } from '../../api/entities/Nihongo';
@@ -70,7 +69,6 @@ export const environment = {
       KanjiStats,
       KartuTandaPenduduk,
       Komentar,
-      Lesson,
       LikeDislike,
       News,
       Nihongo,

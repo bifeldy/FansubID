@@ -330,18 +330,6 @@ export interface KomentarModel {
   reply_to_send?: string;
 }
 
-export interface LessonModel {
-  id?: number;
-  title?: string;
-  content?: string;
-  image_url?: string;
-  created_at?: number | Date;
-  updated_at?: number | Date;
-  attachment_?: AttachmentModel;
-  user_?: UserModel;
-  parent_lesson_?: LessonModel;
-}
-
 export interface NewsModel {
   id?: number;
   title?: string;
