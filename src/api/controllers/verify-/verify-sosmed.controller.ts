@@ -61,7 +61,10 @@ export class VerifySosmedController {
             const res_json1: any = await res_raw1.json();
             this.gs.log(`[oAuthDiscord] 🗝 ${res_raw1.status}`, res_json1);
             const url = new URL(`${environment.discordApiUrl}/users/@me`);
-            const res_raw2 = await this.api.getData(url, environment.nodeJsXhrHeader);
+            const res_raw2 = await this.api.getData(url, {
+              Authorization: `Bearer ${res_json1.access_token}`,
+              ...environment.nodeJsXhrHeader
+            });
             if (res_raw2.ok) {
               const res_json2: any = await res_raw2.json();
               this.gs.log(`[apiDiscord] 🗝 ${res_raw2.status}`, res_json2);
@@ -77,27 +80,32 @@ export class VerifySosmedController {
                   ],
                   relations: ['user_']
                 });
-                if (sosmeds.length > 0) {
-                  await this.sosmedRepo.update({
-                    type: sosmeds[0].type,
-                    user_: {
-                      id: user.id
-                    }
-                  }, {
-                    id: res_json2.id,
-                    refresh_token: res_json1.refresh_token
-                  });
-                } else {
+                console.log('============================================================');
+                console.log(sosmeds);
+                console.log('============================================================');
+                console.log(sosmeds.length);
+                console.log(typeof sosmeds.length);
+                if (sosmeds.length === 0) {
                   const sosmed = this.sosmedRepo.new();
                   sosmed.id = res_json2.id;
                   sosmed.refresh_token = res_json1.refresh_token;
                   sosmed.type = SosMedModel.DISCORD;
                   sosmed.user_ = user;
                   await this.sosmedRepo.insert(sosmed);
+                } else if (sosmeds.length === 1) {
+                  await this.sosmedRepo.update({
+                    type: SosMedModel.DISCORD,
+                    user_: {
+                      id: Equal(user.id)
+                    }
+                  }, {
+                    id: res_json2.id,
+                    refresh_token: res_json1.refresh_token
+                  });
+                } else {
+                  throw new Error('Data Duplikat');
                 }
-                user.verified = false;
                 user.discord = res_json2.id;
-                user.role = RoleModel.USER;
                 const resUserSave = await this.userRepo.save(user as User);
                 delete resUserSave.password;
                 delete resUserSave.session_token;

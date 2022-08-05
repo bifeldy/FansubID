@@ -88,37 +88,42 @@ export class VerifyComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[SOSMED]', res);
         this.bs.idle();
-        this.subsDialog = this.ds.openInfoDialog({
-          data: {
-            title: res.result.title,
-            htmlMessage: res.result.message,
-            confirmText: 'Tutup',
-            cancelText: 'Ulangi'
-          },
-          disableClose: true
-        }).afterClosed().subscribe({
-          next: re => {
-            this.gs.log('[INFO_DIALOG_CLOSED]', re);
-            if (re === true) {
-              this.as.removeUser();
-              this.router.navigate(['/login'], {
-                queryParams: {
-                  returnUrl: this.returnUrl
-                }
-              });
-            } else if (re === false) {
-              if (sosmedApp.toUpperCase() === SosMedModel.DISCORD) {
-                this.openVerifyDiscordUrl();
-              }
-              // TODO :: If Other SosMed
-            }
-            this.subsDialog.unsubscribe();
-          }
-        });
+        this.sosmedVerifyResult(res, sosmedApp);
       },
       error: err => {
         this.gs.log('[SOSMED]', err);
         this.bs.idle();
+        this.sosmedVerifyResult(err.error, sosmedApp);
+      }
+    });
+  }
+
+  sosmedVerifyResult(res: any, sosmedApp: string): void {
+    this.subsDialog = this.ds.openInfoDialog({
+      data: {
+        title: res.result?.title || 'Whoops, Terjadi Kesalahan!',
+        htmlMessage: res.result.message,
+        confirmText: 'Tutup',
+        cancelText: 'Ulangi'
+      },
+      disableClose: true
+    }).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.as.removeUser();
+          this.router.navigate(['/login'], {
+            queryParams: {
+              returnUrl: this.returnUrl
+            }
+          });
+        } else if (re === false) {
+          if (sosmedApp.toUpperCase() === SosMedModel.DISCORD) {
+            this.openVerifyDiscordUrl();
+          }
+          // TODO :: If Other SosMed
+        }
+        this.subsDialog.unsubscribe();
       }
     });
   }
