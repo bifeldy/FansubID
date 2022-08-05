@@ -222,7 +222,7 @@ export class DiscordService {
               await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
             }
             const mail = await this.ms.mailGunAddForwarding(user.username, user.email);
-            await msg.reply({ content: `<@${msg.author.id}> 😚 Berhasil :: ${mail.route?.id} 🤩` });
+            await msg.reply({ content: `<@${msg.author.id}> 😚 .: Berhasil :: ${mail?.route?.id} :. 🤩` });
             await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
               embeds: [
                 new MessageEmbed()
