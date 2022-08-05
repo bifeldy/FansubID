@@ -54,9 +54,9 @@ export class TatoebaService {
     return this.tatoebaRepo.count(options);
   }
 
-  remove(tatoeba: Tatoeba): Promise<Tatoeba> {
+  remove(tatoeba: Tatoeba | Tatoeba[]): Promise<Tatoeba | Tatoeba[]> {
     this.gs.log('[TATOEBA_SERVICE-REMOVE] 🗾', tatoeba);
-    return this.tatoebaRepo.remove(tatoeba);
+    return this.tatoebaRepo.remove(tatoeba as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

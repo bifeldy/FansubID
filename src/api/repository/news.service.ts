@@ -54,9 +54,9 @@ export class NewsService {
     return this.newsRepo.count(options);
   }
 
-  remove(news: News): Promise<News> {
+  remove(news: News | News[]): Promise<News | News[]> {
     this.gs.log('[NEWS_SERVICE-REMOVE] 📰', news);
-    return this.newsRepo.remove(news);
+    return this.newsRepo.remove(news as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

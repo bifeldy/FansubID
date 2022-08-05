@@ -54,9 +54,9 @@ export class FansubMemberService {
     return this.fansubMemberRepo.count(options);
   }
 
-  remove(fansubMember: FansubMember): Promise<FansubMember> {
+  remove(fansubMember: FansubMember | FansubMember[]): Promise<FansubMember | FansubMember[]> {
     this.gs.log('[FANSUB_MEMBER_SERVICE-REMOVE] 🕵️‍♀️', fansubMember);
-    return this.fansubMemberRepo.remove(fansubMember);
+    return this.fansubMemberRepo.remove(fansubMember as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

@@ -54,9 +54,9 @@ export class TrackService {
     return this.trackRepo.count(options);
   }
 
-  remove(track: Track): Promise<Track> {
+  remove(track: Track | Track[]): Promise<Track | Track[]> {
     this.gs.log('[TRACK_SERVICE-REMOVE] 🛤', track);
-    return this.trackRepo.remove(track);
+    return this.trackRepo.remove(track as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

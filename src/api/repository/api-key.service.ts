@@ -58,9 +58,9 @@ export class ApiKeyService {
     return this.apiKeyRepo.count(options);
   }
 
-  remove(apiKey: ApiKey): Promise<ApiKey> {
+  remove(apiKey: ApiKey | ApiKey[]): Promise<ApiKey | ApiKey[]> {
     this.gs.log('[API_KEY_SERVICE-REMOVE] 🏓', apiKey);
-    return this.apiKeyRepo.remove(apiKey);
+    return this.apiKeyRepo.remove(apiKey as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

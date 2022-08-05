@@ -54,9 +54,9 @@ export class LessonService {
     return this.lessonRepo.count(options);
   }
 
-  remove(lesson: Lesson): Promise<Lesson> {
+  remove(lesson: Lesson | Lesson[]): Promise<Lesson | Lesson[]> {
     this.gs.log('[LESSON_SERVICE-REMOVE] 🗾', lesson);
-    return this.lessonRepo.remove(lesson);
+    return this.lessonRepo.remove(lesson as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

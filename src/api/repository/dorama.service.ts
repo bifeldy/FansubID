@@ -54,9 +54,9 @@ export class DoramaService {
     return this.doramaRepo.count(options);
   }
 
-  remove(dorama: Dorama): Promise<Dorama> {
+  remove(dorama: Dorama | Dorama[]): Promise<Dorama | Dorama[]> {
     this.gs.log('[DORAMA_SERVICE-REMOVE] 🎬', dorama);
-    return this.doramaRepo.remove(dorama);
+    return this.doramaRepo.remove(dorama as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

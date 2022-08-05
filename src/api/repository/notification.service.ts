@@ -54,9 +54,9 @@ export class NotificationService {
     return this.notificationRepo.count(options);
   }
 
-  remove(notification: Notification): Promise<Notification> {
+  remove(notification: Notification | Notification[]): Promise<Notification | Notification[]> {
     this.gs.log('[NOTIFICATION_SERVICE-REMOVE] 🔔', notification);
-    return this.notificationRepo.remove(notification);
+    return this.notificationRepo.remove(notification as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

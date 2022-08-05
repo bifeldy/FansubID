@@ -25,25 +25,6 @@ export class MailService {
     // https://app.mailgun.com/app/account/security/api_keys
   }
 
-  async mailGunDeleteForwarding(id): Promise<any> {
-    try {
-      const url = new URL(`${environment.mailGun.clientOptions.url}/routes/${id}`);
-      const res_raw = await this.api.deleteData(url, {
-        'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
-        ...environment.nodeJsXhrHeader
-      });
-      if (res_raw.ok) {
-        const res_json: any = await res_raw.json();
-        this.gs.log(`[MAILGUN_SERVICE-DELETE_FORWARDING_SUCCESS] 💌 ${res_raw.status}`, res_json);
-        return res_json;
-      }
-      throw new Error('Mailgun API Error');
-    } catch (err) {
-      this.gs.log('[MAILGUN_SERVICE-DELETE_FORWARDING_ERROR] 💌', err, 'error');
-      return null;
-    }
-  }
-
   async mailGunGetAllForwarding(): Promise<any> {
     try {
       const url = new URL(`${environment.mailGun.clientOptions.url}/routes`);
@@ -71,6 +52,28 @@ export class MailService {
       return user;
     } catch (err) {
       this.gs.log('[MAILGUN_SERVICE-GET_USER_FORWARDING_ERROR] 💌', err, 'error');
+      return null;
+    }
+  }
+
+  async mailGunDeleteForwarding(username: string): Promise<any> {
+    try {
+      const userMail = await this.mailGunGetUserForwarding(username);
+      if (userMail) {
+        const url = new URL(`${environment.mailGun.clientOptions.url}/routes/${userMail.id}`);
+        const res_raw = await this.api.deleteData(url, {
+          'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
+          ...environment.nodeJsXhrHeader
+        });
+        if (res_raw.ok) {
+          const res_json: any = await res_raw.json();
+          this.gs.log(`[MAILGUN_SERVICE-DELETE_FORWARDING_SUCCESS] 💌 ${res_raw.status}`, res_json);
+          return res_json;
+        }
+      }
+      throw new Error('Mailgun API Error');
+    } catch (err) {
+      this.gs.log('[MAILGUN_SERVICE-DELETE_FORWARDING_ERROR] 💌', err, 'error');
       return null;
     }
   }

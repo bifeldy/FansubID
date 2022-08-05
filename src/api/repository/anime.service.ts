@@ -54,9 +54,9 @@ export class AnimeService {
     return this.animeRepo.count(options);
   }
 
-  remove(anime: Anime): Promise<Anime> {
+  remove(anime: Anime | Anime[]): Promise<Anime | Anime[]> {
     this.gs.log('[ANIME_SERVICE-REMOVE] 🐱‍👤', anime);
-    return this.animeRepo.remove(anime);
+    return this.animeRepo.remove(anime as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

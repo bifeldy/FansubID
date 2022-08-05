@@ -54,9 +54,9 @@ export class EdictService {
     return this.edictRepo.count(options);
   }
 
-  remove(edict: Edict): Promise<Edict> {
+  remove(edict: Edict | Edict[]): Promise<Edict | Edict[]> {
     this.gs.log('[EDICT_SERVICE-REMOVE] 🗾', edict);
-    return this.edictRepo.remove(edict);
+    return this.edictRepo.remove(edict as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

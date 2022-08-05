@@ -54,9 +54,9 @@ export class RegistrationService {
     return this.registrationRepo.count(options);
   }
 
-  remove(registration: Registration): Promise<Registration> {
+  remove(registration: Registration | Registration[]): Promise<Registration | Registration[]> {
     this.gs.log('[REGISTRATION_SERVICE-REMOVE] 🔏', registration);
-    return this.registrationRepo.remove(registration);
+    return this.registrationRepo.remove(registration as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

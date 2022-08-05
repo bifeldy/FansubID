@@ -54,9 +54,9 @@ export class UserService {
     return this.userRepo.count(options);
   }
 
-  remove(user: User): Promise<User> {
+  remove(user: User | User[]): Promise<User | User[]> {
     this.gs.log('[USER_SERVICE-REMOVE] 🤖', user);
-    return this.userRepo.remove(user);
+    return this.userRepo.remove(user as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

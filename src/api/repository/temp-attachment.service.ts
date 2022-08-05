@@ -54,9 +54,9 @@ export class TempAttachmentService {
     return this.tempAttachmentRepo.count(options);
   }
 
-  remove(tempAttachment: TempAttachment): Promise<TempAttachment> {
+  remove(tempAttachment: TempAttachment |TempAttachment[]): Promise<TempAttachment |TempAttachment[]> {
     this.gs.log('[TEMP_ATTACHMENT_SERVICE-REMOVE] 💾', tempAttachment);
-    return this.tempAttachmentRepo.remove(tempAttachment);
+    return this.tempAttachmentRepo.remove(tempAttachment as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

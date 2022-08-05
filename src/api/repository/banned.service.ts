@@ -54,9 +54,9 @@ export class BannedService {
     return this.bannedRepo.count(options);
   }
 
-  remove(banned: Banned): Promise<Banned> {
+  remove(banned: Banned | Banned[]): Promise<Banned | Banned[]> {
     this.gs.log('[BANNED_SERVICE-REMOVE] 🔓', banned);
-    return this.bannedRepo.remove(banned);
+    return this.bannedRepo.remove(banned as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

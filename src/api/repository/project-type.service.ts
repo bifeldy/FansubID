@@ -54,9 +54,9 @@ export class ProjectTypeService {
     return this.projectTypeRepo.count(options);
   }
 
-  remove(projectType: ProjectType): Promise<ProjectType> {
+  remove(projectType: ProjectType | ProjectType[]): Promise<ProjectType | ProjectType[]> {
     this.gs.log('[PROJECT_TYPE_SERVICE-REMOVE] 💉', projectType);
-    return this.projectTypeRepo.remove(projectType);
+    return this.projectTypeRepo.remove(projectType as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

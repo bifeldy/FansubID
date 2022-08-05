@@ -54,9 +54,9 @@ export class BerkasService {
     return this.berkasRepo.count(options);
   }
 
-  remove(berkas: Berkas): Promise<Berkas> {
+  remove(berkas: Berkas | Berkas[]): Promise<Berkas | Berkas[]> {
     this.gs.log('[BERKAS_SERVICE-REMOVE] 📂', berkas);
-    return this.berkasRepo.remove(berkas);
+    return this.berkasRepo.remove(berkas as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

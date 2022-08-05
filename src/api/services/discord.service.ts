@@ -31,6 +31,7 @@ import { GlobalService } from './global.service';
 import { MailService } from '../services/mail.service';
 import { SocketIoService } from './socket-io.service';
 
+import { FansubMemberService } from '../repository/fansub-member.service';
 import { UserService } from '../repository/user.service';
 
 @Injectable()
@@ -45,7 +46,8 @@ export class DiscordService {
     private gs: GlobalService,
     private ms: MailService,
     private sis: SocketIoService,
-    private userRepo: UserService
+    private userRepo: UserService,
+    private fansubMemberRepo: FansubMemberService
   ) {
     if (environment.production) {
       this.startBot();
@@ -214,7 +216,6 @@ export class DiscordService {
             await msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
           } else if (args[1] === SosMedModel.DISCORD) {
             user.verified = true;
-            user.role = RoleModel.USER;
             await this.userRepo.save(user);
             const laboratoryRatsRole = msg.guild.roles.cache.get(environment.laboratoryRatsRoleId);
             if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
@@ -262,21 +263,33 @@ export class DiscordService {
 
   async memberLeftRemoveVerifiedDemote(member: GuildMember | PartialGuildMember): Promise<void> {
     try {
-      const users = await this.userRepo.find({
+      const user = await this.userRepo.findOneOrFail({
         where: [
           {
             verified: true,
             discord: Equal(member.user.id),
-            role: Not(In([RoleModel.ADMIN]))
+            role: Not(In([RoleModel.ADMIN, RoleModel.MODERATOR]))
           }
         ]
       });
-      for (const u of users) {
-        u.verified = false;
-        u.discord = null;
-        u.role = RoleModel.USER;
-        await this.userRepo.save(u);
-      }
+      await this.ms.mailGunDeleteForwarding(user.username);
+      await this.userRepo.update({
+        id: Equal(user.id)
+      }, {
+        verified: false,
+        role: RoleModel.USER
+      });
+      const fansubMembers = await this.fansubMemberRepo.find({
+        where: [
+          {
+            user_: {
+              id: Equal(user.id)
+            }
+          }
+        ],
+        relations: ['user_']
+      });
+      await this.fansubMemberRepo.remove(fansubMembers);
     } catch (e) {
       this.gs.log('[DISCORD_SERVICE-MEMBER_LEAVE] 🎉', e, 'error');
     }

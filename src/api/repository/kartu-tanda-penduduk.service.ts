@@ -54,9 +54,9 @@ export class KartuTandaPendudukService {
     return this.kartuTandaPendudukRepo.count(options);
   }
 
-  remove(kartuTandaPenduduk: KartuTandaPenduduk): Promise<KartuTandaPenduduk> {
+  remove(kartuTandaPenduduk: KartuTandaPenduduk | KartuTandaPenduduk[]): Promise<KartuTandaPenduduk | KartuTandaPenduduk[]> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-REMOVE] 👨‍👩‍👧‍👦', kartuTandaPenduduk);
-    return this.kartuTandaPendudukRepo.remove(kartuTandaPenduduk);
+    return this.kartuTandaPendudukRepo.remove(kartuTandaPenduduk as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

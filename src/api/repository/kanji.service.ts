@@ -54,9 +54,9 @@ export class KanjiService {
     return this.kanjiRepo.count(options);
   }
 
-  remove(kanji: Kanji): Promise<Kanji> {
+  remove(kanji: Kanji | Kanji[]): Promise<Kanji | Kanji[]> {
     this.gs.log('[KANJI_SERVICE-REMOVE] 🗾', kanji);
-    return this.kanjiRepo.remove(kanji);
+    return this.kanjiRepo.remove(kanji as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

@@ -54,9 +54,9 @@ export class SocialMediaService {
     return this.socialMediaRepo.count(options);
   }
 
-  remove(sosmed: SocialMedia): Promise<SocialMedia> {
+  remove(sosmed: SocialMedia | SocialMedia[]): Promise<SocialMedia | SocialMedia[]> {
     this.gs.log('[SOCIAL_MEDIA_SERVICE-REMOVE] 🙇‍♂️', sosmed);
-    return this.socialMediaRepo.remove(sosmed);
+    return this.socialMediaRepo.remove(sosmed as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

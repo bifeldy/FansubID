@@ -54,9 +54,9 @@ export class LikedislikeService {
     return this.likeDislikeRepo.count(options);
   }
 
-  remove(likeDislike: LikeDislike): Promise<LikeDislike> {
+  remove(likeDislike: LikeDislike | LikeDislike[]): Promise<LikeDislike | LikeDislike[]> {
     this.gs.log('[LIKE_DISLIKE_SERVICE-REMOVE] 💖', likeDislike);
-    return this.likeDislikeRepo.remove(likeDislike);
+    return this.likeDislikeRepo.remove(likeDislike as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

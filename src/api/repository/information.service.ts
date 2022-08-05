@@ -54,9 +54,9 @@ export class InformationService {
     return this.informationRepo.count(options);
   }
 
-  remove(information: Information): Promise<Information> {
+  remove(information: Information | Information[]): Promise<Information | Information[]> {
     this.gs.log('[INFORMATION_SERVICE-REMOVE] 🔔', information);
-    return this.informationRepo.remove(information);
+    return this.informationRepo.remove(information as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

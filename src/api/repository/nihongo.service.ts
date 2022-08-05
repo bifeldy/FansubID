@@ -54,9 +54,9 @@ export class NihongoService {
     return this.nihongoRepo.count(options);
   }
 
-  remove(nihongo: Nihongo): Promise<Nihongo> {
+  remove(nihongo: Nihongo | Nihongo[]): Promise<Nihongo | Nihongo[]> {
     this.gs.log('[NIHONGO_SERVICE-REMOVE] 🗾', nihongo);
-    return this.nihongoRepo.remove(nihongo);
+    return this.nihongoRepo.remove(nihongo as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

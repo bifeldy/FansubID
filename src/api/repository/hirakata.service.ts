@@ -54,9 +54,9 @@ export class HirakataService {
     return this.hirakataRepo.count(options);
   }
 
-  remove(hirakata: Hirakata): Promise<Hirakata> {
+  remove(hirakata: Hirakata | Hirakata[]): Promise<Hirakata | Hirakata[]> {
     this.gs.log('[HIRAKATA_SERVICE-REMOVE] 🗾', hirakata);
-    return this.hirakataRepo.remove(hirakata);
+    return this.hirakataRepo.remove(hirakata as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {
