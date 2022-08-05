@@ -155,9 +155,12 @@ export class DiscordService {
         const latency = new Date().getTime() - new Date(msg.createdTimestamp).getTime();
         await msg.reply({ content: `<@${msg.author.id}> Pong ${latency} ms late!` });
       } else if (msg.content.startsWith('~verify ')) {
-        this.verifyAccount(msg);
+        await this.verifyAccount(msg);
       } else {
-        await msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/documentation 💩` });
+        await msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs 💩` });
+      }
+      if (msg.content.includes('DELETE_CHAT')) {
+        await msg.delete();
       }
     } catch (error) {
       this.gs.log('[DISCORD_SERVICE-HANDLE_MESSAGE] 🎉', error, 'error')
@@ -244,9 +247,6 @@ export class DiscordService {
           }
         } else {
           await msg.reply({ content: `<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔` });
-        }
-        if (args[3] === 'DELETE_CHAT') {
-          await msg.delete();
         }
       } else {
         await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
