@@ -22,6 +22,7 @@ import { MyHammerConfig } from './_shared/helpers/my-hammer.config';
 import { MyTooltipConfig } from './_shared/helpers/my-tooltip.config';
 import { SharedMaterialModule } from './_shared/helpers/shared-material.module';
 
+import { HttpCancelInterceptor } from './_shared/interceptors/http-cancel.interceptor';
 import { HttpRequestInterceptor } from './_shared/interceptors/http-request.interceptor';
 import { HttpErrorInterceptor } from './_shared/interceptors/http-error.interceptor';
 
@@ -79,6 +80,7 @@ import { environment } from '../environments/app/environment';
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: MyTooltipConfig },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'always' } },
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 3000 } },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpCancelInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
   ],

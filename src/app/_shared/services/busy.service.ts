@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { Observable, Subject } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 import { GlobalService } from './global.service';
@@ -8,6 +9,8 @@ import { GlobalService } from './global.service';
   providedIn: 'root'
 })
 export class BusyService {
+
+  private cancelPendingRequests$ = new Subject<void>()
 
   busyRequestCount = 0;
 
@@ -18,6 +21,10 @@ export class BusyService {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get onCancelPendingRequests(): Observable<void> {
+    return this.cancelPendingRequests$.asObservable()
   }
 
   busy(): void {
@@ -44,6 +51,7 @@ export class BusyService {
       this.busyRequestCount = 0;
       this.spinnerService.hide();
       this.gs.log('[BUSY_STATE_COUNTER]', this.busyRequestCount);
+      this.cancelPendingRequests$.next();
     }
   }
 
