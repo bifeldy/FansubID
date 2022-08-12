@@ -54,7 +54,7 @@ export class RegisterMiddleware implements NestMiddleware {
         url.searchParams.append('secret', environment.reCaptchaSecretKey);
         url.searchParams.append('response', req.body['g-recaptcha-response']);
         url.searchParams.append('remoteip', (req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString());
-        const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
+        const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
         if (res_raw.ok) {
           const res_json: any = await res_raw.json();
           this.gs.log(`[gCaptcha] 🎲 ${res_raw.status}`, res_json);

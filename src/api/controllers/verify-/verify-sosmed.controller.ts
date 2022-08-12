@@ -56,7 +56,7 @@ export class VerifySosmedController {
           form.append('code', req.body.code);
           form.append('redirect_uri', `${environment.baseUrl}/verify?app=discord`);
           form.append('scope', 'identify email guilds.join');
-          const res_raw1 = await this.api.postData(url, form, environment.nodeJsXhrHeader);
+          const res_raw1 = await this.api.postData(url, form, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
           if (res_raw1.ok) {
             const res_json1: any = await res_raw1.json();
             this.gs.log(`[oAuthDiscord] 🗝 ${res_raw1.status}`, res_json1);
@@ -64,7 +64,7 @@ export class VerifySosmedController {
             const res_raw2 = await this.api.getData(url, {
               Authorization: `Bearer ${res_json1.access_token}`,
               ...environment.nodeJsXhrHeader
-            });
+            }, res.locals['abort-controller'].signal);
             if (res_raw2.ok) {
               const res_json2: any = await res_raw2.json();
               this.gs.log(`[apiDiscord] 🗝 ${res_raw2.status}`, res_json2);

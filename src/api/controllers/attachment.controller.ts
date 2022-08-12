@@ -189,7 +189,7 @@ export class AttachmentController {
         ]
       });
       if (attachment.google_drive) {
-        const gdrive = await this.gdrive.gDrive();
+        const gdrive = await this.gdrive.gDrive(res.locals['abort-controller'].signal);
         const dfile = await gdrive.files.get(
           {
             fileId: attachment.google_drive,

@@ -1,4 +1,5 @@
 // 3rd Party Library
+import { AbortSignal } from 'abort-controller';
 import { OAuth2Client } from 'google-auth-library';
 import { drive_v3, google } from 'googleapis';
 
@@ -30,7 +31,7 @@ export class GdriveService {
   //   scope: ['https://www.googleapis.com/auth/drive', 'https://mail.google.com'],
   //   token_type: 'Bearer'
   // }
-  async gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
+  async gAuthPersonalAccount(signal: AbortSignal, refreshToken): Promise<OAuth2Client> {
     try {
       const url = new URL(this.gcp.serviceAccount.token_uri);
       const form = new URLSearchParams();
@@ -39,7 +40,7 @@ export class GdriveService {
       form.append('client_secret', this.gcp.clientSecret);
       form.append('refresh_token', refreshToken);
       const googleClient = new google.auth.OAuth2(this.gcp.clientId, this.gcp.clientSecret);
-      const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
+      const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader, signal);
       const res_json: any = await res_raw.json();
       this.gs.log(`[gApp] 🔑 ${res_raw.status}`, res_json);
       googleClient.setCredentials(res_json);
@@ -53,11 +54,11 @@ export class GdriveService {
   // https://developers.google.com/identity/protocols/oauth2/service-account#delegatingauthority
   // userPersonalUserAccountInsteadOfServiceAccount => false (for upload)
   //
-  async gDrive(userPersonalUserAccountInsteadOfServiceAccount = false): Promise<drive_v3.Drive> {
+  async gDrive(signal: AbortSignal, userPersonalUserAccountInsteadOfServiceAccount = false): Promise<drive_v3.Drive> {
     try {
       let auth = null;
       if (userPersonalUserAccountInsteadOfServiceAccount) {
-        auth = await this.gAuthPersonalAccount(this.gcp.gDrive.refreshToken);
+        auth = await this.gAuthPersonalAccount(signal, this.gcp.gDrive.refreshToken);
       } else {
         auth = new google.auth.JWT(
           this.gcp.serviceAccount.client_email,

@@ -1,3 +1,6 @@
+// 3rd Party Library
+import { AbortSignal } from 'abort-controller';
+
 // NodeJS Library
 import { URL, URLSearchParams } from 'node:url';
 
@@ -25,13 +28,13 @@ export class MailService {
     // https://app.mailgun.com/app/account/security/api_keys
   }
 
-  async mailGunGetAllForwarding(): Promise<any> {
+  async mailGunGetAllForwarding(signal: AbortSignal): Promise<any> {
     try {
       const url = new URL(`${environment.mailGun.clientOptions.url}/routes`);
       const res_raw = await this.api.getData(url, {
         'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
         ...environment.nodeJsXhrHeader
-      });
+      }, signal);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[MAILGUN_SERVICE-GET_ALL_FORWARDING_SUCCESS] 💌 ${res_raw.status}`, res_json);
@@ -44,9 +47,9 @@ export class MailService {
     }
   }
 
-  async mailGunGetUserForwarding(username): Promise<any> {
+  async mailGunGetUserForwarding(signal: AbortSignal, username): Promise<any> {
     try {
-      const res = await this.mailGunGetAllForwarding();
+      const res = await this.mailGunGetAllForwarding(signal);
       const user = res.items.find(item => item.description === username);
       this.gs.log('[MAILGUN_SERVICE-GET_USER_FORWARDING_SUCCESS] 💌', user);
       return user;
@@ -56,15 +59,15 @@ export class MailService {
     }
   }
 
-  async mailGunDeleteForwarding(username: string): Promise<any> {
+  async mailGunDeleteForwarding(signal: AbortSignal, username: string): Promise<any> {
     try {
-      const userMail = await this.mailGunGetUserForwarding(username);
+      const userMail = await this.mailGunGetUserForwarding(signal, username);
       if (userMail) {
         const url = new URL(`${environment.mailGun.clientOptions.url}/routes/${userMail.id}`);
         const res_raw = await this.api.deleteData(url, {
           'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
           ...environment.nodeJsXhrHeader
-        });
+        }, signal);
         if (res_raw.ok) {
           const res_json: any = await res_raw.json();
           this.gs.log(`[MAILGUN_SERVICE-DELETE_FORWARDING_SUCCESS] 💌 ${res_raw.status}`, res_json);
@@ -78,9 +81,9 @@ export class MailService {
     }
   }
 
-  async mailGunAddForwarding(username, emailTarget): Promise<any> {
+  async mailGunAddForwarding(signal: AbortSignal, username, emailTarget): Promise<any> {
     try {
-      if (!(await this.mailGunGetUserForwarding(username))) {
+      if (!(await this.mailGunGetUserForwarding(signal, username))) {
         const url = new URL(`${environment.mailGun.clientOptions.url}/routes`);
         const form = new URLSearchParams();
         form.append('priority', '0');
@@ -91,7 +94,7 @@ export class MailService {
         const res_raw = await this.api.postData(url, form, {
           'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
           ...environment.nodeJsXhrHeader
-        });
+        }, signal);
         if (res_raw.ok) {
           const res_json: any = await res_raw.json();
           this.gs.log(`[MAILGUN_SERVICE-ADD_FORWARDING_SUCCESS] 💌 ${res_raw.status}`, res_json);
@@ -105,7 +108,7 @@ export class MailService {
     }
   }
 
-  async mailGunSend(mailBody: MailModel): Promise<any> {
+  async mailGunSend(signal: AbortSignal, mailBody: MailModel): Promise<any> {
     try {
       const url = new URL(`${environment.mailGun.clientOptions.url}/${environment.mailGun.domain}/messages`);
       const form = new URLSearchParams();
@@ -117,7 +120,7 @@ export class MailService {
       const res_raw = await this.api.postData(url, form, {
         'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
         ...environment.nodeJsXhrHeader
-      });
+      }, signal);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[MAILGUN_SERVICE-SEND_EMAIL_SUCCESS] 💌 ${res_raw.status}`, res_json);
@@ -140,10 +143,10 @@ export class MailService {
   //   return null;
   // }
 
-  async sendMail(mailBody: any): Promise<any> {
+  async sendMail(signal: AbortSignal, mailBody: any): Promise<any> {
     let mailStatus = null;
     if (!mailStatus && this.cfg.mailSMTP.mailgun) {
-      mailStatus = await this.mailGunSend(mailBody);
+      mailStatus = await this.mailGunSend(signal, mailBody);
     }
     // if (!mailStatus && this.cfg.mailSMTP.ymail) {
     //   mailStatus = await this.yMailSend(mailBody);
@@ -154,7 +157,7 @@ export class MailService {
     return mailStatus;
   }
 
-  async sendRegisterActivationMail(user: RegistrationModel): Promise<any> {
+  async sendRegisterActivationMail(signal: AbortSignal, user: RegistrationModel): Promise<any> {
     const content: MailModel = {
       to: user.email,
       subject: `${environment.siteName} | Aktivasi Akun`,
@@ -204,7 +207,7 @@ export class MailService {
         .: ${user.id} :.
       `.replace(/\s\s+/g, ' ').trim()
     };
-    const res = await this.sendMail(content);
+    const res = await this.sendMail(signal, content);
     return res;
   }
 

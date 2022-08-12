@@ -1,5 +1,6 @@
 // 3rd Party Library
 import fetch, { HeadersInit } from 'node-fetch';
+import { AbortSignal } from 'abort-controller';
 
 // NodeJS Library
 import { URL, URLSearchParams } from 'node:url';
@@ -17,45 +18,53 @@ export class ApiService {
 
   async getData(
     url: URL,
-    headers: HeadersInit
+    headers: HeadersInit,
+    signal: AbortSignal
   ) {
     return fetch(url.toString(), {
       method: 'GET',
-      headers
+      headers,
+      signal
     });
   }
 
   async postData(
     url: URL,
     form: FormData | URLSearchParams | String | any,
-    headers: HeadersInit
+    headers: HeadersInit,
+    signal: AbortSignal
   ) {
     return fetch(url.toString(), {
       method: 'POST',
       body: form,
-      headers
+      headers,
+      signal
     });
   }
 
   async putData(
     url: URL,
     form: FormData | URLSearchParams | String | any,
-    headers: HeadersInit
+    headers: HeadersInit,
+    signal: AbortSignal
   ) {
     return fetch(url.toString(), {
       method: 'POST',
       body: form,
-      headers
+      headers,
+      signal
     });
   }
 
   async deleteData(
     url: URL,
-    headers: HeadersInit
+    headers: HeadersInit,
+    signal: AbortSignal
   ) {
     return fetch(url.toString(), {
       method: 'DELETE',
-      headers
+      headers,
+      signal
     });
   }
 

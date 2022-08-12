@@ -30,7 +30,7 @@ export class AnimeSeasonalController {
     const season = req.query['season'] || this.gs.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
     try {
       const url = new URL(`${environment.externalApiAnime}/seasons/${year}/${season}`);
-      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
+      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
