@@ -2,6 +2,8 @@ import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } 
 import { Reflector } from '@nestjs/core';
 import { Response } from 'express';
 
+import { CONSTANTS } from '../../constants';
+
 import { UserModel } from '../../models/req-res.model';
 
 import { GlobalService } from '../services/global.service';
@@ -17,7 +19,7 @@ export class VerifiedGuard implements CanActivate {
   }
 
   canActivate(context: ExecutionContext): boolean {
-    const verifiedOnly = this.reflector.get<boolean>('verified-only', context.getHandler());
+    const verifiedOnly = this.reflector.get<boolean>(CONSTANTS.decoratorVerifiedOnly, context.getHandler());
     if (!verifiedOnly) {
       return true;
     }

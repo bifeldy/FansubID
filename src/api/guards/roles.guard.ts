@@ -2,6 +2,8 @@ import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } 
 import { Reflector } from '@nestjs/core';
 import { Response } from 'express';
 
+import { CONSTANTS } from '../../constants';
+
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { GlobalService } from '../services/global.service';
@@ -17,7 +19,7 @@ export class RolesGuard implements CanActivate {
   }
 
   canActivate(context: ExecutionContext): boolean  {
-    const requiredRoles = this.reflector.getAllAndOverride<RoleModel[]>('roles', [context.getHandler(), context.getClass()]);
+    const requiredRoles = this.reflector.getAllAndOverride<RoleModel[]>(CONSTANTS.decoratorRoles, [context.getHandler(), context.getClass()]);
     if (!requiredRoles) {
       return true;
     }

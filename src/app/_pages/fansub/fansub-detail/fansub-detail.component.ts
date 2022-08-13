@@ -447,65 +447,73 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   getSubDomain(): void {
-    if (this.joinedAsMember || this.as.currentUserValue.role === RoleModel.ADMIN || this.as.currentUserValue.role === RoleModel.MODERATOR) {
-      const userInput = {
-        server_target: {
-          inputLabel: 'Server Target',
-          inputText: `ghs.google.com`,
-        }
-      };
-      this.subsDialog = this.ds.openInputDialog({
-        data: {
-          title: `Destinasi Server Terget`,
-          input: userInput,
-          confirmText: 'OK',
-          cancelText: 'Batal'
-        },
-        disableClose: true
-      }).afterClosed().subscribe({
-        next: re => {
-          this.gs.log('[INPUT_DIALOG_CLOSED]', re);
-          if (re) {
-            this.bs.busy();
-            this.subsClaimSubDomain = this.fansub.claimSubDomain({
-              slug: this.fansubSlug,
-              server_target: re.server_target?.inputText || null
-            }).subscribe({
-              next: res => {
-                this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_SUCCESS]', res);
-                this.bs.idle();
-                this.subsDialog = this.ds.openInfoDialog({
-                  data: {
-                    title: `Klaim Berhasil`,
-                    htmlMessage: `
-                      Domain '${res.result.name}' sudah didaftarkan dan dapat digunakan,
-                      silahkan migrasi domain pada situs penyedia layanan anda (ex. Blogger / Wordpress / etc.)
-                      kemudian tunggu hingga propagasi DNS selesai.
-                      Terima Kasih.
-                    `,
-                    confirmText: 'Tutup'
-                  },
-                  disableClose: true
-                }).afterClosed().subscribe({
-                  next: r => {
-                    this.gs.log('[INFO_DIALOG_CLOSED]', r);
-                    this.getFansubDetail();
-                    this.subsDialog.unsubscribe();
-                  }
-                });
-              },
-              error: err => {
-                this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_ERROR]', err);
-                this.bs.idle();
-                this.getFansubDetail();
-              }
-            });
+    if (this.as.currentUserValue) {
+      if (this.joinedAsMember || this.as.currentUserValue.role === RoleModel.ADMIN || this.as.currentUserValue.role === RoleModel.MODERATOR) {
+        const userInput = {
+          server_target: {
+            inputLabel: 'Server Target',
+            inputText: `ghs.google.com`,
           }
-          this.subsDialog.unsubscribe();
+        };
+        this.subsDialog = this.ds.openInputDialog({
+          data: {
+            title: `Destinasi Server Terget`,
+            input: userInput,
+            confirmText: 'OK',
+            cancelText: 'Batal'
+          },
+          disableClose: true
+        }).afterClosed().subscribe({
+          next: re => {
+            this.gs.log('[INPUT_DIALOG_CLOSED]', re);
+            if (re) {
+              this.bs.busy();
+              this.subsClaimSubDomain = this.fansub.claimSubDomain({
+                slug: this.fansubSlug,
+                server_target: re.server_target?.inputText || null
+              }).subscribe({
+                next: res => {
+                  this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_SUCCESS]', res);
+                  this.bs.idle();
+                  this.subsDialog = this.ds.openInfoDialog({
+                    data: {
+                      title: `Klaim Berhasil`,
+                      htmlMessage: `
+                        Domain '${res.result.name}' sudah didaftarkan dan dapat digunakan,
+                        silahkan migrasi domain pada situs penyedia layanan anda (ex. Blogger / Wordpress / etc.)
+                        kemudian tunggu hingga propagasi DNS selesai.
+                        Terima Kasih.
+                      `,
+                      confirmText: 'Tutup'
+                    },
+                    disableClose: true
+                  }).afterClosed().subscribe({
+                    next: r => {
+                      this.gs.log('[INFO_DIALOG_CLOSED]', r);
+                      this.getFansubDetail();
+                      this.subsDialog.unsubscribe();
+                    }
+                  });
+                },
+                error: err => {
+                  this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_ERROR]', err);
+                  this.bs.idle();
+                  this.getFansubDetail();
+                }
+              });
+            }
+            this.subsDialog.unsubscribe();
+          }
+        });
+      } else {
+        this.toast.warning('Anda Harus Menjadi Anggota Untuk Klaim SubDomain!', 'Whoops!');
+      }
+    } else {
+      this.router.navigate(['/login'], {
+        queryParams: {
+          returnUrl: this.router.url
         }
       });
-    } else {
-      this.toast.warning('Anda Harus Menjadi Anggota Untuk Klaim SubDomain!', 'Whoops!');
     }
   }
 
