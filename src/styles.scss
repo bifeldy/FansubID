@@ -632,3 +632,29 @@ re-captcha > div {
   50%  { opacity: .5; }
   100% { opacity: 1; }
 }
+
+.xng-breadcrumb-root, .xng-breadcrumb-trail {
+  font-size: small !important;
+  color: whitesmoke !important;
+}
+
+.xng-breadcrumb-link:hover {
+  color: #ffc107 !important;
+  text-decoration: none !important;
+}
+
+.xng-breadcrumb-list {
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  max-width: calc(100vw - 320px);
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  li {
+    display: inline-block;
+    flex: 0 0 auto;
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

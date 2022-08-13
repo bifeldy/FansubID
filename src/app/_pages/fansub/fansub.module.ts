@@ -42,19 +42,25 @@ const routes: Routes = [
     }
   },
   {
-    path: ':fansubSlug/edit',
-    component: FansubEditComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Fansub - Ubah Data',
-      description: 'Halaman Pembaharuan Data Fansub',
-      keywords: 'Ubah Fansub',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
-    }
-  },
-  {
     path: ':fansubSlug',
-    component: FansubDetailComponent
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: FansubDetailComponent
+      },
+      {
+        path: 'edit',
+        component: FansubEditComponent,
+        canActivate: [AuthGuard],
+        data: {
+          title: 'Fansub - Ubah Data',
+          description: 'Halaman Pembaharuan Data Fansub',
+          keywords: 'Ubah Fansub',
+          roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+        }
+      }
+    ]
   }
 ];
 

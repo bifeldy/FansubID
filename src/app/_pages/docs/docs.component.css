@@ -16,6 +16,7 @@
   background-repeat: no-repeat;
   background-size: contain;
   position: absolute;
+  z-index: -1;
 }
 
 .wrapper::before {
@@ -37,6 +38,7 @@
   background-size: contain;
   right: 64px;
   top: -8px;
+  z-index: -1;
 }
 
 .bg-bubbles {

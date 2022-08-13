@@ -34,26 +34,32 @@ const routes: Routes = [
     component: NewsCreateComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Berkas - Buat Baru',
-      description: 'Halaman Unggah Berkas Baru',
-      keywords: 'Tambah Berkas Baru',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
-    }
-  },
-  {
-    path: ':newsId/edit',
-    component: NewsEditComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Berkas - Ubah Data',
-      description: 'Halaman Pembaharuan Data Fansub',
-      keywords: 'Ubah Berkas',
+      title: 'Berita - Buat Baru',
+      description: 'Halaman Unggah Berita Baru',
+      keywords: 'Tambah Berita Baru',
       roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
     path: ':newsId',
-    component: NewsDetailComponent
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: NewsDetailComponent
+      },
+      {
+        path: 'edit',
+        component: NewsEditComponent,
+        canActivate: [AuthGuard],
+        data: {
+          title: 'Berita - Ubah Data',
+          description: 'Halaman Pembaharuan Data Berita',
+          keywords: 'Ubah Berita',
+          roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+        }
+      }
+    ]
   }
 ];
 

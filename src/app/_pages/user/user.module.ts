@@ -37,19 +37,25 @@ const routes: Routes = [
     }
   },
   {
-    path: ':username/edit',
-    component: UserEditComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'User - Ubah Profil',
-      description: 'Halaman Pembaharuan Profil Pengguna',
-      keywords: 'Ubah Profil',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
-    }
-  },
-  {
     path: ':username',
-    component: UserDetailComponent
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: UserDetailComponent
+      },
+      {
+        path: 'edit',
+        component: UserEditComponent,
+        canActivate: [AuthGuard],
+        data: {
+          title: 'User - Ubah Profil',
+          description: 'Halaman Pembaharuan Profil Pengguna',
+          keywords: 'Ubah Profil',
+          roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+        }
+      }
+    ]
   }
 ];
 

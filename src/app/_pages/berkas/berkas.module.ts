@@ -41,19 +41,25 @@ const routes: Routes = [
     }
   },
   {
-    path: ':berkasId/edit',
-    component: BerkasEditComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Berkas - Ubah Data',
-      description: 'Halaman Pembaharuan Data Fansub',
-      keywords: 'Ubah Berkas',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
-    }
-  },
-  {
     path: ':berkasId',
-    component: BerkasDetailComponent
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: BerkasDetailComponent,
+      },
+      {
+        path: 'edit',
+        component: BerkasEditComponent,
+        canActivate: [AuthGuard],
+        data: {
+          title: 'Berkas - Ubah Data',
+          description: 'Halaman Pembaharuan Data Fansub',
+          keywords: 'Ubah Berkas',
+          roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+        }
+      }
+    ]
   }
 ];
 

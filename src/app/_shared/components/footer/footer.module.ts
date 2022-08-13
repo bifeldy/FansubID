@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { BreadcrumbModule } from 'xng-breadcrumb';
+
 import { FooterComponent } from './footer.component';
 
 import { SharedMaterialModule } from '../../helpers/shared-material.module';
@@ -9,7 +11,8 @@ import { SharedMaterialModule } from '../../helpers/shared-material.module';
   declarations: [FooterComponent],
   imports: [
     CommonModule,
-    SharedMaterialModule
+    SharedMaterialModule,
+    BreadcrumbModule
   ],
   exports: [FooterComponent]
 })
