@@ -233,7 +233,7 @@ export class BerkasController {
             } else {
               mimeType += attachment.ext.toString().toLowerCase();
             }
-            this.gdrive.gDrive(res.locals['abort-controller'].signal, true).then(async (gdrive) => {
+            this.gdrive.gDrive(null, true).then(async (gdrive) => {
               const dfile = await gdrive.files.create({
                 requestBody: {
                   name: `${attachment.name.toString().toLowerCase()}.${attachment.ext.toString().toLowerCase()}`,
@@ -245,7 +245,7 @@ export class BerkasController {
                   body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
                 },
                 fields: 'id'
-              });
+              }, { signal: null });
               resAttachmentSave.google_drive = dfile.data.id;
               await this.attachmentRepo.save(resAttachmentSave);
               unlink(`${environment.uploadFolder}/${files[fIdx].name}`, (e) => {
