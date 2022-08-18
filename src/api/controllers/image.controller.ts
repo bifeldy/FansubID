@@ -68,6 +68,7 @@ export class ImageController {
       form.append('key', environment.imgbbKey);
       form.append('name', dateTime);
       form.append('image', imgB64);
+      // Multer Is 'Closing' Request Connection So The req.on('close', () => {}); Is Always Executed Before And AbortController Signal Not Usable Anymore
       const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader, null);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
