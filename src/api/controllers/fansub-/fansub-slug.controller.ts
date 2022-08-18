@@ -2,6 +2,8 @@ import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from
 import { Request, Response } from 'express';
 import { ILike } from 'typeorm';
 
+import { CONSTANTS } from '../../../constants';
+
 import { FansubService } from '../../repository/fansub.service';
 
 @Controller('/fansub-slug')
@@ -20,6 +22,14 @@ export class FansubSlugController {
     try {
       if ('slug' in req.body && req.body.slug) {
         const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
+        if (CONSTANTS.blacklistedWords.includes(slug.toLowerCase())) {
+          return {
+            info: '😅 202 - Fansub API :: Cek Fansub Slug Gagal 🥰',
+            result: {
+              message: `'${slug}' Tidak Dapat Digunakan`
+            }
+          };
+        }
         const selectedFansub = await this.fansubRepo.find({
           where: [
             { slug: ILike(slug) }

@@ -19,6 +19,7 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
     }
   ];
 
+  leaderBoardTotalPages = 1;
   leaderboardPage = 1;
 
   subsLeaderboard = null;
@@ -46,6 +47,7 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
     this.subsLeaderboard = this.qs.getQuizLeaderboard('', this.leaderboardPage).subscribe({
       next: res => {
         this.gs.log('[LEADERBOARD_LIST_SUCCESS]', res);
+        this.leaderBoardTotalPages = res.pages;
         this.leaderboardData = res.results;
       },
       error: err => {

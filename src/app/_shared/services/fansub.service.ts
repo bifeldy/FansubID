@@ -88,12 +88,12 @@ export class FansubService {
     return this.api.deleteData(`/fansub-member/${fansubMemberId}`);
   }
 
-  getAllSubDomain(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<any>> {
-    return this.api.getData(`/fansub-cname?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  getAllSubDomain(q = '', page = 1, row = 12, sort = '', order = ''): Observable<JsonResponseArray<any>> {
+    return this.api.getData(`/fansub-dns?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  claimSubDomain(cnameData): Observable<JsonResponse<any>> {
-    return this.api.postData(`/fansub-cname`, cnameData);
+  claimSubDomain(dnsData): Observable<JsonResponse<any>> {
+    return this.api.postData(`/fansub-dns`, dnsData);
   }
 
 }

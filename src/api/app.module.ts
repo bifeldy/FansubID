@@ -36,7 +36,7 @@ import { FansubController } from './controllers/fansub.controller';
 import { FansubAllController } from './controllers/fansub-/fansub-all.controller';
 import { FansubAnimeController } from './controllers/fansub-/fansub-anime.controller';
 import { FansubBerkasController } from './controllers/fansub-/fansub-berkas.controller';
-import { FansubCnameController } from './controllers/fansub-/fansub-cname.controller';
+import { FansubDnsController } from './controllers/fansub-/fansub-dns.controller';
 import { FansubDoramaController } from './controllers/fansub-/fansub-dorama.controller';
 import { FansubMemberController } from './controllers/fansub-/fansub-member.controller';
 import { FansubRssFeedActiveController } from './controllers/fansub-/fansub-rss-feed-active.controller';
@@ -164,7 +164,7 @@ import { UserService } from './repository/user.service';
     FansubAllController,
     FansubAnimeController,
     FansubBerkasController,
-    FansubCnameController,
+    FansubDnsController,
     FansubDoramaController,
     FansubMemberController,
     FansubRssFeedActiveController,

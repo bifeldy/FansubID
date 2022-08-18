@@ -5,6 +5,8 @@ import { ILike } from 'typeorm';
 
 import { environment } from '../../../environments/api/environment';
 
+import { CONSTANTS } from '../../../constants';
+
 import { RoleModel, UserModel } from '../../../models/req-res.model';
 
 import { Roles } from '../../decorators/roles.decorator';
@@ -15,8 +17,8 @@ import { FansubService } from '../../repository/fansub.service';
 import { CloudflareService } from '../../services/cloudflare.service';
 import { FansubMemberService } from '../../repository/fansub-member.service';
 
-@Controller('/fansub-cname')
-export class FansubCnameController {
+@Controller('/fansub-dns')
+export class FansubDnsController {
 
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
@@ -27,7 +29,7 @@ export class FansubCnameController {
     //
   }
 
-  // GET `/api/fansub-cname`
+  // GET `/api/fansub-dns`
   @Get('/')
   @HttpCode(200)
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
@@ -37,37 +39,40 @@ export class FansubCnameController {
       const queryRow = parseInt(req.query['row'] as string) || 10;
       const querySort = `${req.query['sort'] ? req.query['sort'] : 'name'}`;
       const queryOrder = `${req.query['order'] ? req.query['order'] : 'asc'}`;
-      const cnames = await this.cfs.getCnames(queryName, queryPage, queryRow, querySort, queryOrder);
-      if (cnames) {
-        const cns = [];
-        for (const c of cnames.results) {
+      const dnss = await this.cfs.getDnss(queryName, queryPage, queryRow, querySort, queryOrder);
+      if (dnss) {
+        const records = [];
+        for (const rec of dnss.results) {
+          const fansubSlug = rec.name.split(`.${environment.domain}`)[0];
+          if (CONSTANTS.blacklistedWords.includes(fansubSlug.toLowerCase())) {
+            continue;
+          }
           try {
-            const fansubSlug = c.name.split(`.${environment.domain}`)[0];
             let fansub = await this.fansubRepo.findOneOrFail({
               where: [
                 { slug: ILike(fansubSlug) }
               ]
             });
-            let isFansubCnameChanged = false;
-            if (fansub.cname_id !== c.id) {
-              fansub.cname_id = c.id;
-              isFansubCnameChanged = true;
+            let isFansubDnsChanged = false;
+            if (fansub.dns_id !== rec.id) {
+              fansub.dns_id = rec.id;
+              isFansubDnsChanged = true;
             }
             let isFansubUrlChanged = false;
             const fansubUrls = JSON.parse(fansub.urls);
             if (fansubUrls && Array.isArray(fansubUrls)) {
               const idx = fansubUrls.findIndex(u => u.name === 'web');
               if (idx >= 0) {
-                if (fansubUrls[idx].url !== c.name) {
-                  fansubUrls[idx].url = `https://${c.name}`;
+                if (fansubUrls[idx].url !== rec.name) {
+                  fansubUrls[idx].url = `https://${rec.name}`;
                   isFansubUrlChanged = true;
                 }
               } else {
-                fansubUrls.push({ name: 'web', url: `https://${c.name}` });
+                fansubUrls.push({ name: 'web', url: `https://${rec.name}` });
                 isFansubUrlChanged = true;
               }
             }
-            if (isFansubCnameChanged || isFansubUrlChanged) {
+            if (isFansubDnsChanged || isFansubUrlChanged) {
               if (isFansubUrlChanged) {
                 fansub.urls = JSON.stringify(fansubUrls);
               }
@@ -82,30 +87,30 @@ export class FansubCnameController {
             delete fansub.created_at;
             delete fansub.updated_at;
             delete fansub.user_;
-            c.fansub_ = fansub;
+            rec.fansub_ = fansub;
           } catch (e) {
-            c.fansub_ = null;
+            rec.fansub_ = null;
           }
-          cns.push({
-            id: c.id,
-            name: c.name,
-            content: c.content,
-            proxied: c.proxied,
-            ttl: c.ttl,
-            type: c.type,
-            created_at: c.created_on,
-            updated_at: c.modified_on,
-            fansub_: c.fansub_
+          records.push({
+            id: rec.id,
+            name: rec.name,
+            content: rec.type === 'A' ? '***.***.***.***' : rec.content,
+            proxied: rec.proxied,
+            ttl: rec.ttl,
+            type: rec.type,
+            created_at: rec.created_on,
+            updated_at: rec.modified_on,
+            fansub_: rec.fansub_
           });
         }
         const responseBody = {
-          info: `😅 ${cnames.status} - Cloudflare API :: List All CNAME 🤣`,
-          count: cnames.count,
-          pages: cnames.pages,
-          results: cns
+          info: `😅 ${dnss.status} - Cloudflare API :: List All DNS 🤣`,
+          count: dnss.count,
+          pages: dnss.pages,
+          results: records
         };
-        if (cns.length >= 0) {
-          this.cm.set(req.originalUrl, { status: cnames.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
+        if (records.length >= 0) {
+          this.cm.set(req.originalUrl, { status: dnss.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
         }
         return responseBody;
       }
@@ -168,16 +173,20 @@ export class FansubCnameController {
         if (serverTarget.startsWith('www.')) {
           serverTarget = serverTarget.slice(4, serverTarget.length);
         }
-        const cname = await this.cfs.createCname(fansub.slug, serverTarget);
-        if (cname.status >= 200 && cname.status < 300) {
-          fansub.cname_id = cname.result.id;
+        let recordType = 'CNAME';
+        if (serverTarget.match(CONSTANTS.regexIpAddress)) {
+          recordType = 'A';
+        }
+        const dns = await this.cfs.createDns(fansub.slug, serverTarget, recordType);
+        if (dns.status >= 200 && dns.status < 300) {
+          fansub.dns_id = dns.result.id;
           const fansubUrls = JSON.parse(fansub.urls);
           if (fansubUrls && Array.isArray(fansubUrls)) {
             const idx = fansubUrls.findIndex(u => u.name === 'web');
             if (idx >= 0) {
-              fansubUrls[idx].url = `https://${cname.result.name}`;
+              fansubUrls[idx].url = `https://${dns.result.name}`;
             } else {
-              fansubUrls.push({ name: 'web', url: `https://${cname.result.name}` });
+              fansubUrls.push({ name: 'web', url: `https://${dns.result.name}` });
             }
           }
           fansub.urls = JSON.stringify(fansubUrls);
@@ -193,24 +202,24 @@ export class FansubCnameController {
           delete fansub.updated_at;
           delete fansub.user_;
           return {
-            info: `😅 ${cname.status} - Cloudflare API :: Pendaftaran SubDomain Berhasil 🥰`,
+            info: `😅 ${dns.status} - Cloudflare API :: Pendaftaran SubDomain Berhasil 🥰`,
             result: {
-              id: cname.result.id,
-              name: cname.result.name,
-              content: cname.result.content,
-              proxied: cname.result.proxied,
-              ttl: cname.result.ttl,
-              type: cname.result.type,
-              created_at: cname.result.created_on,
-              updated_at: cname.result.modified_on,
+              id: dns.result.id,
+              name: dns.result.name,
+              content: dns.result.content,
+              proxied: dns.result.proxied,
+              ttl: dns.result.ttl,
+              type: dns.result.type,
+              created_at: dns.result.created_on,
+              updated_at: dns.result.modified_on,
               fansub_: fansub
             }
           };
         } else {
           throw new HttpException({
-            info: `🙄 ${cname.status} - Cloudflare API :: Gagal Menggunakan SubDomain 😪`,
-            result: cname.result
-          }, cname.status);
+            info: `🙄 ${dns.status} - Cloudflare API :: Gagal Menggunakan SubDomain 😪`,
+            result: dns.result
+          }, dns.status);
         }
       }
       throw new Error('Data Tidak Lengkap!');

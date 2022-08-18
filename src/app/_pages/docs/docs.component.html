@@ -80,7 +80,7 @@
           </div>
           <div class="col-12">
             <div class="row px-3">
-              <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let c of cnameData">
+              <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let c of dnsData">
                 <mat-card class="gradient-border rgb-border">
                   <mat-card-header routerLink="/fansub/{{ c.fansub_?.slug }}" style="cursor: pointer;">
                     <div mat-card-avatar style="background-size: cover;"
@@ -96,10 +96,10 @@
             </div>
             <div class="row">
               <div class="col-12 text-end">
-                <button mat-button color="accent" (click)="prevCname()" [disabled]="cnamePage <= 1">
+                <button mat-button color="accent" (click)="prevDns()" [disabled]="dnsPage <= 1">
                   <mat-icon>navigate_before</mat-icon>
                 </button>
-                <button mat-button color="accent" (click)="nextCname()" [disabled]="cnameData.length < 10">
+                <button mat-button color="accent" (click)="nextDns()" [disabled]="dnsPage >= dnsTotalPages">
                   <mat-icon>navigate_next</mat-icon>
                 </button>
               </div>

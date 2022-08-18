@@ -90,6 +90,14 @@ export class FansubController {
       ) {
         const user: UserModel = res.locals['user'];
         const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
+        if (CONSTANTS.blacklistedWords.includes(slug.toLowerCase())) {
+          throw new HttpException({
+            info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
+            result: {
+              message: `'${slug}' Tidak Dapat Digunakan`
+            }
+          }, HttpStatus.BAD_REQUEST);
+        }
         const selectedFansub = await this.fansubRepo.find({
           where: [
             { slug: ILike(slug) }
@@ -255,7 +263,7 @@ export class FansubController {
             user = member.user_;
           } catch (e) {
             throw new HttpException({
-              info: `😅 403 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 🥰`,
+              info: `🙄 403 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
               result: {
                 message: `Anda Harus Menjadi Anggota Untuk Mengubah Data!`
               }
@@ -264,16 +272,24 @@ export class FansubController {
         }
         if ('slug' in req.body) {
           const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
+          if (CONSTANTS.blacklistedWords.includes(newSlug.toLowerCase())) {
+            throw new HttpException({
+              info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
+              result: {
+                message: `'${newSlug}' Tidak Dapat Digunakan`
+              }
+            }, HttpStatus.BAD_REQUEST);
+          }
           const selectedFansub = await this.fansubRepo.find({
             where: [
               { slug: ILike(newSlug) }
             ]
           });
-          if (selectedFansub.length === 0 && !fansub.cname_id) {
+          if (selectedFansub.length === 0 && !fansub.dns_id) {
             fansub.slug = newSlug;
           } else {
             throw new HttpException({
-              info: `😅 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 🥰`,
+              info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
               result: {
                 message: `'${newSlug}' Sudah Terpakai / Terikat Domain`
               }

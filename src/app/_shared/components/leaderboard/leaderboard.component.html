@@ -25,7 +25,7 @@
         <button mat-button color="accent" (click)="prevBoard()" [disabled]="leaderboardPage <= 1">
           <mat-icon>navigate_before</mat-icon>
         </button>
-        <button mat-button color="accent" (click)="nextBoard()" [disabled]="leaderboardData.length < 10">
+        <button mat-button color="accent" (click)="nextBoard()" [disabled]="leaderboardPage >= leaderBoardTotalPages">
           <mat-icon>navigate_next</mat-icon>
         </button>
       </div>

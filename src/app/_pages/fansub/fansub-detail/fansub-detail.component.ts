@@ -457,7 +457,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         };
         this.subsDialog = this.ds.openInputDialog({
           data: {
-            title: `Destinasi Server Terget`,
+            title: `CNAME / A IPv4`,
             input: userInput,
             confirmText: 'OK',
             cancelText: 'Batal'

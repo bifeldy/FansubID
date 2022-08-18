@@ -1,4 +1,9 @@
 export const CONSTANTS = {
+  blacklistedWords: [
+    '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id',
+    'localhost', 'mail', 'email', 'e-mail', 'tracker',
+    'ferdion', 'bifeldy', 'dev', 'api', 'docs'
+  ],
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
@@ -8,6 +13,7 @@ export const CONSTANTS = {
   jwtExpiredIn: 24 * 60 * 60,
   quizOptionsCountHirakata: 5,
   quizOptionsCountKanji: 6,
+  regexIpAddress: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   regexAllKeyboardKeys: /^[\P{Cc}\P{Cn}\P{Cs}]*$/,
   regexEmail: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
   regexEnglishKeyboardKeys: /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/,

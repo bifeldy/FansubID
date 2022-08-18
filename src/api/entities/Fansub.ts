@@ -44,7 +44,7 @@ export class Fansub implements FansubModel {
   like_count: number;
 
   @Column({ type: 'text', nullable: true })
-  cname_id: string;
+  dns_id: string;
 
   @Column({ type: 'boolean', default: true })
   editable: boolean;

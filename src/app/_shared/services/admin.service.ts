@@ -29,8 +29,8 @@ export class AdminService {
       deskripsi: 'Kelola Berkas DDL'
     },
     {
-      url: 'cnames',
-      name: 'CNAME SubDomain',
+      url: 'dns',
+      name: 'CNAME / A Record DNS',
       image_url: null,
       icon: 'badge',
       deskripsi: `sub-domain.${environment.domain}`

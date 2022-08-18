@@ -13,12 +13,13 @@ import { InformationService } from '../../_shared/services/information.service';
 })
 export class DocsComponent implements OnInit {
 
-  cnameData = [];
+  dnsData = [];
   tutorialData = null;
 
-  cnamePage = 1;
+  dnsTotalPages = 1;
+  dnsPage = 1;
 
-  subsCname = null;
+  subsDns = null;
   subsTutorial = null;
 
   constructor(
@@ -37,24 +38,25 @@ export class DocsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.getCname();
+      this.getDns();
       this.getTutorial();
     }
   }
 
   ngOnDestroy(): void {
-    this.subsCname?.unsubscribe();
+    this.subsDns?.unsubscribe();
     this.subsTutorial?.unsubscribe();
   }
 
-  getCname(): void {
-    this.subsCname = this.fansub.getAllSubDomain('', this.cnamePage).subscribe({
+  getDns(): void {
+    this.subsDns = this.fansub.getAllSubDomain('', this.dnsPage).subscribe({
       next: res => {
-        this.gs.log('[CNAMES_LIST_SUCCESS]', res);
-        this.cnameData = res.results;
+        this.gs.log('[DNSS_LIST_SUCCESS]', res);
+        this.dnsTotalPages = res.pages;
+        this.dnsData = res.results;
       },
       error: err => {
-        this.gs.log('[CNAMES_LIST_ERROR]', err);
+        this.gs.log('[DNSS_LIST_ERROR]', err);
       }
     });
   }
@@ -71,17 +73,17 @@ export class DocsComponent implements OnInit {
     });
   }
 
-  prevCname(): void {
-    this.cnamePage--;
-    if (this.cnamePage <= 0) {
-      this.cnamePage = 1;
+  prevDns(): void {
+    this.dnsPage--;
+    if (this.dnsPage <= 0) {
+      this.dnsPage = 1;
     }
-    this.getCname();
+    this.getDns();
   }
 
-  nextCname(): void {
-    this.cnamePage++;
-    this.getCname();
+  nextDns(): void {
+    this.dnsPage++;
+    this.getDns();
   }
 
 }
