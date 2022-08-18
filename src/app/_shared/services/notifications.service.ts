@@ -31,6 +31,7 @@ export class NotificationsService {
   ];
 
   dissmissTimeout = {};
+  timedOut = null;
 
   constructor(
     private gs: GlobalService
@@ -62,7 +63,7 @@ export class NotificationsService {
       this.dissmissTimeout[id] = null;
       delete this.dissmissTimeout[id];
     }
-    setTimeout(() => {
+    this.timedOut = setTimeout(() => {
       const verifyNotifIdx = this.notifications.findIndex(n => n.notifData.id === id);
       if (verifyNotifIdx >= 0) {
         this.notifications = this.notifications.slice(0, verifyNotifIdx).concat(

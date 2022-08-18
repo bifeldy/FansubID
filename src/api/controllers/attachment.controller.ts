@@ -143,7 +143,7 @@ export class AttachmentController {
           delete resAttachmentSave.user_.updated_at;
         }
         this.sr.addTimeout(
-          CONSTANTS.timeoutDeleteTempAttachmentKey,
+          `${CONSTANTS.timeoutDeleteTempAttachmentKey}-${new Date().getTime()}`,
           setTimeout(async () => {
             try {
               const attachmentToBeDeleted = await this.tempAttachmentRepo.findOneOrFail({

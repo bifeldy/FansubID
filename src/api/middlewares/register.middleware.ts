@@ -98,7 +98,7 @@ export class RegisterMiddleware implements NestMiddleware {
             penggunaSave = await this.registrationRepo.save(pengguna);
             res.locals['registration'] = penggunaSave;
             this.sr.addTimeout(
-              CONSTANTS.timeoutCancelRegisterKey,
+              `${CONSTANTS.timeoutCancelRegisterKey}-${new Date().getTime()}`,
               setTimeout(async () => {
                 try {
                   const registrationToBeDeleted = await this.registrationRepo.findOneOrFail({

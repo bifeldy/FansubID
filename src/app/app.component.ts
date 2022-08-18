@@ -46,6 +46,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   subsVerify = null;
   subsDialog = null;
 
+  timedOut = null;
+
   constructor(
     private renderer: Renderer2,
     private router: Router,
@@ -90,6 +92,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subsUrl?.unsubscribe();
     this.subsVerify?.unsubscribe();
     this.subsDialog?.unsubscribe();
+    if (this.timedOut) {
+      clearTimeout(this.timedOut);
+      this.timedOut = null;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -189,7 +195,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
       const aturanTatib = this.ls.getItem(this.gs.localStorageKeys.AturanTatib) === 'true';
       if (!aturanTatib) {
-        setTimeout(async () => {
+        this.timedOut = setTimeout(async () => {
           this.subsDialog = (await this.ds.openAturanTatibDialog()).afterClosed().subscribe({
             next: re => {
               this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);

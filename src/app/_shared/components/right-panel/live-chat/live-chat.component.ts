@@ -39,6 +39,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   subsFansubRoom = null;
 
   firstTimeOpen = true;
+  timedOut = null;
 
   constructor(
     private as: AuthService,
@@ -141,6 +142,10 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subsUser?.unsubscribe();
     this.subsCurrentRoom?.unsubscribe();
     this.subsGlobalRoom?.unsubscribe();
+    if (this.timedOut) {
+      clearTimeout(this.timedOut);
+      this.timedOut = null;
+    }
   }
 
   innerHtml(text: string): string {
@@ -148,7 +153,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scrollToBottom(): void {
-    setTimeout(() => {
+    this.timedOut = setTimeout(() => {
       this.ss.messageChatUnreadCount = 0;
       this.liveChatScroll.nativeElement.scrollTop = this.liveChatScroll.nativeElement.scrollHeight;
     }, 0);

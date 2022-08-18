@@ -61,6 +61,8 @@ export class StatsServerService {
   subsServer = null;
   subsDialog = null;
 
+  timedOut = null;
+
   constructor(
     private as: AuthService,
     private router: Router,
@@ -135,7 +137,7 @@ export class StatsServerService {
       this.gs.log('[SOCKET_CONNECTED]', this.mySocket.id);
       this.pingPong();
       this.notif.removeNotif(`${environment.siteName.toUpperCase()}_SOCKET_DISCONNECTED`);
-      setTimeout(() => {
+      this.timedOut = setTimeout(() => {
         this.socketLeaveAndJoinNewRoom(null, this.router.url);
       }, 1234);
     });

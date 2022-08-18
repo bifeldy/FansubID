@@ -38,6 +38,14 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   subsPengguna = null;
   subsDialog = null;
 
+  timedOut1 = null;
+  timedOut2 = null;
+  timedOut3 = null;
+  timedOut4 = null;
+  timedOut5 = null;
+  timedOut6 = null;
+  timedOut7 = null;
+
   constructor(
     private gs: GlobalService,
     private news: NewsService,
@@ -71,6 +79,34 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.subsBerkas?.unsubscribe();
     this.subsPengguna?.unsubscribe();
     this.subsDialog?.unsubscribe();
+    if (this.timedOut1) {
+      clearTimeout(this.timedOut1);
+      this.timedOut1 = null;
+    }
+    if (this.timedOut2) {
+      clearTimeout(this.timedOut2);
+      this.timedOut2 = null;
+    }
+    if (this.timedOut3) {
+      clearTimeout(this.timedOut3);
+      this.timedOut3 = null;
+    }
+    if (this.timedOut4) {
+      clearTimeout(this.timedOut4);
+      this.timedOut4 = null;
+    }
+    if (this.timedOut5) {
+      clearTimeout(this.timedOut5);
+      this.timedOut5 = null;
+    }
+    if (this.timedOut6) {
+      clearTimeout(this.timedOut6);
+      this.timedOut6 = null;
+    }
+    if (this.timedOut7) {
+      clearTimeout(this.timedOut7);
+      this.timedOut7 = null;
+    }
   }
 
   applyFilter(event): void {
@@ -84,13 +120,13 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.searchResult.berkasResults = [];
     this.searchResult.penggunaResults = [];
     if (this.searchResult.q) {
-      setTimeout(() => { this.getNews(); }, 250);
-      setTimeout(() => { this.getKanji(); }, 500);
-      setTimeout(() => { this.getAnime(); }, 750);
-      setTimeout(() => { this.getDorama(); }, 1000);
-      setTimeout(() => { this.getFansub(); }, 1250);
-      setTimeout(() => { this.getBerkas(); }, 1500);
-      setTimeout(() => { this.getPengguna(); }, 1750);
+      this.timedOut1 = setTimeout(() => { this.getNews(); }, 250);
+      this.timedOut2 = setTimeout(() => { this.getKanji(); }, 500);
+      this.timedOut3 = setTimeout(() => { this.getAnime(); }, 750);
+      this.timedOut4 = setTimeout(() => { this.getDorama(); }, 1000);
+      this.timedOut5 = setTimeout(() => { this.getFansub(); }, 1250);
+      this.timedOut6 = setTimeout(() => { this.getBerkas(); }, 1500);
+      this.timedOut7 = setTimeout(() => { this.getPengguna(); }, 1750);
     }
   }
 
