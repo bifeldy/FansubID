@@ -18,7 +18,7 @@ export class ApiKeyMiddleware implements NestMiddleware {
     const key = req.query['key'] || '';
     const origin = this.aks.getOriginIp(req);
     this.gs.log('[API_KEY_MIDDLEWARE-ORIGIN_KEY] 🌸', `${key} @ ${origin}`);
-    if (!req.originalUrl.includes('/api')) {
+    if (!req.originalUrl.includes('/api') || req.originalUrl.includes('/api/aktivasi')) {
       return next();
     }
     if (await this.aks.checkKey(origin, key as any)) {
