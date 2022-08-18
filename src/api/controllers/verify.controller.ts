@@ -29,6 +29,8 @@ export class VerifyController {
         expires: new Date(this.cs.jwtView(token).exp * 1000),
         domain: environment.domain
       });
+      (user as any).__email = (user as any)._email;
+      delete user.email;
       delete user.password;
       delete user.session_token;
       delete user.kartu_tanda_penduduk_.id;

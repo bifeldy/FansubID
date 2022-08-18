@@ -41,7 +41,7 @@ export class AnimeController {
       const url = new URL(`${environment.externalApiAnime}/anime`);
       url.searchParams.append('q', searchQuery as string);
       url.searchParams.append('type', searchType as string);
-      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
+      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
@@ -138,7 +138,7 @@ export class AnimeController {
     const malId = req.params['malSlug'].split('-')[0];
     try {
       const url = new URL(`${environment.externalApiAnime}/anime/${malId}`);
-      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
+      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);

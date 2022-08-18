@@ -68,14 +68,14 @@ export class FansubMemberController {
           delete member.fansub_.user_;
         }
         if ('user_' in member && member.user_) {
-          delete member.user_.role;
+          delete member.user_.email;
           delete member.user_.password;
           delete member.user_.session_token;
           delete member.user_.created_at;
           delete member.user_.updated_at;
         }
         if ('approved_by_' in member && member.approved_by_) {
-          delete member.approved_by_.role;
+          delete member.approved_by_.email;
           delete member.approved_by_.password;
           delete member.approved_by_.session_token;
           delete member.approved_by_.created_at;
@@ -143,14 +143,14 @@ export class FansubMemberController {
             delete resMemberSave.fansub_.user_;
           }
           if ('user_' in resMemberSave && resMemberSave.user_) {
-            delete resMemberSave.user_.role;
+            delete resMemberSave.user_.email;
             delete resMemberSave.user_.password;
             delete resMemberSave.user_.session_token;
             delete resMemberSave.user_.created_at;
             delete resMemberSave.user_.updated_at;
           }
           if ('approved_by_' in resMemberSave && resMemberSave.approved_by_) {
-            delete resMemberSave.approved_by_.role;
+            delete resMemberSave.approved_by_.email;
             delete resMemberSave.approved_by_.password;
             delete resMemberSave.approved_by_.session_token;
             delete resMemberSave.approved_by_.created_at;
@@ -267,14 +267,14 @@ export class FansubMemberController {
             delete resMember.fansub_.user_;
           }
           if ('user_' in resMember && resMember.user_) {
-            delete resMember.user_.role;
+            delete resMember.user_.email;
             delete resMember.user_.password;
             delete resMember.user_.session_token;
             delete resMember.user_.created_at;
             delete resMember.user_.updated_at;
           }
           if ('approved_by_' in resMember && resMember.approved_by_) {
-            delete resMember.approved_by_.role;
+            delete resMember.approved_by_.email;
             delete resMember.approved_by_.password;
             delete resMember.approved_by_.session_token;
             delete resMember.approved_by_.created_at;
@@ -334,14 +334,14 @@ export class FansubMemberController {
           delete resMemberLeave.fansub_.user_;
         }
         if ('user_' in resMemberLeave && resMemberLeave.user_) {
-          delete resMemberLeave.user_.role;
+          delete resMemberLeave.user_.email;
           delete resMemberLeave.user_.password;
           delete resMemberLeave.user_.session_token;
           delete resMemberLeave.user_.created_at;
           delete resMemberLeave.user_.updated_at;
         }
         if ('approved_by_' in resMemberLeave && resMemberLeave.approved_by_) {
-          delete resMemberLeave.approved_by_.role;
+          delete resMemberLeave.approved_by_.email;
           delete resMemberLeave.approved_by_.password;
           delete resMemberLeave.approved_by_.session_token;
           delete resMemberLeave.approved_by_.created_at;

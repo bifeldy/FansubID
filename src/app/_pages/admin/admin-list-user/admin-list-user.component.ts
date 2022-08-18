@@ -99,7 +99,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 Role: r.role,
                 Image: r.image_url,
                 Username: r.username,
-                Email: r.email,
+                Email: r.__email,
                 'Nama Lengkap': r.kartu_tanda_penduduk_.nama,
                 banned: (Object.keys(result.results[r.id]).length > 0),
                 Aksi: (
@@ -107,11 +107,11 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                   (r.id == this.currentUser.id) ||
                   this.gs.includesOneOf(r.role, excludedRole)
                 ) ? [] : [
-                  { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username, email: r.email },
-                  { type: 'button', icon: 'handyman', name: 'ADMIN', id: r.id, username: r.username, email: r.email },
-                  { type: 'button', icon: 'security', name: 'MODERATOR', id: r.id, username: r.username, email: r.email },
-                  { type: 'button', icon: 'rate_review', name: 'FANSUBBER', id: r.id, username: r.username, email: r.email },
-                  { type: 'button', icon: 'person', name: 'USER', id: r.id, username: r.username, email: r.email }
+                  { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username },
+                  { type: 'button', icon: 'handyman', name: 'ADMIN', id: r.id, username: r.username },
+                  { type: 'button', icon: 'security', name: 'MODERATOR', id: r.id, username: r.username },
+                  { type: 'button', icon: 'rate_review', name: 'FANSUBBER', id: r.id, username: r.username },
+                  { type: 'button', icon: 'person', name: 'USER', id: r.id, username: r.username }
                 ]
               });
             }
@@ -145,7 +145,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     this.gs.log('[USER_LIST_CLICK_BAN]', data);
     this.subsDialog = this.ds.openInputDialog({
       data: {
-        title: `BAN Akun -- '${data.username}' :: '${data.email}'`,
+        title: `BAN Akun -- '${data.username}'`,
         input: {
           reason: {
             inputLabel: 'Alasan',
@@ -192,7 +192,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     this.gs.log('[USER_LIST_CLICK_PROMOTE]', data);
     this.subsDialog = this.ds.openInfoDialog({
       data: {
-        title: `Promosikan Akun -- '${data.username}' :: '${data.email}'`,
+        title: `Promosikan Akun -- '${data.username}'`,
         htmlMessage: 'Apakah Yakin Dan Akun Telah Direview Sebelum Dipromosikan ?',
         confirmText: `Ya, Jadikan ${data.name}`,
         cancelText: 'Tidak, Batal'

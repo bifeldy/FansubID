@@ -94,8 +94,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
               icon: 'lock_open',
               name: 'UnBAN',
               id: r.id,
-              username: r.user_.username,
-              email: r.user_.email
+              username: r.user_.username
             }]
           });
         }
@@ -113,7 +112,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     this.gs.log('[BANNED_LIST_CLICK_UNBAN]', data);
     this.subsDialog = this.ds.openInfoDialog({
       data: {
-        title: `UnBAN Akun -- '${data.username}' :: '${data.email}'`,
+        title: `UnBAN Akun -- '${data.username}'`,
         htmlMessage: 'Apakah Yakin Dan Akun Telah Direview Sebelum UnBAN ?',
         confirmText: 'Ya, Un-BAN Akun',
         cancelText: 'Tidak, Batal'

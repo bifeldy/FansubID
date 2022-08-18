@@ -2,23 +2,47 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { AbortController } from 'abort-controller';
 
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { urlencoded, json } from 'express';
+import { urlencoded, json, Request, Response, NextFunction } from 'express';
 
 import { SocketIoAdapter } from './adapters/socket-io.adapter';
 
 import { AppModule } from './app.module';
 
+import { CONSTANTS } from '../constants';
+
 import { ApiKeyService } from './repository/api-key.service';
 import { GlobalService } from './services/global.service';
+import { SocketIoService } from './services/socket-io.service';
 
 let gs: GlobalService = null;
+let aks: ApiKeyService = null;
+let sis: SocketIoService = null;
+
+function reqResEvent(req: Request, res: Response, next: NextFunction) {
+  const timeStart = new Date();
+  res.locals['abort-controller'] = new AbortController();
+  req.on('close', () => {
+    res.locals['abort-controller'].abort();
+  });
+  res.on('close', () => {
+    const remoteAddress = aks.getOriginIp(req, true);
+    const timeEnd = new Date().getTime() - timeStart.getTime();
+    const reqResInfo = `${remoteAddress} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
+    sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
+  });
+  return next();
+}
 
 // The Nest app is exported so that it can be used by serverless Functions.
 export async function app(): Promise<INestApplication> {
   const nestApp = await NestFactory.create(AppModule);
+  gs = nestApp.select(AppModule).get(GlobalService);
+  aks = nestApp.select(AppModule).get(ApiKeyService);
+  sis = nestApp.select(AppModule).get(SocketIoService);
   nestApp.setGlobalPrefix('api');
   nestApp.getHttpAdapter().getInstance().set('trust proxy', true);
   nestApp.use(helmet({
@@ -42,9 +66,9 @@ export async function app(): Promise<INestApplication> {
   nestApp.use(cookieParser());
   nestApp.use(json({ limit: '512mb' }));
   nestApp.use(urlencoded({ extended: false, limit: '512mb' }));
-  nestApp.enableCors(nestApp.select(AppModule).get(ApiKeyService).getCorsOptions());
+  nestApp.enableCors(aks.getCorsOptions());
   nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
-  gs = nestApp.select(AppModule).get(GlobalService);
+  nestApp.use(reqResEvent);
   return nestApp;
 }
 

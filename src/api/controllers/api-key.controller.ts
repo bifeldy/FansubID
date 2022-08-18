@@ -60,7 +60,7 @@ export class ApiKeyController {
           }
           for (const c of corss) {
             if ('user_' in c && c.user_) {
-              delete c.user_.role;
+              delete c.user_.email;
               delete c.user_.password;
               delete c.user_.session_token;
               delete c.user_.created_at;
@@ -99,7 +99,7 @@ export class ApiKeyController {
           });
           for (const c of corss) {
             if ('user_' in c && c.user_) {
-              delete c.user_.role;
+              delete c.user_.email;
               delete c.user_.password;
               delete c.user_.session_token;
               delete c.user_.created_at;
@@ -170,7 +170,7 @@ export class ApiKeyController {
           cors.user_ = user;
           const resCorsSave = await this.apiKeyRepo.save(cors);
           if ('user_' in resCorsSave && resCorsSave.user_) {
-            delete resCorsSave.user_.role;
+            delete resCorsSave.user_.email;
             delete resCorsSave.user_.password;
             delete resCorsSave.user_.session_token;
             delete resCorsSave.user_.created_at;
@@ -218,7 +218,7 @@ export class ApiKeyController {
           }
           const resCorsSave = await this.apiKeyRepo.save(cors);
           if ('user_' in resCorsSave && resCorsSave.user_) {
-            delete resCorsSave.user_.role;
+            delete resCorsSave.user_.email;
             delete resCorsSave.user_.password;
             delete resCorsSave.user_.session_token;
             delete resCorsSave.user_.created_at;
@@ -271,7 +271,7 @@ export class ApiKeyController {
       });
       const revokedUser = await this.apiKeyRepo.remove(cors);
       if ('user_' in revokedUser && revokedUser.user_) {
-        delete revokedUser.user_.role;
+        delete revokedUser.user_.email;
         delete revokedUser.user_.password;
         delete revokedUser.user_.session_token;
         delete revokedUser.user_.created_at;

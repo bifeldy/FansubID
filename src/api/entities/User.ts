@@ -1,3 +1,4 @@
+import { Exclude, Expose } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 
 import { KartuTandaPendudukModel, ProfileModel, RoleModel, UserModel } from '../../models/req-res.model';
@@ -14,6 +15,7 @@ export class User implements UserModel {
   @Column({ type: 'varchar', length: 255, unique: true })
   username: string;
 
+  @Exclude()
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
@@ -23,6 +25,7 @@ export class User implements UserModel {
   @Column({ type: 'enum', enum: RoleModel, default: RoleModel.USER })
   role: RoleModel;
 
+  @Exclude()
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
@@ -32,6 +35,7 @@ export class User implements UserModel {
   @Column({ type: 'varchar', nullable: true, default: null, unique: true })
   discord: string;
 
+  @Exclude()
   @Column({ type: 'text', nullable: true })
   session_token: string;
 
@@ -48,4 +52,10 @@ export class User implements UserModel {
   @OneToOne(type => Profile)
   @JoinColumn()
   profile_: ProfileModel;
+
+  @Expose()
+  get _email(): string {
+    return this.email;
+  }
+
 }

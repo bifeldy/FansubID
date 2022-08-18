@@ -129,7 +129,7 @@ export class FansubController {
           }
           const resFansubSave = await this.fansubRepo.save(fansub);
           if ('user_' in resFansubSave && resFansubSave.user_) {
-            delete resFansubSave.user_.role;
+            delete resFansubSave.user_.email;
             delete resFansubSave.user_.password;
             delete resFansubSave.user_.session_token;
             delete resFansubSave.user_.created_at;
@@ -194,7 +194,7 @@ export class FansubController {
       fansub.urls = JSON.parse(fansub.urls);
       fansub.tags = JSON.parse(fansub.tags);
       if ('user_' in fansub && fansub.user_) {
-        delete fansub.user_.role;
+        delete fansub.user_.email;
         delete fansub.user_.password;
         delete fansub.user_.session_token;
         delete fansub.user_.created_at;
@@ -317,7 +317,7 @@ export class FansubController {
         fansub.user_ = user;
         const resFansubSave = await this.fansubRepo.save(fansub);
         if ('user_' in resFansubSave && resFansubSave.user_) {
-          delete resFansubSave.user_.role;
+          delete resFansubSave.user_.email;
           delete resFansubSave.user_.password;
           delete resFansubSave.user_.session_token;
           delete resFansubSave.user_.created_at;
@@ -377,7 +377,7 @@ export class FansubController {
       });
       const deletedFansub = await this.fansubRepo.remove(fansub);
       if ('user_' in deletedFansub && deletedFansub.user_) {
-        delete deletedFansub.user_.role;
+        delete deletedFansub.user_.email;
         delete deletedFansub.user_.password;
         delete deletedFansub.user_.session_token;
         delete deletedFansub.user_.created_at;
@@ -430,14 +430,14 @@ export class FansubController {
           delete member.fansub_.user_;
         }
         if ('user_' in member && member.user_) {
-          delete member.user_.role;
+          delete member.user_.email;
           delete member.user_.password;
           delete member.user_.session_token;
           delete member.user_.created_at;
           delete member.user_.updated_at;
         }
         if ('approved_by_' in member && member.approved_by_) {
-          delete member.approved_by_.role;
+          delete member.approved_by_.email;
           delete member.approved_by_.password;
           delete member.approved_by_.session_token;
           delete member.approved_by_.created_at;

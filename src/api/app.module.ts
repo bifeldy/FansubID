@@ -80,6 +80,7 @@ import { RateLimitGuard } from './guards/rate-limit.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { VerifiedGuard } from './guards/verified.guard';
 
+import { ExcludeFieldInterceptor } from './interceptors/exclude-field.interceptor';
 import { ReqResInterceptor } from './interceptors/req-res.interceptor';
 
 import { HttpExceptionFilter } from './filters/http-exception.filter';
@@ -201,6 +202,7 @@ import { UserService } from './repository/user.service';
     { provide: APP_GUARD, useClass: RateLimitGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: VerifiedGuard },
+    { provide: APP_INTERCEPTOR, useClass: ExcludeFieldInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ReqResInterceptor },
     {
       provide: APP_INTERCEPTOR,

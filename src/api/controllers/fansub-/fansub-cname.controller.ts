@@ -37,7 +37,7 @@ export class FansubCnameController {
       const queryRow = parseInt(req.query['row'] as string) || 10;
       const querySort = `${req.query['sort'] ? req.query['sort'] : 'name'}`;
       const queryOrder = `${req.query['order'] ? req.query['order'] : 'asc'}`;
-      const cnames = await this.cfs.getCnames(res.locals['abort-controller'].signal, queryName, queryPage, queryRow, querySort, queryOrder);
+      const cnames = await this.cfs.getCnames(queryName, queryPage, queryRow, querySort, queryOrder);
       if (cnames) {
         const cns = [];
         for (const c of cnames.results) {
@@ -168,7 +168,7 @@ export class FansubCnameController {
         if (serverTarget.startsWith('www.')) {
           serverTarget = serverTarget.slice(4, serverTarget.length);
         }
-        const cname = await this.cfs.createCname(res.locals['abort-controller'].signal, fansub.slug, serverTarget);
+        const cname = await this.cfs.createCname(fansub.slug, serverTarget);
         if (cname.status >= 200 && cname.status < 300) {
           fansub.cname_id = cname.result.id;
           const fansubUrls = JSON.parse(fansub.urls);

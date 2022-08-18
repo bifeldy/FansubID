@@ -78,14 +78,14 @@ export class LikedislikeController {
           delete l.fansub_.updated_at;
         }
         if ('user_' in l && l.user_) {
-          delete l.user_.role;
+          delete l.user_.email;
           delete l.user_.password;
           delete l.user_.session_token;
           delete l.user_.created_at;
           delete l.user_.updated_at;
         }
         if ('report_by_' in l && l.report_by_) {
-          delete l.report_by_.role;
+          delete l.report_by_.email;
           delete l.report_by_.password;
           delete l.report_by_.session_token;
           delete l.report_by_.created_at;
@@ -135,14 +135,14 @@ export class LikedislikeController {
         delete deletedLikedislike.fansub_.updated_at;
       }
       if ('user_' in deletedLikedislike && deletedLikedislike.user_) {
-        delete deletedLikedislike.user_.role;
+        delete deletedLikedislike.user_.email;
         delete deletedLikedislike.user_.password;
         delete deletedLikedislike.user_.session_token;
         delete deletedLikedislike.user_.created_at;
         delete deletedLikedislike.user_.updated_at;
       }
       if ('report_by_' in deletedLikedislike && deletedLikedislike.report_by_) {
-        delete deletedLikedislike.report_by_.role;
+        delete deletedLikedislike.report_by_.email;
         delete deletedLikedislike.report_by_.password;
         delete deletedLikedislike.report_by_.session_token;
         delete deletedLikedislike.report_by_.created_at;
@@ -243,14 +243,14 @@ export class LikedislikeController {
           delete resLdlSave.fansub_.updated_at;
         }
         if ('user_' in resLdlSave && resLdlSave.user_) {
-          delete resLdlSave.user_.role;
+          delete resLdlSave.user_.email;
           delete resLdlSave.user_.password;
           delete resLdlSave.user_.session_token;
           delete resLdlSave.user_.created_at;
           delete resLdlSave.user_.updated_at;
         }
         if ('report_by_' in resLdlSave && resLdlSave.report_by_) {
-          delete resLdlSave.report_by_.role;
+          delete resLdlSave.report_by_.email;
           delete resLdlSave.report_by_.password;
           delete resLdlSave.report_by_.session_token;
           delete resLdlSave.report_by_.created_at;
@@ -285,14 +285,14 @@ export class LikedislikeController {
           delete auditedLikedislike.fansub_.updated_at;
         }
         if ('user_' in auditedLikedislike && auditedLikedislike.user_) {
-          delete auditedLikedislike.user_.role;
+          delete auditedLikedislike.user_.email;
           delete auditedLikedislike.user_.password;
           delete auditedLikedislike.user_.session_token;
           delete auditedLikedislike.user_.created_at;
           delete auditedLikedislike.user_.updated_at;
         }
         if ('report_by_' in auditedLikedislike && auditedLikedislike.report_by_) {
-          delete auditedLikedislike.report_by_.role;
+          delete auditedLikedislike.report_by_.email;
           delete auditedLikedislike.report_by_.password;
           delete auditedLikedislike.report_by_.session_token;
           delete auditedLikedislike.report_by_.created_at;
@@ -426,14 +426,14 @@ export class LikedislikeController {
               delete myReport[0].fansub_.updated_at;
             }
             if ('user_' in myReport[0] && myReport[0].user_) {
-              delete myReport[0].user_.role;
+              delete myReport[0].user_.email;
               delete myReport[0].user_.password;
               delete myReport[0].user_.session_token;
               delete myReport[0].user_.created_at;
               delete myReport[0].user_.updated_at;
             }
             if ('report_by_' in myReport[0] && myReport[0].report_by_) {
-              delete myReport[0].report_by_.role;
+              delete myReport[0].report_by_.email;
               delete myReport[0].report_by_.password;
               delete myReport[0].report_by_.session_token;
               delete myReport[0].report_by_.created_at;

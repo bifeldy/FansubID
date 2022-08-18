@@ -33,7 +33,7 @@ export class VerifyNikController {
         url.searchParams.append('secret', environment.reCaptchaSecretKey);
         url.searchParams.append('response', req.body['g-recaptcha-response']);
         url.searchParams.append('remoteip', (req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip || '').toString());
-        const res_raw1 = await this.api.getData(url, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
+        const res_raw1 = await this.api.getData(url, environment.nodeJsXhrHeader);
         if (res_raw1.ok) {
           const res_json1: any = await res_raw1.json();
           this.gs.log(`[gCaptcha] 🎲 ${res_raw1.status}`, res_json1);
@@ -42,7 +42,7 @@ export class VerifyNikController {
           form.append('nik', req.body.nik);
           form.append('nama', req.body.nama);
           form.append('ck_kpu', environment.apiPemerintahKTPSecretKey);
-          const res_raw2 = await this.api.postData(url, form, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
+          const res_raw2 = await this.api.postData(url, form, environment.nodeJsXhrHeader);
           if (res_raw2.ok) {
             const res_json2: any = await res_raw2.json();
             this.gs.log(`[apiKTP] 🆔 ${res_raw2.status}`, res_json2);

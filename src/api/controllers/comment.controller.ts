@@ -50,7 +50,7 @@ export class CommentController {
       });
       for (const k of komens) {
         if ('user_' in k && k.user_) {
-          delete k.user_.role;
+          delete k.user_.email;
           delete k.user_.password;
           delete k.user_.session_token;
           delete k.user_.created_at;
@@ -105,7 +105,7 @@ export class CommentController {
         komen.user_ = user;
         const resKomenSave = await this.komentarRepo.save(komen);
         if ('user_' in resKomenSave && resKomenSave.user_) {
-          delete resKomenSave.user_.role;
+          delete resKomenSave.user_.email;
           delete resKomenSave.user_.password;
           delete resKomenSave.user_.session_token;
           delete resKomenSave.user_.created_at;
@@ -156,7 +156,7 @@ export class CommentController {
       });
       for (const k of komens) {
         if ('user_' in k && k.user_) {
-          delete k.user_.role;
+          delete k.user_.email;
           delete k.user_.password;
           delete k.user_.session_token;
           delete k.user_.created_at;
@@ -202,7 +202,7 @@ export class CommentController {
       });
       const deletedKomen = await this.komentarRepo.remove(komen);
       if ('user_' in deletedKomen && deletedKomen.user_) {
-        delete deletedKomen.user_.role;
+        delete deletedKomen.user_.email;
         delete deletedKomen.user_.password;
         delete deletedKomen.user_.session_token;
         delete deletedKomen.user_.created_at;

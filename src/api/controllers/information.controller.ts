@@ -46,7 +46,7 @@ export class InformationController {
       });
       for (const i of informations) {
         if ('user_' in i && i.user_) {
-          delete i.user_.role;
+          delete i.user_.email;
           delete i.user_.password;
           delete i.user_.session_token;
           delete i.user_.created_at;
@@ -171,7 +171,7 @@ export class InformationController {
         relations: ['user_']
       });
       if ('user_' in information && information.user_) {
-        delete information.user_.role;
+        delete information.user_.email;
         delete information.user_.password;
         delete information.user_.session_token;
         delete information.user_.created_at;
@@ -205,7 +205,7 @@ export class InformationController {
       });
       const deletedInformasi = await this.informationRepo.remove(information);
       if ('user_' in deletedInformasi && deletedInformasi.user_) {
-        delete deletedInformasi.user_.role;
+        delete deletedInformasi.user_.email;
         delete deletedInformasi.user_.password;
         delete deletedInformasi.user_.session_token;
         delete deletedInformasi.user_.created_at;

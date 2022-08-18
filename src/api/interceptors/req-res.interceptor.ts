@@ -1,46 +1,25 @@
-// 3rd Party Library
-import { AbortController } from 'abort-controller';
-
 import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
 import { Request, Response } from 'express';
 
-import { CONSTANTS } from '../../constants';
-
-import { ApiKeyService } from '../repository/api-key.service';
 import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
-import { SocketIoService } from '../services/socket-io.service';
 
 @Injectable()
 export class ReqResInterceptor implements NestInterceptor {
 
   constructor(
-    private aks: ApiKeyService,
     private cfg: ConfigService,
-    private gs: GlobalService,
-    private sis: SocketIoService
+    private gs: GlobalService
   ) {
     //
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const timeStart = new Date();
 
     const http = context.switchToHttp();
     const req = http.getRequest<Request>();
     const res = http.getResponse<Response>();
-
-    res.locals['abort-controller'] = new AbortController();
-    req.on('close', () => {
-      res.locals['abort-controller'].abort();
-    });
-    res.on('close', () => {
-      const remoteAddress = this.aks.getOriginIp(req, true);
-      const timeEnd = new Date().getTime() - timeStart.getTime();
-      const reqResInfo = `${remoteAddress} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
-      this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
-    });
 
     for (const propName in req.body) {
       if (req.body[propName] === '' || req.body[propName] === undefined || req.body[propName] === null) {

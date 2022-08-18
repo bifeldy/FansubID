@@ -73,6 +73,12 @@ export class UserController {
         take: (maxRow > 0 && maxRow <= 500) ? maxRow : 10
       });
       for (const u of user) {
+        if (adminMod) {
+          if (adminMod.role === RoleModel.ADMIN || adminMod.role === RoleModel.MODERATOR) {
+            (u as any).__email = u._email;
+          }
+        }
+        delete u.email;
         delete u.password;
         delete u.session_token;
         if ('kartu_tanda_penduduk_' in u && u.kartu_tanda_penduduk_) {
@@ -124,6 +130,7 @@ export class UserController {
         ],
         relations: ['kartu_tanda_penduduk_', 'profile_']
       });
+      delete selectedUser.email;
       delete selectedUser.password;
       delete selectedUser.session_token;
       if ('kartu_tanda_penduduk_' in selectedUser && selectedUser.kartu_tanda_penduduk_) {
@@ -215,6 +222,7 @@ export class UserController {
               }
             )
           );
+          delete resUserSave.email;
           delete resUserSave.password;
           delete resUserSave.session_token;
           delete resUserSave.kartu_tanda_penduduk_;
@@ -285,7 +293,7 @@ export class UserController {
       const deletedUser = await this.userRepo.remove(user);
       const deletedKtp = await this.ktpRepo.remove(ktp);
       const deletedProfile = await this.profileRepo.remove(profile);
-      delete (deletedUser as any).role;
+      delete (deletedUser as any).email;
       delete (deletedUser as any).password;
       delete (deletedUser as any).session_token;
       return {
@@ -360,7 +368,7 @@ export class UserController {
           delete f.anime_.updated_at;
         }
         if ('user_' in f && f.user_) {
-          delete f.user_.role;
+          delete f.user_.email;
           delete f.user_.password;
           delete f.user_.session_token;
           delete f.user_.created_at;
@@ -418,7 +426,7 @@ export class UserController {
       });
       for (const k of komens) {
         if ('user_' in k && k.user_) {
-          delete k.user_.role;
+          delete k.user_.email;
           delete k.user_.password;
           delete k.user_.session_token;
           delete k.user_.created_at;
@@ -525,7 +533,7 @@ export class UserController {
           delete ldl.fansub_.updated_at;
         }
         if ('user_' in ldl && ldl.user_) {
-          delete ldl.user_.role;
+          delete ldl.user_.email;
           delete ldl.user_.password;
           delete ldl.user_.session_token;
           delete ldl.user_.created_at;
@@ -548,7 +556,7 @@ export class UserController {
           }
         }
         if ('report_by_' in ldl && ldl.report_by_) {
-          delete ldl.report_by_.role;
+          delete ldl.report_by_.email;
           delete ldl.report_by_.password;
           delete ldl.report_by_.session_token;
           delete ldl.report_by_.created_at;
@@ -659,7 +667,7 @@ export class UserController {
           delete t.fansub_.updated_at;
         }
         if ('user_' in t && t.user_) {
-          delete t.user_.role;
+          delete t.user_.email;
           delete t.user_.password;
           delete t.user_.session_token;
           delete t.user_.created_at;
@@ -682,7 +690,7 @@ export class UserController {
           }
         }
         if ('track_by_' in t && t.track_by_) {
-          delete t.track_by_.role;
+          delete t.track_by_.email;
           delete t.track_by_.password;
           delete t.track_by_.session_token;
           delete t.track_by_.created_at;
@@ -739,14 +747,14 @@ export class UserController {
           delete group.fansub_.user_;
         }
         if ('user_' in group && group.user_) {
-          delete group.user_.role;
+          delete group.user_.email;
           delete group.user_.password;
           delete group.user_.session_token;
           delete group.user_.created_at;
           delete group.user_.updated_at;
         }
         if ('approved_by_' in group && group.approved_by_) {
-          delete group.approved_by_.role;
+          delete group.approved_by_.email;
           delete group.approved_by_.password;
           delete group.approved_by_.session_token;
           delete group.approved_by_.created_at;

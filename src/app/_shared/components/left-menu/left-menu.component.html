@@ -11,7 +11,7 @@
         <a mat-list-item routerLink="/user" routerLinkActive="side-menu-link-active" (click)="onMouseHoverOut()">
           <img class="jim" src="{{ currentUser.image_url }}" />
           <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.2em; padding-right: 0.2em;" class="text-truncate">
-            {{ currentUser.kartu_tanda_penduduk_.nama }} <br /> {{ currentUser.email }}
+            {{ currentUser.kartu_tanda_penduduk_.nama }} <br /> {{ currentUser.__email }}
           </span>
         </a>
       </mat-nav-list>

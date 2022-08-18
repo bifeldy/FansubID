@@ -1,6 +1,3 @@
-// 3rd Party Library
-import { AbortSignal } from 'abort-controller';
-
 // NodeJS Library
 import { URL } from 'node:url';
 
@@ -21,13 +18,13 @@ export class CloudflareService {
     // https://api.cloudflare.com/#dns-records-for-a-zone-properties
   }
 
-  async getCnames(signal: AbortSignal, name = '', page = 1, per_page = 10, order = 'name', direction = 'asc', type = 'CNAME', proxied = false): Promise<any> {
+  async getCnames(name = '', page = 1, per_page = 10, order = 'name', direction = 'asc', type = 'CNAME', proxied = false): Promise<any> {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records?name=${name}&type=${type}&page=${page}&per_page=${per_page}&order=${order}&direction=${direction}&proxied=${proxied}`);
       const res_raw = await this.api.getData(url, {
         'Authorization': `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
-      }, signal);
+      });
       const res = {
         status: res_raw.status,
         count: 0,
@@ -50,7 +47,7 @@ export class CloudflareService {
     }
   }
 
-  async createCname(signal: AbortSignal, name: string, content: string, type = 'CNAME'): Promise<any> {
+  async createCname(name: string, content: string, type = 'CNAME'): Promise<any> {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records`);
       const data = {
@@ -61,7 +58,7 @@ export class CloudflareService {
       const res_raw = await this.api.postData(url, JSON.stringify(data), {
         'Authorization': `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
-      }, signal);
+      });
       const res = {
         status: res_raw.status,
         result: null
@@ -81,13 +78,13 @@ export class CloudflareService {
     }
   }
 
-  async deleteCname(signal: AbortSignal, id: string): Promise<any> {
+  async deleteCname(id: string): Promise<any> {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records/${id}`);
       const res_raw = await this.api.deleteData(url, {
         'Authorization': `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
-      }, signal);
+      });
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[CLOUDFLARE_SERVICE-DELETE_CNAME_SUCCESS] 🔥 ${res_raw.status}`, res_json);

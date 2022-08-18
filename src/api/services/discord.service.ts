@@ -187,7 +187,7 @@ export class DiscordService {
   async changeBotNickname(): Promise<void> {
     try {
       const url = new URL(`https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`);
-      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader, null);
+      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
       if (res_raw.ok) {
         const gh: any = await res_raw.json();
         this.cfg.github = gh[0];
@@ -221,7 +221,7 @@ export class DiscordService {
             if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
               await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
             }
-            const mail = await this.ms.mailGunAddForwarding(null, user.username, user.email);
+            const mail = await this.ms.mailGunAddForwarding(user.username, user.email);
             await msg.reply({ content: `<@${msg.author.id}> 😚 .: Berhasil :: ${mail?.route?.id} :. 🤩` });
             await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
               embeds: [
@@ -272,7 +272,7 @@ export class DiscordService {
           }
         ]
       });
-      await this.ms.mailGunDeleteForwarding(null, user.username);
+      await this.ms.mailGunDeleteForwarding(user.username);
       await this.userRepo.update({
         id: Equal(user.id)
       }, {

@@ -53,7 +53,7 @@ export class NihongoController {
       });
       for (const k of kanas) {
         if ('user_' in k && k.user_) {
-          delete k.user_.role;
+          delete k.user_.email;
           delete k.user_.password;
           delete k.user_.session_token;
           delete k.user_.created_at;
@@ -103,7 +103,7 @@ export class NihongoController {
         kana.user_ = user;
         const resKanaSave = await this.nihongoRepo.save(kana);
         if ('user_' in resKanaSave && resKanaSave.user_) {
-          delete resKanaSave.user_.role;
+          delete resKanaSave.user_.email;
           delete resKanaSave.user_.password;
           delete resKanaSave.user_.session_token;
           delete resKanaSave.user_.created_at;
@@ -138,7 +138,7 @@ export class NihongoController {
         relations: ['user_'],
       });
       if ('user_' in kana && kana.user_) {
-        delete kana.user_.role;
+        delete kana.user_.email;
         delete kana.user_.password;
         delete kana.user_.session_token;
         delete kana.user_.created_at;
@@ -200,7 +200,7 @@ export class NihongoController {
         kana.user_ = user;
         const resKanaSave = await this.nihongoRepo.save(kana);
         if ('user_' in resKanaSave && resKanaSave.user_) {
-          delete resKanaSave.user_.role;
+          delete resKanaSave.user_.email;
           delete resKanaSave.user_.password;
           delete resKanaSave.user_.session_token;
           delete resKanaSave.user_.created_at;
@@ -241,7 +241,7 @@ export class NihongoController {
       });
       const deletedKana = await this.nihongoRepo.remove(kana);
       if ('user_' in deletedKana && deletedKana.user_) {
-        delete deletedKana.user_.role;
+        delete deletedKana.user_.email;
         delete deletedKana.user_.password;
         delete deletedKana.user_.session_token;
         delete deletedKana.user_.created_at;
