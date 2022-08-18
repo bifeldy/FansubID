@@ -27,7 +27,7 @@ export class TaskCronJobController {
       jobs.push({
         id: key,
         last_date: value.lastDate(),
-        next_date: value.nextDate(),
+        next_date: value.nextDate().toJSDate(),
         running: value.running
       });
     }
