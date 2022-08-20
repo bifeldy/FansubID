@@ -119,7 +119,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
               `${this.userData.kartu_tanda_penduduk_.nama}`,
               `${this.userData.profile_.description}`,
               `${this.userData.username}`,
-              this.userData.image_url
+              this.userData.image_url,
+              this.userData.username
             );
             this.bs.idle();
             if (this.gs.isBrowser) {

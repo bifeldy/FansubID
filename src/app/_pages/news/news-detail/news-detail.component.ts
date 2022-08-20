@@ -58,7 +58,8 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
               `${this.newsData.title}`,
               `${this.newsData.content}`,
               `${Array.isArray(this.newsData.tags) ? this.newsData.tags.join(', ') : this.newsData.title}`,
-              this.newsData.image_url
+              this.newsData.image_url,
+              this.newsData.user_.username
             );
             this.bs.idle();
             if (this.gs.isBrowser) {

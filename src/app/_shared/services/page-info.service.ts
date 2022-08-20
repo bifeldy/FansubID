@@ -17,6 +17,7 @@ export class PageInfoService {
   description = '';
   keywords = '';
   image = '';
+  author = '';
 
   constructor(
     private t: Title,
@@ -42,14 +43,16 @@ export class PageInfoService {
     return this.keywords;
   }
 
-  updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = '/favicon.ico'): void {
+  updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = '/favicon.ico', newAuthor = '「💤 Fansub.ID」'): void {
     this.title = newTitle;
     this.description = this.gs.htmlToText(newDescription);
     this.keywords = newKeywords;
     this.image = newImage;
+    this.author = newAuthor;
     this.t.setTitle(`${this.title} | ${this.siteName}`);
     this.m.updateTag({ name: 'description', content: this.description });
     this.m.updateTag({ name: 'keywords', content: this.keywords });
+    this.m.updateTag({ name: 'author', content: this.author });
     this.m.updateTag({ property: 'og:title', content: this.title });
     this.m.updateTag({ property: 'og:description', content: this.description });
     this.m.updateTag({ property: 'og:image', content: this.image });

@@ -80,7 +80,8 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
               `${this.berkasData.name}`,
               `${this.berkasData.description}`,
               `${this.berkasData.name}`,
-              this.berkasData.image_url
+              this.berkasData.image_url,
+              this.berkasData.user_.username
             );
             this.bs.idle();
             if (this.gs.isBrowser) {

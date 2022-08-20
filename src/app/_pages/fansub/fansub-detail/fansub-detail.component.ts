@@ -155,7 +155,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           `${this.fansubData.name}`,
           `${this.fansubData.description}`,
           `${Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name}`,
-          this.fansubData.image_url
+          this.fansubData.image_url,
+          this.fansubData.user_.username
         );
         this.bs.idle();
         if (this.gs.isBrowser) {
