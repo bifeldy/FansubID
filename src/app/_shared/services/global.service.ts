@@ -254,7 +254,7 @@ export class GlobalService {
 
   weatherToggle(): void {
     if (this.weatherRunning) {
-      this.weatherEffect.stop();
+      this.weatherEffect.stop(true);
       this.weatherRunning = false;
     } else {
       this.weatherEffect.start();
