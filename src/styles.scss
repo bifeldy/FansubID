@@ -397,16 +397,18 @@ re-captcha > div {
 
 .mat-drawer-container.mat-drawer-container-has-open >
 .mat-drawer-backdrop.mat-drawer-shown {
-    background-position: left bottom !important;
-    background-size: 50vh !important;
-    background-image: url('/assets/img/router/bg-register.png') !important;
+  background-position: left bottom, top left !important;
+  background-size: 50vh !important;
+  background-image: url('/assets/img/router/bg-register.png'), url('/api/img-seasonal-backdrop') !important;
+  background-repeat: no-repeat, repeat !important;
 }
 
 .mat-drawer-container.mat-drawer-container-explicit-backdrop >
 .mat-drawer-backdrop.mat-drawer-shown {
-    background-position: right bottom !important;
-    background-size: 60vh !important;
-    background-image: url('/assets/img/router/bg-login.png') !important;
+  background-position: right bottom, top right !important;
+  background-size: 60vh !important;
+  background-image: url('/assets/img/router/bg-login.png'), url('/api/img-seasonal-backdrop') !important;
+  background-repeat: no-repeat, repeat !important;
 }
 
 .mat-drawer-transition .mat-drawer-backdrop {

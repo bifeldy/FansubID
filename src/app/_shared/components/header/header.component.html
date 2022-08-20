@@ -16,6 +16,10 @@
     {{ myPoints }}
   </button>
 
+  <button mat-icon-button (click)="toggleWeather()" matTooltip="Weather Effect" *ngIf="GS.weatherEffect">
+    <mat-icon>filter_vintage</mat-icon>
+  </button>
+
   <button mat-icon-button (click)="toggleDarkTheme()" matTooltip="Ganti Warna">
     <mat-icon>nights_stay</mat-icon>
   </button>

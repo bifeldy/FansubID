@@ -51,6 +51,7 @@ export class GlobalService {
   isDarkMode = false;
 
   weatherEffect = null;
+  weatherRunning = false;
 
   angularEditorConfig: AngularEditorConfig = {
     editable: true,
@@ -247,7 +248,17 @@ export class GlobalService {
     const weather = this.seasonalWeather.find(sB => sB.id === Math.ceil(currentMonth / 3));
     if (weather?.cssClassName) {
       this.weatherEffect = new Sakura('body', { className: weather.cssClassName, lifeTime: 12589 });
+      this.weatherRunning = true;
+    }
+  }
+
+  weatherToggle(): void {
+    if (this.weatherRunning) {
       this.weatherEffect.stop();
+      this.weatherRunning = false;
+    } else {
+      this.weatherEffect.start();
+      this.weatherRunning = true;
     }
   }
 

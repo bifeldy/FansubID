@@ -37,6 +37,10 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  get GS(): GlobalService {
+    return this.gs;
+  }
+
   get ROUTER(): Router {
     return this.router;
   }
@@ -72,6 +76,10 @@ export class HeaderComponent implements OnInit {
 
   toggleSideNav(): void {
     this.lms.onSideNavToggleView();
+  }
+
+  toggleWeather(): void {
+    this.gs.weatherToggle();
   }
 
   reloadPage(): void {

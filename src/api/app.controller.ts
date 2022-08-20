@@ -1,12 +1,18 @@
-import { Controller, Get, HttpCode, Redirect } from '@nestjs/common';
+// NodeJS Library
+import { readdirSync } from 'node:fs';
+
+import { Controller, Get, HttpCode, Redirect, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 import { environment } from '../environments/api/environment';
+
+import { GlobalService } from './services/global.service';
 
 @Controller('/')
 export class AppController {
 
   constructor(
-    //
+    private gs: GlobalService
   ) {
     //
   }
@@ -42,7 +48,32 @@ export class AppController {
     };
   }
 
-  // @Post('/reset')
+  @Get('/img-seasonal-backdrop')
+  async resetPassword(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
+    try {
+      const currDate = new Date();
+      const season = this.gs.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
+      const files = readdirSync(`${environment.viewFolder}/assets/img/`, { withFileTypes: true });
+      const fIdx = files.findIndex(f => f.name.toString().toLowerCase().includes(`backdrop-${season}`.toLowerCase()));
+      if (fIdx >= 0) {
+        return res.download(`${environment.viewFolder}/assets/img/${files[fIdx].name}`, files[fIdx].name, async (e) => {
+          if (e) {
+            this.gs.log('[RES_DOWNLOAD_IMAGE_BACKDROP-ERROR] 🔻', e, 'error');
+          }
+        });
+      } else {
+        throw new Error('Lampiran Tidak Ditemukan!');
+      }
+    } catch (error) {
+      return res.download(`${environment.viewFolder}/assets/img/backdrop-null.png`, 'backdrop-null.png', async (e) => {
+        if (e) {
+          this.gs.log('[RES_DOWNLOAD_IMAGE_BACKDROP-ERROR] 🔻', e, 'error');
+        }
+      });
+    }
+  }
+
+  // @Post('/reset-password')
   // async resetPassword(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
   //   const user: UserModel = res.locals['user'];
   //   return {

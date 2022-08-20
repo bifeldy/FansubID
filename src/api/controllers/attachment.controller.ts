@@ -224,7 +224,7 @@ export class AttachmentController {
         if (fIdx >= 0) {
           return res.download(`${environment.uploadFolder}/${files[fIdx].name}`, `${attachment.name}.${attachment.ext}`, async (e) => {
             if (e) {
-              this.gs.log('[RES_DOWNLOAD-ERROR] 🔻', e, 'error');
+              this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
             } else {
               attachment.download_count++;
               await this.attachmentRepo.save(attachment);

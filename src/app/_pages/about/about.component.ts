@@ -1,6 +1,6 @@
 import pkg from '../../../../package.json';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { environment } from '../../../environments/app/environment';
 
@@ -13,7 +13,7 @@ import { WinboxService } from '../../_shared/services/winbox.service';
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.css']
 })
-export class AboutComponent implements OnInit, OnDestroy {
+export class AboutComponent implements OnInit {
 
   detailed = false;
 
@@ -70,12 +70,7 @@ export class AboutComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this. library = pkg.dependencies;
       this.fs.initializeFab(null, '/assets/img/discord-pink.png', 'Discord Server', environment.discordUrl, true);
-      this.gs.weatherEffect?.start();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.gs.weatherEffect?.stop(true);
   }
 
   openWebsite(url: string): void {
