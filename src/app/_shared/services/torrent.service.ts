@@ -182,7 +182,7 @@ export class TorrentService {
                 inputText: this.torrentsQueue[key].name
               }
             }, files, callback);
-          });
+          }).catch(err => this.gs.log('[INDEXDB-OPEN_FAILED]', err, 'error'));
         }
       }
     }
@@ -233,7 +233,7 @@ export class TorrentService {
         }
       },
       error: (err: any) => {
-        this.gs.log('[TORRENT_CLIENT_HEALTH_ERROR]', err);
+        this.gs.log('[TORRENT_CLIENT_HEALTH_ERROR]', err, 'error');
         if (callback) {
           callback(err, null);
         }

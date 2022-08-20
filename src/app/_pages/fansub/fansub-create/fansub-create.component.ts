@@ -177,7 +177,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
         this.submitted = false;
       },
       error: err => {
-        this.gs.log('[IMAGE_ERROR]', err);
+        this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.submitted = false;
       }
@@ -223,7 +223,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/fansub');
       },
       error: err => {
-        this.gs.log('[FANSUB_CREATE_ERROR]', err);
+        this.gs.log('[FANSUB_CREATE_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
       }

@@ -102,7 +102,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[KANJI_LIST_ERROR]', err);
+        this.gs.log('[KANJI_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

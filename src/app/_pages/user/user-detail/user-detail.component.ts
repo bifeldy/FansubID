@@ -132,7 +132,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             }
           },
           error: err => {
-            this.gs.log('[USER_DETAIL_ERROR]', err);
+            this.gs.log('[USER_DETAIL_ERROR]', err, 'error');
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
@@ -156,7 +156,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[USER_CHECK_BANNED_ERROR]', err);
+        this.gs.log('[USER_CHECK_BANNED_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -185,7 +185,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[USER_BERKAS_LIST_ERROR]', err);
+        this.gs.log('[USER_BERKAS_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -230,7 +230,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[USER_DETAIL_GROUP_LIST_ERROR]', err);
+        this.gs.log('[USER_DETAIL_GROUP_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

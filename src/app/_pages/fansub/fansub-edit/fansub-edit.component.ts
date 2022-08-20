@@ -120,7 +120,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
                   }
                 },
                 error: err => {
-                  this.gs.log('[FANSUB_EDIT_MEMBER_LIST_ERROR]', err);
+                  this.gs.log('[FANSUB_EDIT_MEMBER_LIST_ERROR]', err, 'error');
                   this.bs.idle();
                   this.router.navigate(['/error'], {
                     queryParams: {
@@ -132,7 +132,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
             }
           },
           error: err => {
-            this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+            this.gs.log('[FANSUB_DETAIL_ERROR]', err, 'error');
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
@@ -253,7 +253,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         this.submitted = false;
       },
       error: err => {
-        this.gs.log('[IMAGE_ERROR]', err);
+        this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.fg.controls['image'].markAsPristine();
         this.submitted = false;
@@ -304,7 +304,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(`/fansub/${res.result.slug}`);
       },
       error: err => {
-        this.gs.log('[FANSUB_EDIT_ERROR]', err);
+        this.gs.log('[FANSUB_EDIT_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
       }

@@ -76,7 +76,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[USER_FEED_COMMENT_ERROR]', err);
+        this.gs.log('[USER_FEED_COMMENT_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -91,7 +91,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[USER_FEED_LIKEDISLIKE_ERROR]', err);
+        this.gs.log('[USER_FEED_LIKEDISLIKE_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -106,7 +106,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[USER_FEED_VISIT_ERROR]', err);
+        this.gs.log('[USER_FEED_VISIT_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

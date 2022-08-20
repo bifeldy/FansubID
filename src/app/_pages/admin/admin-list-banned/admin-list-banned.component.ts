@@ -102,7 +102,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[BANNED_LIST_ERROR]', err);
+        this.gs.log('[BANNED_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -130,7 +130,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
               this.getBan();
             },
             error: err => {
-              this.gs.log('[BANNED_LIST_CLICK_UNBAN_ERROR]', err);
+              this.gs.log('[BANNED_LIST_CLICK_UNBAN_ERROR]', err, 'error');
               this.bs.idle();
               this.getBan();
             }

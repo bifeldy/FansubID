@@ -123,7 +123,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
         this.submitted = false;
       },
       error: err => {
-        this.gs.log('[IMAGE_ERROR]', err);
+        this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.fg.controls['image'].markAsPristine();
         this.submitted = false;
@@ -163,7 +163,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
         this.dialogRef.close(res);
       },
       error: err => {
-        this.gs.log('[NIHONGO_ADD_OR_EDIT_ERROR]', err);
+        this.gs.log('[NIHONGO_ADD_OR_EDIT_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
       }

@@ -101,7 +101,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[PROJECT_LIST_ERROR]', err);
+        this.gs.log('[PROJECT_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -136,7 +136,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
         this.getProject();
       },
       error: err => {
-        this.gs.log('[PROJECT_CREATE_ERROR]', err);
+        this.gs.log('[PROJECT_CREATE_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
         this.getProject();
@@ -166,7 +166,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
               this.getProject();
             },
             error: err => {
-              this.gs.log('[PROJECT_LIST_CLICK_DELETE_ERROR]', err);
+              this.gs.log('[PROJECT_LIST_CLICK_DELETE_ERROR]', err, 'error');
               this.bs.idle();
               this.getProject();
             }
@@ -223,7 +223,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
         this.submitted = false;
       },
       error: err => {
-        this.gs.log('[IMAGE_ERROR]', err);
+        this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.submitted = false;
       }

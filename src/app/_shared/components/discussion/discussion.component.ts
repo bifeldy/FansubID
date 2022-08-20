@@ -86,7 +86,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.gs.log('[KOMENTAR_CREATE_REPLY_ERROR]', err);
+        this.gs.log('[KOMENTAR_CREATE_REPLY_ERROR]', err, 'error');
       }
     });
   }
@@ -111,7 +111,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
           }
         },
         error: err => {
-          this.gs.log('[KOMENTAR_LIST_ERROR]', err);
+          this.gs.log('[KOMENTAR_LIST_ERROR]', err, 'error');
         }
       });
     }
@@ -137,7 +137,7 @@ export class DiscussionComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.gs.log('[REPLY_LIST_ERROR]', err);
+        this.gs.log('[REPLY_LIST_ERROR]', err, 'error');
         k.reply = [];
       }
     });

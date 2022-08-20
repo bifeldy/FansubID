@@ -71,7 +71,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
             }
           },
           error: err => {
-            this.gs.log('[NEWS_DETAIL_ERROR]', err);
+            this.gs.log('[NEWS_DETAIL_ERROR]', err, 'error');
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {

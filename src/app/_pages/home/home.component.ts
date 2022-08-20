@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[HOME_NEWS_LIST_ERROR]', err);
+        this.gs.log('[HOME_NEWS_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[HOME_KOMENTAR_LIST_ERROR]', err);
+        this.gs.log('[HOME_KOMENTAR_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[HOME_RSS_FEED_LIST_ERROR]', err);
+        this.gs.log('[HOME_RSS_FEED_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

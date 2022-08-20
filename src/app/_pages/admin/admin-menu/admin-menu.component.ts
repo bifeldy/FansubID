@@ -80,7 +80,7 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[TASK_CRON_JOB_LIST_ERROR]', err);
+        this.gs.log('[TASK_CRON_JOB_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -95,7 +95,7 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
         this.getAllTaskCronJobs();
       },
       error: err => {
-        this.gs.log('[TASK_CRON_JOB_TOGGLE_ERROR]', err);
+        this.gs.log('[TASK_CRON_JOB_TOGGLE_ERROR]', err, 'error');
         this.bs.idle();
         this.getAllTaskCronJobs();
       }

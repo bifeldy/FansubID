@@ -119,7 +119,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.activationDialog(res);
         },
         error: err => {
-          this.gs.log('[REGISTER_FORM_ERROR]', err);
+          this.gs.log('[REGISTER_FORM_ERROR]', err, 'error');
           this.bs.idle();
           this.submitted = false;
           this.captchaRef.reset();
@@ -151,7 +151,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
               this.activationDialog(success);
             },
             error: error => {
-              this.gs.log('[RESEND_ACTIVATION_ERROR]', error);
+              this.gs.log('[RESEND_ACTIVATION_ERROR]', error, 'error');
               this.bs.idle();
             }
           });

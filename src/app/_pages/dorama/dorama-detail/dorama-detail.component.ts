@@ -139,7 +139,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
             }
           },
           error: err => {
-            this.gs.log('[DORAMA_DETAIL_ERROR]', err);
+            this.gs.log('[DORAMA_DETAIL_ERROR]', err, 'error');
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
@@ -221,7 +221,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[BERKAS_DORAMA_ERROR]', err);
+        this.gs.log('[BERKAS_DORAMA_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -248,7 +248,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_DORAMA_ERROR]', err);
+        this.gs.log('[FANSUB_DORAMA_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

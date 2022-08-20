@@ -171,7 +171,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         this.searchResult.beritaResults = res.results;
       },
       error: err => {
-        this.gs.log('[NEWS_SEARCH_ERROR]', err);
+        this.gs.log('[NEWS_SEARCH_ERROR]', err, 'error');
       }
     });
   }
@@ -186,7 +186,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         this.searchResult.kanjiResults = res.results;
       },
       error: err => {
-        this.gs.log('[KANJI_SEARCH_ERROR]', err);
+        this.gs.log('[KANJI_SEARCH_ERROR]', err, 'error');
       }
     });
   }
@@ -205,7 +205,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         this.searchResult.animeResults = res.results;
       },
       error: err => {
-        this.gs.log('[ANIME_SEARCH_ERROR]', err);
+        this.gs.log('[ANIME_SEARCH_ERROR]', err, 'error');
       }
     });
   }
@@ -220,7 +220,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         this.searchResult.doramaResults = res.results;
       },
       error: err => {
-        this.gs.log('[DORAMA_SEARCH_ERROR]', err);
+        this.gs.log('[DORAMA_SEARCH_ERROR]', err, 'error');
       }
     });
   }
@@ -235,7 +235,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         this.searchResult.fansubResults = res.results;
       },
       error: err => {
-        this.gs.log('[FANSUB_SEARCH_ERROR]', err);
+        this.gs.log('[FANSUB_SEARCH_ERROR]', err, 'error');
       }
     });
   }
@@ -250,7 +250,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         this.searchResult.berkasResults = res.results;
       },
       error: err => {
-        this.gs.log('[BERKAS_SEARCH_ERROR]', err);
+        this.gs.log('[BERKAS_SEARCH_ERROR]', err, 'error');
       }
     });
   }
@@ -265,7 +265,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         this.searchResult.penggunaResults = res.results;
       },
       error: err => {
-        this.gs.log('[PENGGUNA_SEARCH_ERROR]', err);
+        this.gs.log('[PENGGUNA_SEARCH_ERROR]', err, 'error');
       }
     });
   }

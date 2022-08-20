@@ -89,7 +89,7 @@ export class MaterialDialogEdictComponent implements OnInit, OnDestroy, AfterVie
         }
       },
       error: err => {
-        this.gs.log('[EDICT_LIST_ERROR]', err);
+        this.gs.log('[EDICT_LIST_ERROR]', err, 'error');
       }
     });
   }

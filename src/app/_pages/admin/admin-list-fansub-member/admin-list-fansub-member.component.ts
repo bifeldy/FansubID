@@ -87,7 +87,7 @@ export class AdminListFansubMemberComponent implements OnInit {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_MEMBER_LIST_ERROR]', err);
+        this.gs.log('[FANSUB_MEMBER_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -155,7 +155,7 @@ export class AdminListFansubMemberComponent implements OnInit {
               this.bs.idle();
             },
             error: err => {
-              this.gs.log('[FANSUB_MEMBER_APPROVE_REJECT_ERROR]', err);
+              this.gs.log('[FANSUB_MEMBER_APPROVE_REJECT_ERROR]', err, 'error');
               this.getFansubMember();
               this.bs.idle();
             }
@@ -189,7 +189,7 @@ export class AdminListFansubMemberComponent implements OnInit {
               this.bs.idle();
             },
             error: err => {
-              this.gs.log('[FANSUB_MEMBER_KICK_ERROR]', err);
+              this.gs.log('[FANSUB_MEMBER_KICK_ERROR]', err, 'error');
               this.getFansubMember();
               this.bs.idle();
             }

@@ -88,7 +88,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[BERKAS_LIST_ERROR]', err);
+        this.gs.log('[BERKAS_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

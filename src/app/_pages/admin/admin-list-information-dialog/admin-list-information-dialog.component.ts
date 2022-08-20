@@ -113,7 +113,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[INFORMATION_LIST_ERROR]', err);
+        this.gs.log('[INFORMATION_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -152,7 +152,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
         this.getInfo();
       },
       error: err => {
-        this.gs.log('[INFORMATION_CREATE_UPDATE_ERROR]', err);
+        this.gs.log('[INFORMATION_CREATE_UPDATE_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
         this.getInfo();
@@ -182,7 +182,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
               this.getInfo();
             },
             error: err => {
-              this.gs.log('[INFORMATION_LIST_CLICK_DELETE_ERROR]', err);
+              this.gs.log('[INFORMATION_LIST_CLICK_DELETE_ERROR]', err, 'error');
               this.bs.idle();
               this.getInfo();
             }

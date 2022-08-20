@@ -56,7 +56,7 @@ export class DocsComponent implements OnInit {
         this.dnsData = res.results;
       },
       error: err => {
-        this.gs.log('[DNSS_LIST_ERROR]', err);
+        this.gs.log('[DNSS_LIST_ERROR]', err, 'error');
       }
     });
   }
@@ -68,7 +68,7 @@ export class DocsComponent implements OnInit {
         this.tutorialData = res.result.content;
       },
       error: err => {
-        this.gs.log('[TUTORIAL_INFORMATION_ERROR]', err);
+        this.gs.log('[TUTORIAL_INFORMATION_ERROR]', err, 'error');
       }
     });
   }

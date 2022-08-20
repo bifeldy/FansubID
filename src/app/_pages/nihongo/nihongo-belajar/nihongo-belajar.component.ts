@@ -205,7 +205,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[BELAJAR_HIRAKATA_ERROR]', err);
+        this.gs.log('[BELAJAR_HIRAKATA_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -233,7 +233,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[BELAJAR_KANA_LIST_ERROR]', err);
+        this.gs.log('[BELAJAR_KANA_LIST_ERROR]', err, 'error');
         this.bs.idle();
       },
     });

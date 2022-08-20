@@ -178,7 +178,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.gs.log('[FANSUB_DETAIL_ERROR]', err);
+        this.gs.log('[FANSUB_DETAIL_ERROR]', err, 'error');
         this.bs.idle();
         this.router.navigate(['/error'], {
           queryParams: {
@@ -207,7 +207,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[RSS_FEED_LIST_ERROR]', err);
+        this.gs.log('[RSS_FEED_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -239,7 +239,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[BERKAS_FANSUB_ERROR]', err);
+        this.gs.log('[BERKAS_FANSUB_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -264,7 +264,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.gs.log('[FANSUB_ANIME_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -290,7 +290,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_DORAMA_ERROR]', err);
+        this.gs.log('[FANSUB_DORAMA_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -381,7 +381,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_DETAIL_MEMBER_LIST_ERROR]', err);
+        this.gs.log('[FANSUB_DETAIL_MEMBER_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -397,7 +397,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           this.bs.idle();
         },
         error: err => {
-          this.gs.log('[FANSUB_DETAIL_MEMBER_LEAVE_ERROR]', err);
+          this.gs.log('[FANSUB_DETAIL_MEMBER_LEAVE_ERROR]', err, 'error');
           this.getFansubMember();
           this.bs.idle();
         }
@@ -412,7 +412,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           this.bs.idle();
         },
         error: err => {
-          this.gs.log('[FANSUB_DETAIL_MEMBER_JOIN_ERROR]', err);
+          this.gs.log('[FANSUB_DETAIL_MEMBER_JOIN_ERROR]', err, 'error');
           this.getFansubMember();
           this.bs.idle();
         }
@@ -431,7 +431,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_ERROR]', err);
+        this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_ERROR]', err, 'error');
         this.getFansubMember();
         this.bs.idle();
       }
@@ -496,7 +496,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
                   });
                 },
                 error: err => {
-                  this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_ERROR]', err);
+                  this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_ERROR]', err, 'error');
                   this.bs.idle();
                   this.getFansubDetail();
                 }

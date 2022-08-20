@@ -208,7 +208,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.gs.log('[LIKE-DISLIKE_SET_REPORT_ERROR]', err);
+        this.gs.log('[LIKE-DISLIKE_SET_REPORT_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -229,7 +229,7 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[LIKE-DISLIKE_GET_REPORT_ERROR]', err);
+        this.gs.log('[LIKE-DISLIKE_GET_REPORT_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

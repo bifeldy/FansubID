@@ -91,7 +91,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         this.sosmedVerifyResult(res, sosmedApp);
       },
       error: err => {
-        this.gs.log('[SOSMED]', err);
+        this.gs.log('[SOSMED]', err, 'error');
         this.bs.idle();
         this.sosmedVerifyResult(err.error, sosmedApp);
       }
@@ -264,7 +264,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl(this.returnUrl);
           },
           error: error => {
-            this.gs.log('[VERIFY_LOGIN_ERROR]', error);
+            this.gs.log('[VERIFY_LOGIN_ERROR]', error, 'error');
             this.bs.idle();
             this.as.removeUser();
             this.router.navigateByUrl(this.returnUrl);
@@ -272,7 +272,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         });
       },
       error: err => {
-        this.gs.log('[USER_VERIFIKASI_ERROR]', err);
+        this.gs.log('[USER_VERIFIKASI_ERROR]', err, 'error');
         this.bs.idle();
         this.submitted = false;
         this.verifyInfo = err.error.result.message;

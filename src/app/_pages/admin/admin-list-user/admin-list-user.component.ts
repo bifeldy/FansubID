@@ -119,14 +119,14 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
             this.bs.idle();
           },
           error: err => {
-            this.gs.log('[BANNED_LIST_ERROR]', err);
+            this.gs.log('[BANNED_LIST_ERROR]', err, 'error');
             this.bs.idle();
           }
         });
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[USER_LIST_ERROR]', err);
+        this.gs.log('[USER_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -175,7 +175,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
               });
             },
             error: err => {
-              this.gs.log('[USER_LIST_CLICK_BAN_ERROR]', err);
+              this.gs.log('[USER_LIST_CLICK_BAN_ERROR]', err, 'error');
               this.bs.idle();
               this.getUser();
             }
@@ -213,7 +213,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
               this.getUser();
             },
             error: err => {
-              this.gs.log('[USER_LIST_CLICK_PROMOTE_ERROR]', err);
+              this.gs.log('[USER_LIST_CLICK_PROMOTE_ERROR]', err, 'error');
               this.bs.idle();
               this.getUser();
             }

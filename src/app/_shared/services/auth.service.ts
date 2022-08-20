@@ -84,7 +84,7 @@ export class AuthService {
         this.router.navigateByUrl('/');
       },
       error: err => {
-        this.gs.log('[LOGOUT_ERROR]', err);
+        this.gs.log('[LOGOUT_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

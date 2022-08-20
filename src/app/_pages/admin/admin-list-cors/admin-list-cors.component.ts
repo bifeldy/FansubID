@@ -85,7 +85,7 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[CORS_LIST_ERROR]', err);
+        this.gs.log('[CORS_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -113,7 +113,7 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
               this.getCors();
             },
             error: err => {
-              this.gs.log('[CORS_LIST_CLICK_REVOKE_ERROR]', err);
+              this.gs.log('[CORS_LIST_CLICK_REVOKE_ERROR]', err, 'error');
               this.bs.idle();
               this.getCors();
             }

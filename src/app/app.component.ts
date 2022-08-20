@@ -224,7 +224,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bs.idle();
       },
       error: error => {
-        this.gs.log('[VERIFY_ERROR]', error);
+        this.gs.log('[VERIFY_ERROR]', error, 'error');
         this.bs.idle();
         this.as.removeUser();
       }

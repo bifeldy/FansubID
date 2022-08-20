@@ -89,7 +89,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             }
           },
           error: err => {
-            this.gs.log('[BERKAS_DETAIL_ERROR]', err);
+            this.gs.log('[BERKAS_DETAIL_ERROR]', err, 'error');
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {

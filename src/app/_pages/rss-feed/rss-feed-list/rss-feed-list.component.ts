@@ -81,7 +81,7 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[RSS_FEED_LIST_ERROR]', err);
+        this.gs.log('[RSS_FEED_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

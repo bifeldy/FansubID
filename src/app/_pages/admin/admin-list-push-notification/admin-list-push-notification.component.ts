@@ -114,7 +114,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[NOTIFICATION_LIST_ERROR]', err);
+        this.gs.log('[NOTIFICATION_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -151,7 +151,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
         this.getNotif();
       },
       error: err => {
-        this.gs.log('[NOTIFICATION_CREATE_ERROR]', err);
+        this.gs.log('[NOTIFICATION_CREATE_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
         this.getNotif();
@@ -181,7 +181,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
               this.getNotif();
             },
             error: err => {
-              this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_ERROR]', err);
+              this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_ERROR]', err, 'error');
               this.bs.idle();
               this.getNotif();
             }

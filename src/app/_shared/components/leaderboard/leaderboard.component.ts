@@ -51,7 +51,7 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
         this.leaderboardData = res.results;
       },
       error: err => {
-        this.gs.log('[LEADERBOARD_LIST_ERROR]', err);
+        this.gs.log('[LEADERBOARD_LIST_ERROR]', err, 'error');
       }
     });
   }

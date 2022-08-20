@@ -104,7 +104,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           }
         },
         error: err => {
-          this.gs.log('[USER_DETAIL_ERROR]', err);
+          this.gs.log('[USER_DETAIL_ERROR]', err, 'error');
           this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
@@ -183,7 +183,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.submitted = false;
       },
       error: err => {
-        this.gs.log('[IMAGE_PHOTO_ERROR]', err);
+        this.gs.log('[IMAGE_PHOTO_ERROR]', err, 'error');
         this.fg.controls['image_photo'].patchValue(null);
         this.fg.controls['image_photo'].markAsPristine();
         this.submitted = false;
@@ -237,7 +237,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.submitted = false;
       },
       error: err => {
-        this.gs.log('[IMAGE_COVER_ERROR]', err);
+        this.gs.log('[IMAGE_COVER_ERROR]', err, 'error');
         this.fg.controls['image_cover'].patchValue(null);
         this.fg.controls['image_cover'].markAsPristine();
         this.submitted = false;
@@ -274,7 +274,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl(`/user/${this.username}`);
           },
           error: error => {
-            this.gs.log('[VERIFY_LOGIN_ERROR]', error);
+            this.gs.log('[VERIFY_LOGIN_ERROR]', error, 'error');
             this.bs.idle();
             this.as.removeUser();
             this.router.navigateByUrl(`/user/${this.username}`);
@@ -282,7 +282,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         });
       },
       error: err => {
-        this.gs.log('[USER_EDIT_ERROR]', err);
+        this.gs.log('[USER_EDIT_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
       }

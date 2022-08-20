@@ -119,7 +119,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
           }
         },
         error: err => {
-          this.gs.log('[BERKAS_DETAIL_ERROR]', err);
+          this.gs.log('[BERKAS_DETAIL_ERROR]', err, 'error');
           this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
@@ -157,7 +157,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[PROJECT_LOAD_ERROR]', err);
+        this.gs.log('[PROJECT_LOAD_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -221,7 +221,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.filteredAnime = (res as any).results;
       },
       error: err => {
-        this.gs.log('[BERKAS_EDIT_SEARCH_ANIME_RESULT_ERROR]', err);
+        this.gs.log('[BERKAS_EDIT_SEARCH_ANIME_RESULT_ERROR]', err, 'error');
       }
     });
     this.subsDoramaDetail = this.fg.get('dorama_id').valueChanges.pipe(
@@ -242,7 +242,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.filteredDorama = (res as any).results;
       },
       error: err => {
-        this.gs.log('[BERKAS_EDIT_SEARCH_DORAMA_RESULT_ERROR]', err);
+        this.gs.log('[BERKAS_EDIT_SEARCH_DORAMA_RESULT_ERROR]', err, 'error');
       }
     });
     this.subsProjectDetail = this.fg.get('projectType_id').valueChanges.pipe(
@@ -384,7 +384,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.fg.controls['anime_name'].patchValue(res.result.name);
       },
       error: err => {
-        this.gs.log('[ANIME_CHECK_ADD_ERROR]', err);
+        this.gs.log('[ANIME_CHECK_ADD_ERROR]', err, 'error');
         this.submitted = false;
         this.resetSelectedAnime();
         this.fg.controls['anime_id'].patchValue(null);
@@ -411,7 +411,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.fg.controls['dorama_name'].patchValue(res.result.name);
       },
       error: err => {
-        this.gs.log('[DORAMA_CHECK_ADD_ERROR]', err);
+        this.gs.log('[DORAMA_CHECK_ADD_ERROR]', err, 'error');
         this.submitted = false;
         this.resetSelectedDorama();
         this.fg.controls['dorama_id'].patchValue(null);
@@ -471,7 +471,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.submitted = false;
       },
       error: err => {
-        this.gs.log('[IMAGE_ERROR]', err);
+        this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.fg.controls['image'].markAsPristine();
         this.submitted = false;
@@ -507,7 +507,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(`/berkas/${this.berkasId}`);
       },
       error: err => {
-        this.gs.log('[BERKAS_EDIT_ERROR]', err);
+        this.gs.log('[BERKAS_EDIT_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
       }

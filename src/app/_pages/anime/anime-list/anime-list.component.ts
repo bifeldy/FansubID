@@ -139,7 +139,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
         this.getFansubAnime();
       },
       error: err => {
-        this.gs.log('[ANIME_SEASONAL_ERROR]', err);
+        this.gs.log('[ANIME_SEASONAL_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -176,7 +176,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.gs.log('[FANSUB_ANIME_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

@@ -104,14 +104,14 @@ export class LoginComponent implements OnInit, OnDestroy {
               this.router.navigateByUrl(this.returnUrl);
             },
             error: error => {
-              this.gs.log('[VERIFY_LOGIN_ERROR]', error);
+              this.gs.log('[VERIFY_LOGIN_ERROR]', error, 'error');
               this.bs.idle();
               this.as.removeUser();
             }
           });
         },
         error: err => {
-          this.gs.log('[LOGIN_FORM_ERROR]', err);
+          this.gs.log('[LOGIN_FORM_ERROR]', err, 'error');
           this.loginInfo = err.error.result.message || err.error.info;
           this.submitted = false;
           this.bs.idle();

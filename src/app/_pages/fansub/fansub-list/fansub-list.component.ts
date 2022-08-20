@@ -204,7 +204,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_LIST_ERROR]', err);
+        this.gs.log('[FANSUB_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -228,7 +228,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_ANIME_ERROR]', err);
+        this.gs.log('[FANSUB_ANIME_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -252,7 +252,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[FANSUB_DORAMA_ERROR]', err);
+        this.gs.log('[FANSUB_DORAMA_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

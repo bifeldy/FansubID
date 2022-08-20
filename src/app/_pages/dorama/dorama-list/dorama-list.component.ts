@@ -150,7 +150,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
         this.getFansubDorama();
       },
       error: err => {
-        this.gs.log('[DORAMA_SEASONAL_ERROR]', err);
+        this.gs.log('[DORAMA_SEASONAL_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
@@ -187,7 +187,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
         this.changeCountryDorama();
       },
       error: err => {
-        this.gs.log('[FANSUB_DORAMA_ERROR]', err);
+        this.gs.log('[FANSUB_DORAMA_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
