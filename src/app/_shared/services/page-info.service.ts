@@ -46,7 +46,7 @@ export class PageInfoService {
     this.title = `${newTitle} | ${this.siteName}`;
     this.description = this.gs.htmlToText(newDescription);
     this.keywords = newKeywords;
-    this.image = newImage;
+    this.image = newImage.startsWith('/') ? environment.baseUrl + newImage : newImage;
     this.author = newAuthor;
     this.t.setTitle(this.title);
     this.m.updateTag({ name: 'description', content: this.description });
