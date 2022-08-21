@@ -10,19 +10,21 @@ import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
+import { ApiKeyService } from '../repository/api-key.service';
 import { ApiService } from '../services/api.service';
 import { ConfigService } from '../services/config.service';
 import { CryptoService } from '../services/crypto.service';
 import { GlobalService } from '../services/global.service';
+import { UserService } from '../repository/user.service';
 
 import { RegistrationService } from '../repository/registration.service';
-import { UserService } from '../repository/user.service';
 
 @Injectable()
 export class RegisterMiddleware implements NestMiddleware {
 
   constructor(
     private sr: SchedulerRegistry,
+    private aks: ApiKeyService,
     private api: ApiService,
     private cfg: ConfigService,
     private cs: CryptoService,
@@ -53,7 +55,7 @@ export class RegisterMiddleware implements NestMiddleware {
         const url = new URL(environment.recaptchaApiUrl);
         url.searchParams.append('secret', environment.reCaptchaSecretKey);
         url.searchParams.append('response', req.body['g-recaptcha-response']);
-        url.searchParams.append('remoteip', (req.headers['cf-connecting-ip'] || req.ip || '').toString());
+        url.searchParams.append('remoteip', this.aks.getOriginIpCc(req, true).origin_ip);
         const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
         if (res_raw.ok) {
           const res_json: any = await res_raw.json();

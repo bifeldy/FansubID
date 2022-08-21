@@ -105,6 +105,7 @@ export class ApiKeyService {
 
   async checkKey(origin: string, key: string): Promise<boolean> {
     let isAllowed = false;
+    // Remove Prefixes
     if (origin.startsWith('::ffff:')) {
       origin = origin.slice(7, origin.length);
     }
@@ -116,11 +117,27 @@ export class ApiKeyService {
     if (origin.startsWith('www.')) {
       origin = origin.slice(4, origin.length);
     }
-    if (origin.includes('/') && !origin.startsWith('/')) {
-      origin = origin.split('/')[0];
+    // Get Domain Or IP Maybe With Port Included And Remove Folder Path
+    origin = origin.split('/')[0];
+    // Remove Port
+    let totalColon = 0;
+    for (let i = 0; i < origin.length; i++) {
+      if (origin[i] === ':') {
+        totalColon++;
+      }
+      if (totalColon > 1) {
+        break;
+      }
     }
-    if (origin.includes(':') && !origin.startsWith(':')) {
+    if (totalColon === 1) {
+      // IPv4
       origin = origin.split(':')[0];
+    } else {
+      // IPv6
+      origin = origin.split(']')[0];
+      if (origin.startsWith('[')) {
+        origin = origin.slice(1, origin.length);
+      }
     }
     if (this.cfg.bypassApiKeyRateLimit.includes(origin)) {
       return true;

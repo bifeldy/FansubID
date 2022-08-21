@@ -10,6 +10,7 @@ import { RoleModel } from '../../../models/req-res.model';
 
 import { Roles } from '../../decorators/roles.decorator';
 
+import { ApiKeyService } from '../../repository/api-key.service';
 import { ApiService } from '../../services/api.service';
 import { GlobalService } from '../../services/global.service';
 
@@ -17,6 +18,7 @@ import { GlobalService } from '../../services/global.service';
 export class VerifyNikController {
 
   constructor(
+    private aks: ApiKeyService,
     private api: ApiService,
     private gs: GlobalService
   ) {
@@ -32,7 +34,7 @@ export class VerifyNikController {
         const url = new URL(environment.recaptchaApiUrl);
         url.searchParams.append('secret', environment.reCaptchaSecretKey);
         url.searchParams.append('response', req.body['g-recaptcha-response']);
-        url.searchParams.append('remoteip', (req.headers['cf-connecting-ip'] || req.ip || '').toString());
+        url.searchParams.append('remoteip', this.aks.getOriginIpCc(req, true).origin_ip);
         const res_raw1 = await this.api.getData(url, environment.nodeJsXhrHeader);
         if (res_raw1.ok) {
           const res_json1: any = await res_raw1.json();
