@@ -14,19 +14,18 @@ export class RateLimitGuard extends ThrottlerGuard {
   @Inject(GlobalService) private gs: GlobalService;
 
   override getTracker(req: Request): string {
-    return this.aks.getOriginIp(req, true);
+    const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
+    return clientOriginIpCc.origin_ip;
   }
 
   override async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
     const http = context.switchToHttp();
-    const ws = context.switchToWs();
     const req = http.getRequest<Request>();
-    const client = ws.getClient();
-    const origin = this.aks.getOriginIp(req) || client.conn.remoteAddress || '';
-    if (this.cfg.bypassApiKeyRateLimit.includes(origin)) {
+    const clientOriginIpCc = this.aks.getOriginIpCc(req);
+    if (this.cfg.bypassApiKeyRateLimit.includes(clientOriginIpCc.origin_ip)) {
       return true;
     }
-    const key = this.generateKey(context, origin);
+    const key = this.generateKey(context, clientOriginIpCc.origin_ip);
     const ttls = await this.storageService.getRecord(key);
     this.gs.log('[RATE_LIMIT_GUARD-SESSION] ⌛', ttls);
     if (ttls.length >= limit) {

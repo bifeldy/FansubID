@@ -29,9 +29,9 @@ function reqResEvent(req: Request, res: Response, next: NextFunction) {
     res.locals['abort-controller'].abort();
   });
   res.on('close', () => {
-    const remoteAddress = aks.getOriginIp(req, true);
+    const clientOriginIpCc = aks.getOriginIpCc(req, true);
     const timeEnd = new Date().getTime() - timeStart.getTime();
-    const reqResInfo = `${remoteAddress} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
+    const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
     sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
   });
   return next();

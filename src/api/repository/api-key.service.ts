@@ -80,13 +80,17 @@ export class ApiKeyService {
 
   /** */
 
-  getOriginIp(req: Request, ipOnly = false): string {
+  getOriginIpCc(req: Request, ipOnly = false): { origin_ip: string, country_code: string } {
     let originIp = '';
     if (!ipOnly) {
       originIp = originIp || req.headers.origin || req.headers.referer || '';
     }
-    originIp = (originIp || req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString();
-    return originIp || (req.ips?.length ? req.ips[0] : req.ip);
+    originIp = (originIp || req.headers['cf-connecting-ip'] || req.ip || '').toString();
+    const countryCode = (req.headers['cf-ipcountry'] || '').toString();
+    return {
+      origin_ip: originIp,
+      country_code: countryCode
+    };
   }
 
   getCorsOptions(): CorsOptions {
