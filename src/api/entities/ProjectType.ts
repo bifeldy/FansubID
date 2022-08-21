@@ -14,7 +14,7 @@ export class ProjectType implements ProjectTypeModel {
   @Column({ type: 'text', default: '// No Description' })
   description: string;
 
-  @Column({ type: 'text', default: '/favicon.ico' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png' })
   image_url: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

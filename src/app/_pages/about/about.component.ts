@@ -54,8 +54,6 @@ export class AboutComponent implements OnInit {
 
   library = null;
 
-  siteName = environment.siteName;
-
   constructor(
     private fs: FabService,
     private gs: GlobalService,
@@ -64,6 +62,10 @@ export class AboutComponent implements OnInit {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get ENV(): any {
+    return environment;
   }
 
   ngOnInit(): void {

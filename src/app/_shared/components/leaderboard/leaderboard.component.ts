@@ -10,14 +10,7 @@ import { QuizService } from '../../services/quiz.service';
 })
 export class LeaderboardComponent implements OnInit, OnDestroy {
 
-  leaderboardData = [
-    {
-      rank: '1',
-      username: 'No Data',
-      image_url: '/favicon.ico',
-      points: 0
-    }
-  ];
+  leaderboardData = [];
 
   leaderBoardTotalPages = 1;
   leaderboardPage = 1;

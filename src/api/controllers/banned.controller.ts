@@ -214,11 +214,11 @@ export class BannedController {
                 url: environment.baseUrl
               })
               .addField('Alasan', banned.reason, false)
-              .setThumbnail(banned.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.user_.image_url)
+              .setThumbnail(banned.user_.image_url.startsWith('/') ? environment.baseUrl + banned.user_.image_url : banned.user_.image_url)
               .setTimestamp(banned.updated_at)
               .setFooter({
                 text: (banned.banned_by_ ? banned.banned_by_.username : 'AUTO_BANNED'),
-                iconURL: (banned.banned_by_ ? (banned.banned_by_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
+                iconURL: (banned.banned_by_ ? (banned.banned_by_.image_url.startsWith('/') ? environment.baseUrl + banned.banned_by_.image_url : banned.banned_by_.image_url) : `${environment.baseUrl}/assets/img/favicon.png`)
               })
           ]
         });

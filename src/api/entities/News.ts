@@ -16,7 +16,7 @@ export class News implements NewsModel {
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ type: 'text', default: '/favicon.ico' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png' })
   image_url: string;
 
   @Column({ type: 'text', default: '[]' })

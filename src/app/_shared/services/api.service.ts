@@ -23,18 +23,14 @@ export class ApiService {
   }
 
   HTTP_REQ_URL(path: string): string {
-    if (path.startsWith('http')) {
-      return path;
-    } else if (!this.gs.isBrowser) {
-      const reqUrl = environment.baseUrl + environment.apiUrl + path;
-      if (reqUrl.includes('?')) {
-        return reqUrl + `&key=${environment.apiKey}`;
-      } else {
-        return reqUrl + `?key=${environment.apiKey}`;
+    if (path.startsWith('/')) {
+      let reqUrl = environment.baseUrl;
+      if (!path.startsWith('/api')) {
+        reqUrl += environment.apiUrl;
       }
-    } else {
-      return environment.apiUrl + path;
+      path = reqUrl + path;
     }
+    return path;
   }
 
   getData(path: string, options = {}, timedOut = 20 * 1000, retryCount = 3): Observable<any> {

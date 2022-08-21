@@ -173,11 +173,11 @@ export class FansubMemberController {
                   url: environment.baseUrl
                 })
                 .setDescription('Mengajukan Diri Bergabung Sebagai Anggota Fansub')
-                .setThumbnail(resMemberSave.fansub_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resMemberSave.fansub_.image_url)
+                .setThumbnail(resMemberSave.fansub_.image_url.startsWith('/') ? environment.baseUrl + resMemberSave.fansub_.image_url : resMemberSave.fansub_.image_url)
                 .setTimestamp(resMemberSave.updated_at)
                 .setFooter({
                   text: resMemberSave.user_.username,
-                  iconURL: resMemberSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resMemberSave.user_.image_url
+                  iconURL: resMemberSave.user_.image_url.startsWith('/') ? environment.baseUrl + resMemberSave.user_.image_url : resMemberSave.user_.image_url
                 })
             ]
           });
@@ -288,11 +288,11 @@ export class FansubMemberController {
                     url: environment.baseUrl
                   })
                   .setDescription(`Anggota Disetujui Dengan Keterangan '${resMember.keterangan}'`)
-                  .setThumbnail(resMember.fansub_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resMember.fansub_.image_url)
+                  .setThumbnail(resMember.fansub_.image_url.startsWith('/') ? environment.baseUrl + resMember.fansub_.image_url : resMember.fansub_.image_url)
                   .setTimestamp(resMember.updated_at)
                   .setFooter({
                     text: resMember.user_.username,
-                    iconURL: resMember.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resMember.user_.image_url
+                    iconURL: resMember.user_.image_url.startsWith('/') ? environment.baseUrl + resMember.user_.image_url : resMember.user_.image_url
                   })
               ]
             });

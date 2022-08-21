@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { environment } from '../../../environments/app/environment';
+
 import { CONSTANTS } from '../../../constants';
 
 import { GlobalService } from '../../_shared/services/global.service';
@@ -70,6 +72,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  get ENV(): any {
+    return environment;
   }
 
   get registerFormVal(): any {

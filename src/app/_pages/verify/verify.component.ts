@@ -55,6 +55,10 @@ export class VerifyComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get ENV(): any {
+    return environment;
+  }
+
   ngOnDestroy(): void {
     this.subsCekNik?.unsubscribe();
     this.subsVerify1?.unsubscribe();
@@ -134,7 +138,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         title: 'Metode Verifikasi Baru (｡>﹏<｡)',
         htmlMessage: `
           <div class="text-center p-3">
-            <img src="/favicon.ico" class="mb-4">
+            <img src="${environment.baseUrl}/assets/img/favicon.png" class="mb-4">
             <p class="text-warning">
               <br />
               Silahkan gunakan metode verifikasi yang tersedia pada tombol dibawah. <br />

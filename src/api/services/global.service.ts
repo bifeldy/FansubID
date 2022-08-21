@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { environment } from '../../environments/api/environment';
+// import { environment } from '../../environments/api/environment';
 
 import { Seasons } from '../../app/_shared/models/Seasons';
 
@@ -19,21 +19,23 @@ export class GlobalService {
   }
 
   log(message: any, data: any = null, type: string = 'log'): void {
-    if (!environment.production) {
-      if (type === 'log') {
-        if (data != null) {
-          console.log(message, data);
-        } else {
-          console.log(message);
-        }
-      } else if (type === 'warn') {
-        console.warn(message, data);
+    // if (!environment.production) {
+      let logger = null;
+      if (type === 'warn') {
+        logger = console.warn;
       } else if (type === 'error') {
-        console.error(message, data);
+        logger = console.error;
       } else if (type === 'table') {
-        console.table(message);
+        logger = console.table;
+      } else {
+        logger = console.log;
       }
-    }
+      if (data) {
+        logger(message, data);
+      } else {
+        logger(message);
+      }
+    // }
   }
 
   OBJ2XML(obj: object): string {

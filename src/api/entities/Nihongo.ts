@@ -25,7 +25,7 @@ export class Nihongo implements NihongoModel {
   @Column({ type: 'text', nullable: true })
   audio: string;
 
-  @Column({ type: 'text', default: '/favicon.ico' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png' })
   image_url: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

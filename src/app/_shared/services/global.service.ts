@@ -101,18 +101,20 @@ export class GlobalService {
       this.forceEnableDebugLog = localStorage.getItem(this.localStorageKeys.DebugLogs) === 'true';
     }
     if (this.isDevMode || this.forceEnableDebugLog) {
-      if (type === 'log') {
-        if (data != null) {
-          console.log(message, data);
-        } else {
-          console.log(message);
-        }
-      } else if (type === 'warn') {
-        console.warn(message, data);
+      let logger = null;
+      if (type === 'warn') {
+        logger = console.warn;
       } else if (type === 'error') {
-        console.error(message, data);
+        logger = console.error;
       } else if (type === 'table') {
-        console.table(message);
+        logger = console.table;
+      } else {
+        logger = console.log;
+      }
+      if (data) {
+        logger(message, data);
+      } else {
+        logger(message);
       }
     }
   }

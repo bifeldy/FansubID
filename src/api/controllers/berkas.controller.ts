@@ -324,11 +324,11 @@ export class BerkasController {
                 { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
                 { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
               )
-              .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
+              .setImage(resFileSave.image_url.startsWith('/') ? environment.baseUrl + resFileSave.image_url : resFileSave.image_url)
               .setTimestamp(resFileSave.updated_at)
               .setFooter({
                 text: resFileSave.user_.username,
-                iconURL: resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
+                iconURL: resFileSave.user_.image_url.startsWith('/') ? environment.baseUrl + resFileSave.user_.image_url : resFileSave.user_.image_url
               })
           ]
         });
@@ -600,11 +600,11 @@ export class BerkasController {
                   { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
                   { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
                 )
-                .setImage(resFileSave.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.image_url)
+                .setImage(resFileSave.image_url.startsWith('/') ? environment.baseUrl + resFileSave.image_url : resFileSave.image_url)
                 .setTimestamp(resFileSave.updated_at)
                 .setFooter({
                   text: resFileSave.user_.username,
-                  iconURL: resFileSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resFileSave.user_.image_url
+                  iconURL: resFileSave.user_.image_url.startsWith('/') ? environment.baseUrl + resFileSave.user_.image_url : resFileSave.user_.image_url
                 })
             ]
           });

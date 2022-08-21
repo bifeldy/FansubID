@@ -111,6 +111,10 @@
                 {
                   "replace": "src/environments/app/environment.ts",
                   "with": "src/environments/app/environment.prod.ts"
+                },
+                {
+                  "replace": "src/environments/api/environment.ts",
+                  "with": "src/environments/api/environment.prod.ts"
                 }
               ],
               "outputHashing": "all"
@@ -213,6 +217,10 @@
             "production": {
               "outputHashing": "media",
               "fileReplacements": [
+                {
+                  "replace": "src/environments/app/environment.ts",
+                  "with": "src/environments/app/environment.prod.ts"
+                },
                 {
                   "replace": "src/environments/api/environment.ts",
                   "with": "src/environments/api/environment.prod.ts"

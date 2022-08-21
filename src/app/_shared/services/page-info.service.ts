@@ -42,7 +42,7 @@ export class PageInfoService {
     return this.keywords;
   }
 
-  updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = '/favicon.ico', newAuthor = '「💤 Fansub ✨ ID 🌞」'): void {
+  updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = `${environment.baseUrl}/assets/img/favicon.png`, newAuthor = '「💤 Fansub ✨ ID 🌞」'): void {
     this.title = `${newTitle} | ${this.siteName}`;
     this.description = this.gs.htmlToText(newDescription);
     this.keywords = newKeywords;

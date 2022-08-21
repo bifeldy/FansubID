@@ -8,7 +8,7 @@
             <div class="card-body">
               <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()">
                 <div class="text-center mb-4">
-                  <img class="mb-4" src="/favicon.ico" style="transform: rotateY(180deg);" />
+                  <img class="mb-4" src="{{ ENV.baseUrl }}/assets/img/favicon.png" style="transform: rotateY(180deg);" />
                   <h1 class="h3 mb-3 font-weight-normal">Hai, Selamat Datang! >_<"</h1>
                   <p class="text-warning">{{ registerInfo }}</p>
                 </div>

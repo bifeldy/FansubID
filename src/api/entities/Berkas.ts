@@ -27,7 +27,7 @@ export class Berkas implements BerkasModel {
   @Column({ type: 'text' })
   download_url: string;
 
-  @Column({ type: 'text', default: '/favicon.ico' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png' })
   image_url: string;
 
   @Column({ type: 'int', default: 0 })

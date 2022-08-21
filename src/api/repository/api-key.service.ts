@@ -85,7 +85,7 @@ export class ApiKeyService {
     if (!ipOnly) {
       originIp = originIp || req.headers.origin || req.headers.referer || '';
     }
-    originIp = (originIp || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString();
+    originIp = (originIp || req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString();
     return originIp || (req.ips?.length ? req.ips[0] : req.ip);
   }
 

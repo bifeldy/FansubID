@@ -27,6 +27,7 @@ export class ApiKeyMiddleware implements NestMiddleware {
     throw new HttpException({
       info: '🙄 401 - API Key :: Kunci Tidak Dapat Digunakan 😪',
       result: {
+        key, origin,
         message: `💩 Api Key Salah / Tidak Terdaftar! 🤬`
       }
     }, HttpStatus.UNAUTHORIZED);

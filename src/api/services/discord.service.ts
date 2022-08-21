@@ -135,15 +135,15 @@ export class DiscordService {
           .setURL(setUrl)
           .setAuthor({
             name: setAuthor.name,
-            iconURL: setAuthor.iconURL === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : setAuthor.iconURL,
+            iconURL: setAuthor.iconURL.startsWith('/') ? environment.baseUrl + setAuthor.iconURL : setAuthor.iconURL,
             url: setAuthor.url
           })
           .setDescription(setDescription.replace(/<[^>]*>/g, ' ').trim())
-          .setThumbnail(setThumbnail === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : setThumbnail)
+          .setThumbnail(setThumbnail.startsWith('/') ? environment.baseUrl + setThumbnail : setThumbnail)
           .setTimestamp(setTimestamp)
           .setFooter({
             text: setFooter.text,
-            iconURL: setFooter.iconURL === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : setFooter.iconURL
+            iconURL: setFooter.iconURL.startsWith('/') ? environment.baseUrl + setFooter.iconURL : setFooter.iconURL
           })
       ]
     };
@@ -235,11 +235,11 @@ export class DiscordService {
                     url: environment.baseUrl
                   })
                   .setDescription(user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
-                  .setThumbnail(user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url)
+                  .setThumbnail(user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url)
                   .setTimestamp(user.updated_at)
                   .setFooter({
                     text: user.username,
-                    iconURL: user.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : user.image_url
+                    iconURL: user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url
                   })
               ]
             });

@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -69,7 +71,7 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
             'Nama Api': r.name,
             'IP Domain': r.ip_domain,
             'Api Key': r.api_key,
-            foto: (r.user_?.image_url || '/favicon.ico'),
+            foto: (r.user_?.image_url || `${environment.baseUrl}/assets/img/favicon.png`),
             Pemilik: (r.user_?.username || 'SYSTEM'),
             Aksi: [{
               type: 'button',

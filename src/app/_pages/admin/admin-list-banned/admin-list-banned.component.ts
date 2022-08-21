@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { UserModel, RoleModel } from '../../../../models/req-res.model';
 
 import { AdminService } from '../../../_shared/services/admin.service';
@@ -85,7 +87,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
           bannedDataRow.push({
             Id: r.id,
             foto_korban: r.user_.image_url,
-            foto_pelaku: (r.banned_by_?.image_url || '/favicon.ico'),
+            foto_pelaku: (r.banned_by_?.image_url || `${environment.baseUrl}/assets/img/favicon.png`),
             Korban: r.user_.username,
             Pelaku: (r.banned_by_?.username || 'AUTO_BANNED'),
             Alasan: r.reason,

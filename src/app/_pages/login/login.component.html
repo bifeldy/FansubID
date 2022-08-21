@@ -13,7 +13,7 @@
             <div class="card-body">
               <form [formGroup]="fg" class="m-2" (ngSubmit)="onClickedSubmit()">
                 <div class="text-center mb-4">
-                  <img class="mb-4" src="/favicon.ico" />
+                  <img class="mb-4" src="{{ ENV.baseUrl }}/assets/img/favicon.png" />
                   <h1 class="h3 mb-3 font-weight-normal">Hai, Jumpa Lagi! >_<"</h1>
                   <p class="text-warning">{{ loginInfo }}</p>
                 </div>

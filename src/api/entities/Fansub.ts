@@ -34,7 +34,7 @@ export class Fansub implements FansubModel {
   @Column({ type: 'text', default: '[]' })
   tags: string;
 
-  @Column({ type: 'text', default: '/favicon.ico' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png' })
   image_url: string;
 
   @Column({ type: 'int', default: 0 })

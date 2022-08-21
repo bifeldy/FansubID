@@ -161,7 +161,7 @@
                     [videoType]="lampiran.ext"
                     [subtitleUrl]="ddlSubtitles"
                     [subtitleFonts]="ddlFonts"
-                    [poster]="'/favicon.ico'">
+                    [poster]="ENV.baseUrl + '/assets/img/favicon.png'">
                   </app-vjs-player>
                   <button class="w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">
                     <mat-icon class="me-1">enhanced_encryption</mat-icon>

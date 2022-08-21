@@ -117,7 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       `「💤 ${environment.siteName}」`,
       `「✨ ${environment.siteDescription}」`,
       `「💤 ${environment.siteName} ✨🌞」`,
-      '/favicon.ico'
+      `${environment.baseUrl}/assets/img/favicon.png`
     );
     this.subsRouter = this.router.events.subscribe({
       next: e1 => {
@@ -170,7 +170,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                 e2['title'],
                 e2['description'],
                 e2['keywords'],
-                (this.gs.bgImgUrl || '/favicon.ico')
+                (this.gs.bgImgUrl || `${environment.baseUrl}/assets/img/favicon.png`)
               );
               this.fs.removeFab();
               if (this.gs.isBrowser) {

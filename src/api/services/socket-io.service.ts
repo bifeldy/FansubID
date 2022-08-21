@@ -196,7 +196,7 @@ export class SocketIoService {
   }
 
   checkUserLogin(client: Socket, payload: PayloadModel): void {
-    const ip = client.handshake.headers['x-real-ip'] || client.handshake.headers['x-forwarded-for'] || client.handshake.address || client.request.socket.remoteAddress || '';
+    const ip = client.handshake.headers['cf-connecting-ip'] || client.handshake.headers['x-real-ip'] || client.handshake.headers['x-forwarded-for'] || client.handshake.address || client.request.socket.remoteAddress || '';
     payload.ip = ip as string;
     if (payload.token) {
       try {

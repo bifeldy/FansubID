@@ -19,7 +19,7 @@ export class User implements UserModel {
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
-  @Column({ type: 'text', default: '/favicon.ico' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png' })
   image_url: string;
 
   @Column({ type: 'enum', enum: RoleModel, default: RoleModel.USER })

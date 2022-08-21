@@ -2,6 +2,8 @@ import { KeyValue } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { QuizService } from '../../../_shared/services/quiz.service';
 import { RightPanelService } from '../../../_shared/services/right-panel.service';
@@ -40,6 +42,10 @@ export class QuizComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get ENV(): any {
+    return environment;
   }
 
   get ROUTER(): Router {

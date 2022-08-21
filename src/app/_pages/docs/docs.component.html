@@ -84,7 +84,7 @@
                 <mat-card class="gradient-border rgb-border">
                   <mat-card-header routerLink="/fansub/{{ c.fansub_?.slug }}" style="cursor: pointer;">
                     <div mat-card-avatar style="background-size: cover;"
-                      [style.background-image]="'url(' + (c.fansub_?.image_url || '/favicon.ico') + ')'">
+                      [style.background-image]="'url(' + (c.fansub_?.image_url || ENV.baseUrl + '/assets/img/favicon.png') + ')'">
                     </div>
                     <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
                       <h3 class="mb-0">{{ c.name }}</h3>

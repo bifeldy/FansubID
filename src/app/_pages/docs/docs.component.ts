@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { environment } from '../../../environments/app/environment';
-import { FansubService } from '../../_shared/services/fansub.service';
 
+import { FansubService } from '../../_shared/services/fansub.service';
 import { GlobalService } from '../../_shared/services/global.service';
 import { InformationService } from '../../_shared/services/information.service';
 
