@@ -5,16 +5,21 @@ import { Equal, ILike } from 'typeorm';
 import { Roles } from '../../decorators/roles.decorator';
 import { VerifiedOnly } from '../../decorators/verified.decorator';
 
-import { RoleModel, UserModel } from '../../../models/req-res.model';
+import { environment } from '../../../environments/api/environment';
+
+import { RoleModel, FansubMemberModel, UserModel } from '../../../models/req-res.model';
 
 import { FansubService } from '../../repository/fansub.service';
 import { FansubMemberService } from '../../repository/fansub-member.service';
 import { UserService } from '../../repository/user.service';
 
+import { DiscordService } from '../../services/discord.service';
+
 @Controller('/fansub-member')
 export class FansubMemberController {
 
   constructor(
+    private ds: DiscordService,
     private fansubRepo: FansubService,
     private fansubMemberRepo: FansubMemberService,
     private userRepo: UserService
@@ -156,6 +161,26 @@ export class FansubMemberController {
             delete resMemberSave.approved_by_.created_at;
             delete resMemberSave.approved_by_.updated_at;
           }
+          this.ds.sendNews({
+            embeds: [
+              this.ds.createEmbedMessageEmptyRawTemplate()
+                .setColor('#ffc107')
+                .setTitle(resMemberSave.fansub_.name)
+                .setURL(`${environment.baseUrl}/fansub/${resMemberSave.fansub_.slug}`)
+                .setAuthor({
+                  name: `${environment.siteName} - Keanggotaan Grup`,
+                  iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                  url: environment.baseUrl
+                })
+                .setDescription('Mengajukan Diri Bergabung Sebagai Anggota Fansub')
+                .setThumbnail(resMemberSave.fansub_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resMemberSave.fansub_.image_url)
+                .setTimestamp(resMemberSave.updated_at)
+                .setFooter({
+                  text: resMemberSave.user_.username,
+                  iconURL: resMemberSave.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resMemberSave.user_.image_url
+                })
+            ]
+          });
           return {
             info: `😅 201 - Fansub API :: Permintaan Bergabung Berhasil 🤣`,
             result: resMemberSave
@@ -237,7 +262,7 @@ export class FansubMemberController {
               }
             }, HttpStatus.NOT_ACCEPTABLE);
           }
-          let resMember = null;
+          let resMember: FansubMemberModel | FansubMemberModel[] = null;
           let resInfo = null;
           if (req.body.approved) {
             if (req.body.keterangan) {
@@ -251,6 +276,26 @@ export class FansubMemberController {
               targetUser.role = RoleModel.FANSUBBER;
               await this.userRepo.save(targetUser);
             }
+            this.ds.sendNews({
+              embeds: [
+                this.ds.createEmbedMessageEmptyRawTemplate()
+                  .setColor('#69f0ae')
+                  .setTitle(resMember.fansub_.name)
+                  .setURL(`${environment.baseUrl}/fansub/${resMember.fansub_.slug}`)
+                  .setAuthor({
+                    name: `${environment.siteName} - Keanggotaan Grup`,
+                    iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                    url: environment.baseUrl
+                  })
+                  .setDescription(`Anggota Disetujui Dengan Keterangan '${resMember.keterangan}'`)
+                  .setThumbnail(resMember.fansub_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resMember.fansub_.image_url)
+                  .setTimestamp(resMember.updated_at)
+                  .setFooter({
+                    text: resMember.user_.username,
+                    iconURL: resMember.user_.image_url === '/favicon.ico' ? `${environment.baseUrl}/assets/img/favicon.png` : resMember.user_.image_url
+                  })
+              ]
+            });
           } else {
             resInfo = `😅 201 - Fansub API :: Berhasil Menolak Keanggotaan 🤣`;
             resMember = await this.fansubMemberRepo.remove(member);

@@ -232,7 +232,7 @@ export interface FansubModel {
   user_?: UserModel;
 }
 
-export interface UserFansubGroupMemberModel {
+export interface FansubMemberModel {
   id?: string;
   keterangan?: string;
   approved?: boolean;

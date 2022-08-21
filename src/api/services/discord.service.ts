@@ -226,7 +226,7 @@ export class DiscordService {
             await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
               embeds: [
                 new MessageEmbed()
-                  .setColor('#43b581')
+                  .setColor('#69f0ae')
                   .setTitle(user.kartu_tanda_penduduk_.nama)
                   .setURL(`${environment.baseUrl}/user/${user.username}`)
                   .setAuthor({

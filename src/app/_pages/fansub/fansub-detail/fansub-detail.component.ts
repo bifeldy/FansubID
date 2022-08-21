@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { environment } from '../../../../environments/app/environment';
 
-import { RoleModel, UserFansubGroupMemberModel } from '../../../../models/req-res.model';
+import { RoleModel, FansubMemberModel } from '../../../../models/req-res.model';
 import { Warna } from '../../../_shared/models/Warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -28,8 +28,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   fansubData = null;
   rssFeedData = null;
 
-  approvedMembers: UserFansubGroupMemberModel[] = [];
-  pendingMembers: UserFansubGroupMemberModel[] = [];
+  approvedMembers: FansubMemberModel[] = [];
+  pendingMembers: FansubMemberModel[] = [];
   joinedAsMember = null;
   showPendingMember = false;
 
@@ -421,7 +421,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  approveOrRejectFansubMember(m: UserFansubGroupMemberModel, ac: boolean): void {
+  approveOrRejectFansubMember(m: FansubMemberModel, ac: boolean): void {
     this.bs.busy();
     this.subsFansubMemberApproveReject = this.fansub.approveRejectFansubMember(m.id, {
       approved: ac
@@ -439,7 +439,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  approveMember(member: UserFansubGroupMemberModel): void {
+  approveMember(member: FansubMemberModel): void {
     this.approveOrRejectFansubMember(member, true);
   }
 
