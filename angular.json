@@ -82,6 +82,7 @@
               "file-saver",
               "global/document",
               "hammerjs",
+              "html-entities",
               "idb-chunk-store",
               "lodash",
               "p2p-graph",
