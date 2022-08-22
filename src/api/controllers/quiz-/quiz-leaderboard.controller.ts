@@ -19,34 +19,56 @@ export class QuizLeaderboardController {
     try {
       const maxPage = parseInt(req.query['page'] as string) || 0;
       const maxRow = parseInt(req.query['row'] as string) || 10;
-      const leaderboard = await this.userRepo.query(`
+      const leaderboards = await this.userRepo.query(`
         SELECT
-          row_number() over(ORDER BY p.points DESC) as rank,
-          u.username,
-          u.email,
-          u.image_url,
-          p.points,
-          p.created_at,
-          p.updated_at
+          a.*,
+          b.*
         FROM
-          users u,
-          profile p
-        WHERE
-          u.profile_id = p.id
-        LIMIT
-          $1
-        OFFSET
-          $2
+          (
+            SELECT
+              count(*)
+            FROM
+              users u,
+              profile p
+            WHERE
+              u.profile_id = p.id
+          ) a,
+          (
+            SELECT
+              row_number() over(ORDER BY p.points DESC) as rank,
+              u.username,
+              u.image_url,
+              p.points,
+              p.created_at,
+              p.updated_at
+            FROM
+              users u,
+              profile p
+            WHERE
+              u.profile_id = p.id
+            LIMIT
+              $1
+            OFFSET
+              $2
+          ) b
       `, [
         ((maxRow > 0 && maxRow <= 500) ? maxRow : 10),
         ((maxPage > 0) ? (maxPage * maxRow - maxRow) : 0)
       ]);
-      const count = leaderboard.length || 0;
+      let count = 0 || leaderboards.length;
+      for (const l of leaderboards) {
+        if ('count' in l) {
+          if (l.count > count) {
+            count = l.count;
+          }
+          delete l.count;
+        }
+      }
       return {
         info: `😅 200 - Leaderboard API :: List Rank 🤣`,
         count,
         pages: Math.ceil(count / (maxRow ? maxRow : 10)),
-        results: leaderboard
+        results: leaderboards
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
