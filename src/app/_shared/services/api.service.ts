@@ -25,7 +25,7 @@ export class ApiService {
   HTTP_REQ_URL(path: string): string {
     if (path.startsWith('/')) {
       let reqUrl = environment.baseUrl;
-      if (!path.startsWith('/api')) {
+      if (!path.startsWith('/api/')) {
         reqUrl += environment.apiUrl;
       }
       path = reqUrl + path;
