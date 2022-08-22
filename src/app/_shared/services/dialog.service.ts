@@ -26,7 +26,7 @@ export class DialogService {
     private info: InformationService
   ) {
     if (this.gs.isBrowser) {
-      this.maxWidth = (this.gs.gridListBreakpoint == 4) ? '45vw' : ((this.gs.gridListBreakpoint == 3) ? '50vw' : ((this.gs.gridListBreakpoint == 2) ? '60vw' : '80vw'));
+      this.maxWidth = (this.gs.gridListBreakpoint === 4) ? '45vw' : ((this.gs.gridListBreakpoint === 3) ? '50vw' : ((this.gs.gridListBreakpoint === 2) ? '60vw' : '80vw'));
     }
   }
 

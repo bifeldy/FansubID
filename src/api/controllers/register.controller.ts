@@ -27,6 +27,7 @@ export class RegisterController {
         message: `
           Silahkan Periksa Email Untuk Menyelesaikan Pendaftaran. <br />
           Petunjuk Sudah Dikirimkan Ke '<span class="text-danger">${registration.email}</span>'. <br />
+          <br />
           .: ${registration.id} :.
         `
       }

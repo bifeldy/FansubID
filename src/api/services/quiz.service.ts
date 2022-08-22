@@ -103,7 +103,7 @@ export class QuizService {
             FROM kanji
             WHERE translate <> ''
         `;
-      } else if (school != null) {
+      } else if (school !== null) {
         sqlQuery += `
             WHERE school::varchar(255) ILIKE '%${school}%';
           max_select := total_data - select_count;
@@ -113,7 +113,7 @@ export class QuizService {
             FROM kanji
             WHERE school::varchar(255) ILIKE '%${school}%'
         `;
-      } else if (jlpt != null) {
+      } else if (jlpt !== null) {
         sqlQuery += `
             WHERE jlpt::varchar(255) ILIKE '%${jlpt}%';
           max_select := total_data - select_count;
@@ -136,9 +136,9 @@ export class QuizService {
       let kanjis = await this.manager.query(sqlQuery);
       if (school === null && jlpt === null) {
         sqlQuery = `SELECT * FROM kanji_all_quiz`;
-      } else if (school != null) {
+      } else if (school !== null) {
         sqlQuery = `SELECT * FROM kanji_s${school}_quiz`;
-      } else if (jlpt != null) {
+      } else if (jlpt !== null) {
         sqlQuery = `SELECT * FROM kanji_n${jlpt}_quiz`;
       }
       kanjis = await this.manager.query(sqlQuery);

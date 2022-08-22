@@ -104,7 +104,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 banned: (Object.keys(result.results[r.id]).length > 0),
                 Aksi: (
                   (Object.keys(result.results[r.id]).length > 0) ||
-                  (r.id == this.currentUser.id) ||
+                  (r.id === this.currentUser.id) ||
                   this.gs.includesOneOf(r.role, excludedRole)
                 ) ? [] : [
                   { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username },

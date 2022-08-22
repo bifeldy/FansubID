@@ -8,7 +8,6 @@ import { environment } from '../../environments/api/environment';
 import { MailModel, RegistrationModel } from '../../models/req-res.model';
 
 import { ApiService } from './api.service';
-import { ConfigService } from './config.service';
 import { CryptoService } from './crypto.service';
 import { GlobalService } from './global.service';
 
@@ -17,7 +16,6 @@ export class MailService {
 
   constructor(
     private api: ApiService,
-    private cfg: ConfigService,
     private cs: CryptoService,
     private gs: GlobalService
   ) {
@@ -130,30 +128,6 @@ export class MailService {
     }
   }
 
-  // async yMailSend(mailBody: any): Promise<any> {
-  //   this.gs.log('[MAIL_SERVICE-ERROR] 💌', 'No Mail Service Configured!', 'error');
-  //   return null;
-  // }
-
-  // async gMailSend(mailBody: any): Promise<any> {
-  //   this.gs.log('[MAIL_SERVICE-ERROR] 💌', 'No Mail Service Configured!', 'error');
-  //   return null;
-  // }
-
-  async sendMail(mailBody: any): Promise<any> {
-    let mailStatus = null;
-    if (!mailStatus && this.cfg.mailSMTP.mailgun) {
-      mailStatus = await this.mailGunSend(mailBody);
-    }
-    // if (!mailStatus && this.cfg.mailSMTP.ymail) {
-    //   mailStatus = await this.yMailSend(mailBody);
-    // }
-    // if (!mailStatus && this.cfg.mailSMTP.gmail) {
-    //   mailStatus = await this.gMailSend(mailBody);
-    // }
-    return mailStatus;
-  }
-
   async sendRegisterActivationMail(user: RegistrationModel): Promise<any> {
     const content: MailModel = {
       to: user.email,
@@ -204,8 +178,7 @@ export class MailService {
         .: ${user.id} :.
       `.replace(/\s\s+/g, ' ').trim()
     };
-    const res = await this.sendMail(content);
-    return res;
+    return await this.mailGunSend(content);
   }
 
 }

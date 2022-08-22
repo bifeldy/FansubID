@@ -200,7 +200,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
         inputText: `Torrent # ${this.ss.mySocket.id} @ ${new Date().toUTCString()}`,
       }
     };
-    if (this.files.length == 1) {
+    if (this.files.length === 1) {
       userInput.torrentBerkasName.inputText = this.files[0].name;
       this.uploadFiles(userInput);
     } else if (this.files.length > 1) {

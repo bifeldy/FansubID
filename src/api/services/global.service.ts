@@ -48,7 +48,7 @@ export class GlobalService {
           xml += this.OBJ2XML(new Object(obj[prop][array]));
           xml += '</' + prop + '>';
         }
-      } else if (typeof obj[prop] == 'object') {
+      } else if (typeof obj[prop] === 'object') {
         xml += this.OBJ2XML(new Object(obj[prop]));
       } else {
         xml += obj[prop];

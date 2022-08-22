@@ -53,7 +53,7 @@ export class FuriganaService {
   }
 
   watch(mutation): void {
-    if (mutation.type == 'childList') {
+    if (mutation.type === 'childList') {
       for (const node of mutation.addedNodes) {
         this.gs.log('[KUROSHIRO_NODE_WATCHER]', node);
         if (this.ignoreNodes.includes(node)) {
@@ -71,7 +71,7 @@ export class FuriganaService {
           }
         }
       }
-    } else if (mutation.type == 'characterData') {
+    } else if (mutation.type === 'characterData') {
       this.convertAndReplace(mutation.target);
     }
   }

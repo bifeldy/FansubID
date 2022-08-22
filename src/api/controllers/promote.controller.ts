@@ -30,7 +30,7 @@ export class PromoteController {
       if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
         const adminMod: UserModel = res.locals['user'];
         const excludedRole = adminMod.role === RoleModel.ADMIN ? [RoleModel.ADMIN] : [RoleModel.ADMIN, RoleModel.MODERATOR];
-        if (adminMod.role != RoleModel.ADMIN && excludedRole.includes(req.body.role)) {
+        if (adminMod.role !== RoleModel.ADMIN && excludedRole.includes(req.body.role)) {
           throw new HttpException({
             info: '🙄 403 - Promote API :: Authorisasi Pengguna Gagal 😪',
             result: {

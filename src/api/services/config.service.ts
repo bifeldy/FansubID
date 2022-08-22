@@ -25,12 +25,6 @@ export class ConfigService {
 
   github = null;
 
-  mailSMTP = {
-    mailgun: true,
-    ymail: false,
-    gmail: false
-  };
-
   settings: ServerInfoModel = {
     isMaintenance: false,
     winboxOpenLink: true,
@@ -42,15 +36,6 @@ export class ConfigService {
     private gs: GlobalService
   ) {
     //
-  }
-
-  mailSet(provider: string): void {
-    for (const key in this.mailSMTP) {
-      this.mailSMTP[key] = false;
-    }
-    if (this.mailSMTP.hasOwnProperty(provider)) {
-      this.mailSMTP[provider] = true;
-    }
   }
 
   serverGet(): ServerInfoModel {

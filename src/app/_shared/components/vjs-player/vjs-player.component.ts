@@ -49,7 +49,7 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
           muted: false,
           sources: [{
             src: this.videoUrl,
-            type: `video/${this.videoType == 'mkv' ? 'mp4' : this.videoType}`
+            type: `video/${this.videoType === 'mkv' ? 'mp4' : this.videoType}`
           }],
           poster: this.poster
         }, () => {

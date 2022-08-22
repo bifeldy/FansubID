@@ -644,7 +644,7 @@ export class UserController {
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const t of tracks) {
-        if (user.username != selectedUser.username && user.role != RoleModel.ADMIN && user.role != RoleModel.MODERATOR) {
+        if (user.username !== selectedUser.username && user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
           delete t.ip;
         }
         if ('news_' in t && t.news_) {
