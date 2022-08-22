@@ -1,3 +1,6 @@
+// 3rd Party Library
+import { stripHtml } from 'string-strip-html';
+
 import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
@@ -57,6 +60,11 @@ export class GlobalService {
     }
     var xml = xml.replace(/<\/?[0-9]{1,}>/g, '');
     return `<root>${xml}</root>`;
+  }
+
+  htmlToText(htmlElementString: string): string {
+    const stringText = stripHtml(htmlElementString);
+    return stringText.result;
   }
 
 }

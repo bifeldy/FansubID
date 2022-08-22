@@ -316,7 +316,7 @@ export class BerkasController {
                 iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                 url: environment.baseUrl
               })
-              .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
+              .setDescription(this.gs.htmlToText(resFileSave.description))
               .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
               .addField('Fansub', fansubEmbedData.join(', '), false)
               .addFields(
@@ -592,7 +592,7 @@ export class BerkasController {
                   iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                   url: environment.baseUrl
                 })
-                .setDescription(resFileSave.description.replace(/<[^>]*>/g, ' ').trim())
+                .setDescription(this.gs.htmlToText(resFileSave.description))
                 .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
                 .addField('Fansub', fansubEmbedData.join(', '), false)
                 .addFields(

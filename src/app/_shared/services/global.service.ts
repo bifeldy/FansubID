@@ -4,6 +4,8 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
+import { stripHtml } from 'string-strip-html';
+
 import { environment } from '../../../environments/app/environment';
 
 import { Seasons } from '../models/Seasons';
@@ -165,8 +167,9 @@ export class GlobalService {
     }
   }
 
-  htmlToText(htmlString: string): string {
-    return htmlString.replace(/<[^>]*>/g, ' ').trim();
+  htmlToText(htmlElementString: string): string {
+    const stringText = stripHtml(htmlElementString);
+    return stringText.result;
   }
 
   shuffle(array): any {

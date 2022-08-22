@@ -138,7 +138,7 @@ export class DiscordService {
             iconURL: setAuthor.iconURL.startsWith('/') ? environment.baseUrl + setAuthor.iconURL : setAuthor.iconURL,
             url: setAuthor.url
           })
-          .setDescription(setDescription.replace(/<[^>]*>/g, ' ').trim())
+          .setDescription(this.gs.htmlToText(setDescription))
           .setThumbnail(setThumbnail.startsWith('/') ? environment.baseUrl + setThumbnail : setThumbnail)
           .setTimestamp(setTimestamp)
           .setFooter({
@@ -234,7 +234,7 @@ export class DiscordService {
                     iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
                     url: environment.baseUrl
                   })
-                  .setDescription(user.profile_.description.replace(/<[^>]*>/g, ' ').trim())
+                  .setDescription(this.gs.htmlToText(user.profile_.description))
                   .setThumbnail(user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url)
                   .setTimestamp(user.updated_at)
                   .setFooter({
