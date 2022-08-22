@@ -57,7 +57,6 @@ export class CloudflareService {
       };
       const res_raw = await this.api.postData(url, JSON.stringify(data), {
         'Authorization': `Bearer ${environment.cloudflare.key}`,
-        'Content-Type': 'application/json',
         ...environment.nodeJsXhrHeader
       });
       const res = {
