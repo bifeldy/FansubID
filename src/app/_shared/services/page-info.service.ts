@@ -48,7 +48,7 @@ export class PageInfoService {
     this.keywords = newKeywords;
     this.image = newImage.startsWith('/') ? environment.baseUrl + newImage : newImage;
     this.author = newAuthor;
-    this.t.setTitle(this.title);
+    this.t.setTitle(`${this.title} | ${this.siteName}`);
     this.m.updateTag({ name: 'description', content: this.description });
     this.m.updateTag({ name: 'keywords', content: this.keywords });
     this.m.updateTag({ name: 'author', content: this.author });
