@@ -43,7 +43,7 @@ export class PageInfoService {
   }
 
   updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = `${environment.baseUrl}/assets/img/favicon.png`, newAuthor = '「💤 Fansub ✨ ID 🌞」'): void {
-    this.title = `${newTitle} | ${this.siteName}`;
+    this.title = newTitle;
     this.description = this.gs.htmlToText(newDescription);
     this.keywords = newKeywords;
     this.image = newImage.startsWith('/') ? environment.baseUrl + newImage : newImage;
@@ -52,10 +52,10 @@ export class PageInfoService {
     this.m.updateTag({ name: 'description', content: this.description });
     this.m.updateTag({ name: 'keywords', content: this.keywords });
     this.m.updateTag({ name: 'author', content: this.author });
-    this.m.updateTag({ property: 'og:title', content: this.title });
+    this.m.updateTag({ property: 'og:title', content: `${this.title} | ${this.siteName}` });
     this.m.updateTag({ property: 'og:description', content: this.description });
     this.m.updateTag({ property: 'og:image', content: this.image });
-    this.m.updateTag({ name: 'twitter:title', content: this.title });
+    this.m.updateTag({ name: 'twitter:title', content: `${this.title} | ${this.siteName}` });
     this.m.updateTag({ name: 'twitter:description', content: this.description });
     this.m.updateTag({ name: 'twitter:image', content: this.image });
     if (this.router.url.includes('/berkas/')) {
