@@ -150,7 +150,7 @@ export class ApiKeyService {
             api_key: Equal(key)
           },
           {
-            ip_domain: '',
+            ip_domain: Equal('*'),
             api_key: Equal(key)
           }
         ]
