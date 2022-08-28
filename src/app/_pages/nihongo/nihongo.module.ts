@@ -8,8 +8,8 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { AuthGuard } from '../../_shared/helpers/auth-guard';
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { AuthGuard } from '../../_shared/guards/auth.guard';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { NihongoListComponent } from './nihongo-list/nihongo-list.component';
 import { NihongoBelajarComponent } from './nihongo-belajar/nihongo-belajar.component';

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 import { MaterialChipComponent } from './material-chip.component';
 

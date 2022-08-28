@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { LeftMenuComponent } from './left-menu.component';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 @NgModule({
   declarations: [LeftMenuComponent],

@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 import { MaterialDialogInfoComponent } from './material-dialog-info/material-dialog-info.component';
 import { MaterialDialogDmakComponent } from './material-dialog-dmak/material-dialog-dmak.component';

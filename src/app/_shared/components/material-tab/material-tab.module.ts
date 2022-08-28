@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 import { MaterialTableModule } from '../material-table/material-table.module';
 import { DiscussionModule } from '../discussion/discussion.module';
 

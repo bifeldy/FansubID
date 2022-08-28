@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { TorrentComponent } from './torrent.component';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 

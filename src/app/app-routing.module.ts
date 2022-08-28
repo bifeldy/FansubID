@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { RoleModel } from '../models/req-res.model';
 
-import { AuthGuard } from './_shared/helpers/auth-guard';
+import { AuthGuard } from './_shared/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -46,7 +46,8 @@ const routes: Routes = [
     data: {
       title: 'Verifikasi',
       description: 'Halaman Verifikasi Akun',
-      keywords: 'Verify'
+      keywords: 'Verify',
+      roles: [RoleModel.ADMIN, RoleModel.FANSUBBER, RoleModel.MODERATOR, RoleModel.USER]
     }
   },
   {

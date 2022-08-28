@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
 import { AboutComponent } from './about.component';

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { MaterialTableComponent } from './material-table.component';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 import { MaterialChipModule } from '../material-chip/material-chip.module';
 

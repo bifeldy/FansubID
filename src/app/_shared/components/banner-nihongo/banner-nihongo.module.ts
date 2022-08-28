@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { BannerNihongoComponent } from './banner-nihongo.component';
 
-import { SharedMaterialModule } from '../../../_shared/helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 @NgModule({
   declarations: [BannerNihongoComponent],

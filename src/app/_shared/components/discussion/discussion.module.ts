@@ -6,7 +6,7 @@ import { DiscussionComponent } from './discussion.component';
 
 import { CustomPipeModule } from '../../pipes/custom-pipe.module';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 import { CustomDirectivesModule } from '../../directives/custom-directive.module';
 

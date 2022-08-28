@@ -18,9 +18,9 @@ import { NgProgressHttpModule } from 'ngx-progressbar/http';
 
 import { AppRoutingModule } from './app-routing.module';
 
-import { MyHammerConfig } from './_shared/helpers/my-hammer.config';
-import { MyTooltipConfig } from './_shared/helpers/my-tooltip.config';
-import { SharedMaterialModule } from './_shared/helpers/shared-material.module';
+import { MyHammerConfig } from './_shared/configs/my-hammer.config';
+import { MyTooltipConfig } from './_shared/helpers/tooltip';
+import { SharedMaterialModule } from './_shared/modules/shared-material.module';
 
 import { HttpCancelInterceptor } from './_shared/interceptors/http-cancel.interceptor';
 import { HttpRequestInterceptor } from './_shared/interceptors/http-request.interceptor';

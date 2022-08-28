@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MaterialFabComponent } from './material-fab.component';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 @NgModule({
   declarations: [MaterialFabComponent],

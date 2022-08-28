@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { RegisterComponent } from './register.component';
 

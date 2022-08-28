@@ -6,7 +6,7 @@ import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
 

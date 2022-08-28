@@ -8,8 +8,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { AuthGuard } from '../../_shared/helpers/auth-guard';
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { AuthGuard } from '../../_shared/guards/auth.guard';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';

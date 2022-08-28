@@ -5,7 +5,7 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
 
 import { FooterComponent } from './footer.component';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 @NgModule({
   declarations: [FooterComponent],

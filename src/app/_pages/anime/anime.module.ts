@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';

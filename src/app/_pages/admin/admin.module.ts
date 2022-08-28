@@ -9,8 +9,8 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
-import { AuthGuard } from '../../_shared/helpers/auth-guard';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
+import { AuthGuard } from '../../_shared/guards/auth.guard';
 
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';

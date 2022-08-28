@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { RssFeedListComponent } from './rss-feed-list/rss-feed-list.component';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { DiscussionModule } from '../../_shared/components/discussion/discussion.module';

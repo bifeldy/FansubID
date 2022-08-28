@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SwiperModule } from 'ngx-swiper-wrapper';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 import { CardAnimeDoramaComponent } from './card-anime-dorama.component';
 

@@ -8,7 +8,7 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { SharedMaterialModule } from '../../_shared/helpers/shared-material.module';
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { VjsPlayerModule } from '../../_shared/components/vjs-player/vjs-player.module';
@@ -16,7 +16,7 @@ import { DiscussionModule } from '../../_shared/components/discussion/discussion
 import { ReportModule } from '../../_shared/components/report/report.module';
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
-import { AuthGuard } from '../../_shared/helpers/auth-guard';
+import { AuthGuard } from '../../_shared/guards/auth.guard';
 
 import { BerkasCreateComponent } from './berkas-create/berkas-create.component';
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';

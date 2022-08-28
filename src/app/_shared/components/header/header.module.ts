@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { HeaderComponent } from './header.component';
 
-import { SharedMaterialModule } from '../../helpers/shared-material.module';
+import { SharedMaterialModule } from '../../modules/shared-material.module';
 
 @NgModule({
   declarations: [HeaderComponent],
