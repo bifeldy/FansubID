@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
@@ -24,7 +24,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private toast: ToastrService,
     private bs: BusyService,
     private ss: StatsServerService,
-    private ls: LocalStorageService
+    private ls: LocalStorageService,
+    private activatedRoute: ActivatedRoute
   ) {
     if (this.gs.isBrowser) {
       //
@@ -87,28 +88,36 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             }
           }
           this.toast.error(errorMessage, errorTitle);
-        }
-        switch (e.status) {
-          case 401:
-            this.as.removeUser();
-            this.ls.clear();
-            this.bs.idle();
-            this.router.navigate(['/login'], {
-              queryParams: {
-                returnUrl: this.router.url
-              }
-            });
-            break;
-          case 418:
-            this.bs.idle();
-            this.router.navigate(['/verify'], {
-              queryParams: {
-                returnUrl: this.router.url
-              }
-            });
-            break;
-          default:
-            break;
+          switch (e.status) {
+            case 401:
+              this.as.removeUser();
+              this.ls.clear();
+              this.bs.idle();
+              this.router.navigate(['/login'], {
+                queryParams: {
+                  returnUrl: this.router.url
+                }
+              });
+              break;
+            case 404:
+              this.bs.idle();
+              this.router.navigate(['/error'], {
+                queryParams: {
+                  returnUrl: this.activatedRoute.snapshot.parent.url
+                }
+              });
+              break;
+            case 418:
+              this.bs.idle();
+              this.router.navigate(['/verify'], {
+                queryParams: {
+                  returnUrl: this.router.url
+                }
+              });
+              break;
+            default:
+              break;
+          }
         }
         return throwError(() => e);
       }
