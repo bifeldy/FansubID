@@ -13,17 +13,17 @@ export class ApiKey implements ApiKeyModel {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'varchar', length: 255, default: '' })
+  @Column({ type: 'varchar', length: 255, default: '*' })
   ip_domain: string;
 
   @Column({ type: 'varchar', length: 255, unique: true })
   api_key: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: number;
+  created_at: number | Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updated_at: number;
+  updated_at: number | Date;
 
   @ManyToOne(type => User)
   user_: UserModel;

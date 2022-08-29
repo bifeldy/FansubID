@@ -26,10 +26,10 @@ export class Information implements InformationModel {
   close: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: number;
+  created_at: number | Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updated_at: number;
+  updated_at: number | Date;
 
   @ManyToOne(type => User)
   @JoinColumn()
