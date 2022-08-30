@@ -43,6 +43,7 @@ export interface JsonResponseMulti<T> {
 }
 
 export interface MailModel {
+  from?: string;
   to?: string;
   subject?: string;
   template?: string;
@@ -56,6 +57,17 @@ export interface MailModel {
   };
   html?: string;
   text?: string;
+};
+
+export interface MailboxModel {
+  id?: string;
+  from?: string;
+  to?: string;
+  subject?: string;
+  html?: string;
+  text?: string;
+  created_at?: number | Date;
+  updated_at?: number | Date;
 };
 
 export enum RoleModel {
@@ -167,6 +179,7 @@ export interface AttachmentModel {
   name?: string;
   ext?: string;
   size?: number;
+  mime?: string;
   download_count?: number;
   google_drive?: string;
   created_at?: number | Date;
@@ -428,6 +441,7 @@ export interface TempAttachmentModel {
   name?: string;
   ext?: string;
   size?: number;
+  mime?: string;
   download_count?: number;
   created_at?: number | Date;
   updated_at?: number | Date;
