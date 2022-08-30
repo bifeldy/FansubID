@@ -20,6 +20,7 @@ import { KanjiStats } from '../../api/entities/KanjiStats';
 import { KartuTandaPenduduk } from '../../api/entities/KartuTandaPenduduk';
 import { Komentar } from '../../api/entities/Komentar';
 import { LikeDislike } from '../../api/entities/LikeDislike';
+import { Mailbox } from '../../api/entities/Mailbox';
 import { News } from '../../api/entities/News';
 import { Nihongo } from '../../api/entities/Nihongo';
 import { Notification } from '../../api/entities/Notification';
@@ -70,6 +71,7 @@ export const environment = {
       KartuTandaPenduduk,
       Komentar,
       LikeDislike,
+      Mailbox,
       News,
       Nihongo,
       Notification,

@@ -85,7 +85,7 @@ export class MailService {
         form.append('description', username);
         form.append('expression', `match_recipient("${username}@${environment.mailGun.domain}")`);
         form.append('action', `forward("${emailTarget}")`);
-        form.append('action', 'stop()');
+        // form.append('action', 'stop()');
         const res_raw = await this.api.postData(url, form, {
           'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
           ...environment.nodeJsXhrHeader
@@ -107,11 +107,17 @@ export class MailService {
     try {
       const url = new URL(`${environment.mailGun.clientOptions.url}/${environment.mailGun.domain}/messages`);
       const form = new URLSearchParams();
-      form.append('from', `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`);
+      form.append('from', mailBody.from);
       form.append('to', mailBody.to);
       form.append('subject', mailBody.subject);
-      form.append('template', mailBody.template);
-      form.append('h:x-mailgun-variables', JSON.stringify(mailBody.variables));
+      if (mailBody.template && mailBody.variables) {
+        form.append('template', mailBody.template);
+        form.append('h:x-mailgun-variables', JSON.stringify(mailBody.variables));
+      } else if (mailBody.html) {
+        form.append('html', mailBody.html);
+      } else {
+        form.append('text', mailBody.text);
+      }
       const res_raw = await this.api.postData(url, form, {
         'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
         ...environment.nodeJsXhrHeader
@@ -130,6 +136,7 @@ export class MailService {
 
   async sendRegisterActivationMail(user: RegistrationModel): Promise<any> {
     const content: MailModel = {
+      from: `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`,
       to: user.email,
       subject: `${environment.siteName} | Aktivasi Akun`,
       template: 'register',
