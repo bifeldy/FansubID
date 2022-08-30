@@ -15,9 +15,12 @@ export class TempAttachment implements TempAttachmentModel {
 
   @Column({ type: 'varchar', length: 255 })
   ext: string;
-
+  
   @Column({ type: 'int' })
   size: number;
+
+  @Column({ type: 'text', nullable: true })
+  mime: string;
 
   @Column({ type: 'int', default: 0 })
   download_count: number;

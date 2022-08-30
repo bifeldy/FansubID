@@ -133,6 +133,7 @@ export class AttachmentController {
         const fileOriginalNameSplit = req.file.originalname.split('.');
         tempAttachment.ext = fileOriginalNameSplit[fileOriginalNameSplit.length - 1];
         tempAttachment.size = req.file.size;
+        tempAttachment.mime = req.file.mimetype;
         tempAttachment.user_ = user;
         const resAttachmentSave = await this.tempAttachmentRepo.save(tempAttachment);
         if ('user_' in resAttachmentSave && resAttachmentSave.user_) {

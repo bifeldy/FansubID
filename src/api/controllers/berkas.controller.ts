@@ -194,16 +194,16 @@ export class BerkasController {
           attachment.name = tempAttachment.name;
           attachment.size = tempAttachment.size;
           attachment.ext = tempAttachment.ext;
+          attachment.mime = tempAttachment.mime;
           attachment.user_ = tempAttachment.user_;
           const resAttachmentSave = await this.attachmentRepo.save(attachment);
-          berkas.attachment_ = resAttachmentSave;
           await this.tempAttachmentRepo.remove(tempAttachment);
           const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-          const fIdx = files.findIndex(f => f.name.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
-          let mimeType = 'video/';
+          const fIdx = files.findIndex(f => f.name.toString().toLowerCase().includes(resAttachmentSave.name.toString().toLowerCase()));
           if (fIdx >= 0) {
-            if (attachment.ext.toString().toLowerCase() === 'mkv') {
-              this.mkv.mkvExtract(attachment.name.toString().toLowerCase(), `${environment.uploadFolder}/${files[fIdx].name}`, async (e1, extractedFiles) => {
+            berkas.attachment_ = resAttachmentSave;
+            if (resAttachmentSave.ext.toString().toLowerCase() === 'mkv') {
+              this.mkv.mkvExtract(resAttachmentSave.name.toString().toLowerCase(), `${environment.uploadFolder}/${files[fIdx].name}`, async (e1, extractedFiles) => {
                 if (e1) {
                   this.gs.log('[MKV_EXTRACT-ERROR] 📂', e1, 'error');
                 } else {
@@ -218,7 +218,7 @@ export class BerkasController {
                           mkvAttachment.size = f.size;
                           const strSplit = f.name.split('.');
                           mkvAttachment.ext = strSplit[strSplit.length - 1];
-                          mkvAttachment.user_ = attachment.user_;
+                          mkvAttachment.user_ = resAttachmentSave.user_;
                           mkvAttachment.parent_attachment_ = resAttachmentSave;
                           await this.attachmentRepo.save(mkvAttachment);
                         } catch (e3) {
@@ -229,19 +229,16 @@ export class BerkasController {
                   }
                 }
               });
-              mimeType += 'x-matroska';
-            } else {
-              mimeType += attachment.ext.toString().toLowerCase();
             }
             this.gdrive.gDrive(true).then(async (gdrive) => {
               const dfile = await gdrive.files.create({
                 requestBody: {
-                  name: `${attachment.name.toString().toLowerCase()}.${attachment.ext.toString().toLowerCase()}`,
+                  name: `${resAttachmentSave.name.toString().toLowerCase()}.${resAttachmentSave.ext.toString().toLowerCase()}`,
                   parents: [environment.gdriveFolderId],  // FansubID ひきこもり - Folder
-                  mimeType
+                  mimeType: resAttachmentSave.mime
                 },
                 media: {
-                  mimeType,
+                  mimeType: resAttachmentSave.mime,
                   body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
                 },
                 fields: 'id'
@@ -264,7 +261,7 @@ export class BerkasController {
               // });
             }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
           } else {
-            await this.attachmentRepo.remove(attachment);
+            await this.attachmentRepo.remove(resAttachmentSave);
             throw new HttpException({
               info: `🙄 404 - Berkas API :: Gagal Mencari Lampiran 😪`,
               result: {

@@ -19,6 +19,9 @@ export class Attachment implements AttachmentModel {
   @Column({ type: 'int' })
   size: number;
 
+  @Column({ type: 'text', nullable: true })
+  mime: string;
+
   @Column({ type: 'int', default: 0 })
   download_count: number;
 
