@@ -54,12 +54,8 @@ export class MailInboxController {
       for (const m of mailboxs) {
         delete m.html;
         delete m.text;
-        if ('attachment_' in m && m.attachment_) {
-          for (const a of m.attachment_) {
-            delete a.created_at;
-            delete a.updated_at;
-          }
-        }
+        (m as any).attachment_count = m.attachment_.length;
+        delete m.attachment_;
       }
       return {
         info: '😍 200 - Mail Inbox API :: All Email 🥰',
