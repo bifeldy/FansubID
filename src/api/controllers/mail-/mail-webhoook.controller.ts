@@ -48,6 +48,8 @@ export class MailWebhookController {
       mailbox.id = req.body['Message-Id'];
       mailbox.from = req.body.From;
       mailbox.to = req.body.To;
+      mailbox.cc = req.body.Cc;
+      mailbox.bcc = req.body.Bcc;
       mailbox.subject = req.body.Subject;
       mailbox.html = req.body['body-html'];
       mailbox.text = req.body['body-plain'];

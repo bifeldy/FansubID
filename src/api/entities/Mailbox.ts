@@ -16,6 +16,12 @@ export class Mailbox implements MailboxModel {
   @Column({ type: 'text' })
   to: string;
 
+  @Column({ type: 'text', default: null })
+  cc: string;
+
+  @Column({ type: 'text', default: null })
+  bcc: string;
+
   @Column({ type: 'text' })
   subject: string;
 
