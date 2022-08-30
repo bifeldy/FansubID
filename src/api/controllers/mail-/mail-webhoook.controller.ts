@@ -52,8 +52,8 @@ export class MailWebhookController {
       mailbox.html = req.body['body-html'];
       mailbox.text = req.body['body-plain'];
       mailbox.date = new Date(req.body.Date);
-      const abortController = new AbortController();
-      if (req.files.length > 0) {
+      if (req.files?.length > 0) {
+        const abortController = new AbortController();
         let attachments = [];
         for (const file of req.files as any) {
           const attachment = this.attachmentRepo.new();

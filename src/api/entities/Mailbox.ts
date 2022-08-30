@@ -10,13 +10,13 @@ export class Mailbox implements MailboxModel {
   @Column({ type: 'text', primary: true })
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   from: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   to: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   subject: string;
 
   @Column({ type: 'text', default: null })
