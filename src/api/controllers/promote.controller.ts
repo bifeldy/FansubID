@@ -5,6 +5,7 @@ import { Equal, Not, In, ILike } from 'typeorm';
 import { environment } from '../../environments/api/environment';
 
 import { Roles } from '../decorators/roles.decorator';
+import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
@@ -25,6 +26,7 @@ export class PromoteController {
   @Post('/')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async promote(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {

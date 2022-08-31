@@ -5,6 +5,7 @@ import { Equal, ILike, IsNull } from 'typeorm';
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';
+import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { KomentarService } from '../repository/komentar.service';
 
@@ -193,6 +194,7 @@ export class CommentController {
   @Delete('/:id')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const komen =  await this.komentarRepo.findOneOrFail({

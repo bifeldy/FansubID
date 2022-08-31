@@ -232,6 +232,7 @@ export class NihongoController {
   @Delete('/:id')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const kana =  await this.nihongoRepo.findOneOrFail({

@@ -258,6 +258,7 @@ export class ApiKeyController {
   @Delete('/:id')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const cors = await this.apiKeyRepo.findOneOrFail({

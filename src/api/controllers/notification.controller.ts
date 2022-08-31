@@ -5,6 +5,7 @@ import { Equal, ILike } from 'typeorm';
 import { NotificationModel, RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';
+import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { NotificationService } from '../repository/notification.service';
 
@@ -23,6 +24,7 @@ export class NotificationController {
   @Get('/')
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -73,6 +75,7 @@ export class NotificationController {
   @Post('/')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -135,6 +138,7 @@ export class NotificationController {
   @Delete('/:id')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const notification = await this.notificationRepo.findOneOrFail({

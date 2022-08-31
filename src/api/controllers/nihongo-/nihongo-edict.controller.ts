@@ -2,6 +2,8 @@ import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '
 import { Request, Response } from 'express';
 import { Equal, Raw } from 'typeorm';
 
+// import { VerifiedOnly } from '../../decorators/verified.decorator';
+
 import { EdictService } from '../../repository/edict.service';
 
 @Controller('/nihongo-edict')
@@ -63,6 +65,7 @@ export class NihongoEdictController {
   // @Post('/')
   // @HttpCode(201)
   // @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  // @VerifiedOnly()
   // async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
   //   try {
   //     if (
@@ -125,6 +128,7 @@ export class NihongoEdictController {
   // @Put('/:id')
   // @HttpCode(201)
   // @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  // @VerifiedOnly()
   // async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
   //   try {
   //     if (
@@ -180,6 +184,7 @@ export class NihongoEdictController {
   // @Delete('/:id')
   // @HttpCode(202)
   // @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  // @VerifiedOnly()
   // async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
   //   try {
   //     const edict =  await this.edictRepo.findOneOrFail({

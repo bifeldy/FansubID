@@ -384,6 +384,7 @@ export class FansubController {
   @Delete('/:slug')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async deleteBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const fansub =  await this.fansubRepo.findOneOrFail({

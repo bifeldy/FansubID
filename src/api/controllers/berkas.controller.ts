@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 import { Equal, ILike, In } from 'typeorm';
 
 import { Roles } from '../decorators/roles.decorator';
+import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
@@ -639,6 +640,7 @@ export class BerkasController {
   @Delete('/:id')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const berkas =  await this.berkasRepo.findOneOrFail({

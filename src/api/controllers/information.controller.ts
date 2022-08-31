@@ -5,6 +5,7 @@ import { ILike } from 'typeorm';
 import { InformationModel, RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';
+import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { InformationService } from '../repository/information.service';
 
@@ -23,6 +24,7 @@ export class InformationController {
   @Get('/')
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -73,6 +75,7 @@ export class InformationController {
   @Post('/')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -195,6 +198,7 @@ export class InformationController {
   @Delete('/:id')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const information = await this.informationRepo.findOneOrFail({

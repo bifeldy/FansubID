@@ -7,6 +7,7 @@ import { environment } from '../../environments/api/environment';
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';
+import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { BerkasService } from '../repository/berkas.service';
 import { FansubMemberService } from '../repository/fansub-member.service';
@@ -272,6 +273,7 @@ export class UserController {
   @Delete('/:username')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user =  await this.userRepo.findOneOrFail({
