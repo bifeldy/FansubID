@@ -132,36 +132,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
     });
   }
 
-  verifyByKtpDisabled(): void {
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: 'Metode Verifikasi Baru (｡>﹏<｡)',
-        htmlMessage: `
-          <div class="text-center p-3">
-            <img src="${environment.baseUrl}/assets/img/favicon.png" class="mb-4">
-            <p class="text-warning">
-              <br />
-              Silahkan gunakan metode verifikasi yang tersedia pada tombol dibawah. <br />
-              <br />
-              === <i>Connect With</i> Discord (?) === <br />
-              Cukup dengan menghubungkan akun kamu. <br />
-              Lalu kirimkan kode yang muncul disini ke
-              <a href="https://discord.gg/xGWdExk" target="_blank" class="text-decoration-none">
-                <i>Channel</i> Khusus BOT
-              </a>. <br />
-              Status akunmu akan berubah menjadi terverifikasi. <br />
-              Akun terverifikasi hanya selama kamu berada dalam server. <br />
-              Saat keluar, kemungkinan status verifikasimu akan hilang. <br />
-              <br />
-              Terima kasih.
-            </p>
-          </div>
-        `,
-        confirmText: 'Via Discord',
-        cancelText: 'Batal'
-      },
-      disableClose: true
-    }).afterClosed().subscribe({
+  async verifyByKtpDisabled(): Promise<void> {
+    this.subsDialog = (await this.ds.openVerifikasiDiscord()).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

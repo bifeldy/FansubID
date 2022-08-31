@@ -32,16 +32,12 @@ export class WinboxService {
     }
   }
 
-  confirmationOpenUrl(uriUrl, windowTarget): void {
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: 'Ingin Buka Di Tab Baru?',
-        htmlMessage: uriUrl,
-        confirmText: 'Ya',
-        cancelText: 'Tidak'
-      },
-      disableClose: false
-    }).afterClosed().subscribe({
+  async confirmationOpenUrl(uriUrl, windowTarget): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      'Ingin Buka Di Tab Baru?',
+      uriUrl,
+      false
+    )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

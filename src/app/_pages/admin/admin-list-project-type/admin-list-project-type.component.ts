@@ -144,17 +144,12 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteProject(data): void {
+  async deleteProject(data): Promise<void> {
     this.gs.log('[PROJECT_LIST_CLICK_DELETE]', data);
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: `Hapus Proyek -- '${data.id}' :: '${data.nama}'`,
-        htmlMessage: 'Menghapus Dapat Membuat Error / Menghapus Berkas Yang Menunjuk Ke Tipe Ini !',
-        confirmText: 'Ya, Hapus',
-        cancelText: 'Tidak, Batal'
-      },
-      disableClose: false
-    }).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Hapus Proyek -- '${data.id}' :: '${data.nama}'`,
+      'Menghapus Dapat Membuat Error / Menghapus Berkas Yang Menunjuk Ke Tipe Ini !'
+    )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

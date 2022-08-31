@@ -409,8 +409,21 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
       }).subscribe({
         next: res => {
           this.gs.log('[FANSUB_DETAIL_MEMBER_JOIN_SUCCESS]', res);
-          this.getFansubMember();
           this.bs.idle();
+          this.subsDialog = this.ds.openInfoDialog({
+            data: {
+              title: `Permintaan Gabung Berhasil`,
+              htmlMessage: 'Silahkan Menghubungi Anggota Yang Sudah Tergabung / Admin / Moderator Fansub Untuk Menerima Permintaan Anda.',
+              confirmText: 'Tutup'
+            },
+            disableClose: true
+          }).afterClosed().subscribe({
+            next: r => {
+              this.gs.log('[INFO_DIALOG_CLOSED]', r);
+              this.getFansubMember();
+              this.subsDialog.unsubscribe();
+            }
+          });
         },
         error: err => {
           this.gs.log('[FANSUB_DETAIL_MEMBER_JOIN_ERROR]', err, 'error');

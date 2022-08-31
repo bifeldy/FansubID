@@ -159,17 +159,12 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteNotif(data): void {
+  async deleteNotif(data): Promise<void> {
     this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE]', data);
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: `Hapus Notif -- '${data.id}' :: '${data.title}'`,
-        htmlMessage: 'Yakin Akan Menghapus Notifikasi Ini ?',
-        confirmText: 'Ya, Hapus',
-        cancelText: 'Tidak, Batal'
-      },
-      disableClose: false
-    }).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Hapus Notif -- '${data.id}' :: '${data.title}'`,
+      'Yakin Akan Menghapus Notifikasi Ini ?'
+    )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

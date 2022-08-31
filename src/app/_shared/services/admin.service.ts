@@ -119,7 +119,7 @@ export class AdminService {
     return this.api.postData(`/banned`, bannedData);
   }
 
-  promote(promoteData): Observable<JsonResponse<UserModel>> {
+  proDemote(promoteData): Observable<JsonResponse<UserModel>> {
     return this.api.postData(`/promote`, promoteData);
   }
 

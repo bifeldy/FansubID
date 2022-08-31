@@ -68,28 +68,19 @@ export class DialogService {
     return this.dialog.open(MaterialDialogBelajarComponent, dataInfo);
   }
 
-  async openMaintenanceDialog(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
+  /** */
+
+  async openKonfirmasiDialog(title: string, htmlMessage: string, disableClose = true): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
     const defaultData = {
-      id: 'MAINTENANCE',
       data: {
-        title: `Informasi Perbaikan Web & Server`,
-        htmlMessage: 'Gagal Memuat Perbaikan Web & Server',
-        confirmText: 'Ok, Saya Mengerti!',
-        cancelText: null
+        title,
+        htmlMessage,
+        confirmText: 'Ya',
+        cancelText: 'Tidak'
       },
-      disableClose: true,
+      disableClose,
       maxWidth: this.maxWidth
     };
-    try {
-      const res: JsonResponse<InformationModel> = await lastValueFrom(this.info.getInfo(defaultData.id));
-      defaultData.data.title = res.result.title;
-      defaultData.data.htmlMessage = res.result.content;
-      defaultData.data.confirmText = res.result.confirm;
-      defaultData.data.cancelText = res.result.cancel;
-      defaultData.disableClose = res.result.close;
-    } catch (e) {
-      this.gs.log('[DIALOG_SERVICE-MAINTENANCE_DIALOG_ERROR]', e.error);
-    }
     return this.openInfoDialog(defaultData);
   }
 
@@ -118,6 +109,51 @@ export class DialogService {
     } catch (e) {
       this.gs.log('[DIALOG_SERVICE-ATURAN_TATA_TERTIB_DIALOG_ERROR]', e.error);
     }
+    return this.openInfoDialog(defaultData);
+  }
+
+  async fetchInformation(defaultData: any): Promise<void> {
+    try {
+      const res: JsonResponse<InformationModel> = await lastValueFrom(this.info.getInfo(defaultData.id));
+      defaultData.data.title = res.result.title;
+      defaultData.data.htmlMessage = res.result.content;
+      defaultData.data.confirmText = res.result.confirm;
+      defaultData.data.cancelText = res.result.cancel;
+      defaultData.disableClose = res.result.close;
+    } catch (e) {
+      this.gs.log('[DIALOG_SERVICE-FETCH_DIALOG_ERROR]', e.error);
+    }
+  }
+
+  async openMaintenanceDialog(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
+    const defaultData = {
+      id: 'MAINTENANCE',
+      data: {
+        title: `Informasi Perbaikan Web & Server`,
+        htmlMessage: 'Gagal Memuat Perbaikan Web & Server',
+        confirmText: 'Ok, Saya Mengerti!',
+        cancelText: null
+      },
+      disableClose: true,
+      maxWidth: this.maxWidth
+    };
+    await this.fetchInformation(defaultData);
+    return this.openInfoDialog(defaultData);
+  }
+
+  async openVerifikasiDiscord(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
+    const defaultData = {
+      id: 'VERIFIKASI-DISCORD',
+      data: {
+        title: 'Metode Verifikasi Baru (｡>﹏<｡)',
+        htmlMessage: 'Gagal Memuat Metode Verifikasi',
+        confirmText: 'Via Discord',
+        cancelText: 'Batal'
+      },
+      disableClose: true,
+      maxWidth: this.maxWidth
+    };
+    await this.fetchInformation(defaultData);
     return this.openInfoDialog(defaultData);
   }
 

@@ -137,7 +137,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     if (data.name === 'BAN') {
       this.ban(data);
     } else {
-      this.promote(data);
+      this.proDemote(data);
     }
   }
 
@@ -188,22 +188,17 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     });
   }
 
-  promote(data): void {
+  async proDemote(data): Promise<void> {
     this.gs.log('[USER_LIST_CLICK_PROMOTE]', data);
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: `Promosikan Akun -- '${data.username}'`,
-        htmlMessage: 'Apakah Yakin Dan Akun Telah Direview Sebelum Dipromosikan ?',
-        confirmText: `Ya, Jadikan ${data.name}`,
-        cancelText: 'Tidak, Batal'
-      },
-      disableClose: false
-    }).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Promosikan Akun -- '${data.username}'`,
+      'Apakah Yakin Dan Akun Telah Direview Sebelum Dipromosikan ?'
+    )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsPromote = this.adm.promote({
+          this.subsPromote = this.adm.proDemote({
             id: data.id,
             role: data.name
           }).subscribe({

@@ -93,8 +93,8 @@ export class ServiceWorkerService {
             data: {
               title: 'Ada Pembaharuan Tersedia',
               htmlMessage: `
-                <div>Versi Sekarang :: ${event.currentVersion.hash}</div>
-                <div>Versi Tersedia :: ${event.latestVersion.hash}</div>
+                <div>Sekarang :: ${event.currentVersion.hash}</div>
+                <div>Tersedia :: ${event.latestVersion.hash}</div>
               `,
               confirmText: 'OK'
             },

@@ -168,16 +168,11 @@ export class AdminListFansubMemberComponent implements OnInit {
     });
   }
 
-  kickMember(data): void {
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: `Kick Member -- '${data.user_.username}' :: '${data.fansub_.slug}'`,
-        htmlMessage: 'Apakah Yakin Dan Akun Telah Direview Sebelum Dikeluarkan ?',
-        confirmText: `Ya, Keluarkan`,
-        cancelText: 'Tidak, Batal'
-      },
-      disableClose: false
-    }).afterClosed().subscribe({
+  async kickMember(data): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Kick Member -- '${data.user_.username}' :: '${data.fansub_.slug}'`,
+      'Apakah Yakin Dan Akun Telah Direview Sebelum Dikeluarkan ?'
+    )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

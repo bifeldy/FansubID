@@ -93,17 +93,12 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
     });
   }
 
-  revokeCors(data): void {
+  async revokeCors(data): Promise<void> {
     this.gs.log('[CORS_LIST_CLICK_REVOKE]', data);
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: `Revoke Kunci -- '${data.id}' :: '${data.ip_domain}'`,
-        htmlMessage: 'Apakah Yakin Untuk Menonaktifkan Kunci Ini ?',
-        confirmText: 'Ya, Revoke',
-        cancelText: 'Tidak, Batal'
-      },
-      disableClose: false
-    }).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Revoke Kunci -- '${data.id}' :: '${data.ip_domain}'`,
+      'Apakah Yakin Untuk Menonaktifkan Kunci Ini ?'
+    )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

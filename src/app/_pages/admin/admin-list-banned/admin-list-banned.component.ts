@@ -110,17 +110,12 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     });
   }
 
-  unBan(data): void {
+  async unBan(data): Promise<void> {
     this.gs.log('[BANNED_LIST_CLICK_UNBAN]', data);
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: `UnBAN Akun -- '${data.username}'`,
-        htmlMessage: 'Apakah Yakin Dan Akun Telah Direview Sebelum UnBAN ?',
-        confirmText: 'Ya, Un-BAN Akun',
-        cancelText: 'Tidak, Batal'
-      },
-      disableClose: false
-    }).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `UnBAN Akun -- '${data.username}'`,
+      'Apakah Yakin Dan Akun Telah Direview Sebelum UnBAN ?'
+    )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

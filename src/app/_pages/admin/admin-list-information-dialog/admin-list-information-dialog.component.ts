@@ -160,17 +160,12 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteInfo(data): void {
+  async deleteInfo(data): Promise<void> {
     this.gs.log('[INFORMATION_LIST_CLICK_DELETE]', data);
-    this.subsDialog = this.ds.openInfoDialog({
-      data: {
-        title: `Hapus Info -- '${data.id}' :: '${data.title}'`,
-        htmlMessage: 'Yakin Akan Menghapus Informasi Ini ?',
-        confirmText: 'Ya, Hapus',
-        cancelText: 'Tidak, Batal'
-      },
-      disableClose: false
-    }).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Hapus Info -- '${data.id}' :: '${data.title}'`,
+      'Yakin Akan Menghapus Informasi Ini ?'
+    )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
