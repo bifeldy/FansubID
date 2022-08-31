@@ -35,7 +35,7 @@ export class QuizLeaderboardController {
           ) a,
           (
             SELECT
-              row_number() over(ORDER BY p.points DESC) as rank,
+              row_number() over(ORDER BY p.points DESC, u.updated_at DESC) as rank,
               u.username,
               u.image_url,
               p.points,
