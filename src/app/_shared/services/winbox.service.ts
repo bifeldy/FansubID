@@ -70,7 +70,10 @@ export class WinboxService {
         right: 0,
         bottom: 32,
         left: 64,
-        onclose: (force): any => this.confirmationOpenUrl(uriUrl, windowTarget)
+        onclose: (force): any => {
+          this.confirmationOpenUrl(uriUrl, windowTarget);
+          return false;
+        }
       });
     } else {
       this.confirmationOpenUrl(uriUrl, windowTarget);
