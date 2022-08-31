@@ -38,7 +38,7 @@ export class LeftMenuService {
     {
       name: 'Surel',
       link: '/mailbox',
-      icon: 'email',
+      icon: 'mail_outline',
       badge: null
     }
   ];
