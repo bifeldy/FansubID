@@ -34,23 +34,19 @@ const routes: Routes = [
   {
     path: 'banned-list',
     component: AdminListBannedComponent,
-    canActivate: [AuthGuard],
     data: {
       title: 'Admin - List All Banned User',
       description: 'Kelola Banned User',
-      keywords: 'Kelola Banned User',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      keywords: 'Kelola Banned User'
     }
   },
   {
     path: 'cors-list',
     component: AdminListCorsComponent,
-    canActivate: [AuthGuard],
     data: {
       title: 'CORS - List All Api Key',
       description: 'Kelola Api Key',
-      keywords: 'Kelola Api Key',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      keywords: 'Kelola Api Key'
     }
   },
   {
@@ -67,56 +63,46 @@ const routes: Routes = [
   {
     path: 'user-list',
     component: AdminListUserComponent,
-    canActivate: [AuthGuard],
     data: {
       title: 'Admin - List All Users',
       description: 'Atur Seluruh Member',
-      keywords: 'BAN & UN-BAN User',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      keywords: 'BAN & UN-BAN User'
     }
   },
   {
     path: 'project-type',
     component: AdminListProjectTypeComponent,
-    canActivate: [AuthGuard],
     data: {
       title: 'Admin - List All Project Type',
       description: 'Atur Kategori Garapan',
-      keywords: 'Jenis Proyek Berkas',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      keywords: 'Jenis Proyek Berkas'
     }
   },
   {
     path: 'fansub-member',
     component: AdminListFansubMemberComponent,
-    canActivate: [AuthGuard],
     data: {
       title: 'Admin - List All Fansub Member',
       description: 'Atur Keanggotaan Fansub',
-      keywords: 'Keanggotaan Fansub',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      keywords: 'Keanggotaan Fansub'
     }
   },
   {
     path: 'push-notification',
     component: AdminListPushNotificationComponent,
-    canActivate: [AuthGuard],
     data: {
       title: 'Admin - Push Notification',
       description: 'Buat Pengumuman Dadakan',
-      keywords: 'Push Notification',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      keywords: 'Push Notification'
     }
   },
   {
     path: 'information',
     component: AdminListInformationDialogComponent,
-    canActivate: [AuthGuard],
     data: {
       title: 'Admin - List All Information',
       description: 'Atur Informasi Dialog',
-      keywords: 'Informations',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      keywords: 'Informations'
     }
   }
 ];

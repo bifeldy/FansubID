@@ -26,7 +26,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     SharedMaterialModule,
     RecaptchaModule,
-    RecaptchaFormsModule,
+    RecaptchaFormsModule
   ]
 })
 export class VerifyModule { }
