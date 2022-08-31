@@ -43,11 +43,12 @@ const routes: Routes = [
   {
     path: 'verify',
     loadChildren: () => import('./_pages/verify/verify.module').then(m => m.VerifyModule),
+    canActivate: [AuthGuard],
     data: {
       title: 'Verifikasi',
       description: 'Halaman Verifikasi Akun',
       keywords: 'Verify',
-      roles: [RoleModel.ADMIN, RoleModel.FANSUBBER, RoleModel.MODERATOR, RoleModel.USER]
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
@@ -66,6 +67,17 @@ const routes: Routes = [
       title: 'Berita & Informasi',
       description: 'Papan Pengumuman',
       keywords: 'News'
+    }
+  },
+  {
+    path: 'mailbox',
+    loadChildren: () => import('./_pages/mailbox/mailbox.module').then(m => m.MailboxModule),
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Surat Elektronik',
+      description: 'E-Mail & DM\'s',
+      keywords: 'Surel Email DM',
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {

@@ -34,6 +34,12 @@ export class LeftMenuService {
       link: '/nihongo',
       icon: 'translate',
       badge: null
+    },
+    {
+      name: 'Surel',
+      link: '/mailbox',
+      icon: 'email',
+      badge: null
     }
   ];
 

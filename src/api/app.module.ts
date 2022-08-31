@@ -47,7 +47,9 @@ import { InformationController } from './controllers/information.controller';
 import { LikedislikeController } from './controllers/likedislike.controller';
 import { LoginController } from './controllers/login.controller';
 import { LogoutController } from './controllers/logout.controller';
+import { MailController } from './controllers/mail.controller';
 import { MailInboxController } from './controllers/mail-/mail-inbox.controller';
+import { MailOutboxController } from './controllers/mail-/mail-outbox.controller';
 import { MailWebhookController } from './controllers/mail-/mail-webhoook.controller';
 import { NewsController } from './controllers/news.controller';
 import { NihongoController } from './controllers/nihongo.controller';
@@ -178,7 +180,9 @@ import { UserService } from './repository/user.service';
     LikedislikeController,
     LoginController,
     LogoutController,
+    MailController,
     MailInboxController,
+    MailOutboxController,
     MailWebhookController,
     NewsController,
     NihongoController,

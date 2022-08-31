@@ -11,8 +11,8 @@ import { VerifiedOnly } from '../../decorators/verified.decorator';
 
 import { MailboxService } from '../../repository/mailbox.service';
 
-@Controller('/mail-inbox')
-export class MailInboxController {
+@Controller('/mail-outbox')
+export class MailOutboxController {
 
   constructor(
     private mailboxRepo: MailboxService
@@ -24,7 +24,7 @@ export class MailInboxController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
-  async mailInbox(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async mailOutbox(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
@@ -33,15 +33,7 @@ export class MailInboxController {
         where: [
           {
             subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            to: ILike(`%${user.username}@${environment.domain}%`)
-          },
-          {
-            subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            cc: ILike(`%${user.username}@${environment.domain}%`)
-          },
-          {
-            subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            bcc: ILike(`%${user.username}@${environment.domain}%`),
+            from: ILike(`%${user.username}@${environment.domain}%`)
           }
         ],
         order: {
@@ -58,7 +50,7 @@ export class MailInboxController {
         delete m.attachment_;
       }
       return {
-        info: '😍 200 - Mail Inbox API :: Inbox Email 🥰',
+        info: '😍 200 - Mail Outbox API :: Outbox Email 🥰',
         count,
         pages: Math.ceil(count / (queryRow ? queryRow : 10)),
         results: mailboxs
@@ -66,7 +58,7 @@ export class MailInboxController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Mail Inbox API :: Gagal Mendapatkan Inbox Email 😪`,
+        info: `🙄 400 - Mail Outbox API :: Gagal Mendapatkan Outbox Email 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }
