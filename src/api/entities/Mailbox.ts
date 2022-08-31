@@ -1,4 +1,4 @@
-import { Entity, Column, JoinTable, ManyToMany } from 'typeorm';
+import { Entity, Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { AttachmentModel, MailboxModel } from '../../models/req-res.model';
 
@@ -7,8 +7,11 @@ import { Attachment } from './Attachment';
 @Entity({ name: 'mailbox' })
 export class Mailbox implements MailboxModel {
 
-  @Column({ type: 'text', primary: true })
+  @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ type: 'text', unique: true })
+  mail: string;
 
   @Column({ type: 'text' })
   from: string;

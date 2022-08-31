@@ -61,6 +61,7 @@ export interface MailModel {
 
 export interface MailboxModel {
   id?: string;
+  mail?: string;
   from?: string;
   to?: string;
   cc?: string;
@@ -68,8 +69,8 @@ export interface MailboxModel {
   subject?: string;
   html?: string;
   text?: string;
-  created_at?: number | Date;
-  updated_at?: number | Date;
+  date?: number | Date;
+  attachment_count?: number;
 };
 
 export enum RoleModel {

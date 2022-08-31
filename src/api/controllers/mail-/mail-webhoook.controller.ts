@@ -78,7 +78,7 @@ export class MailWebhookController {
         }, HttpStatus.NOT_FOUND);
       }
       const mailbox = this.mailboxRepo.new();
-      mailbox.id = req.body['Message-Id'];
+      mailbox.mail = req.body['Message-Id'];
       mailbox.from = req.body.From;
       mailbox.to = req.body.To;
       mailbox.cc = req.body.Cc;

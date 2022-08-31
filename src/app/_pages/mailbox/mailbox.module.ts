@@ -9,6 +9,9 @@ import { MailboxComposeComponent } from './mailbox-compose/mailbox-compose.compo
 import { MailboxDetailComponent } from './mailbox-detail/mailbox-detail.component';
 import { MailboxListComponent } from './mailbox-list/mailbox-list.component';
 
+import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
+import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
+
 const routes: Routes = [
   {
     path: '',
@@ -47,7 +50,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
-    SharedMaterialModule
+    SharedMaterialModule,
+    NotificationsModule,
+    MaterialTableModule
   ]
 })
 export class MailboxModule { }

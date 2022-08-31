@@ -1,1 +1,50 @@
-<p>mailbox-list works!</p>
+<div class="container-fluid p-0">
+  <div class="wrapper">
+    <ul class="bg-bubbles align-items-center p-0">
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+      <div class="row align-items-center h-100">
+        <div class="col-12 mx-auto">
+          <div class="container text-light">
+            <h2 class="mb-1" style="line-height: normal;">
+              {{ AS.currentUserValue ? AS.currentUserValue?.username : 'username' }} @ {{ ENV.domain }}
+            </h2>
+            <p class="mb-0">E-Mail ~ Surat Elektronik ~ {{ this.mailData['inbox'].count }} Inbox | {{ this.mailData['outbox'].count }} Outbox</p>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+</div>
+
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 pb-3 sticky-top bg-bifeldy">
+          <h3 class="m-0 border-bottom border-primary row">
+            <mat-form-field class="pt-3 col-6 col-md-4 col-lg-2" [color]="'accent'">
+              <mat-label>Kotak Pesan</mat-label>
+              <mat-select [(value)]="selectedMailBox" (valueChange)="changeMailbox()">
+                <mat-option value="inbox">Masuk</mat-option>
+                <mat-option value="outbox">Keluar</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="ms-auto p-3 col-6 col-md-4 col-lg-2">
+              <button mat-flat-button color="accent" class="w-100 h-100" (click)="changeMailbox()">
+                Refresh
+              </button>
+            </div>
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <app-material-table [tableDataColumn]="mailData[selectedMailBox].column" [tableDataRow]="mailData[selectedMailBox].row" [count]="this.mailData[this.selectedMailBox].count"
+      [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (rowClicked)="onRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
+  </div>
+</div>
