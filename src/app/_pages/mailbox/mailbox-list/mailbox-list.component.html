@@ -35,6 +35,7 @@
             </mat-form-field>
             <div class="ms-auto p-3 col-6 col-md-4 col-lg-2">
               <button mat-flat-button color="accent" class="w-100 h-100" (click)="changeMailbox()">
+                <mat-icon class="me-1">loop</mat-icon>
                 Refresh
               </button>
             </div>
@@ -43,7 +44,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row px-3">
     <app-material-table [tableDataColumn]="mailData[selectedMailBox].column" [tableDataRow]="mailData[selectedMailBox].row" [count]="this.mailData[this.selectedMailBox].count"
       [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (rowClicked)="onRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
   </div>
