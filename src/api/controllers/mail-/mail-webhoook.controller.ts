@@ -7,6 +7,7 @@ import { createReadStream, readdirSync, unlink } from 'node:fs';
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
 import { AnyFilesInterceptor, } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
+import { In } from 'typeorm';
 
 import { CONSTANTS } from '../../../constants';
 
@@ -14,6 +15,7 @@ import { environment } from '../../../environments/api/environment';
 
 import { AttachmentService } from '../../repository/attachment.service';
 import { MailboxService } from '../../repository/mailbox.service';
+import { UserService } from '../../repository/user.service';
 
 import { GdriveService } from '../../services/gdrive.service';
 import { GlobalService } from '../../services/global.service';
@@ -25,7 +27,8 @@ export class MailWebhookController {
     private gdrive: GdriveService,
     private gs: GlobalService,
     private attachmentRepo: AttachmentService,
-    private mailboxRepo: MailboxService
+    private mailboxRepo: MailboxService,
+    private userRepo: UserService
   ) {
     //
   }
@@ -44,6 +47,36 @@ export class MailWebhookController {
   )
   async mailHook(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
+      const userTarget = [];
+      let stringRecipient = req.body.To;
+      if (req.body.Cc) {
+        stringRecipient += `, ${req.body.Cc}`;
+      }
+      if (req.body.Bcc) {
+        stringRecipient += `, ${req.body.Bcc}`;
+      }
+      for (const recipient of stringRecipient.split(', ')) {
+        if (recipient.includes(`@${environment.domain}`)) {
+          let email = recipient;
+          if (recipient.includes('<') && recipient.includes('>')) {
+            email = recipient.split('<')[1].split('>')[0];
+          }
+          userTarget.push(email.split('@')[0]);
+        }
+      }
+      const usersCount = await this.userRepo.count({
+        where: [
+          { username: In(userTarget) }
+        ]
+      });
+      if (usersCount === 0) {
+        throw new HttpException({
+          info: `🙄 404 - Mail Webhook API :: Gagal Menyimpan Email 😪`,
+          result: {
+            message: 'Pengguna Tidak Terdaftar!'
+          }
+        }, HttpStatus.NOT_FOUND);
+      }
       const mailbox = this.mailboxRepo.new();
       mailbox.id = req.body['Message-Id'];
       mailbox.from = req.body.From;
