@@ -1,13 +1,15 @@
-<!-- Notification -->
-<app-notifications></app-notifications>
+<div class="container" *ngIf="fg">
+  <div class="fansub-banner fansub-banner-1 align-items-center" [style.background-image]="'url(' + cover_url + ')'"></div>
+  <div class="fansub-banner fansub-banner-2 align-items-center"></div>
+  <div style="margin-top: 160px"></div>
 
-<!-- Content -->
-<div class="container">
+  <!-- Notification -->
+  <app-notifications></app-notifications>
   
   <!-- Detail -->
   <div class="row px-3">
     <div class="col-12">
-      <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
+      <form [formGroup]="fg" (submit)="onSubmit();">
         <div class="row mt-3 mb-3">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">
@@ -21,7 +23,7 @@
                   <div class="col-12">
                     <img class="w-100 border" [src]="image_url" />
                     <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
-                      <mat-label>Gambar</mat-label>
+                      <mat-label>Foto</mat-label>
                       <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
                       <mat-icon matSuffix>image</mat-icon>
@@ -42,6 +44,23 @@
               </div>
               <div class="col-12 col-md-7 col-xl-8 pt-3">
                 <div class="row">
+                  <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
+                    <mat-label>Cover</mat-label>
+                    <ngx-mat-file-input class="w-100" (change)="uploadCover($event, gambar_)" #gambar_ [disabled]="fg.value.cover"
+                      [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+                    <mat-icon matSuffix>image</mat-icon>
+                  </mat-form-field>
+                  <mat-error class="px-3 w-100">
+                    <small>
+                      <strong>{{ coverErrorText }}</strong>
+                    </small>
+                  </mat-error>
+                  <div class="col-12 p-3" *ngIf="cover && !fg.value.cover">
+                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitCover()">
+                      <mat-icon class="me-1">add_photo_alternate</mat-icon>
+                      Unggah
+                    </button>
+                  </div>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
                     <mat-label>Nama Fansub</mat-label>
                     <input matInput formControlName="name" placeholder="Fansub Jalanan" />
@@ -175,5 +194,4 @@
       </form>
     </div>
   </div>
-
 </div>

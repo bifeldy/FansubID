@@ -125,6 +125,9 @@ export class FansubController {
           if ('image' in req.body) {
             fansub.image_url = req.body.image;
           }
+          if ('cover' in req.body) {
+            fansub.cover_url = req.body.cover;
+          }
           if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
             const filteredTagsUnique = [...new Set(req.body.tags)];
             fansub.tags = JSON.stringify(filteredTagsUnique);
@@ -310,6 +313,9 @@ export class FansubController {
         }
         if ('image' in req.body) {
           fansub.image_url = req.body.image;
+        }
+        if ('cover' in req.body) {
+          fansub.cover_url = req.body.cover;
         }
         if ('rss_feed' in req.body) {
           const rssFeed: string = req.body.rss_feed;

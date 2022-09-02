@@ -29,11 +29,17 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
   image = null;
   imageErrorText = null;
   image_url = '/assets/img/form-no-image.png';
+
+  cover = null;
+  coverErrorText = null;
+  cover_url = '/assets/img/form-no-image.png';
+
   urls = [];
 
   currentDate = new Date();
 
   gambar = null;
+  gambar_ = null;
 
   subsImgbb = null;
   subsFansub = null;
@@ -95,6 +101,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       slug: [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [[], Validators.compose([])],
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      cover: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       web: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       facebook: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       discord: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
@@ -184,6 +191,57 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     });
   }
 
+  uploadCover(event, gambar_): void {
+    this.gambar = gambar_;
+    this.cover = null;
+    this.fg.controls['cover'].patchValue(null);
+    const file = event.target.files[0];
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = e => {
+        this.gs.log('[COVER_SELECTED]', e);
+        if (file.size <= CONSTANTS.fileSizeImageLimit) {
+          const img = this.gs.document.createElement('img');
+          img.onload = () => {
+            this.cover = file;
+            this.cover_url = reader.result.toString();
+          };
+          img.src = reader.result.toString();
+          this.coverErrorText = null;
+        } else {
+          this.cover = null;
+          this.cover_url = '/assets/img/form-image-error.png';
+          this.coverErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
+          this.gambar.clear(event);
+        }
+      };
+    } catch (error) {
+      this.cover = null;
+      this.coverErrorText = null;
+      this.cover_url = '/assets/img/form-no-image.png';
+      this.gambar.clear(event);
+    }
+  }
+
+  submitCover(): void {
+    this.submitted = true;
+    this.subsImgbb = this.imgbb.uploadImage({
+      file: this.cover
+    }).subscribe({
+      next: res => {
+        this.gs.log('[COVER_SUCCESS]', res);
+        this.fg.controls['cover'].patchValue(res.result.url);
+        this.submitted = false;
+      },
+      error: err => {
+        this.gs.log('[COVER_ERROR]', err, 'error');
+        this.fg.controls['cover'].patchValue(null);
+        this.submitted = false;
+      }
+    });
+  }
+
   onSubmit(): void {
     this.bs.busy();
     const urls = [];
@@ -207,6 +265,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     }
     this.subsFansub = this.fansub.createFansub({
       image: this.fg.value.image,
+      cover: this.fg.value.cover,
       name: this.fg.value.name,
       description: this.fg.value.description,
       born: this.fg.value.born.getTime(),

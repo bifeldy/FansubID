@@ -4,7 +4,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: blur(10px) brightness(100%);
+  filter: blur(5px) brightness(100%);
   opacity: 0.5;
 }
 

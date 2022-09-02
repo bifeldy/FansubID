@@ -35,11 +35,17 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   image_url = '/assets/img/form-no-image.png';
   image_url_original = null;
 
+  cover = null;
+  coverErrorText = null;
+  cover_url = '/assets/img/form-no-image.png';
+  cover_url_original = null;
+
   urls = [];
 
   currentDate = new Date();
 
   gambar = null;
+  gambar_ = null;
 
   subsActRoute = null;
   subsFansubUpdate = null;
@@ -155,6 +161,8 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   initForm(data): void {
     this.image_url = data.image_url;
     this.image_url_original = this.image_url;
+    this.cover_url = data.cover_url;
+    this.cover_url_original = this.cover_url;
     const urls = data.urls;
     const WEB = urls.find(u => u.name === 'web');
     const FACEBOOK = urls.find(u => u.name === 'facebook');
@@ -168,6 +176,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       slug: [{ value: data.slug, disabled: data.dns_id }, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
       tags: [data.tags, Validators.compose([])],
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      cover: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       web: [(WEB?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
@@ -256,6 +265,60 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.fg.controls['image'].markAsPristine();
+        this.submitted = false;
+      }
+    });
+  }
+
+  uploadCover(event, gambar_): void {
+    this.gambar_ = gambar_;
+    this.cover = null;
+    this.fg.controls['cover'].patchValue(null);
+    this.fg.controls['cover'].markAsPristine();
+    const file = event.target.files[0];
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = e => {
+        this.gs.log('[COVER_SELECTED]', e);
+        if (file.size <= CONSTANTS.fileSizeImageLimit) {
+          const img = this.gs.document.createElement('img');
+          img.onload = () => {
+            this.cover = file;
+            this.cover_url = reader.result.toString();
+          };
+          img.src = reader.result.toString();
+          this.coverErrorText = null;
+        } else {
+          this.cover = null;
+          this.cover_url = '/assets/img/form-image-error.png';
+          this.coverErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
+          this.gambar.clear(event);
+        }
+      };
+    } catch (error) {
+      this.cover = null;
+      this.coverErrorText = null;
+      this.cover_url = this.cover_url_original;
+      this.gambar.clear(event);
+    }
+  }
+
+  submitCover(): void {
+    this.submitted = true;
+    this.subsImgbb = this.imgbb.uploadImage({
+      file: this.cover
+    }).subscribe({
+      next: res => {
+        this.gs.log('[COVER_SUCCESS]', res);
+        this.fg.controls['cover'].patchValue(res.result.url);
+        this.fg.controls['cover'].markAsDirty();
+        this.submitted = false;
+      },
+      error: err => {
+        this.gs.log('[COVER_ERROR]', err, 'error');
+        this.fg.controls['cover'].patchValue(null);
+        this.fg.controls['cover'].markAsPristine();
         this.submitted = false;
       }
     });

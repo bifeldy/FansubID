@@ -37,7 +37,7 @@
             </h1>
           </div>
           <div class="row py-3">
-            <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
+            <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
               <mat-label>Cover Image</mat-label>
               <ngx-mat-file-input class="w-100" placeholder="Basic Input" (change)="uploadCoverImage($event, coverImage)" #coverImage
                 [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
@@ -48,7 +48,7 @@
                 <strong>{{ imageCoverErrorText }}</strong>
               </small>
             </mat-error>
-            <div class="col-12" *ngIf="imageCover && !fg.value.image_cover">
+            <div class="col-12 p-3" *ngIf="imageCover && !fg.value.image_cover">
               <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitCoverImage()">
                 <mat-icon class="me-1">add_photo_alternate</mat-icon>
                 Unggah
