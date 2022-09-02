@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
+
 import { MailboxComposeComponent } from './mailbox-compose/mailbox-compose.component';
 import { MailboxDetailComponent } from './mailbox-detail/mailbox-detail.component';
 import { MailboxListComponent } from './mailbox-list/mailbox-list.component';
@@ -52,7 +54,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     SharedMaterialModule,
     NotificationsModule,
-    MaterialTableModule
+    MaterialTableModule,
+    CustomPipeModule
   ]
 })
 export class MailboxModule { }

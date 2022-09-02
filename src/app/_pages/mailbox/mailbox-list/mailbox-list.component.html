@@ -6,9 +6,9 @@
         <div class="col-12 mx-auto">
           <div class="container text-light">
             <h2 class="mb-1" style="line-height: normal;">
-              {{ AS.currentUserValue ? AS.currentUserValue?.username : 'username' }} @ {{ ENV.domain }}
+              {{ AS.currentUserValue?.username }} @ {{ ENV.domain }}
             </h2>
-            <p class="mb-0">E-Mail ~ Surat Elektronik ~ {{ this.mailData['inbox'].count }} Inbox | {{ this.mailData['outbox'].count }} Outbox</p>
+            <p class="mb-0">E-Mail ~ Surat Elektronik ~ {{ mailData['inbox'].count }} Inbox | {{ mailData['outbox'].count }} Outbox</p>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@
     </div>
   </div>
   <div class="row px-3">
-    <app-material-table [tableDataColumn]="mailData[selectedMailBox].column" [tableDataRow]="mailData[selectedMailBox].row" [count]="this.mailData[this.selectedMailBox].count"
+    <app-material-table [tableDataColumn]="mailData[selectedMailBox].column" [tableDataRow]="mailData[selectedMailBox].row" [count]="mailData[selectedMailBox].count"
       [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (rowClicked)="onRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
   </div>
 </div>

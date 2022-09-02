@@ -25,7 +25,7 @@ export class MailService {
     return this.api.getData(`/mail-${type}?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getMail(mailId: number): Observable<JsonResponse<MailboxModel>> {
+  getMail(mailId: string): Observable<JsonResponse<MailboxModel>> {
     return this.api.getData(`/mail/${mailId}`);
   }
 
