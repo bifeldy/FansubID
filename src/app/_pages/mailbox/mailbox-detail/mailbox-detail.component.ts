@@ -81,6 +81,7 @@ export class MailboxDetailComponent implements OnInit, OnDestroy {
           error: err => {
             this.gs.log('[MAIL_DETAIL_ERROR]', err, 'error');
             this.bs.idle();
+            this.router.navigateByUrl('/mailbox');
           }
         });
       }
