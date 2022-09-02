@@ -52,7 +52,9 @@ export class WinboxService {
     if (uriUrl.startsWith('http://')) {
       uriUrl = 'https://' + uriUrl.slice(7, uriUrl.length);
     }
-    if (
+    if (uriUrl.startsWith('/api/')) {
+      this.confirmationOpenUrl(uriUrl, '_self');
+    } else if (
       (this.currentServer?.winboxOpenLink &&
       !this.gs.includesOneOf(uriUrl, ['ftp://', 'mailto:'])) ||
       force

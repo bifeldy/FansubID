@@ -112,6 +112,7 @@ export class MailController {
       }
       if ('attachment_' in mailbox && mailbox.attachment_) {
         for (const a of mailbox.attachment_) {
+          delete a.google_drive
           delete a.created_at;
           delete a.updated_at;
         }

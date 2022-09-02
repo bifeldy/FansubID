@@ -284,6 +284,7 @@ export class BerkasController {
           }
         }
         if ('attachment_' in resFileSave && resFileSave.attachment_) {
+          delete resFileSave.attachment_.google_drive;
           delete resFileSave.attachment_.user_;
           delete resFileSave.attachment_.created_at;
           delete resFileSave.attachment_.updated_at;
@@ -398,6 +399,9 @@ export class BerkasController {
           }
         } else {
           if ('attachment_' in file && file.attachment_) {
+            delete file.attachment_.google_drive;
+            delete file.attachment_.created_at;
+            delete file.attachment_.updated_at;
             const subtitles = await this.attachmentRepo.find({
               where: [
                 {
@@ -416,11 +420,10 @@ export class BerkasController {
               relations: ['parent_attachment_']
             });
             for (const s of subtitles) {
+              delete s.google_drive;
               delete s.created_at;
-              delete s.download_count;
-              delete s.parent_attachment_;
               delete s.updated_at;
-              delete s.user_;
+              delete s.parent_attachment_;
             }
             (file as any).attachment_.subtitles_ = subtitles;
             const fonts = await this.attachmentRepo.find({
@@ -441,11 +444,10 @@ export class BerkasController {
               relations: ['parent_attachment_']
             });
             for (const f of fonts) {
+              delete f.google_drive;
               delete f.created_at;
-              delete f.download_count;
-              delete f.parent_attachment_;
               delete f.updated_at;
-              delete f.user_;
+              delete f.parent_attachment_;
             }
             (file as any).attachment_.fonts_ = fonts;
           }

@@ -224,7 +224,11 @@ export class AttachmentController {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
         if (fIdx >= 0) {
-          return res.download(`${environment.uploadFolder}/${files[fIdx].name}`, `${attachment.name}.${attachment.ext}`, async (e) => {
+          let attachmentFileNameOutput = attachment.name;
+          if (!attachmentFileNameOutput.includes(`.${attachment.ext}`)) {
+            attachmentFileNameOutput += `.${attachment.ext}`;
+          }
+          return res.download(`${environment.uploadFolder}/${files[fIdx].name}`, attachmentFileNameOutput, async (e) => {
             if (e) {
               this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
             } else {
