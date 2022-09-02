@@ -2,6 +2,8 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { SECRETS } from '../../secrets';
+
 import { Anime } from '../../api/entities/Anime';
 import { Attachment } from '../../api/entities/Attachment';
 import { ApiKey } from '../../api/entities/ApiKey';
@@ -34,24 +36,24 @@ import { Track } from '../../api/entities/Track';
 import { User } from '../../api/entities/User';
 
 export const environment = {
-  production: false,
+  production: SECRETS().IS_PRODUCTION,                                            // false,
   siteName: 'FansubID',
   siteDescription: 'Di Kamar Saja!',
   author: 'Bifeldy',
-  jwtSecretKey: '',
+  jwtSecretKey: SECRETS().JWT_SECRET_KEY,                                         // ''
   tokenName: 'FansubID_Token',
-  domain: 'localhost',
-  ip: '127.0.0.1',
-  baseUrl: 'http://localhost:4200',
+  domain: SECRETS().DOMAIN,                                                       // 'localhost',
+  ip: SECRETS().IP,                                                               // '127.0.0.1',
+  baseUrl: SECRETS().BASE_URL,                                                    // 'http://localhost:4200',
   typeorm: {
     type: 'postgres',
     host: 'localhost',
     port: 5432,
     database: 'fansubid',
     username: 'postgres',
-    password: 'postgres',
+    password: SECRETS().DB_PASSWORD,                                              // 'postgres',
     synchronize: true,
-    logging: true,
+    logging: !SECRETS().IS_PRODUCTION,                                            // true,
     entities: [
       Anime,
       Attachment,
@@ -90,66 +92,67 @@ export const environment = {
   jsonCacheFolder: 'dist/fansubid/caches',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',
   recaptchaApiUrl: 'https://www.google.com/recaptcha/api/siteverify',
-  reCaptchaSecretKey: '',
-  apiPemerintahKTPUrl: '',
-  apiPemerintahKTPSecretKey: '',
-  imgbbKey: '',
+  reCaptchaSecretKey: SECRETS().RECAPTCHA_SECRET_KEY,                             // '',
+  apiPemerintahKTPUrl: SECRETS().API_PEMERINTAH_KTP_URL,                          // '',
+  apiPemerintahKTPSecretKey: SECRETS().API_PEMERINTAH_KTP_SECRET_KEY,             // '',
+  imgbbKey: SECRETS().IMGBB_KEY,                                                  // '',
   gCloudPlatform: {
-    clientId: '',
-    clientSecret: '',
-    clientEmail: '',
+    clientId: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_ID,                           // '',
+    clientSecret: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_SECRET,                   // '',
+    clientEmail: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_EMAIL,                     // '',
     gDrive: {
-      refreshToken: '',
+      refreshToken: SECRETS().GCP_PERSONAL_ACCOUNT_REFRESH_TOKEN,                 // '',
       scopes: ['https://www.googleapis.com/auth/drive']
     },
     serviceAccount: {
       type: 'service_account',
-      project_id: 'fansubid-bifeldy',
-      private_key_id: '',
-      private_key: '',
-      client_email: '',
-      client_id: '',
+      project_id: 'hikki-bifeldy',
+      private_key_id: SECRETS().GCP_SERVICE_ACCOUNT_PRIVATE_KEY_ID,               // '',
+      private_key: SECRETS().GCP_SERVICE_ACCOUNT_PRIVATE_KEY,                     // '',
+      client_email: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_EMAIL,                   // '',
+      client_id: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_ID,                         // '',
       auth_uri: 'https://accounts.google.com/o/oauth2/auth',
       token_uri: 'https://oauth2.googleapis.com/token',
       auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
-      client_x509_cert_url: ''
+      client_x509_cert_url: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL    // ''
     }
   },
   mailGun: {
     clientOptions: {
       username: 'noreply',
-      key: '',
-      url: 'https://api.mailgun.net/v3',
+      key: SECRETS().MAILGUN_KEY,                                                 // '',
+      url: 'https://api.eu.mailgun.net/v3',
     },
     fullName: `FansubID | No-Reply`,
     domain: 'fansub.id'
   },
   cloudflare: {
     url: 'https://api.cloudflare.com/client/v4',
-    key: '',
-    zoneId: ''
+    key: SECRETS().CLOUDFLARE_KEY,                                                // '',
+    zoneId: '804863012d6a7700333d781170c4dd95'
   },
   discordApiUrl: 'https://discord.com/api',
   discordGuildId: '342220398022098944',
   discordClientId: '789831990433153034',
-  discordClientSecret: '',
+  discordClientSecret: SECRETS().DISCORD_CLIENT_SECRET,                           // '',
   laboratoryRatsRoleId: '479208130534703108',
   discordBotChannelEventId: '790158935045701652',
   discordBotChannelBotId: '426384107795251206',
-  discordBotLoginToken: '',
+  discordBotLoginToken: SECRETS().DISCORD_BOT_LOGIN_TOKEN,                        // '',
   nodeJsXhrHeader: {
     Accept: 'application/json',
     Connection: 'keep-alive',
     'User-Agent': 'node.js'
   },
   externalApiCacheTime: 30 * 60 * 1,
-  externalApiAnime: 'http://api.jikan.moe/v4',
+  externalApiAnime: 'https://api.jikan.moe/v4',
   externalApiDorama: 'https://kuryana.vercel.app',
   externalApiImage: 'https://api.imgbb.com/1/upload',
   trackerAnnounce: [
     'wss://tracker.fansub.id'
   ]
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file
