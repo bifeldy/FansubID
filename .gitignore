@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
+/dist/fansubid/caches
+/dist/fansubid/uploads
 /tmp
 /out-tsc
 # Only exists if Bazel was run
@@ -48,7 +49,7 @@ Thumbs.db
 # Other & Environments
 /src/environments/client_secret_878859208574-ouhcfsn5llj9iaq2880n6v63vdua1ern.apps.googleusercontent.com.json
 /src/environments/FansubID-Bifeldy-5b4fb0c54cd3.json
-/src/assets/raw/*
+/src/assets/raw
 /secret.json
 /secret.prod.json
 /stdout.log

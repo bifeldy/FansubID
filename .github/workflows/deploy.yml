@@ -22,6 +22,5 @@ jobs:
             cd /home/bifeldy/www/fansubid
             git pull
             npm install
-            npm run bifeldy:prod
             ln -s /home/bifeldy/www/fansubid/src/assets /home/bifeldy/www/fansubid/dist/fansubid/browser/assets
             sudo pm2 restart fansubid
