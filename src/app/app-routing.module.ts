@@ -23,6 +23,17 @@ const routes: Routes = [
     }
   },
   {
+    path: 'create',
+    loadChildren: () => import('./_pages/create/create.module').then(m => m.CreateModule),
+    canActivate: [AuthGuard],
+    data: {
+      title: 'Membuat Konten Baru',
+      description: 'Membuat Konten Baru',
+      keywords: 'Add New Content',
+      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+    }
+  },
+  {
     path: 'login',
     loadChildren: () => import('./_pages/login/login.module').then(m => m.LoginModule),
     data: {

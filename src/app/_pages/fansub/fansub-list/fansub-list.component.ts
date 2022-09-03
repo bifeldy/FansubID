@@ -200,7 +200,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
         this.tabData[0].data.row = this.fansubData;
         this.getAnimeFansub();
         this.getDoramaFansub();
-        this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/fansub/create', false);
+        this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/create/fansub', false);
         this.bs.idle();
       },
       error: err => {

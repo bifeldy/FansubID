@@ -18,7 +18,6 @@ import { StatsServerModule } from '../../_shared/components/stats-server/stats-s
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { DiscussionModule } from '../../_shared/components/discussion/discussion.module';
 
-import { NewsCreateComponent } from './news-create/news-create.component';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
 import { NewsEditComponent } from './news-edit/news-edit.component';
 import { NewsListComponent } from './news-list/news-list.component';
@@ -28,17 +27,6 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     component: NewsListComponent
-  },
-  {
-    path: 'create',
-    component: NewsCreateComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Berita - Buat Baru',
-      description: 'Halaman Unggah Berita Baru',
-      keywords: 'Tambah Berita Baru',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
-    }
   },
   {
     path: ':newsId',
@@ -65,7 +53,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    NewsCreateComponent,
     NewsListComponent,
     NewsDetailComponent,
     NewsEditComponent

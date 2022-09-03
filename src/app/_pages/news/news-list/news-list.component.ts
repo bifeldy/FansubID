@@ -81,7 +81,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[0].data.row = this.newsData;
-        this.fs.initializeFab('add', null, 'Tambah Berita Baru', `/news/create`, false);
+        this.fs.initializeFab('add', null, 'Tambah Berita Baru', `/create/news`, false);
         this.bs.idle();
       },
       error: err => {

@@ -18,7 +18,6 @@ import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
 import { AuthGuard } from '../../_shared/guards/auth.guard';
 
-import { BerkasCreateComponent } from './berkas-create/berkas-create.component';
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';
 import { BerkasEditComponent } from './berkas-edit/berkas-edit.component';
 import { BerkasListComponent } from './berkas-list/berkas-list.component';
@@ -28,17 +27,6 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     component: BerkasListComponent
-  },
-  {
-    path: 'create',
-    component: BerkasCreateComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Berkas - Buat Baru',
-      description: 'Halaman Unggah Berkas Baru',
-      keywords: 'Tambah Berkas Baru',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
-    }
   },
   {
     path: ':berkasId',
@@ -65,7 +53,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    BerkasCreateComponent,
     BerkasDetailComponent,
     BerkasEditComponent,
     BerkasListComponent

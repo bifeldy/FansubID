@@ -301,7 +301,7 @@ export class NihongoListComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      // this.fs.initializeFab('add', null, 'Tambah Modul Baru', `/nihongo/create`, false);
+      // this.fs.initializeFab('add', null, 'Tambah Modul Baru', `/create/nihongo`, false);
       // this.getBook();
     }
   }

@@ -21,7 +21,6 @@ import { ReportModule } from '../../_shared/components/report/report.module';
 
 import { FansubListComponent } from './fansub-list/fansub-list.component';
 import { FansubDetailComponent } from './fansub-detail/fansub-detail.component';
-import { FansubCreateComponent } from './fansub-create/fansub-create.component';
 import { FansubEditComponent } from './fansub-edit/fansub-edit.component';
 
 const routes: Routes = [
@@ -29,17 +28,6 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     component: FansubListComponent
-  },
-  {
-    path: 'create',
-    component: FansubCreateComponent,
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Fansub - Buat Baru',
-      description: 'Halaman Menambahkan Fansub Baru',
-      keywords: 'Create Fansub',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
-    }
   },
   {
     path: ':fansubSlug',
@@ -68,7 +56,6 @@ const routes: Routes = [
   declarations: [
     FansubListComponent,
     FansubDetailComponent,
-    FansubCreateComponent,
     FansubEditComponent
   ],
   imports: [
