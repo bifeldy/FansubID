@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { SocialMediaModel, SosMedModel, UserModel } from '../../models/req-res.model';
 
@@ -16,10 +16,10 @@ export class SocialMedia implements SocialMediaModel {
   @PrimaryColumn({ type: 'enum', enum: SosMedModel })
   type: SosMedModel;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number | Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: number | Date;
 
   @ManyToOne(type => User)

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { AnimeModel, AttachmentModel, BerkasModel, DoramaModel, FansubModel, ProjectTypeModel, UserModel } from '../../models/req-res.model';
 
@@ -36,10 +36,10 @@ export class Berkas implements BerkasModel {
   @Column({ type: 'int', default: 0 })
   like_count: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number | Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: number | Date;
 
   @ManyToOne(type => ProjectType)

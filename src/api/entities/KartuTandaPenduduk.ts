@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { AgamaModel, GolonganDarahModel, JenisKelaminModel, KartuTandaPendudukModel, WargaNegaraModel } from '../../models/req-res.model';
 
@@ -66,9 +66,9 @@ export class KartuTandaPenduduk implements KartuTandaPendudukModel {
   @Column({ type: 'enum', enum: WargaNegaraModel, nullable: true })
   kewarganegaraan: WargaNegaraModel;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number | Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: number | Date;
 }
