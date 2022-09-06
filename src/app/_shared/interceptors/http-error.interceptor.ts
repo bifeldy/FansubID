@@ -64,9 +64,14 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           }
           if (request.method === 'GET') {
             this.gs.log(`[SOCKET_TRACK-SET]`, request.url);
-            this.ss.socketEmitVolatile('track-set', {
-              pathUrl: request.url.startsWith(environment.apiUrl) ? request.url.slice(environment.apiUrl.length) : request.url
-            });
+            let pathUrl = request.url;
+            if (pathUrl.startsWith(environment.baseUrl)) {
+              pathUrl = pathUrl.slice(environment.baseUrl.length);
+            }
+            if (pathUrl.startsWith(environment.apiUrl)) {
+              pathUrl = pathUrl.slice(environment.apiUrl.length);
+            }
+            this.ss.socketEmitVolatile('track-set', { pathUrl });
           }
         }
       }),
