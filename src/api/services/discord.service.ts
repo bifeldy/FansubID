@@ -107,7 +107,10 @@ export class DiscordService {
   async sendNews(message: MessageOptions): Promise<void> {
     try {
       const botNewsChannel = this.bot ? (this.bot.channels.cache.get(environment.discordBotChannelEventId) as NewsChannel) : null;
-      await botNewsChannel?.send(message);
+      if (botNewsChannel) {
+        const msg = await botNewsChannel.send(message);
+        await msg?.crosspost();
+      }
     }  catch (error) {
       this.gs.log('[DISCORD_SERVICE-SEND_NEWS] 🎉', error, 'error')
     }
