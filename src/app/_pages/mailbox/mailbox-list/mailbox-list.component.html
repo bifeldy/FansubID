@@ -8,7 +8,9 @@
             <h2 class="mb-1" style="line-height: normal;">
               {{ AS.currentUserValue?.username }} @ {{ ENV.domain }}
             </h2>
-            <p class="mb-0">E-Mail ~ Surat Elektronik ~ {{ mailData['inbox'].count }} Inbox | {{ mailData['outbox'].count }} Outbox</p>
+            <p class="mb-0">
+              {{ mailData['inbox'].count }} Inbox ~ {{ mailData['outbox'].count }} Outbox
+            </p>
           </div>
         </div>
       </div>
