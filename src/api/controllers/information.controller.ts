@@ -128,8 +128,8 @@ export class InformationController {
           infoCreateOrUpdate.close = infoTemplate.close;
         }
         infoCreateOrUpdate.user_ = user;
-        const broadcast = (req.body.broadcast === true && user.role === RoleModel.ADMIN ? true : false);
-        if (broadcast) {
+        const broadcastOnly = (req.body.broadcast === true);
+        if (broadcastOnly) {
           this.sis.emitToBroadcast('new-information', {
             infoCreator: infoCreateOrUpdate.user_.username,
             infoData: {

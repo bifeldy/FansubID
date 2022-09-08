@@ -90,7 +90,7 @@ export class NotificationController {
           type: req.body.type,
           title: req.body.title,
           content: req.body.content,
-          dismissible: ((req.body.dismissible === false) && user.role === RoleModel.ADMIN ? false : true),
+          dismissible: (req.body.dismissible === false),
           user_: {
             username: user.username
           }
