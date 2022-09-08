@@ -11,10 +11,15 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { MailboxService } from '../repository/mailbox.service';
 
+import { GlobalService } from '../services/global.service';
+import { MailService } from '../services/mail.service';
+
 @Controller('/mail')
 export class MailController {
 
   constructor(
+    private gs: GlobalService,
+    private ms: MailService,
     private mailboxRepo: MailboxService
   ) {
     //
@@ -68,10 +73,36 @@ export class MailController {
   @VerifiedOnly()
   async sendNewMail(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      // TODO :: POST -- Compose A New Mail
-      return {
-        info: '🙂 201 - Mail API :: Email Terkirim! 🥰'
-      };
+      if (
+        'to' in req.body &&
+        'subject' in req.body &&
+        'message' in req.body
+      ) {
+        const user: UserModel = res.locals['user'];
+        const to = req.body.to.split(',').map(e => e.trim());
+        const subject = req.body.subject;
+        const html = req.body.message;
+        const text = this.gs.htmlToText(req.body.message);
+        let cc = null;
+        if (req.body.cc) {
+          cc = req.body.cc.split(',').map(e => e.trim());
+        }
+        let bcc = null;
+        if (req.body.bcc) {
+          bcc = req.body.bcc.split(',').map(e => e.trim());
+        }
+        const resSendMail = await this.ms.mailGunSend({
+          from: `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.domain}>`,
+          to, subject, html, text, cc, bcc
+        });
+        if (resSendMail) {
+          return {
+            info: '🙂 201 - Mail API :: Email Terkirim! 🥰',
+            result: resSendMail.id
+          };
+        }
+      }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

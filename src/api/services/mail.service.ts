@@ -108,8 +108,14 @@ export class MailService {
       const url = new URL(`${environment.mailGun.clientOptions.url}/${environment.mailGun.domain}/messages`);
       const form = new URLSearchParams();
       form.append('from', mailBody.from);
-      form.append('to', mailBody.to);
       form.append('subject', mailBody.subject);
+      form.append('to', mailBody.to);
+      if (mailBody.cc) {
+        form.append('cc', mailBody.cc);
+      }
+      if (mailBody.bcc) {
+        form.append('cc', mailBody.bcc);
+      }
       if (mailBody.template && mailBody.variables) {
         form.append('template', mailBody.template);
         form.append('h:x-mailgun-variables', JSON.stringify(mailBody.variables));
