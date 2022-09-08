@@ -91,14 +91,29 @@ export class MailController {
         if (req.body.bcc) {
           bcc = req.body.bcc.split(',').map(e => e.trim());
         }
-        const resSendMail = await this.ms.mailGunSend({
-          from: `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.domain}>`,
+        const mailSend = await this.ms.mailGunSend({
+          from: `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailGun.domain}>`,
           to, subject, html, text, cc, bcc
         });
-        if (resSendMail) {
+        if (mailSend) {
+          const mailbox = this.mailboxRepo.new();
+          mailbox.mail = mailSend.id;
+          mailbox.from = `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailGun.domain}>`;
+          mailbox.to = to;
+          if (cc) {
+            mailbox.cc = cc;
+          }
+          if (bcc) {
+            mailbox.bcc = bcc;
+          }
+          mailbox.subject = subject;
+          mailbox.html = html;
+          mailbox.text = text;
+          mailbox.date = new Date();
+          const mailboxSave = await this.mailboxRepo.save(mailbox);
           return {
             info: '🙂 201 - Mail API :: Email Terkirim! 🥰',
-            result: resSendMail.id
+            result: mailboxSave
           };
         }
       }
