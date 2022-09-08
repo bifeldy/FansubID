@@ -236,11 +236,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onWindowRightClick(ev): any {
-    ev.preventDefault();
+    this.gs.log('[MOUSE_RIGHT_CLICK]', ev);
+    // TODO :: Add Share Button & Disable Right Click
+    // ev.preventDefault();
   }
 
   onWindowLeftClick(ev): boolean {
-    this.gs.log('[MOUSE_CLICK]', ev);
+    this.gs.log('[MOUSE_LEFT_CLICK]', ev);
     const e = ev || window.event;
     const el = e.target || e.srcElement;
     if (el.tagName === 'A' || el.tagName === 'a') {
