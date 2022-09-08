@@ -7,7 +7,6 @@ import { SharedMaterialModule } from '../../_shared/modules/shared-material.modu
 
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
-import { MailboxComposeComponent } from './mailbox-compose/mailbox-compose.component';
 import { MailboxDetailComponent } from './mailbox-detail/mailbox-detail.component';
 import { MailboxListComponent } from './mailbox-list/mailbox-list.component';
 
@@ -19,15 +18,6 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     component: MailboxListComponent
-  },
-  {
-    path: 'compose',
-    component: MailboxComposeComponent,
-    data: {
-      title: 'Surel - Buat Baru',
-      description: 'Halaman Kirim Surel Baru',
-      keywords: 'Buat Surel Baru'
-    }
   },
   {
     path: ':mailId',
@@ -44,7 +34,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     MailboxListComponent,
-    MailboxComposeComponent,
     MailboxDetailComponent
   ],
   imports: [

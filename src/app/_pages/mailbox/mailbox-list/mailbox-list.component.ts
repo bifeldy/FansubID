@@ -105,7 +105,7 @@ export class MailboxListComponent implements OnInit, OnDestroy {
             Lampiran: `${r.attachment_count} Berkas`
           });
         }
-        this.fs.initializeFab('outgoing_mail', null, 'Buat Email Baru', `/mailbox/compose`, false);
+        this.fs.initializeFab('outgoing_mail', null, 'Buat Email Baru', `/create/mailbox`, false);
         this.bs.idle();
       },
       error: err => {

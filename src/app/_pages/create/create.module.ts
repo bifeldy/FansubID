@@ -11,6 +11,7 @@ import { NotificationsModule } from '../../_shared/components/notifications/noti
 
 import { BerkasCreateComponent } from '../create/berkas-create/berkas-create.component';
 import { FansubCreateComponent } from '../create/fansub-create/fansub-create.component';
+import { MailboxCreateComponent } from '../create/mailbox-create/mailbox-create.component';
 import { NewsCreateComponent } from '../create/news-create/news-create.component';
 
 const routes: Routes = [
@@ -38,6 +39,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'mailbox',
+    component: MailboxCreateComponent,
+    data: {
+      title: 'Surel - Buat Baru',
+      description: 'Halaman Kirim Surel Baru',
+      keywords: 'Buat Surel Baru'
+    }
+  },
+  {
     path: 'news',
     component: NewsCreateComponent,
     data: {
@@ -45,14 +55,15 @@ const routes: Routes = [
       description: 'Halaman Unggah Berita Baru',
       keywords: 'Tambah Berita Baru'
     }
-  },
+  }
 ];
 
 @NgModule({
   declarations: [
     BerkasCreateComponent,
     FansubCreateComponent,
-    NewsCreateComponent,
+    MailboxCreateComponent,
+    NewsCreateComponent
   ],
   imports: [
     CommonModule,
