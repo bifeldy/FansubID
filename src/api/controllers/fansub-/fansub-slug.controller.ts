@@ -50,9 +50,8 @@ export class FansubSlugController {
             }
           };
         }
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

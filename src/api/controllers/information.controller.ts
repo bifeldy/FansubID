@@ -149,9 +149,8 @@ export class InformationController {
           info: '😚 201 - Information API :: Berhasil Membuat / Mengirim Informasi 🤩',
           result: infoTemplate
         };
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

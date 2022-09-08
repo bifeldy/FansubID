@@ -145,12 +145,9 @@ export class VerifySosmedController {
         //   // TODO :: If Other SosMed
         // } else if (req.body.app === SosMed.FACEBOOK) {
         //   // TODO :: If Other SosMed
-        } else {
-          throw new Error('Data Tidak Lengkap!');
         }
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

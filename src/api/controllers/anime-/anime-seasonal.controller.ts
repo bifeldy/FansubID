@@ -46,9 +46,8 @@ export class AnimeSeasonalController {
           this.cm.set(req.originalUrl, { status: res_raw.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
         }
         return responseBody;
-      } else {
-        throw new Error('Gagal Tarik Data Anime');
       }
+      throw new Error('Gagal Tarik Data Anime');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

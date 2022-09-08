@@ -195,15 +195,14 @@ export class DiscordService {
         const gh: any = await res_raw.json();
         this.cfg.github = gh[0];
         this.bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(this.bot.user.id)?.setNickname(`${environment.siteName} - ${this.cfg.github?.sha?.slice(0, 7)}`);
-      } else {
-        throw new Error('Github API Error');
       }
+      throw new Error('Github API Error');
     } catch (error) {
       this.gs.log('[DISCORD_SERVICE-CHANGE_BOT_NICKNAME] 🎉', error, 'error')
     }
   }
 
-  async verifyAccount(msg: Message): Promise<void> {
+  async verifyAccount(msg: Message): Promise<Message<boolean>> {
     try {
       const args = msg.content.split(' ');
       if (args.length >= 3 && args.length <= 4) {
@@ -216,7 +215,7 @@ export class DiscordService {
             relations: ['kartu_tanda_penduduk_', 'profile_']
           });
           if (user.verified) {
-            await msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
+            return await msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
           } else if (args[1] === SosMedModel.DISCORD) {
             user.verified = true;
             await this.userRepo.save(user);
@@ -226,7 +225,7 @@ export class DiscordService {
             }
             const mail = await this.ms.mailGunAddForwarding(user.username, user.email);
             await msg.reply({ content: `<@${msg.author.id}> 😚 .: Berhasil :: ${mail?.route?.id} :. 🤩` });
-            await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
+            return await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
               embeds: [
                 new MessageEmbed()
                   .setColor('#69f0ae')
@@ -246,20 +245,18 @@ export class DiscordService {
                   })
               ]
             });
-          } else {
-            throw new Error('Format Data Salah / Token Expired!');
           }
-        } else {
-          await msg.reply({ content: `<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔` });
+          throw new Error('Format Data Salah / Token Expired!');
         }
-      } else {
-        await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
+        return await msg.reply({ content: `<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔` });
       }
+      return await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
     } catch (error) {
       try {
-        await msg.reply({ content: `<@${msg.author.id}> Format data salah atau token expired 🤔` });
+        return await msg.reply({ content: `<@${msg.author.id}> Format data salah atau token expired 🤔` });
       } catch (e) {
-        this.gs.log('[DISCORD_SERVICE-VERIFY_ACCOUNT] 🎉', e, 'error')
+        this.gs.log('[DISCORD_SERVICE-VERIFY_ACCOUNT] 🎉', e, 'error');
+        return null;
       }
     }
   }

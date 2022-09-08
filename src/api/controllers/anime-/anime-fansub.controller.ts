@@ -70,9 +70,8 @@ export class AnimeFansubController {
           pages: (animeId.length > 1 ? 1 : Math.ceil(count / (queryRow ? queryRow : 10))),
           results
         };
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

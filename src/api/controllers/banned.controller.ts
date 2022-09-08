@@ -85,9 +85,8 @@ export class BannedController {
             pages: 1,
             results
           };
-        } else {
-          throw new Error('Data Tidak Lengkap!');
         }
+        throw new Error('Data Tidak Lengkap!');
       } else {
         if (!user) {
           throw new HttpException({

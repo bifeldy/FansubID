@@ -449,21 +449,18 @@ export class LikedislikeController {
                 myReport: myReport[0]
               }
             };
-          } else {
-            throw new Error('Data Duplikat');
           }
-        } else {
-          return {
-            info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
-            result: {
-              statistics: likedislike,
-              myReport: null
-            }
-          };
+          throw new Error('Data Duplikat');
         }
-      } else {
-        throw new Error('Data Tidak Lengkap');
+        return {
+          info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
+          result: {
+            statistics: likedislike,
+            myReport: null
+          }
+        };
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

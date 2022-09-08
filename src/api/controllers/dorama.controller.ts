@@ -52,9 +52,8 @@ export class DoramaController {
           this.cm.set(req.originalUrl, { status: res_raw.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
         }
         return responseBody;
-      } else {
-        throw new Error('Gagal Tarik Data Dorama');
       }
+      throw new Error('Gagal Tarik Data Dorama');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
@@ -111,15 +110,13 @@ export class DoramaController {
             info: `😅 202 - Dorama API :: Data Dorama Diperbaharui 🤣`,
             result: resultSaveDorama
           };
-        } else {
-          return {
-            info: `😍 202 - Dorama API :: Data Dorama Multi Duplikat 🥰`,
-            result: doramas
-          };
         }
-      } else {
-        throw new Error('Data Tidak Lengkap!');
+        return {
+          info: `😍 202 - Dorama API :: Data Dorama Multi Duplikat 🥰`,
+          result: doramas
+        };
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
@@ -160,9 +157,8 @@ export class DoramaController {
           this.cm.set(req.originalUrl, { status: httpStatusCode, body: responseBody }, { ttl: environment.externalApiCacheTime });
         }
         return responseBody;
-      } else {
-        throw new Error('Gagal Tarik Data Dorama');
       }
+      throw new Error('Gagal Tarik Data Dorama');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

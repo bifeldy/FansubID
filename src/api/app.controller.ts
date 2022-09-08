@@ -61,9 +61,8 @@ export class AppController {
             this.gs.log('[RES_DOWNLOAD_IMAGE_BACKDROP-ERROR] 🔻', e, 'error');
           }
         });
-      } else {
-        throw new Error('Lampiran Tidak Ditemukan!');
       }
+      throw new Error('Lampiran Tidak Ditemukan!');
     } catch (error) {
       return res.download(`${environment.viewFolder}/assets/img/backdrop-null.png`, 'backdrop-null.png', async (e) => {
         if (e) {

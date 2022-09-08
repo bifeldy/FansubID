@@ -200,9 +200,8 @@ export class FansubMemberController {
             }
           }, HttpStatus.NOT_ACCEPTABLE);
         }
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
@@ -330,17 +329,15 @@ export class FansubMemberController {
             info: resInfo,
             result: resMember
           };
-        } else {
-          throw new HttpException({
-            info: '🙄 403 - Fansub API :: Gagal Menyetujui Keanggotaan 😪',
-            result: {
-              message: 'Hanya Bisa Dilakukan Oleh Sesama Member!'
-            }
-          }, HttpStatus.FORBIDDEN);
         }
-      } else {
-        throw new Error('Data Tidak Lengkap!');
+        throw new HttpException({
+          info: '🙄 403 - Fansub API :: Gagal Menyetujui Keanggotaan 😪',
+          result: {
+            message: 'Hanya Bisa Dilakukan Oleh Sesama Member!'
+          }
+        }, HttpStatus.FORBIDDEN);
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

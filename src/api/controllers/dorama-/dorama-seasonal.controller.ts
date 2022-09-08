@@ -43,9 +43,8 @@ export class DoramaSeasonalController {
           this.cm.set(req.originalUrl, { status: res_raw.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
         }
         return responseBody;
-      } else {
-        throw new Error('Gagal Tarik Data Dorama');
       }
+      throw new Error('Gagal Tarik Data Dorama');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

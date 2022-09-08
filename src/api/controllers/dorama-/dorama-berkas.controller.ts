@@ -90,9 +90,8 @@ export class DoramaBerkasController {
           pages: Math.ceil(count / (queryRow ? queryRow : 10)),
           results
         };
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

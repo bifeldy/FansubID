@@ -54,9 +54,8 @@ export class LoginMiddleware implements NestMiddleware {
           domain: environment.domain
         });
         return next();
-      } else {
-        throw new Error('Username, Email, atau Password tidak tepat!');
       }
+      throw new Error('Username, Email, atau Password tidak tepat!');
     } catch (error) {
       this.gs.log('[LOGIN_MIDDLEWARE-ERROR] 🎃', error, 'error');
       if (error instanceof HttpException) throw error;

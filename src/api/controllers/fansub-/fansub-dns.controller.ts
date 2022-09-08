@@ -215,12 +215,11 @@ export class FansubDnsController {
               fansub_: fansub
             }
           };
-        } else {
-          throw new HttpException({
-            info: `🙄 ${dns.status} - Cloudflare API :: Gagal Menggunakan SubDomain 😪`,
-            result: dns.result
-          }, dns.status);
         }
+        throw new HttpException({
+          info: `🙄 ${dns.status} - Cloudflare API :: Gagal Menggunakan SubDomain 😪`,
+          result: dns.result
+        }, dns.status);
       }
       throw new Error('Data Tidak Lengkap!');
     } catch (error) {

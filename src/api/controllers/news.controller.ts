@@ -126,9 +126,8 @@ export class NewsController {
           info: `😅 201 - News API :: Tambah Baru 🤣`,
           result: resNewsSave
         };
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

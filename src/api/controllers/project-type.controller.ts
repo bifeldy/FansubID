@@ -56,9 +56,8 @@ export class ProjectTypeController {
           info: `😅 201 - Project API :: Tambah Baru 🤣`,
           result: resProjectSave
         };
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

@@ -88,17 +88,15 @@ export class PromoteController {
             info: `😅 201 - Promote API :: Berhasil Mempromosikan User 🤣`,
             result: resUserSave
           };
-        } else {
-          throw new HttpException({
-            info: `🙄 400 - Promote API :: Gagal Mempromosikan User 😪`,
-            result: {
-              message: 'Akun Pengguna Belum Diverifikasi!'
-            }
-          }, HttpStatus.BAD_REQUEST);
         }
-      } else {
-        throw new Error('Data Tidak Lengkap');
+        throw new HttpException({
+          info: `🙄 400 - Promote API :: Gagal Mempromosikan User 😪`,
+          result: {
+            message: 'Akun Pengguna Belum Diverifikasi!'
+          }
+        }, HttpStatus.BAD_REQUEST);
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

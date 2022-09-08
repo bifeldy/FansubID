@@ -45,9 +45,8 @@ export class TorrentController {
             result: data
           });
         });
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       const body: any = {
         info: '🙄 400 - Torrent Tracker API :: Gagal Mendapatkan Torrent 😪',

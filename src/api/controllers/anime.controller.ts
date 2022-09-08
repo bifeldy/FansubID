@@ -57,9 +57,8 @@ export class AnimeController {
           this.cm.set(req.originalUrl, { status: res_raw.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
         }
         return responseBody;
-      } else {
-        throw new Error('Gagal Tarik Data Anime');
       }
+      throw new Error('Gagal Tarik Data Anime');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
@@ -112,15 +111,13 @@ export class AnimeController {
             info: `😅 202 - Anime API :: Data Anime Diperbaharui 🤣`,
             result: resultSaveAnime
           };
-        } else {
-          return {
-            info: `😍 202 - Anime API :: Data Anime Multi Duplikat 🥰`,
-            result: animes
-          };
         }
-      } else {
-        throw new Error('Data Tidak Lengkap!');
+        return {
+          info: `😍 202 - Anime API :: Data Anime Multi Duplikat 🥰`,
+          result: animes
+        };
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
@@ -162,9 +159,8 @@ export class AnimeController {
           this.cm.set(req.originalUrl, { status: httpStatusCode, body: responseBody }, { ttl: environment.externalApiCacheTime });
         }
         return responseBody;
-      } else {
-        throw new Error('Gagal Tarik Data Anime');
       }
+      throw new Error('Gagal Tarik Data Anime');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

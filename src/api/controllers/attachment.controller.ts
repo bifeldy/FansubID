@@ -164,9 +164,8 @@ export class AttachmentController {
           info: `😅 201 - Temp Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
           result: resAttachmentSave
         };
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       this.deleteAttachment(req.file.filename);
       if (error instanceof HttpException) throw error;
@@ -236,9 +235,8 @@ export class AttachmentController {
               await this.attachmentRepo.save(attachment);
             }
           });
-        } else {
-          throw new Error('Lampiran Tidak Ditemukan!');
         }
+        throw new Error('Lampiran Tidak Ditemukan!');
       }
     } catch (error) {
       const body: any = {

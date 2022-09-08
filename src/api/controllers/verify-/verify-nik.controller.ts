@@ -55,25 +55,22 @@ export class VerifyNikController {
               info: `😍 201 - KTP API :: Data Kartu Tanda Penduduk 🥰`,
               result: res_json2
             };
-          } else {
-            throw new HttpException({
-              info: `🙄 ${res_raw2.status || 400} - KTP API :: API Pemerintah Error 😪`,
-              result: {
-                message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya?'
-              }
-            }, res_raw2.status || HttpStatus.BAD_REQUEST);
           }
-        } else {
           throw new HttpException({
-            info: `🙄 ${res_raw1.status || 400} - Google API :: Captcha Bermasalah 😪`,
+            info: `🙄 ${res_raw2.status || 400} - KTP API :: API Pemerintah Error 😪`,
             result: {
-              message: 'Captcha Salah / Expired / Google API Down!'
+              message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya?'
             }
-          }, res_raw1.status || HttpStatus.BAD_REQUEST);
+          }, res_raw2.status || HttpStatus.BAD_REQUEST);
         }
-      } else {
-        throw new Error('Data Tidak Lengkap!');
+        throw new HttpException({
+          info: `🙄 ${res_raw1.status || 400} - Google API :: Captcha Bermasalah 😪`,
+          result: {
+            message: 'Captcha Salah / Expired / Google API Down!'
+          }
+        }, res_raw1.status || HttpStatus.BAD_REQUEST);
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

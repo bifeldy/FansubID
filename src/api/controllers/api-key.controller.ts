@@ -74,9 +74,8 @@ export class ApiKeyController {
             pages: 1,
             results
           };
-        } else {
-          throw new Error('Data Tidak Lengkap!');
         }
+        throw new Error('Data Tidak Lengkap!');
       } else {
         if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
           const [corss, count] = await this.apiKeyRepo.findAndCount({
@@ -181,9 +180,8 @@ export class ApiKeyController {
             result: resCorsSave
           };
         }
-      } else {
-        throw new Error('Data Tidak Lengkap!');
       }
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
