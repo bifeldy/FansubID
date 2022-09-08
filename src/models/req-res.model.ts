@@ -44,8 +44,10 @@ export interface JsonResponseMulti<T> {
 
 export interface MailModel {
   from?: string;
-  to?: string;
   subject?: string;
+  to?: string;
+  cc?: string;
+  bcc?: string;
   template?: string;
   variables?: {
     nama?: string;
