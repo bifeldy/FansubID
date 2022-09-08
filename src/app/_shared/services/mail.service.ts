@@ -29,4 +29,8 @@ export class MailService {
     return this.api.getData(`/mail/${mailId}`);
   }
 
+  sendMail(mailData: any) {
+    return this.api.postData('/mail', mailData);
+  }
+
 }

@@ -75,7 +75,7 @@ export class MailboxDetailComponent implements OnInit, OnDestroy {
           next: res => {
             this.gs.log('[MAIL_DETAIL_SUCCESS]', res);
             this.mailData = res.result;
-            this.fs.initializeFab('outgoing_mail', null, 'Balas Email', `/mailbox/compose`, false);
+            this.fs.initializeFab('outgoing_mail', null, 'Balas Email', `/create/mailbox`, false);
             this.bs.idle();
           },
           error: err => {

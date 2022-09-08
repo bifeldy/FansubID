@@ -51,7 +51,7 @@ export class CloudflareService {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records`);
       const data = {
-        name: name.includes(`.${environment.domain}`) ? name : `${name}.${environment.domain}`,
+        name: name.includes(`.${environment.cloudflare.domain}`) ? name : `${name}.${environment.cloudflare.domain}`,
         type, content, ttl: 1,
         proxied: type === 'A' ? true : false
       };

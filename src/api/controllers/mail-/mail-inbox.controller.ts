@@ -33,15 +33,15 @@ export class MailInboxController {
         where: [
           {
             subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            to: ILike(`%${user.username}@${environment.domain}%`)
+            to: ILike(`%${user.username}@${environment.mailGun.domain}%`)
           },
           {
             subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            cc: ILike(`%${user.username}@${environment.domain}%`)
+            cc: ILike(`%${user.username}@${environment.mailGun.domain}%`)
           },
           {
             subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            bcc: ILike(`%${user.username}@${environment.domain}%`),
+            bcc: ILike(`%${user.username}@${environment.mailGun.domain}%`),
           }
         ],
         order: {

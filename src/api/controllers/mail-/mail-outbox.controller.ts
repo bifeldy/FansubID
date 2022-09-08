@@ -33,7 +33,7 @@ export class MailOutboxController {
         where: [
           {
             subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            from: ILike(`%${user.username}@${environment.domain}%`)
+            from: ILike(`%${user.username}@${environment.mailGun.domain}%`)
           }
         ],
         order: {

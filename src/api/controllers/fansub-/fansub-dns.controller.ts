@@ -43,7 +43,7 @@ export class FansubDnsController {
       if (dnss) {
         const records = [];
         for (const rec of dnss.results) {
-          const fansubSlug = rec.name.split(`.${environment.domain}`)[0];
+          const fansubSlug = rec.name.split(`.${environment.cloudflare.domain}`)[0];
           if (CONSTANTS.blacklistedWords.includes(fansubSlug.toLowerCase())) {
             continue;
           }

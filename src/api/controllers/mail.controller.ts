@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 
 import { environment } from '../../environments/api/environment';
 
-import { RoleModel, UserModel } from '../../models/req-res.model';
+import { MailModel, RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
@@ -79,36 +79,30 @@ export class MailController {
         'message' in req.body
       ) {
         const user: UserModel = res.locals['user'];
-        const to = req.body.to.split(',').map(e => e.trim());
-        const subject = req.body.subject;
-        const html = req.body.message;
-        const text = this.gs.htmlToText(req.body.message);
-        let cc = null;
+        const mailbox = this.mailboxRepo.new();
+        mailbox.from = `${user.username}@${environment.mailGun.domain}`;
+        mailbox.to = req.body.to;
+        mailbox.subject = req.body.subject;
+        mailbox.html = req.body.message;
+        mailbox.text = this.gs.htmlToText(req.body.message);
+        const mailBody: MailModel = {
+          from: mailbox.from,
+          to: mailbox.to,
+          subject: mailbox.subject,
+          html: mailbox.html,
+          text: mailbox.text
+        };
         if (req.body.cc) {
-          cc = req.body.cc.split(',').map(e => e.trim());
+          mailbox.cc = req.body.cc;
+          mailBody.cc = req.body.cc;
         }
-        let bcc = null;
         if (req.body.bcc) {
-          bcc = req.body.bcc.split(',').map(e => e.trim());
+          mailbox.bcc = req.body.bcc;
+          mailBody.bcc = req.body.bcc;
         }
-        const mailSend = await this.ms.mailGunSend({
-          from: `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailGun.domain}>`,
-          to, subject, html, text, cc, bcc
-        });
+        const mailSend = await this.ms.mailGunSend(mailBody);
         if (mailSend) {
-          const mailbox = this.mailboxRepo.new();
           mailbox.mail = mailSend.id;
-          mailbox.from = `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailGun.domain}>`;
-          mailbox.to = to;
-          if (cc) {
-            mailbox.cc = cc;
-          }
-          if (bcc) {
-            mailbox.bcc = bcc;
-          }
-          mailbox.subject = subject;
-          mailbox.html = html;
-          mailbox.text = text;
           mailbox.date = new Date();
           const mailboxSave = await this.mailboxRepo.save(mailbox);
           return {
@@ -143,10 +137,10 @@ export class MailController {
         relations: ['attachment_'],
       });
       if (
-        !mailbox.from.includes(`${user.username}@${environment.domain}`) &&
-        !mailbox.to.includes(`${user.username}@${environment.domain}`) &&
-        !mailbox.cc.includes(`${user.username}@${environment.domain}`) &&
-        !mailbox.bcc.includes(`${user.username}@${environment.domain}`) &&
+        !mailbox.from.includes(`${user.username}@${environment.mailGun.domain}`) &&
+        !mailbox.to.includes(`${user.username}@${environment.mailGun.domain}`) &&
+        !mailbox.cc.includes(`${user.username}@${environment.mailGun.domain}`) &&
+        !mailbox.bcc.includes(`${user.username}@${environment.mailGun.domain}`) &&
         user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR
       ) {
         throw new HttpException({

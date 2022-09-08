@@ -56,7 +56,7 @@ export class MailWebhookController {
         stringRecipient += `, ${req.body.Bcc}`;
       }
       for (const recipient of stringRecipient.split(', ')) {
-        if (recipient.includes(`@${environment.domain}`)) {
+        if (recipient.includes(`@${environment.mailGun.domain}`)) {
           let email = recipient;
           if (recipient.includes('<') && recipient.includes('>')) {
             email = recipient.split('<')[1].split('>')[0];
