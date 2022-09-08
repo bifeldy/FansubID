@@ -80,7 +80,7 @@ export class MailController {
       ) {
         const user: UserModel = res.locals['user'];
         const mailbox = this.mailboxRepo.new();
-        mailbox.from = `${user.username}@${environment.mailGun.domain}`;
+        mailbox.from = `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailGun.domain}>`;
         mailbox.to = req.body.to;
         mailbox.subject = req.body.subject;
         mailbox.html = req.body.message;

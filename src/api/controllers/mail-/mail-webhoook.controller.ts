@@ -66,7 +66,10 @@ export class MailWebhookController {
       }
       const usersCount = await this.userRepo.count({
         where: [
-          { username: In(userTarget) }
+          {
+            username: In(userTarget),
+            verified: true
+          }
         ]
       });
       if (usersCount === 0) {
