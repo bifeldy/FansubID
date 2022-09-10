@@ -89,8 +89,8 @@ export class FansubController {
         ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
       ) {
         const user: UserModel = res.locals['user'];
-        const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
-        if (CONSTANTS.blacklistedWords.includes(slug.toLowerCase())) {
+        const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '').toLowerCase();
+        if (CONSTANTS.blacklistedWords.includes(slug)) {
           throw new HttpException({
             info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
             result: {
@@ -273,8 +273,8 @@ export class FansubController {
           }
         }
         if ('slug' in req.body) {
-          const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '');
-          if (CONSTANTS.blacklistedWords.includes(newSlug.toLowerCase())) {
+          const newSlug = req.body.slug.replace(/[^a-zA-Z-]/g, '').toLowerCase();
+          if (CONSTANTS.blacklistedWords.includes(newSlug)) {
             throw new HttpException({
               info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
               result: {

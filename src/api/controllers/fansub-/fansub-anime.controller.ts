@@ -15,7 +15,7 @@ export class FansubAnimeController {
   // PATCH `/api/fansub/anime?id=`
   @Patch('/')
   @HttpCode(202)
-  async checkSlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async animeFansub(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);

@@ -17,7 +17,7 @@ export class FansubBerkasController {
   // PATCH `/api/fansub/berkas?id=`
   @Patch('/')
   @HttpCode(202)
-  async checkSlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async berkasFansub(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
