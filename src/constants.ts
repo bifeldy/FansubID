@@ -1,8 +1,9 @@
 export const CONSTANTS = {
   blacklistedWords: [
     '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id',
-    'localhost', 'mail', 'email', 'e-mail', 'tracker',
-    'ferdion', 'bifeldy', 'dev', 'api', 'docs'
+    'localhost', 'mail', 'email', 'e-mail', 'tracker', 'fansub', 'fansubber',
+    'ferdion', 'bifeldy', 'dev', 'api', 'docs', 'cs', 'help', 'support',
+    'admin', 'administrator', 'info', 'information', 'noreply', 'mod', 'moderator'
   ],
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
   decoratorRoles: 'roles',

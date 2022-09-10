@@ -60,23 +60,31 @@ export class RegisterMiddleware implements NestMiddleware {
         if (res_raw.ok) {
           const res_json: any = await res_raw.json();
           this.gs.log(`[gCaptcha] 🎲 ${res_raw.status}`, res_json);
+          const usrName = req.body.username.replace(/\s/g, '').replace(/[^a-z0-9]/g, '').toLowerCase();
           const selectedRegistration = await this.registrationRepo.find({
             where: [
-              { username: ILike(req.body.username) },
+              { username: ILike(usrName) },
               { email: ILike(req.body.email) }
             ]
           });
           const selectedUser = await this.userRepo.find({
             where: [
-              { username: ILike(req.body.username) },
+              { username: ILike(usrName) },
               { email: ILike(req.body.email) }
             ]
           });
           const userNotAvailable = [...selectedRegistration, ...selectedUser];
           if (userNotAvailable.length === 0) {
+            if (CONSTANTS.blacklistedWords.includes(usrName)) {
+              throw new HttpException({
+                info: '🙄 400 - Authentication API :: Pendaftaran Gagal 😪',
+                result: {
+                  message: `'${usrName}' Tidak Dapat Digunakan`
+                }
+              }, HttpStatus.BAD_REQUEST);
+            }
             const result: any = {};
-            req.body.username = req.body.username.replace(/\s/g, '').replace(/[^a-z0-9]/g, '');
-            if (req.body.username.length < 8) {
+            if (usrName.length < 8) {
               result.username = 'Nama Pengguna Minimal 8 Huruf';
             }
             if (!req.body.email.match(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)) {
@@ -90,7 +98,7 @@ export class RegisterMiddleware implements NestMiddleware {
               }, HttpStatus.BAD_REQUEST);
             }
             const pengguna = this.registrationRepo.new();
-            pengguna.username = req.body.username;
+            pengguna.username = usrName;
             pengguna.email = req.body.email;
             pengguna.password = this.cs.hashPassword(req.body.password);
             pengguna.nama = req.body.name;
@@ -118,7 +126,7 @@ export class RegisterMiddleware implements NestMiddleware {
           } else {
             const result: any = {};
             for (const user of userNotAvailable) {
-              if (user.username === req.body.username) {
+              if (user.username === usrName) {
                 result.username = `${user.username} Sudah Terpakai`;
               }
               if (user.email === req.body.email) {
