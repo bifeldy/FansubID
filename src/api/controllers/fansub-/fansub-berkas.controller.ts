@@ -14,7 +14,7 @@ export class FansubBerkasController {
     //
   }
 
-  // PATCH `/api/fansub/berkas?id=`
+  // PATCH `/api/fansub-berkas?id=`
   @Patch('/')
   @HttpCode(202)
   async berkasFansub(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {

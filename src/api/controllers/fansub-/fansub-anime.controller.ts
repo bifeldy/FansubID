@@ -12,7 +12,7 @@ export class FansubAnimeController {
     //
   }
 
-  // PATCH `/api/fansub/anime?id=`
+  // PATCH `/api/fansub-anime?id=`
   @Patch('/')
   @HttpCode(202)
   async animeFansub(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {

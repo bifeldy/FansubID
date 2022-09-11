@@ -62,16 +62,6 @@
     <!-- Detail -->
     <div class="row pb-3 px-0">
       <div class="col-lg-8 col-xl-9">
-        <div class="row pb-3" *ngIf="tutorialData">
-          <div class="col-12 sticky-top bg-bifeldy">
-            <h2 class="pt-3 border-bottom-dotted">
-              <b class="text-bifeldy">Tutorial Klaim *.Fansub.ID</b>
-            </h2>
-          </div>
-          <div class="col-12">
-            <div class="row px-3 pb-3" [innerHTML]="tutorialData"></div>
-          </div>
-        </div>
         <div class="row">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">
@@ -104,6 +94,16 @@
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="tutorialData">
+          <div class="col-12 sticky-top bg-bifeldy">
+            <h2 class="pt-3 border-bottom-dotted">
+              <b class="text-bifeldy">Tutorial Klaim *.Fansub.ID</b>
+            </h2>
+          </div>
+          <div class="col-12">
+            <div class="row px-3 pb-3" [innerHTML]="tutorialData"></div>
           </div>
         </div>
       </div>

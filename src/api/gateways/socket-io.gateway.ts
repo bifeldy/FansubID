@@ -134,27 +134,29 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       const trackColumnName = trackColumns.find(column => column.propertyName.startsWith(`${payload.trackType}_`)).propertyName;
       tracks = await this.trackRepo.query(`
         SELECT *
-        FROM (
-          SELECT
-            visitor_date::DATE
-          FROM generate_series(
-            NOW() - INTERVAL '7 DAY',
-            NOW(),
-            INTERVAL '1 DAY'
-          ) visitor_date
-        ) d
-        LEFT JOIN (
-          SELECT
-            DATE_TRUNC('DAY', created_at)::DATE AS visitor_date,
-            COUNT(*) AS visitor_count
-          FROM
-            track
-          WHERE
-            created_at >= NOW() - INTERVAL '7 DAY'
-            AND ${trackColumnName}id = $1
-          GROUP BY 1
-        ) t USING (visitor_date)
-        ORDER BY visitor_date ASC;
+        FROM
+          (
+            SELECT
+              visitor_date::DATE
+            FROM generate_series(
+              NOW() - INTERVAL '7 DAY',
+              NOW(),
+              INTERVAL '1 DAY'
+            ) visitor_date
+          ) d
+          LEFT JOIN (
+            SELECT
+              DATE_TRUNC('DAY', created_at)::DATE visitor_date,
+              COUNT(*) visitor_count
+            FROM
+              track
+            WHERE
+              created_at >= NOW() - INTERVAL '7 DAY'
+              AND ${trackColumnName}id = $1
+            GROUP BY 1
+          ) t USING (visitor_date)
+        ORDER BY
+          visitor_date ASC
       `, [selected.id]);
       result.visitor = tracks;
       return result;

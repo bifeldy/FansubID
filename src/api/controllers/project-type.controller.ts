@@ -7,12 +7,14 @@ import { RoleModel } from '../../models/req-res.model';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
+import { BerkasService } from '../repository/berkas.service';
 import { ProjectTypeService } from '../repository/project-type.service';
 
 @Controller('/project-type')
 export class ProjectTypeController {
 
   constructor(
+    private berkasRepo: BerkasService,
     private projectTypeRepo: ProjectTypeService
   ) {
     //
@@ -21,14 +23,47 @@ export class ProjectTypeController {
   @Get('/')
   @HttpCode(200)
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-    const [projects, count] = await this.projectTypeRepo.findAndCount({
-      order: {
-        name: 'ASC'
-      }
-    });
+    const projects = await this.projectTypeRepo.query(`
+      SELECT
+        SUM(total_berkas) total_berkas,
+        x.id,
+        x.name,
+        x.description,
+        x.image_url,
+        x.created_at,
+        x.updated_at
+      FROM
+        (
+          SELECT
+            0 total_berkas,
+            p.*
+          FROM
+            project_types p
+          UNION
+          SELECT
+            COUNT(b.id) total_berkas,
+            p.*
+          FROM
+            berkas b,
+            project_types p
+          WHERE
+            b."projectType_id" = p.id
+          GROUP BY
+            p.id
+        ) x
+      GROUP BY
+        x.id,
+        x.name,
+        x.description,
+        x.image_url,
+        x.created_at,
+        x.updated_at
+      ORDER BY
+        x.name ASC
+    `);
     return {
       info: `😅 200 - Project API :: List All 🤣`,
-      count,
+      count: projects.length,
       pages: 1,
       results: projects
     };
@@ -78,9 +113,17 @@ export class ProjectTypeController {
           { id: Equal(parseInt(req.params['id'])) }
         ]
       });
+      const berkasCount = await this.berkasRepo.count({
+        where: [
+          { project_type_: Equal(projectType.id) }
+        ]
+      });
       return {
         info: `😅 200 - Project API :: Detail ${req.params['id']} 🤣`,
-        result: projectType
+        result: {
+          ...projectType,
+          total_berkas: berkasCount
+        }
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;

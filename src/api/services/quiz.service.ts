@@ -33,33 +33,59 @@ export class QuizService {
     try {
       let hirakatas = await this.manager.query(`
         DO $$
-        DECLARE
-          random_number DOUBLE PRECISION;
-          select_count BIGINT := ${CONSTANTS.quizOptionsCountHirakata};
-          total_data BIGINT;
-          max_select BIGINT;
-        BEGIN
-          SELECT RANDOM()
-            INTO random_number;
-          SELECT COUNT(*)
-            INTO total_data
-            FROM hirakata
-            WHERE hiragana IS NOT NULL AND hiragana <> '' AND katakana IS NOT NULL AND katakana <> '';
-          max_select := total_data - select_count;
-          DROP TABLE IF EXISTS hirakata_quiz;
-          CREATE TABLE hirakata_quiz AS
-            SELECT *
-            FROM hirakata
-            WHERE hiragana IS NOT NULL AND hiragana <> '' AND katakana IS NOT NULL AND katakana <> ''
-            OFFSET
-              CASE
-                WHEN FLOOR(random_number * total_data) >= max_select THEN max_select
-                ELSE FLOOR(random_number * total_data)
-              END
-            LIMIT select_count;
+          DECLARE
+            random_number DOUBLE PRECISION;
+            select_count BIGINT := ${CONSTANTS.quizOptionsCountHirakata};
+            total_data BIGINT;
+            max_select BIGINT;
+          BEGIN
+            SELECT
+              RANDOM()
+            INTO
+              random_number
+            ;
+            SELECT
+              COUNT(*)
+            INTO
+              total_data
+            FROM
+              hirakata
+            WHERE
+              hiragana IS NOT NULL AND
+              hiragana <> '' AND
+              katakana IS NOT NULL AND
+              katakana <> ''
+            ;
+            max_select := total_data - select_count;
+            DROP TABLE IF EXISTS hirakata_quiz;
+            CREATE TABLE hirakata_quiz AS
+              SELECT
+                *
+              FROM
+                hirakata
+              WHERE
+                hiragana IS NOT NULL AND
+                hiragana <> '' AND
+                katakana IS NOT NULL AND
+                katakana <> ''
+              OFFSET
+                CASE
+                  WHEN FLOOR(random_number * total_data) >= max_select
+                    THEN max_select
+                  ELSE
+                    FLOOR(random_number * total_data)
+                END
+              LIMIT
+                select_count
+              ;
         END $$
       `);
-      hirakatas = await this.manager.query(`SELECT * FROM hirakata_quiz`);
+      hirakatas = await this.manager.query(`
+        SELECT
+          *
+        FROM
+          hirakata_quiz
+      `);
       for (const h of hirakatas) {
         delete h.created_at;
         delete h.updated_at;

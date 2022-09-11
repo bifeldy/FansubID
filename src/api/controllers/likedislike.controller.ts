@@ -378,13 +378,16 @@ export class LikedislikeController {
       if (req.params['type'] === 'berkas' || req.params['type'] === 'fansub' || req.params['type'] === 'user') {
         const likedislike = await this.likedislikeRepo.query(`
           SELECT
-            type, COUNT(*) AS count
+            type,
+            COUNT(*) count
           FROM
-            public.like_dislike
+            like_dislike
           WHERE
             ${req.params['type']}_id = $1
-          GROUP BY type
-          ORDER BY type ASC
+          GROUP BY
+            type
+          ORDER BY
+            type ASC
         `, [selected.id]);
         if (user) {
           const myReport = await this.likedislikeRepo.find({

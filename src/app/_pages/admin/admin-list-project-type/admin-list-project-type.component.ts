@@ -33,7 +33,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
   image_url = '/assets/img/form-no-image.png';
 
   projectData = {
-    column: ['Nama', 'Image', 'Deskripsi', 'Aksi'],
+    column: ['Nama', 'Image', 'Deskripsi', 'Berkas', 'Aksi'],
     row: []
   };
 
@@ -88,7 +88,8 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
             Nama: r.name,
             Image: r.image_url,
             Deskripsi: r.description,
-            Aksi: [{
+            Berkas: (r as any).total_berkas,
+            Aksi: ( (r as any).total_berkas > 0 ) ? [] : [{
               type: 'button',
               icon: 'delete_forever',
               name: 'Hapus',
