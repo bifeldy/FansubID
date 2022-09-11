@@ -194,11 +194,24 @@ export class ProjectTypeController {
           { id: Equal(parseInt(req.params['id'])) }
         ]
       });
-      const deletedProject = await this.projectTypeRepo.remove(projectType);
-      return {
-        info: `😅 202 - Project API :: Berhasil Menghapus Project ${req.params['id']} 🤣`,
-        result: deletedProject
-      };
+      const berkasCount = await this.berkasRepo.count({
+        where: [
+          { project_type_: Equal(projectType.id) }
+        ]
+      });
+      if (berkasCount === 0) {
+        const deletedProject = await this.projectTypeRepo.remove(projectType);
+        return {
+          info: `😅 202 - Project API :: Berhasil Menghapus Project ${req.params['id']} 🤣`,
+          result: deletedProject
+        };
+      }
+      throw new HttpException({
+        info: `🙄 403 - Project API :: Gagal Menghapus Project ${req.params['id']} 😪`,
+        result: {
+          message: 'Ada Berkas Yang Terkait Dengan Kategori Ini!'
+        }
+      }, HttpStatus.FORBIDDEN);
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
