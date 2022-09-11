@@ -112,7 +112,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           ]
         });
       } else {
-        // Other Url Target In FansubID API -- e.g '/news/:newsId'
+        // TODO :: Other Url Target In FansubID API -- e.g '/other/:otherId'
+        throw new Error('Data Tidak Lengkap!');
       }
       let tracks = null;
       const result: any = {};
@@ -219,7 +220,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
             ]
           });
         } else {
-          // Other Url Target In FansubID API -- e.g '/news/:newsId'
+          // TODO :: Other Url Target In FansubID API -- e.g '/other/:otherId'
+          throw new Error('Data Tidak Lengkap!');
         }
         const tracks = await this.trackRepo.find({
           where: [

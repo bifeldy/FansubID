@@ -139,13 +139,8 @@ export class VerifySosmedController {
               }
             }, res_raw1.status || HttpStatus.BAD_REQUEST);
           }
-        // } else if (req.body.app === SosMed.DISQUS) {
-        //   // TODO :: If Other SosMed
-        // } else if (req.body.app === SosMed.GOOGLE) {
-        //   // TODO :: If Other SosMed
-        // } else if (req.body.app === SosMed.FACEBOOK) {
-        //   // TODO :: If Other SosMed
         }
+        // TODO :: If Other SosMed
       }
       throw new Error('Data Tidak Lengkap!');
     } catch (error) {

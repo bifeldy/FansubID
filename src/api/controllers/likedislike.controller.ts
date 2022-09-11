@@ -204,7 +204,8 @@ export class LikedislikeController {
           relations: ['profile_']
         });
       } else {
-        // Other Url Target In FansubID API -- e.g '/news/:newsId'
+        // TODO :: Other Url Target In FansubID API -- e.g '/other/:otherId'
+        throw new Error('Data Tidak Lengkap!');
       }
       const likedislike = await this.likedislikeRepo.find({
         where: [
@@ -305,28 +306,26 @@ export class LikedislikeController {
       } else {
         throw new Error('Data Duplikat');
       }
-      if (req.params['type'] === 'berkas' || req.params['type'] === 'fansub' || req.params['type'] === 'user') {
-        if (req.params['type'] === 'user') {
-          selectedRepo = this.profileRepo;
-          selected = await this.profileRepo.findOneOrFail({
-            where: [
-              { id: Equal(selected.profile_.id) }
-            ]
-          });
-        }
-        const updatedLikeCount = await this.likedislikeRepo.count({
+      if (req.params['type'] === 'user') {
+        selectedRepo = this.profileRepo;
+        selected = await this.profileRepo.findOneOrFail({
           where: [
-            {
-              [`${req.params['type']}_`]: {
-                id: Equal(selected.id)
-              },
-              type: Equal(LikeAndDislikeModel.LIKE),
-            }
-          ],
+            { id: Equal(selected.profile_.id) }
+          ]
         });
-        selected.like_count = updatedLikeCount;
-        await selectedRepo.save(selected);
       }
+      const updatedLikeCount = await this.likedislikeRepo.count({
+        where: [
+          {
+            [`${req.params['type']}_`]: {
+              id: Equal(selected.id)
+            },
+            type: Equal(LikeAndDislikeModel.LIKE),
+          }
+        ],
+      });
+      selected.like_count = updatedLikeCount;
+      await selectedRepo.save(selected);
       return {
         info: `😅 201 - Like Dislike API :: Berhasil Tambah / Update Report 🤣`,
         result
@@ -373,97 +372,95 @@ export class LikedislikeController {
           ]
         });
       } else {
-        // Other Url Target In FansubID API -- e.g '/news/:newsId'
+        // TODO :: Other Url Target In FansubID API -- e.g '/other/:otherId'
+        throw new Error('Data Tidak Lengkap!');
       }
-      if (req.params['type'] === 'berkas' || req.params['type'] === 'fansub' || req.params['type'] === 'user') {
-        const likedislike = await this.likedislikeRepo.query(`
-          SELECT
-            type,
-            COUNT(*) count
-          FROM
-            like_dislike
-          WHERE
-            ${req.params['type']}_id = $1
-          GROUP BY
-            type
-          ORDER BY
-            type ASC
-        `, [selected.id]);
-        if (user) {
-          const myReport = await this.likedislikeRepo.find({
-            where: [
-              {
-                [`${req.params['type']}_`]: {
-                  id: Equal(selected.id)
-                },
-                report_by_: {
-                  id: Equal(user.id)
-                }
+      const likedislike = await this.likedislikeRepo.query(`
+        SELECT
+          type,
+          COUNT(*) count
+        FROM
+          like_dislike
+        WHERE
+          ${req.params['type']}_id = $1
+        GROUP BY
+          type
+        ORDER BY
+          type ASC
+      `, [selected.id]);
+      if (user) {
+        const myReport = await this.likedislikeRepo.find({
+          where: [
+            {
+              [`${req.params['type']}_`]: {
+                id: Equal(selected.id)
+              },
+              report_by_: {
+                id: Equal(user.id)
               }
-            ],
-            relations: ['news_', 'berkas_', 'fansub_', 'user_', 'report_by_']
-          });
-          if (myReport.length <= 0) {
-            return {
-              info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
-              result: {
-                statistics: likedislike,
-                myReport: null
-              }
-            };
-          } else if (myReport.length === 1) {
-            if ('news_' in myReport[0] && myReport[0].news_) {
-              delete myReport[0].news_.content;
-              delete myReport[0].news_.tags;
-              delete myReport[0].news_.created_at;
-              delete myReport[0].news_.updated_at;
             }
-            if ('berkas_' in myReport[0] && myReport[0].berkas_) {
-              delete myReport[0].berkas_.description;
-              delete myReport[0].berkas_.download_url;
-              delete myReport[0].berkas_.created_at;
-              delete myReport[0].berkas_.updated_at;
+          ],
+          relations: ['news_', 'berkas_', 'fansub_', 'user_', 'report_by_']
+        });
+        if (myReport.length <= 0) {
+          return {
+            info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
+            result: {
+              statistics: likedislike,
+              myReport: null
             }
-            if ('fansub_' in myReport[0] && myReport[0].fansub_) {
-              delete myReport[0].fansub_.description;
-              delete myReport[0].fansub_.urls;
-              delete myReport[0].fansub_.tags;
-              delete myReport[0].fansub_.created_at;
-              delete myReport[0].fansub_.updated_at;
-            }
-            if ('user_' in myReport[0] && myReport[0].user_) {
-              delete myReport[0].user_.email;
-              delete myReport[0].user_.password;
-              delete myReport[0].user_.session_token;
-              delete myReport[0].user_.created_at;
-              delete myReport[0].user_.updated_at;
-            }
-            if ('report_by_' in myReport[0] && myReport[0].report_by_) {
-              delete myReport[0].report_by_.email;
-              delete myReport[0].report_by_.password;
-              delete myReport[0].report_by_.session_token;
-              delete myReport[0].report_by_.created_at;
-              delete myReport[0].report_by_.updated_at;
-            }
-            return {
-              info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
-              result: {
-                statistics: likedislike,
-                myReport: myReport[0]
-              }
-            };
+          };
+        } else if (myReport.length === 1) {
+          if ('news_' in myReport[0] && myReport[0].news_) {
+            delete myReport[0].news_.content;
+            delete myReport[0].news_.tags;
+            delete myReport[0].news_.created_at;
+            delete myReport[0].news_.updated_at;
           }
-          throw new Error('Data Duplikat');
+          if ('berkas_' in myReport[0] && myReport[0].berkas_) {
+            delete myReport[0].berkas_.description;
+            delete myReport[0].berkas_.download_url;
+            delete myReport[0].berkas_.created_at;
+            delete myReport[0].berkas_.updated_at;
+          }
+          if ('fansub_' in myReport[0] && myReport[0].fansub_) {
+            delete myReport[0].fansub_.description;
+            delete myReport[0].fansub_.urls;
+            delete myReport[0].fansub_.tags;
+            delete myReport[0].fansub_.created_at;
+            delete myReport[0].fansub_.updated_at;
+          }
+          if ('user_' in myReport[0] && myReport[0].user_) {
+            delete myReport[0].user_.email;
+            delete myReport[0].user_.password;
+            delete myReport[0].user_.session_token;
+            delete myReport[0].user_.created_at;
+            delete myReport[0].user_.updated_at;
+          }
+          if ('report_by_' in myReport[0] && myReport[0].report_by_) {
+            delete myReport[0].report_by_.email;
+            delete myReport[0].report_by_.password;
+            delete myReport[0].report_by_.session_token;
+            delete myReport[0].report_by_.created_at;
+            delete myReport[0].report_by_.updated_at;
+          }
+          return {
+            info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
+            result: {
+              statistics: likedislike,
+              myReport: myReport[0]
+            }
+          };
         }
-        return {
-          info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
-          result: {
-            statistics: likedislike,
-            myReport: null
-          }
-        };
+        throw new Error('Data Duplikat');
       }
-      throw new Error('Data Tidak Lengkap!');
+      return {
+        info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
+        result: {
+          statistics: likedislike,
+          myReport: null
+        }
+      };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
