@@ -19,7 +19,8 @@ export const environment = {
     {
       urls: [
         'stun:tracker.fansub.id:3478',
-        'stun:tracker.fansub.id:5349'
+        'stun:openrelay.metered.ca:80',
+        'stun:stun.l.google.com:19302'
       ]
     }
   ]
