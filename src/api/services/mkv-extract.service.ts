@@ -148,20 +148,18 @@ export class MkvExtractService {
     });
   
     fileStream.on('end', () => {
-      const endTime = new Date().getTime();
-      this.gs.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`);
-      trackData.forEach((entries, index) => {
-        const heading = entries[0];
+      for (const [idx, val] of trackData.entries()) {
+        const heading = val[0];
         const isASS = heading.includes('Format:');
         const formatFn = isASS ? this.formatTimestamp : this.formatTimestampSRT;
         const eventMatches = isASS ? heading.match(/\[Events\]\s+Format:([^\r\n]*)/) : [''];
         const headingParts = isASS ? heading.split(eventMatches[0]) : ['', ''];
         const fixedLines: any = [];
-        for (let i = 1; i < entries.length; i += 4) {
-          const line = entries[i];
-          const lineTimestamp = entries[i + 1];
-          const chunkTimestamp = entries[i + 2];
-          const duration = entries[i + 3];
+        for (let i = 1; i < val.length; i += 4) {
+          const line = val[i];
+          const lineTimestamp = val[i + 1];
+          const chunkTimestamp = val[i + 2];
+          const duration = val[i + 3];
           const lineParts = isASS && line.split(',');
           const lineIndex = isASS ? lineParts[0] : (i - 1) / 4;
           const startTimestamp = formatFn(chunkTimestamp + lineTimestamp);
@@ -179,11 +177,13 @@ export class MkvExtractService {
           }
         }
         files.push({
-          name: fileName + '_' + (index + 1) + (isASS ? '.ass' : '.srt'),
+          name: fileName + '_' + (idx + 1) + (isASS ? '.ass' : '.srt'),
           data: (isASS ? headingParts[0] + eventMatches[0] + '\r\n' : '') + fixedLines.join('\r\n') + headingParts[1] + '\r\n',
-          size: subtitleFileSize[index]
+          size: subtitleFileSize[idx]
         });
       });
+      const endTime = new Date().getTime();
+      this.gs.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`);
       if (files.length === 0) {
         callback(Error('No data found'), null);
       } else {
