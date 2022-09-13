@@ -1,6 +1,9 @@
 // 3rd Party Library
 import { stripHtml } from 'string-strip-html';
 
+// NodeJS Library
+import { unlink } from 'node:fs';
+
 import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
@@ -65,6 +68,14 @@ export class GlobalService {
   htmlToText(htmlElementString: string): string {
     const stringText = stripHtml(htmlElementString);
     return stringText.result;
+  }
+
+  deleteAttachment(videoFileNameNoExt: string) {
+    unlink(`${environment.uploadFolder}/${videoFileNameNoExt}`, (err) => {
+      if (err) {
+        this.log('[NODE_FS_UNLINK-ERROR] 🔗', err, 'error');
+      }
+    });
   }
 
 }

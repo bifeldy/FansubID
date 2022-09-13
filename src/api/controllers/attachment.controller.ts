@@ -1,5 +1,5 @@
 // NodeJS Library
-import { unlink, readdirSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -33,14 +33,6 @@ export class AttachmentController {
     private tempAttachmentRepo: TempAttachmentService
   ) {
     //
-  }
-
-  deleteAttachment(videoFileNameNoExt: string) {
-    unlink(`${environment.uploadFolder}/${videoFileNameNoExt}`, (err) => {
-      if (err) {
-        this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', err, 'error');
-      }
-    });
   }
 
   @Get('/')
@@ -152,7 +144,7 @@ export class AttachmentController {
                   { id: Equal(resAttachmentSave.id) }
                 ]
               });
-              this.deleteAttachment(attachmentToBeDeleted.name);
+              this.gs.deleteAttachment(attachmentToBeDeleted.name);
               await this.tempAttachmentRepo.remove(attachmentToBeDeleted);
             } catch (e) {
               this.gs.log('[TEMP_ATTACHMENT_DELETE-ERROR] 🚮', e, 'error');
@@ -166,7 +158,7 @@ export class AttachmentController {
       }
       throw new Error('Data Tidak Lengkap!');
     } catch (error) {
-      this.deleteAttachment(req.file.filename);
+      this.gs.deleteAttachment(req.file.filename);
       if (error instanceof HttpException) throw error;
       throw new HttpException({
         info: '🙄 400 - Temp Attachment API :: Gagal Mengunggah Lampiran 😪',
@@ -261,7 +253,7 @@ export class AttachmentController {
           { id: Equal(req.params['id']) }
         ]
       });
-      this.deleteAttachment(attachment.name);
+      this.gs.deleteAttachment(attachment.name);
       const deletedAttachment = await this.attachmentRepo.remove(attachment);
       if ('user_' in deletedAttachment && deletedAttachment.user_) {
         delete deletedAttachment.user_.email;

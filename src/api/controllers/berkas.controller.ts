@@ -1,5 +1,5 @@
 // NodeJS Library
-import { writeFile, createReadStream, unlink, readdirSync } from 'node:fs';
+import { writeFile, createReadStream, readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -44,14 +44,6 @@ export class BerkasController {
     private tempAttachmentRepo: TempAttachmentService
   ) {
     //
-  }
-
-  deleteAttachment(filePath: string) {
-    unlink(`${environment.uploadFolder}/${filePath}`, (err) => {
-      if (err) {
-        this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', err, 'error');
-      }
-    });
   }
 
   @Get('/')
@@ -250,11 +242,7 @@ export class BerkasController {
                             resMkvAttachmentSave.mime = dfile.data.mimeType;
                             resMkvAttachmentSave.google_drive = dfile.data.id;
                             await this.attachmentRepo.save(resMkvAttachmentSave);
-                            unlink(`${environment.uploadFolder}/${fileName}.${fileExt}`, (e4) => {
-                              if (e4) {
-                                this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e4, 'error');
-                              }
-                            });
+                            this.gs.deleteAttachment(`${fileName}.${fileExt}`);
                           }).catch(e5 => this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error'));
                         } catch (e3) {
                           this.gs.log('[FILE_NOTE-ERROR] 🎼', e3, 'error');
@@ -265,11 +253,7 @@ export class BerkasController {
                 }
                 videoExtractCompleted = true;
                 if (videoUploadCompleted) {
-                  unlink(`${environment.uploadFolder}/${files[fIdx].name}`, (e) => {
-                    if (e) {
-                      this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e, 'error');
-                    }
-                  });
+                  this.gs.deleteAttachment(files[fIdx].name);
                 }
               });
             } else {
@@ -293,11 +277,7 @@ export class BerkasController {
               await this.attachmentRepo.save(resAttachmentSave);
               videoUploadCompleted = true;
               if (videoExtractCompleted) {
-                unlink(`${environment.uploadFolder}/${files[fIdx].name}`, (e) => {
-                  if (e) {
-                    this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e, 'error');
-                  }
-                });
+                this.gs.deleteAttachment(files[fIdx].name);
               }
             }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
           } else {
