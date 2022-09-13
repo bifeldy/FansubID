@@ -76,12 +76,12 @@ export class MkvExtractService {
     let trackTypeTemp = 0;
     let trackDataTemp = '';
     let trackIndex = 0;
-  
+
     decoder.on('error', error => {
       fileStream.destroy();
       callback(error, null);
     });
-  
+
     decoder.on('data', chunk => {
       this.gs.log(`[MKVEXTRACT_CHUNK] ⌛ ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`);
       switch (chunk[0]) {
@@ -146,7 +146,7 @@ export class MkvExtractService {
         currentFile++;
       }
     });
-  
+
     fileStream.on('end', () => {
       for (const [idx, val] of trackData.entries()) {
         const heading = val[0];
@@ -181,7 +181,7 @@ export class MkvExtractService {
           data: (isASS ? headingParts[0] + eventMatches[0] + '\r\n' : '') + fixedLines.join('\r\n') + headingParts[1] + '\r\n',
           size: subtitleFileSize[idx]
         });
-      });
+      };
       const endTime = new Date().getTime();
       this.gs.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`);
       if (files.length === 0) {
@@ -190,7 +190,7 @@ export class MkvExtractService {
         callback(null, files);
       }
     });
-  
+
     fileStream.pipe(decoder as any);
   }
 

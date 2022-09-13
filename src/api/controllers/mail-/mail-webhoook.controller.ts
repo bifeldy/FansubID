@@ -96,20 +96,19 @@ export class MailWebhookController {
         for (const file of req.files as any) {
           const attachment = this.attachmentRepo.new();
           attachment.name = file.filename;
-          const fileOriginalNameSplit = file.originalname.split('.');
-          attachment.ext = fileOriginalNameSplit[fileOriginalNameSplit.length - 1];
+          attachment.ext = file.originalname.split('.').pop().toLowerCase();
           attachment.size = file.size;
           attachment.mime = file.mimetype;
           const resAttachmentSave = await this.attachmentRepo.save(attachment);
           const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-          const fIdx = files.findIndex(f => f.name.toString().toLowerCase().includes(resAttachmentSave.name.toString().toLowerCase()));
+          const fIdx = files.findIndex(f => f.name.includes(resAttachmentSave.name));
           if (fIdx >= 0) {
             attachments.push(resAttachmentSave);
             this.gdrive.gDrive(true).then(async (gdrive) => {
               const dfile = await gdrive.files.create({
                 requestBody: {
-                  name: `${resAttachmentSave.name.toString().toLowerCase()}.${resAttachmentSave.ext.toString().toLowerCase()}`,
-                  parents: [environment.gdriveFolderId],  // FansubID ひきこもり - Folder
+                  name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                  parents: [environment.gdriveFolderId],
                   mimeType: resAttachmentSave.mime
                 },
                 media: {
@@ -118,6 +117,7 @@ export class MailWebhookController {
                 },
                 fields: 'id'
               }, { signal: abortController.signal });
+              resAttachmentSave.mime = dfile.data.mimeType;
               resAttachmentSave.google_drive = dfile.data.id;
               await this.attachmentRepo.save(resAttachmentSave);
               unlink(`${environment.uploadFolder}/${files[fIdx].name}`, (e) => {

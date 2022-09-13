@@ -35,8 +35,8 @@ export class AttachmentController {
     //
   }
 
-  deleteAttachment(fileName: string) {
-    unlink(`${environment.uploadFolder}/${fileName}`, (err) => {
+  deleteAttachment(videoFileNameNoExt: string) {
+    unlink(`${environment.uploadFolder}/${videoFileNameNoExt}`, (err) => {
       if (err) {
         this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', err, 'error');
       }
@@ -131,8 +131,7 @@ export class AttachmentController {
         const user: UserModel = res.locals['user'];
         const tempAttachment = this.tempAttachmentRepo.new();
         tempAttachment.name = req.file.filename;
-        const fileOriginalNameSplit = req.file.originalname.split('.');
-        tempAttachment.ext = fileOriginalNameSplit[fileOriginalNameSplit.length - 1];
+        tempAttachment.ext = req.file.originalname.split('.').pop().toLowerCase();
         tempAttachment.size = req.file.size;
         tempAttachment.mime = req.file.mimetype;
         tempAttachment.user_ = user;
@@ -150,7 +149,7 @@ export class AttachmentController {
             try {
               const attachmentToBeDeleted = await this.tempAttachmentRepo.findOneOrFail({
                 where: [
-                  { id: Equal(resAttachmentSave.id), name: ILike(resAttachmentSave.name) }
+                  { id: Equal(resAttachmentSave.id) }
                 ]
               });
               this.deleteAttachment(attachmentToBeDeleted.name);
@@ -220,14 +219,11 @@ export class AttachmentController {
           await this.attachmentRepo.save(attachment);
         }).pipe(res);
       } else {
+        const fileNameExt = `${attachment.name}.${attachment.ext}`;
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-        const fIdx = files.findIndex(f => f.name.toString().toLowerCase().includes(attachment.name.toString().toLowerCase()));
+        const fIdx = files.findIndex(f => f.name.includes(fileNameExt));
         if (fIdx >= 0) {
-          let attachmentFileNameOutput = attachment.name;
-          if (!attachmentFileNameOutput.includes(`.${attachment.ext}`)) {
-            attachmentFileNameOutput += `.${attachment.ext}`;
-          }
-          return res.download(`${environment.uploadFolder}/${files[fIdx].name}`, attachmentFileNameOutput, async (e) => {
+          return res.download(`${environment.uploadFolder}/${files[fIdx].name}`, fileNameExt, async (e) => {
             if (e) {
               this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
             } else {

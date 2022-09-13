@@ -168,12 +168,12 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       this.attachmentFile = data.attachment_;
       if (data.attachment_.fonts_) {
         data.attachment_.fonts_.forEach(f => {
-          this.attachmentFontSubtitle.push(f.name);
+          this.attachmentFontSubtitle.push(`${f.name}.${f.ext}`);
         });
       }
       if (data.attachment_.subtitles_) {
         data.attachment_.subtitles_.forEach(s => {
-          this.attachmentFontSubtitle.push(s.name);
+          this.attachmentFontSubtitle.push(`${s.name}.${s.ext}`);
         });
       }
     }

@@ -46,6 +46,14 @@ export class BerkasController {
     //
   }
 
+  deleteAttachment(filePath: string) {
+    unlink(`${environment.uploadFolder}/${filePath}`, (err) => {
+      if (err) {
+        this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', err, 'error');
+      }
+    });
+  }
+
   @Get('/')
   @HttpCode(200)
   async searchBerkas(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
@@ -200,28 +208,54 @@ export class BerkasController {
           const resAttachmentSave = await this.attachmentRepo.save(attachment);
           await this.tempAttachmentRepo.remove(tempAttachment);
           const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-          const fIdx = files.findIndex(f => f.name.toString().toLowerCase().includes(resAttachmentSave.name.toString().toLowerCase()));
+          const fIdx = files.findIndex(f => f.name.includes(resAttachmentSave.name));
           if (fIdx >= 0) {
             berkas.attachment_ = resAttachmentSave;
-            if (resAttachmentSave.ext.toString().toLowerCase() === 'mkv') {
-              this.mkv.mkvExtract(resAttachmentSave.name.toString().toLowerCase(), `${environment.uploadFolder}/${files[fIdx].name}`, async (e1, extractedFiles) => {
+            let videoExtractCompleted = false;
+            let videoUploadCompleted = false;
+            if (resAttachmentSave.ext === 'mkv') {
+              this.mkv.mkvExtract(resAttachmentSave.name, `${environment.uploadFolder}/${files[fIdx].name}`, async (e1, extractedFiles) => {
                 if (e1) {
                   this.gs.log('[MKV_EXTRACT-ERROR] 📂', e1, 'error');
                 } else {
-                  for (const f of extractedFiles) {
-                    writeFile(`${environment.uploadFolder}/${f.name}`, f.data, async (e2) => {
+                  for (const ef of extractedFiles) {
+                    const fileNameExt = ef.name.split('.');
+                    const fileExt = fileNameExt.pop().toLowerCase();
+                    const fileName = fileNameExt.join('.').toLowerCase();
+                    writeFile(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data, async (e2) => {
                       if (e2) {
                         this.gs.log('[NODE_FS_WRITE_FILE-ERROR] 📁', e2, 'error');
                       } else {
                         try {
                           const mkvAttachment = this.attachmentRepo.new();
-                          mkvAttachment.name = f.name;
-                          mkvAttachment.size = f.size;
-                          const strSplit = f.name.split('.');
-                          mkvAttachment.ext = strSplit[strSplit.length - 1];
+                          mkvAttachment.name = fileName;
+                          mkvAttachment.ext = fileExt;
+                          mkvAttachment.size = ef.size;
                           mkvAttachment.user_ = resAttachmentSave.user_;
                           mkvAttachment.parent_attachment_ = resAttachmentSave;
-                          await this.attachmentRepo.save(mkvAttachment);
+                          const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
+                          this.gdrive.gDrive(true).then(async (gdrive) => {
+                            const dfile = await gdrive.files.create({
+                              requestBody: {
+                                name: `${resMkvAttachmentSave.name}.${resMkvAttachmentSave.ext}`,
+                                parents: [environment.gdriveFolderId],
+                                mimeType: resMkvAttachmentSave.mime
+                              },
+                              media: {
+                                mimeType: resMkvAttachmentSave.mime,
+                                body: createReadStream(`${environment.uploadFolder}/${fileName}.${fileExt}`)
+                              },
+                              fields: 'id'
+                            }, { signal: null });
+                            resMkvAttachmentSave.mime = dfile.data.mimeType;
+                            resMkvAttachmentSave.google_drive = dfile.data.id;
+                            await this.attachmentRepo.save(resMkvAttachmentSave);
+                            unlink(`${environment.uploadFolder}/${fileName}.${fileExt}`, (e4) => {
+                              if (e4) {
+                                this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e4, 'error');
+                              }
+                            });
+                          }).catch(e5 => this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error'));
                         } catch (e3) {
                           this.gs.log('[FILE_NOTE-ERROR] 🎼', e3, 'error');
                         }
@@ -229,13 +263,23 @@ export class BerkasController {
                     });
                   }
                 }
+                videoExtractCompleted = true;
+                if (videoUploadCompleted) {
+                  unlink(`${environment.uploadFolder}/${files[fIdx].name}`, (e) => {
+                    if (e) {
+                      this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e, 'error');
+                    }
+                  });
+                }
               });
+            } else {
+              videoExtractCompleted = true;
             }
             this.gdrive.gDrive(true).then(async (gdrive) => {
               const dfile = await gdrive.files.create({
                 requestBody: {
-                  name: `${resAttachmentSave.name.toString().toLowerCase()}.${resAttachmentSave.ext.toString().toLowerCase()}`,
-                  parents: [environment.gdriveFolderId],  // FansubID ひきこもり - Folder
+                  name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                  parents: [environment.gdriveFolderId],
                   mimeType: resAttachmentSave.mime
                 },
                 media: {
@@ -244,22 +288,17 @@ export class BerkasController {
                 },
                 fields: 'id'
               }, { signal: null });
+              resAttachmentSave.mime = dfile.data.mimeType;
               resAttachmentSave.google_drive = dfile.data.id;
               await this.attachmentRepo.save(resAttachmentSave);
-              unlink(`${environment.uploadFolder}/${files[fIdx].name}`, (e) => {
-                if (e) {
-                  this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e, 'error');
-                }
-              });
-              // await gdrive.permissions.create({
-              //   transferOwnership: true,
-              //   fileId: dfile.data.id,
-              //   requestBody: {
-              //     type: 'user',
-              //     role: 'owner',
-              //     emailAddress: environment.gCloudPlatform.clientEmail
-              //   }
-              // });
+              videoUploadCompleted = true;
+              if (videoExtractCompleted) {
+                unlink(`${environment.uploadFolder}/${files[fIdx].name}`, (e) => {
+                  if (e) {
+                    this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e, 'error');
+                  }
+                });
+              }
             }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
           } else {
             await this.attachmentRepo.remove(resAttachmentSave);

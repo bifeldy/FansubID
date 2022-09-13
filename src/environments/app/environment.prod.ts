@@ -18,7 +18,7 @@ export const environment = {
   iceServers: [
     {
       urls: [
-        'stun:tracker.fansub.id:3478',
+        'stun:tracker.fansub.id:11111',
         'stun:openrelay.metered.ca:80',
         'stun:stun.l.google.com:19302'
       ]
