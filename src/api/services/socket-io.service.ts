@@ -197,7 +197,7 @@ export class SocketIoService {
 
   checkUserLogin(client: Socket, payload: PayloadModel): void {
     const ip = client.handshake.headers['cf-connecting-ip'] || client.handshake.address || '';
-    payload.ip = ip as string;
+    payload.ip = this.gs.cleanIpOrigin(ip as string);
     if (payload.token) {
       try {
         const decoded = this.cs.jwtDecrypt(payload.token);

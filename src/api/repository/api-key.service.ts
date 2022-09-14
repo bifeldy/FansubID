@@ -86,6 +86,7 @@ export class ApiKeyService {
       originIp = originIp || req.headers.origin || req.headers.referer || '';
     }
     originIp = (originIp || req.headers['cf-connecting-ip'] || req.ip || '').toString();
+    originIp = this.gs.cleanIpOrigin(originIp);
     const countryCode = (req.headers['cf-ipcountry'] || '').toString();
     return {
       origin_ip: originIp,
@@ -105,40 +106,6 @@ export class ApiKeyService {
 
   async checkKey(origin: string, key: string): Promise<boolean> {
     let isAllowed = false;
-    // Remove Prefixes
-    if (origin.startsWith('::ffff:')) {
-      origin = origin.slice(7, origin.length);
-    }
-    if (origin.startsWith('http://')) {
-      origin = origin.slice(7, origin.length);
-    } else if (origin.startsWith('https://')) {
-      origin = origin.slice(8, origin.length);
-    }
-    if (origin.startsWith('www.')) {
-      origin = origin.slice(4, origin.length);
-    }
-    // Get Domain Or IP Maybe With Port Included And Remove Folder Path
-    origin = origin.split('/')[0];
-    // Remove Port
-    let totalColon = 0;
-    for (let i = 0; i < origin.length; i++) {
-      if (origin[i] === ':') {
-        totalColon++;
-      }
-      if (totalColon > 1) {
-        break;
-      }
-    }
-    if (totalColon === 1) {
-      // IPv4
-      origin = origin.split(':')[0];
-    } else {
-      // IPv6
-      origin = origin.split(']')[0];
-      if (origin.startsWith('[')) {
-        origin = origin.slice(1, origin.length);
-      }
-    }
     if (this.cfg.bypassApiKeyRateLimit.includes(origin)) {
       return true;
     }
