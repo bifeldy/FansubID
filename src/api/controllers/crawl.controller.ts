@@ -56,37 +56,21 @@ export class CrawlController {
     let tryCount = 0;
     try {
       if (url) {
-        console.log('AAAAAAAAAA');
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
           url = 'http://' + url;
         }
-        console.log('BBBBBBBBBB');
         page = await this.browser.newPage();
-        console.log('CCCCCCCCCC');
         const requestHeaders = { ...req.headers };
         for (const header of [...this.requestHeadersToRemove, ...this.prohibitedHeaders]) {
-          console.log(header, requestHeaders[header]);
           delete requestHeaders[header];
         }
-        console.log('CCCCCCCCCC');
-        const httpExtraHeaders = {};
-        for (const header in requestHeaders) {
-          console.log(header, requestHeaders[header]);
-          httpExtraHeaders[header] = requestHeaders[header];
-        }
-        console.log('CCCCCCCCCC');
-        console.log('DDDDDDDDDD');
-        await page.setExtraHTTPHeaders(httpExtraHeaders);
-        console.log('DDDDDDDDDD');
+        await page.setExtraHTTPHeaders(requestHeaders as any);
         let response = await page.goto(url, {
           timeout: 30000,
           waitUntil: 'domcontentloaded'
         });
-        console.log('EEEEEEEEEE');
         responseBody = await response.text();
-        console.log('FFFFFFFFFF');
         responseData = await response.buffer();
-        console.log('GGGGGGGGGG');
         while (responseBody.includes('cf-browser-verification') && tryCount <= 10) {
           const newResponse = await page.waitForNavigation({
             timeout: 30000,
@@ -95,48 +79,30 @@ export class CrawlController {
           if (newResponse) {
             response = newResponse;
           }
-          console.log('HHHHHHHHHH');
           responseBody = await response.text();
-          console.log('IIIIIIIIII');
           responseData = await response.buffer();
-          console.log('JJJJJJJJJJ');
           tryCount++;
         }
-        console.log('KKKKKKKKKK');
         responseHeaders = response.headers();
         for (const header of [...this.responseHeadersToRemove, ...this.prohibitedHeaders]) {
-          console.log(header, responseHeaders[header]);
           delete responseHeaders[header];
         }
-        console.log('KKKKKKKKKK');
         for (const header in responseHeaders) {
-          console.log(header, responseHeaders[header]);
           res.set(header, responseHeaders[header]);
         }
-        console.log('KKKKKKKKKK');
-        console.log('LLLLLLLLLL');
         const cookies = await page.cookies();
         if (cookies) {
           for (const cookie of cookies) {
-            console.log(cookie);
             const { name, value, secure, expires, domain, ...options } = cookie;
             res.cookie(cookie.name, cookie.value, options as any);
           }
         }
-        console.log('LLLLLLLLLL');
-        console.log('MMMMMMMMMM');
         await page.close();
-        console.log('NNNNNNNNNN');
-        console.log('OOOOOOOOOO');
         res.send(responseData);
-        console.log('PPPPPPPPPP');
       } else {
         throw new Error('Data Tidak Lengkap!');
       }
     } catch (error) {
-      console.log('QQQQQQQQQQ');
-      console.error(error);
-      console.log('RRRRRRRRRR');
       if (page) {
         await page.close();
       }
