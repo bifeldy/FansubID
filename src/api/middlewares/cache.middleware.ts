@@ -25,9 +25,10 @@ export class CacheMiddleware implements NestMiddleware {
         res.set('Content-Type', 'application/xml');
         body = this.gs.OBJ2XML(cacheData.body);
       }
-      return res.status(cacheData.status).send(body);
+      res.status(cacheData.status).send(body);
+    } else {
+      return next();
     }
-    return next();
   }
 
 }

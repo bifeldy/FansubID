@@ -22,7 +22,7 @@ export class TorrentController {
   async addNew(@Req() req: Request, @Res(/* { passthrough: true } */) res: Response): Promise<any> {
     try {
       if ('magnetHash' in req.body) {
-        return webtorrentHealth(req.body.magnetHash, {
+        webtorrentHealth(req.body.magnetHash, {
           trackers: environment.trackerAnnounce,
           timeout: req.body.trackTimeout || 1234
         }, (err, data) => {
@@ -36,17 +36,20 @@ export class TorrentController {
             res.status(HttpStatus.BAD_REQUEST);
             if (res.locals['xml']) {
               res.set('Content-Type', 'application/xml');
-              return res.send(this.gs.OBJ2XML(body));
+              res.send(this.gs.OBJ2XML(body));
+            } else {
+              res.json(body);
             }
-            return res.json(body);
+          } else {
+            res.status(HttpStatus.CREATED).json({
+              info: `😅 200 - Torrent Tracker API :: Berhasil Mendapatkan ${req.body.magnetHash} 🤣`,
+              result: data
+            });
           }
-          return res.status(HttpStatus.CREATED).json({
-            info: `😅 200 - Torrent Tracker API :: Berhasil Mendapatkan ${req.body.magnetHash} 🤣`,
-            result: data
-          });
         });
+      } else {
+        throw new Error('Data Tidak Lengkap!');
       }
-      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       const body: any = {
         info: '🙄 400 - Torrent Tracker API :: Gagal Mendapatkan Torrent 😪',
@@ -57,9 +60,10 @@ export class TorrentController {
       res.status(HttpStatus.BAD_REQUEST);
       if (res.locals['xml']) {
         res.set('Content-Type', 'application/xml');
-        return res.send(this.gs.OBJ2XML(body));
+        res.send(this.gs.OBJ2XML(body));
+      } else {
+        res.json(body);
       }
-      return res.json(body);
     }
   }
 

@@ -236,9 +236,10 @@ export class AttachmentController {
       res.status(HttpStatus.NOT_FOUND);
       if (res.locals['xml']) {
         res.set('Content-Type', 'application/xml');
-        return res.send(this.gs.OBJ2XML(body));
+        res.send(this.gs.OBJ2XML(body));
+      } else {
+        res.json(body);
       }
-      return res.json(body);
     }
   }
 
