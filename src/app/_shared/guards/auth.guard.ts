@@ -3,6 +3,10 @@ import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from
 
 import { ToastrService } from 'ngx-toastr';
 
+import { CONSTANTS } from '../../../constants';
+
+import { RoleModel } from '../../../models/req-res.model';
+
 import { AuthService } from '../services/auth.service';
 import { BusyService } from '../services/busy.service';
 import { GlobalService } from '../services/global.service';
@@ -25,19 +29,24 @@ export class AuthGuard implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    const requiredRoles: RoleModel[] = route.data[CONSTANTS.decoratorRoles];
+    if (!requiredRoles) {
+      return true;
+    }
     if (this.gs.isBrowser) {
-      const currentUser = this.as.currentUserValue;
-      if (currentUser) {
-        if (route.data['roles'] && route.data['roles'].indexOf(currentUser.role) === -1) {
-          this.toast.error(`Membutuhkan Role :: ${route.data['roles'].join(' / ')}`, 'Whoops, Akses Ditolak!');
-          this.bs.idle();
-          this.router.navigateByUrl('/');
-          return false;
+      const user = this.as.currentUserValue;
+      if (user) {
+        const isAllowed = requiredRoles.some((rR) => user.role === rR);
+        if (isAllowed) {
+          return true;
         }
-        return true;
+        this.bs.clear();
+        this.toast.error(`Membutuhkan Role :: ${route.data[CONSTANTS.decoratorRoles].join(' / ')}`, 'Whoops, Akses Ditolak!');
+        this.router.navigateByUrl(state.url || '/');
+        return false;
       }
+      this.bs.clear();
       this.toast.error(`Harap Login Terlebih Dahulu~`, 'Whoops, Akses Ditolak!');
-      this.bs.idle();
     }
     this.router.navigate(['/login'], {
       queryParams: {
