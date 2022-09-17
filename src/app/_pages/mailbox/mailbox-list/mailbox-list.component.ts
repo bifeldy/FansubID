@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { environment } from '../../../../environments/app/environment';
 
 import { AuthService } from '../../../_shared/services/auth.service';
@@ -45,7 +43,6 @@ export class MailboxListComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private toast: ToastrService,
     private as: AuthService,
     private bs: BusyService,
     private fs: FabService,
@@ -67,16 +64,7 @@ export class MailboxListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-        this.getMailbox();
-      } else {
-        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.router.navigate(['/verify'], {
-          queryParams: {
-            returnUrl: '/home'
-          }
-        });
-      }
+      this.getMailbox();
     }
   }
 

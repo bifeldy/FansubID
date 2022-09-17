@@ -5,8 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../constants';
 
-import { RoleModel } from '../../../models/req-res.model';
-
 import { AuthService } from '../services/auth.service';
 import { BusyService } from '../services/busy.service';
 import { GlobalService } from '../services/global.service';
@@ -14,7 +12,7 @@ import { GlobalService } from '../services/global.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RolesGuard implements CanActivate {
+export class VerifiedGuard implements CanActivate {
 
   constructor(
     private router: Router,
@@ -29,20 +27,19 @@ export class RolesGuard implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const requiredRoles: RoleModel[] = route.data[CONSTANTS.decoratorRoles];
-    if (!requiredRoles) {
+    const verifiedOnly = route.data[CONSTANTS.decoratorVerifiedOnly];
+    if (!verifiedOnly) {
       return true;
     }
     if (this.gs.isBrowser) {
       const user = this.as.currentUserValue;
       if (user) {
-        const isAllowed = requiredRoles.some((rR) => user.role === rR);
-        if (isAllowed) {
+        if (user.verified) {
           return true;
         }
         this.bs.clear();
-        this.toast.error(`Membutuhkan Role :: ${requiredRoles.join(' / ')}`, 'Whoops, Akses Ditolak!');
-        this.router.navigateByUrl(state.url || '/');
+        this.toast.error('Khusus Pengguna Terverifikasi', 'Whoops, Akses Ditolak!');
+        this.router.navigateByUrl('/verify');
         return false;
       }
       this.bs.clear();

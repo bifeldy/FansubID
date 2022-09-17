@@ -12,6 +12,8 @@ import { CONSTANTS } from '../../../constants';
 import { RoleModel } from '../../../models/req-res.model';
 
 import { RolesGuard } from '../../_shared/guards/roles.guard';
+import { VerifiedGuard } from '../../_shared/guards/verified.guard';
+
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
@@ -42,12 +44,13 @@ const routes: Routes = [
       {
         path: 'edit',
         component: FansubEditComponent,
-        canActivate: [RolesGuard],
+        canActivate: [RolesGuard, VerifiedGuard],
         data: {
           title: 'Fansub - Ubah Data',
           description: 'Halaman Pembaharuan Data Fansub',
           keywords: 'Ubah Fansub',
-          [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+          [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+          [CONSTANTS.decoratorVerifiedOnly]: true
         }
       }
     ]

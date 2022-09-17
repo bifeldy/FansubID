@@ -11,8 +11,9 @@ import { CONSTANTS } from '../../../constants';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { RolesGuard } from '../../_shared/guards/roles.guard';
+
+import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';

@@ -1,11 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { environment } from '../../../../environments/app/environment';
-
-import { AuthService } from '../../../_shared/services/auth.service';
 
 import { BusyService } from '../../../_shared/services/busy.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -29,8 +25,6 @@ export class MailboxDetailComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private toast: ToastrService,
-    private as: AuthService,
     private bs: BusyService,
     private fs: FabService,
     private gs: GlobalService,
@@ -44,16 +38,7 @@ export class MailboxDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-        this.getMail();
-      } else {
-        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.router.navigate(['/verify'], {
-          queryParams: {
-            returnUrl: '/home'
-          }
-        });
-      }
+      this.getMail();
     }
   }
 

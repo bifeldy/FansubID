@@ -6,6 +6,7 @@ import { CONSTANTS } from '../constants';
 import { RoleModel } from '../models/req-res.model';
 
 import { RolesGuard } from './_shared/guards/roles.guard';
+import { VerifiedGuard } from './_shared/guards/verified.guard';
 
 const routes: Routes = [
   {
@@ -85,12 +86,13 @@ const routes: Routes = [
   {
     path: 'mailbox',
     loadChildren: () => import('./_pages/mailbox/mailbox.module').then(m => m.MailboxModule),
-    canActivate: [RolesGuard],
+    canActivate: [RolesGuard, VerifiedGuard],
     data: {
       title: 'Surat Elektronik',
       description: 'E-Mail & DM\'s',
       keywords: 'Surel Email DM',
-      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorVerifiedOnly]: true
     }
   },
   {

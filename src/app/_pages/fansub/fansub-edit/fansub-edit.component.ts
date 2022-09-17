@@ -95,66 +95,57 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     );
     if (this.gs.isBrowser) {
       this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
-      if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-        this.bs.busy();
-        this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe({
-          next: res => {
-            this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
-            this.bs.idle();
-            this.editable = res.result.editable;
-            if (!this.editable) {
-              this.toast.warning('Data Fansub Ini Tidak Dapat Diubah', 'Whoops!');
-              this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
-            } else {
-              this.bs.busy();
-              this.subsFansubMemberGet = this.fansub.getFansubMember(this.fansubSlug).subscribe({
-                next: r => {
-                  this.gs.log('[FANSUB_EDIT_MEMBER_LIST_SUCCESS]', r);
-                  this.bs.idle();
-                  this.approvedMembers = [];
-                  for (const m of r.results) {
-                    if (m.approved) {
-                      this.approvedMembers.push(m);
-                    }
+      this.bs.busy();
+      this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe({
+        next: res => {
+          this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
+          this.bs.idle();
+          this.editable = res.result.editable;
+          if (!this.editable) {
+            this.toast.warning('Data Fansub Ini Tidak Dapat Diubah', 'Whoops!');
+            this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
+          } else {
+            this.bs.busy();
+            this.subsFansubMemberGet = this.fansub.getFansubMember(this.fansubSlug).subscribe({
+              next: r => {
+                this.gs.log('[FANSUB_EDIT_MEMBER_LIST_SUCCESS]', r);
+                this.bs.idle();
+                this.approvedMembers = [];
+                for (const m of r.results) {
+                  if (m.approved) {
+                    this.approvedMembers.push(m);
                   }
-                  const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserValue.id);
-                  if (index >= 0 || this.as.currentUserValue.role === RoleModel.ADMIN || this.as.currentUserValue.role === RoleModel.MODERATOR || this.as.currentUserValue.id === res.result.user_.id) {
-                    this.initForm(res.result);
-                  } else {
-                    this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!');
-                    this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
-                  }
-                },
-                error: err => {
-                  this.gs.log('[FANSUB_EDIT_MEMBER_LIST_ERROR]', err, 'error');
-                  this.bs.idle();
-                  this.router.navigate(['/error'], {
-                    queryParams: {
-                      returnUrl: `/fansub/${this.fansubSlug}`
-                    }
-                  });
                 }
-              });
-            }
-          },
-          error: err => {
-            this.gs.log('[FANSUB_DETAIL_ERROR]', err, 'error');
-            this.bs.idle();
-            this.router.navigate(['/error'], {
-              queryParams: {
-                returnUrl: `/fansub/${this.fansubSlug}`
+                const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserValue.id);
+                if (index >= 0 || this.as.currentUserValue.role === RoleModel.ADMIN || this.as.currentUserValue.role === RoleModel.MODERATOR || this.as.currentUserValue.id === res.result.user_.id) {
+                  this.initForm(res.result);
+                } else {
+                  this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!');
+                  this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
+                }
+              },
+              error: err => {
+                this.gs.log('[FANSUB_EDIT_MEMBER_LIST_ERROR]', err, 'error');
+                this.bs.idle();
+                this.router.navigate(['/error'], {
+                  queryParams: {
+                    returnUrl: `/fansub/${this.fansubSlug}`
+                  }
+                });
               }
             });
           }
-        });
-      } else {
-        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.router.navigate(['/verify'], {
-          queryParams: {
-            returnUrl: `/fansub/${this.fansubSlug}`
-          }
-        });
-      }
+        },
+        error: err => {
+          this.gs.log('[FANSUB_DETAIL_ERROR]', err, 'error');
+          this.bs.idle();
+          this.router.navigate(['/error'], {
+            queryParams: {
+              returnUrl: `/fansub/${this.fansubSlug}`
+            }
+          });
+        }
+      });
     }
   }
 

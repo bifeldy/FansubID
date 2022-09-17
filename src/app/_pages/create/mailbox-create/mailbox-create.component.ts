@@ -2,11 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { CONSTANTS } from '../../../../constants';
-
-import { AuthService } from '../../../_shared/services/auth.service';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -29,8 +25,6 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private toast: ToastrService,
-    private as: AuthService,
     private bs: BusyService,
     private pi: PageInfoService,
     private gs: GlobalService,
@@ -52,16 +46,7 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
       `Create Email`
     );
     if (this.gs.isBrowser) {
-      if (this.as.currentUserValue && this.as.currentUserValue.verified) {
-        this.initForm();
-      } else {
-        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.router.navigate(['/verify'], {
-          queryParams: {
-            returnUrl: '/home'
-          }
-        });
-      }
+      this.initForm();
     }
   }
 

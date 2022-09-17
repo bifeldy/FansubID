@@ -6,6 +6,10 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
+import { CONSTANTS } from '../../../constants';
+
+import { VerifiedGuard } from '../../_shared/guards/verified.guard';
+
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
@@ -32,19 +36,23 @@ const routes: Routes = [
   {
     path: 'fansub',
     component: FansubCreateComponent,
+    canActivate: [VerifiedGuard],
     data: {
       title: 'Fansub - Buat Baru',
       description: 'Halaman Menambahkan Fansub Baru',
-      keywords: 'Create Fansub'
+      keywords: 'Create Fansub',
+      [CONSTANTS.decoratorVerifiedOnly]: true
     }
   },
   {
     path: 'mailbox',
     component: MailboxCreateComponent,
+    canActivate: [VerifiedGuard],
     data: {
       title: 'Surel - Buat Baru',
       description: 'Halaman Kirim Surel Baru',
-      keywords: 'Buat Surel Baru'
+      keywords: 'Buat Surel Baru',
+      [CONSTANTS.decoratorVerifiedOnly]: true
     }
   },
   {
