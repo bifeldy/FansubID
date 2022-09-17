@@ -8,7 +8,7 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { AuthGuard } from '../../_shared/guards/auth.guard';
+import { RolesGuard } from '../../_shared/guards/roles.guard';
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { NihongoListComponent } from './nihongo-list/nihongo-list.component';
@@ -59,7 +59,7 @@ const routes: Routes = [
   {
     path: 'hiragana',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Hiragana',
       description: 'Uji Kemampuan Huruf Hiragana',
@@ -72,7 +72,7 @@ const routes: Routes = [
   {
     path: 'katakana',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Katakana',
       description: 'Uji Kemampuan Huruf Katakana',
@@ -85,7 +85,7 @@ const routes: Routes = [
   // {
   //   path: 'angka',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Angka',
   //     description: 'Uji Kemampuan Angka',
@@ -98,7 +98,7 @@ const routes: Routes = [
   // {
   //   path: 'warna',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Warna',
   //     description: 'Uji Kemampuan Warna',
@@ -111,7 +111,7 @@ const routes: Routes = [
   // {
   //   path: 'binatang',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Binatang',
   //     description: 'Uji Kemampuan Binatang',
@@ -124,7 +124,7 @@ const routes: Routes = [
   // {
   //   path: 'buah',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Buah',
   //     description: 'Uji Kemampuan Buah',
@@ -137,7 +137,7 @@ const routes: Routes = [
   // {
   //   path: 'sayur',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Sayur',
   //     description: 'Uji Kemampuan Sayur',
@@ -150,7 +150,7 @@ const routes: Routes = [
   // {
   //   path: 'daging',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Daging',
   //     description: 'Uji Kemampuan Daging',
@@ -163,7 +163,7 @@ const routes: Routes = [
   // {
   //   path: 'minuman',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Minuman',
   //     description: 'Uji Kemampuan Minuman',
@@ -176,7 +176,7 @@ const routes: Routes = [
   // {
   //   path: 'pakaian',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Pakaian',
   //     description: 'Uji Kemampuan Pakaian',
@@ -189,7 +189,7 @@ const routes: Routes = [
   // {
   //   path: 'cuaca',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Cuaca',
   //     description: 'Uji Kemampuan Cuaca',
@@ -202,7 +202,7 @@ const routes: Routes = [
   // {
   //   path: 'transportasi',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Transportasi',
   //     description: 'Uji Kemampuan Transportasi',
@@ -215,7 +215,7 @@ const routes: Routes = [
   // {
   //   path: 'tempat',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Tempat',
   //     description: 'Uji Kemampuan Tempat',
@@ -228,7 +228,7 @@ const routes: Routes = [
   // {
   //   path: 'pekerjaan',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Pekerjaan',
   //     description: 'Uji Kemampuan Pekerjaan',
@@ -241,7 +241,7 @@ const routes: Routes = [
   // {
   //   path: 'olah-raga',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Olahraga',
   //     description: 'Uji Kemampuan Olahraga',
@@ -254,7 +254,7 @@ const routes: Routes = [
   // {
   //   path: 'perkakas',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Perkakas',
   //     description: 'Uji Kemampuan Perkakas',
@@ -267,7 +267,7 @@ const routes: Routes = [
   // {
   //   path: 'mebel',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Mebel',
   //     description: 'Uji Kemampuan Mebel',
@@ -280,7 +280,7 @@ const routes: Routes = [
   // {
   //   path: 'dapur',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Dapur',
   //     description: 'Uji Kemampuan Dapur',
@@ -293,7 +293,7 @@ const routes: Routes = [
   // {
   //   path: 'negara',
   //   component: NihongoTesComponent,
-  //   canActivate: [AuthGuard],
+  //   canActivate: [RolesGuard],
   //   data: {
   //     title: 'Tes Negara',
   //     description: 'Uji Kemampuan Negara',
@@ -306,7 +306,7 @@ const routes: Routes = [
   {
     path: 'jlpt-n5',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf N5',
       description: 'Uji Kemampuan Huruf N5',
@@ -319,7 +319,7 @@ const routes: Routes = [
   {
     path: 'jlpt-n4',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf N4',
       description: 'Uji Kemampuan Huruf N4',
@@ -332,7 +332,7 @@ const routes: Routes = [
   {
     path: 'jlpt-n3',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf N3',
       description: 'Uji Kemampuan Huruf N3',
@@ -345,7 +345,7 @@ const routes: Routes = [
   {
     path: 'jlpt-n2',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf N2',
       description: 'Uji Kemampuan Huruf N2',
@@ -358,7 +358,7 @@ const routes: Routes = [
   {
     path: 'jlpt-n1',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf N1',
       description: 'Uji Kemampuan Huruf N1',
@@ -371,7 +371,7 @@ const routes: Routes = [
   {
     path: 'kelas-1',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Kelas 1',
       description: 'Uji Kemampuan Huruf Kelas 1',
@@ -384,7 +384,7 @@ const routes: Routes = [
   {
     path: 'kelas-2',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Kelas 2',
       description: 'Uji Kemampuan Huruf Kelas 2',
@@ -397,7 +397,7 @@ const routes: Routes = [
   {
     path: 'kelas-3',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Kelas 3',
       description: 'Uji Kemampuan Huruf Kelas 3',
@@ -410,7 +410,7 @@ const routes: Routes = [
   {
     path: 'kelas-4',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Kelas 4',
       description: 'Uji Kemampuan Huruf Kelas 4',
@@ -423,7 +423,7 @@ const routes: Routes = [
   {
     path: 'kelas-5',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Kelas 5',
       description: 'Uji Kemampuan Huruf Kelas 5',
@@ -436,7 +436,7 @@ const routes: Routes = [
   {
     path: 'kelas-6',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Kelas 6',
       description: 'Uji Kemampuan Huruf Kelas 6',
@@ -449,7 +449,7 @@ const routes: Routes = [
   {
     path: 'kelas-lanjutan-1',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Lanjutan 1',
       description: 'Uji Kemampuan Huruf Lanjutan 1',
@@ -462,7 +462,7 @@ const routes: Routes = [
   {
     path: 'kelas-lanjutan-2',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Lanjutan 2',
       description: 'Uji Kemampuan Huruf Lanjutan 2',
@@ -475,7 +475,7 @@ const routes: Routes = [
   {
     path: 'semua-kanji',
     component: NihongoTesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Tes Huruf Semua Kanji',
       description: 'Uji Kemampuan Huruf Semua Kanji',

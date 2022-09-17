@@ -8,7 +8,7 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { AuthGuard } from '../../_shared/guards/auth.guard';
+import { RolesGuard } from '../../_shared/guards/roles.guard';
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
@@ -28,7 +28,7 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     component: UserListComponent,
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'User - Dashboard Overview',
       description: 'Halaman Informasi Pengguna',
@@ -47,7 +47,7 @@ const routes: Routes = [
       {
         path: 'edit',
         component: UserEditComponent,
-        canActivate: [AuthGuard],
+        canActivate: [RolesGuard],
         data: {
           title: 'User - Ubah Profil',
           description: 'Halaman Pembaharuan Profil Pengguna',

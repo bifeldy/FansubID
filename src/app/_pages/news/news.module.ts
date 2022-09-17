@@ -8,7 +8,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { AuthGuard } from '../../_shared/guards/auth.guard';
+import { RolesGuard } from '../../_shared/guards/roles.guard';
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
@@ -39,7 +39,7 @@ const routes: Routes = [
       {
         path: 'edit',
         component: NewsEditComponent,
-        canActivate: [AuthGuard],
+        canActivate: [RolesGuard],
         data: {
           title: 'Berita - Ubah Data',
           description: 'Halaman Pembaharuan Data Berita',

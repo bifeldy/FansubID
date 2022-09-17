@@ -16,7 +16,7 @@ import { DiscussionModule } from '../../_shared/components/discussion/discussion
 import { ReportModule } from '../../_shared/components/report/report.module';
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
-import { AuthGuard } from '../../_shared/guards/auth.guard';
+import { RolesGuard } from '../../_shared/guards/roles.guard';
 
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';
 import { BerkasEditComponent } from './berkas-edit/berkas-edit.component';
@@ -39,7 +39,7 @@ const routes: Routes = [
       {
         path: 'edit',
         component: BerkasEditComponent,
-        canActivate: [AuthGuard],
+        canActivate: [RolesGuard],
         data: {
           title: 'Berkas - Ubah Data',
           description: 'Halaman Pembaharuan Data Fansub',

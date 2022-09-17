@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { RoleModel } from '../models/req-res.model';
 
-import { AuthGuard } from './_shared/guards/auth.guard';
+import { RolesGuard } from './_shared/guards/roles.guard';
 
 const routes: Routes = [
   {
@@ -14,7 +14,7 @@ const routes: Routes = [
   {
     path: 'admin-mod',
     loadChildren: () => import('./_pages/admin/admin.module').then(m => m.AdminModule),
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Admin & Moderator Panel Management',
       description: 'Halaman Khusus Untuk Administrasi & Moderasi',
@@ -25,7 +25,7 @@ const routes: Routes = [
   {
     path: 'create',
     loadChildren: () => import('./_pages/create/create.module').then(m => m.CreateModule),
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Membuat Konten Baru',
       description: 'Membuat Konten Baru',
@@ -54,7 +54,7 @@ const routes: Routes = [
   {
     path: 'verify',
     loadChildren: () => import('./_pages/verify/verify.module').then(m => m.VerifyModule),
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Verifikasi',
       description: 'Halaman Verifikasi Akun',
@@ -83,7 +83,7 @@ const routes: Routes = [
   {
     path: 'mailbox',
     loadChildren: () => import('./_pages/mailbox/mailbox.module').then(m => m.MailboxModule),
-    canActivate: [AuthGuard],
+    canActivate: [RolesGuard],
     data: {
       title: 'Surat Elektronik',
       description: 'E-Mail & DM\'s',

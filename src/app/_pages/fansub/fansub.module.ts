@@ -9,7 +9,7 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { RoleModel } from '../../../models/req-res.model';
 
-import { AuthGuard } from '../../_shared/guards/auth.guard';
+import { RolesGuard } from '../../_shared/guards/roles.guard';
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
@@ -40,7 +40,7 @@ const routes: Routes = [
       {
         path: 'edit',
         component: FansubEditComponent,
-        canActivate: [AuthGuard],
+        canActivate: [RolesGuard],
         data: {
           title: 'Fansub - Ubah Data',
           description: 'Halaman Pembaharuan Data Fansub',

@@ -14,7 +14,7 @@ import { GlobalService } from '../services/global.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class RolesGuard implements CanActivate {
 
   constructor(
     private router: Router,
