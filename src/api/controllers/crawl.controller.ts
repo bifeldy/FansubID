@@ -59,8 +59,14 @@ export class CrawlController {
         console.log('CCCCCCCCCC');
         const headers = req.headers;
         for (const header of this.headersToRemove) {
+          console.log(header, headers[header]);
           delete headers[header];
         }
+        console.log('CCCCCCCCCC');
+        for (const header in headers) {
+          console.log(header, headers[header]);
+        }
+        console.log('CCCCCCCCCC');
         console.log('DDDDDDDDDD');
         await page.setExtraHTTPHeaders(headers as any);
         let response = await page.goto(url, {
@@ -89,23 +95,29 @@ export class CrawlController {
         }
         console.log('KKKKKKKKKK');
         responseHeaders = response.headers();
+        for (const header of this.responseHeadersToRemove) {
+          console.log(header, responseHeaders[header]);
+          delete responseHeaders[header];
+        }
+        console.log('KKKKKKKKKK');
+        for (const header in responseHeaders) {
+          console.log(header, responseHeaders[header]);
+          res.set(header, responseHeaders[header]);
+        }
+        console.log('KKKKKKKKKK');
         console.log('LLLLLLLLLL');
         const cookies = await page.cookies();
         if (cookies) {
           for (const cookie of cookies) {
+            console.log(cookie);
             const { name, value, secure, expires, domain, ...options } = cookie;
             res.cookie(cookie.name, cookie.value, options as any);
           }
         }
+        console.log('LLLLLLLLLL');
         console.log('MMMMMMMMMM');
         await page.close();
         console.log('NNNNNNNNNN');
-        for (const header of this.responseHeadersToRemove) {
-          delete responseHeaders[header];
-        }
-        for (const header in responseHeaders) {
-          res.set(header, responseHeaders[header]);
-        }
         console.log('OOOOOOOOOO');
         res.send(responseData);
         console.log('PPPPPPPPPP');
