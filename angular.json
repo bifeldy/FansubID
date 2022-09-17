@@ -209,6 +209,9 @@
               "node:path",
               "node:url",
               "pg",
+              "puppeteer",
+              "puppeteer-extra",
+              "puppeteer-extra-plugin-stealth",
               "ytdl-core"
             ]
           },

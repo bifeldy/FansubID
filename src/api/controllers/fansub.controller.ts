@@ -510,7 +510,7 @@ export class FansubController {
           if (!rssUrl.includes('alt=rss')) {
             rssUrl += 'alt=rss';
           }
-          const feed = await parse(rssUrl, null);
+          const feed = await parse(`${environment.baseUrl}/api/crawl?url=${rssUrl}`, null);
           rssFeed.slug = fansub.slug;
           rssFeed.title = feed.title;
           // rssFeed.description: feed.description;

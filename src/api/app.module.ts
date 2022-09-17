@@ -28,6 +28,7 @@ import { AttachmentController } from './controllers/attachment.controller';
 import { BannedController } from './controllers/banned.controller';
 import { BerkasController } from './controllers/berkas.controller';
 import { CommentController } from './controllers/comment.controller';
+import { CrawlController } from './controllers/crawl.controller';
 import { DoramaController } from './controllers/dorama.controller';
 import { DoramaBerkasController } from './controllers/dorama-/dorama-berkas.controller';
 import { DoramaFansubController } from './controllers/dorama-/dorama-fansub.controller';
@@ -161,6 +162,7 @@ import { UserService } from './repository/user.service';
     BannedController,
     BerkasController,
     CommentController,
+    CrawlController,
     DoramaController,
     DoramaBerkasController,
     DoramaFansubController,

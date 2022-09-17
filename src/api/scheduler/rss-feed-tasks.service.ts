@@ -42,7 +42,7 @@ export class RssFeedTasksService {
       rssUrl += 'alt=rss';
     }
     this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-PARSING] 🐾', rssUrl);
-    return parse(rssUrl, null);
+    return parse(`${environment.baseUrl}/api/crawl?url=${rssUrl}`, null);
   }
 
   sortRssFeedWhileAdding(fansub: FansubModel, rssFeed: any[], feed: { title: any; description: any; link: any; image: any; category: any; items: any[]; }, countData: number = null): void {
