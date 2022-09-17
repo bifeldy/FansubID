@@ -10,7 +10,7 @@ import { GlobalService } from './global.service';
 })
 export class BusyService {
 
-  private cancelPendingRequests$ = new Subject<void>()
+  private cancelPendingRequests$ = new Subject<void>();
 
   busyRequestCount = 0;
 
@@ -29,9 +29,11 @@ export class BusyService {
 
   busy(): void {
     if (this.gs.isBrowser) {
+      if (this.busyRequestCount <= 0) {
+        this.spinnerService.show();
+      }
       this.busyRequestCount++;
-      this.spinnerService.show();
-      this.gs.log('[BUSY_STATE_COUNTER]', this.busyRequestCount);
+      this.gs.log('[BUSY_STATE_COUNTER_BUSY]', this.busyRequestCount);
     }
   }
 
@@ -42,16 +44,16 @@ export class BusyService {
         this.busyRequestCount = 0;
         this.spinnerService.hide();
       }
-      this.gs.log('[BUSY_STATE_COUNTER]', this.busyRequestCount);
+      this.gs.log('[BUSY_STATE_COUNTER_IDLE]', this.busyRequestCount);
     }
   }
 
   clear(): void {
     if (this.gs.isBrowser) {
-      this.busyRequestCount = 0;
-      this.spinnerService.hide();
-      this.gs.log('[BUSY_STATE_COUNTER]', this.busyRequestCount);
-      this.cancelPendingRequests$.next();
+      while (this.busyRequestCount > 0) {
+        this.idle();
+        this.cancelPendingRequests$.next();
+      }
     }
   }
 
