@@ -1,7 +1,7 @@
 // 3rd Party Library
 import webtorrentHealth from 'webtorrent-health';
 
-import { Controller, HttpCode, Post, Req, Res } from '@nestjs/common';
+import { Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 import { environment } from '../../environments/api/environment';
@@ -33,14 +33,14 @@ export class TorrentController {
                 message: err.message
               }
             };
-            res.status(400);
+            res.status(HttpStatus.BAD_REQUEST);
             if (res.locals['xml']) {
               res.set('Content-Type', 'application/xml');
               return res.send(this.gs.OBJ2XML(body));
             }
             return res.json(body);
           }
-          return res.status(201).json({
+          return res.status(HttpStatus.CREATED).json({
             info: `😅 200 - Torrent Tracker API :: Berhasil Mendapatkan ${req.body.magnetHash} 🤣`,
             result: data
           });
@@ -54,7 +54,7 @@ export class TorrentController {
           message: 'Data Tidak Lengkap!'
         }
       };
-      res.status(400);
+      res.status(HttpStatus.BAD_REQUEST);
       if (res.locals['xml']) {
         res.set('Content-Type', 'application/xml');
         return res.send(this.gs.OBJ2XML(body));

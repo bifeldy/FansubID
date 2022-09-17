@@ -233,7 +233,7 @@ export class AttachmentController {
           message: 'Lampiran Tidak Ditemukan!'
         }
       };
-      res.status(404);
+      res.status(HttpStatus.NOT_FOUND);
       if (res.locals['xml']) {
         res.set('Content-Type', 'application/xml');
         return res.send(this.gs.OBJ2XML(body));
