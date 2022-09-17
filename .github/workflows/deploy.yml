@@ -1,16 +1,16 @@
 # FansubID ~ Fansub Indonesia
 
-name: NodeJS Deploy ~ Angular + NestJS
+name: Re-Deploy ー SSH
 
 on:
   push:
     branches: [ "master" ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Executing remote SSH commands using password
+      - name: SSH ー RCE
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -19,7 +19,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             sudo pm2 stop fansubid
-            cd /home/bifeldy/www/fansubid
+            cd ~/www/fansubid
             git pull
             npm install
             sudo pm2 restart fansubid
+            sudo systemctl reload nginx
