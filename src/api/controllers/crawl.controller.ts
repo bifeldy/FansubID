@@ -11,7 +11,13 @@ import { GlobalService } from '../services/global.service';
 @Controller('/crawl')
 export class CrawlController {
 
-  headersToRemove = [
+  prohibitedHeaders = [
+    'accept-charset', 'accept-encoding', 'access-control-request-headers', 'access-control-request-method',
+    'connection', 'content-length', 'cookie', 'date', 'dnt', 'expect', 'feature-policy', 'host',
+    'keep-alive', 'origin', 'proxy-*', 'sec-*', 'referer', 'te', 'trailer', 'transfer-encoding', 'upgrade', 'via'
+  ];
+
+  requestHeadersToRemove = [
     'host', 'user-agent', 'accept', 'accept-encoding', 'content-length',
     'forwarded', 'x-forwarded-proto', 'x-forwarded-for', 'x-cloud-trace-context'
   ];
@@ -57,18 +63,21 @@ export class CrawlController {
         console.log('BBBBBBBBBB');
         page = await this.browser.newPage();
         console.log('CCCCCCCCCC');
-        const headers = req.headers;
-        for (const header of this.headersToRemove) {
-          console.log(header, headers[header]);
-          delete headers[header];
+        const requestHeaders = { ...req.headers };
+        for (const header of [...this.requestHeadersToRemove, ...this.prohibitedHeaders]) {
+          console.log(header, requestHeaders[header]);
+          delete requestHeaders[header];
         }
         console.log('CCCCCCCCCC');
-        for (const header in headers) {
-          console.log(header, headers[header]);
+        const httpExtraHeaders = {};
+        for (const header in requestHeaders) {
+          console.log(header, requestHeaders[header]);
+          httpExtraHeaders[header] = requestHeaders[header];
         }
         console.log('CCCCCCCCCC');
         console.log('DDDDDDDDDD');
-        await page.setExtraHTTPHeaders(headers as any);
+        await page.setExtraHTTPHeaders(httpExtraHeaders);
+        console.log('DDDDDDDDDD');
         let response = await page.goto(url, {
           timeout: 30000,
           waitUntil: 'domcontentloaded'
@@ -95,7 +104,7 @@ export class CrawlController {
         }
         console.log('KKKKKKKKKK');
         responseHeaders = response.headers();
-        for (const header of this.responseHeadersToRemove) {
+        for (const header of [...this.responseHeadersToRemove, ...this.prohibitedHeaders]) {
           console.log(header, responseHeaders[header]);
           delete responseHeaders[header];
         }
