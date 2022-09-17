@@ -50,21 +50,28 @@ export class CrawlController {
     let tryCount = 0;
     try {
       if (url) {
+        console.log('AAAAAAAAAA');
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
           url = 'http://' + url;
         }
+        console.log('BBBBBBBBBB');
         page = await this.browser.newPage();
+        console.log('CCCCCCCCCC');
         const headers = req.headers;
         for (const header of this.headersToRemove) {
           delete headers[header];
         }
+        console.log('DDDDDDDDDD');
         await page.setExtraHTTPHeaders(headers as any);
         let response = await page.goto(url, {
           timeout: 30000,
           waitUntil: 'domcontentloaded'
         });
+        console.log('EEEEEEEEEE');
         responseBody = await response.text();
+        console.log('FFFFFFFFFF');
         responseData = await response.buffer();
+        console.log('GGGGGGGGGG');
         while (responseBody.includes('cf-browser-verification') && tryCount <= 10) {
           const newResponse = await page.waitForNavigation({
             timeout: 30000,
@@ -73,11 +80,16 @@ export class CrawlController {
           if (newResponse) {
             response = newResponse;
           }
+          console.log('HHHHHHHHHH');
           responseBody = await response.text();
+          console.log('IIIIIIIIII');
           responseData = await response.buffer();
+          console.log('JJJJJJJJJJ');
           tryCount++;
         }
+        console.log('KKKKKKKKKK');
         responseHeaders = response.headers();
+        console.log('LLLLLLLLLL');
         const cookies = await page.cookies();
         if (cookies) {
           for (const cookie of cookies) {
@@ -85,18 +97,25 @@ export class CrawlController {
             res.cookie(cookie.name, cookie.value, options as any);
           }
         }
+        console.log('MMMMMMMMMM');
         await page.close();
+        console.log('NNNNNNNNNN');
         for (const header of this.responseHeadersToRemove) {
           delete responseHeaders[header];
         }
         for (const header in responseHeaders) {
           res.set(header, responseHeaders[header]);
         }
+        console.log('OOOOOOOOOO');
         res.send(responseData);
+        console.log('PPPPPPPPPP');
       } else {
         throw new Error('Data Tidak Lengkap!');
       }
     } catch (error) {
+      console.log('QQQQQQQQQQ');
+      console.error(error);
+      console.log('RRRRRRRRRR');
       if (page) {
         await page.close();
       }
