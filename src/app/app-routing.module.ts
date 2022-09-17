@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { CONSTANTS } from '../constants';
+
 import { RoleModel } from '../models/req-res.model';
 
 import { RolesGuard } from './_shared/guards/roles.guard';
@@ -19,7 +21,7 @@ const routes: Routes = [
       title: 'Admin & Moderator Panel Management',
       description: 'Halaman Khusus Untuk Administrasi & Moderasi',
       keywords: 'Admin Moderator Fansub Database',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {
@@ -30,7 +32,7 @@ const routes: Routes = [
       title: 'Membuat Konten Baru',
       description: 'Membuat Konten Baru',
       keywords: 'Add New Content',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
@@ -59,7 +61,7 @@ const routes: Routes = [
       title: 'Verifikasi',
       description: 'Halaman Verifikasi Akun',
       keywords: 'Verify',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
@@ -88,7 +90,7 @@ const routes: Routes = [
       title: 'Surat Elektronik',
       description: 'E-Mail & DM\'s',
       keywords: 'Surel Email DM',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {

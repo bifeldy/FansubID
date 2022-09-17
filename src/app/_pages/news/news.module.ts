@@ -6,6 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
+import { CONSTANTS } from '../../../constants';
+
 import { RoleModel } from '../../../models/req-res.model';
 
 import { RolesGuard } from '../../_shared/guards/roles.guard';
@@ -44,7 +46,7 @@ const routes: Routes = [
           title: 'Berita - Ubah Data',
           description: 'Halaman Pembaharuan Data Berita',
           keywords: 'Ubah Berita',
-          roles: [RoleModel.ADMIN, RoleModel.MODERATOR]
+          [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR]
         }
       }
     ]

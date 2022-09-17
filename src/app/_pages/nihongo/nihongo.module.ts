@@ -6,6 +6,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
+import { CONSTANTS } from '../../../constants';
+
 import { RoleModel } from '../../../models/req-res.model';
 
 import { RolesGuard } from '../../_shared/guards/roles.guard';
@@ -64,7 +66,7 @@ const routes: Routes = [
       title: 'Tes Huruf Hiragana',
       description: 'Uji Kemampuan Huruf Hiragana',
       keywords: 'Hiragana',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'hiragana',
       options: 'romaji'
     }
@@ -77,7 +79,7 @@ const routes: Routes = [
       title: 'Tes Huruf Katakana',
       description: 'Uji Kemampuan Huruf Katakana',
       keywords: 'Katakana',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'katakana',
       options: 'romaji'
     }
@@ -90,7 +92,7 @@ const routes: Routes = [
   //     title: 'Tes Angka',
   //     description: 'Uji Kemampuan Angka',
   //     keywords: 'Angka',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: 'kanji',
   //     options: 'number'
   //   }
@@ -103,7 +105,7 @@ const routes: Routes = [
   //     title: 'Tes Warna',
   //     description: 'Uji Kemampuan Warna',
   //     keywords: 'Warna',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -116,7 +118,7 @@ const routes: Routes = [
   //     title: 'Tes Binatang',
   //     description: 'Uji Kemampuan Binatang',
   //     keywords: 'Binatang',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -129,7 +131,7 @@ const routes: Routes = [
   //     title: 'Tes Buah',
   //     description: 'Uji Kemampuan Buah',
   //     keywords: 'Buah',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -142,7 +144,7 @@ const routes: Routes = [
   //     title: 'Tes Sayur',
   //     description: 'Uji Kemampuan Sayur',
   //     keywords: 'Sayur',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -155,7 +157,7 @@ const routes: Routes = [
   //     title: 'Tes Daging',
   //     description: 'Uji Kemampuan Daging',
   //     keywords: 'Daging',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -168,7 +170,7 @@ const routes: Routes = [
   //     title: 'Tes Minuman',
   //     description: 'Uji Kemampuan Minuman',
   //     keywords: 'Minuman',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -181,7 +183,7 @@ const routes: Routes = [
   //     title: 'Tes Pakaian',
   //     description: 'Uji Kemampuan Pakaian',
   //     keywords: 'Pakaian',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -194,7 +196,7 @@ const routes: Routes = [
   //     title: 'Tes Cuaca',
   //     description: 'Uji Kemampuan Cuaca',
   //     keywords: 'Cuaca',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -207,7 +209,7 @@ const routes: Routes = [
   //     title: 'Tes Transportasi',
   //     description: 'Uji Kemampuan Transportasi',
   //     keywords: 'Transportasi',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -220,7 +222,7 @@ const routes: Routes = [
   //     title: 'Tes Tempat',
   //     description: 'Uji Kemampuan Tempat',
   //     keywords: 'Tempat',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -233,7 +235,7 @@ const routes: Routes = [
   //     title: 'Tes Pekerjaan',
   //     description: 'Uji Kemampuan Pekerjaan',
   //     keywords: 'Pekerjaan',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -246,7 +248,7 @@ const routes: Routes = [
   //     title: 'Tes Olahraga',
   //     description: 'Uji Kemampuan Olahraga',
   //     keywords: 'Olahraga',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -259,7 +261,7 @@ const routes: Routes = [
   //     title: 'Tes Perkakas',
   //     description: 'Uji Kemampuan Perkakas',
   //     keywords: 'Perkakas',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -272,7 +274,7 @@ const routes: Routes = [
   //     title: 'Tes Mebel',
   //     description: 'Uji Kemampuan Mebel',
   //     keywords: 'Mebel',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -285,7 +287,7 @@ const routes: Routes = [
   //     title: 'Tes Dapur',
   //     description: 'Uji Kemampuan Dapur',
   //     keywords: 'Dapur',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -298,7 +300,7 @@ const routes: Routes = [
   //     title: 'Tes Negara',
   //     description: 'Uji Kemampuan Negara',
   //     keywords: 'Negara',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: ,
   //     options: 
   //   }
@@ -311,7 +313,7 @@ const routes: Routes = [
       title: 'Tes Huruf N5',
       description: 'Uji Kemampuan Huruf N5',
       keywords: 'N5',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -324,7 +326,7 @@ const routes: Routes = [
       title: 'Tes Huruf N4',
       description: 'Uji Kemampuan Huruf N4',
       keywords: 'N4',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -337,7 +339,7 @@ const routes: Routes = [
       title: 'Tes Huruf N3',
       description: 'Uji Kemampuan Huruf N3',
       keywords: 'N3',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -350,7 +352,7 @@ const routes: Routes = [
       title: 'Tes Huruf N2',
       description: 'Uji Kemampuan Huruf N2',
       keywords: 'N2',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -363,7 +365,7 @@ const routes: Routes = [
       title: 'Tes Huruf N1',
       description: 'Uji Kemampuan Huruf N1',
       keywords: 'N1',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -376,7 +378,7 @@ const routes: Routes = [
       title: 'Tes Huruf Kelas 1',
       description: 'Uji Kemampuan Huruf Kelas 1',
       keywords: 'Kelas 1',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -389,7 +391,7 @@ const routes: Routes = [
       title: 'Tes Huruf Kelas 2',
       description: 'Uji Kemampuan Huruf Kelas 2',
       keywords: 'Kelas 2',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -402,7 +404,7 @@ const routes: Routes = [
       title: 'Tes Huruf Kelas 3',
       description: 'Uji Kemampuan Huruf Kelas 3',
       keywords: 'Kelas 3',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -415,7 +417,7 @@ const routes: Routes = [
       title: 'Tes Huruf Kelas 4',
       description: 'Uji Kemampuan Huruf Kelas 4',
       keywords: 'Kelas 4',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -428,7 +430,7 @@ const routes: Routes = [
       title: 'Tes Huruf Kelas 5',
       description: 'Uji Kemampuan Huruf Kelas 5',
       keywords: 'Kelas 5',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -441,7 +443,7 @@ const routes: Routes = [
       title: 'Tes Huruf Kelas 6',
       description: 'Uji Kemampuan Huruf Kelas 6',
       keywords: 'Kelas 6',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -454,7 +456,7 @@ const routes: Routes = [
       title: 'Tes Huruf Lanjutan 1',
       description: 'Uji Kemampuan Huruf Lanjutan 1',
       keywords: 'Lanjutan 1',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -467,7 +469,7 @@ const routes: Routes = [
       title: 'Tes Huruf Lanjutan 2',
       description: 'Uji Kemampuan Huruf Lanjutan 2',
       keywords: 'Lanjutan 2',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -480,7 +482,7 @@ const routes: Routes = [
       title: 'Tes Huruf Semua Kanji',
       description: 'Uji Kemampuan Huruf Semua Kanji',
       keywords: 'Semua Kanji',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
       question: 'character',
       options: 'translate'
     }
@@ -492,7 +494,7 @@ const routes: Routes = [
   //     title: 'Latihan Nama-Nama Warna, Buah & Sayur, Dan Lingkungan Sekitar',
   //     description: 'Tebak Gambar Nama-Nama Warna, Buah & Sayur, Dan Lingkungan Sekitar',
   //     keywords: 'Objek Di Sekitar Kita',
-  //     roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
   //     question: null,
   //     options: null
   //   }

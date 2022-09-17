@@ -6,6 +6,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
+import { CONSTANTS } from '../../../constants';
+
 import { RoleModel } from '../../../models/req-res.model';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
@@ -44,7 +46,7 @@ const routes: Routes = [
           title: 'Berkas - Ubah Data',
           description: 'Halaman Pembaharuan Data Fansub',
           keywords: 'Ubah Berkas',
-          roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+          [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
         }
       }
     ]

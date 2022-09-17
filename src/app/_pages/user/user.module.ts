@@ -6,6 +6,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
+import { CONSTANTS } from '../../../constants';
+
 import { RoleModel } from '../../../models/req-res.model';
 
 import { RolesGuard } from '../../_shared/guards/roles.guard';
@@ -33,7 +35,7 @@ const routes: Routes = [
       title: 'User - Dashboard Overview',
       description: 'Halaman Informasi Pengguna',
       keywords: 'User',
-      roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
@@ -52,7 +54,7 @@ const routes: Routes = [
           title: 'User - Ubah Profil',
           description: 'Halaman Pembaharuan Profil Pengguna',
           keywords: 'Ubah Profil',
-          roles: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+          [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
         }
       }
     ]
