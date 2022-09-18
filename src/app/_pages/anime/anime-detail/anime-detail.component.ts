@@ -72,7 +72,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     private fs: FabService,
     private wb: WinboxService
   ) {
-    this.gs.bannerImg = '/assets/img/season/winter.png';
+    this.gs.bannerImg = null;
     this.gs.bgRepeat = true;
     this.gs.sizeContain = true;
   }

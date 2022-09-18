@@ -73,9 +73,9 @@ export class TorrentComponent implements OnInit, OnDestroy {
     private ss: StatsServerService,
     private bs: BusyService
   ) {
-    if (this.gs.isBrowser) {
-      //
-    }
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   get ENV(): any {

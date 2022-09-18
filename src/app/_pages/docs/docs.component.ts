@@ -27,9 +27,9 @@ export class DocsComponent implements OnInit {
     private fansub: FansubService,
     private info: InformationService
   ) {
-    if (this.gs.isBrowser) {
-      //
-    }
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   get ENV(): any {

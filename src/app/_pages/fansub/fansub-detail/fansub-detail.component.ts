@@ -107,7 +107,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     private toast: ToastrService,
     private wb: WinboxService
   ) {
-    this.gs.bannerImg = '/assets/img/fansub-banner.png';
+    this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
   }

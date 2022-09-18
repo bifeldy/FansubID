@@ -51,7 +51,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     private gs: GlobalService,
     private as: AuthService
   ) {
-    this.gs.bannerImg = '/assets/img/news-banner.png';
+    this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
   }

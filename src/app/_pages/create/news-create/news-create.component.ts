@@ -40,7 +40,7 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
     private news: NewsService,
     private gs: GlobalService
   ) {
-    this.gs.bannerImg = '/assets/img/news-banner.png';
+    this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
   }

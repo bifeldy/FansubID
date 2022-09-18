@@ -7,8 +7,6 @@ import { MatDatepicker } from '@angular/material/datepicker';
 
 import { Moment } from 'moment';
 
-import { Seasons } from '../../../_shared/models/Seasons';
-
 import { moment, MY_FORMATS } from '../../../_shared/helpers/moment';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -98,12 +96,8 @@ export class AnimeListComponent implements OnInit, OnDestroy {
         this.fg.controls['currentDate'].patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
         this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
         this.selectedSeasonName = p['season'] ? (
-          [
-            Seasons.WINTER,
-            Seasons.SPRING,
-            Seasons.SUMMER,
-            Seasons.FALL
-          ].indexOf(p['season']) >= 0 ? p['season'] : this.findSeasonNameByMonthNumber(this.currentMonth)
+          this.gs.seasonalWeather.map(s => s.name)
+            .indexOf(p['season']) >= 0 ? p['season'] : this.findSeasonNameByMonthNumber(this.currentMonth)
         ) : this.findSeasonNameByMonthNumber(this.currentMonth);
         this.gs.bannerImg = this.gs.seasonalWeather.find(sB => sB.name === this.selectedSeasonName).img;
         this.bs.idle();

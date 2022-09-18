@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Warna } from '../../../_shared/models/Warna';
-import { Seasons } from '../../../_shared/models/Seasons';
 
 import { DoramaService } from '../../../_shared/services/dorama.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -16,13 +15,6 @@ import { BusyService } from '../../../_shared/services/busy.service';
   styleUrls: ['./dorama-detail.component.css']
 })
 export class DoramaDetailComponent implements OnInit, OnDestroy {
-
-  seasonalBanner = [
-    { id: 1, name: Seasons.WINTER, img: '/assets/img/season/winter.png' },
-    { id: 2, name: Seasons.SPRING, img: '/assets/img/season/spring.png' },
-    { id: 3, name: Seasons.SUMMER, img: '/assets/img/season/summer.png' },
-    { id: 4, name: Seasons.FALL, img: '/assets/img/season/fall.png' }
-  ];
 
   doramaId = '';
   doramaData = null;
@@ -78,7 +70,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
     private dorama: DoramaService,
     private fs: FabService
   ) {
-    this.gs.bannerImg = '/assets/img/season/winter.png';
+    this.gs.bannerImg = null;
     this.gs.bgRepeat = true;
     this.gs.sizeContain = true;
   }
@@ -104,13 +96,13 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
             this.pi.updatePageMetaData(
               `${this.doramaData.title}`,
               `${this.doramaData.synopsis}`,
-              `${this.doramaData?.others?.tags || this.doramaData?.title}`,
+              `${this.doramaData?.others?.tags ? this.doramaData?.others?.tags.join(', ') : this.doramaData.title}`,
               this.doramaData.image_url
             );
             this.bs.idle();
             if (this.gs.isBrowser) {
               if ('others' in this.doramaData) {
-                const genres = this.doramaData.others.genres.split(', ');
+                const genres = this.doramaData.others.genres;
                 for (const g of genres) {
                   this.chipData.push({
                     mdl_id: 8,
@@ -170,7 +162,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
 
   get seasonDorama(): string {
     try {
-      return this.seasonalBanner.find(sB => sB.id === Math.ceil((this.yearDorama.getMonth() + 1) / 3)).name;
+      return this.gs.seasonalWeather.find(sB => sB.id === Math.ceil((this.yearDorama.getMonth() + 1) / 3)).name;
     } catch (e) {
       return '';
     }

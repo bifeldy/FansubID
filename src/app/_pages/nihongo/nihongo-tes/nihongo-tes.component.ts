@@ -19,9 +19,9 @@ export class NihongoTesComponent implements OnInit {
     private gs: GlobalService,
     private ss: StatsServerService
   ) {
-    if (this.gs.isBrowser) {
-      //
-    }
+    this.gs.bannerImg = null;
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   get GS(): GlobalService {
