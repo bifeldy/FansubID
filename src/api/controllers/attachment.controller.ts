@@ -211,11 +211,10 @@ export class AttachmentController {
           await this.attachmentRepo.save(attachment);
         }).pipe(res);
       } else {
-        const fileNameExt = `${attachment.name}.${attachment.ext}`;
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-        const fIdx = files.findIndex(f => f.name.includes(fileNameExt));
+        const fIdx = files.findIndex(f => f.name.includes(attachment.name));
         if (fIdx >= 0) {
-          return res.download(`${environment.uploadFolder}/${files[fIdx].name}`, fileNameExt, async (e) => {
+          return res.download(`${environment.uploadFolder}/${files[fIdx].name}`, `${attachment.name}.${attachment.ext}`, async (e) => {
             if (e) {
               this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
             } else {

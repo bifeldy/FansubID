@@ -2,7 +2,7 @@
 import { AbortController } from 'abort-controller';
 
 // NodeJS Library
-import { createReadStream, readdirSync, unlink } from 'node:fs';
+import { createReadStream, readdirSync } from 'node:fs';
 
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
 import { AnyFilesInterceptor, } from '@nestjs/platform-express';
@@ -120,11 +120,7 @@ export class MailWebhookController {
               resAttachmentSave.mime = dfile.data.mimeType;
               resAttachmentSave.google_drive = dfile.data.id;
               await this.attachmentRepo.save(resAttachmentSave);
-              unlink(`${environment.uploadFolder}/${files[fIdx].name}`, (e) => {
-                if (e) {
-                  this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e, 'error');
-                }
-              });
+              this.gs.deleteAttachment(files[fIdx].name);
             }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
           } else {
             abortController.abort();

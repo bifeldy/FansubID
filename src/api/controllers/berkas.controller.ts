@@ -226,6 +226,7 @@ export class BerkasController {
                           mkvAttachment.user_ = resAttachmentSave.user_;
                           mkvAttachment.parent_attachment_ = resAttachmentSave;
                           const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
+                          // Upload Video Attachment -- Subtitles, Fonts, etc
                           this.gdrive.gDrive(true).then(async (gdrive) => {
                             const dfile = await gdrive.files.create({
                               requestBody: {
@@ -259,6 +260,7 @@ export class BerkasController {
             } else {
               videoExtractCompleted = true;
             }
+            // Upload Video -- Mp4, Mkv, etc
             this.gdrive.gDrive(true).then(async (gdrive) => {
               const dfile = await gdrive.files.create({
                 requestBody: {

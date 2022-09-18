@@ -70,6 +70,7 @@ export class GlobalService {
     return stringText.result;
   }
 
+  // Only MKV Video Attachment Files Don't Have Any Extension -- Temporary Server Storage
   deleteAttachment(videoFileNameNoExt: string) {
     unlink(`${environment.uploadFolder}/${videoFileNameNoExt}`, (err) => {
       if (err) {
