@@ -28,7 +28,7 @@ export class RolesGuard implements CanActivate {
     const user: UserModel = res.locals['user'];
     if (user) {
       this.gs.log('[ROLES_GUARD-USER] 🧨', user);
-      const isAllowed = requiredRoles.some((rR) => user.role === rR);
+      const isAllowed = requiredRoles.includes(user.role);
       if (isAllowed) {
         return true;
       }

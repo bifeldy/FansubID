@@ -36,13 +36,13 @@ export class RolesGuard implements CanActivate {
     if (this.gs.isBrowser) {
       const user = this.as.currentUserValue;
       if (user) {
-        const isAllowed = requiredRoles.some((rR) => user.role === rR);
+        const isAllowed = requiredRoles.includes(user.role);
         if (isAllowed) {
           return true;
         }
         this.bs.clear();
         this.toast.error(`Membutuhkan Role :: ${requiredRoles.join(' / ')}`, 'Whoops, Akses Ditolak!');
-        this.router.navigateByUrl(state.url || '/');
+        this.router.navigateByUrl(this.gs.previousUrl || '/');
         return false;
       }
       this.bs.clear();
