@@ -151,7 +151,7 @@
                     <mat-label>Tautan Discord</mat-label>
                     <input matInput formControlName="discord" placeholder="http://www.discord.gg" />
                     <mat-icon matSuffix>
-                      <img src="/assets/img/discord-{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" />
+                      <img src="/assets/img/discord/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" />
                     </mat-icon>
                     <mat-error>
                       <strong *ngIf="fg.get('discord').hasError('pattern')">Discord Link Tidak Valid</strong>

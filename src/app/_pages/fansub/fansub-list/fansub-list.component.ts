@@ -175,7 +175,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
               tautanLink.push({
                 type: 'button',
                 icon: i.name === 'discord' ? undefined : i.name,
-                image: i.name === 'discord' ? '/assets/img/discord-blue.png' : undefined,
+                image: i.name === 'discord' ? '/assets/img/discord/blue.png' : undefined,
                 url: i.url,
                 name: i.name
               });
