@@ -22,6 +22,7 @@ import { MaterialChipModule } from '../../_shared/components/material-chip/mater
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
 import { ReportModule } from '../../_shared/components/report/report.module';
+import { NoDataModule } from '../../_shared/components/no-data/no-data.module';
 
 import { FansubListComponent } from './fansub-list/fansub-list.component';
 import { FansubDetailComponent } from './fansub-detail/fansub-detail.component';
@@ -77,7 +78,8 @@ const routes: Routes = [
     MaterialFileInputModule,
     AngularEditorModule,
     ReportModule,
-    CustomPipeModule
+    CustomPipeModule,
+    NoDataModule
   ]
 })
 export class FansubModule { }

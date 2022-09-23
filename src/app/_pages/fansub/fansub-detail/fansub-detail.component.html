@@ -51,16 +51,7 @@
               </div>
               <div class="col-12" style="max-height: 288px;">
                 <div class="h-100" style="overflow-y: auto;">
-                  <div *ngIf="(!showPendingMember && approvedMembers.length <= 0) || (showPendingMember && pendingMembers.length <= 0)"
-                    style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px; overflow: hidden;">
-                    <div class="row align-items-center h-100">
-                      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
-                        <h3 class="m-0">
-                          Tidak Ada Data ¯\_(ツ)_/¯
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
+                  <app-no-data *ngIf="(!showPendingMember && approvedMembers.length <= 0) || (showPendingMember && pendingMembers.length <= 0)"></app-no-data>
                   <mat-selection-list [multiple]="false" *ngIf="!showPendingMember && approvedMembers.length > 0">
                     <mat-list-option class="h-100" *ngFor="let m of approvedMembers" routerLink="/user/{{ m.user_.username }}">
                       <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" />

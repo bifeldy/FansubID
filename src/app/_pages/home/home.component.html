@@ -18,16 +18,7 @@
         </div>
         <div class="col-12">
           <div class="row">
-            <div class="col-12 p-3" *ngIf="newsData.length <= 0"
-              style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
-              <div class="row align-items-center h-100">
-                <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
-                  <h3 class="m-0">
-                    Tidak Ada Data ¯\_(ツ)_/¯
-                  </h3>
-                </div>
-              </div>
-            </div>
+            <app-no-data class="col-12 p-3" *ngIf="newsData.length <= 0"></app-no-data>
             <div class="col-12" *ngIf="newsData.length > 0">
               <div class="row px-3">
                 <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let n of newsData | slice:0:(GS.gridListBreakpoint === 3 ? 2 : GS.gridListBreakpoint)">

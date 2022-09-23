@@ -8,6 +8,8 @@ import { CustomPipeModule } from '../../pipes/custom-pipe.module';
 
 import { SharedMaterialModule } from '../../modules/shared-material.module';
 
+import { NoDataModule } from '../no-data/no-data.module';
+
 import { CustomDirectivesModule } from '../../directives/custom-directive.module';
 
 @NgModule({
@@ -20,7 +22,8 @@ import { CustomDirectivesModule } from '../../directives/custom-directive.module
     ReactiveFormsModule,
     SharedMaterialModule,
     CustomPipeModule,
-    CustomDirectivesModule
+    CustomDirectivesModule,
+    NoDataModule
   ],
   exports: [DiscussionComponent]
 })

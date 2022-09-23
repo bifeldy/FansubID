@@ -7,6 +7,8 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { SharedMaterialModule } from '../../modules/shared-material.module';
 
+import { NoDataModule } from '../no-data/no-data.module';
+
 import { MaterialDialogInfoComponent } from './material-dialog-info/material-dialog-info.component';
 import { MaterialDialogDmakComponent } from './material-dialog-dmak/material-dialog-dmak.component';
 import { MaterialDialogEdictComponent } from './material-dialog-edict/material-dialog-edict.component';
@@ -27,7 +29,8 @@ import { MaterialDialogInputComponent } from './material-dialog-input/material-d
     SharedMaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialFileInputModule
+    MaterialFileInputModule,
+    NoDataModule
   ],
   exports: [
     MaterialDialogInfoComponent,

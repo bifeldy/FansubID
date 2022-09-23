@@ -9,6 +9,7 @@ import { StatsServerModule } from '../../_shared/components/stats-server/stats-s
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
+import { NoDataModule } from '../../_shared/components/no-data/no-data.module';
 
 import { HomeComponent } from './home.component';
 
@@ -30,7 +31,8 @@ const routes: Routes = [
     StatsServerModule,
     NotificationsModule,
     SharedMaterialModule,
-    CustomPipeModule
+    CustomPipeModule,
+    NoDataModule
   ]
 })
 export class HomeModule { }

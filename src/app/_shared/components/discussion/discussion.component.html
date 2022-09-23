@@ -59,14 +59,5 @@
   </div>
 </div>
 <div class="row" *ngIf="komentar && komentar.length <= 0">
-  <div class="col-12 p-3"
-    style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
-    <div class="row align-items-center h-100">
-      <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
-        <h3 class="m-0">
-          Tidak Ada Data ¯\_(ツ)_/¯
-        </h3>
-      </div>
-    </div>
-  </div>
+  <app-no-data class="col-12 p-3"></app-no-data>
 </div>

@@ -13,7 +13,7 @@
         <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
-      <div class="p-3" *ngIf="tab.data.length > 0">
+      <div class="p-3" *ngIf="tab.data.length > 0; else noData">
         <mat-selection-list [multiple]="false" class="p-0">
           <mat-grid-list [cols]="GS.gridListBreakpoint" rowHeight="72px">
             <mat-grid-tile *ngFor="let d of tab.data">
@@ -29,23 +29,13 @@
           <button mat-button (click)="onGridLoadNextPage()">Load More ...</button>
         </div>
       </div>
-      <div class="p-3" *ngIf="tab.data.length <= 0"
-        style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
-        <div class="row align-items-center h-100">
-          <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
-            <h3 class="m-0">
-              Tidak Ada Data ¯\_(ツ)_/¯
-            </h3>
-          </div>
-        </div>
-      </div>
     </div>
     <div *ngIf="tab.type === 'list'">
       <ng-template mat-tab-label>
         <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
-      <div class="p-3" *ngIf="tab.data.length > 0">
+      <div class="p-3" *ngIf="tab.data.length > 0; else noData">
         <mat-selection-list [multiple]="false">
           <mat-list-option *ngFor="let d of tab.data" (click)="onListClicked(d)">
             <img matListAvatar src="{{ d.image }}" class="ms-3" style="border-radius: 0;" />
@@ -55,16 +45,6 @@
         </mat-selection-list>
         <div class="col-12 text-center p-3" *ngIf="!listPageFinished">
           <button mat-button (click)="onListLoadNextPage()">Load More ...</button>
-        </div>
-      </div>
-      <div class="p-3" *ngIf="tab.data.length <= 0"
-        style="background-image: url('/assets/img/404-no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
-        <div class="row align-items-center h-100">
-          <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
-            <h3 class="m-0">
-              Tidak Ada Data ¯\_(ツ)_/¯
-            </h3>
-          </div>
         </div>
       </div>
     </div>
@@ -91,3 +71,7 @@
     </ng-template>
   </mat-tab>
 </mat-tab-group>
+
+<ng-template #noData>
+  <app-no-data class="p-3"></app-no-data>
+</ng-template>

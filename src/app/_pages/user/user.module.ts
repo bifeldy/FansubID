@@ -12,6 +12,8 @@ import { RoleModel } from '../../../models/req-res.model';
 
 import { RolesGuard } from '../../_shared/guards/roles.guard';
 
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
+
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { MaterialExpansionPanelModule } from '../../_shared/components/material-expansion-panel/material-expansion-panel.module';
@@ -20,7 +22,7 @@ import { ReportModule } from '../../_shared/components/report/report.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
-import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
+import { NoDataModule } from '../../_shared/components/no-data/no-data.module';
 
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { UserListComponent } from './user-list/user-list.component';
@@ -82,7 +84,8 @@ const routes: Routes = [
     NotificationsModule,
     BannerDiscordModule,
     StatsServerModule,
-    CustomPipeModule
+    CustomPipeModule,
+    NoDataModule
   ]
 })
 export class UserModule { }
