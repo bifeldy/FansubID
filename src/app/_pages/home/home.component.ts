@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private wb: WinboxService
   ) {
-    this.gs.bannerImg = '/assets/img/home-banner.png';
+    this.gs.bannerImg = '/assets/img/banner/home.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
   }

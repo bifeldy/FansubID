@@ -142,7 +142,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
     private fansub: FansubService,
     private wb: WinboxService
   ) {
-    this.gs.bannerImg = '/assets/img/fansub-banner.png';
+    this.gs.bannerImg = '/assets/img/banner/fansub.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
     if (this.gs.isBrowser) {

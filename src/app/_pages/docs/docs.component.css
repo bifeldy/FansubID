@@ -6,7 +6,7 @@
   width: 100%;
   height: 128px;
   overflow: hidden;
-  background-image: url('/assets/img/docs-banner.jpg');
+  background-image: url('/assets/img/banner/docs.jpg');
 }
 
 .wrapper::before, .wrapper::after {
@@ -20,19 +20,19 @@
 }
 
 .wrapper::before {
-  background-image: url('/assets/img/docs-banner-before.svg');
+  background-image: url('/assets/img/banner/docs-before.svg');
   left: 0;
 }
 
 .wrapper::after {
-  background-image: url('/assets/img/docs-banner-after.svg');
+  background-image: url('/assets/img/banner/docs-after.svg');
   right: 0;
 }
 
 .wrapper-1 {
   width: 256px;
   height: 100%;
-  background-image: url('/assets/img/docs-banner-1.svg');
+  background-image: url('/assets/img/banner/docs-1.svg');
   position: absolute;
   background-repeat: no-repeat;
   background-size: contain;
