@@ -88,7 +88,7 @@ export class CrawlController {
           delete responseHeaders[header];
         }
         for (const header in responseHeaders) {
-          res.set(header, responseHeaders[header]);
+          res.set(header, responseHeaders[header].replace(/(\r\n|\n|\r)/gm, ', '));
         }
         const cookies = await page.cookies();
         if (cookies) {
