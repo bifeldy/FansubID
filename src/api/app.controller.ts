@@ -53,10 +53,10 @@ export class AppController {
     try {
       const currDate = new Date();
       const season = this.gs.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
-      const files = readdirSync(`${environment.viewFolder}/assets/img/`, { withFileTypes: true });
-      const fIdx = files.findIndex(f => f.name.includes(`backdrop-${season}`));
+      const files = readdirSync(`${environment.viewFolder}/assets/img/backdrop/`, { withFileTypes: true });
+      const fIdx = files.findIndex(f => f.name.includes(`${season}`));
       if (fIdx >= 0) {
-        return res.download(`${environment.viewFolder}/assets/img/${files[fIdx].name}`, files[fIdx].name, async (e) => {
+        return res.download(`${environment.viewFolder}/assets/img/backdrop/${files[fIdx].name}`, files[fIdx].name, async (e) => {
           if (e) {
             this.gs.log('[RES_DOWNLOAD_IMAGE_BACKDROP-ERROR] 🔻', e, 'error');
           }
