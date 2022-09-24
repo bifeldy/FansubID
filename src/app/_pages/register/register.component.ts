@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   submitted = false;
 
   returnUrl = '/';
-  registerImg = '/assets/img/loginregister.png';
+  registerImg = '/assets/img/login-register.png';
   registerInfo = 'Ayo bergabung dan masuk dalam komunitas~';
 
   subsUser = null;
