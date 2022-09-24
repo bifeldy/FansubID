@@ -30,7 +30,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
-  image_url = '/assets/img/form-no-image.png';
+  image_url = '/assets/img/form/no-image.png';
 
   projectData = {
     column: ['Nama', 'Image', 'Deskripsi', 'Berkas', 'Aksi'],
@@ -195,7 +195,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
           this.imageErrorText = null;
         } else {
           this.image = null;
-          this.image_url = '/assets/img/form-image-error.png';
+          this.image_url = '/assets/img/form/image-error.png';
           this.imageErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.gambar.clear(event);
         }
@@ -203,7 +203,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.image = null;
       this.imageErrorText = null;
-      this.image_url = '/assets/img/form-no-image.png';
+      this.image_url = '/assets/img/form/no-image.png';
       this.gambar.clear(event);
     }
   }

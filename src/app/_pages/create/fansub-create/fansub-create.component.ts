@@ -27,11 +27,11 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
-  image_url = '/assets/img/form-no-image.png';
+  image_url = '/assets/img/form/no-image.png';
 
   cover = null;
   coverErrorText = null;
-  cover_url = '/assets/img/form-no-image.png';
+  cover_url = '/assets/img/form/no-image.png';
 
   urls = [];
 
@@ -149,7 +149,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
           this.imageErrorText = null;
         } else {
           this.image = null;
-          this.image_url = '/assets/img/form-image-error.png';
+          this.image_url = '/assets/img/form/image-error.png';
           this.imageErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.gambar.clear(event);
         }
@@ -157,7 +157,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.image = null;
       this.imageErrorText = null;
-      this.image_url = '/assets/img/form-no-image.png';
+      this.image_url = '/assets/img/form/no-image.png';
       this.gambar.clear(event);
     }
   }
@@ -200,7 +200,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
           this.coverErrorText = null;
         } else {
           this.cover = null;
-          this.cover_url = '/assets/img/form-image-error.png';
+          this.cover_url = '/assets/img/form/image-error.png';
           this.coverErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.gambar.clear(event);
         }
@@ -208,7 +208,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.cover = null;
       this.coverErrorText = null;
-      this.cover_url = '/assets/img/form-no-image.png';
+      this.cover_url = '/assets/img/form/no-image.png';
       this.gambar.clear(event);
     }
   }

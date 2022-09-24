@@ -23,7 +23,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
-  image_url = '/assets/img/form-no-image.png';
+  image_url = '/assets/img/form/no-image.png';
   image_url_original = null;
 
   gambar = null;
@@ -98,7 +98,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
           this.imageErrorText = null;
         } else {
           this.image = null;
-          this.image_url = '/assets/img/form-image-error.png';
+          this.image_url = '/assets/img/form/image-error.png';
           this.imageErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.gambar.clear(event);
         }

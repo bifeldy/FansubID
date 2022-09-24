@@ -158,7 +158,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           this.imagePhotoErrorText = null;
         } else {
           this.imagePhoto = null;
-          this.image_photo = '/assets/img/form-image-error.png';
+          this.image_photo = '/assets/img/form/image-error.png';
           this.imagePhotoErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.photoImage.clear(event);
         }
@@ -212,7 +212,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           this.imageCoverErrorText = null;
         } else {
           this.imageCover = null;
-          this.image_cover = '/assets/img/form-image-error.png';
+          this.image_cover = '/assets/img/form/image-error.png';
           this.imageCoverErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.coverImage.clear(event);
         }

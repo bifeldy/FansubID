@@ -39,7 +39,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
-  image_url = '/assets/img/form-no-image.png';
+  image_url = '/assets/img/form/no-image.png';
 
   filteredAnime = [];
   filteredDorama = [];
@@ -411,7 +411,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
           this.imageErrorText = null;
         } else {
           this.image = null;
-          this.image_url = '/assets/img/form-image-error.png';
+          this.image_url = '/assets/img/form/image-error.png';
           this.imageErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
           this.gambar.clear(event);
         }
@@ -419,7 +419,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.image = null;
       this.imageErrorText = null;
-      this.image_url = '/assets/img/form-no-image.png';
+      this.image_url = '/assets/img/form/no-image.png';
       this.gambar.clear(event);
     }
   }
