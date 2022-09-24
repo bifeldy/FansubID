@@ -31,6 +31,17 @@ td.mat-column-star {
   color: #7289da;
 }
 
+@media screen and (min-width: 992px) {
+
+  .fixed-single {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 128px;
+  }
+
+}
+
 @media screen and (max-width: 992px) {
   .mat-elevation-z8 {
     background: transparent;
