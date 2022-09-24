@@ -111,7 +111,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
                 text: this.animeData.synopsis,
                 tooltip: `Alih Bahasa Oleh 'Google Translate' 😘`
               });
-              this.fs.initializeFab(null, '/assets/img/mal-logo.png', 'Buka Di MyAnimeList', this.animeData.url, true);
+              this.fs.initializeFab(null, '/assets/img/logo/mal.png', 'Buka Di MyAnimeList', this.animeData.url, true);
               this.getFansubAnime();
               this.getBerkasAnime();
             }

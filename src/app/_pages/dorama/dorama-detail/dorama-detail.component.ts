@@ -122,7 +122,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
               });
               this.fs.initializeFab(
                 null,
-                '/assets/img/mdl-logo.png', 'Buka Di MyDramaList',
+                '/assets/img/logo/mdl.png', 'Buka Di MyDramaList',
                 `https://mydramalist.com/${this.router.url.split('/')[this.router.url.split('/').length - 1]}`,
                 true
               );
