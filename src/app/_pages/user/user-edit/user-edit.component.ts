@@ -6,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
+import { UserModel } from '../../../../models/req-res.model';
+
 import { BusyService } from '../../../_shared/services/busy.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -20,6 +22,8 @@ import { CryptoService } from '../../../_shared/services/crypto.service';
   styleUrls: ['./user-edit.component.css']
 })
 export class UserEditComponent implements OnInit, OnDestroy {
+
+  currentUser: UserModel = null;
 
   fg: FormGroup;
 
@@ -48,6 +52,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   subsImgbb2 = null;
   subsUserUpdate = null;
   subsVerify = null;
+  subsUser = null;
 
   constructor(
     private router: Router,
@@ -81,6 +86,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.subsImgbb2?.unsubscribe();
     this.subsUserUpdate?.unsubscribe();
     this.subsVerify?.unsubscribe();
+    this.subsUser?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -90,13 +96,14 @@ export class UserEditComponent implements OnInit, OnDestroy {
       `Ubah Profile`
     );
     if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.username = this.activatedRoute.snapshot.paramMap.get('username');
       this.bs.busy();
       this.subsUserDetail = this.us.getUserData(this.username).subscribe({
         next: res => {
           this.gs.log('[USER_DETAIL_SUCCESS]', res);
           this.bs.idle();
-          if (this.as.currentUserValue.id !== res.result.id) {
+          if (this.currentUser.id !== res.result.id) {
             this.toast.warning('Profile Ini Milik Orang Lain', 'Whoops!');
             this.router.navigateByUrl(`/user/${this.username}`);
           } else {

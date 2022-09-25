@@ -34,7 +34,7 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     if (this.gs.isBrowser) {
-      const user = this.as.currentUserValue;
+      const user = this.as.currentUserSubject.value;
       if (user) {
         const isAllowed = requiredRoles.includes(user.role);
         if (isAllowed) {

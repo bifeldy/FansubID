@@ -110,7 +110,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         next: res => {
           this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
           this.bs.idle();
-          if (this.as.currentUserValue.id !== res.result.user_.id) {
+          if (this.currentUser.id !== res.result.user_.id) {
             this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
             this.router.navigateByUrl(`/berkas/${res.result.id}`);
           } else {

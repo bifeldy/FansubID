@@ -32,7 +32,7 @@ export class VerifiedGuard implements CanActivate {
       return true;
     }
     if (this.gs.isBrowser) {
-      const user = this.as.currentUserValue;
+      const user = this.as.currentUserSubject.value;
       if (user) {
         if (user.verified) {
           return true;

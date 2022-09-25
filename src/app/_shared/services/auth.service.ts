@@ -34,10 +34,6 @@ export class AuthService {
     }
   }
 
-  get currentUserValue(): UserModel {
-    return this.currentUserSubject?.value || null;
-  }
-
   verify(token: any): Observable<JsonResponse<UserModel>> {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.patchData(`/verify`, { token }).pipe(map(respVerify => {

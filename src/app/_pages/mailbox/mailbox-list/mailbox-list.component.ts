@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 
 import { environment } from '../../../../environments/app/environment';
 
+import { UserModel } from '../../../../models/req-res.model';
+
 import { AuthService } from '../../../_shared/services/auth.service';
 
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -16,6 +18,8 @@ import { MailService } from '../../../_shared/services/mail.service';
   styleUrls: ['./mailbox-list.component.css']
 })
 export class MailboxListComponent implements OnInit, OnDestroy {
+
+  currentUser: UserModel = null;
 
   mailData = {
     inbox: {
@@ -40,6 +44,7 @@ export class MailboxListComponent implements OnInit, OnDestroy {
   order = '';
 
   subsMailbox = null;
+  subsUser = null;
 
   constructor(
     private router: Router,
@@ -54,22 +59,20 @@ export class MailboxListComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
-  get AS(): AuthService {
-    return this.as;
-  }
-
   get ENV(): any {
     return environment;
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.getMailbox();
     }
   }
 
   ngOnDestroy(): void {
     this.subsMailbox?.unsubscribe();
+    this.subsUser?.unsubscribe();
   }
 
   getMailbox(): void {

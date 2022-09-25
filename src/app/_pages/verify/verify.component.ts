@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { SosMedModel } from '../../../models/req-res.model';
+import { SosMedModel, UserModel } from '../../../models/req-res.model';
 
 import { AuthService } from '../../_shared/services/auth.service';
 import { GlobalService } from '../../_shared/services/global.service';
@@ -22,6 +22,8 @@ import { CONSTANTS } from '../../../constants';
 })
 export class VerifyComponent implements OnInit, OnDestroy {
 
+  currentUser: UserModel = null;
+
   fg1: FormGroup;
   fg2: FormGroup;
 
@@ -38,6 +40,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   subsVerify2 = null;
   subsSosmed = null;
   subsDialog = null;
+  subsUser = null;
 
   constructor(
     private fb: FormBuilder,
@@ -65,6 +68,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
     this.subsVerify2?.unsubscribe();
     this.subsSosmed?.unsubscribe();
     this.subsDialog?.unsubscribe();
+    this.subsUser?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -73,12 +77,13 @@ export class VerifyComponent implements OnInit, OnDestroy {
       this.returnUrl = '/';
     }
     if (this.gs.isBrowser) {
+      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.initKTP();
       const app = this.route.snapshot.queryParamMap.get('app');
       const code = this.route.snapshot.queryParamMap.get('code');
       if (app && code) {
         this.sosmedVerify(app, code);
-      } else if (this.as.currentUserValue && this.as.currentUserValue.verified) {
+      } else if (this.currentUser && this.currentUser.verified) {
         this.router.navigateByUrl(this.returnUrl);
       } else {
         this.verifyByKtpDisabled();
