@@ -13,22 +13,7 @@ export class NotificationsService {
 
   currentUser: UserModel = null;
 
-  notifications = [
-    {
-      notifCreator: null,
-      notifData: {
-        id: `${environment.siteName.toUpperCase()}_UNDER_DEVELOPMENT`,
-        type: 'info',
-        title: 'Pemberitahuan!',
-        content: `
-          Website masih dalam tahap pengembangan. Jika ingin request fitur baru ataupun melaporkan
-          <i>Bug</i> dapat menulis pesan di kanal Discord '<a href="https://discord.gg/xGWdExk"
-          target="_blank" class="text-decoration-none">#dev-prog</a>'. Terima kasih. ^_^
-        `,
-        dismissible: true
-      }
-    }
-  ];
+  notifications = [];
 
   dissmissTimeout = {};
   timedOut = null;
@@ -37,7 +22,20 @@ export class NotificationsService {
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
-      //
+      this.notifications.push({
+        notifCreator: null,
+        notifData: {
+          id: `${environment.siteName.toUpperCase()}_UNDER_DEVELOPMENT`,
+          type: 'info',
+          title: 'Pemberitahuan!',
+          content: `
+            Website masih dalam tahap pengembangan. Jika ingin request fitur baru ataupun melaporkan
+            <i>Bug</i> dapat menulis pesan di kanal Discord '<a href="https://discord.gg/xGWdExk"
+            target="_blank" class="text-decoration-none">#dev-prog</a>'. Terima kasih. ^_^
+          `,
+          dismissible: true
+        }
+      });
     }
   }
 
