@@ -45,7 +45,7 @@ $dark-theme: mat.define-dark-theme((
 // CSS class whatever you want. In this example, any component inside of an element with
 // `.bifeldy-dark-theme` will be affected by this alternate dark theme instead of the default theme.
 .bifeldy-dark-theme {
-  @include mat.all-component-themes($dark-theme);
+  @include mat.all-component-colors($dark-theme);
 }
 
 .mat-gelap,

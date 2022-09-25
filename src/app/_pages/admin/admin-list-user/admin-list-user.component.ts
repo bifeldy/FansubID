@@ -82,10 +82,10 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
             this.gs.log('[BANNED_LIST_SUCCESS]', res);
             const userDataRow = [];
             let excludedRole = [];
-            if (this.as.currentUserSubject.value.role === RoleModel.ADMIN) {
+            if (this.as.currentUserSubject?.value?.role === RoleModel.ADMIN) {
               excludedRole = [RoleModel.ADMIN];
             }
-            if (this.as.currentUserSubject.value.role === RoleModel.MODERATOR) {
+            if (this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR) {
               excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
             }
             for (const r of res.results) {
@@ -99,7 +99,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 banned: (Object.keys(result.results[r.id]).length > 0),
                 Aksi: (
                   (Object.keys(result.results[r.id]).length > 0) ||
-                  (r.id === this.as.currentUserSubject.value.id) ||
+                  (r.id === this.as.currentUserSubject?.value?.id) ||
                   this.gs.includesOneOf(r.role, excludedRole)
                 ) ? [] : [
                   { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username },
@@ -144,7 +144,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
         input: {
           reason: {
             inputLabel: 'Alasan',
-            inputText: `Manually Banned By ${this.as.currentUserSubject.value.role}`,
+            inputText: `Manually Banned By ${this.as.currentUserSubject?.value?.role}`,
           }
         },
         confirmText: 'Ya, BAN Akun',

@@ -96,7 +96,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         next: res => {
           this.gs.log('[USER_DETAIL_SUCCESS]', res);
           this.bs.idle();
-          if (this.as.currentUserSubject.value.id !== res.result.id) {
+          if (this.as.currentUserSubject?.value?.id !== res.result.id) {
             this.toast.warning('Profile Ini Milik Orang Lain', 'Whoops!');
             this.router.navigateByUrl(`/user/${this.username}`);
           } else {

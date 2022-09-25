@@ -38,7 +38,7 @@
                       Unggah
                     </button>
                   </div>
-                  <div class="col-12 p-3" *ngIf="AS.currentUserSubject.value.verified">
+                  <div class="col-12 p-3" *ngIf="AS.currentUserSubject?.value?.verified">
                     <mat-slide-toggle formControlName="private" matTooltip="Hanya diakses melalui profil dan/atau url">
                       Jadikan Private, Akses Hanya Dengan URL
                     </mat-slide-toggle>

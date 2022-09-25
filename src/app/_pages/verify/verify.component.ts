@@ -78,7 +78,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
       const code = this.route.snapshot.queryParamMap.get('code');
       if (app && code) {
         this.sosmedVerify(app, code);
-      } else if (this.as.currentUserSubject.value.verified) {
+      } else if (this.as.currentUserSubject?.value?.verified) {
         this.router.navigateByUrl(this.returnUrl);
       } else {
         this.verifyByKtpDisabled();

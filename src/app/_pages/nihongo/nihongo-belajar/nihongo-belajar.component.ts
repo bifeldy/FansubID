@@ -230,7 +230,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   editDataset(dataset): void {
     this.gs.log('[BELAJAR_DATASET_ADD_OR_EDIT_CLICK]', dataset);
-    if (this.as.currentUserSubject.value.verified) {
+    if (this.as.currentUserSubject?.value?.verified) {
       this.subsDialog = this.ds.openBelajarDialog({
         data: {
           title: (dataset ? `Edit Data` : `Tambah Dataset`),
@@ -251,8 +251,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   }
 
   addDataset(): void {
-    if (this.as.currentUserSubject.value) {
-      if (this.as.currentUserSubject.value.verified) {
+    if (this.as.currentUserSubject?.value) {
+      if (this.as.currentUserSubject?.value?.verified) {
         this.editDataset(null);
       } else {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');

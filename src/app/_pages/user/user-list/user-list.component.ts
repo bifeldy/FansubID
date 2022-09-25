@@ -52,7 +52,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         'arrow_forward',
         null,
         'Menuju Halaman Profile',
-        `/user/${this.as.currentUserSubject.value.username}`,
+        `/user/${this.as.currentUserSubject?.value?.username}`,
         false
       );
     }
@@ -66,7 +66,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   getUserFeedComment(): void {
     this.bs.busy();
-    this.subsFeedKomentar = this.us.getUserFeedComment(this.as.currentUserSubject.value.username, '', 1, 5).subscribe({
+    this.subsFeedKomentar = this.us.getUserFeedComment(this.as.currentUserSubject?.value?.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_COMMENT_SUCCESS]', res);
         this.feedKomentarData = res.results;
@@ -81,7 +81,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   getUserFeedLikeDislike(): void {
     this.bs.busy();
-    this.subsFeedLikeDislike = this.us.getUserFeedLikeDislike(this.as.currentUserSubject.value.username, '', 1, 5).subscribe({
+    this.subsFeedLikeDislike = this.us.getUserFeedLikeDislike(this.as.currentUserSubject?.value?.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_LIKEDISLIKE_SUCCESS]', res);
         this.feedLikeDislikeData = res.results;
@@ -96,7 +96,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   getUserFeedVisit(): void {
     this.bs.busy();
-    this.subsFeedVisit = this.us.getUserFeedVisit(this.as.currentUserSubject.value.username, '', 1, 5).subscribe({
+    this.subsFeedVisit = this.us.getUserFeedVisit(this.as.currentUserSubject?.value?.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_VISIT_SUCCESS]', res);
         this.feedVisitData = res.results;

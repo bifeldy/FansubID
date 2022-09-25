@@ -375,8 +375,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             this.pendingMembers.push(m);
           }
         }
-        if (this.as.currentUserSubject.value) {
-          const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserSubject.value.id);
+        if (this.as.currentUserSubject?.value) {
+          const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserSubject?.value?.id);
           this.joinedAsMember = index >= 0 ? this.approvedMembers[index] : null;
         }
         this.bs.idle();
@@ -461,8 +461,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   getSubDomain(): void {
-    if (this.as.currentUserSubject.value) {
-      if (this.joinedAsMember || this.as.currentUserSubject.value.role === RoleModel.ADMIN || this.as.currentUserSubject.value.role === RoleModel.MODERATOR) {
+    if (this.as.currentUserSubject?.value) {
+      if (this.joinedAsMember || this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR) {
         const userInput = {
           server_target: {
             inputLabel: 'Server Target',

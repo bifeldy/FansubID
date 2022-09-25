@@ -73,7 +73,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
         next: res => {
           this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
           this.bs.idle();
-          if (this.as.currentUserSubject.value.id !== res.result.user_.id) {
+          if (this.as.currentUserSubject?.value?.id !== res.result.user_.id) {
             this.toast.warning('Berita Ini Milik Orang Lain', 'Whoops!');
             this.router.navigateByUrl(`/news/${this.newsId}`);
           } else {

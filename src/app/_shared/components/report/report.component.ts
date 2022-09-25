@@ -185,7 +185,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   likeOrDislike(like: string): void {
     let tempReport = null;
-    if (this.as.currentUserSubject.value) {
+    if (this.as.currentUserSubject?.value) {
       if (like === this.myReport?.type) {
         tempReport = null;
       } else {

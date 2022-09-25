@@ -89,8 +89,8 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get isAdminModFansubber(): any {
-    if (this.as.currentUserSubject.value) {
-      if (this.as.currentUserSubject.value.role === RoleModel.ADMIN || this.as.currentUserSubject.value.role === RoleModel.MODERATOR || this.as.currentUserSubject.value.role === RoleModel.FANSUBBER) {
+    if (this.as.currentUserSubject?.value) {
+      if (this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR || this.as.currentUserSubject?.value?.role === RoleModel.FANSUBBER) {
         return true;
       }
     }
@@ -122,7 +122,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get canChat(): boolean {
-    if (this.as.currentUserSubject.value) {
+    if (this.as.currentUserSubject?.value) {
       if (this.liveChatResult.roomId !== CONSTANTS.socketRoomNameGlobalFansub) {
         return true;
       }

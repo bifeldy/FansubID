@@ -116,8 +116,8 @@ export class FansubEditComponent implements OnInit, OnDestroy {
                     this.approvedMembers.push(m);
                   }
                 }
-                const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserSubject.value.id);
-                if (index >= 0 || this.as.currentUserSubject.value.role === RoleModel.ADMIN || this.as.currentUserSubject.value.role === RoleModel.MODERATOR || this.as.currentUserSubject.value.id === res.result.user_.id) {
+                const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserSubject?.value?.id);
+                if (index >= 0 || this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR || this.as.currentUserSubject?.value?.id === res.result.user_.id) {
                   this.initForm(res.result);
                 } else {
                   this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!');
