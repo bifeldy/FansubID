@@ -115,14 +115,7 @@
                   "with": "src/environments/app/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all",
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                }
-              }
+              "outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,

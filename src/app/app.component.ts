@@ -23,7 +23,7 @@ import { ServiceWorkerService } from './_shared/services/service-worker.service'
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [ onMainContentChange ]
+  animations: [onMainContentChange]
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
