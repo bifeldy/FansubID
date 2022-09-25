@@ -399,7 +399,7 @@ re-captcha > div {
 .mat-drawer-backdrop.mat-drawer-shown {
   background-position: left bottom, top left !important;
   background-size: 50vh !important;
-  background-image: url('/assets/img/router/bg-register.png'), url('/api/img-seasonal-backdrop') !important;
+  background-image: url('/assets/img/router/register.png'), url('/api/img-seasonal-backdrop') !important;
   background-repeat: no-repeat, repeat !important;
 }
 
@@ -407,7 +407,7 @@ re-captcha > div {
 .mat-drawer-backdrop.mat-drawer-shown {
   background-position: right bottom, top right !important;
   background-size: 60vh !important;
-  background-image: url('/assets/img/router/bg-login.png'), url('/api/img-seasonal-backdrop') !important;
+  background-image: url('/assets/img/router/login.png'), url('/api/img-seasonal-backdrop') !important;
   background-repeat: no-repeat, repeat !important;
 }
 
