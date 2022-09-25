@@ -8,8 +8,6 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
-import { UserModel } from '../../../../models/req-res.model';
-
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
@@ -29,8 +27,6 @@ import { ImgbbService } from '../../../_shared/services/imgbb.service';
 export class BerkasEditComponent implements OnInit, OnDestroy {
 
   @ViewChild('gambar', { static: true }) gambar: FileInputComponent;
-
-  currentUser: UserModel = null;
 
   berkasId = '';
 
@@ -56,7 +52,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   attachmentFile = null;
   attachmentFontSubtitle = [];
 
-  subsUser = null;
   subsProject = null;
   subsFansub = null;
   subsAnimeDetail = null;
@@ -92,6 +87,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get AS(): AuthService {
+    return this.as;
+  }
+
   get GS(): GlobalService {
     return this.gs;
   }
@@ -103,14 +102,13 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       `Ubah Berkas`
     );
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.berkasId = this.activatedRoute.snapshot.paramMap.get('berkasId');
       this.bs.busy();
       this.subsBerkasDetail = this.berkas.getBerkas(this.berkasId).subscribe({
         next: res => {
           this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
           this.bs.idle();
-          if (this.currentUser.id !== res.result.user_.id) {
+          if (this.as.currentUserSubject.value.id !== res.result.user_.id) {
             this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
             this.router.navigateByUrl(`/berkas/${res.result.id}`);
           } else {
@@ -132,7 +130,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subsUser?.unsubscribe();
     this.subsProject?.unsubscribe();
     this.subsFansub?.unsubscribe();
     this.subsAnimeDetail?.unsubscribe();

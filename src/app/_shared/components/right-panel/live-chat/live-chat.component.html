@@ -56,13 +56,13 @@
         </div>
       </div>
       <div class="col-12 mt-auto">
-        <mat-form-field class="mt-3 col-12" [color]="'accent'" *ngIf="currentUser">
+        <mat-form-field class="mt-3 col-12" [color]="'accent'" *ngIf="AS.currentUserSubject.value">
           <mat-label>Kirim Pesan Obrolan Disini ...</mat-label>
           <input matInput maxlength="200" placeholder="Ex. Hello 世界！" (keyup.enter)="applyFilter($event)"
             [(ngModel)]="liveChatResult.messageToSend" [disabled]="!canChat" />
           <mat-icon matSuffix>send</mat-icon>
         </mat-form-field>
-        <button class="mt-4 col-12 text-light" mat-flat-button color="accent" (click)="login()" *ngIf="!currentUser">
+        <button class="mt-4 col-12 text-light" mat-flat-button color="accent" (click)="login()" *ngIf="!AS.currentUserSubject.value">
           <mat-icon class="me-1">vpn_key</mat-icon>
           Login Untuk Bisa Mengobrol
         </button>

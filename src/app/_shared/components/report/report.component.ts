@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 
-import { LikeAndDislikeModel, UserModel } from '../../../../models/req-res.model';
+import { LikeAndDislikeModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../services/auth.service';
@@ -113,9 +113,6 @@ export class ReportComponent implements OnInit, OnDestroy {
   reportTrackType = null;
   idSlugUsername = null;
 
-  currentUser: UserModel = null;
-
-  subsUser = null;
   subsGetReport = null;
   subsSetReport = null;
 
@@ -135,8 +132,11 @@ export class ReportComponent implements OnInit, OnDestroy {
     }
   }
 
+  get AS(): AuthService {
+    return this.as;
+  }
+
   ngOnDestroy(): void {
-    this.subsUser?.unsubscribe();
     this.subsGetReport?.unsubscribe();
     this.subsSetReport?.unsubscribe();
   }
@@ -151,7 +151,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.reportTrackType = this.router.url.split('/')[1];
       this.idSlugUsername = this.router.url.split('/')[2];
       this.ss.socketEmit('track-get', {
@@ -186,7 +185,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   likeOrDislike(like: string): void {
     let tempReport = null;
-    if (this.currentUser) {
+    if (this.as.currentUserSubject.value) {
       if (like === this.myReport?.type) {
         tempReport = null;
       } else {

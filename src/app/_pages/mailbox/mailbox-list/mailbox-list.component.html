@@ -6,7 +6,7 @@
         <div class="col-12 mx-auto">
           <div class="container text-light">
             <h2 class="mb-1" style="line-height: normal;">
-              {{ currentUser?.username }} @ {{ ENV.domain }}
+              {{ AS.currentUserSubject.value.username }} @ {{ ENV.domain }}
             </h2>
             <p class="mb-0">
               {{ mailData['inbox'].count }} Inbox ~ {{ mailData['outbox'].count }} Outbox

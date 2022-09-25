@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
-import { RoleModel, UserModel } from '../../../../models/req-res.model';
+import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -23,8 +23,6 @@ import { AuthService } from '../../../_shared/services/auth.service';
   styleUrls: ['./fansub-edit.component.css']
 })
 export class FansubEditComponent implements OnInit, OnDestroy {
-
-  currentUser: UserModel = null;
 
   fansubSlug = '';
 
@@ -55,7 +53,6 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   subsImgbb = null;
   subsCekFansubSlug = null;
   subsFansubMemberGet = null;
-  subsUser = null;
 
   slugInfo = '';
   editable = true;
@@ -88,7 +85,6 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     this.subsFansubDetail?.unsubscribe();
     this.subsImgbb?.unsubscribe();
     this.subsFansubMemberGet?.unsubscribe();
-    this.subsUser?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -98,7 +94,6 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       `Ubah Fansub`
     );
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
       this.bs.busy();
       this.subsFansubDetail = this.fansub.getFansub(this.fansubSlug).subscribe({
@@ -121,8 +116,8 @@ export class FansubEditComponent implements OnInit, OnDestroy {
                     this.approvedMembers.push(m);
                   }
                 }
-                const index = this.approvedMembers.findIndex(m => m.user_.id === this.currentUser.id);
-                if (index >= 0 || this.currentUser.role === RoleModel.ADMIN || this.currentUser.role === RoleModel.MODERATOR || this.currentUser.id === res.result.user_.id) {
+                const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserSubject.value.id);
+                if (index >= 0 || this.as.currentUserSubject.value.role === RoleModel.ADMIN || this.as.currentUserSubject.value.role === RoleModel.MODERATOR || this.as.currentUserSubject.value.id === res.result.user_.id) {
                   this.initForm(res.result);
                 } else {
                   this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!');

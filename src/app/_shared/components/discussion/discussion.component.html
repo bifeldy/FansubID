@@ -1,4 +1,4 @@
-<div class="row" *ngIf="rootCommentBox && currentUser">
+<div class="row" *ngIf="rootCommentBox && AS.currentUserSubject.value">
   <mat-form-field appearance="outline" class="col-12" [color]="'accent'">
     <mat-label>Buat Komentar Baru</mat-label>
     <input matInput placeholder="Buat Baru ..." [(ngModel)]="commentToSend" />
@@ -28,7 +28,7 @@
         </p>
         <p class="mb-1" style="line-height: normal;">{{ k.comment }}</p>
       </div>
-      <mat-form-field appearance="outline" class="mt-2 col-12" [color]="'accent'" *ngIf="k.reply_mode && currentUser && recursionCount === 0">
+      <mat-form-field appearance="outline" class="mt-2 col-12" [color]="'accent'" *ngIf="k.reply_mode && AS.currentUserSubject.value && recursionCount === 0">
         <mat-label>Balas / Tanggapi</mat-label>
         <input matInput placeholder="Balas ..." [(ngModel)]="k.reply_to_send" />
         <mat-icon matSuffix>quickreply</mat-icon>
@@ -42,7 +42,7 @@
           </button>
         </div>
         <div class="col-6 text-end">
-          <button mat-button color="accent" *ngIf="k.reply_mode && currentUser && recursionCount === 0" (click)="sendComment(k)">
+          <button mat-button color="accent" *ngIf="k.reply_mode && AS.currentUserSubject.value && recursionCount === 0" (click)="sendComment(k)">
             Kirim
             <mat-icon class="ms-1">send</mat-icon>
           </button>

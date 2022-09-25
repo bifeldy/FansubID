@@ -2,8 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { environment } from '../../../../environments/app/environment';
 
-import { UserModel } from '../../../../models/req-res.model';
-
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -17,13 +15,10 @@ import { UserService } from '../../../_shared/services/user.service';
 })
 export class UserListComponent implements OnInit, OnDestroy {
 
-  currentUser: UserModel = null;
-
   feedKomentarData = [];
   feedLikeDislikeData = [];
   feedVisitData = [];
 
-  subsUser = null;
   subsFeedKomentar = null;
   subsFeedLikeDislike = null;
   subsFeedVisit = null;
@@ -40,13 +35,16 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get AS(): any {
+    return this.as;
+  }
+
   get ENV(): any {
     return environment;
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.getUserFeedComment();
       this.getUserFeedLikeDislike();
       this.getUserFeedVisit();
@@ -54,14 +52,13 @@ export class UserListComponent implements OnInit, OnDestroy {
         'arrow_forward',
         null,
         'Menuju Halaman Profile',
-        `/user/${this.currentUser.username}`,
+        `/user/${this.as.currentUserSubject.value.username}`,
         false
       );
     }
   }
 
   ngOnDestroy(): void {
-    this.subsUser?.unsubscribe();
     this.subsFeedKomentar?.unsubscribe();
     this.subsFeedLikeDislike?.unsubscribe();
     this.subsFeedVisit?.unsubscribe();
@@ -69,7 +66,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   getUserFeedComment(): void {
     this.bs.busy();
-    this.subsFeedKomentar = this.us.getUserFeedComment(this.currentUser.username, '', 1, 5).subscribe({
+    this.subsFeedKomentar = this.us.getUserFeedComment(this.as.currentUserSubject.value.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_COMMENT_SUCCESS]', res);
         this.feedKomentarData = res.results;
@@ -84,7 +81,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   getUserFeedLikeDislike(): void {
     this.bs.busy();
-    this.subsFeedLikeDislike = this.us.getUserFeedLikeDislike(this.currentUser.username, '', 1, 5).subscribe({
+    this.subsFeedLikeDislike = this.us.getUserFeedLikeDislike(this.as.currentUserSubject.value.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_LIKEDISLIKE_SUCCESS]', res);
         this.feedLikeDislikeData = res.results;
@@ -99,7 +96,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   getUserFeedVisit(): void {
     this.bs.busy();
-    this.subsFeedVisit = this.us.getUserFeedVisit(this.currentUser.username, '', 1, 5).subscribe({
+    this.subsFeedVisit = this.us.getUserFeedVisit(this.as.currentUserSubject.value.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_VISIT_SUCCESS]', res);
         this.feedVisitData = res.results;

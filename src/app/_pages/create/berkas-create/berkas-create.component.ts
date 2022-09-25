@@ -8,8 +8,6 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
-import { UserModel } from '../../../../models/req-res.model';
-
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
@@ -28,8 +26,6 @@ import { DdlLampiranService } from '../../../_shared/services/ddl-lampiran.servi
   styleUrls: ['./berkas-create.component.css']
 })
 export class BerkasCreateComponent implements OnInit, OnDestroy {
-
-  currentUser: UserModel = null;
 
   fg: FormGroup;
 
@@ -67,7 +63,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   gambar = null;
   ddl = null;
 
-  subsUser = null;
   subsProject = null;
   subsFansub = null;
   subsAnimeDetail = null;
@@ -102,6 +97,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get AS(): AuthService {
+    return this.as;
+  }
+
   get GS(): GlobalService {
     return this.gs;
   }
@@ -113,7 +112,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       `Create Berkas`
     );
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.loadProjectList();
       this.initForm();
     }
@@ -134,7 +132,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       clearTimeout(this.timerTimeout);
       this.timerTimeout = null;
     }
-    this.subsUser?.unsubscribe();
     this.uploadHandler?.unsubscribe();
     this.subsProject?.unsubscribe();
     this.subsFansub?.unsubscribe();

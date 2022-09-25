@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { TaskCronJobModel, UserModel } from '../../../../models/req-res.model';
+import { TaskCronJobModel } from '../../../../models/req-res.model';
 import { ServerInfoModel } from '../../../../models/socket-io.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -17,15 +17,12 @@ import { BusyService } from '../../../_shared/services/busy.service';
 })
 export class AdminMenuComponent implements OnInit, OnDestroy {
 
-  currentUser: UserModel = null;
   settings: ServerInfoModel = null;
 
   cronJobs: TaskCronJobModel[] = [];
 
-  subsUser = null;
   subsCronJobsGet = null;
   subsCronJobsPut = null;
-  subsServer = null;
 
   constructor(
     private bs: BusyService,
@@ -38,6 +35,10 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get AS(): AuthService {
+    return this.as;
   }
 
   get GS(): GlobalService {
@@ -54,17 +55,13 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
-      this.subsServer = this.ss.currentServer.subscribe({ next: async server => this.settings = server });
       this.getAllTaskCronJobs();
     }
   }
 
   ngOnDestroy(): void {
-    this.subsUser?.unsubscribe();
     this.subsCronJobsGet?.unsubscribe();
     this.subsCronJobsPut?.unsubscribe();
-    this.subsServer?.unsubscribe();
   }
 
   toggleSetting(key: string, checked: boolean): void {

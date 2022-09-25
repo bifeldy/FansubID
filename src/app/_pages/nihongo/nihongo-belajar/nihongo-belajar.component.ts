@@ -4,8 +4,6 @@ import { Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { UserModel } from '../../../../models/req-res.model';
-
 import { AuthService } from '../../../_shared/services/auth.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -18,8 +16,6 @@ import { NihongoService } from '../../../_shared/services/nihongo.service';
   styleUrls: ['./nihongo-belajar.component.css']
 })
 export class NihongoBelajarComponent implements OnInit, OnDestroy {
-
-  currentUser: UserModel = null;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -63,7 +59,6 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   q = '';
 
-  subsUser = null;
   subsDialog = null;
   subsHirakata = null;
   subsAllNihongo = null;
@@ -113,11 +108,6 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({
-        next: user => {
-          this.currentUser = user;
-        }
-      });
       this.getHirakata();
       this.getAngka();
       if (!this.gs.isDarkMode) {
@@ -127,7 +117,6 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subsUser?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsHirakata?.unsubscribe();
     this.subsAllNihongo?.unsubscribe();
@@ -241,7 +230,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   editDataset(dataset): void {
     this.gs.log('[BELAJAR_DATASET_ADD_OR_EDIT_CLICK]', dataset);
-    if (this.currentUser?.verified) {
+    if (this.as.currentUserSubject.value.verified) {
       this.subsDialog = this.ds.openBelajarDialog({
         data: {
           title: (dataset ? `Edit Data` : `Tambah Dataset`),
@@ -262,8 +251,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   }
 
   addDataset(): void {
-    if (this.currentUser) {
-      if (this.currentUser.verified) {
+    if (this.as.currentUserSubject.value) {
+      if (this.as.currentUserSubject.value.verified) {
         this.editDataset(null);
       } else {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');

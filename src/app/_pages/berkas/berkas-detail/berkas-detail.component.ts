@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { UserModel } from '../../../../models/req-res.model';
-
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -23,12 +21,9 @@ import { environment } from '../../../../environments/app/environment';
 })
 export class BerkasDetailComponent implements OnInit, OnDestroy {
 
-  currentUser: UserModel = null;
-
   berkasId = '';
   berkasData = null;
 
-  subsUser = null;
   subsBerkas = null;
   subsParam = null;
 
@@ -57,6 +52,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get AS(): AuthService {
+    return this.as;
+  }
+
   get ENV(): any {
     return environment;
   }
@@ -66,7 +65,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subsUser?.unsubscribe();
     this.subsBerkas?.unsubscribe();
     this.subsParam?.unsubscribe();
   }
@@ -89,7 +87,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             );
             this.bs.idle();
             if (this.gs.isBrowser) {
-              this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
               this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);
             }
           },

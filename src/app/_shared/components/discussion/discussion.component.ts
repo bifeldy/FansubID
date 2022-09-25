@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { KomentarModel, UserModel } from '../../../../models/req-res.model';
+import { KomentarModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../services/global.service';
 import { KomentarService } from '../../services/komentar.service';
@@ -13,8 +13,6 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./discussion.component.css']
 })
 export class DiscussionComponent implements OnInit, OnDestroy {
-
-  currentUser: UserModel = null;
 
   urlPath = null;
 
@@ -31,7 +29,6 @@ export class DiscussionComponent implements OnInit, OnDestroy {
 
   @Input() komentar: KomentarModel[] = [];
 
-  subsUser = null;
   subsKomenSend = null;
   subsKomenGetKomen = null;
   subsKomenGetReply = null;
@@ -47,16 +44,18 @@ export class DiscussionComponent implements OnInit, OnDestroy {
     }
   }
 
+  get AS(): AuthService {
+    return this.as;
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.urlPath = this.router.url;
       this.getComment(true);
     }
   }
 
   ngOnDestroy(): void {
-    this.subsUser?.unsubscribe();
     this.subsKomenSend?.unsubscribe();
     this.subsKomenGetKomen?.unsubscribe();
     this.subsKomenGetReply?.unsubscribe();

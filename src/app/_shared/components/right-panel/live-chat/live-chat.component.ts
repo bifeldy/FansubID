@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { CONSTANTS } from '../../../../../constants';
 
-import { RoleModel, UserModel } from '../../../../../models/req-res.model';
+import { RoleModel } from '../../../../../models/req-res.model';
 
 import { GlobalService } from '../../../services/global.service';
 import { AuthService } from '../../../services/auth.service';
@@ -16,8 +16,6 @@ import { StatsServerService } from '../../../services/stats-server.service';
   styleUrls: ['./live-chat.component.css']
 })
 export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  currentUser: UserModel = null;
 
   @Input() chatOnly = false;
 
@@ -33,7 +31,6 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   currentRoom = null;
   messageHistory = [];
 
-  subsUser = null;
   subsCurrentRoom = null;
   subsGlobalRoom = null;
   subsFansubRoom = null;
@@ -53,6 +50,10 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  get AS(): AuthService {
+    return this.as;
+  }
+
   get ROUTER(): Router {
     return this.router;
   }
@@ -63,7 +64,6 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.liveChatResult = this.ls.getItem(this.gs.localStorageKeys.LiveChatResults, true) || this.liveChatResult;
       this.liveChatResult.roomId = this.router.url;
       this.subsCurrentRoom = this.ss.currentRoom.subscribe({
@@ -89,8 +89,8 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get isAdminModFansubber(): any {
-    if (this.currentUser) {
-      if (this.currentUser.role === RoleModel.ADMIN || this.currentUser.role === RoleModel.MODERATOR || this.currentUser.role === RoleModel.FANSUBBER) {
+    if (this.as.currentUserSubject.value) {
+      if (this.as.currentUserSubject.value.role === RoleModel.ADMIN || this.as.currentUserSubject.value.role === RoleModel.MODERATOR || this.as.currentUserSubject.value.role === RoleModel.FANSUBBER) {
         return true;
       }
     }
@@ -122,7 +122,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get canChat(): boolean {
-    if (this.currentUser) {
+    if (this.as.currentUserSubject.value) {
       if (this.liveChatResult.roomId !== CONSTANTS.socketRoomNameGlobalFansub) {
         return true;
       }
@@ -139,7 +139,6 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.ls.setItem(this.gs.localStorageKeys.LiveChatResults, this.liveChatResult);
-    this.subsUser?.unsubscribe();
     this.subsCurrentRoom?.unsubscribe();
     this.subsGlobalRoom?.unsubscribe();
     if (this.timedOut) {

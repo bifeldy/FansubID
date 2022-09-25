@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { environment } from '../../../../environments/app/environment';
 
-import { RoleModel, FansubMemberModel, UserModel } from '../../../../models/req-res.model';
+import { RoleModel, FansubMemberModel } from '../../../../models/req-res.model';
 import { Warna } from '../../../_shared/models/Warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -23,8 +23,6 @@ import { DialogService } from '../../../_shared/services/dialog.service';
   styleUrls: ['./fansub-detail.component.css']
 })
 export class FansubDetailComponent implements OnInit, OnDestroy {
-
-  currentUser: UserModel = null;
 
   fansubSlug = '';
   fansubData = null;
@@ -94,7 +92,6 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   subsFansubMemberLeave = null;
   subsDialog = null;
   subsClaimSubDomain = null;
-  subsUser = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -137,7 +134,6 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.subsFansubMemberLeave?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsClaimSubDomain?.unsubscribe();
-    this.subsUser?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -164,7 +160,6 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         );
         this.bs.idle();
         if (this.gs.isBrowser) {
-          this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
           if (Array.isArray(this.fansubData.tags)) {
             for (let i = 0; i < this.fansubData.tags.length; i++) {
               this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
@@ -380,8 +375,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             this.pendingMembers.push(m);
           }
         }
-        if (this.currentUser) {
-          const index = this.approvedMembers.findIndex(m => m.user_.id === this.currentUser.id);
+        if (this.as.currentUserSubject.value) {
+          const index = this.approvedMembers.findIndex(m => m.user_.id === this.as.currentUserSubject.value.id);
           this.joinedAsMember = index >= 0 ? this.approvedMembers[index] : null;
         }
         this.bs.idle();
@@ -466,8 +461,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   getSubDomain(): void {
-    if (this.currentUser) {
-      if (this.joinedAsMember || this.currentUser.role === RoleModel.ADMIN || this.currentUser.role === RoleModel.MODERATOR) {
+    if (this.as.currentUserSubject.value) {
+      if (this.joinedAsMember || this.as.currentUserSubject.value.role === RoleModel.ADMIN || this.as.currentUserSubject.value.role === RoleModel.MODERATOR) {
         const userInput = {
           server_target: {
             inputLabel: 'Server Target',

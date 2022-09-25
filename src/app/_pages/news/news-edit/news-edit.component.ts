@@ -7,8 +7,6 @@ import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
-import { UserModel } from '../../../../models/req-res.model';
-
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -22,8 +20,6 @@ import { AuthService } from '../../../_shared/services/auth.service';
   styleUrls: ['./news-edit.component.css']
 })
 export class NewsEditComponent implements OnInit, OnDestroy {
-
-  currentUser: UserModel = null;
 
   newsId = 0;
 
@@ -42,7 +38,6 @@ export class NewsEditComponent implements OnInit, OnDestroy {
   subsNewsUpdate = null;
   subsNewsDetail = null;
   subsImgbb = null;
-  subsUser = null;
 
   constructor(
     private fb: FormBuilder,
@@ -72,14 +67,13 @@ export class NewsEditComponent implements OnInit, OnDestroy {
       `Edit News`
     );
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.newsId = Number(this.activatedRoute.snapshot.paramMap.get('newsId'));
       this.bs.busy();
       this.subsNewsDetail = this.news.getNews(this.newsId).subscribe({
         next: res => {
           this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
           this.bs.idle();
-          if (this.currentUser.id !== res.result.user_.id) {
+          if (this.as.currentUserSubject.value.id !== res.result.user_.id) {
             this.toast.warning('Berita Ini Milik Orang Lain', 'Whoops!');
             this.router.navigateByUrl(`/news/${this.newsId}`);
           } else {
@@ -104,7 +98,6 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     this.subsNewsUpdate?.unsubscribe();
     this.subsNewsDetail?.unsubscribe();
     this.subsImgbb?.unsubscribe();
-    this.subsUser?.unsubscribe();
   }
 
   initForm(data): void {

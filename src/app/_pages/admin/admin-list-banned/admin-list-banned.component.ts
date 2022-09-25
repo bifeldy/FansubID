@@ -6,7 +6,6 @@ import { environment } from '../../../../environments/app/environment';
 import { UserModel, RoleModel } from '../../../../models/req-res.model';
 
 import { AdminService } from '../../../_shared/services/admin.service';
-import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -23,7 +22,6 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
   subsBannedGet = null;
   subsBannedDelete = null;
   subsDialog = null;
-  subsUser = null;
 
   count = 0;
   page = 1;
@@ -41,7 +39,6 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private adm: AdminService,
-    private as: AuthService,
     private bs: BusyService,
     private ds: DialogService,
     private gs: GlobalService,
@@ -53,7 +50,6 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.getBan();
     }
   }
@@ -62,7 +58,6 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     this.subsBannedGet?.unsubscribe();
     this.subsBannedDelete?.unsubscribe();
     this.subsDialog?.unsubscribe();
-    this.subsUser?.unsubscribe();
   }
 
   getBan(): void {

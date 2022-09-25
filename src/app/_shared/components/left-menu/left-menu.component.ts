@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { UserModel } from '../../../../models/req-res.model';
-
 import { onSideNavChange, animateText } from '../../animations/anim-side-menu';
 
 import { LeftMenuService } from '../../services/left-menu.service';
@@ -21,9 +19,6 @@ import { Menu } from '../../models/Menu';
 })
 export class LeftMenuComponent implements OnInit, OnDestroy {
 
-  currentUser: UserModel = null;
-
-  subsUser = null;
   subsDialog = null;
 
   constructor(
@@ -37,6 +32,10 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       //
     }
+  }
+
+  get AS(): AuthService {
+    return this.as;
   }
 
   get GS(): GlobalService {
@@ -56,13 +55,12 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subsUser?.unsubscribe();
     this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
+      //
     }
   }
 

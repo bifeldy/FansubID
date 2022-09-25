@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { RoleModel, UserModel } from '../../../../models/req-res.model';
+import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
@@ -18,14 +18,11 @@ import { StatsServerService } from '../../../_shared/services/stats-server.servi
 })
 export class AdminListUserComponent implements OnInit, OnDestroy {
 
-  currentUser: UserModel = null;
-
   subsUserGet = null;
   subsUserDelete = null;
   subsPromote = null;
   subsDialog = null;
   subsBannedGet = null;
-  subsUser = null;
 
   count = 0;
   page = 1;
@@ -57,7 +54,6 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.subsUser = this.as.currentUser.subscribe({ next: user => this.currentUser = user });
       this.getUser();
     }
   }
@@ -68,7 +64,6 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     this.subsPromote?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsBannedGet?.unsubscribe();
-    this.subsUser?.unsubscribe();
   }
 
   getUser(): void {
@@ -87,10 +82,10 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
             this.gs.log('[BANNED_LIST_SUCCESS]', res);
             const userDataRow = [];
             let excludedRole = [];
-            if (this.currentUser.role === RoleModel.ADMIN) {
+            if (this.as.currentUserSubject.value.role === RoleModel.ADMIN) {
               excludedRole = [RoleModel.ADMIN];
             }
-            if (this.currentUser.role === RoleModel.MODERATOR) {
+            if (this.as.currentUserSubject.value.role === RoleModel.MODERATOR) {
               excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
             }
             for (const r of res.results) {
@@ -104,7 +99,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 banned: (Object.keys(result.results[r.id]).length > 0),
                 Aksi: (
                   (Object.keys(result.results[r.id]).length > 0) ||
-                  (r.id === this.currentUser.id) ||
+                  (r.id === this.as.currentUserSubject.value.id) ||
                   this.gs.includesOneOf(r.role, excludedRole)
                 ) ? [] : [
                   { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username },
@@ -149,7 +144,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
         input: {
           reason: {
             inputLabel: 'Alasan',
-            inputText: `Manually Banned By ${this.currentUser.role}`,
+            inputText: `Manually Banned By ${this.as.currentUserSubject.value.role}`,
           }
         },
         confirmText: 'Ya, BAN Akun',

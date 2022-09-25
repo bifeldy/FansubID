@@ -93,15 +93,15 @@
     <div class="col-lg-4 col-xl-3">
       <div class="row sticky-top">
         <div class="col-12">
-          <div class="row" *ngIf="currentUser">
+          <div class="row" *ngIf="AS.currentUserSubject.value">
             <div class="col-12 sticky-top bg-bifeldy">
               <h2 class="pt-3 border-bottom-dotted">
                 <b class="text-bifeldy" matTooltip="Khusus Pengguna Terverifikasi">Alamat Email</b>
               </h2>
             </div>
             <div class="col-12 mb-2">
-              <button mat-button class="w-100" color="accent" matTooltip="Akan Diteruskan Ke => {{ currentUser.__email }}">
-                <mat-icon class="me-1">email</mat-icon> '{{ currentUser.username }}@{{ ENV.domain }}'
+              <button mat-button class="w-100" color="accent" matTooltip="Akan Diteruskan Ke => {{ AS.currentUserSubject.value.__email }}">
+                <mat-icon class="me-1">email</mat-icon> '{{ AS.currentUserSubject.value.username }}@{{ ENV.domain }}'
               </button>
             </div>
           </div>
