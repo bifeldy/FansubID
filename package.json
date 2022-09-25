@@ -10,7 +10,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev:ssr": "ng run fansubid:serve-ssr",
@@ -21,7 +21,7 @@
     "lint": "ng lint",
     "bifeldy:install": "npm install --legacy-peer-deps",
     "bifeldy:prerender": "npm run prerender",
-    "bifeldy:angular-dev": "node --max_old_space_size=4096 node_modules\\@angular\\cli\\bin\\ng build",
+    "bifeldy:angular-dev": "node --max_old_space_size=4096 node_modules\\@angular\\cli\\bin\\ng build --configuration development",
     "bifeldy:angular-prod": "ng build --configuration production",
     "bifeldy:express": "ng run fansubid:server:production",
     "bifeldy:dev": "node --max_old_space_size=4096 node_modules\\@angular\\cli\\bin\\ng run fansubid:serve-ssr",
