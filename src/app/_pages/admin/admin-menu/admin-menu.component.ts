@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TaskCronJobModel } from '../../../../models/req-res.model';
-import { ServerInfoModel } from '../../../../models/socket-io.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AdminService } from '../../../_shared/services/admin.service';
@@ -16,8 +15,6 @@ import { BusyService } from '../../../_shared/services/busy.service';
   styleUrls: ['./admin-menu.component.css']
 })
 export class AdminMenuComponent implements OnInit, OnDestroy {
-
-  settings: ServerInfoModel = null;
 
   cronJobs: TaskCronJobModel[] = [];
 

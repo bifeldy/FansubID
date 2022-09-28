@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 
 import { environment } from '../../../../environments/app/environment';
 
-import { UserModel, RoleModel } from '../../../../models/req-res.model';
+import { RoleModel } from '../../../../models/req-res.model';
 
 import { AdminService } from '../../../_shared/services/admin.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -16,8 +17,6 @@ import { GlobalService } from '../../../_shared/services/global.service';
   styleUrls: ['./admin-list-banned.component.css']
 })
 export class AdminListBannedComponent implements OnInit, OnDestroy {
-
-  currentUser: UserModel = null;
 
   subsBannedGet = null;
   subsBannedDelete = null;
@@ -42,6 +41,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private ds: DialogService,
     private gs: GlobalService,
+    private as: AuthService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -72,10 +72,10 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
         this.count = res.count;
         const bannedDataRow = [];
         let excludedRole = [];
-        if (this.currentUser.role === RoleModel.ADMIN) {
+        if (this.as.currentUserSubject?.value?.role === RoleModel.ADMIN) {
           excludedRole = [RoleModel.ADMIN];
         }
-        if (this.currentUser.role === RoleModel.MODERATOR) {
+        if (this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR) {
           excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
         }
         for (const r of res.results) {
