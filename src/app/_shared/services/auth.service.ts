@@ -14,8 +14,8 @@ import { LocalStorageService } from './local-storage.service';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  currentUserSubject: BehaviorSubject<UserModel>;
-  currentUser: Observable<UserModel>;
+  currentUserSubject: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(null);
+  currentUser: Observable<UserModel> = this.currentUserSubject.asObservable();
 
   token = null;
 
@@ -27,8 +27,6 @@ export class AuthService {
     private api: ApiService
   ) {
     if (this.gs.isBrowser) {
-      this.currentUserSubject = new BehaviorSubject<UserModel>(null);
-      this.currentUser = this.currentUserSubject.asObservable();
       this.token = this.ls.getItem(this.gs.localStorageKeys.token);
       this.ls.removeItem(this.gs.localStorageKeys.token);
     }

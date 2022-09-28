@@ -2,16 +2,12 @@ import { Injectable } from '@angular/core';
 
 import { environment } from '../../../environments/app/environment';
 
-import { UserModel } from '../../../models/req-res.model';
-
 import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationsService {
-
-  currentUser: UserModel = null;
 
   notifications = [];
 
