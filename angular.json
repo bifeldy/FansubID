@@ -74,7 +74,7 @@
               "./node_modules/kuroshiro/dist/kuroshiro.js",
               "./node_modules/kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.js",
               "./node_modules/p2p-graph/example/p2p-graph.js",
-              "./node_modules/viewerjs/dist/viewer.js"
+              "./node_modules/viewerjs/dist/viewer.min.js"
             ],
             "allowedCommonJsDependencies": [
               "@videojs/xhr",
@@ -185,7 +185,7 @@
               "./node_modules/kuroshiro/dist/kuroshiro.js",
               "./node_modules/kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.js",
               "./node_modules/p2p-graph/example/p2p-graph.js",
-              "./node_modules/viewerjs/dist/viewer.js"
+              "./node_modules/viewerjs/dist/viewer.min.js"
             ]
           }
         },
