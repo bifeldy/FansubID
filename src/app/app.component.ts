@@ -30,6 +30,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:contextmenu', ['$event']) windowRightClick;
   @HostListener('window:click', ['$event']) windowLeftClick;
+  @HostListener('window:dblclick', ['$event']) windowDoubleClick;
   @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
 
   @HostListener('window:resize', ['$event'])
@@ -194,6 +195,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.checkStorage();
       this.windowRightClick = this.onWindowRightClick;
       this.windowLeftClick = this.onWindowLeftClick;
+      this.windowDoubleClick = this.onWindowDoubleClick;
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
       const aturanTatib = this.ls.getItem(this.gs.localStorageKeys.AturanTatib) === 'true';
       if (!aturanTatib) {
@@ -251,23 +253,29 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       const externalUri: string = el.getAttribute('href');
       if (externalUri) {
         if (
-          this.gs.gridListBreakpoint >= 2 &&
+          this.gs.isDesktop &&
           this.gs.includesOneOf(externalUri, ['http', 'ftp', 'mailto']) &&
           !externalUri.includes(environment.baseUrl)
         ) {
-          ev.preventDefault();
-          ev.stopPropagation();
+          e.preventDefault();
+          e.stopPropagation();
           this.winboxOpenUri(externalUri);
           return false;
         }
       }
-    } else if (el.tagName === 'IMG' || el.tagName === 'img') {
-      ev.preventDefault();
-      ev.stopPropagation();
-      this.viewer.viewImage(el);
-      return false;
     }
     return true;
+  }
+
+  onWindowDoubleClick(ev): any {
+    this.gs.log('[MOUSE_DOUBLE_CLICK]', ev);
+    const e = ev || window.event;
+    const el = e.target || e.srcElement;
+    if (el.tagName === 'IMG' || el.tagName === 'img') {
+      if (this.gs.isDesktop) {
+        this.viewer.viewImage(el);
+      }
+    }
   }
 
   onWindowBeforeUnloaded(ev): any {
