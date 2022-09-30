@@ -11,6 +11,8 @@ declare const Viewer: typeof viewerjs;
 })
 export class ViewerService {
 
+  currentViewer = null;
+
   constructor(
     private gs: GlobalService
   ) {
@@ -20,30 +22,31 @@ export class ViewerService {
   }
 
   viewImage(htmlElement: HTMLElement): void {
-    new Viewer(
+    this.currentViewer = new Viewer(
       htmlElement,
       {
         url: 'src',
-        navbar: true,
+        navbar: false,
         title: true,
         toolbar: {
-          zoomIn: 1,
-          zoomOut: 1,
-          oneToOne: 1,
-          reset: 1,
-          prev: 1,
+          zoomIn: true,
+          zoomOut: true,
+          oneToOne: true,
+          reset: true,
+          prev: false,
           play: {
-            show: 1,
+            show: false,
             size: 'large'
           },
-          next: 1,
-          rotateLeft: 1,
-          rotateRight: 1,
-          flipHorizontal: 1,
-          flipVertical: 1
+          next: false,
+          rotateLeft: true,
+          rotateRight: true,
+          flipHorizontal: true,
+          flipVertical: true
         },
         ready: (e) => {
           this.gs.log('[VIEWERJS]', e.type);
+          this.currentViewer.show();
         },
         show: (e) => {
           this.gs.log('[VIEWERJS]', e.type);
@@ -92,6 +95,8 @@ export class ViewerService {
         },
         hidden: (e) => {
           this.gs.log('[VIEWERJS]', e.type);
+          this.currentViewer.destroy();
+          this.currentViewer = null;
         },
       }
     );
