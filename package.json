@@ -111,6 +111,7 @@
     "tslib": "^2.4.0",
     "typeorm": "^0.2.38",
     "video.js": "^7.18.1",
+    "viewerjs": "^1.10.5",
     "wanakana": "^5.0.0",
     "webtorrent": "^1.5.8",
     "webtorrent-health": "^1.1.2",

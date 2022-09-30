@@ -18,6 +18,7 @@ import { WinboxService } from './_shared/services/winbox.service';
 import { LocalStorageService } from './_shared/services/local-storage.service';
 import { DialogService } from './_shared/services/dialog.service';
 import { ServiceWorkerService } from './_shared/services/service-worker.service';
+import { ViewerService } from './_shared/services/viewer.service.';
 
 @Component({
   selector: 'app-root',
@@ -63,7 +64,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private ss: StatsServerService,
     private wb: WinboxService,
     private ds: DialogService,
-    private sw: ServiceWorkerService
+    private sw: ServiceWorkerService,
+    private viewer: ViewerService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -253,12 +255,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           this.gs.includesOneOf(externalUri, ['http', 'ftp', 'mailto']) &&
           !externalUri.includes(environment.baseUrl)
         ) {
-          this.winboxOpenUri(externalUri);
           ev.preventDefault();
           ev.stopPropagation();
+          this.winboxOpenUri(externalUri);
           return false;
         }
       }
+    } else if (el.tagName === 'IMG' || el.tagName === 'img') {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.viewer.viewImage(el);
+      return false;
     }
     return true;
   }

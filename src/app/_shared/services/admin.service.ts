@@ -30,7 +30,7 @@ export class AdminService {
     },
     {
       url: 'dns',
-      name: 'CNAME / A Record DNS',
+      name: 'CNAME / A Record',
       image_url: null,
       icon: 'badge',
       deskripsi: `sub-domain.${environment.domain}`
