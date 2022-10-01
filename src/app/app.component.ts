@@ -211,6 +211,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }, 2000);
       }
+      this.injectServerTimeClock();
     }
   }
 
@@ -287,6 +288,47 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   winboxOpenUri(uri: string): void {
     this.wb.winboxOpenUri(uri);
+  }
+
+  injectServerTimeClock(): void {
+    if (this.gs.isDesktop) {
+      const backdrop = this.gs.document.getElementsByClassName('mat-drawer-backdrop');
+      if (backdrop.length > 0) {
+        const drawerBackdrop = backdrop[0];
+        drawerBackdrop.innerHTML = `
+          <div class="row align-items-center h-100">
+            <div class="col-9 mx-auto text-bifeldy text-center">
+              <h1 id="clock">~ Kalender (｡>﹏<｡) Server ~</h1>
+              <h1 id="serverDate"></h1>
+              <h1 id="serverTime"></h1>
+            </div>
+          </div>
+        `;
+        const script = this.gs.document.createElement('script');
+        script.textContent = `
+          function runCalendar() {
+            const calendar = new Date();
+            const serverTime = document.getElementById('serverTime');
+            serverTime.innerHTML = calendar.toLocaleTimeString('ja-JP', {
+              timeZone: 'Asia/Tokyo',
+              timeZoneName: 'longGeneric'
+            });
+            const serverDate = document.getElementById('serverDate');
+            serverDate.innerHTML = calendar.toLocaleDateString('id-ID', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              timeZone: 'Asia/Tokyo'
+            });
+            setTimeout(runCalendar, 1000);
+          }
+          runCalendar();
+        `;
+        const clock = this.gs.document.getElementById('clock');
+        clock.append(script);
+      }
+    }
   }
 
 }
