@@ -198,8 +198,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.windowDoubleClick = this.onWindowDoubleClick;
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
       const aturanTatib = this.ls.getItem(this.gs.localStorageKeys.AturanTatib) === 'true';
-      if (!aturanTatib) {
-        this.timedOut = setTimeout(async () => {
+      this.timedOut = setTimeout(async () => {
+        if (!aturanTatib) {
           this.subsDialog = (await this.ds.openAturanTatibDialog()).afterClosed().subscribe({
             next: re => {
               this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
@@ -209,9 +209,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               this.subsDialog.unsubscribe();
             }
           });
-        }, 2000);
-      }
-      this.injectServerTimeClock();
+        }
+        this.injectServerTimeClock();
+      }, 1234);
     }
   }
 
