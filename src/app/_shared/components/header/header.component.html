@@ -16,11 +16,11 @@
     {{ myPoints }}
   </button>
 
-  <button mat-icon-button (click)="toggleWeather()" matTooltip="Weather Effect" *ngIf="GS.weatherEffect">
+  <button class="animate__animated animate__tada animate__infinite animate__slower" mat-icon-button (click)="toggleWeather()" matTooltip="Weather Effect" *ngIf="GS.weatherEffect">
     <mat-icon>filter_vintage</mat-icon>
   </button>
 
-  <button mat-icon-button (click)="toggleDarkTheme()" matTooltip="Ganti Warna">
+  <button class="animate__animated animate__flash animate__infinite animate__slower" mat-icon-button (click)="toggleDarkTheme()" matTooltip="Ganti Warna">
     <mat-icon>nights_stay</mat-icon>
   </button>
 
@@ -34,7 +34,7 @@
     <mat-icon>apps</mat-icon>
   </button>
 
-  <button mat-icon-button (click)="openSearch()" matTooltip="Pencarian">
+  <button class="animate__animated animate__heartBeat animate__infinite animate__slower" mat-icon-button (click)="openSearch()" matTooltip="Pencarian">
     <mat-icon>search</mat-icon>
   </button>
 

@@ -297,14 +297,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         const drawerBackdrop = backdrop[0];
         drawerBackdrop.innerHTML = `
           <div class="row align-items-center h-100">
-            <div class="col-9 mx-auto text-bifeldy text-center">
-              <h1 id="clock">~ Kalender (｡>﹏<｡) Server ~</h1>
+            <div class="col-9 mx-auto text-light text-center">
+              <h1>~ Kalender (｡>﹏<｡) Server ~</h1>
               <h1 id="serverDate"></h1>
               <h1 id="serverTime"></h1>
             </div>
           </div>
         `;
         const script = this.gs.document.createElement('script');
+        script.type = 'text/javascript';
         script.textContent = `
           function runCalendar() {
             const calendar = new Date();
@@ -325,8 +326,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           runCalendar();
         `;
-        const clock = this.gs.document.getElementById('clock');
-        clock.append(script);
+        this.gs.document.head.appendChild(script);
       }
     }
   }

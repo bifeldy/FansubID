@@ -20,7 +20,9 @@
             <mat-form-field class="pt-3 col-4 col-lg-2">
               <mat-label>Tahun</mat-label>
               <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" formControlName="currentDate" />
-              <mat-datepicker-toggle matSuffix [for]="picker" class="shiny"></mat-datepicker-toggle>
+              <mat-datepicker-toggle matSuffix [for]="picker" class="shiny">
+                <mat-icon matDatepickerToggleIcon class="animate__animated animate__swing animate__infinite animate__slower">today</mat-icon>
+              </mat-datepicker-toggle>
               <mat-datepicker #picker startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)" disabled="false"></mat-datepicker>
             </mat-form-field>
             <mat-form-field class="ms-auto pt-3 col-4 col-lg-2" [color]="'accent'">
