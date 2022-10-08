@@ -87,7 +87,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       description: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       born: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       active: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      slug: [null, Validators.compose([Validators.required, Validators.pattern(/^[a-zA-Z-]*$/)])],
+      slug: [null, Validators.compose([Validators.required, Validators.pattern(/^[0-9a-zA-Z-]*$/)])],
       tags: [[], Validators.compose([])],
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       cover: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],

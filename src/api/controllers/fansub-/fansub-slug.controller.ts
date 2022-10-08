@@ -21,7 +21,7 @@ export class FansubSlugController {
   async checkSlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('slug' in req.body && req.body.slug) {
-        const slug = req.body.slug.replace(/[^a-zA-Z-]/g, '').toLowerCase();
+        const slug = req.body.slug.replace(/[^0-9a-zA-Z-]/g, '').toLowerCase();
         if (CONSTANTS.blacklistedWords.includes(slug)) {
           return {
             info: '😅 202 - Fansub API :: Cek Fansub Slug Gagal 🥰',
