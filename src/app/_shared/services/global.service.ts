@@ -52,6 +52,7 @@ export class GlobalService {
   isDevMode = true;
   isDarkMode = false;
 
+  weather = null;
   weatherEffect = null;
   weatherRunning = false;
 
@@ -250,9 +251,9 @@ export class GlobalService {
 
   weatherJS(): void {
     const currentMonth = new Date().getMonth() + 1;
-    const weather = this.seasonalWeather.find(sB => sB.id === Math.ceil(currentMonth / 3));
-    if (weather?.cssClassName) {
-      this.weatherEffect = new Sakura('body', { className: weather.cssClassName, lifeTime: 12589 });
+    this.weather = this.seasonalWeather.find(sB => sB.id === Math.ceil(currentMonth / 3));
+    if (this.weather?.cssClassName) {
+      this.weatherEffect = new Sakura('body', { className: this.weather.cssClassName, lifeTime: 12589 });
       this.weatherRunning = true;
     }
   }

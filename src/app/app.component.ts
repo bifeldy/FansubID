@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationStart } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
 
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   timedOut = null;
 
   constructor(
+    private snackBar: MatSnackBar,
     private renderer: Renderer2,
     private router: Router,
     private route: ActivatedRoute,
@@ -197,8 +199,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.windowLeftClick = this.onWindowLeftClick;
       this.windowDoubleClick = this.onWindowDoubleClick;
       this.windowBeforeUnloaded = this.onWindowBeforeUnloaded;
-      const aturanTatib = this.ls.getItem(this.gs.localStorageKeys.AturanTatib) === 'true';
       this.timedOut = setTimeout(async () => {
+        const aturanTatib = this.ls.getItem(this.gs.localStorageKeys.AturanTatib) === 'true';
         if (!aturanTatib) {
           this.subsDialog = (await this.ds.openAturanTatibDialog()).afterClosed().subscribe({
             next: re => {
@@ -211,7 +213,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }
         this.injectServerTimeClock();
+        if (this.gs.weather) {
+          this.snackBar.open('Gunakan Menu Di Kanan Atas Untuk Mematikan Efek Musiman!', 'Ok');
+        }
       }, 1234);
+
     }
   }
 

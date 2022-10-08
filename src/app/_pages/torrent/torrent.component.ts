@@ -3,17 +3,18 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ToastrService } from 'ngx-toastr';
 import { saveAs } from 'file-saver';
+
+import { environment } from '../../../environments/app/environment';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { TorrentService } from '../../_shared/services/torrent.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 import { StatsServerService } from '../../_shared/services/stats-server.service';
 import { BusyService } from '../../_shared/services/busy.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { environment } from '../../../environments/app/environment';
 
 declare const P2PGraph: any;
 
@@ -114,7 +115,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
   copyMagnetHashToClipboard(magnetHash: string): void {
     const copyResult = this.clipboard.copy(magnetHash);
     if (copyResult) {
-      this.snackBar.open('Link Magnet Hash Berhasil Disalin!');
+      this.snackBar.open('Link Magnet Hash Berhasil Disalin!', 'Ok');
     }
   }
 
