@@ -85,12 +85,9 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-12 text-end">
-                <button mat-button color="accent" (click)="prevDns()" [disabled]="dnsPage <= 1">
-                  <mat-icon>navigate_before</mat-icon>
-                </button>
-                <button mat-button color="accent" (click)="nextDns()" [disabled]="dnsPage >= dnsTotalPages">
-                  <mat-icon>navigate_next</mat-icon>
+              <div class="col-12 text-end py-3">
+                <button mat-button color="accent" (click)="loadNextPage()" [disabled]="pageFinished">
+                  Load More ...
                 </button>
               </div>
             </div>

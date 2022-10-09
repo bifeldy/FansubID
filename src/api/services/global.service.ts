@@ -117,4 +117,16 @@ export class GlobalService {
     return ipOrigin;
   }
 
+  cleanUpUrlStringRecord(text: string): string {
+    if (text.startsWith('http://')) {
+      text = text.slice(7, text.length);
+    } else if (text.startsWith('https://')) {
+      text = text.slice(8, text.length);
+    }
+    if (text.startsWith('www.')) {
+      text = text.slice(4, text.length);
+    }
+    return text;
+  }
+
 }

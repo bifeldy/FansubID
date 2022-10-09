@@ -13,15 +13,17 @@ import { Roles } from '../../decorators/roles.decorator';
 import { VerifiedOnly } from '../../decorators/verified.decorator';
 
 import { FansubService } from '../../repository/fansub.service';
+import { FansubMemberService } from '../../repository/fansub-member.service';
 
 import { CloudflareService } from '../../services/cloudflare.service';
-import { FansubMemberService } from '../../repository/fansub-member.service';
+import { GlobalService } from '../../services/global.service';
 
 @Controller('/fansub-dns')
 export class FansubDnsController {
 
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
+    private gs: GlobalService,
     private cfs: CloudflareService,
     private fansubRepo: FansubService,
     private fansubMemberRepo: FansubMemberService
@@ -164,21 +166,18 @@ export class FansubDnsController {
             }, HttpStatus.FORBIDDEN);
           }
         }
-        let serverTarget: string = req.body.server_target;
-        if (serverTarget.startsWith('http://')) {
-          serverTarget = serverTarget.slice(7, serverTarget.length);
-        } else if (serverTarget.startsWith('https://')) {
-          serverTarget = serverTarget.slice(8, serverTarget.length);
-        }
-        if (serverTarget.startsWith('www.')) {
-          serverTarget = serverTarget.slice(4, serverTarget.length);
-        }
+        let serverTarget: string = this.gs.cleanUpUrlStringRecord(req.body.server_target);
         let recordType = 'CNAME';
         if (serverTarget.match(CONSTANTS.regexIpAddress)) {
           recordType = 'A';
         }
         const dns = await this.cfs.createDns(fansub.slug, serverTarget, recordType);
         if (dns.status >= 200 && dns.status < 300) {
+          let verification_name: string = this.gs.cleanUpUrlStringRecord(req.body.verification_name);
+          let verification_target: string = this.gs.cleanUpUrlStringRecord(req.body.verification_target);
+          if (verification_target && verification_target && serverTarget === 'ghs.google.com') {
+            await this.cfs.createDns(verification_name, verification_target, 'CNAME');
+          }
           fansub.dns_id = dns.result.id;
           const fansubUrls = JSON.parse(fansub.urls);
           if (fansubUrls && Array.isArray(fansubUrls)) {

@@ -466,7 +466,15 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         const userInput = {
           server_target: {
             inputLabel: 'Server Target',
-            inputText: `ghs.google.com`,
+            inputText: `ghs.google.com`
+          },
+          verification_name: {
+            inputLabel: 'Tambahan Khusus Blogger :: Name',
+            inputText: `blablabla-name`
+          },
+          verification_target: {
+            inputLabel: 'Tambahan Khusus Blogger :: Target',
+            inputText: `blablabla-target.dv.googlehosted.com`
           }
         };
         this.subsDialog = this.ds.openInputDialog({
@@ -484,7 +492,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
               this.bs.busy();
               this.subsClaimSubDomain = this.fansub.claimSubDomain({
                 slug: this.fansubSlug,
-                server_target: re.server_target?.inputText || null
+                server_target: re.server_target?.inputText || null,
+                verification_name: re.verification_name?.inputText || null,
+                verification_target: re.verification_target?.inputText || null
               }).subscribe({
                 next: res => {
                   this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_SUCCESS]', res);

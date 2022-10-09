@@ -16,8 +16,8 @@ export class DocsComponent implements OnInit {
   dnsData = [];
   tutorialData = null;
 
-  dnsTotalPages = 1;
-  dnsPage = 1;
+  page = 1;
+  pageFinished = false;
 
   subsDns = null;
   subsTutorial = null;
@@ -49,11 +49,20 @@ export class DocsComponent implements OnInit {
   }
 
   getDns(): void {
-    this.subsDns = this.fansub.getAllSubDomain('', this.dnsPage).subscribe({
+    this.subsDns = this.fansub.getAllSubDomain('', this.page).subscribe({
       next: res => {
         this.gs.log('[DNSS_LIST_SUCCESS]', res);
-        this.dnsTotalPages = res.pages;
-        this.dnsData = res.results;
+        const records = [];
+        for (const rec of res.results) {
+          if (rec.content.includes('dv.googlehosted.com')) {
+            continue;
+          }
+          records.push(rec);
+        }
+        this.dnsData = [...this.dnsData, ...records];
+        if (res.results.length <= 0) {
+          this.pageFinished = true;
+        }
       },
       error: err => {
         this.gs.log('[DNSS_LIST_ERROR]', err, 'error');
@@ -73,17 +82,11 @@ export class DocsComponent implements OnInit {
     });
   }
 
-  prevDns(): void {
-    this.dnsPage--;
-    if (this.dnsPage <= 0) {
-      this.dnsPage = 1;
+  loadNextPage(): void {
+    if (!this.pageFinished) {
+      this.page++;
+      this.getDns();
     }
-    this.getDns();
-  }
-
-  nextDns(): void {
-    this.dnsPage++;
-    this.getDns();
   }
 
 }
