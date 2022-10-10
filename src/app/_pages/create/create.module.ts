@@ -11,6 +11,8 @@ import { CONSTANTS } from '../../../constants';
 import { VerifiedGuard } from '../../_shared/guards/verified.guard';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
+
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
 import { BerkasCreateComponent } from '../create/berkas-create/berkas-create.component';
@@ -81,7 +83,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     MaterialFileInputModule,
     NotificationsModule,
-    AngularEditorModule
+    AngularEditorModule,
+    CustomPipeModule
   ]
 })
 export class CreateModule { }

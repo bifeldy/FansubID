@@ -162,8 +162,8 @@
                 <div class="row" *ngIf="AS.currentUserSubject?.value?.verified">
                   <mat-form-field appearance="outline" class="px-3 pt-3 col" [color]="'accent'">
                     <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
-                    <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event, ddl)" #ddl [disabled]="attachmentIsUploading || attachmentIsCompleted"
-                      [accept]="'video/x-matroska, video/mp4'"></ngx-mat-file-input>
+                    <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event, ddl)" #ddl [disabled]="attachmentSelected !== null"
+                      [accept]="'video/x-matroska, video/mp4'" uploadx (state)="onState($any($event))"></ngx-mat-file-input>
                     <mat-icon matSuffix>attach_file</mat-icon>
                   </mat-form-field>
                   <mat-error class="px-4 w-100">
@@ -172,17 +172,17 @@
                     </small>
                   </mat-error>
                 </div>
-                <div class="row mb-4" *ngIf="attachment">
+                <div class="row mb-4" *ngFor="let item of uploads$ | async">
                   <div class="col">
-                    <div class="px-3" *ngIf="attachmentIsUploading || attachmentIsCompleted">
-                      {{ attachmentPercentage >= 100 ? 'Selesai Mengunggah ... '  : 'Sedang Mengunggah ... ' }}
-                      {{ attachmentPercentage }}% @ {{ attachmentSpeed }} KB/s
+                    <div class="px-3">
+                      {{ item.status }} :: {{ item.progress }}% @ {{ item.speed | bytes }}/s
                       <br />
-                      <mat-progress-bar [mode]="attachmentMode" [value]="attachmentPercentage"></mat-progress-bar>
+                      <mat-progress-bar [mode]="'determinate'" [value]="item.progress"></mat-progress-bar>
                     </div>
                   </div>
-                  <div class="col-6 col-lg-4" *ngIf="!attachmentIsUploading && !attachmentIsCompleted">
-                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitAttachment()">
+                  <div class="col-6 col-lg-4">
+                    <button mat-raised-button class="w-100" color="primary" type="button"
+                      [disabled]="submitted || item.status === 'complete' || item.status === 'uploading'" (click)="submitAttachment(item)">
                       <mat-icon class="me-1">attachment</mat-icon>
                       Unggah
                     </button>
@@ -247,7 +247,7 @@
                     </a>
                   </div>
                   <div class="col-12 col-md-3 pb-3">
-                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || attachmentIsUploading">
+                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || attachmentSelected?.status === 'uploading'">
                       Simpan
                       <mat-icon class="ms-1">save</mat-icon>
                     </button>

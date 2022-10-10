@@ -1,9 +1,10 @@
 // NodeJS Library
 import { readdirSync } from 'node:fs';
 
-import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { DiskFile } from '@uploadx/core';
+
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
 
@@ -93,39 +94,16 @@ export class AttachmentController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
-  @UseInterceptors(
-    FileInterceptor(
-      'file',
-      {
-        dest: environment.uploadFolder,
-        fileFilter: (req, file, cb) => {
-          if (file) {
-            const typeArray = file.mimetype.split('/');
-            const fileType = typeArray[0];
-            const fileExt = typeArray[1];
-            if ((fileType === 'video' || fileType === 'application') && file) {
-              if (fileExt === 'mp4' || fileExt === 'x-matroska' || fileExt === 'pdf') {
-                return cb(null, true);
-              }
-            }
-          }
-          return cb(null, false);
-        },
-        limits: {
-          fileSize: CONSTANTS.fileSizeAttachmentLimit
-        }
-      }
-    )
-  )
   async uploadLampiran(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const file = req.body as DiskFile;
     try {
-      if (req.file) {
+      if (file) {
         const user: UserModel = res.locals['user'];
         const tempAttachment = this.tempAttachmentRepo.new();
-        tempAttachment.name = req.file.filename;
-        tempAttachment.ext = req.file.originalname.split('.').pop().toLowerCase();
-        tempAttachment.size = req.file.size;
-        tempAttachment.mime = req.file.mimetype;
+        tempAttachment.name = file.id;
+        tempAttachment.ext = file.originalName.split('.').pop().toLowerCase();
+        tempAttachment.size = file.size;
+        tempAttachment.mime = file.metadata.mimeType;
         tempAttachment.user_ = user;
         const resAttachmentSave = await this.tempAttachmentRepo.save(tempAttachment);
         if ('user_' in resAttachmentSave && resAttachmentSave.user_) {
@@ -158,7 +136,7 @@ export class AttachmentController {
       }
       throw new Error('Data Tidak Lengkap!');
     } catch (error) {
-      this.gs.deleteAttachment(req.file.filename);
+      this.gs.deleteAttachment(file.id);
       if (error instanceof HttpException) throw error;
       throw new HttpException({
         info: '🙄 400 - Temp Attachment API :: Gagal Mengunggah Lampiran 😪',

@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ProgressBarMode } from '@angular/material/progress-bar';
 
+import { Observable } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
+import { Uploader, UploadState, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -18,7 +19,6 @@ import { BerkasService } from '../../../_shared/services/berkas.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
-import { DdlLampiranService } from '../../../_shared/services/ddl-lampiran.service';
 
 @Component({
   selector: 'app-berkas-create',
@@ -26,6 +26,8 @@ import { DdlLampiranService } from '../../../_shared/services/ddl-lampiran.servi
   styleUrls: ['./berkas-create.component.css']
 })
 export class BerkasCreateComponent implements OnInit, OnDestroy {
+
+  uploads$: Observable<Uploader[]>;
 
   fg: FormGroup;
 
@@ -45,18 +47,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   animeCheckOrAddResponse = null;
   doramaCheckOrAddResponse = null;
 
-  attachment = null;
-  attachmentPercentage = 0;
-  attachmentIsUploading = false;
-  attachmentIsCompleted = false;
+  attachmentSelected: Uploader = null;
   attachmentErrorText = '';
 
-  uploadHandler = null;
   uploadToast = null;
-
-  attachmentPreviousLoaded = null;
-  attachmentSpeed = 0;
-  attachmentMode: ProgressBarMode = 'indeterminate';
 
   timerTimeout = null;
 
@@ -90,7 +84,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     private toast: ToastrService,
     private gs: GlobalService,
     private as: AuthService,
-    private dls: DdlLampiranService
+    private uploadService: UploadxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -114,17 +108,38 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.loadProjectList();
       this.initForm();
+      this.uploads$ = this.uploadService.connect();
+      this.uploadService.events.subscribe({
+        next: state => {
+          this.gs.log('[UPLOAD_EVENTS]', state);
+          if (state.status === 'complete') {
+            this.gs.log('[UPLOAD_COMPLETED]', state.response);
+            this.fg.controls['attachment_id'].patchValue(state.response.result.id);
+            this.uploadToast = this.toast.warning(
+              `Segera Kirim Data Berkas Anda!`,
+              `Lampiran Akan Dihapus ...`,
+              {
+                closeButton: false,
+                timeOut: CONSTANTS.timeoutDeleteTempAttachmentTime,
+                disableTimeOut: 'extendedTimeOut',
+                tapToDismiss: false,
+                progressAnimation: 'decreasing'
+              }
+            );
+            this.timerTimeout = setTimeout(() => {
+              this.gs.log('[UPLOAD_TIMEOUT]', CONSTANTS.timeoutDeleteTempAttachmentTime);
+              this.failOrCancelUpload();
+            }, CONSTANTS.timeoutDeleteTempAttachmentTime);
+          } else if (state.status === 'error') {
+            this.gs.log('[UPLOAD_ERROR]', state.response, 'error');
+            this.failOrCancelUpload(state.response);
+          }
+        }
+      });
     }
   }
 
   ngOnDestroy(): void {
-    if (this.uploadHandler) {
-      this.attachmentMode = 'indeterminate';
-      this.attachmentPercentage = 0;
-      this.attachmentSpeed = 0;
-      this.attachmentIsUploading = false;
-      this.attachmentIsCompleted = false;
-    }
     if (this.uploadToast) {
       this.toast.remove(this.uploadToast.toastId);
     }
@@ -132,7 +147,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       clearTimeout(this.timerTimeout);
       this.timerTimeout = null;
     }
-    this.uploadHandler?.unsubscribe();
     this.subsProject?.unsubscribe();
     this.subsFansub?.unsubscribe();
     this.subsAnimeDetail?.unsubscribe();
@@ -145,6 +159,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.subsDoramaNew?.unsubscribe();
     this.subsImgbb?.unsubscribe();
     this.subsBerkasCreate?.unsubscribe();
+    this.uploadService.disconnect();
   }
 
   loadProjectList(): void {
@@ -442,7 +457,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.bs.busy();
     this.submitted = true;
-    if (this.fg.invalid || this.attachmentIsUploading) {
+    if (this.fg.invalid || this.attachmentSelected?.status === 'uploading') {
       this.submitted = false;
       this.bs.idle();
       return;
@@ -482,91 +497,33 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     const file = event.target.files[0];
     this.gs.log('[ATTACHMENT_SELECTED]', file);
     this.fg.controls['attachment_id'].patchValue(null);
+    this.uploadService.disconnect();
+    this.uploadService.connect();
     try {
-      if (file.size <= CONSTANTS.fileSizeAttachmentLimit) {
-        this.attachment = file;
+      if (file.size <= CONSTANTS.fileSizeAttachmentTotalLimit) {
         this.attachmentErrorText = '';
+        this.uploadService.handleFiles(file);
       } else {
-        this.attachment = null;
-        this.attachmentErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeAttachmentLimit} Bytes!`;
+        this.attachmentErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeAttachmentTotalLimit} Bytes!`;
         this.ddl.clear(event);
       }
     } catch (error) {
-      this.attachment = null;
       this.attachmentErrorText = '';
       this.ddl.clear(event);
     }
   }
 
-  submitAttachment(): void {
-    this.attachmentIsUploading = true;
-    this.uploadToast = this.toast.warning(
-      `${this.attachmentPercentage}% @ ${this.attachmentSpeed} KB/s`,
-      `Mengunggah ...`,
-      {
-        closeButton: false,
-        timeOut: 0,
-        disableTimeOut: 'extendedTimeOut',
-        tapToDismiss: false
-      }
-    );
-    this.uploadHandler = this.dls.uploadLampiran({
-      file: this.attachment
-    }).subscribe({
-      next: event => {
-        this.gs.log('[UPLOAD_EVENTS]', event);
-        if ((event as any).loaded && (event as any).total) {
-          const e = (event as any);
-          this.gs.log('[UPLOAD_PROGRESS]', e);
-          this.attachmentMode = 'determinate';
-          this.attachmentPercentage = Math.round(e.loaded / e.total * 100);
-          if (this.attachmentPercentage < 100) {
-            this.attachmentSpeed = (e.loaded - this.attachmentPreviousLoaded) / 1000;
-            this.attachmentPreviousLoaded = e.loaded;
-            if (this.attachmentSpeed <= 0) {
-              this.attachmentSpeed = 0;
-            }
-          }
-          this.uploadToast.toastRef.componentInstance.message = `${this.attachmentPercentage}% @ ${this.attachmentSpeed} KB/s`;
-        }
-        if ((event as any).body) {
-          const e = (event as any).body;
-          this.gs.log('[UPLOAD_COMPLETED]', e);
-          this.attachmentMode = 'determinate';
-          this.attachmentIsUploading = false;
-          this.attachmentIsCompleted = true;
-          this.fg.controls['attachment_id'].patchValue(e.result.id);
-          this.toast.remove(this.uploadToast.toastId);
-          this.uploadToast = this.toast.warning(
-            `Segera Kirim Data Berkas Anda!`,
-            `Lampiran Akan Dihapus ...`,
-            {
-              closeButton: false,
-              timeOut: CONSTANTS.timeoutDeleteTempAttachmentTime,
-              disableTimeOut: 'extendedTimeOut',
-              tapToDismiss: false,
-              progressAnimation: 'decreasing'
-            }
-          );
-          this.timerTimeout = setTimeout(() => {
-            this.gs.log('[UPLOAD_TIMEOUT]', CONSTANTS.timeoutDeleteTempAttachmentTime);
-            this.attachmentMode = 'determinate';
-            this.failOrCancelUpload();
-          }, CONSTANTS.timeoutDeleteTempAttachmentTime);
-        }
-      },
-      error: err => {
-        this.gs.log('[UPLOAD_ERROR]', err, 'error');
-        this.attachmentMode = 'indeterminate';
-        this.failOrCancelUpload(err);
-      }
-    });
+  onState(event: UploadState): void {
+    
+  }
+
+  submitAttachment(item: Uploader): void {
+    this.attachmentSelected = item;
+    item.status = 'queue';
   }
 
   failOrCancelUpload(err = null): void {
-    this.attachmentIsUploading = false;
-    this.attachmentIsCompleted = false;
-    this.attachment = null;
+    this.attachmentSelected = null;
     this.attachmentErrorText = err?.error?.result?.message || err?.error?.info || '';
     this.fg.controls['attachment_id'].patchValue(null);
     this.toast.remove(this.uploadToast.toastId);

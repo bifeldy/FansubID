@@ -84,6 +84,7 @@ export const environment = {
     ],
   },
   viewFolder: 'dist/fansubid/browser',
+  tempFolder: 'dist/fansubid/temp',
   uploadFolder: 'dist/fansubid/uploads',
   jsonCacheFolder: 'dist/fansubid/caches',
   gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',

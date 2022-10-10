@@ -11,6 +11,9 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MorganInterceptor, MorganModule } from 'nest-morgan';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
+import { uploadx } from '@uploadx/core';
+
+import { CONSTANTS } from '../constants';
 
 import { environment } from '../environments/api/environment';
 
@@ -292,6 +295,21 @@ export class AppModule {
     mc.apply(RegisterMiddleware).forRoutes({ path:'/register', method: RequestMethod.POST });
     mc.apply(LogoutMiddleware).forRoutes({ path:'/logout', method: RequestMethod.DELETE });
     mc.apply(CacheMiddleware).forRoutes({ path: '*', method: RequestMethod.GET });
+    mc.apply(
+      uploadx.upload({
+        path: '/attachment',
+        directory: environment.uploadFolder,
+        maxUploadSize: CONSTANTS.fileSizeAttachmentTotalLimit,
+        useRelativeLocation: true,
+        expiration: {
+          maxAge: '1h',
+          purgeInterval: '10min'
+        },
+        metaStorageConfig: {
+          directory: environment.tempFolder
+        }
+      })
+    ).forRoutes({ path: '/attachment', method: RequestMethod.ALL });
   }
 
 }

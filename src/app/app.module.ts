@@ -15,6 +15,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { NgProgressModule } from 'ngx-progressbar';
 import { NgProgressHttpModule } from 'ngx-progressbar/http';
+import { UploadxModule } from 'ngx-uploadx';
+
+import { CONSTANTS } from '../constants';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -73,7 +76,19 @@ import { environment } from '../environments/app/environment';
         enabled: environment.production,
         registrationStrategy: 'registerWhenStable:30000'
       }
-    )
+    ),
+    UploadxModule.withConfig({
+      autoUpload: false,
+      concurrency: 1,
+      endpoint: `${environment.apiUrl}/attachment`,
+      headers: {
+        'ngsw-bypass': 'true'
+      },
+      retryConfig: {
+        maxAttempts: 3
+      },
+      maxChunkSize: CONSTANTS.fileSizeAttachmentChunkLimit
+    })
   ],
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },

@@ -120,4 +120,5 @@ export class DownloadManagerService {
     const attachment = this.attachmentsDownload[attachmentId];
     saveAs(attachment.data, `${attachment.name}.${attachment.ext}`);
   }
+
 }
