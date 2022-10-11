@@ -174,14 +174,6 @@ export class AttachmentController {
             signal: res.locals['abort-controller'].signal
           }
         );
-        if (!Object.keys(dfile.headers).some((key) => key.match(/^content-type$/i))) {
-          if (dfile.headers['content-type'] === 'application/octet-stream' && attachment.mime) {
-            dfile.headers['content-type'] = attachment.mime;
-          }
-          if (attachment.ext === 'mkv') {
-            dfile.headers['content-type'] = 'video/mp4';
-          }
-        }
         res.writeHead(dfile.status, dfile.headers);
         res.on('pipe', src => {
           this.gs.log('[RES-PIPE_FLOW] 💦', src.readableFlowing);
@@ -200,21 +192,9 @@ export class AttachmentController {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name.includes(attachment.name));
         if (fIdx >= 0) {
-          let contentType = 'application/octet-stream';
-          if (attachment.mime) {
-            contentType = attachment.mime;
-          }
-          if (attachment.ext === 'mkv' || attachment.mime === 'video/x-matroska') {
-            contentType = 'video/mp4';
-          }
           return res.download(
             `${environment.uploadFolder}/${files[fIdx].name}`,
             `${attachment.name}.${attachment.ext}`,
-            {
-              headers: {
-                'content-type': contentType
-              }
-            },
             async (e) => {
               if (e) {
                 this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
