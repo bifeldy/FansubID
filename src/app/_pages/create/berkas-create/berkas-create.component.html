@@ -163,7 +163,7 @@
                   <mat-form-field appearance="outline" class="px-3 pt-3 col" [color]="'accent'">
                     <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
                     <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event, ddl)" #ddl [disabled]="attachmentSelected !== null"
-                      [accept]="'video/x-matroska, video/mp4'" uploadx (state)="onState($any($event))"></ngx-mat-file-input>
+                      [accept]="'video/x-matroska, video/mp4'" uploadx></ngx-mat-file-input>
                     <mat-icon matSuffix>attach_file</mat-icon>
                   </mat-form-field>
                   <mat-error class="px-4 w-100">

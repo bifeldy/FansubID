@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-import { Uploader, UploadState, UploadxService } from 'ngx-uploadx';
+import { Uploader, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -67,6 +67,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   subsDoramaNew = null;
   subsImgbb = null;
   subsBerkasCreate = null;
+  subsUpload = null;
 
   berkasType = '';
 
@@ -109,7 +110,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       this.loadProjectList();
       this.initForm();
       this.uploads$ = this.uploadService.connect();
-      this.uploadService.events.subscribe({
+      this.subsUpload = this.uploadService.events.subscribe({
         next: state => {
           this.gs.log('[UPLOAD_EVENTS]', state);
           if (state.status === 'complete') {
@@ -160,6 +161,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.subsImgbb?.unsubscribe();
     this.subsBerkasCreate?.unsubscribe();
     this.uploadService.disconnect();
+    this.subsUpload?.unsubscribe();
   }
 
   loadProjectList(): void {
@@ -511,10 +513,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       this.attachmentErrorText = '';
       this.ddl.clear(event);
     }
-  }
-
-  onState(event: UploadState): void {
-    
   }
 
   submitAttachment(item: Uploader): void {
