@@ -174,6 +174,14 @@ export class AttachmentController {
             signal: res.locals['abort-controller'].signal
           }
         );
+        if (!Object.keys(dfile.headers).some((key) => key.match(/^content-type$/i))) {
+          if (dfile.headers['content-type'] === 'application/octet-stream' && attachment.mime) {
+            dfile.headers['content-type'] = attachment.mime;
+          }
+          if (attachment.ext === 'mkv') {
+            dfile.headers['content-type'] = 'video/mp4';
+          }
+        }
         res.writeHead(dfile.status, dfile.headers);
         res.on('pipe', src => {
           this.gs.log('[RES-PIPE_FLOW] 💦', src.readableFlowing);
