@@ -200,14 +200,30 @@ export class AttachmentController {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name.includes(attachment.name));
         if (fIdx >= 0) {
-          return res.download(`${environment.uploadFolder}/${files[fIdx].name}`, `${attachment.name}.${attachment.ext}`, async (e) => {
-            if (e) {
-              this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
-            } else {
-              attachment.download_count++;
-              await this.attachmentRepo.save(attachment);
+          let contentType = 'application/octet-stream';
+          if (attachment.mime) {
+            contentType = attachment.mime;
+          }
+          if (attachment.ext === 'mkv' || attachment.mime === 'video/x-matroska') {
+            contentType = 'video/mp4';
+          }
+          return res.download(
+            `${environment.uploadFolder}/${files[fIdx].name}`,
+            `${attachment.name}.${attachment.ext}`,
+            {
+              headers: {
+                'content-type': contentType
+              }
+            },
+            async (e) => {
+              if (e) {
+                this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
+              } else {
+                attachment.download_count++;
+                await this.attachmentRepo.save(attachment);
+              }
             }
-          });
+          );
         }
         throw new Error('Lampiran Tidak Ditemukan!');
       }
