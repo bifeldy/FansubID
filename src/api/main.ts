@@ -48,7 +48,6 @@ export async function app(): Promise<INestApplication> {
   nestApp.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
-    referrerPolicy: false,
     // crossOriginOpenerPolicy: true,
     // crossOriginResourcePolicy: true,
     // dnsPrefetchControl: true,
@@ -57,9 +56,10 @@ export async function app(): Promise<INestApplication> {
     // hidePoweredBy: true,
     // hsts: true,
     // ieNoOpen: true,
-    // noSniff: true,
+    noSniff: false,
     // originAgentCluster: true,
     // permittedCrossDomainPolicies: true,
+    referrerPolicy: false,
     // xssFilter: true
   }));
   nestApp.use(compression());
