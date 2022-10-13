@@ -30,11 +30,13 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   imagePhoto = null;
   imagePhotoErrorText = null;
+  imagePhotoLimitExceeded = null;
   image_photo = null;
   image_photo_original = null;
 
   imageCover = null;
   imageCoverErrorText = null;
+  imageCoverLimitExceeded = null;
   image_cover = null;
   image_cover_original = null;
 
@@ -140,6 +142,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   uploadPhotoImage(event, photoImage): void {
     this.photoImage = photoImage;
     this.imagePhoto = null;
+    this.imagePhotoLimitExceeded = null;
+    this.imagePhotoErrorText = null;
     this.fg.controls['image_photo'].patchValue(null);
     this.fg.controls['image_photo'].markAsPristine();
     const file = event.target.files[0];
@@ -155,17 +159,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
             this.image_photo = reader.result.toString();
           };
           img.src = reader.result.toString();
-          this.imagePhotoErrorText = null;
         } else {
           this.imagePhoto = null;
           this.image_photo = '/assets/img/form/image-error.png';
-          this.imagePhotoErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
+          this.imagePhotoLimitExceeded = CONSTANTS.fileSizeImageLimit;
           this.photoImage.clear(event);
         }
       };
     } catch (error) {
       this.imagePhoto = null;
-      this.imagePhotoErrorText = null;
       this.image_photo = this.image_photo_original;
       this.photoImage.clear(event);
     }
@@ -187,6 +189,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.fg.controls['image_photo'].patchValue(null);
         this.fg.controls['image_photo'].markAsPristine();
         this.submitted = false;
+        this.imagePhotoErrorText = err?.error?.result?.message || err?.error?.info || null;
       }
     });
   }
@@ -194,6 +197,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   uploadCoverImage(event, coverImage): void {
     this.coverImage = coverImage;
     this.imageCover = null;
+    this.imageCoverLimitExceeded = null;
+    this.imageCoverErrorText = null;
     this.fg.controls['image_cover'].patchValue(null);
     this.fg.controls['image_cover'].markAsPristine();
     const file = event.target.files[0];
@@ -209,17 +214,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
             this.image_cover = reader.result.toString();
           };
           img.src = reader.result.toString();
-          this.imageCoverErrorText = null;
         } else {
           this.imageCover = null;
           this.image_cover = '/assets/img/form/image-error.png';
-          this.imageCoverErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
+          this.imageCoverLimitExceeded = CONSTANTS.fileSizeImageLimit;
           this.coverImage.clear(event);
         }
       };
     } catch (error) {
       this.imageCover = null;
-      this.imageCoverErrorText = null;
       this.image_cover = this.image_cover_original;
       this.coverImage.clear(event);
     }
@@ -241,6 +244,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.fg.controls['image_cover'].patchValue(null);
         this.fg.controls['image_cover'].markAsPristine();
         this.submitted = false;
+        this.imageCoverErrorText = err?.error?.result?.message || err?.error?.info || null;
       }
     });
   }
