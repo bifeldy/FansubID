@@ -7,6 +7,8 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { SharedMaterialModule } from '../../modules/shared-material.module';
 
+import { CustomPipeModule } from '../../pipes/custom-pipe.module';
+
 import { NoDataModule } from '../no-data/no-data.module';
 
 import { MaterialDialogInfoComponent } from './material-dialog-info/material-dialog-info.component';
@@ -30,7 +32,8 @@ import { MaterialDialogInputComponent } from './material-dialog-input/material-d
     FormsModule,
     ReactiveFormsModule,
     MaterialFileInputModule,
-    NoDataModule
+    NoDataModule,
+    CustomPipeModule
   ],
   exports: [
     MaterialDialogInfoComponent,

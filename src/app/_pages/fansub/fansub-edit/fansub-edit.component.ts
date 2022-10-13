@@ -32,11 +32,13 @@ export class FansubEditComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
+  imageLimitExceeded = null;
   image_url = '/assets/img/form/no-image.png';
   image_url_original = null;
 
   cover = null;
   coverErrorText = null;
+  coverLimitExceeded = null;
   cover_url = '/assets/img/form/no-image.png';
   cover_url_original = null;
 
@@ -210,6 +212,8 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   uploadImage(event, gambar): void {
     this.gambar = gambar;
     this.image = null;
+    this.imageLimitExceeded = null;
+    this.imageErrorText = null;
     this.fg.controls['image'].patchValue(null);
     this.fg.controls['image'].markAsPristine();
     const file = event.target.files[0];
@@ -225,17 +229,15 @@ export class FansubEditComponent implements OnInit, OnDestroy {
             this.image_url = reader.result.toString();
           };
           img.src = reader.result.toString();
-          this.imageErrorText = null;
         } else {
           this.image = null;
           this.image_url = '/assets/img/form/image-error.png';
-          this.imageErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
+          this.imageLimitExceeded = CONSTANTS.fileSizeImageLimit;
           this.gambar.clear(event);
         }
       };
     } catch (error) {
       this.image = null;
-      this.imageErrorText = null;
       this.image_url = this.image_url_original;
       this.gambar.clear(event);
     }
@@ -257,6 +259,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         this.fg.controls['image'].patchValue(null);
         this.fg.controls['image'].markAsPristine();
         this.submitted = false;
+        this.imageErrorText = err?.error?.result?.message || err?.error?.info || null;
       }
     });
   }
@@ -264,6 +267,8 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   uploadCover(event, gambar_): void {
     this.gambar_ = gambar_;
     this.cover = null;
+    this.coverLimitExceeded = null;
+    this.coverErrorText = null;
     this.fg.controls['cover'].patchValue(null);
     this.fg.controls['cover'].markAsPristine();
     const file = event.target.files[0];
@@ -279,19 +284,17 @@ export class FansubEditComponent implements OnInit, OnDestroy {
             this.cover_url = reader.result.toString();
           };
           img.src = reader.result.toString();
-          this.coverErrorText = null;
         } else {
           this.cover = null;
           this.cover_url = '/assets/img/form/image-error.png';
-          this.coverErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
-          this.gambar.clear(event);
+          this.coverLimitExceeded = CONSTANTS.fileSizeImageLimit;
+          this.gambar_.clear(event);
         }
       };
     } catch (error) {
       this.cover = null;
-      this.coverErrorText = null;
       this.cover_url = this.cover_url_original;
-      this.gambar.clear(event);
+      this.gambar_.clear(event);
     }
   }
 
@@ -311,6 +314,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         this.fg.controls['cover'].patchValue(null);
         this.fg.controls['cover'].markAsPristine();
         this.submitted = false;
+        this.coverErrorText = err?.error?.result?.message || err?.error?.info || null;
       }
     });
   }

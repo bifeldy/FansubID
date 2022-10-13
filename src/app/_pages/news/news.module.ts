@@ -14,6 +14,8 @@ import { RolesGuard } from '../../_shared/guards/roles.guard';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
+
 import { MaterialChipModule } from '../../_shared/components/material-chip/material-chip.module';
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
@@ -73,7 +75,8 @@ const routes: Routes = [
     BannerDiscordModule,
     StatsServerModule,
     MaterialChipModule,
-    DiscussionModule
+    DiscussionModule,
+    CustomPipeModule
   ]
 })
 export class NewsModule { }

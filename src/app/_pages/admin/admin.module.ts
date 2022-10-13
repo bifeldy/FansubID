@@ -15,6 +15,8 @@ import { RolesGuard } from '../../_shared/guards/roles.guard';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
+
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 
@@ -134,7 +136,8 @@ const routes: Routes = [
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     MaterialFileInputModule,
-    AngularEditorModule
+    AngularEditorModule,
+    CustomPipeModule
   ]
 })
 export class AdminModule { }

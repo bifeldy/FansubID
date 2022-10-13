@@ -14,7 +14,8 @@
             </mat-form-field>
             <mat-error class="px-3 pb-3 w-100">
               <small>
-                <strong>{{ imageErrorText }}</strong> <br *ngIf="imageErrorText" />
+                <strong *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</strong>
+                <strong *ngIf="imageErrorText">{{ imageErrorText }}</strong>
                 <strong *ngIf="fg.get('image').hasError('required')">Gambar Wajib Ada!</strong>
               </small>
             </mat-error>

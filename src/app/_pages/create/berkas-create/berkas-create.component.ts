@@ -37,6 +37,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   image = null;
   imageErrorText = null;
+  imageLimitExceeded = null;
   image_url = '/assets/img/form/no-image.png';
 
   filteredAnime = [];
@@ -48,7 +49,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   doramaCheckOrAddResponse = null;
 
   attachmentSelected: Uploader = null;
-  attachmentErrorText = '';
+  attachmentErrorText = null;
   attachmentLimitExceeded = null;
 
   uploadToast = null;
@@ -409,6 +410,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   uploadImage(event, gambar): void {
     this.gambar = gambar;
     this.image = null;
+    this.imageLimitExceeded = null;
+    this.imageErrorText = null;
     this.fg.controls['image'].patchValue(null);
     const file = event.target.files[0];
     try {
@@ -423,17 +426,15 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
             this.image_url = reader.result.toString();
           };
           img.src = reader.result.toString();
-          this.imageErrorText = null;
         } else {
           this.image = null;
           this.image_url = '/assets/img/form/image-error.png';
-          this.imageErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeImageLimit} Bytes!`;
+          this.imageLimitExceeded = CONSTANTS.fileSizeImageLimit;
           this.gambar.clear(event);
         }
       };
     } catch (error) {
       this.image = null;
-      this.imageErrorText = null;
       this.image_url = '/assets/img/form/no-image.png';
       this.gambar.clear(event);
     }
@@ -453,6 +454,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.submitted = false;
+        this.imageErrorText = err?.error?.result?.message || err?.error?.info || null;
       }
     });
   }
@@ -519,12 +521,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   submitAttachment(item: Uploader): void {
     this.attachmentSelected = item;
     item.status = 'queue';
-    this.attachmentErrorText = '';
+    this.attachmentErrorText = null;
   }
 
   failOrCancelUpload(err = null): void {
     this.attachmentSelected = null;
-    this.attachmentErrorText = err?.error?.result?.message || err?.error?.info || '';
+    this.attachmentErrorText = err?.error?.result?.message || err?.error?.info || null;
     this.fg.controls['attachment_id'].patchValue(null);
     this.toast.remove(this.uploadToast.toastId);
     this.ddl.clear();
