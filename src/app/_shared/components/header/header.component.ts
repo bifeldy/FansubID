@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from '../../../../environments/app/environment';
@@ -16,9 +16,11 @@ import { LocalStorageService } from '../../services/local-storage.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   myPoints = 0;
+
+  subsGlobalRoom = null;
 
   constructor(
     private lms: LeftMenuService,
@@ -60,7 +62,16 @@ export class HeaderComponent implements OnInit {
         this.gs.isDarkMode = event.matches;
         this.toggleDarkTheme(true);
       });
+      this.subsGlobalRoom = this.ss.globalRoom.subscribe({
+        next: global => {
+          this.myPoints = global?.member_list[this.ss.mySocket.id]?.profile_?.points || 0;
+        }
+      });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subsGlobalRoom?.unsubscribe();
   }
 
   get discordUrl(): string {
