@@ -49,6 +49,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   attachmentSelected: Uploader = null;
   attachmentErrorText = '';
+  attachmentLimitExceeded = null;
 
   uploadToast = null;
 
@@ -503,14 +504,14 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.uploadService.connect();
     try {
       if (file.size <= CONSTANTS.fileSizeAttachmentTotalLimit) {
-        this.attachmentErrorText = '';
+        this.attachmentLimitExceeded = null;
         this.uploadService.handleFiles(file);
       } else {
-        this.attachmentErrorText = `Ukuran Upload Melebihi Batas ${CONSTANTS.fileSizeAttachmentTotalLimit} Bytes!`;
+        this.attachmentLimitExceeded = CONSTANTS.fileSizeAttachmentTotalLimit;
         this.ddl.clear(event);
       }
     } catch (error) {
-      this.attachmentErrorText = '';
+      this.attachmentLimitExceeded = null;
       this.ddl.clear(event);
     }
   }
@@ -518,6 +519,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   submitAttachment(item: Uploader): void {
     this.attachmentSelected = item;
     item.status = 'queue';
+    this.attachmentErrorText = '';
   }
 
   failOrCancelUpload(err = null): void {

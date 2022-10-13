@@ -9,7 +9,7 @@ export const CONSTANTS = {
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
   fileSizeAttachmentChunkLimit: 100 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
-  fileSizeAttachmentTotalLimit: 512 * 1000 * 1000,
+  fileSizeAttachmentTotalLimit: 1024 * 1000 * 1000, // Max Upload Limits -- 1 GB
   fileSizeImageLimit: 256 * 1000,
   jwtAlgorithm: 'HS512',
   jwtExpiredIn: 24 * 60 * 60,

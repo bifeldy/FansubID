@@ -168,7 +168,8 @@
                   </mat-form-field>
                   <mat-error class="px-4 w-100">
                     <small>
-                      <strong>{{ attachmentErrorText }}</strong>
+                      <strong *ngIf="attachmentLimitExceeded">Ukuran Upload Melebihi Batas {{ attachmentLimitExceeded | bytes }} !</strong>
+                      <strong *ngIf="attachmentErrorText">{{ attachmentErrorText }}</strong>
                     </small>
                   </mat-error>
                 </div>
