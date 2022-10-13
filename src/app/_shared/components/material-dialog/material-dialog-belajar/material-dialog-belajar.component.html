@@ -14,9 +14,9 @@
             </mat-form-field>
             <mat-error class="px-3 pb-3 w-100">
               <small>
-                <strong *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</strong>
-                <strong *ngIf="imageErrorText">{{ imageErrorText }}</strong>
-                <strong *ngIf="fg.get('image').hasError('required')">Gambar Wajib Ada!</strong>
+                <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
+                <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
+                <div *ngIf="fg.get('image').hasError('required')">Gambar Wajib Ada!</div>
               </small>
             </mat-error>
           </div>
@@ -35,8 +35,8 @@
             <input matInput formControlName="kana" placeholder="褐色" />
             <mat-icon matSuffix>translate</mat-icon>
             <mat-error>
-              <strong *ngIf="fg.get('kana').hasError('required')">Kana Tidak Boleh Kosong</strong>
-              <strong *ngIf="fg.get('kana').hasError('pattern')">Kana Hanya Boleh Huruf Jepang</strong>
+              <div *ngIf="fg.get('kana').hasError('required')">Kana Tidak Boleh Kosong</div>
+              <div *ngIf="fg.get('kana').hasError('pattern')">Kana Hanya Boleh Huruf Jepang</div>
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
@@ -44,8 +44,8 @@
             <input matInput formControlName="romaji" placeholder="Kasshoku" />
             <mat-icon matSuffix>text_fields</mat-icon>
             <mat-error>
-              <strong *ngIf="fg.get('romaji').hasError('required')">Romaji Tidak Boleh Kosong</strong>
-              <strong *ngIf="fg.get('romaji').hasError('pattern')">Romaji Hanya Boleh Huruf Standar Papan Ketik</strong>
+              <div *ngIf="fg.get('romaji').hasError('required')">Romaji Tidak Boleh Kosong</div>
+              <div *ngIf="fg.get('romaji').hasError('pattern')">Romaji Hanya Boleh Huruf Standar Papan Ketik</div>
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
@@ -53,8 +53,8 @@
             <input matInput formControlName="meaning" placeholder="Coklat" />
             <mat-icon matSuffix>g_translate</mat-icon>
             <mat-error>
-              <strong *ngIf="fg.get('meaning').hasError('required')">Arti Tidak Boleh Kosong</strong>
-              <strong *ngIf="fg.get('meaning').hasError('pattern')">Arti Hanya Boleh Huruf Standar Papan Ketik</strong>
+              <div *ngIf="fg.get('meaning').hasError('required')">Arti Tidak Boleh Kosong</div>
+              <div *ngIf="fg.get('meaning').hasError('pattern')">Arti Hanya Boleh Huruf Standar Papan Ketik</div>
             </mat-error>
           </mat-form-field>
         </div>

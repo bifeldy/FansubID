@@ -28,8 +28,8 @@
                     </mat-form-field>
                     <mat-error class="px-3 w-100">
                       <small>
-                        <strong *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</strong>
-                        <strong *ngIf="imageErrorText">{{ imageErrorText }}</strong>
+                        <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
+                        <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
                       </small>
                     </mat-error>
                   </div>
@@ -49,8 +49,8 @@
                     <mat-icon matSuffix>short_text</mat-icon>
                     <mat-hint align="end">Untuk Jenis Berkas</mat-hint>
                     <mat-error>
-                      <strong *ngIf="fg.get('name').hasError('required')">Nama Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('name').hasError('pattern')">Nama Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <div *ngIf="fg.get('name').hasError('required')">Nama Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('name').hasError('pattern')">Nama Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
@@ -58,8 +58,8 @@
                     <input matInput formControlName="description" placeholder="Edisi Terbatas" />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('description').hasError('required')">Deskripsi Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('description').hasError('pattern')">Deskripsi Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <div *ngIf="fg.get('description').hasError('required')">Deskripsi Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('description').hasError('pattern')">Deskripsi Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                 </div>

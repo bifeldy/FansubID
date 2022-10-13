@@ -30,8 +30,8 @@
                     </mat-form-field>
                     <mat-error class="px-3 w-100">
                       <small>
-                        <strong *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</strong>
-                        <strong *ngIf="imageErrorText">{{ imageErrorText }}</strong>
+                        <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
+                        <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
                       </small>
                     </mat-error>
                   </div>
@@ -53,8 +53,8 @@
                   </mat-form-field>
                   <mat-error class="px-3 w-100">
                     <small>
-                      <strong *ngIf="coverLimitExceeded">Ukuran Upload Melebihi Batas {{ coverLimitExceeded | bytes }} !</strong>
-                      <strong *ngIf="coverErrorText">{{ coverErrorText }}</strong>
+                      <div *ngIf="coverLimitExceeded">Ukuran Upload Melebihi Batas {{ coverLimitExceeded | bytes }} !</div>
+                      <div *ngIf="coverErrorText">{{ coverErrorText }}</div>
                     </small>
                   </mat-error>
                   <div class="col-12 p-3" *ngIf="cover && !fg.value.cover">
@@ -68,8 +68,8 @@
                     <input matInput formControlName="name" placeholder="Fansub Jalanan" />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('name').hasError('required')">Nama Fansub Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('name').hasError('pattern')">Nama Fansub Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <div *ngIf="fg.get('name').hasError('required')">Nama Fansub Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('name').hasError('pattern')">Nama Fansub Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'">
@@ -77,11 +77,11 @@
                     <input matInput formControlName="slug" placeholder="Jalsub" />
                     <mat-icon matSuffix>short_text</mat-icon>
                     <small *ngIf="slugInfo" class="text-info">
-                      <strong>{{ slugInfo }}</strong>
+                      <div>{{ slugInfo }}</div>
                     </small>
                     <mat-error>
-                      <strong *ngIf="fg.get('slug').hasError('required')">Singkatan Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('slug').hasError('pattern')">Singkatan Hanya Boleh Huruf Dan 一</strong>
+                      <div *ngIf="fg.get('slug').hasError('required')">Singkatan Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('slug').hasError('pattern')">Singkatan Hanya Boleh Huruf Dan 一</div>
                     </mat-error>
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
@@ -91,8 +91,8 @@
                     <mat-datepicker-toggle matSuffix [for]="kalender"></mat-datepicker-toggle>
                     <mat-datepicker #kalender disabled="false"></mat-datepicker>
                     <mat-error>
-                      <strong *ngIf="fg.get('born').hasError('required') || fg.get('born').hasError('matDatepickerParse')">Tanggal Harus Diisi Secara Valid</strong>
-                      <strong *ngIf="fg.get('born').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <div *ngIf="fg.get('born').hasError('required') || fg.get('born').hasError('matDatepickerParse')">Tanggal Harus Diisi Secara Valid</div>
+                      <div *ngIf="fg.get('born').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-6" [color]="'accent'">
@@ -103,8 +103,8 @@
                     </mat-select>
                     <mat-hint align="end">Status Kehidupan Fansub Saat Ini</mat-hint>
                     <mat-error>
-                      <strong *ngIf="fg.get('active').hasError('required')">Mohon Pilih Salah Satu</strong>
-                      <strong *ngIf="fg.get('active').hasError('pattern')">Status Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <div *ngIf="fg.get('active').hasError('required')">Mohon Pilih Salah Satu</div>
+                      <div *ngIf="fg.get('active').hasError('pattern')">Status Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -137,8 +137,8 @@
                     <input matInput formControlName="web" placeholder="http://www.domain.id" />
                     <mat-icon matSuffix>web</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('web').hasError('required')">Website Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('web').hasError('pattern')">Website Link Tidak Valid</strong>
+                      <div *ngIf="fg.get('web').hasError('required')">Website Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('web').hasError('pattern')">Website Link Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
@@ -146,7 +146,7 @@
                     <input matInput formControlName="facebook" placeholder="http://www.facebook.com" />
                     <mat-icon matSuffix>facebook</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('facebook').hasError('pattern')">Facebook Link Tidak Valid</strong>
+                      <div *ngIf="fg.get('facebook').hasError('pattern')">Facebook Link Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
@@ -156,7 +156,7 @@
                       <img src="/assets/img/discord/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" />
                     </mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('discord').hasError('pattern')">Discord Link Tidak Valid</strong>
+                      <div *ngIf="fg.get('discord').hasError('pattern')">Discord Link Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -168,7 +168,7 @@
                 <input matInput formControlName="rss_feed" placeholder="http://my-site.blogspot.com/feeds/posts/default?alt=rss" />
                 <mat-icon matSuffix>rss_feed</mat-icon>
                 <mat-error>
-                  <strong *ngIf="fg.get('rss_feed').hasError('pattern')">RSS Link Tidak Valid</strong>
+                  <div *ngIf="fg.get('rss_feed').hasError('pattern')">RSS Link Tidak Valid</div>
                 </mat-error>
               </mat-form-field>
             </div>

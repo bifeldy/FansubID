@@ -22,8 +22,8 @@
                 <mat-icon matSuffix>short_text</mat-icon>
                 <mat-hint align="end">Teks Tebal Di Kiri</mat-hint>
                 <mat-error>
-                  <strong *ngIf="fg.get('title').hasError('required')">Judul Tidak Boleh Kosong</strong>
-                  <strong *ngIf="fg.get('title').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</strong>
+                  <div *ngIf="fg.get('title').hasError('required')">Judul Tidak Boleh Kosong</div>
+                  <div *ngIf="fg.get('title').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-8" [color]="'accent'">
@@ -31,8 +31,8 @@
                 <input matInput formControlName="content" placeholder="Akan Diadakan Maintenance Pada ..." />
                 <mat-icon matSuffix>wysiwyg</mat-icon>
                 <mat-error>
-                  <strong *ngIf="fg.get('content').hasError('required')">Isi Tidak Boleh Kosong</strong>
-                  <strong *ngIf="fg.get('content').hasError('pattern')">Isi Hanya Boleh Huruf Standar Papan Ketik</strong>
+                  <div *ngIf="fg.get('content').hasError('required')">Isi Tidak Boleh Kosong</div>
+                  <div *ngIf="fg.get('content').hasError('pattern')">Isi Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
@@ -48,8 +48,8 @@
                   <mat-option value="info">Biru Muda</mat-option>
                 </mat-select>
                 <mat-error>
-                  <strong *ngIf="fg.get('type').hasError('required')">Mohon Pilih Salah Satu</strong>
-                  <strong *ngIf="fg.get('type').hasError('pattern')">Tipe Hanya Boleh Huruf Standar Papan Ketik</strong>
+                  <div *ngIf="fg.get('type').hasError('required')">Mohon Pilih Salah Satu</div>
+                  <div *ngIf="fg.get('type').hasError('pattern')">Tipe Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
@@ -60,8 +60,8 @@
                 </mat-select>
                 <mat-hint align="end">Tombol X Di Kanan</mat-hint>
                 <mat-error>
-                  <strong *ngIf="fg.get('dismissible').hasError('required')">Mohon Pilih Salah Satu</strong>
-                  <strong *ngIf="fg.get('dismissible').hasError('pattern')">Dismissible Hanya Boleh Huruf Standar Papan Ketik</strong>
+                  <div *ngIf="fg.get('dismissible').hasError('required')">Mohon Pilih Salah Satu</div>
+                  <div *ngIf="fg.get('dismissible').hasError('pattern')">Dismissible Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
@@ -72,10 +72,10 @@
                 <ngx-mat-datetime-picker #kalender [showSpinners]="true" [showSeconds]="true" [enableMeridian]="true"></ngx-mat-datetime-picker>
                 <mat-hint align="end">Muncul Setiap Halaman Di Refresh</mat-hint>
                 <mat-error>
-                  <strong *ngIf="fg.get('deadline').hasError('matDatetimePickerParse')">Tanggal Tidak Valid</strong>
-                  <strong *ngIf="fg.get('deadline').hasError('matDatetimePickerMax')">Paling Lama 7 Hari Mendatang</strong>
-                  <strong *ngIf="fg.get('deadline').hasError('matDatetimePickerMin')">Paling Cepat Detik Ini Sekarang</strong>
-                  <strong *ngIf="fg.get('deadline').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</strong>
+                  <div *ngIf="fg.get('deadline').hasError('matDatetimePickerParse')">Tanggal Tidak Valid</div>
+                  <div *ngIf="fg.get('deadline').hasError('matDatetimePickerMax')">Paling Lama 7 Hari Mendatang</div>
+                  <div *ngIf="fg.get('deadline').hasError('matDatetimePickerMin')">Paling Cepat Detik Ini Sekarang</div>
+                  <div *ngIf="fg.get('deadline').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
             </div>

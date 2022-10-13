@@ -28,8 +28,8 @@
                     </mat-form-field>
                     <mat-error class="px-3 w-100">
                       <small>
-                        <strong *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</strong>
-                        <strong *ngIf="imageErrorText">{{ imageErrorText }}</strong>
+                        <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
+                        <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
                       </small>
                     </mat-error>
                   </div>
@@ -50,8 +50,8 @@
                       <mat-option *ngFor="let p of projectList" [value]="p.id">{{ p.name }}</mat-option>
                     </mat-select>
                     <mat-error>
-                      <strong *ngIf="fg.get('projectType_id').hasError('required')">Jenis Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('projectType_id').hasError('pattern')">Jenis Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <div *ngIf="fg.get('projectType_id').hasError('required')">Jenis Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('projectType_id').hasError('pattern')">Jenis Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 w-100" *ngIf="berkasType.toLowerCase().includes('anime')" [color]="'accent'">
@@ -71,8 +71,8 @@
                     </mat-autocomplete>
                     <small *ngIf="fg.get('anime_name').value" class="text-warning">{{ fg.get('anime_name').value }}</small>
                     <mat-error>
-                      <strong *ngIf="fg.get('anime_id').hasError('required')">ID Anime Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('anime_id').hasError('pattern')">ID Anime Hanya Boleh Angka</strong>
+                      <div *ngIf="fg.get('anime_id').hasError('required')">ID Anime Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('anime_id').hasError('pattern')">ID Anime Hanya Boleh Angka</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 w-100" *ngIf="berkasType.toLowerCase().includes('dorama')" [color]="'accent'">
@@ -92,8 +92,8 @@
                     </mat-autocomplete>
                     <small *ngIf="fg.get('dorama_name').value" class="text-warning">{{ fg.get('dorama_name').value }}</small>
                     <mat-error>
-                      <strong *ngIf="fg.get('dorama_id').hasError('required')">ID Dorama Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('dorama_id').hasError('pattern')">ID Dorama Hanya Boleh Angka</strong>
+                      <div *ngIf="fg.get('dorama_id').hasError('required')">ID Dorama Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('dorama_id').hasError('pattern')">ID Dorama Hanya Boleh Angka</div>
                     </mat-error>
                   </mat-form-field>
                   <div class="col-12 p-3">
@@ -122,8 +122,8 @@
                           </mat-autocomplete>
                           <small class="text-warning">{{ fs.get('fansub_name').value }}</small>
                           <mat-error>
-                            <strong *ngIf="fs.get('fansub_id').hasError('required')">ID Fansub Tidak Boleh Kosong</strong>
-                            <strong *ngIf="fs.get('fansub_id').hasError('pattern')">ID Fansub Hanya Boleh Angka</strong>
+                            <div *ngIf="fs.get('fansub_id').hasError('required')">ID Fansub Tidak Boleh Kosong</div>
+                            <div *ngIf="fs.get('fansub_id').hasError('pattern')">ID Fansub Hanya Boleh Angka</div>
                           </mat-error>
                         </mat-form-field>
                       </div>
@@ -149,8 +149,8 @@
                     <input matInput formControlName="name" placeholder="[Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32].mkv" />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('name').hasError('required')">Nama Berkas Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('name').hasError('pattern')">Nama Berkas Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <div *ngIf="fg.get('name').hasError('required')">Nama Berkas Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('name').hasError('pattern')">Nama Berkas Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
@@ -187,8 +187,8 @@
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
-                          <strong *ngIf="dl.get('name').hasError('required')">Web Tidak Boleh Kosong</strong>
-                          <strong *ngIf="dl.get('name').hasError('pattern')">Web Hanya Boleh Huruf Standar Papan Ketik</strong>
+                          <div *ngIf="dl.get('name').hasError('required')">Web Tidak Boleh Kosong</div>
+                          <div *ngIf="dl.get('name').hasError('pattern')">Web Hanya Boleh Huruf Standar Papan Ketik</div>
                         </mat-error>
                       </mat-form-field>
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
@@ -199,8 +199,8 @@
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
-                          <strong *ngIf="dl.get('url').hasError('required')">Tautan Tidak Boleh Kosong</strong>
-                          <strong *ngIf="dl.get('url').hasError('pattern')">Tautan Link Tidak Valid</strong>
+                          <div *ngIf="dl.get('url').hasError('required')">Tautan Tidak Boleh Kosong</div>
+                          <div *ngIf="dl.get('url').hasError('pattern')">Tautan Link Tidak Valid</div>
                         </mat-error>
                       </mat-form-field>
                     </div>

@@ -23,8 +23,8 @@
                     <input matInput formControlName="to" placeholder="user@domain.tld" matTooltip="Gunakan , Jika Lebih Dari 1" />
                     <mat-icon matSuffix>short_text</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('to').hasError('required')">Alamat Surel Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('to').hasError('pattern')">Email Tidak Valid</strong>
+                      <div *ngIf="fg.get('to').hasError('required')">Alamat Surel Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('to').hasError('pattern')">Email Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
@@ -32,7 +32,7 @@
                     <input matInput formControlName="cc" placeholder="user@domain.tld,user@domain.tld" matTooltip="Gunakan , Jika Lebih Dari 1" />
                     <mat-icon matSuffix>short_text</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('cc').hasError('pattern')">Email Tidak Valid</strong>
+                      <div *ngIf="fg.get('cc').hasError('pattern')">Email Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
@@ -40,7 +40,7 @@
                     <input matInput formControlName="bcc" placeholder="user@domain.tld, user@domain.tld" matTooltip="Gunakan , Jika Lebih Dari 1" />
                     <mat-icon matSuffix>short_text</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('bcc').hasError('pattern')">Email Tidak Valid</strong>
+                      <div *ngIf="fg.get('bcc').hasError('pattern')">Email Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -52,8 +52,8 @@
                     <input matInput formControlName="subject" placeholder="Judul Pesan Blablabla ..." />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
-                      <strong *ngIf="fg.get('subject').hasError('required')">Judul Berita Tidak Boleh Kosong</strong>
-                      <strong *ngIf="fg.get('subject').hasError('pattern')">Judul Berita Hanya Boleh Huruf Standar Papan Ketik</strong>
+                      <div *ngIf="fg.get('subject').hasError('required')">Judul Berita Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('subject').hasError('pattern')">Judul Berita Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="message" [config]="GS.angularEditorConfig"></angular-editor>
