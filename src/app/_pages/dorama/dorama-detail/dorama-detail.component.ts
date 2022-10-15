@@ -149,30 +149,21 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   }
 
   get yearDorama(): Date {
-    try {
-      if ('release_date' in this.doramaData.details) {
-        return new Date(this.doramaData.details.release_date);
-      } else {
-        return new Date(this.doramaData.details.aired.split(' - ')[0]);
-      }
-    } catch (e) {
-      return null;
+    if ('release_date' in this.doramaData?.details) {
+      return new Date(this.doramaData?.details?.release_date) || null;
     }
+    return new Date(this.doramaData?.details?.aired?.split(' - ')[0]) || null;
   }
 
   get seasonDorama(): string {
-    try {
-      return this.gs.seasonalWeather.find(sB => sB.id === Math.ceil((this.yearDorama.getMonth() + 1) / 3)).name;
-    } catch (e) {
-      return '';
-    }
+    return this.gs.seasonalWeather.find(sB => sB.id === Math.ceil((this.yearDorama?.getMonth() + 1) / 3))?.name || null;
   }
 
   openSeasonalDorama(): void {
     this.router.navigate(['/dorama'], {
       queryParams: {
         season: this.seasonDorama,
-        year: this.yearDorama.getFullYear()
+        year: this.yearDorama?.getFullYear()
       }
     });
   }
