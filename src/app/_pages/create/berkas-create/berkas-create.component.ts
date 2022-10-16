@@ -137,6 +137,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
             this.gs.log('[UPLOAD_ERROR]', state.response, 'error');
             this.failOrCancelUpload(state.response);
           }
+        },
+        error: err => {
+          this.gs.log('[UPLOAD_ERROR]', err, 'error');
+          this.failOrCancelUpload(err);
         }
       });
     }
@@ -500,20 +504,20 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   uploadAttachment(event, ddl): void {
     this.ddl = ddl;
     const file = event.target.files[0];
+    this.attachmentLimitExceeded = null;
+    this.attachmentErrorText = null;
     this.gs.log('[ATTACHMENT_SELECTED]', file);
     this.fg.controls['attachment_id'].patchValue(null);
     this.uploadService.disconnect();
     this.uploadService.connect();
     try {
       if (file.size <= CONSTANTS.fileSizeAttachmentTotalLimit) {
-        this.attachmentLimitExceeded = null;
         this.uploadService.handleFiles(file);
       } else {
         this.attachmentLimitExceeded = CONSTANTS.fileSizeAttachmentTotalLimit;
         this.ddl.clear(event);
       }
     } catch (error) {
-      this.attachmentLimitExceeded = null;
       this.ddl.clear(event);
     }
   }
@@ -521,12 +525,13 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   submitAttachment(item: Uploader): void {
     this.attachmentSelected = item;
     item.status = 'queue';
-    this.attachmentErrorText = null;
   }
 
   failOrCancelUpload(err = null): void {
     this.attachmentSelected = null;
     this.attachmentErrorText = err?.error?.result?.message || err?.error?.info || null;
+    this.uploadService.disconnect();
+    this.uploadService.connect();
     this.fg.controls['attachment_id'].patchValue(null);
     this.toast.remove(this.uploadToast.toastId);
     this.ddl.clear();
