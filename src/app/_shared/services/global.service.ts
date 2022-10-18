@@ -24,8 +24,7 @@ export class GlobalService {
     token: `${environment.siteName}_Token`,
     LiveChatResults: `${environment.siteName}_LiveChatResults`,
     SearchResults: `${environment.siteName}_SearchResults`,
-    Torrents : `${environment.siteName}_Torrents`,
-    WeatherJS: `${environment.siteName}_WeatherJS`
+    Torrents : `${environment.siteName}_Torrents`
   };
 
   forceEnableDebugLog = null;
@@ -52,7 +51,6 @@ export class GlobalService {
   isDevMode = true;
   isDarkMode = false;
 
-  weather = null;
   weatherEffect = null;
   weatherRunning = false;
 
@@ -251,9 +249,9 @@ export class GlobalService {
 
   weatherJS(): void {
     const currentMonth = new Date().getMonth() + 1;
-    this.weather = this.seasonalWeather.find(sB => sB.id === Math.ceil(currentMonth / 3));
-    if (this.weather?.cssClassName) {
-      this.weatherEffect = new Sakura('body', { className: this.weather.cssClassName, lifeTime: 12589 });
+    const weather = this.seasonalWeather.find(sB => sB.id === Math.ceil(currentMonth / 3));
+    if (weather?.cssClassName) {
+      this.weatherEffect = new Sakura('body', { className: weather.cssClassName, lifeTime: 12589 });
       this.weatherRunning = true;
     }
   }

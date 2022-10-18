@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { environment } from '../../../../environments/app/environment';
 
@@ -23,6 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   subsGlobalRoom = null;
 
   constructor(
+    private snackBar: MatSnackBar,
     private lms: LeftMenuService,
     private rps: RightPanelService,
     private router: Router,
@@ -84,6 +86,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleWeather(): void {
     this.gs.weatherToggle();
+    this.snackBar.open(`Berhasil ${this.gs.weatherRunning ? 'Menyalakan' : 'Mematikan'} Efek Musiman`, 'Ok');
   }
 
   reloadPage(): void {
@@ -107,6 +110,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.gs.toggleDarkTheme(firstRun);
     this.ls.setItem(this.gs.localStorageKeys.DarkMode, JSON.stringify(this.gs.isDarkMode));
     this.pi.updateStatusBarTheme(this.gs.isDarkMode);
+    this.snackBar.open(`Menggunakan Mode ${this.gs.isDarkMode ? 'Gelap' : 'Terang'}`, 'Ok');
   }
 
 }

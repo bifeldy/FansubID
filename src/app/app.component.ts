@@ -213,8 +213,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }
         this.injectServerTimeClock();
-        if (this.gs.weather) {
-          this.snackBar.open('Gunakan Menu Di Kanan Atas Untuk Mematikan Efek Musiman!', 'Ok');
+        if (this.gs.weatherEffect) {
+          this.snackBar.open('Gunakan Menu Di Kanan Atas (Gambar Bunga) Untuk Mematikan Animasi Efek Musiman!', 'Ok');
         }
       }, 1234);
 
