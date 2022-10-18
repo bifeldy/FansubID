@@ -1,10 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 
-import { LikeAndDislikeModel } from '../../../../models/req-res.model';
+import { LikeAndDislikeModel, RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../services/auth.service';
@@ -19,9 +19,13 @@ import { BusyService } from '../../services/busy.service';
 })
 export class ReportComponent implements OnInit, OnDestroy {
 
-  @Input() report = {
+  summary = {
     like: 0,
-    dislike: 0
+    dislike: 0,
+    unique_ip: 0,
+    unique_user: 0,
+    verified_user: 0,
+    un_verified_user: 0
   };
 
   doughnutChartKetertarikanOptions: ChartOptions = {
@@ -149,6 +153,14 @@ export class ReportComponent implements OnInit, OnDestroy {
     return LikeAndDislikeModel.DISLIKE;
   }
 
+  get SHOWALLSTATS(): boolean {
+    const role = this.as.currentUserSubject?.value?.role;
+    if (role) {
+      return role === RoleModel.ADMIN || role === RoleModel.MODERATOR || role === RoleModel.FANSUBBER;
+    }
+    return false;
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.reportTrackType = this.router.url.split('/')[1];
@@ -160,6 +172,10 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.gs.log(`[SOCKET_TRACK-GET]`, response);
         this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna', 'Terverifikasi', 'Belum Verifikasi'];
         this.barChartUniqueData = [response.unique_ip, response.unique_user, response.verified_user, response.un_verified_user];
+        this.summary.unique_ip = response.unique_ip;
+        this.summary.unique_user = response.unique_user;
+        this.summary.verified_user = response.verified_user;
+        this.summary.un_verified_user = response.un_verified_user;
         this.lineChartVisitorData = [];
         this.lineChartVisitorLabels = [];
         for (const v of response.visitor) {
@@ -220,8 +236,16 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.gs.log('[LIKE-DISLIKE_GET_REPORT_SUCCESS]', res);
         this.doughnutChartKetertarikanLabels = [];
         this.doughnutChartKetertarikanData = [];
+        this.summary.like = 0;
+        this.summary.dislike = 0;
         for (const s of res.result.statistics) {
-          this.doughnutChartKetertarikanLabels.push(s.type === this.LIKE ? 'Suka' : 'Tidak Suka');
+          if (s.type === this.LIKE) {
+            this.doughnutChartKetertarikanLabels.push('Suka');
+            this.summary.like = s.count;
+          } else {
+            this.doughnutChartKetertarikanLabels.push('Tidak Suka');
+            this.summary.dislike = s.count;
+          }
           this.doughnutChartKetertarikanData.push(s.count);
         }
         this.myReport = res.result.myReport;
