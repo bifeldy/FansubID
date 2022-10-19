@@ -54,7 +54,7 @@ export class DocsComponent implements OnInit {
         this.gs.log('[DNSS_LIST_SUCCESS]', res);
         const records = [];
         for (const rec of res.results) {
-          if (rec.content.includes('dv.googlehosted.com')) {
+          if (this.gs.includesOneOf(rec.content, ['dv.googlehosted.com', 'verify.bing.com'])) {
             continue;
           }
           records.push(rec);
