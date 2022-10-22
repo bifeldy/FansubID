@@ -34,7 +34,7 @@ export class Mailbox implements MailboxModel {
   @Column({ type: 'text', default: null })
   text: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   date: number | Date;
 
   @ManyToMany(type => Attachment)
