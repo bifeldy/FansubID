@@ -1,6 +1,7 @@
 .wrapper {
-  background: #1fa260;
+  /* background: #1fa260; */
   /* background: linear-gradient(to bottom, #3f51b5 0%, #0d6efd 100%); */
+  /* background: linear-gradient(to bottom, #673ab7 0%, #ee0dfd 100%); */
   position: sticky;
   left: 0;
   width: 100%;

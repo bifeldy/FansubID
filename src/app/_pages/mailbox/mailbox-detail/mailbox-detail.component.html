@@ -1,7 +1,7 @@
-<div *ngIf="mailData">
+<div *ngIf="mailData" class="p-0 m-0">
 
   <div class="container-fluid p-0">
-    <div class="wrapper">
+    <div class="wrapper" [style.background]=" GS.isDarkMode ? 'linear-gradient(to bottom, #673ab7 0%, #ee0dfd 100%)' : 'linear-gradient(to bottom, #3f51b5 0%, #ee0dfd 100%)'">
       <ul class="bg-bubbles align-items-center p-0">
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
         <div class="row align-items-center h-100">

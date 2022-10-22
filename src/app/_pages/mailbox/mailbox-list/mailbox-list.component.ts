@@ -54,6 +54,10 @@ export class MailboxListComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get GS(): GlobalService {
+    return this.gs;
+  }
+
   get AS(): AuthService {
     return this.as;
   }

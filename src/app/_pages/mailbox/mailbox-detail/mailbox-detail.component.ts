@@ -36,6 +36,10 @@ export class MailboxDetailComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get GS(): GlobalService {
+    return this.gs;
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.getMail();
