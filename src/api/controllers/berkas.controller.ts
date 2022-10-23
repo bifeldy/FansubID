@@ -227,24 +227,26 @@ export class BerkasController {
                           mkvAttachment.parent_attachment_ = resAttachmentSave;
                           const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
                           // Upload Video Attachment -- Subtitles, Fonts, etc
-                          this.gdrive.gDrive(true).then(async (gdrive) => {
-                            const dfile = await gdrive.files.create({
-                              requestBody: {
-                                name: `${resMkvAttachmentSave.name}.${resMkvAttachmentSave.ext}`,
-                                parents: [environment.gdriveFolderId],
-                                mimeType: resMkvAttachmentSave.mime
-                              },
-                              media: {
-                                mimeType: resMkvAttachmentSave.mime,
-                                body: createReadStream(`${environment.uploadFolder}/${fileName}.${fileExt}`)
-                              },
-                              fields: 'id'
-                            }, { signal: null });
-                            resMkvAttachmentSave.mime = dfile.data.mimeType;
-                            resMkvAttachmentSave.google_drive = dfile.data.id;
-                            await this.attachmentRepo.save(resMkvAttachmentSave);
-                            this.gs.deleteAttachment(`${fileName}.${fileExt}`);
-                          }).catch(e5 => this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error'));
+                          if (environment.production) {
+                            this.gdrive.gDrive(true).then(async (gdrive) => {
+                              const dfile = await gdrive.files.create({
+                                requestBody: {
+                                  name: `${resMkvAttachmentSave.name}.${resMkvAttachmentSave.ext}`,
+                                  parents: [environment.gdriveFolderId],
+                                  mimeType: resMkvAttachmentSave.mime
+                                },
+                                media: {
+                                  mimeType: resMkvAttachmentSave.mime,
+                                  body: createReadStream(`${environment.uploadFolder}/${fileName}.${fileExt}`)
+                                },
+                                fields: 'id'
+                              }, { signal: null });
+                              resMkvAttachmentSave.mime = dfile.data.mimeType;
+                              resMkvAttachmentSave.google_drive = dfile.data.id;
+                              await this.attachmentRepo.save(resMkvAttachmentSave);
+                              this.gs.deleteAttachment(`${fileName}.${fileExt}`);
+                            }).catch(e5 => this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error'));
+                          }
                         } catch (e3) {
                           this.gs.log('[FILE_NOTE-ERROR] 🎼', e3, 'error');
                         }
@@ -261,27 +263,29 @@ export class BerkasController {
               videoExtractCompleted = true;
             }
             // Upload Video -- Mp4, Mkv, etc
-            this.gdrive.gDrive(true).then(async (gdrive) => {
-              const dfile = await gdrive.files.create({
-                requestBody: {
-                  name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-                  parents: [environment.gdriveFolderId],
-                  mimeType: resAttachmentSave.mime
-                },
-                media: {
-                  mimeType: resAttachmentSave.mime,
-                  body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
-                },
-                fields: 'id'
-              }, { signal: null });
-              resAttachmentSave.mime = dfile.data.mimeType;
-              resAttachmentSave.google_drive = dfile.data.id;
-              await this.attachmentRepo.save(resAttachmentSave);
-              videoUploadCompleted = true;
-              if (videoExtractCompleted) {
-                this.gs.deleteAttachment(files[fIdx].name);
-              }
-            }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+            if (environment.production) {
+              this.gdrive.gDrive(true).then(async (gdrive) => {
+                const dfile = await gdrive.files.create({
+                  requestBody: {
+                    name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                    parents: [environment.gdriveFolderId],
+                    mimeType: resAttachmentSave.mime
+                  },
+                  media: {
+                    mimeType: resAttachmentSave.mime,
+                    body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
+                  },
+                  fields: 'id'
+                }, { signal: null });
+                resAttachmentSave.mime = dfile.data.mimeType;
+                resAttachmentSave.google_drive = dfile.data.id;
+                await this.attachmentRepo.save(resAttachmentSave);
+                videoUploadCompleted = true;
+                if (videoExtractCompleted) {
+                  this.gs.deleteAttachment(files[fIdx].name);
+                }
+              }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+            }
           } else {
             await this.attachmentRepo.remove(resAttachmentSave);
             throw new HttpException({

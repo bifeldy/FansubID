@@ -104,24 +104,27 @@ export class MailWebhookController {
           const fIdx = files.findIndex(f => f.name.includes(resAttachmentSave.name));
           if (fIdx >= 0) {
             attachments.push(resAttachmentSave);
-            this.gdrive.gDrive(true).then(async (gdrive) => {
-              const dfile = await gdrive.files.create({
-                requestBody: {
-                  name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-                  parents: [environment.gdriveFolderId],
-                  mimeType: resAttachmentSave.mime
-                },
-                media: {
-                  mimeType: resAttachmentSave.mime,
-                  body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
-                },
-                fields: 'id'
-              }, { signal: abortController.signal });
-              resAttachmentSave.mime = dfile.data.mimeType;
-              resAttachmentSave.google_drive = dfile.data.id;
-              await this.attachmentRepo.save(resAttachmentSave);
-              this.gs.deleteAttachment(files[fIdx].name);
-            }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+            // Upload Attachment -- Jpg, Png, etc
+            if (environment.production) {
+              this.gdrive.gDrive(true).then(async (gdrive) => {
+                const dfile = await gdrive.files.create({
+                  requestBody: {
+                    name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                    parents: [environment.gdriveFolderId],
+                    mimeType: resAttachmentSave.mime
+                  },
+                  media: {
+                    mimeType: resAttachmentSave.mime,
+                    body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
+                  },
+                  fields: 'id'
+                }, { signal: abortController.signal });
+                resAttachmentSave.mime = dfile.data.mimeType;
+                resAttachmentSave.google_drive = dfile.data.id;
+                await this.attachmentRepo.save(resAttachmentSave);
+                this.gs.deleteAttachment(files[fIdx].name);
+              }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+            }
           } else {
             abortController.abort();
             await this.attachmentRepo.remove(resAttachmentSave);
