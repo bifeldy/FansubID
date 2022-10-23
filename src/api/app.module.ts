@@ -1,5 +1,6 @@
 // 3rd Party Library
 import { Chalk } from 'chalk';
+import throttle from 'express-throttle-bandwidth';
 
 // NodeJS Library
 import { join } from 'node:path';
@@ -296,6 +297,7 @@ export class AppModule {
     mc.apply(LogoutMiddleware).forRoutes({ path:'/logout', method: RequestMethod.DELETE });
     mc.apply(CacheMiddleware).forRoutes({ path: '*', method: RequestMethod.GET });
     mc.apply(
+      throttle(CONSTANTS.attachmentSpeedLimiterBps),
       uploadx.upload({
         path: '/attachment',
         directory: environment.uploadFolder,

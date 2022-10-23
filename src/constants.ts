@@ -1,4 +1,5 @@
 export const CONSTANTS = {
+  attachmentSpeedLimiterBps: 512 * 1000, // 512 KB/s
   blacklistedWords: [
     '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id',
     'localhost', 'mail', 'email', 'e-mail', 'tracker', 'fansub', 'fansubber',
@@ -10,9 +11,9 @@ export const CONSTANTS = {
   decoratorVerifiedOnly: 'verified-only',
   fileSizeAttachmentChunkLimit: 100 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileSizeAttachmentTotalLimit: 1024 * 1000 * 1000, // Max Upload Limits -- 1 GB
-  fileSizeImageLimit: 256 * 1000,
+  fileSizeImageLimit: 256 * 1000, // 256 KB
   jwtAlgorithm: 'HS512',
-  jwtExpiredIn: 24 * 60 * 60,
+  jwtExpiredIn: 24 * 60 * 60, // 1 Day
   quizOptionsCountHirakata: 5,
   quizOptionsCountKanji: 6,
   regexIpAddress: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
@@ -26,10 +27,10 @@ export const CONSTANTS = {
   socketRoomNameGlobalFansub: 'GLOBAL_FANSUB',
   socketRoomNameServerLogs: 'SERVER_LOGS',
   timeoutCancelRegisterKey: 'TIMEOUT_CANCEL_REGISTER',
-  timeoutCancelRegisterTime: 3 * 60 * 1000,
+  timeoutCancelRegisterTime: 3 * 60 * 1000, // 3 Minutes
   timeoutDeleteTempAttachmentKey: 'TIMEOUT_DELETE_TEMP_ATTACHMENT',
-  timeoutDeleteTempAttachmentTime: 3 * 60 * 1000,
-  timeLoginRememberMe: 7 * 24 * 60 * 60,
-  timeMaxDaysNotification: 7 * 24 * 60 * 60 * 1000,
-  timeRegisterActivation: 5 * 60
+  timeoutDeleteTempAttachmentTime: 3 * 60 * 1000, // 3 Minutes
+  timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days
+  timeMaxDaysNotification: 7 * 24 * 60 * 60 * 1000, // 7 Days
+  timeRegisterActivation: 5 * 60 // 5 Minutes
 };
