@@ -537,4 +537,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.ddl.clear();
   }
 
+  verify(): void {
+    this.router.navigate(['/verify'], {
+      queryParams: {
+        returnUrl: this.router.url
+      }
+    });
+  }
+
 }
