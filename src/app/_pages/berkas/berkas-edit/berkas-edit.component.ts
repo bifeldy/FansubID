@@ -17,6 +17,7 @@ import { BerkasService } from '../../../_shared/services/berkas.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-berkas-edit',
@@ -80,7 +81,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     private toast: ToastrService,
     private imgbb: ImgbbService,
     private gs: GlobalService,
-    private as: AuthService
+    private as: AuthService,
+    private notif: NotificationsService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -110,6 +112,13 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
           this.bs.idle();
           if (this.as.currentUserSubject?.value?.id !== res.result.user_.id) {
             this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
+            this.notif.addNotif(
+              null,
+              new Date().getTime(),
+              'warning',
+              'Whoops!',
+              'Berkas Ini Bukan Milikmu'
+            );
             this.router.navigateByUrl(`/berkas/${res.result.id}`);
           } else {
             this.loadProjectList();

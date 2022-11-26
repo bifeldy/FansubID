@@ -13,6 +13,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { NewsService } from '../../../_shared/services/news.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-news-edit',
@@ -50,7 +51,8 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     private news: NewsService,
     private toast: ToastrService,
     private gs: GlobalService,
-    private as: AuthService
+    private as: AuthService,
+    private notif: NotificationsService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -76,6 +78,13 @@ export class NewsEditComponent implements OnInit, OnDestroy {
           this.bs.idle();
           if (this.as.currentUserSubject?.value?.id !== res.result.user_.id) {
             this.toast.warning('Berita Ini Milik Orang Lain', 'Whoops!');
+            this.notif.addNotif(
+              null,
+              new Date().getTime(),
+              'warning',
+              'Whoops!',
+              'Berita Ini Milik Orang Lain'
+            );
             this.router.navigateByUrl(`/news/${this.newsId}`);
           } else {
             this.initForm(res.result);

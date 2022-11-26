@@ -9,6 +9,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { NihongoService } from '../../../_shared/services/nihongo.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-belajar',
@@ -99,7 +100,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     private gs: GlobalService,
     private bs: BusyService,
     private ds: DialogService,
-    private nihon: NihongoService
+    private nihon: NihongoService,
+    private notif: NotificationsService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -256,6 +258,13 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         this.editDataset(null);
       } else {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
+        this.notif.addNotif(
+          null,
+          new Date().getTime(),
+          'warning',
+          'Whoops!',
+          'Khusus Pengguna Terverifikasi'
+        );
         this.router.navigate(['/verify'], {
           queryParams: {
             returnUrl: this.router.url

@@ -13,6 +13,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-fansub-create',
@@ -56,7 +57,8 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private fansub: FansubService,
     private toast: ToastrService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private notif: NotificationsService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -251,6 +253,13 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     if (this.fg.invalid || urls.length === 0) {
       if (urls.length === 0) {
         this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)');
+        this.notif.addNotif(
+          null,
+          new Date().getTime(),
+          'warning',
+          'Form Tidak lengkap (Web/FB/DC)',
+          'Harap Isi Salah Satu URL'
+        );
       }
       this.submitted = false;
       this.bs.idle();

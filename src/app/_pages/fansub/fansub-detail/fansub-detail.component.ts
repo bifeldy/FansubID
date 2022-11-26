@@ -16,6 +16,7 @@ import { StatsServerService } from '../../../_shared/services/stats-server.servi
 import { WinboxService } from '../../../_shared/services/winbox.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -105,7 +106,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     private fansub: FansubService,
     private ss: StatsServerService,
     private toast: ToastrService,
-    private wb: WinboxService
+    private wb: WinboxService,
+    private notif: NotificationsService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -531,6 +533,13 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         });
       } else {
         this.toast.warning('Anda Harus Menjadi Anggota Untuk Klaim SubDomain!', 'Whoops!');
+        this.notif.addNotif(
+          null,
+          new Date().getTime(),
+          'warning',
+          'Whoops!',
+          'Anda Harus Menjadi Anggota Untuk Klaim SubDomain!'
+        );
       }
     } else {
       this.router.navigate(['/login'], {

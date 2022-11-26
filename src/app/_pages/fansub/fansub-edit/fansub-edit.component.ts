@@ -16,6 +16,7 @@ import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-fansub-edit',
@@ -70,7 +71,8 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     private fansub: FansubService,
     private toast: ToastrService,
     private as: AuthService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private notif: NotificationsService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -105,6 +107,13 @@ export class FansubEditComponent implements OnInit, OnDestroy {
           this.editable = res.result.editable;
           if (!this.editable) {
             this.toast.warning('Data Fansub Ini Tidak Dapat Diubah', 'Whoops!');
+            this.notif.addNotif(
+              null,
+              new Date().getTime(),
+              'warning',
+              'Whoops!',
+              'Data Fansub Ini Tidak Dapat Diubah'
+            );
             this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
           } else {
             this.bs.busy();
@@ -123,6 +132,13 @@ export class FansubEditComponent implements OnInit, OnDestroy {
                   this.initForm(res.result);
                 } else {
                   this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!');
+                  this.notif.addNotif(
+                    null,
+                    new Date().getTime(),
+                    'warning',
+                    'Whoops!',
+                    'Anda Harus Menjadi Anggota Untuk Mengubah Data!'
+                  );
                   this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
                 }
               },
@@ -347,6 +363,13 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     if (this.fg.invalid || urls.length === 0) {
       if (urls.length === 0) {
         this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)');
+        this.notif.addNotif(
+          null,
+          new Date().getTime(),
+          'warning',
+          'Form Tidak lengkap (Web/FB/DC)',
+          'Harap Isi Salah Satu URL'
+        );
       }
       this.submitted = false;
       this.bs.idle();

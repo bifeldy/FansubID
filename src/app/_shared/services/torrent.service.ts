@@ -120,7 +120,7 @@ export class TorrentService {
     });
     torrent.on('warning', warn => {
       this.gs.log('[TORRENT_FILE_WARNING]', warn);
-      this.toast.warning(warn.toString(), 'Yuhuu! Warning.');
+      this.toast.info(warn.toString(), 'Yuhuu!');
       if (callback) {
         callback(warn, null);
       }
@@ -220,7 +220,7 @@ export class TorrentService {
       next: (res: any) => {
         this.gs.log('[TORRENT_CLIENT_HEALTH_SUCCESS]', res.result);
         if (res.result.seeds <= 0) {
-          this.toast.warning('Tidak Ada Seeder!', 'Whoops! Error.');
+          this.toast.info('Tidak Ada Seeder!', 'Whoops!');
           if (callback) {
             callback(null, res.result);
           }

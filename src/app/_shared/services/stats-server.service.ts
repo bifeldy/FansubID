@@ -275,6 +275,13 @@ export class StatsServerService {
     this.mySocket.on('multiple-connection', (multipleConnection, callback) => {
       this.gs.log('[SOCKET_MULTIPLE-CONNECTION]', multipleConnection);
       this.toast.warning('Sesi lain telah aktif!', 'Koneksi Duplikat');
+      this.notif.addNotif(
+        null,
+        new Date().getTime(),
+        'warning',
+        'Koneksi Duplikat',
+        'Sesi lain telah aktif!'
+      );
       this.mySocket.io.reconnection(false);
       if (callback) {
         callback();
