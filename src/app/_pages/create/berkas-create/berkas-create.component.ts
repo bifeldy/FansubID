@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
 import { Uploader, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
@@ -19,7 +18,7 @@ import { BerkasService } from '../../../_shared/services/berkas.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
+import { ToastService } from '../../../_shared/services/toast.service';
 
 @Component({
   selector: 'app-berkas-create',
@@ -85,11 +84,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     private fansub: FansubService,
     private berkas: BerkasService,
     private imgbb: ImgbbService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private gs: GlobalService,
     private as: AuthService,
-    private uploadService: UploadxService,
-    private notif: NotificationsService
+    private uploadService: UploadxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -129,14 +127,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
                 disableTimeOut: 'extendedTimeOut',
                 tapToDismiss: false,
                 progressAnimation: 'decreasing'
-              }
-            );
-            this.notif.addNotif(
-              null,
-              new Date().getTime(),
-              'warning',
-              'Lampiran Akan Dihapus ...',
-              'Segera Kirim Data Berkas Anda!'
+              },
+              true
             );
             this.timerTimeout = setTimeout(() => {
               this.gs.log('[UPLOAD_TIMEOUT]', CONSTANTS.timeoutDeleteTempAttachmentTime);

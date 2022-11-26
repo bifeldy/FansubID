@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from '@angular/router';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { CONSTANTS } from '../../../constants';
 
 import { RoleModel } from '../../../models/req-res.model';
@@ -10,6 +8,7 @@ import { RoleModel } from '../../../models/req-res.model';
 import { AuthService } from '../services/auth.service';
 import { BusyService } from '../services/busy.service';
 import { GlobalService } from '../services/global.service';
+import { ToastService } from '../services/toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,7 @@ export class RolesGuard implements CanActivate {
   constructor(
     private router: Router,
     private as: AuthService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private gs: GlobalService,
     private bs: BusyService
   ) {
@@ -41,12 +40,12 @@ export class RolesGuard implements CanActivate {
           return true;
         }
         this.bs.clear();
-        this.toast.error(`Membutuhkan Role :: ${requiredRoles.join(' / ')}`, 'Whoops, Akses Ditolak!');
+        this.toast.error(`Membutuhkan Role :: ${requiredRoles.join(' / ')}`, 'Whoops, Akses Ditolak!', null, true);
         this.router.navigateByUrl(this.gs.previousUrl || '/');
         return false;
       }
       this.bs.clear();
-      this.toast.error(`Harap Login Terlebih Dahulu~`, 'Whoops, Akses Ditolak!');
+      this.toast.error(`Harap Login Terlebih Dahulu~`, 'Whoops, Akses Ditolak!', null, true);
     }
     this.router.navigate(['/login'], {
       queryParams: {

@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../constants';
 
@@ -18,6 +17,7 @@ import { LeftMenuService } from './left-menu.service';
 import { AuthService } from './auth.service';
 import { DialogService } from './dialog.service';
 import { ServiceWorkerService } from './service-worker.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -69,7 +69,7 @@ export class StatsServerService {
     private gs: GlobalService,
     private notif: NotificationsService,
     private lms: LeftMenuService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private ds: DialogService,
     private sw: ServiceWorkerService
   ) {
@@ -179,7 +179,7 @@ export class StatsServerService {
     });
     this.mySocket.on('force-logout', reason => {
       this.gs.log('[SOCKET_EXIT]', reason);
-      this.toast.info(reason, 'Keluar Paksa!');
+      this.toast.info(reason, 'Keluar Paksa!', null, true);
       this.as.logout();
     });
     this.mySocket.on('new-notification', (notifObj: any) => {
@@ -274,14 +274,7 @@ export class StatsServerService {
     });
     this.mySocket.on('multiple-connection', (multipleConnection, callback) => {
       this.gs.log('[SOCKET_MULTIPLE-CONNECTION]', multipleConnection);
-      this.toast.warning('Sesi lain telah aktif!', 'Koneksi Duplikat');
-      this.notif.addNotif(
-        null,
-        new Date().getTime(),
-        'warning',
-        'Koneksi Duplikat',
-        'Sesi lain telah aktif!'
-      );
+      this.toast.warning('Sesi lain telah aktif!', 'Koneksi Duplikat', null, true);
       this.mySocket.io.reconnection(false);
       if (callback) {
         callback();

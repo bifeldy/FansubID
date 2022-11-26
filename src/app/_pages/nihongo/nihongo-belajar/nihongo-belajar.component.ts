@@ -2,14 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { AuthService } from '../../../_shared/services/auth.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { NihongoService } from '../../../_shared/services/nihongo.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
+import { ToastService } from '../../../_shared/services/toast.service';
 
 @Component({
   selector: 'app-belajar',
@@ -95,13 +93,12 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private toast: ToastrService,
+    private toast: ToastService,
     private as: AuthService,
     private gs: GlobalService,
     private bs: BusyService,
     private ds: DialogService,
-    private nihon: NihongoService,
-    private notif: NotificationsService
+    private nihon: NihongoService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -257,14 +254,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
       if (this.as.currentUserSubject?.value?.verified) {
         this.editDataset(null);
       } else {
-        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!');
-        this.notif.addNotif(
-          null,
-          new Date().getTime(),
-          'warning',
-          'Whoops!',
-          'Khusus Pengguna Terverifikasi'
-        );
+        this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!', null, true);
         this.router.navigate(['/verify'], {
           queryParams: {
             returnUrl: this.router.url

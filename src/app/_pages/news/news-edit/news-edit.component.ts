@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { CONSTANTS } from '../../../../constants';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -13,7 +11,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { NewsService } from '../../../_shared/services/news.service';
 import { AuthService } from '../../../_shared/services/auth.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
+import { ToastService } from '../../../_shared/services/toast.service';
 
 @Component({
   selector: 'app-news-edit',
@@ -49,10 +47,9 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private imgbb: ImgbbService,
     private news: NewsService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private gs: GlobalService,
-    private as: AuthService,
-    private notif: NotificationsService
+    private as: AuthService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -77,14 +74,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
           this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
           this.bs.idle();
           if (this.as.currentUserSubject?.value?.id !== res.result.user_.id) {
-            this.toast.warning('Berita Ini Milik Orang Lain', 'Whoops!');
-            this.notif.addNotif(
-              null,
-              new Date().getTime(),
-              'warning',
-              'Whoops!',
-              'Berita Ini Milik Orang Lain'
-            );
+            this.toast.warning('Berita Ini Milik Orang Lain', 'Whoops!', null, true);
             this.router.navigateByUrl(`/news/${this.newsId}`);
           } else {
             this.initForm(res.result);

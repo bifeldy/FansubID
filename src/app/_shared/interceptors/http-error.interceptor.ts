@@ -4,13 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from '../services/global.service';
 import { AuthService } from '../services/auth.service';
 import { BusyService } from '../services/busy.service';
 import { StatsServerService } from '../services/stats-server.service';
 import { LocalStorageService } from '../services/local-storage.service';
+import { ToastService } from '../services/toast.service';
 
 import { environment } from '../../../environments/app/environment';
 
@@ -21,7 +21,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private gs: GlobalService,
     private router: Router,
     private as: AuthService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private bs: BusyService,
     private ss: StatsServerService,
     private ls: LocalStorageService,

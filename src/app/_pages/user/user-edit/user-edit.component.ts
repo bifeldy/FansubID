@@ -2,8 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { CONSTANTS } from '../../../../constants';
 
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -13,7 +11,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { CryptoService } from '../../../_shared/services/crypto.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
+import { ToastService } from '../../../_shared/services/toast.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -55,7 +53,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private toast: ToastrService,
+    private toast: ToastService,
     private bs: BusyService,
     private us: UserService,
     private pi: PageInfoService,
@@ -63,8 +61,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private gs: GlobalService,
     private as: AuthService,
-    private cs: CryptoService,
-    private notif: NotificationsService
+    private cs: CryptoService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -101,14 +98,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           this.gs.log('[USER_DETAIL_SUCCESS]', res);
           this.bs.idle();
           if (this.as.currentUserSubject?.value?.id !== res.result.id) {
-            this.toast.warning('Profile Ini Milik Orang Lain', 'Whoops!');
-            this.notif.addNotif(
-              null,
-              new Date().getTime(),
-              'warning',
-              'Whoops!',
-              'Profile Ini Milik Orang Lain'
-            );
+            this.toast.warning('Profile Ini Milik Orang Lain', 'Whoops!', null, true);
             this.router.navigateByUrl(`/user/${this.username}`);
           } else {
             this.initForm(res.result);

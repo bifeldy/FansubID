@@ -4,7 +4,6 @@ import webTorrent from 'webtorrent';
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
 import { Options, Instance, Torrent, TorrentOptions } from 'webtorrent';
 import { Wire } from 'bittorrent-protocol';
 import { openDB } from 'idb';
@@ -15,6 +14,7 @@ import { environment } from '../../../environments/app/environment';
 import { GlobalService } from './global.service';
 import { LocalStorageService } from './local-storage.service';
 import { ApiService } from './api.service';
+import { ToastService } from './toast.service';
 
 declare const WebTorrent: typeof webTorrent;
 
@@ -65,7 +65,7 @@ export class TorrentService {
   constructor(
     private gs: GlobalService,
     private api: ApiService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
@@ -75,7 +75,7 @@ export class TorrentService {
         this.gs.log('[TORRENT_CLIENT_WEB_MODE_INITIALIZED]', this.webClient);
         this.handleWebClient();
       } else {
-        this.toast.error('WebRTC Not Supported!', 'Whoops! Error.');
+        this.toast.error('WebRTC Not Supported!', 'Whoops!', null, true);
       }
     }
   }
@@ -91,7 +91,7 @@ export class TorrentService {
   handleWebClient(): void {
     this.webClient.on('torrent', torrent => {
       this.gs.log('[TORRENT_CLIENT_ADD_TORRENT_FILE]', torrent);
-      this.toast.info(torrent.infoHash, 'Woaw, Antrian Baru!');
+      this.toast.info(torrent.infoHash, 'Woaw, Antrian Baru!', null, true);
       this.tableDataRowValue.push(torrent);
       this.tableDataRowSubject.next(this.tableDataRowValue);
       if (this.refCallback) {
@@ -100,7 +100,7 @@ export class TorrentService {
     });
     this.webClient.on('error', err => {
       this.gs.log('[TORRENT_CLIENT_ERROR]', err);
-      this.toast.error(err.toString(), 'Whoops! Error.');
+      this.toast.error(err.toString(), 'Whoops!', null, true);
       this.error = err;
       if (this.refCallback) {
         this.refCallback(this.error, null);
@@ -111,7 +111,7 @@ export class TorrentService {
   handleWebTorrent(torrent: Torrent, callback): void {
     torrent.on('done', () => {
       this.gs.log('[TORRENT_FILE_DONE]', torrent);
-      this.toast.success(`Ada Torrent Yang Sudah Selesai Di Download`, 'Yeay, Selesai!');
+      this.toast.success(`Ada Torrent Yang Sudah Selesai Di Download`, 'Yeay, Selesai!', null, true);
       this.torrentsQueue[torrent.infoHash].completed = true;
       this.ls.setItem(this.gs.localStorageKeys.Torrents, this.torrentsQueue);
       if (callback) {
@@ -120,14 +120,14 @@ export class TorrentService {
     });
     torrent.on('warning', warn => {
       this.gs.log('[TORRENT_FILE_WARNING]', warn);
-      this.toast.info(warn.toString(), 'Yuhuu!');
+      this.toast.info(warn.toString(), 'Yuhuu!', null, true);
       if (callback) {
         callback(warn, null);
       }
     });
     torrent.on('error', err => {
       this.gs.log('[TORRENT_FILE_ERROR]', err);
-      this.toast.error(err.toString(), 'Whoops! Error.');
+      this.toast.error(err.toString(), 'Whoops!', null, true);
       if (callback) {
         callback(err, null);
       }
@@ -220,14 +220,14 @@ export class TorrentService {
       next: (res: any) => {
         this.gs.log('[TORRENT_CLIENT_HEALTH_SUCCESS]', res.result);
         if (res.result.seeds <= 0) {
-          this.toast.info('Tidak Ada Seeder!', 'Whoops!');
+          this.toast.info('Tidak Ada Seeder!', 'Whoops!', null, true);
           if (callback) {
             callback(null, res.result);
           }
         } else {
           this.webClient.add(magnetHash, opts, torrent => {
             this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
-            this.toast.info('Memulai Download ...', 'Download!');
+            this.toast.info('Memulai Download ...', 'Download!', null, true);
             this.processTorrent(torrent, false, callback);
           });
         }
@@ -250,7 +250,7 @@ export class TorrentService {
       name: userInput.torrentBerkasName.inputText
     } as any), torrent => {
       this.gs.log('[TORRENT_FILE_SEED_READY]', torrent);
-      this.toast.info('Memulai Seeding ...', 'Seeding');
+      this.toast.info('Memulai Seeding ...', 'Seeding', null, true);
       this.processTorrent(torrent, true, callback);
     });
   }

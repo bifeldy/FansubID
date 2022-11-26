@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { GlobalService } from '../../../_shared/services/global.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
+import { ToastService } from '../../../_shared/services/toast.service';
 
 @Component({
   selector: 'app-tes',
@@ -16,10 +14,9 @@ export class NihongoTesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private toast: ToastrService,
+    private toast: ToastService,
     private gs: GlobalService,
-    private ss: StatsServerService,
-    private notif: NotificationsService
+    private ss: StatsServerService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -33,14 +30,7 @@ export class NihongoTesComponent implements OnInit {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       if (!this.ss.mySocket?.id) {
-        this.toast.warning('Tidak Dapat Terhubung Melalui Web Socket', 'Gagal Menyambung Ke Jaringan!');
-        this.notif.addNotif(
-          null,
-          new Date().getTime(),
-          'warning',
-          'Gagal Menyambung Ke Jaringan!',
-          'Tidak Dapat Terhubung Melalui Web Socket'
-        );
+        this.toast.warning('Tidak Dapat Terhubung Melalui Web Socket', 'Gagal Menyambung Ke Jaringan!', null, true);
         this.router.navigateByUrl('/nihongo');
       }
       if (!this.gs.isDarkMode) {

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { saveAs } from 'file-saver';
-import { ToastrService } from 'ngx-toastr';
 
 import { GlobalService } from './global.service';
 import { DdlLampiranService } from './ddl-lampiran.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class DownloadManagerService {
 
   constructor(
     private gs: GlobalService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private dls: DdlLampiranService
   ) {
     if (this.gs.isBrowser) {
@@ -55,7 +55,8 @@ export class DownloadManagerService {
         timeOut: 0,
         disableTimeOut: 'extendedTimeOut',
         tapToDismiss: false
-      }
+      },
+      true
     );
     if (!attachment.isCompleted) {
       attachment.isDownloading = true;

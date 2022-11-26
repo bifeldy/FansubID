@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -17,7 +16,7 @@ import { BerkasService } from '../../../_shared/services/berkas.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
+import { ToastService } from '../../../_shared/services/toast.service';
 
 @Component({
   selector: 'app-berkas-edit',
@@ -78,11 +77,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     private project: ProjectService,
     private fansub: FansubService,
     private berkas: BerkasService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private imgbb: ImgbbService,
     private gs: GlobalService,
-    private as: AuthService,
-    private notif: NotificationsService
+    private as: AuthService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -111,14 +109,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
           this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
           this.bs.idle();
           if (this.as.currentUserSubject?.value?.id !== res.result.user_.id) {
-            this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!');
-            this.notif.addNotif(
-              null,
-              new Date().getTime(),
-              'warning',
-              'Whoops!',
-              'Berkas Ini Bukan Milikmu'
-            );
+            this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!', null, true);
             this.router.navigateByUrl(`/berkas/${res.result.id}`);
           } else {
             this.loadProjectList();

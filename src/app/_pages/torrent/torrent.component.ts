@@ -5,7 +5,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { ToastrService } from 'ngx-toastr';
 import { saveAs } from 'file-saver';
 
 import { environment } from '../../../environments/app/environment';
@@ -15,6 +14,7 @@ import { TorrentService } from '../../_shared/services/torrent.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 import { StatsServerService } from '../../_shared/services/stats-server.service';
 import { BusyService } from '../../_shared/services/busy.service';
+import { ToastService } from '../../_shared/services/toast.service';
 
 declare const P2PGraph: any;
 
@@ -69,7 +69,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
     private clipboard: Clipboard,
     private gs: GlobalService,
     private torrent: TorrentService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private ds: DialogService,
     private ss: StatsServerService,
     private bs: BusyService
@@ -136,7 +136,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.toast.info('Berkas Sedang Dalam Proses Unduhan!', 'Yah, File Belum Siap!');
+      this.toast.info('Berkas Sedang Dalam Proses Unduhan!', 'Yah, File Belum Siap!', null, true);
     }
   }
 

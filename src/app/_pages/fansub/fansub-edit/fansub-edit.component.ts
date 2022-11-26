@@ -4,7 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 import { debounceTime, distinctUntilChanged, retry, switchMap, tap } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -16,7 +15,7 @@ import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { AuthService } from '../../../_shared/services/auth.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
+import { ToastService } from '../../../_shared/services/toast.service';
 
 @Component({
   selector: 'app-fansub-edit',
@@ -69,10 +68,9 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private imgbb: ImgbbService,
     private fansub: FansubService,
-    private toast: ToastrService,
+    private toast: ToastService,
     private as: AuthService,
-    private gs: GlobalService,
-    private notif: NotificationsService
+    private gs: GlobalService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -106,14 +104,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.editable = res.result.editable;
           if (!this.editable) {
-            this.toast.warning('Data Fansub Ini Tidak Dapat Diubah', 'Whoops!');
-            this.notif.addNotif(
-              null,
-              new Date().getTime(),
-              'warning',
-              'Whoops!',
-              'Data Fansub Ini Tidak Dapat Diubah'
-            );
+            this.toast.warning('Data Fansub Ini Tidak Dapat Diubah', 'Whoops!', null, true);
             this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
           } else {
             this.bs.busy();
@@ -131,14 +122,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
                 if (index >= 0 || this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR || this.as.currentUserSubject?.value?.id === res.result.user_.id) {
                   this.initForm(res.result);
                 } else {
-                  this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!');
-                  this.notif.addNotif(
-                    null,
-                    new Date().getTime(),
-                    'warning',
-                    'Whoops!',
-                    'Anda Harus Menjadi Anggota Untuk Mengubah Data!'
-                  );
+                  this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!', null, true);
                   this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
                 }
               },
@@ -362,14 +346,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     this.submitted = true;
     if (this.fg.invalid || urls.length === 0) {
       if (urls.length === 0) {
-        this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)');
-        this.notif.addNotif(
-          null,
-          new Date().getTime(),
-          'warning',
-          'Form Tidak lengkap (Web/FB/DC)',
-          'Harap Isi Salah Satu URL'
-        );
+        this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)', null, true);
       }
       this.submitted = false;
       this.bs.idle();

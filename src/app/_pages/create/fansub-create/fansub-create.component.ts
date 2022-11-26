@@ -4,7 +4,6 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 
 import { debounceTime, distinctUntilChanged, retry, switchMap, tap } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -13,7 +12,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
-import { NotificationsService } from '../../../_shared/services/notifications.service';
+import { ToastService } from '../../../_shared/services/toast.service';
 
 @Component({
   selector: 'app-fansub-create',
@@ -56,9 +55,8 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private imgbb: ImgbbService,
     private fansub: FansubService,
-    private toast: ToastrService,
-    private gs: GlobalService,
-    private notif: NotificationsService
+    private toast: ToastService,
+    private gs: GlobalService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -252,14 +250,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     this.submitted = true;
     if (this.fg.invalid || urls.length === 0) {
       if (urls.length === 0) {
-        this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)');
-        this.notif.addNotif(
-          null,
-          new Date().getTime(),
-          'warning',
-          'Form Tidak lengkap (Web/FB/DC)',
-          'Harap Isi Salah Satu URL'
-        );
+        this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)', null, true);
       }
       this.submitted = false;
       this.bs.idle();
