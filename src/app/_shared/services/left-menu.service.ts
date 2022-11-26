@@ -36,7 +36,7 @@ export class LeftMenuService {
       badge: null
     },
     {
-      name: 'Surel',
+      name: 'E-Mail@FanSub.ID',
       link: '/mailbox',
       icon: 'mail_outline',
       badge: null
