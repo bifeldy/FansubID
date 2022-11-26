@@ -92,7 +92,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               }
             }
           }
-          this.toast.error(errorMessage, errorTitle);
+          this.toast.error(errorMessage, errorTitle, null, true);
           switch (e.status) {
             case 401:
               this.as.removeUser();
