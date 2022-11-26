@@ -251,7 +251,7 @@ export class GlobalService {
     const currentMonth = new Date().getMonth() + 1;
     const weather = this.seasonalWeather.find(sB => sB.id === Math.ceil(currentMonth / 3));
     if (weather?.cssClassName) {
-      this.weatherEffect = new Sakura('body', { className: weather.cssClassName, lifeTime: 12589 });
+      this.weatherEffect = new Sakura('body', { className: weather.cssClassName, lifeTime: 5000 });
       this.weatherRunning = true;
     }
   }
