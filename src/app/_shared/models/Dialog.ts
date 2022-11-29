@@ -1,24 +1,23 @@
 import { NihongoModel } from "../../../models/req-res.model";
 
 export interface DialogDataModel {
+  title?: string;
   confirmText?: string;
   cancelText?: string;
+  infoText?: string;
 }
 
 export interface DialogNihongoDataModel extends DialogDataModel {
-  title?: string;
   modeTampilan: string;
   dataset?: NihongoModel;
   htmlMessage?: string;
 }
 
 export interface DialogInputDataModel extends DialogDataModel {
-  title?: string;
   input: any;
 }
 
 export interface DialogInfoDataModel extends DialogDataModel {
-  title?: string;
   htmlMessage?: string;
 }
 

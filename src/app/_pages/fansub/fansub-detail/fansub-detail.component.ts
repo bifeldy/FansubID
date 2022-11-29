@@ -482,7 +482,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             title: `CNAME / A IPv4`,
             input: userInput,
             confirmText: 'OK',
-            cancelText: 'Batal'
+            cancelText: 'Batal',
+            infoText: 'Blogger Memang Agak Ribet'
           },
           disableClose: true
         }).afterClosed().subscribe({
