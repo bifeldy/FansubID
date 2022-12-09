@@ -38,7 +38,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     { id: 'tempat', name: 'Tempat' },
     { id: 'pekerjaan', name: 'Pekerjaan' },
     { id: 'olahraga', name: 'Olah Raga' },
-    { id: 'perkakas', name: 'Perkakas' },
+    { id: 'perabotan', name: 'Perabotan' },
     { id: 'mebel', name: 'Mebel' },
     { id: 'dapur', name: 'Dapur' },
     { id: 'negara', name: 'Negara' }
