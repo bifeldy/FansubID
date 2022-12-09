@@ -102,6 +102,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     return this.gs;
   }
 
+  get fileTypeAttachmentAllowed(): string {
+    return CONSTANTS.fileTypeAttachmentAllowed.join(', ');
+  }
+
   ngOnInit(): void {
     this.pi.updatePageMetaData(
       `Berkas - Buat Baru`,

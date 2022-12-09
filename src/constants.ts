@@ -9,6 +9,10 @@ export const CONSTANTS = {
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
+  fileTypeAttachmentAllowed: [
+    'video/x-matroska',
+    'video/mp4'
+  ],
   fileSizeAttachmentChunkLimit: 96 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileSizeAttachmentTotalLimit: 512 * 1000 * 1000, // Max Upload Limits -- < 512 MB Streamable
   fileSizeImageLimit: 256 * 1000, // 256 KB

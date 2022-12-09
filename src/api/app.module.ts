@@ -300,6 +300,7 @@ export class AppModule {
     mc.apply(
       uploadx.upload({
         path: '/attachment',
+        allowMIME: CONSTANTS.fileTypeAttachmentAllowed,
         directory: environment.uploadFolder,
         maxUploadSize: CONSTANTS.fileSizeAttachmentTotalLimit,
         useRelativeLocation: true,
