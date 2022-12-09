@@ -27,7 +27,7 @@ export class ConfigService {
 
   settings: ServerInfoModel = {
     isMaintenance: false,
-    winboxOpenLink: false,
+    winboxOpenLink: true,
     discordNotification: true,
     openForRegister: true
   }
