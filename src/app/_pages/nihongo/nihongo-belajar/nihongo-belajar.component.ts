@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
+import { RoleModel } from '../../../../models/req-res.model';
+
 import { AuthService } from '../../../_shared/services/auth.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -229,7 +231,13 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   editDataset(dataset): void {
     this.gs.log('[BELAJAR_DATASET_ADD_OR_EDIT_CLICK]', dataset);
-    if (this.as.currentUserSubject?.value?.verified) {
+    if (
+        (!dataset && this.as.currentUserSubject?.value?.verified) ||
+        (dataset && (
+            this.as.currentUserSubject?.value?.role === RoleModel.ADMIN ||
+            this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR
+        ))
+    ) {
       this.subsDialog = this.ds.openBelajarDialog({
         data: {
           title: (dataset ? `Edit Data` : `Tambah Dataset`),
