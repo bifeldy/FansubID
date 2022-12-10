@@ -463,7 +463,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.submitted = false;
-        this.imageErrorText = err?.error?.result?.message || err?.error?.info || null;
+        this.imageErrorText = err.result.message || err.info;
       }
     });
   }
@@ -534,7 +534,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   failOrCancelUpload(err = null): void {
     this.attachmentSelected = null;
-    this.attachmentErrorText = err?.error?.result?.message || err?.error?.info || null;
+    this.attachmentErrorText = err.result.message || err.info;
     this.uploadService.disconnect();
     this.uploadService.connect();
     this.fg.controls['attachment_id'].patchValue(null);

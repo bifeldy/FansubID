@@ -122,7 +122,7 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.submitted = false;
-        this.imageErrorText = err?.error?.result?.message || err?.error?.info || null;
+        this.imageErrorText = err.result.message || err.info;
       }
     });
   }

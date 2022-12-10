@@ -72,6 +72,7 @@ export class CryptoService {
       this.gs.log('[CRYPTO_SERVICE-CREDENTIAL_DECODE_SUCCESS] 🍪', decoded);
       return { ...decoded, token };
     } catch (error) {
+      this.gs.log('[CRYPTO_SERVICE-CREDENTIAL_DECODE_ERROR] 🍪', error);
       throw error;
     }
   }

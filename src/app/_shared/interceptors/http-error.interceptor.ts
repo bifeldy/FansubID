@@ -124,7 +124,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               break;
           }
         }
-        return throwError(() => e);
+        return throwError(() => e.error);
       }
     ));
   }

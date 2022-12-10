@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { catchError, timeout, map, retry } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { timeout, retry } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/app/environment';
 
@@ -37,8 +37,6 @@ export class ApiService {
     this.gs.log('[API_GET]', path);
     this.prepareOptions(options);
     return this.http.get(this.HTTP_REQ_URL(path), options).pipe(
-      catchError(err => throwError(() => err)),
-      map(res => res),
       timeout(timedOut),
       retry(retryCount)
     );
@@ -52,8 +50,6 @@ export class ApiService {
     }
     this.prepareOptions(options);
     return this.http.post(this.HTTP_REQ_URL(path), body, options).pipe(
-      catchError(err => throwError(() => err)),
-      map(res => res),
       timeout(timedOut)
     );
   }
@@ -66,8 +62,6 @@ export class ApiService {
     }
     this.prepareOptions(options);
     return this.http.put(this.HTTP_REQ_URL(path), body, options).pipe(
-      catchError(err => throwError(() => err)),
-      map(res => res),
       timeout(timedOut)
     );
   }
@@ -80,8 +74,6 @@ export class ApiService {
     }
     this.prepareOptions(options);
     return this.http.patch(this.HTTP_REQ_URL(path), body, options).pipe(
-      catchError(err => throwError(() => err)),
-      map(res => res),
       timeout(timedOut)
     );
   }
@@ -90,8 +82,6 @@ export class ApiService {
     this.gs.log('[API_DELETE]', path);
     this.prepareOptions(options);
     return this.http.delete(this.HTTP_REQ_URL(path), options).pipe(
-      catchError(err => throwError(() => err)),
-      map(res => res),
       timeout(timedOut),
       retry(retryCount)
     );
