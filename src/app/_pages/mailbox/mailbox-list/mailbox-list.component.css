@@ -7,6 +7,9 @@
   width: 100%;
   height: 128px;
   overflow: hidden;
+  background-size: 200px, auto !important;
+  background-repeat: no-repeat, repeat !important;
+  background-position-x: 100%, 0% !important;
 }
 
 .bg-bubbles {

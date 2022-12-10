@@ -6,17 +6,17 @@
   </div>
   <div class="col-12">
     <div class="row p-0">
-      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="AS.currentUserSubject?.value && SHOWALLSTATS && doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0">
+      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="showChartKetertarikan && AS.currentUserSubject?.value && SHOWALLSTATS && doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0">
         <canvas baseChart [data]="doughnutChartKetertarikanData" [labels]="doughnutChartKetertarikanLabels" [chartType]="doughnutChartType"
           [options]="doughnutChartKetertarikanOptions" [plugins]="chartPlugins" [legend]="true">
         </canvas>
       </div>
-      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="AS.currentUserSubject?.value && SHOWALLSTATS && barChartUniqueData.length > 0 && barChartUniqueLabels.length > 0">
+      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="showChartUnique && AS.currentUserSubject?.value && SHOWALLSTATS && barChartUniqueData.length > 0 && barChartUniqueLabels.length > 0">
         <canvas baseChart [data]="barChartUniqueData" [labels]="barChartUniqueLabels" [chartType]="barChartType"
           [options]="barChartUniqueOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>
       </div>
-      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="lineChartVisitorData.length > 0 && lineChartVisitorLabels.length > 0">
+      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="showChartVisitor && lineChartVisitorData.length > 0 && lineChartVisitorLabels.length > 0">
         <canvas baseChart [data]="lineChartVisitorData" [labels]="lineChartVisitorLabels" [chartType]="lineChartType"
           [options]="lineChartVisitorOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>

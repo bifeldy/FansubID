@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChartType, ChartOptions } from 'chart.js';
@@ -18,6 +18,10 @@ import { BusyService } from '../../services/busy.service';
   styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit, OnDestroy {
+
+  @Input() showChartKetertarikan = true;
+  @Input() showChartUnique = true;
+  @Input() showChartVisitor = true;
 
   summary = {
     like: 0,
