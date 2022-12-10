@@ -5,6 +5,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 
 @Component({
   selector: 'app-berkas-list',
@@ -42,11 +43,16 @@ export class BerkasListComponent implements OnInit, OnDestroy {
     private gs: GlobalService,
     private bs: BusyService,
     private berkas: BerkasService,
-    private fs: FabService
+    private fs: FabService,
+    private as: AuthService
   ) {
     this.gs.bannerImg = '/assets/img/banner/berkas.jpg';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get AS(): AuthService {
+    return this.as;
   }
 
   ngOnDestroy(): void {

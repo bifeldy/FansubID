@@ -9,5 +9,10 @@
     <app-material-tab (tableRowClicked)="openBerkas($event)" (paginatorClicked)="onPaginatorClicked($event)"
       [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-tab>
   </div>
+  <div class="row" *ngIf="!AS.currentUserSubject?.value?.verified">
+    <div class="col-12 mb-4">
+      <div class="text-danger text-end">* Berkas <i>Private</i> Tidak Di Tampilkan</div>
+    </div>
+  </div>
 
 </div>
