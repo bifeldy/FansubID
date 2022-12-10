@@ -18,27 +18,29 @@
             <div class="row">
               <div class="col-12 col-md-5 col-xl-4 p-3">
                 <div class="row">
-                  <div class="col-12">
-                    <img class="w-100 border" [src]="image_url" />
-                    <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
-                      <mat-label>Gambar</mat-label>
-                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
-                        [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
-                      <mat-icon matSuffix>image</mat-icon>
-                    </mat-form-field>
-                    <mat-error class="px-3 w-100">
-                      <small>
-                        <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
-                        <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
-                      </small>
-                    </mat-error>
-                  </div>
-                  <div class="col-12 mb-4" *ngIf="image && !fg.value.image">
-                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
-                      <mat-icon class="me-1">add_photo_alternate</mat-icon>
-                      Unggah
-                    </button>
-                  </div>
+                  <!-- 
+                    <div class="col-12">
+                      <img class="w-100 border" [src]="image_url" />
+                      <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
+                        <mat-label>Gambar Untuk Embed SEO</mat-label>
+                        <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
+                          [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+                        <mat-icon matSuffix>image</mat-icon>
+                      </mat-form-field>
+                      <mat-error class="px-3 w-100">
+                        <small>
+                          <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
+                          <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
+                        </small>
+                      </mat-error>
+                    </div>
+                    <div class="col-12 mb-4" *ngIf="image && !fg.value.image">
+                      <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+                        <mat-icon class="me-1">add_photo_alternate</mat-icon>
+                        Unggah
+                      </button>
+                    </div>
+                  -->
                   <div class="col-12 p-3" *ngIf="AS.currentUserSubject?.value?.verified">
                     <mat-slide-toggle formControlName="private" matTooltip="Hanya diakses melalui profil dan/atau url">
                       Jadikan Private, Akses Hanya Dengan URL

@@ -58,7 +58,7 @@ export class PageInfoService {
     this.m.updateTag({ name: 'twitter:title', content: `${this.title} | ${this.siteName}` });
     this.m.updateTag({ name: 'twitter:description', content: this.description });
     this.m.updateTag({ name: 'twitter:image', content: this.image });
-    if (this.router.url.includes('/berkas/')) {
+    if (this.router.url.includes('/berkas/') && !this.image.includes(environment.baseUrl)) {
       this.m.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     }
   }
