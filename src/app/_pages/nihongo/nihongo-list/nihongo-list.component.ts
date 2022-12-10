@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { GlobalService } from '../../../_shared/services/global.service';
 // import { FabService } from '../../../_shared/services/fab.service';
+import { GlobalService } from '../../../_shared/services/global.service';
+import { BusyService } from '../../../_shared/services/busy.service';
+import { NihongoService } from '../../../_shared/services/nihongo.service';
 
 @Component({
   selector: 'app-nihongo-list',
   templateUrl: './nihongo-list.component.html',
   styleUrls: ['./nihongo-list.component.css']
 })
-export class NihongoListComponent implements OnInit {
+export class NihongoListComponent implements OnInit, OnDestroy {
 
-  testNihongo = [
+  testDasar = [
     {
       url: 'hiragana',
       name: 'Hiragana',
@@ -32,119 +34,12 @@ export class NihongoListComponent implements OnInit {
       image_url: null,
       icon: 'plus_one',
       letter: '~∞ Unik'
-    },
-    // {
-    //   url: 'warna',
-    //   name: 'Warna',
-    //   image_url: null,
-    //   icon: null,
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'binatang',
-    //   name: 'Binatang',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'buah',
-    //   name: 'Buah',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'sayur',
-    //   name: 'Sayur',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'daging',
-    //   name: 'Daging',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'minuman',
-    //   name: 'Minuman',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'pakaian',
-    //   name: 'Pakaian',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'cuaca',
-    //   name: 'Cuaca',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'transportasi',
-    //   name: 'Transportasi',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'tempat',
-    //   name: 'Tempat',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'pekerjaan',
-    //   name: 'Pekerjaan',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'olah-raga',
-    //   name: 'Olah Raga',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'perkakas',
-    //   name: 'Perkakas',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'mebel',
-    //   name: 'Mebel',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'dapur',
-    //   name: 'Dapur',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
-    // {
-    //   url: 'negara',
-    //   name: 'Negara',
-    //   image_url: null,
-    //   icon: 'plus_one',
-    //   letter: '~0 Unik'
-    // },
+    }
+  ];
+
+  testMenengah = [];
+
+  testLanjutan = [
     {
       url: 'jlpt-n5',
       name: 'JLPT N5',
@@ -289,10 +184,14 @@ export class NihongoListComponent implements OnInit {
   sort = '';
   order = '';
 
+  subsAllKategori = null;
+
   constructor(
     private router: Router,
     // private fs: FabService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private bs: BusyService,
+    private nihon: NihongoService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -301,9 +200,39 @@ export class NihongoListComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      this.getKategori();
       // this.fs.initializeFab('add', null, 'Tambah Modul Baru', `/create/nihongo`, false);
       // this.getBook();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subsAllKategori?.unsubscribe();
+  }
+
+  getKategori(): void {
+    this.bs.busy();
+    this.subsAllKategori = this.nihon.getAllKategori().subscribe({
+      next: res => {
+        this.gs.log('[BELAJAR_KANA_KATEGORI_SUCCESS]', res);
+        const x = [];
+        for (const r of res.results) {
+          x.push({
+            url: r.id,
+            name: r.id,
+            image_url: null,
+            icon: 'switch_access_shortcut',
+            letter: '~∞ Unik'
+          });
+        }
+        this.testMenengah = x;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[BELAJAR_KANA_KATEGORI_ERROR]', err, 'error');
+        this.bs.idle();
+      },
+    });
   }
 
   getBook(): void {

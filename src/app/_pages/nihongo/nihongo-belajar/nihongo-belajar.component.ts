@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
-import { RoleModel } from '../../../../models/req-res.model';
+import { NihongoCategoryModel, RoleModel } from '../../../../models/req-res.model';
 
 import { AuthService } from '../../../_shared/services/auth.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -22,26 +22,10 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   pageSizeOptions = [50, 75, 100, 125, 150];
 
-  kategori = [
-    { id: 'hiragana', name: 'Huruf Hiragana' },
-    { id: 'katakana', name: 'Huruf Katakana' },
-    { id: 'angka', name: 'Angka' },
-    { id: 'warna', name: 'Warna' },
-    { id: 'binatang', name: 'Binatang' },
-    { id: 'buah', name: 'Buah' },
-    { id: 'sayur', name: 'Sayur' },
-    { id: 'daging', name: 'Daging' },
-    { id: 'minuman', name: 'Minuman' },
-    { id: 'pakaian', name: 'Pakaian' },
-    { id: 'cuaca', name: 'Cuaca' },
-    { id: 'transportasi', name: 'Transportasi' },
-    { id: 'tempat', name: 'Tempat' },
-    { id: 'pekerjaan', name: 'Pekerjaan' },
-    { id: 'olahraga', name: 'Olah Raga' },
-    { id: 'perabotan', name: 'Perabotan' },
-    { id: 'mebel', name: 'Mebel' },
-    { id: 'dapur', name: 'Dapur' },
-    { id: 'negara', name: 'Negara' }
+  kategori: NihongoCategoryModel[] = [
+    { id: 'hiragana', name: 'Hiragana' },
+    { id: 'katakana', name: 'Katakana' },
+    { id: 'angka', name: 'Angka' }
   ];
 
   modeTampilan = 'hiragana';
@@ -63,6 +47,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
   subsDialog = null;
   subsHirakata = null;
   subsAllNihongo = null;
+  subsAllKategori = null;
 
   dummyDataset = [
     { category: 'number', meaning: 0, kana: '零／ゼロ', romaji: 'Rei/Zero' },
@@ -82,6 +67,8 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     { category: 'number', meaning: 21, kana: '二十一', romaji: 'Ni Jyuu Ichi' },
     { category: 'number', meaning: 30, kana: '三十', romaji: 'San Jyuu' },
     { category: 'number', meaning: 100, kana: '百', romaji: 'Hyaku' },
+    { category: 'number', meaning: 101, kana: '百一', romaji: 'Hyaku Ichi' },
+    { category: 'number', meaning: 123, kana: '百二十三', romaji: 'Hyaku Ni Jyuu San' },
     { category: 'number', meaning: 300, kana: '三百', romaji: 'San Byaku' },
     { category: 'number', meaning: 600, kana: '六百', romaji: 'Roppyaku' },
     { category: 'number', meaning: 800, kana: '八百', romaji: 'Happyaku' },
@@ -90,7 +77,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     { category: 'number', meaning: 8000, kana: '八千', romaji: 'Hassen' },
     { category: 'number', meaning: 10000, kana: '一万', romaji: 'Ichi-Man' },
     { category: 'number', meaning: 100000, kana: '十万', romaji:  'Jyuu-Man' },
-    { category: 'number', meaning: 1000000, kana: '百万', romaji:  'Hyaku-Man' },
+    { category: 'number', meaning: 1000000, kana: '百万', romaji:  'Hyaku-Man' }
   ];
 
   constructor(
@@ -111,6 +98,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.getHirakata();
       this.getAngka();
+      this.getKategori();
       if (!this.gs.isDarkMode) {
         this.gs.toggleDarkTheme();
       }
@@ -121,6 +109,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     this.subsDialog?.unsubscribe();
     this.subsHirakata?.unsubscribe();
     this.subsAllNihongo?.unsubscribe();
+    this.subsAllKategori?.unsubscribe();
   }
 
   changeModeTampilan(data): void {
@@ -211,6 +200,21 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
       });
     }
     this.daftarAngka.row = dataAngka;
+  }
+
+  getKategori(): void {
+    this.bs.busy();
+    this.subsAllKategori = this.nihon.getAllKategori().subscribe({
+      next: res => {
+        this.gs.log('[BELAJAR_KANA_KATEGORI_SUCCESS]', res);
+        this.kategori = [...this.kategori, ...res.results];
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[BELAJAR_KANA_KATEGORI_ERROR]', err, 'error');
+        this.bs.idle();
+      },
+    });
   }
 
   getData(): void {

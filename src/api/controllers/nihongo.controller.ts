@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
+import { Controller, Delete, Get, Patch, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
 
@@ -16,6 +16,34 @@ export class NihongoController {
     private nihongoRepo: NihongoService
   ) {
     //
+  }
+
+  @Patch('/')
+  @HttpCode(200)
+  async getCategories(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    try {
+      const categories = await this.nihongoRepo.query(`
+        SELECT
+          DISTINCT category AS id,
+          INITCAP(category) AS name
+        FROM
+          nihongo
+      `);
+      return {
+        info: `😅 200 - Nihongo Kana API :: List Kategori '${req.query['category'] ? req.query['category'] : ''}' 🤣`,
+        count: categories.length,
+        pages: 1,
+        results: categories
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: `🙄 400 - Nihongo Kana API :: Gagal Mendapatkan Kategori 😪`,
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get('/')

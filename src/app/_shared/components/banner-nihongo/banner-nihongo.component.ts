@@ -12,7 +12,7 @@ export class BannerNihongoComponent implements OnInit {
   nihongoMenu = [
     {
       url: 'belajar',
-      title: 'Pengenalan Aksara Jepang',
+      title: 'Pengenalan Aksara',
       image_url: '/assets/img/nihongo/hirakata.png'
     },
     {

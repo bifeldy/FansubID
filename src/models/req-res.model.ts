@@ -374,6 +374,11 @@ export interface LikeDislikeModel {
   report_by_?: UserModel;
 }
 
+export interface NihongoCategoryModel {
+  id?: string;
+  name?: string;
+}
+
 export interface NihongoModel {
   id?: number;
   romaji?: string;

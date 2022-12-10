@@ -20,16 +20,64 @@
       <div class="row">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
-            <b class="text-bifeldy">Quiz & Latihan</b>
+            <b class="text-bifeldy">Latihan Dasar</b>
           </h2>
         </div>
         <div class="col-12">
           <div class="row px-3">
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3 p-2" *ngFor="let t of testNihongo">
-              <mat-card class="{{ t.name === 'Hiragana' || t.name === 'Katakana' ? 'gradient-border' : (
-                  t.name.startsWith('JLPT') ? 'rgb-border' : (
-                    t.name === 'All Kanji' ? 'gradient-border rgb-border' : ''
-                  )
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3 p-2" *ngFor="let t of testDasar">
+              <mat-card class="gradient-border">
+                <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
+                  <div mat-card-avatar style="background-size: cover; background-color: whitesmoke"
+                    [style.background-image]="'url(' + (t.image_url || '') + ')'">
+                    <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
+                  </div>
+                  <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
+                    <h3 class="mb-0">{{ t.name }}</h3>
+                  </mat-card-title>
+                  <mat-card-subtitle class="mb-0">{{ t.letter }}</mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="testMenengah.length > 0">
+        <div class="col-12 sticky-top bg-bifeldy">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-bifeldy">Latihan Menengah</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <div class="row px-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3 p-2" *ngFor="let t of testMenengah">
+              <mat-card>
+                <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
+                  <div mat-card-avatar style="background-size: cover; background-color: whitesmoke"
+                    [style.background-image]="'url(' + (t.image_url || '') + ')'">
+                    <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
+                  </div>
+                  <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
+                    <h3 class="mb-0">{{ t.name }}</h3>
+                  </mat-card-title>
+                  <mat-card-subtitle class="mb-0">{{ t.letter }}</mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-bifeldy">Latihan Lanjutan</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <div class="row px-3">
+            <div class="col-12 col-sm-6 col-md-4 col-xl-3 p-2" *ngFor="let t of testLanjutan">
+              <mat-card class="{{ t.name.startsWith('JLPT') ? 'rgb-border' : (
+                  t.name === 'All Kanji' ? 'gradient-border rgb-border' : ''
                 ) }}">
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
                   <div mat-card-avatar style="background-size: cover; background-color: whitesmoke"
