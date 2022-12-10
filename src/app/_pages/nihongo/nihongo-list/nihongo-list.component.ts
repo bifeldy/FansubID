@@ -219,7 +219,7 @@ export class NihongoListComponent implements OnInit, OnDestroy {
         for (const r of res.results) {
           x.push({
             url: r.id,
-            name: r.id,
+            name: r.name,
             image_url: null,
             icon: 'switch_access_shortcut',
             letter: '~∞ Unik'

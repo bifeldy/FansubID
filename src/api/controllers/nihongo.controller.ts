@@ -123,7 +123,7 @@ export class NihongoController {
         kana.romaji = req.body.romaji;
         kana.kana = req.body.kana;
         kana.meaning = req.body.meaning;
-        kana.category = req.body.category;
+        kana.category = req.body.category.toLowerCase();
         kana.image_url = req.body.image;
         if ('audio' in req.body) {
           kana.audio = req.body.audio;
