@@ -41,41 +41,6 @@ export class NihongoListComponent implements OnInit, OnDestroy {
 
   testLanjutan = [
     {
-      url: 'jlpt-n5',
-      name: 'JLPT N5',
-      image_url: '/assets/img/nihongo/kanji.png',
-      icon: null,
-      letter: '~79 Unik'
-    },
-    {
-      url: 'jlpt-n4',
-      name: 'JLPT N4',
-      image_url: '/assets/img/nihongo/kanji.png',
-      icon: null,
-      letter: '~166 Unik'
-    },
-    {
-      url: 'jlpt-n3',
-      name: 'JLPT N3',
-      image_url: '/assets/img/nihongo/kanji.png',
-      icon: null,
-      letter: '~367 Unik'
-    },
-    {
-      url: 'jlpt-n2',
-      name: 'JLPT N2',
-      image_url: '/assets/img/nihongo/kanji.png',
-      icon: null,
-      letter: '~367 Unik'
-    },
-    {
-      url: 'jlpt-n1',
-      name: 'JLPT N1',
-      image_url: '/assets/img/nihongo/kanji.png',
-      icon: null,
-      letter: '~1231 Unik'
-    },
-    {
       url: 'kelas-1',
       name: 'Kelas 1',
       image_url: '/assets/img/nihongo/kanji.png',
@@ -130,6 +95,41 @@ export class NihongoListComponent implements OnInit, OnDestroy {
       image_url: '/assets/img/nihongo/kanji.png',
       icon: null,
       letter: '~349 Unik'
+    },
+    {
+      url: 'jlpt-n5',
+      name: 'JLPT N5',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~79 Unik'
+    },
+    {
+      url: 'jlpt-n4',
+      name: 'JLPT N4',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~166 Unik'
+    },
+    {
+      url: 'jlpt-n3',
+      name: 'JLPT N3',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~367 Unik'
+    },
+    {
+      url: 'jlpt-n2',
+      name: 'JLPT N2',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~367 Unik'
+    },
+    {
+      url: 'jlpt-n1',
+      name: 'JLPT N1',
+      image_url: '/assets/img/nihongo/kanji.png',
+      icon: null,
+      letter: '~1231 Unik'
     },
     {
       url: 'semua-kanji',
