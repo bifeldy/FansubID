@@ -9,10 +9,11 @@ import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel } from '../..
 
 import { ConfigService } from '../services/config.service';
 import { CryptoService } from '../services/crypto.service';
-import { DiscordService } from '../services/discord.service';
 import { GlobalService } from '../services/global.service';
 import { QuizService } from '../services/quiz.service';
 import { SocketIoService } from '../services/socket-io.service';
+
+import { TrackerStatisticsService } from '../scheduler/tracker-statistics-tasks.service';
 
 import { BerkasService } from '../repository/berkas.service';
 import { FansubService } from '../repository/fansub.service';
@@ -28,7 +29,6 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     private cfg: ConfigService,
     private berkasRepo: BerkasService,
     private cs:CryptoService,
-    private ds: DiscordService,
     private fansubRepo: FansubService,
     private gs: GlobalService,
     private newsRepo: NewsService,
@@ -36,7 +36,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     private qs: QuizService,
     private sis: SocketIoService,
     private trackRepo: TrackService,
-    private userRepo: UserService
+    private userRepo: UserService,
+    private ts: TrackerStatisticsService
   ) {
     //
   }
@@ -47,16 +48,16 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
   handleConnection(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_CONNECTED] 🌟', client.id);
-    this.sis.emitToBroadcast('visitors', this.sis.getAllClientsSocket().size);
+    this.sis.emitToBroadcast('visitors', this.sis.getAllClientsSocket()?.size || 0);
     this.sis.checkNewNotification(client);
-    this.ds.updateVisitor();
+    this.ts.updateVisitor();
   }
 
   handleDisconnect(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_DISCONNECTED] 🌟', client.id);
-    this.sis.emitToBroadcast('visitors', this.sis.getAllClientsSocket().size);
+    this.sis.emitToBroadcast('visitors', this.sis.getAllClientsSocket()?.size || 0);
     this.sis.disconnectRoom(client);
-    this.ds.updateVisitor();
+    this.ts.updateVisitor();
   }
 
   @SubscribeMessage('ping-pong')

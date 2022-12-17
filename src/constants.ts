@@ -7,6 +7,7 @@ export const CONSTANTS = {
     'admin', 'administrator', 'info', 'information', 'noreply', 'mod', 'moderator'
   ],
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
+  cronTrackerStatistics: 'CRON_TRACKER_STATISTICS',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
   fileTypeAttachmentAllowed: [

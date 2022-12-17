@@ -28,7 +28,6 @@ import { ApiService } from './api.service';
 import { ConfigService } from './config.service';
 import { CryptoService } from './crypto.service';
 import { GlobalService } from './global.service';
-import { SocketIoService } from './socket-io.service';
 
 import { FansubMemberService } from '../repository/fansub-member.service';
 import { UserService } from '../repository/user.service';
@@ -43,7 +42,6 @@ export class DiscordService {
     private cfg: ConfigService,
     private cs: CryptoService,
     private gs: GlobalService,
-    private sis: SocketIoService,
     private userRepo: UserService,
     private fansubMemberRepo: FansubMemberService
   ) {
@@ -89,7 +87,6 @@ export class DiscordService {
       try {
         this.gs.log(`[DISCORD_SERVICE-READY] 🎉 ${this.bot.user.username}#${this.bot.user.discriminator} - ${this.bot.user.id} 🎶`);
         this.changeBotNickname();
-        this.updateVisitor();
       } catch (error) {
         this.gs.log('[DISCORD_SERVICE-FAILED] 🎉', error, 'error')
         this.cfg.github = null;
@@ -167,21 +164,6 @@ export class DiscordService {
       }
     } catch (error) {
       this.gs.log('[DISCORD_SERVICE-HANDLE_MESSAGE] 🎉', error, 'error')
-    }
-  }
-
-  updateVisitor(): void {
-    if (this.bot && this.sis.io) {
-      this.bot?.user?.setPresence({
-        status: 'idle',
-        activities: [
-          {
-            name: `${this.sis.getAllClientsSocket().size} Pengunjung`,
-            type: 'WATCHING',
-            url: environment.baseUrl
-          }
-        ]
-      });
     }
   }
 

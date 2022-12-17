@@ -20,7 +20,8 @@ export class ConfigService {
   ];
 
   CRON = {
-    [CONSTANTS.cronFansubRssFeed]: false
+    [CONSTANTS.cronFansubRssFeed]: false,
+    [CONSTANTS.cronTrackerStatistics]: false
   };
 
   github = null;

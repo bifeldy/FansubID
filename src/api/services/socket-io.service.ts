@@ -58,7 +58,7 @@ export class SocketIoService {
   }
 
   getClientSocket(socketId: string): Socket {
-    const socket = this.getAllClientsSocket().get(socketId);
+    const socket = this.getAllClientsSocket()?.get(socketId);
     this.gs.log('[SOCKET_IO_SERVICE-GET_CLIENT_SOCKET] 📢', socket?.id);
     return socket;
   }
