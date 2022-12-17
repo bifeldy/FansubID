@@ -483,7 +483,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             input: userInput,
             confirmText: 'OK',
             cancelText: 'Batal',
-            infoText: 'Blogger Memang Agak Ribet'
+            infoText: 'Abaikan 2 Input Terakhir Jika Bukan Blogger'
           },
           disableClose: true
         }).afterClosed().subscribe({
