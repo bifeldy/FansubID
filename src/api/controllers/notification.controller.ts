@@ -90,7 +90,7 @@ export class NotificationController {
           type: req.body.type,
           title: req.body.title,
           content: req.body.content,
-          dismissible: (req.body.dismissible === false),
+          dismissible: (req.body.dismissible === true),
           user_: {
             username: user.username
           }
