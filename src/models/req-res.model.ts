@@ -377,6 +377,7 @@ export interface LikeDislikeModel {
 export interface NihongoCategoryModel {
   id?: string;
   name?: string;
+  jumlah?: number;
 }
 
 export interface NihongoModel {

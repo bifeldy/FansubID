@@ -383,7 +383,16 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
             } else {
               answer = await this.sis.decreasePlayerPoint(client, payload);
             }
-            await this.qs.getNewQuestion(payload.roomId);
+            try {
+              await this.qs.getNewQuestion(payload.roomId);
+            } catch (err) {
+              this.sis.emitToRoomOrId(payload.roomId, 'force-redirect', {
+                title: 'Terjadi Kesalahan',
+                message: 'Kategori Kuis Tidak Tersedia',
+                url: '/nihongo'
+              });
+              throw err;
+            }
             this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', {
               room_id: payload.roomId,
               sender: {

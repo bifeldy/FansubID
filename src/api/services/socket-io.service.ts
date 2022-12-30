@@ -136,7 +136,16 @@ export class SocketIoService {
         this.rooms[data.newRoom][socket.id].profile_ = selectedUser.profile_;
         if (data.newRoom.startsWith('/nihongo/')) {
           if (!this.qs.quiz[data.newRoom]) {
-            await this.qs.getNewQuestion(data.newRoom);
+            try {
+              await this.qs.getNewQuestion(data.newRoom);
+            } catch (err) {
+              socket.emit('force-redirect', {
+                title: 'Terjadi Kesalahan',
+                message: 'Kategori Kuis Tidak Tersedia',
+                url: '/nihongo'
+              });
+              throw err;
+            }
           }
           socket.emit('quiz-question', {
             room_id: data.newRoom,

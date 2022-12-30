@@ -177,6 +177,11 @@ export class StatsServerService {
       this.gs.log('[SOCKET_CONSOLE_LOG]', log);
       this.serverLog = `${log}\r\n${this.serverLog}`;
     });
+    this.mySocket.on('force-redirect', data => {
+      this.gs.log('[SOCKET_REDIRECT]', data.message);
+      this.toast.info(data.message, data.title, null, true);
+      this.router.navigateByUrl(data.url);
+    });
     this.mySocket.on('force-logout', reason => {
       this.gs.log('[SOCKET_EXIT]', reason);
       this.toast.info(reason, 'Keluar Paksa!', null, true);

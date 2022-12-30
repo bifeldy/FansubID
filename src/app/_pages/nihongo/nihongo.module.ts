@@ -99,214 +99,6 @@ const routes: Routes = [
   //     options: 'number'
   //   }
   // },
-  // {
-  //   path: 'warna',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Warna',
-  //     description: 'Uji Kemampuan Warna',
-  //     keywords: 'Warna',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'binatang',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Binatang',
-  //     description: 'Uji Kemampuan Binatang',
-  //     keywords: 'Binatang',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'buah',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Buah',
-  //     description: 'Uji Kemampuan Buah',
-  //     keywords: 'Buah',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'sayur',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Sayur',
-  //     description: 'Uji Kemampuan Sayur',
-  //     keywords: 'Sayur',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'daging',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Daging',
-  //     description: 'Uji Kemampuan Daging',
-  //     keywords: 'Daging',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'minuman',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Minuman',
-  //     description: 'Uji Kemampuan Minuman',
-  //     keywords: 'Minuman',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'pakaian',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Pakaian',
-  //     description: 'Uji Kemampuan Pakaian',
-  //     keywords: 'Pakaian',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'cuaca',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Cuaca',
-  //     description: 'Uji Kemampuan Cuaca',
-  //     keywords: 'Cuaca',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'transportasi',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Transportasi',
-  //     description: 'Uji Kemampuan Transportasi',
-  //     keywords: 'Transportasi',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'tempat',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Tempat',
-  //     description: 'Uji Kemampuan Tempat',
-  //     keywords: 'Tempat',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'pekerjaan',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Pekerjaan',
-  //     description: 'Uji Kemampuan Pekerjaan',
-  //     keywords: 'Pekerjaan',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'olah-raga',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Olahraga',
-  //     description: 'Uji Kemampuan Olahraga',
-  //     keywords: 'Olahraga',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'perkakas',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Perkakas',
-  //     description: 'Uji Kemampuan Perkakas',
-  //     keywords: 'Perkakas',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'mebel',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Mebel',
-  //     description: 'Uji Kemampuan Mebel',
-  //     keywords: 'Mebel',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'dapur',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Dapur',
-  //     description: 'Uji Kemampuan Dapur',
-  //     keywords: 'Dapur',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
-  // {
-  //   path: 'negara',
-  //   component: NihongoTesComponent,
-  //   canActivate: [RolesGuard],
-  //   data: {
-  //     title: 'Tes Negara',
-  //     description: 'Uji Kemampuan Negara',
-  //     keywords: 'Negara',
-  //     [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-  //     question: ,
-  //     options: 
-  //   }
-  // },
   {
     path: 'jlpt-n5',
     component: NihongoTesComponent,
@@ -489,6 +281,19 @@ const routes: Routes = [
       options: 'translate'
     }
   },
+  {
+    path: ':category',
+    component: NihongoTesComponent,
+    canActivate: [RolesGuard],
+    data: {
+      title: 'Tes Kategori Lainnya',
+      description: 'Uji Kemampuan Kategori Lainnya',
+      keywords: 'Kategori Lainnya',
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
+      question: 'image_url',
+      options: 'kana'
+    }
+  },
   // {
   //   path: ':category',
   //   component: NihongoPracticeComponent,
@@ -500,7 +305,7 @@ const routes: Routes = [
   //     question: null,
   //     options: null
   //   }
-  // },
+  // }
 ];
 
 @NgModule({

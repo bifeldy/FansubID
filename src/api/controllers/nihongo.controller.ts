@@ -24,10 +24,15 @@ export class NihongoController {
     try {
       const categories = await this.nihongoRepo.query(`
         SELECT
-          DISTINCT category AS id,
-          INITCAP(category) AS name
+          category AS id,
+          INITCAP(category) AS name,
+          count(category) AS jumlah
         FROM
           nihongo
+        GROUP BY
+          category
+        ORDER BY
+          id ASC
       `);
       return {
         info: `😅 200 - Nihongo Kana API :: List Kategori '${req.query['category'] ? req.query['category'] : ''}' 🤣`,

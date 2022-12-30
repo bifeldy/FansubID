@@ -218,11 +218,11 @@ export class NihongoListComponent implements OnInit, OnDestroy {
         const x = [];
         for (const r of res.results) {
           x.push({
-            url: r.id,
+            url: `latihan-${r.id}`,
             name: r.name,
             image_url: null,
             icon: 'switch_access_shortcut',
-            letter: '~∞ Unik'
+            letter: `~${r.jumlah} Unik`
           });
         }
         this.testMenengah = x;

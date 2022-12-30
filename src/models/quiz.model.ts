@@ -1,4 +1,4 @@
-import { HirakataModel, KanjiModel } from "./req-res.model";
+import { HirakataModel, KanjiModel, NihongoModel } from "./req-res.model";
 
 export interface QuizModel {
   randomInteger: number;
@@ -8,6 +8,11 @@ export interface QuizModel {
 export interface QuizHirakataModel extends QuizModel {
   question: HirakataModel;
   options: HirakataModel[];
+}
+
+export interface QuizCategoryModel extends QuizModel {
+  question: NihongoModel;
+  options: NihongoModel[];
 }
 
 export interface QuizKanjiModel extends QuizModel {

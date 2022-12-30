@@ -20,6 +20,7 @@ export const CONSTANTS = {
   jwtAlgorithm: 'HS512',
   jwtExpiredIn: 24 * 60 * 60, // 1 Day
   quizOptionsCountHirakata: 5,
+  quizOptionsCountCategory: 6,
   quizOptionsCountKanji: 6,
   regexIpAddress: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   regexAllKeyboardKeys: /^[\P{Cc}\P{Cn}\P{Cs}]*$/,

@@ -4,7 +4,7 @@ import { EntityManager } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
-import { QuizHirakataModel, QuizKanjiModel, QuizRoom } from '../../models/quiz.model';
+import { QuizCategoryModel, QuizHirakataModel, QuizKanjiModel, QuizRoom } from '../../models/quiz.model';
 import { RoomInfoInOutModel } from '../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
@@ -103,6 +103,75 @@ export class QuizService {
     }
   }
 
+  async getQuizCategory(category: string): Promise<QuizCategoryModel> {
+    try {
+      let nihongo = await this.manager.query(`
+        DO $$
+          DECLARE
+            random_number DOUBLE PRECISION;
+            select_count BIGINT := ${CONSTANTS.quizOptionsCountCategory};
+            total_data BIGINT;
+            max_select BIGINT;
+          BEGIN
+            SELECT
+              RANDOM()
+            INTO
+              random_number
+            ;
+            SELECT
+              COUNT(*)
+            INTO
+              total_data
+            FROM
+              nihongo
+            WHERE
+              category ILIKE '%${category}%'
+            ;
+            max_select := total_data - select_count;
+            DROP TABLE IF EXISTS nihongo_${category}_quiz;
+            CREATE TABLE nihongo_${category}_quiz AS
+              SELECT
+                *
+              FROM
+                nihongo
+              WHERE
+                category ILIKE '%${category}%'
+              OFFSET
+                CASE
+                  WHEN FLOOR(random_number * total_data) >= max_select
+                  THEN max_select
+                  ELSE
+                  FLOOR(random_number * total_data)
+                END
+              LIMIT 
+                select_count
+              ;
+        END $$
+      `);
+      nihongo = await this.manager.query(`
+        SELECT
+          * 
+        FROM
+          nihongo_${category}_quiz
+      `);
+      for (const h of nihongo) {
+        delete h.created_at;
+        delete h.updated_at;
+        delete h.user_id;
+      }
+      const randomInteger = this.getRandomInt(0, nihongo.length - 1);
+      return {
+        randomInteger,
+        isAnswering: false,
+        question: nihongo[randomInteger],
+        options: nihongo
+      };
+    } catch (error) {
+      this.gs.log('[QUIZ_SERVICE-GET_NIHONGO] 🏁', error, 'error');
+      return null;
+    }
+  }
+
   async getQuizKanji(school = null, jlpt = null): Promise<QuizKanjiModel> {
     try {
       let sqlQuery = `
@@ -186,43 +255,49 @@ export class QuizService {
   }
 
   async getNewQuestion(roomId: string) {
-    try {
-      switch (roomId) {
-        case '/nihongo/hiragana':
-        case '/nihongo/katakana':
-          this.quiz[roomId] = await this.getQuizHirakata();
-          return;
-        case '/nihongo/kelas-lanjutan-2':
-          this.quiz[roomId] = await this.getQuizKanji('9', null);
-          return;
-        case '/nihongo/kelas-lanjutan-1':
-          this.quiz[roomId] = await this.getQuizKanji('8', null);
-          return;
-        case '/nihongo/kelas-6':
-        case '/nihongo/kelas-5':
-        case '/nihongo/kelas-4':
-        case '/nihongo/kelas-3':
-        case '/nihongo/kelas-2':
-        case '/nihongo/kelas-1':
-          const schoolLevel = roomId.split('-').pop()[0];
-          this.quiz[roomId] = await this.getQuizKanji(schoolLevel, null);
-          return;
-        case '/nihongo/jlpt-n5':
-        case '/nihongo/jlpt-n4':
-        case '/nihongo/jlpt-n3':
-        case '/nihongo/jlpt-n2':
-        case '/nihongo/jlpt-n1':
-          const jlptLevel = roomId.split('-').pop()[1];
-          this.quiz[roomId] = await this.getQuizKanji(null, jlptLevel);
-          return;
-        case '/nihongo/semua-kanji':
-          this.quiz[roomId] = await this.getQuizKanji(null, null);
-          return;
-        default:
-          return;
-      }
-    } catch (error) {
-      this.gs.log('[QUIZ_SERVICE-NEW_QUESTION] 🏁', error, 'error');
+    switch (roomId) {
+      case '/nihongo/hiragana':
+      case '/nihongo/katakana':
+        this.quiz[roomId] = await this.getQuizHirakata();
+        return;
+      case '/nihongo/kelas-lanjutan-2':
+        this.quiz[roomId] = await this.getQuizKanji('9', null);
+        return;
+      case '/nihongo/kelas-lanjutan-1':
+        this.quiz[roomId] = await this.getQuizKanji('8', null);
+        return;
+      case '/nihongo/kelas-6':
+      case '/nihongo/kelas-5':
+      case '/nihongo/kelas-4':
+      case '/nihongo/kelas-3':
+      case '/nihongo/kelas-2':
+      case '/nihongo/kelas-1':
+        const schoolLevel = roomId.split('-').pop()[0];
+        this.quiz[roomId] = await this.getQuizKanji(schoolLevel, null);
+        return;
+      case '/nihongo/jlpt-n5':
+      case '/nihongo/jlpt-n4':
+      case '/nihongo/jlpt-n3':
+      case '/nihongo/jlpt-n2':
+      case '/nihongo/jlpt-n1':
+        const jlptLevel = roomId.split('-').pop()[1];
+        this.quiz[roomId] = await this.getQuizKanji(null, jlptLevel);
+        return;
+      case '/nihongo/semua-kanji':
+        this.quiz[roomId] = await this.getQuizKanji(null, null);
+        return;
+      default:
+        if (roomId.startsWith('/nihongo/latihan-')) {
+          const categoryUrl = roomId.split('-').pop();
+          const categoryDb = await this.manager.query(`SELECT DISTINCT category FROM nihongo`);
+          const availableCategory: string[] = categoryDb.map(c => c.category);
+          if (availableCategory.includes(categoryUrl)) {
+            this.quiz[roomId] = await this.getQuizCategory(categoryUrl);
+          } else {
+            throw 'Kategori Kuis Tidak Tersedia';
+          }
+        }
+        return;
     }
   }
 
@@ -239,6 +314,8 @@ export class QuizService {
         hasilPangkatDua = hasilPangkatDua * 2;
       }
       points = hasilPangkatDua;
+    } else if (question.category) {
+      points = 12;
     } else {
       points = 1;
     }
