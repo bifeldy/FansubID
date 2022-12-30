@@ -63,7 +63,7 @@
           <div class="col-12 p-4">
             <div class="row text-center">
               <div *ngFor="let o of getQuiz.options"
-                class="{{ ROUTER.url.includes('/kelas-') || ROUTER.url.includes('/jlpt-') || ROUTER.url.includes('/semua-kanji') ? '' : 'col-md-4' }} col-6 p-2">
+                class="{{ ROUTER.url.includes('/kelas-') || ROUTER.url.includes('/jlpt-') || ROUTER.url.includes('/semua-kanji') || ROUTER.url.includes('/latihan-') ? 'col-md-6 col-12' : 'col-md-4 col-6' }} p-2">
                 <div class="card p-3 m-1" (click)="selectAnswer(o)" style="cursor: pointer;">
                   <div class="card-body {{ ROUTER.url.includes('/kelas-') || ROUTER.url.includes('/jlpt-') || ROUTER.url.includes('/semua-kanji') ? 'p-0' : 'px-0' }}"
                     [style.font-size]="ROUTER.url.includes('/kelas-') || ROUTER.url.includes('/jlpt-') || ROUTER.url.includes('/semua-kanji') ? '100%' : '250%'">
