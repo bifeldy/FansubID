@@ -293,11 +293,10 @@ export class QuizService {
           const availableCategory: string[] = categoryDb.map(c => c.category);
           if (availableCategory.includes(categoryUrl)) {
             this.quiz[roomId] = await this.getQuizCategory(categoryUrl);
-          } else {
-            throw 'Kategori Kuis Tidak Tersedia';
+            return;
           }
         }
-        return;
+        throw 'Kuis Tidak Tersedia';
     }
   }
 

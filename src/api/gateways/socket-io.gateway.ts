@@ -388,7 +388,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
             } catch (err) {
               this.sis.emitToRoomOrId(payload.roomId, 'force-redirect', {
                 title: 'Terjadi Kesalahan',
-                message: 'Kategori Kuis Tidak Tersedia',
+                message: 'Kuis Tidak Tersedia',
                 url: '/nihongo'
               });
               throw err;

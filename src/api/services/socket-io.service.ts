@@ -141,7 +141,7 @@ export class SocketIoService {
             } catch (err) {
               socket.emit('force-redirect', {
                 title: 'Terjadi Kesalahan',
-                message: 'Kategori Kuis Tidak Tersedia',
+                message: 'Kuis Tidak Tersedia',
                 url: '/nihongo'
               });
               throw err;

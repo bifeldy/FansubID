@@ -35,7 +35,7 @@ export class TrackerStatisticsService {
         status: 'idle',
         activities: [
           {
-            name: `:: ${this.sis.getAllClientsSocket()?.size || 0} 🏃‍♂️ • ${this.torrentTracker?.peersAll || 0} 🔗`,
+            name: `:: 🏃‍♂️ ${this.sis.getAllClientsSocket()?.size || 0} • 🔗 ${this.torrentTracker?.peersAll || 0}`,
             type: 'WATCHING',
             url: environment.baseUrl
           }
