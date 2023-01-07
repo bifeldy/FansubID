@@ -131,7 +131,7 @@ export class BerkasController {
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
-        'name' in req.body && 'description' in req.body && 'projectType_id' in req.body &&
+        'name' in req.body && 'projectType_id' in req.body &&
         ('anime_id' in req.body || 'dorama_id' in req.body) &&
         'download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0 &&
         'fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0
@@ -146,7 +146,9 @@ export class BerkasController {
         }
         berkas.name = req.body.name;
         berkas.download_url = JSON.stringify(filteredUrls);
-        berkas.description = req.body.description;
+        if ('description' in req.body) {
+          berkas.description = req.body.description;
+        }
         if ('private' in req.body) {
           berkas.private = (req.body.private === true);
         }

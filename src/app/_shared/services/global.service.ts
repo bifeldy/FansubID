@@ -167,8 +167,11 @@ export class GlobalService {
   }
 
   htmlToText(htmlElementString: string): string {
-    const stringText = stripHtml(htmlElementString);
-    return stringText.result;
+    if (htmlElementString) {
+      const stringText = stripHtml(htmlElementString);
+      return stringText.result;
+    }
+    return '';
   }
 
   shuffle(array): any {

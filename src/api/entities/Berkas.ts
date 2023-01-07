@@ -18,7 +18,7 @@ export class Berkas implements BerkasModel {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true, default: null })
   description: string;
 
   @Column({ type: 'boolean', default: false })

@@ -176,7 +176,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     }
     this.fg = this.fb.group({
       name: [data.name, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      description: [data.description, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      description: [data.description, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       projectType_id: [data.project_type_.id, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       anime_id: [(data.anime_?.id || null), Validators.compose([])],
       anime_name: [data.anime_?.name || null, Validators.compose([])],

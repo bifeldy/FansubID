@@ -49,14 +49,16 @@ export class PageInfoService {
     this.image = newImage.startsWith('/') ? environment.baseUrl + newImage : newImage;
     this.author = newAuthor;
     this.t.setTitle(`${this.title} | ${this.siteName}`);
-    this.m.updateTag({ name: 'description', content: this.description });
     this.m.updateTag({ name: 'keywords', content: this.keywords });
     this.m.updateTag({ name: 'author', content: this.author });
     this.m.updateTag({ property: 'og:title', content: `${this.title} | ${this.siteName}` });
-    this.m.updateTag({ property: 'og:description', content: this.description });
     this.m.updateTag({ property: 'og:image', content: this.image });
     this.m.updateTag({ name: 'twitter:title', content: `${this.title} | ${this.siteName}` });
-    this.m.updateTag({ name: 'twitter:description', content: this.description });
+    if (this.description) {
+      this.m.updateTag({ name: 'description', content: this.description });
+      this.m.updateTag({ property: 'og:description', content: this.description });
+      this.m.updateTag({ name: 'twitter:description', content: this.description });
+    }
     this.m.updateTag({ name: 'twitter:image', content: this.image });
     if (this.router.url.includes('/berkas/') && !this.image.includes(environment.baseUrl)) {
       this.m.updateTag({ name: 'twitter:card', content: 'summary_large_image' });

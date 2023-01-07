@@ -27,6 +27,8 @@ import { ToastService } from '../../../_shared/services/toast.service';
 })
 export class BerkasCreateComponent implements OnInit, OnDestroy {
 
+  detailMode: boolean = false;
+
   uploads$: Observable<Uploader[]>;
 
   fg: FormGroup;
@@ -175,6 +177,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.subsUpload?.unsubscribe();
   }
 
+  toggleDetailMode(): void {
+    this.detailMode = !this.detailMode;
+  }
+
   loadProjectList(): void {
     this.bs.busy();
     this.subsProject = this.project.getProject().subscribe({
@@ -193,7 +199,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   initForm(): void {
     this.fg = this.fb.group({
       name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      description: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      description: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       anime_id: [null, Validators.compose([])],
       anime_name: [null, Validators.compose([])],

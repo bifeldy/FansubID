@@ -11,6 +11,9 @@
         <div class="row mt-3 mb-3">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">
+              <span class="float-end text-decoration-none text-warning" style="font-size: small; cursor: pointer;" (click)="toggleDetailMode()">
+                {{ detailMode ? 'Sederhana' : 'Lengkap' }}
+              </span>
               <b class="text-bifeldy">Tambah Berkas Baru</b>
             </h2>
           </div>
@@ -18,29 +21,27 @@
             <div class="row">
               <div class="col-12 col-md-5 col-xl-4 p-3">
                 <div class="row">
-                  <!-- 
-                    <div class="col-12">
-                      <img class="w-100 border" [src]="image_url" />
-                      <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
-                        <mat-label>Gambar Untuk Embed SEO</mat-label>
-                        <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
-                          [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
-                        <mat-icon matSuffix>image</mat-icon>
-                      </mat-form-field>
-                      <mat-error class="px-3 w-100">
-                        <small>
-                          <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
-                          <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
-                        </small>
-                      </mat-error>
-                    </div>
-                    <div class="col-12 mb-4" *ngIf="image && !fg.value.image">
-                      <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
-                        <mat-icon class="me-1">add_photo_alternate</mat-icon>
-                        Unggah
-                      </button>
-                    </div>
-                  -->
+                  <div class="col-12" *ngIf="detailMode">
+                    <img class="w-100 border" [src]="image_url" />
+                    <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
+                      <mat-label>Gambar Untuk Embed SEO</mat-label>
+                      <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
+                        [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
+                      <mat-icon matSuffix>image</mat-icon>
+                    </mat-form-field>
+                    <mat-error class="px-3 w-100">
+                      <small>
+                        <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
+                        <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
+                      </small>
+                    </mat-error>
+                  </div>
+                  <div class="col-12 mb-4" *ngIf="image && !fg.value.image && detailMode">
+                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+                      <mat-icon class="me-1">add_photo_alternate</mat-icon>
+                      Unggah
+                    </button>
+                  </div>
                   <div class="col-12 p-3" *ngIf="AS.currentUserSubject?.value?.verified">
                     <mat-slide-toggle formControlName="private" matTooltip="Hanya diakses melalui profil dan/atau url">
                       Jadikan Private, Akses Hanya Dengan URL
@@ -155,7 +156,7 @@
                       <div *ngIf="fg.get('name').hasError('pattern')">Nama Berkas Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
+                  <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig" *ngIf="detailMode"></angular-editor>
                 </div>
                 <div class="row">
                   <div class="col-12 p-3">
