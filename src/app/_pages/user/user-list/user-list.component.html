@@ -100,9 +100,9 @@
               </h2>
             </div>
             <div class="col-12 mb-2">
-              <button mat-button class="w-100" color="accent" matTooltip="Akan Diteruskan Ke => {{ AS.currentUserSubject?.value?.__email }}">
+              <a mat-button class="w-100" color="accent" matTooltip="Akan Diteruskan Ke => {{ AS.currentUserSubject?.value?.__email }}" routerLink="/mailbox">
                 <mat-icon class="me-1">email</mat-icon> '{{ AS.currentUserSubject?.value?.username }}@{{ ENV.domain }}'
-              </button>
+              </a>
             </div>
           </div>
           <app-banner-discord></app-banner-discord>
