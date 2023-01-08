@@ -10,7 +10,7 @@ export const environment = {
   domain: 'localhost',
   baseUrl: 'http://localhost:4200',
   apiUrl: '/api',
-  apiKey: 'fansubid_api_key',
+  apiKey: '00000000-0000-0000-0000-000000000000',
   discordUrl: 'https://discord.gg/xGWdExk',
   discordGuildId: '342220398022098944',
   discordClientId: '789831990433153034',

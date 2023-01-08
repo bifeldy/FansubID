@@ -5,6 +5,7 @@ interface SECRETS_DATA_TYPE {
   IS_PRODUCTION: boolean;
   JWT_SECRET_KEY: string;
   DOMAIN: string;
+  DOMAIN_ALT: string;
   IP: string;
   BASE_URL: string;
   DB_PASSWORD: string;

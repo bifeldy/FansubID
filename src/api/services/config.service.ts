@@ -13,6 +13,7 @@ export class ConfigService {
 
   bypassApiKeyRateLimit = [
     environment.domain,
+    environment.domain_alt,
     environment.ip,
     '127.0.0.1',
     '::1',

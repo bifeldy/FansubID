@@ -39,6 +39,7 @@ export const environment = {
   jwtSecretKey: SECRETS().JWT_SECRET_KEY,                                         // ''
   tokenName: 'FansubID_Token',
   domain: SECRETS().DOMAIN,                                                       // 'localhost',
+  domain_alt: SECRETS().DOMAIN_ALT,                                               // 'localhost',
   ip: SECRETS().IP,                                                               // '127.0.0.1',
   baseUrl: SECRETS().BASE_URL,                                                    // 'http://localhost:4200',
   typeorm: {

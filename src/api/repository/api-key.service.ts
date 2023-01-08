@@ -110,6 +110,9 @@ export class ApiKeyService {
       return true;
     }
     try {
+      if (!key) {
+        throw 'Tidak Ada API Key';
+      }
       const apiKey = await this.findOneOrFail({
         where: [
           {
