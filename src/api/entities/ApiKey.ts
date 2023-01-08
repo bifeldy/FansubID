@@ -16,7 +16,7 @@ export class ApiKey implements ApiKeyModel {
   @Column({ type: 'varchar', length: 255, default: '*' })
   ip_domain: string;
 
-  @Column({ generated: 'uuid', nullable: true })
+  @Column({ generated: 'uuid', nullable: true, unique: true })
   api_key: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

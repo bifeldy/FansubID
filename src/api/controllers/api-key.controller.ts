@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { Equal, ILike, In, IsNull, Not } from 'typeorm';
+import { Equal, ILike, In, IsNull, Not, Raw } from 'typeorm';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
@@ -9,14 +9,11 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { ApiKeyService } from '../repository/api-key.service';
 
-import { CryptoService } from '../services/crypto.service';
-
 @Controller('/api-key')
 export class ApiKeyController {
 
   constructor(
-    private apiKeyRepo: ApiKeyService,
-    private cs: CryptoService
+    private apiKeyRepo: ApiKeyService
   ) {
     //
   }
@@ -82,7 +79,19 @@ export class ApiKeyController {
             where: [
               { name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
               { ip_domain: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
-              { api_key: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) }
+              {
+                api_key: Raw(tblCol => {
+                  let caseSens = tblCol.split('.').map(tc => {
+                    if (tc.startsWith('"') && tc.endsWith('"')) {
+                      return tc;
+                    }
+                    return `"${tc}"`;
+                  }).join('.');
+                  return `${caseSens}::TEXT ILIKE :ak`;
+                }, {
+                  ak: `%${req.query['q'] ? req.query['q'] : ''}%`
+                })
+              }
             ],
             order: {
               ...((req.query['sort'] && req.query['order']) ? {
@@ -165,7 +174,6 @@ export class ApiKeyController {
           const cors = this.apiKeyRepo.new();
           cors.name = req.body.name;
           cors.ip_domain = req.body.ip_domain;
-          cors.api_key = this.cs.universalBtoa(new Date().getTime().toString());
           cors.user_ = user;
           const resCorsSave = await this.apiKeyRepo.save(cors);
           if ('user_' in resCorsSave && resCorsSave.user_) {
