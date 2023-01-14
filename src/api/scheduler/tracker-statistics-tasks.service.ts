@@ -17,7 +17,17 @@ import { DiscordService } from '../services/discord.service';
 @Injectable()
 export class TrackerStatisticsService {
 
-  torrentTracker = null;
+  torrentTracker: any = {
+    torrents: 0,
+    activeTorrents: 0,
+    peersAll: 0,
+    peersSeederOnly: 0,
+    peersLeecherOnly: 0,
+    peersSeederAndLeecher: 0,
+    peersIPv4: 0,
+    peersIPv6: 0,
+    clients: {}
+  };
 
   constructor(
     private cfg: ConfigService,
@@ -51,7 +61,7 @@ export class TrackerStatisticsService {
     }
   )
   async statistics(): Promise<void> {
-    if (!this.cfg.CRON[CONSTANTS.cronTrackerStatistics]) {
+    if (!this.cfg.CRON[CONSTANTS.cronTrackerStatistics] && environment.production) {
       const startTime = new Date();
       this.gs.log('[CRON_TASK_TRACKER_STATISTICS-START] 🐾', `${startTime}`);
       this.cfg.CRON[CONSTANTS.cronTrackerStatistics] = true;
