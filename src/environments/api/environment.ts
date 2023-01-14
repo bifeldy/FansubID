@@ -88,7 +88,7 @@ export const environment = {
   tempFolder: 'dist/fansubid/temp',
   uploadFolder: 'dist/fansubid/uploads',
   jsonCacheFolder: 'dist/fansubid/caches',
-  gdriveFolderId: '1VMuZLNaxFnDByLMJiu0EN1Adl8A9FlwZ',
+  gdriveFolderId: '1DEiBMKDMZzSzhnlRi92tuyL2dh56tZLa',
   recaptchaApiUrl: 'https://www.google.com/recaptcha/api/siteverify',
   reCaptchaSecretKey: SECRETS().RECAPTCHA_SECRET_KEY,                             // '',
   apiPemerintahKTPUrl: SECRETS().API_PEMERINTAH_KTP_URL,                          // '',

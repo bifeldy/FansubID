@@ -9,7 +9,7 @@ import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { ApiService } from '../services/api.service';
+import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
 
 @Injectable()
@@ -50,8 +50,9 @@ export class GdriveService {
   }
 
   //
-  // https://developers.google.com/identity/protocols/oauth2/service-account#delegatingauthority
-  // userPersonalUserAccountInsteadOfServiceAccount => false (for upload)
+  // https://console.cloud.google.com/apis/credentials => OAuth 2.0 Client IDs
+  // https://developers.google.com/oauthplayground => OAuth 2.0 Playground
+  // userPersonalUserAccountInsteadOfServiceAccount = false (for upload)
   //
   async gDrive(userPersonalUserAccountInsteadOfServiceAccount = false): Promise<drive_v3.Drive> {
     try {
