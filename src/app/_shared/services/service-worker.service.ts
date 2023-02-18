@@ -93,8 +93,8 @@ export class ServiceWorkerService {
             data: {
               title: 'Ada Pembaharuan Tersedia',
               htmlMessage: `
-                <div>Sekarang :: ${event.currentVersion.hash}</div>
-                <div>Tersedia :: ${event.latestVersion.hash}</div>
+                <div>Sekarang :: ${event.currentVersion?.hash?.slice(0, 8)}</div>
+                <div>Tersedia :: ${event.latestVersion?.hash?.slice(0, 8)}</div>
               `,
               confirmText: 'OK'
             },
@@ -106,7 +106,7 @@ export class ServiceWorkerService {
             data: {
               title: 'Pembaharuan Gagal',
               htmlMessage: `
-                <div>Versi :: ${event.version.hash}</div>
+                <div>Versi :: ${event.version?.hash?.slice(0, 8)}</div>
                 <div>Error :: ${event.error}</div>
               `,
               confirmText: 'Ulangi',
