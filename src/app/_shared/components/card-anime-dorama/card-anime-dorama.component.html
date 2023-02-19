@@ -5,7 +5,7 @@
     <div class="row align-items-center w-100 h-100">
       <div class="mt-auto text-bifeldy p-0 col-12 bg-bifeldy" style="opacity: 0.75;">
         <div class="row m-0 p-0">
-          <div class="col-6 m-0 p-1">{{ ad.episodes ? ad.episodes : '?' }} Eps</div>
+          <div class="col-6 m-0 p-1">{{ (ad.episodes || ad.num_episodes) ? (ad.episodes || ad.num_episodes) : '?' }} Eps</div>
           <div class="col-6 m-0 p-1 text-end">{{ ad.namaFansubs.length }} Grup</div>
         </div>
       </div>

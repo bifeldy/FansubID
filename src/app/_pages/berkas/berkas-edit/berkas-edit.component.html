@@ -63,9 +63,9 @@
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                       </mat-option>
                       <ng-container *ngIf="!isLoading">
-                        <mat-option *ngFor="let a of filteredAnime" [value]="a.mal_id" class="px-1" (click)="filterAnimeSelected(a)">
+                        <mat-option *ngFor="let a of filteredAnime" [value]="a.id" class="px-1" (click)="filterAnimeSelected(a)">
                           <img src="{{ a.image_url }}" style="border-radius: 0; height: 40px; width: 30px; object-fit: cover;" class="me-1" />
-                          <span class="ms-1">{{ a.mal_id }} :: {{ a.title }}</span>
+                          <span class="ms-1">{{ a.id }} :: {{ a.media_type?.toUpperCase() }} :: {{ a.title }}</span>
                         </mat-option>
                       </ng-container>
                     </mat-autocomplete>

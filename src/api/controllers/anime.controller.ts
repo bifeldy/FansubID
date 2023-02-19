@@ -23,6 +23,8 @@ import { AnimeService } from '../repository/anime.service';
 @Controller('/anime')
 export class AnimeController {
 
+  header = { ...environment.nodeJsXhrHeader, 'X-MAL-CLIENT-ID': environment.malClientId };
+
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
     private api: ApiService,
@@ -36,18 +38,18 @@ export class AnimeController {
   @HttpCode(200)
   async searchAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
-    const searchType = req.query['type'] || '';
     try {
-      const url = new URL(`${environment.externalApiAnime}/anime`);
+      const url = new URL(`${environment.externalApiAnime}/anime?nsfw=true&fields=media_type,num_episodes`);
       url.searchParams.append('q', searchQuery as string);
-      url.searchParams.append('type', searchType as string);
-      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
+      const res_raw = await this.api.getData(url, this.header);
+      const data = [];
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
-        const data = res_json.data;
-        for (let i = 0; i < data.length; i++) {
-          data[i].image_url = data[i].images.jpg?.image_url || data[i].images.webp?.image_url;
+        const data1 = res_json.data;
+        for (let i = 0; i < data1.length; i++) {
+          data1[i].node.image_url = data1[i].node.main_picture?.medium || data1[i].node.main_picture?.large;
+          data.push(data1[i].node);
         }
         const responseBody = {
           info: `😅 ${res_raw.status} - Anime API :: Search ${searchQuery} 🤣`,
@@ -134,14 +136,14 @@ export class AnimeController {
   async getDetailAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const malId = req.params['malSlug'].split('-')[0];
     try {
-      const url = new URL(`${environment.externalApiAnime}/anime/${malId}`);
-      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
+      const url = new URL(`${environment.externalApiAnime}/anime/${malId}?nsfw=true&sort=anime_score&limit=2&offset=1&fields=alternative_titles,synopsis,mean,media_type,genres,start_date,end_date,num_episodes,rank,popularity,status`);
+      const res_raw = await this.api.getData(url, this.header);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[apiAnime] 🔥 ${res_raw.status}`, res_json);
         let httpStatusCode = res_raw.status;
-        const animeDetail = res_json.data;
-        animeDetail.image_url = animeDetail.images.jpg?.image_url || animeDetail.images.webp?.image_url;
+        const animeDetail = res_json;
+        animeDetail.image_url = animeDetail.main_picture?.medium || animeDetail.main_picture?.large;
         try {
           if ('synopsis' in animeDetail && animeDetail.synopsis) {
             const translatedAnimeSynopsis = await translate(animeDetail.synopsis, { to: 'id' });

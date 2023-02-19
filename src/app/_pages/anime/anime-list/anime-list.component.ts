@@ -125,7 +125,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     this.subsSeasonalAnime = this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe({
       next: res => {
         this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
-        this.seasonalAnime = res.results.sort((a, b) => b.score - a.score);
+        this.seasonalAnime = res.results.sort((a, b) => (b.score || 0) - (a.score || 0));
         if (showFab) {
           this.fs.initializeFab('settings_backup_restore', null, 'Kembali Ke Musim Sekarang', '/anime', false);
         }
@@ -144,21 +144,21 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     this.tabData[0].data.row = [];
     const seasonalAnimeListId = [];
     for (const sA of this.seasonalAnime) {
-      seasonalAnimeListId.push(sA.mal_id);
+      seasonalAnimeListId.push(sA.id);
     }
     this.subsFansubAnime = this.anime.getFansubAnime(seasonalAnimeListId).subscribe({
       next: res => {
         this.gs.log('[FANSUB_ANIME_SUCCESS]', res);
         let seasonalAnimeWithFansub = [];
         for (const sA of this.seasonalAnime) {
-          sA.namaFansubs = res.results[sA.mal_id];
+          sA.namaFansubs = res.results[sA.id];
           for (const f of sA.namaFansubs) {
             f.selected = true;
             f.type = 'chip';
           }
           seasonalAnimeWithFansub.push({
-            mal_id: sA.mal_id,
-            Jenis: sA.type,
+            id: sA.id,
+            Jenis: `${sA.media_type?.toUpperCase()} • ${sA.mean || 0}`,
             Poster: sA.image_url,
             'Judul Anime': sA.title,
             'Nama Fansub': sA.namaFansubs,
@@ -193,7 +193,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     } catch (e) {
       judulAnime = data['Judul Anime'].replace(/[^a-zA-Z0-9]/g, '-');
     }
-    this.router.navigateByUrl(`/anime/${data.mal_id}-${judulAnime}`);
+    this.router.navigateByUrl(`/anime/${data.id}-${judulAnime}`);
   }
 
   openFansub(data): void {

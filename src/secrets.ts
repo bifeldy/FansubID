@@ -26,6 +26,7 @@ interface SECRETS_DATA_TYPE {
   CLOUDFLARE_KEY: string;
   DISCORD_CLIENT_SECRET: string;
   DISCORD_BOT_LOGIN_TOKEN: string;
+  MAL_CLIENT_ID: string;
 };
 
 let SECRETS_DATA: SECRETS_DATA_TYPE = null;

@@ -368,10 +368,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.gs.log('[ANIME_FILTER_CLICK]', data);
     this.submitted = true;
     this.subsAnimeNew = this.anime.addNewAnime({
-      id: data.mal_id,
+      id: data.id,
       name: data.title,
       image_url: data.image_url,
-      type: data.type
+      type: data.media_type?.toUpperCase()
     }).subscribe({
       next: res => {
         this.gs.log('[ANIME_CHECK_ADD_SUCCESS]', res);

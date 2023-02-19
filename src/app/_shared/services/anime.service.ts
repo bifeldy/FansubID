@@ -20,8 +20,8 @@ export class AnimeService {
     }
   }
 
-  searchAnime(q: string, type = ''): Observable<JsonResponseArray<any>> {
-    return this.api.getData(`/anime?q=${q}&type=${type}`);
+  searchAnime(q: string): Observable<JsonResponseArray<any>> {
+    return this.api.getData(`/anime?q=${q}`);
   }
 
   getAnime(animeId: string): Observable<JsonResponse<any>> {

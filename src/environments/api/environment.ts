@@ -144,10 +144,11 @@ export const environment = {
     'User-Agent': 'node.js'
   },
   externalApiCacheTime: 30 * 60 * 1,
-  externalApiAnime: 'https://api.jikan.moe/v4',
+  externalApiAnime: 'https://api.myanimelist.net/v2',
   externalApiDorama: 'https://kuryana.vercel.app',
   externalApiImage: 'https://api.imgbb.com/1/upload',
   trackerAnnounce: [
     'wss://tracker.fansub.id'
-  ]
+  ],
+  malClientId: SECRETS().MAL_CLIENT_ID,                                          // '',
 };

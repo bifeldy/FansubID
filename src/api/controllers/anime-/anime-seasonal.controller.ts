@@ -13,6 +13,8 @@ import { GlobalService } from '../../services/global.service';
 @Controller('/anime-seasonal')
 export class AnimeSeasonalController {
 
+  header = { ...environment.nodeJsXhrHeader, 'X-MAL-CLIENT-ID': environment.malClientId };
+
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
     private api: ApiService,
@@ -31,32 +33,30 @@ export class AnimeSeasonalController {
     const data = [];
     let status = 200;
     try {
-      let page = 1;
-      const url1 = new URL(`${environment.externalApiAnime}/seasons/${year}/${season}?page=${page}`);
-      const res_raw1 = await this.api.getData(url1, environment.nodeJsXhrHeader);
+      const url1 = new URL(`${environment.externalApiAnime}/anime/season/${year}/${season}?nsfw=true&limit=500&fields=rank,mean,media_type,num_episodes`);
+      const res_raw1 = await this.api.getData(url1, this.header);
       if (res_raw1.ok) {
         const res_json1: any = await res_raw1.json();
-        this.gs.log(`[apiAnime-1] 🔥 ${res_raw1.status}`, res_json1);
-        const pagen = res_json1.pagination?.last_visible_page || 1;
+        this.gs.log(`[apiAnime] 🔥 ${res_raw1.status}`, res_json1);
         let data1 = res_json1.data;
         for (let i = 0; i < data1.length; i++) {
-          data1[i].image_url = data1[i].images.jpg?.image_url || data1[i].images.webp?.image_url;
+          data1[i].node.image_url = data1[i].node.main_picture?.medium || data1[i].node.main_picture?.large;
+          data.push(data1[i].node);
         }
-        data.push(...data1);
         status = res_raw1.status;
-        while (page < pagen) {
-          page++;
-          const urln = new URL(`${environment.externalApiAnime}/seasons/${year}/${season}?page=${page}`);
-          const res_rawn = await this.api.getData(urln, environment.nodeJsXhrHeader);
+        let next = res_json1.paging?.next;
+        while (next) {
+          const res_rawn = await this.api.getData(next, this.header);
           if (res_rawn.ok) {
             const res_jsonn: any = await res_rawn.json();
-            this.gs.log(`[apiAnime-${page}] 🔥 ${res_rawn.status}`, res_jsonn);
+            this.gs.log(`[apiAnime] 🔥 ${res_rawn.status}`, res_jsonn);
             const datan = res_jsonn.data;
             for (let i = 0; i < datan.length; i++) {
-              datan[i].image_url = datan[i].images.jpg?.image_url || datan[i].images.webp?.image_url;
+              datan[i].node.image_url = datan[i].node.main_picture?.medium || datan[i].node.main_picture?.large;
+              data.push(datan[i].node);
             }
-            data.push(...datan);
             status = res_rawn.status;
+            next = res_jsonn.paging?.next;
           } else {
             throw new Error('Gagal Tarik Data Anime');
           }

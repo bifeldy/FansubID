@@ -17,6 +17,8 @@ import { WinboxService } from '../../../_shared/services/winbox.service';
 })
 export class AnimeDetailComponent implements OnInit, OnDestroy {
 
+  malDomain = 'https://myanimelist.net';
+
   animeId = '';
   animeData = null;
 
@@ -77,6 +79,14 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     this.gs.sizeContain = true;
   }
 
+  get SEASON(): string {
+    return this.findSeasonNameByMonthNumber(new Date(this.animeData.start_date).getMonth() + 1);
+  }
+
+  get YEAR(): number {
+    return new Date(this.animeData.start_date).getFullYear();
+  }
+
   ngOnDestroy(): void {
     this.subsAnime?.unsubscribe();
     this.subsBerkas?.unsubscribe();
@@ -97,7 +107,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             this.pi.updatePageMetaData(
               `${this.animeData.title}`,
               `${this.animeData.synopsis}`,
-              `${Array.isArray(this.animeData.title_synonyms) ? this.animeData.title_synonyms.join(', ') : this.animeData.title}`,
+              `${this.animeData.alternative_titles?.synonyms?.join(', ')}`,
               this.animeData.image_url
             );
             this.bs.idle();
@@ -111,7 +121,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
                 text: this.animeData.synopsis,
                 tooltip: `Alih Bahasa Oleh 'Google Translate' 😘`
               });
-              this.fs.initializeFab(null, '/assets/img/logo/mal.png', 'Buka Di MyAnimeList', this.animeData.url, true);
+              this.fs.initializeFab(null, '/assets/img/logo/mal.png', 'Buka Di MyAnimeList', `${this.malDomain}/anime/${this.animeId}`, true);
               this.getFansubAnime();
               this.getBerkasAnime();
             }
@@ -131,14 +141,18 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   }
 
   openRank(): void {
-    this.wb.winboxOpenUri(`https://myanimelist.net/topanime.php?limit=${this.animeData.rank - 1}`);
+    this.wb.winboxOpenUri(`${this.malDomain}/topanime.php?limit=${this.animeData.rank - 1}`);
+  }
+
+  findSeasonNameByMonthNumber(monthNumber: number): string {
+    return this.gs.seasonalWeather.find(sB => sB.id === Math.ceil(monthNumber / 3)).name;
   }
 
   openSeasonalAnime(): void {
     this.router.navigate(['/anime'], {
       queryParams: {
-        season: this.animeData.season,
-        year: this.animeData.year
+        season: this.SEASON,
+        year: this.YEAR
       }
     });
   }
@@ -214,7 +228,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
 
   openGenre(data): void {
     this.gs.log('[ANIME_DETAIL_CLICK_GENRE]', data);
-    this.wb.winboxOpenUri(data.url);
+    this.wb.winboxOpenUri(`${this.malDomain}/anime/genre/${data.id}`);
   }
 
   openFansub(data): void {
