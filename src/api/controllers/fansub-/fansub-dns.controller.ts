@@ -172,7 +172,7 @@ export class FansubDnsController {
           recordType = 'A';
         }
         const dns = await this.cfs.createDns(fansub.slug, serverTarget, recordType);
-        if (dns.status >= 200 && dns.status < 300) {
+        if (dns.status >= 200 && dns.status < 400) {
           let verification_name: string = this.gs.cleanUpUrlStringRecord(req.body.verification_name);
           let verification_target: string = this.gs.cleanUpUrlStringRecord(req.body.verification_target);
           if (verification_target && verification_target && serverTarget === 'ghs.google.com') {
