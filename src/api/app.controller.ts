@@ -22,16 +22,6 @@ export class AppController {
   // POST & PUT @HttpCode(201)
   // PATCH & DELETE @HttpCode(202)
 
-  @Get('/')
-  @HttpCode(301)
-  @Redirect()
-  async index(): Promise<any> {
-    return {
-      url: '/docs',
-      statusCode: 301
-    };
-  }
-
   @Get('/discord-verifikasi')
   @HttpCode(301)
   @Redirect()

@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AbortController } from 'abort-controller';
 
+import { environment } from '../environments/api/environment';
+
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { urlencoded, json, Request, Response, NextFunction } from 'express';
@@ -17,6 +19,7 @@ import { CONSTANTS } from '../constants';
 import { ApiKeyService } from './repository/api-key.service';
 import { GlobalService } from './services/global.service';
 import { SocketIoService } from './services/socket-io.service';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 let gs: GlobalService = null;
 let aks: ApiKeyService = null;
@@ -69,6 +72,12 @@ export async function app(): Promise<INestApplication> {
   nestApp.enableCors(aks.getCorsOptions());
   nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
   nestApp.use(reqResEvent);
+  const config = new DocumentBuilder()
+    .setTitle(environment.siteName)
+    .setDescription(environment.siteDescription)
+    .build();
+  const document = SwaggerModule.createDocument(nestApp, config);
+  SwaggerModule.setup('api', nestApp, document);
   return nestApp;
 }
 

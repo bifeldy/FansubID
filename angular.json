@@ -202,6 +202,7 @@
               "@discordjs/opus",
               "@nestjs/microservices",
               "@nestjs/microservices/microservices-module",
+              "@nestjs/swagger",
               "@nestjs/websockets",
               "@nestjs/websockets/socket-module",
               "cache-manager",
