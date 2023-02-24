@@ -48,7 +48,7 @@
     "@angular/router": "~13.3.0",
     "@angular/service-worker": "~13.3.0",
     "@discordjs/opus": "^0.7.0",
-    "@iamtraction/google-translate": "^1.1.2",
+    "@iamtraction/google-translate": "^2.0.1",
     "@kolkov/angular-editor": "^2.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
