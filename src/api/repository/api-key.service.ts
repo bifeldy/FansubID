@@ -106,7 +106,7 @@ export class ApiKeyService {
 
   async checkKey(origin: string, key: string): Promise<boolean> {
     let isAllowed = false;
-    if (this.cfg.bypassApiKeyRateLimit.includes(origin)) {
+    if (this.cfg.domainIpBypass.includes(origin)) {
       return true;
     }
     try {

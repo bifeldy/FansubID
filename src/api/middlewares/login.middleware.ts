@@ -4,17 +4,21 @@ import { ILike } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
+import { ConfigService } from '../services/config.service';
 import { CryptoService } from '../services/crypto.service';
 import { GlobalService } from '../services/global.service';
 import { AuthService } from '../services/auth.service';
 
+import { ApiKeyService } from '../repository/api-key.service';
 import { UserService } from '../repository/user.service';
 
 @Injectable()
 export class LoginMiddleware implements NestMiddleware {
 
   constructor(
+    private aks: ApiKeyService,
     private as: AuthService,
+    private cfg: ConfigService,
     private cs: CryptoService,
     private gs: GlobalService,
     private userRepo: UserService
@@ -32,9 +36,13 @@ export class LoginMiddleware implements NestMiddleware {
             { email: ILike(req.body.userNameOrEmail), password: ILike(reqBodyPassword) }
           ]
         });
-        const { password, session_token, ...noPwdSsToken } = selectedUser;
+        const { password, session_token, session_origin, ...noPwdSes } = selectedUser;
         const rememberMe = ('rememberMe' in req.body && (req.body.rememberMe === true));
-        selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSsToken }, rememberMe);
+        const clientOriginIpCc = this.aks.getOriginIpCc(req);
+        if (!this.cfg.domainIpBypass.includes(clientOriginIpCc.origin_ip)) {
+          selectedUser.session_origin = clientOriginIpCc.origin_ip;
+        }
+        selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes }, rememberMe);
         const resUserSave = await this.userRepo.save(selectedUser);
         const banned = await this.as.isAccountBanned(resUserSave.id);
         if (banned) {

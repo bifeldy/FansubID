@@ -1,7 +1,10 @@
 import { HttpException, HttpStatus, Injectable, NestMiddleware, Next, Req, Res } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
+import { UserModel } from '../../models/req-res.model';
+
 import { ApiKeyService } from '../repository/api-key.service';
+import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
 
 @Injectable()
@@ -9,6 +12,7 @@ export class ApiKeyMiddleware implements NestMiddleware {
 
   constructor(
     private aks: ApiKeyService,
+    private cfg: ConfigService,
     private gs: GlobalService
   ) {
     //
@@ -22,6 +26,17 @@ export class ApiKeyMiddleware implements NestMiddleware {
       return next();
     }
     if (await this.aks.checkKey(clientOriginIpCc.origin_ip, key)) {
+      const user: UserModel = res.locals['user'];
+      if (user) {
+        if (![user.session_origin, ...this.cfg.domainIpBypass].includes(clientOriginIpCc.origin_ip)) {
+          throw new HttpException({
+            info: '🙄 401 - API Key :: Sesi Sudah Habis 😪',
+            result: {
+              message: `🎉 Silahkan Login Ulang ✨`
+            }
+          }, HttpStatus.UNAUTHORIZED);
+        }
+      }
       return next();
     }
     throw new HttpException({

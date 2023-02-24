@@ -162,6 +162,7 @@ export interface UserModel {
   verified?: boolean;
   discord?: string;
   session_token?: string;
+  session_origin?: string;
   created_at?: number | Date;
   updated_at?: number | Date;
   kartu_tanda_penduduk_?: KartuTandaPendudukModel;

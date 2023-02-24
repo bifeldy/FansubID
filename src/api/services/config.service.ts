@@ -11,7 +11,7 @@ import { GlobalService } from './global.service';
 @Injectable()
 export class ConfigService {
 
-  bypassApiKeyRateLimit = [
+  domainIpBypass = [
     environment.domain,
     environment.domain_alt,
     environment.ip,

@@ -22,7 +22,7 @@ export class RateLimitGuard extends ThrottlerGuard {
     const http = context.switchToHttp();
     const req = http.getRequest<Request>();
     const clientOriginIpCc = this.aks.getOriginIpCc(req);
-    if (this.cfg.bypassApiKeyRateLimit.includes(clientOriginIpCc.origin_ip)) {
+    if (this.cfg.domainIpBypass.includes(clientOriginIpCc.origin_ip)) {
       return true;
     }
     const key = this.generateKey(context, clientOriginIpCc.origin_ip);

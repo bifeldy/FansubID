@@ -39,6 +39,10 @@ export class User implements UserModel {
   @Column({ type: 'text', nullable: true })
   session_token: string;
 
+  @Exclude()
+  @Column({ type: 'text', nullable: true })
+  session_origin: string;
+
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number | Date;
 
