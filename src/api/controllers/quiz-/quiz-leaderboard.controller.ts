@@ -19,8 +19,8 @@ export class QuizLeaderboardController {
   @Get('/')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagQuiz)
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const maxPage = parseInt(req.query['page'] as string) || 0;

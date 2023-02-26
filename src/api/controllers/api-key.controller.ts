@@ -24,6 +24,7 @@ export class ApiKeyController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
     try {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
@@ -79,8 +80,8 @@ export class ApiKeyController {
         if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
           const [corss, count] = await this.apiKeyRepo.findAndCount({
             where: [
-              { name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
-              { ip_domain: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
+              { name: ILike(`%${searchQuery}%`) },
+              { ip_domain: ILike(`%${searchQuery}%`) },
               {
                 api_key: Raw(tblCol => {
                   let caseSens = tblCol.split('.').map(tc => {
@@ -91,7 +92,7 @@ export class ApiKeyController {
                   }).join('.');
                   return `${caseSens}::TEXT ILIKE :ak`;
                 }, {
-                  ak: `%${req.query['q'] ? req.query['q'] : ''}%`
+                  ak: `%${searchQuery}%`
                 })
               }
             ],

@@ -56,22 +56,24 @@ export class NihongoController {
   @Get('/')
   @HttpCode(200)
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
+    const searchCategory = req.query['category'] || '';
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
       const [kanas, count] = await this.nihongoRepo.findAndCount({
         where: [
           {
-            romaji: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            category: ILike(`%${req.query['category'] ? req.query['category'] : ''}%`)
+            romaji: ILike(`%${searchQuery}%`),
+            category: ILike(`%${searchCategory}%`)
           },
           {
-            kana: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            category: ILike(`%${req.query['category'] ? req.query['category'] : ''}%`)
+            kana: ILike(`%${searchQuery}%`),
+            category: ILike(`%${searchCategory}%`)
           },
           {
-            meaning: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-            category: ILike(`%${req.query['category'] ? req.query['category'] : ''}%`)
+            meaning: ILike(`%${searchQuery}%`),
+            category: ILike(`%${searchCategory}%`)
           }
         ],
         order: {

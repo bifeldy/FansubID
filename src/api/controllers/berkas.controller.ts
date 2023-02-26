@@ -52,9 +52,9 @@ export class BerkasController {
   @Get('/')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagBerkas)
-  @ApiQuery({ name: 'q', required: true, type: 'string' })
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   async searchBerkas(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

@@ -44,9 +44,9 @@ export class AnimeController {
   async searchAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
-      if (searchQuery.length <= 3) {
+      if (searchQuery.length < 3) {
         throw new HttpException({
-          info: '🙄 400 - Anime API :: Gagal Menarik Data 😪',
+          info: '🙄 400 - Anime API :: Gagal Mencari Anime 😪',
           result: {
             message: 'Minimal 3 Huruf Untuk Pencarian!'
           }

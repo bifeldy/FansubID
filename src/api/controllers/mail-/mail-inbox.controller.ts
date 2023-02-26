@@ -27,6 +27,7 @@ export class MailInboxController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
   async mailInbox(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
     try {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
@@ -34,15 +35,15 @@ export class MailInboxController {
       const [mailboxs, count] = await this.mailboxRepo.findAndCount({
         where: [
           {
-            subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+            subject: ILike(`%${searchQuery}%`),
             to: ILike(`%${user.username}@${environment.mailGun.domain}%`)
           },
           {
-            subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+            subject: ILike(`%${searchQuery}%`),
             cc: ILike(`%${user.username}@${environment.mailGun.domain}%`)
           },
           {
-            subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+            subject: ILike(`%${searchQuery}%`),
             bcc: ILike(`%${user.username}@${environment.mailGun.domain}%`),
           }
         ],

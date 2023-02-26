@@ -35,6 +35,7 @@ export class FansubMemberController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
@@ -42,12 +43,12 @@ export class FansubMemberController {
         where: [
           {
             fansub_: {
-              slug: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              slug: ILike(`%${searchQuery}%`)
             }
           },
           {
             user_: {
-              username: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              username: ILike(`%${searchQuery}%`)
             }
           }
         ],

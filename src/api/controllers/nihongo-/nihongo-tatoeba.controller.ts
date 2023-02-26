@@ -19,18 +19,19 @@ export class NihongoTatoebaController {
   @Get('/')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagNihongo)
-  @ApiQuery({ name: 'q', required: true, type: 'string' })
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
       const [tatoebas, count] = await this.tatoebaRepo.findAndCount({
         where: [
-          { phrase: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
-          { kanji: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
-          { translate: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) }
+          { phrase: ILike(`%${searchQuery}%`) },
+          { kanji: ILike(`%${searchQuery}%`) },
+          { translate: ILike(`%${searchQuery}%`) }
         ],
         order: {
           ...((req.query['sort'] && req.query['order']) ? {

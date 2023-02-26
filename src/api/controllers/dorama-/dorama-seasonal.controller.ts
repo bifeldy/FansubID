@@ -28,8 +28,8 @@ export class DoramaSeasonalController {
   @Get('/')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagDorama)
-  @ApiQuery({ name: 'year', required: true, type: 'number' })
-  @ApiQuery({ name: 'season', required: true, type: 'string' })
+  @ApiQuery({ name: 'year', required: false, type: 'number' })
+  @ApiQuery({ name: 'season', required: false, type: 'string' })
   async seasonalDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const currDate = new Date();
     const year = req.query['year'] || currDate.getFullYear();

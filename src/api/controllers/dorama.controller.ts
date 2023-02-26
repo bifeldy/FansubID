@@ -43,9 +43,9 @@ export class DoramaController {
     const searchQuery = req.query['q'] || '';
     const searchType = req.query['type'] || '';
     try {
-      if (searchQuery.length <= 3) {
+      if (searchQuery.length < 3) {
         throw new HttpException({
-          info: '🙄 400 - Dorama API :: Gagal Menarik Data 😪',
+          info: '🙄 400 - Dorama API :: Gagal Mencari Dorama 😪',
           result: {
             message: 'Minimal 3 Huruf Untuk Pencarian!'
           }

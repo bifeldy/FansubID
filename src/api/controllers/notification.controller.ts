@@ -28,13 +28,14 @@ export class NotificationController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
       const [notifications, count] = await this.notificationRepo.findAndCount({
         where: [
-          { title: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
-          { content: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) }
+          { title: ILike(`%${searchQuery}%`) },
+          { content: ILike(`%${searchQuery}%`) }
         ],
         order: {
           ...((req.query['sort'] && req.query['order']) ? {

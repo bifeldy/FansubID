@@ -21,9 +21,9 @@ export class NihongoEdictController {
   @Get('/')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagNihongo)
-  @ApiQuery({ name: 'q', required: true, type: 'string' })
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);

@@ -46,26 +46,35 @@ export class UserController {
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagUser)
   @ApiQuery({ name: 'q', required: true, type: 'string' })
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
     try {
       const adminMod: UserModel = res.locals['user'];
       let maxPage = 0;
       let maxRow = 10;
+      let allowSearch0q = false;
       if (adminMod) {
         if (adminMod.role === RoleModel.ADMIN || adminMod.role === RoleModel.MODERATOR) {
           maxPage = parseInt(req.query['page'] as string) || 0;
           maxRow = parseInt(req.query['row'] as string) || 10;
+          allowSearch0q = true;
         }
+      }
+      if ((!searchQuery || searchQuery.length < 3) && !allowSearch0q) {
+        throw new HttpException({
+          info: '🙄 400 - Dorama API :: Gagal Mencari User 😪',
+          result: {
+            message: 'Minimal 3 Huruf Untuk Pencarian!'
+          }
+        }, HttpStatus.BAD_REQUEST);
       }
       const [user, count] = await this.userRepo.findAndCount({
         where: [
-          { username: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
-          { email: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
+          { username: ILike(`%${searchQuery}%`) },
+          { email: ILike(`%${searchQuery}%`) },
           {
             kartu_tanda_penduduk_: {
-              nama: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              nama: ILike(`%${searchQuery}%`)
             }
           }
         ],
@@ -331,9 +340,9 @@ export class UserController {
   @Get('/:username/feed-berkas')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagUser)
-  @ApiQuery({ name: 'q', required: true, type: 'string' })
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   @ApiParam({ name: 'username', type: 'string' })
   async getFeedBerkasByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
@@ -413,9 +422,9 @@ export class UserController {
   @Get('/:username/feed-comment')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagUser)
-  @ApiQuery({ name: 'q', required: true, type: 'string' })
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   @ApiParam({ name: 'username', type: 'string' })
   async getFeedCommentByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
@@ -476,11 +485,12 @@ export class UserController {
   @Get('/:username/feed-likedislike')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagUser)
-  @ApiQuery({ name: 'q', required: true, type: 'string' })
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   @ApiParam({ name: 'username', type: 'string' })
   async getFeedLikeDislikeByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
@@ -493,7 +503,7 @@ export class UserController {
         where: [
           {
             news_: {
-              title: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              title: ILike(`%${searchQuery}%`)
             },
             report_by_: {
               id: Equal(selectedUser.id)
@@ -501,7 +511,7 @@ export class UserController {
           },
           {
             berkas_: {
-              name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              name: ILike(`%${searchQuery}%`)
             },
             report_by_: {
               id: Equal(selectedUser.id)
@@ -509,7 +519,7 @@ export class UserController {
           },
           {
             fansub_: {
-              name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              name: ILike(`%${searchQuery}%`)
             },
             report_by_: {
               id: Equal(selectedUser.id)
@@ -518,7 +528,7 @@ export class UserController {
           {
             user_: {
               kartu_tanda_penduduk_: {
-                nama: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+                nama: ILike(`%${searchQuery}%`)
               }
             },
             report_by_: {
@@ -611,11 +621,12 @@ export class UserController {
   @Get('/:username/feed-visit')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagUser)
-  @ApiQuery({ name: 'q', required: true, type: 'string' })
-  @ApiQuery({ name: 'row', required: true, type: 'number' })
-  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   @ApiParam({ name: 'username', type: 'string' })
   async getFeedVisitByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const searchQuery = req.query['q'] || '';
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
@@ -629,7 +640,7 @@ export class UserController {
         where: [
           {
             news_: {
-              title: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              title: ILike(`%${searchQuery}%`)
             },
             track_by_: {
               id: Equal(selectedUser.id)
@@ -637,7 +648,7 @@ export class UserController {
           },
           {
             berkas_: {
-              name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              name: ILike(`%${searchQuery}%`)
             },
             track_by_: {
               id: Equal(selectedUser.id)
@@ -645,7 +656,7 @@ export class UserController {
           },
           {
             fansub_: {
-              name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              name: ILike(`%${searchQuery}%`)
             },
             track_by_: {
               id: Equal(selectedUser.id)
@@ -654,7 +665,7 @@ export class UserController {
           {
             user_: {
               kartu_tanda_penduduk_: {
-                nama: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+                nama: ILike(`%${searchQuery}%`)
               }
             },
             track_by_: {
