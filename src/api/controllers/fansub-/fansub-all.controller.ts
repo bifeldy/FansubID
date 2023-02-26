@@ -1,8 +1,10 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { FansubService } from '../../repository/fansub.service';
 
+@ApiExcludeController()
 @Controller('/fansub-all')
 export class FansubAllController {
 

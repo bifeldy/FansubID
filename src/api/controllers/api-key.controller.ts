@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike, In, IsNull, Not, Raw } from 'typeorm';
 
@@ -9,6 +10,7 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { ApiKeyService } from '../repository/api-key.service';
 
+@ApiExcludeController()
 @Controller('/api-key')
 export class ApiKeyController {
 

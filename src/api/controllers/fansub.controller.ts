@@ -2,6 +2,7 @@
 import { parse } from 'rss-to-json';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
+import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ILike } from 'typeorm';
 
@@ -36,6 +37,10 @@ export class FansubController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagFansub)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -82,6 +87,7 @@ export class FansubController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -193,6 +199,8 @@ export class FansubController {
 
   @Get('/:slug')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagFansub)
+  @ApiParam({ name: 'slug', type: 'string' })
   async getBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const fansub = await this.fansubRepo.findOneOrFail({
@@ -229,6 +237,7 @@ export class FansubController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async updateBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -390,6 +399,7 @@ export class FansubController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async deleteBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const fansub =  await this.fansubRepo.findOneOrFail({
@@ -423,6 +433,8 @@ export class FansubController {
   // GET `/api/fansub/:slug/member`
   @Get('/:slug/member')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagFansub)
+  @ApiParam({ name: 'slug', type: 'string' })
   async getFansubMembers(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const [members, count] = await this.fansubMemberRepo.findAndCount({
@@ -486,6 +498,8 @@ export class FansubController {
   // GET `/api/fansub/:slug/rss`
   @Get('/:slug/rss')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagFansub)
+  @ApiParam({ name: 'slug', type: 'string' })
   async getFansubFeedBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const rssFeed: any = {};

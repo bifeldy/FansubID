@@ -1,6 +1,9 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Put, Req, Res } from '@nestjs/common';
+import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -41,6 +44,10 @@ export class UserController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagUser)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const adminMod: UserModel = res.locals['user'];
@@ -123,6 +130,8 @@ export class UserController {
 
   @Get('/:username')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagUser)
+  @ApiParam({ name: 'username', type: 'string' })
   async getByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const selectedUser = await this.userRepo.findOneOrFail({
@@ -173,6 +182,7 @@ export class UserController {
   @Put('/:username')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @ApiExcludeEndpoint()
   async updateByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body) {
@@ -274,6 +284,7 @@ export class UserController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user =  await this.userRepo.findOneOrFail({
@@ -319,6 +330,11 @@ export class UserController {
 
   @Get('/:username/feed-berkas')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagUser)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiParam({ name: 'username', type: 'string' })
   async getFeedBerkasByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -396,6 +412,11 @@ export class UserController {
 
   @Get('/:username/feed-comment')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagUser)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiParam({ name: 'username', type: 'string' })
   async getFeedCommentByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -454,6 +475,11 @@ export class UserController {
 
   @Get('/:username/feed-likedislike')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagUser)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiParam({ name: 'username', type: 'string' })
   async getFeedLikeDislikeByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -584,6 +610,11 @@ export class UserController {
 
   @Get('/:username/feed-visit')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagUser)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
+  @ApiParam({ name: 'username', type: 'string' })
   async getFeedVisitByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -719,6 +750,8 @@ export class UserController {
   // GET `/api/user/:username/group`
   @Get('/:username/group')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagUser)
+  @ApiParam({ name: 'username', type: 'string' })
   async getFansubMembers(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const [groups, count] = await this.fansubMemberRepo.findAndCount({

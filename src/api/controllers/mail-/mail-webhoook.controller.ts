@@ -5,6 +5,7 @@ import { AbortController } from 'abort-controller';
 import { createReadStream, readdirSync } from 'node:fs';
 
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { AnyFilesInterceptor, } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 import { In } from 'typeorm';
@@ -20,6 +21,7 @@ import { UserService } from '../../repository/user.service';
 import { GdriveService } from '../../services/gdrive.service';
 import { GlobalService } from '../../services/global.service';
 
+@ApiExcludeController()
 @Controller('/mail-webhook')
 export class MailWebhookController {
 

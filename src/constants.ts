@@ -1,4 +1,14 @@
 export const CONSTANTS = {
+  apiTagAnime: 'Anime',
+  apiTagAttachment: 'Atachment DDL',
+  apiTagAuthSes: 'Auth & Session',
+  apiTagBerkas: 'Berkas',
+  apiTagDorama: 'Dorama',
+  apiTagFansub: 'Fansub',
+  apiTagNews: 'News',
+  apiTagNihongo: 'Nihongo',
+  apiTagQuiz: 'Quiz',
+  apiTagUser: 'User',
   attachmentSpeedLimiterBps: 512 * 1000, // 512 KB/s
   blacklistedWords: [
     '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id',

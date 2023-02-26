@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike, IsNull } from 'typeorm';
 
@@ -9,6 +10,7 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { KomentarService } from '../repository/komentar.service';
 
+@ApiExcludeController()
 @Controller('/comment')
 export class CommentController {
 

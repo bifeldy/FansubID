@@ -1,6 +1,9 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '@nestjs/common';
+import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, Raw } from 'typeorm';
+
+import { CONSTANTS } from '../../../constants';
 
 // import { VerifiedOnly } from '../../decorators/verified.decorator';
 
@@ -17,6 +20,10 @@ export class NihongoEdictController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagNihongo)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -102,6 +109,8 @@ export class NihongoEdictController {
 
   @Get('/:id')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagNihongo)
+  @ApiParam({ name: 'id', type: 'number' })
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const edict = await this.edictRepo.findOneOrFail({

@@ -1,4 +1,5 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { In, Equal } from 'typeorm';
 import { Request, Response } from 'express';
 
@@ -14,6 +15,7 @@ import { CryptoService } from '../../services/crypto.service';
 import { KartuTandaPendudukService } from '../../repository/kartu-tanda-penduduk.service';
 import { UserService } from '../../repository/user.service';
 
+@ApiExcludeController()
 @Controller('/verify-ktp')
 export class VerifyKtpController {
 

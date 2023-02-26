@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
 
@@ -11,6 +12,7 @@ import { NotificationService } from '../repository/notification.service';
 
 import { SocketIoService } from '../services/socket-io.service';
 
+@ApiExcludeController()
 @Controller('/notification')
 export class NotificationController {
 

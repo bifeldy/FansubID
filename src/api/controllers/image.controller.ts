@@ -6,6 +6,7 @@ import { FormData } from 'node-fetch';
 import { URL } from 'node:url';
 
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 
@@ -21,6 +22,7 @@ import { ApiService } from '../services/api.service';
 import { CryptoService } from '../services/crypto.service';
 import { GlobalService } from '../services/global.service';
 
+@ApiExcludeController()
 @Controller('/image')
 export class ImageController {
 

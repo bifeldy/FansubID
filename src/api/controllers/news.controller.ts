@@ -1,6 +1,9 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
+import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -27,6 +30,10 @@ export class NewsController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagNews)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -79,6 +86,7 @@ export class NewsController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('title' in req.body && 'content' in req.body) {
@@ -141,6 +149,8 @@ export class NewsController {
 
   @Get('/:id')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagNews)
+  @ApiParam({ name: 'id', type: 'number' })
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const news = await this.newsRepo.findOneOrFail({
@@ -176,6 +186,7 @@ export class NewsController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -265,6 +276,7 @@ export class NewsController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const news =  await this.newsRepo.findOneOrFail({

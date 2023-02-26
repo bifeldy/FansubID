@@ -1,5 +1,8 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+
+import { CONSTANTS } from '../../../constants';
 
 import { UserService } from '../../repository/user.service';
 
@@ -15,6 +18,9 @@ export class QuizLeaderboardController {
   // GET `/api/quiz-leaderboard`
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagQuiz)
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const maxPage = parseInt(req.query['page'] as string) || 0;

@@ -1,6 +1,9 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '@nestjs/common';
+import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ILike } from 'typeorm';
+
+import { CONSTANTS } from '../../../constants';
 
 import { HirakataService } from '../../repository/hirakata.service';
 
@@ -15,6 +18,10 @@ export class NihongoHirakataController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagNihongo)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -54,8 +61,10 @@ export class NihongoHirakataController {
     }
   }
 
-  @Get('/:id')
+  @Get('/:romaji')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagNihongo)
+  @ApiParam({ name: 'romaji', type: 'string' })
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const hirakata = await this.hirakataRepo.findOneOrFail({
@@ -70,7 +79,7 @@ export class NihongoHirakataController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 404 - Hirakata API :: Gagal Mencari Hirakata ${req.params['id']} 😪`,
+        info: `🙄 404 - Hirakata API :: Gagal Mencari Hirakata ${req.params['romaji']} 😪`,
         result: {
           message: 'Hirakata Tidak Ditemukan!'
         }

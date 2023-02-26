@@ -1,6 +1,9 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '@nestjs/common';
+import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ILike, Raw } from 'typeorm';
+
+import { CONSTANTS } from '../../../constants';
 
 import { KanjiService } from '../../repository/kanji.service';
 
@@ -15,6 +18,10 @@ export class NihongoKanjiController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagNihongo)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
+  @ApiQuery({ name: 'row', required: true, type: 'number' })
+  @ApiQuery({ name: 'page', required: true, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -61,8 +68,10 @@ export class NihongoKanjiController {
     }
   }
 
-  @Get('/:id')
+  @Get('/:character')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagNihongo)
+  @ApiParam({ name: 'character', type: 'string' })
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const kanji = await this.kanjiRepo.findOneOrFail({
@@ -77,7 +86,7 @@ export class NihongoKanjiController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 404 - Kanji API :: Gagal Mencari Kanji ${req.params['id']} 😪`,
+        info: `🙄 404 - Kanji API :: Gagal Mencari Kanji ${req.params['character']} 😪`,
         result: {
           message: 'Kanji Tidak Ditemukan!'
         }

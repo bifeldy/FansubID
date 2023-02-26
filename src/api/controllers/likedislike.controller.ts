@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
 
@@ -14,6 +15,7 @@ import { NewsService } from '../repository/news.service';
 import { ProfileService } from '../repository/profile.service';
 import { UserService } from '../repository/user.service';
 
+@ApiExcludeController()
 @Controller('/likedislike')
 export class LikedislikeController {
 

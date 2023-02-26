@@ -1,8 +1,10 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { HirakataService } from '../../../repository/hirakata.service';
 
+@ApiExcludeController()
 @Controller('/nihongo-hirakata-all')
 export class NihongoHirakataAllController {
 

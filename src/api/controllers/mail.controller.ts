@@ -1,4 +1,5 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Get, Req, Res, Post } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Equal, ILike } from 'typeorm';
 import { Request, Response } from 'express';
 
@@ -14,6 +15,7 @@ import { MailboxService } from '../repository/mailbox.service';
 import { GlobalService } from '../services/global.service';
 import { MailService } from '../services/mail.service';
 
+@ApiExcludeController()
 @Controller('/mail')
 export class MailController {
 

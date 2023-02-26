@@ -2,6 +2,7 @@
 import { readFileSync } from 'node:fs';
 
 import { Controller, HttpCode, Get, Req, Res, Inject, CACHE_MANAGER, HttpException, HttpStatus } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
 
@@ -11,6 +12,7 @@ import { JsonCache } from '../../../models/req-res.model';
 
 import { GlobalService } from '../../services/global.service';
 
+@ApiExcludeController()
 @Controller('/fansub-rss-feed-active')
 export class FansubRssFeedActiveController {
 

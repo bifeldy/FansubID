@@ -2,8 +2,11 @@
 import { URL } from 'node:url';
 
 import { CACHE_MANAGER, Controller, Get, HttpCode, HttpException, HttpStatus, Inject, Req, Res } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
+
+import { CONSTANTS } from '../../../constants';
 
 import { environment } from '../../../environments/api/environment';
 
@@ -26,6 +29,9 @@ export class AnimeSeasonalController {
   // GET `/api/anime-seasonal`
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagAnime)
+  @ApiQuery({ name: 'year', required: true, type: 'number' })
+  @ApiQuery({ name: 'season', required: true, type: 'string' })
   async seasonalAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const currDate = new Date();
     const year = req.query['year'] || currDate.getFullYear();

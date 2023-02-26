@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike, In, Not } from 'typeorm';
 
@@ -14,6 +15,7 @@ import { DiscordService } from '../services/discord.service';
 import { BannedService } from '../repository/banned.service';
 import { UserService } from '../repository/user.service';
 
+@ApiExcludeController()
 @Controller('/banned')
 export class BannedController {
 

@@ -2,12 +2,14 @@
 import { readdirSync } from 'node:fs';
 
 import { Controller, Get, HttpCode, Redirect, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { environment } from '../environments/api/environment';
 
 import { GlobalService } from './services/global.service';
 
+@ApiExcludeController()
 @Controller('/')
 export class AppController {
 

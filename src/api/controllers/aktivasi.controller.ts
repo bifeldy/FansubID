@@ -1,4 +1,5 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Post, Redirect, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { environment } from '../../environments/api/environment';
@@ -10,6 +11,7 @@ import { CryptoService } from '../services/crypto.service';
 import { DiscordService } from '../services/discord.service';
 import { MailService } from '../services/mail.service';
 
+@ApiExcludeController()
 @Controller('/aktivasi')
 export class AktivasiController {
 

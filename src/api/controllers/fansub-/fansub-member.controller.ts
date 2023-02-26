@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
 
@@ -15,6 +16,7 @@ import { UserService } from '../../repository/user.service';
 
 import { DiscordService } from '../../services/discord.service';
 
+@ApiExcludeController()
 @Controller('/fansub-member')
 export class FansubMemberController {
 

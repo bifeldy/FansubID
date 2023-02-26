@@ -1,4 +1,5 @@
 import { CACHE_MANAGER, Controller, Get, HttpCode, HttpException, HttpStatus, Inject, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
 import { ILike } from 'typeorm';
@@ -18,6 +19,7 @@ import { FansubMemberService } from '../../repository/fansub-member.service';
 import { CloudflareService } from '../../services/cloudflare.service';
 import { GlobalService } from '../../services/global.service';
 
+@ApiExcludeController()
 @Controller('/fansub-dns')
 export class FansubDnsController {
 

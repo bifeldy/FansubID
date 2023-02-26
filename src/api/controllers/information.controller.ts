@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ILike } from 'typeorm';
 
@@ -11,6 +12,7 @@ import { InformationService } from '../repository/information.service';
 
 import { SocketIoService } from '../services/socket-io.service';
 
+@ApiExcludeController()
 @Controller('/information')
 export class InformationController {
 

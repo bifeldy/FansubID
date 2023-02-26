@@ -5,9 +5,12 @@ import translate from '@iamtraction/google-translate';
 import { URL } from 'node:url';
 
 import { CACHE_MANAGER, Controller, Get, HttpCode, HttpException, HttpStatus, Inject, Patch, Req, Res } from '@nestjs/common';
+import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
 import { Equal } from 'typeorm';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -34,10 +37,20 @@ export class DoramaController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagDorama)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
   async searchDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     const searchType = req.query['type'] || '';
     try {
+      if (searchQuery.length <= 3) {
+        throw new HttpException({
+          info: '🙄 400 - Dorama API :: Gagal Menarik Data 😪',
+          result: {
+            message: 'Minimal 3 Huruf Untuk Pencarian!'
+          }
+        }, HttpStatus.BAD_REQUEST);
+      }
       const url = new URL(`${environment.externalApiDorama}/search/q/${searchQuery}`);
       const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
       if (res_raw.ok) {
@@ -68,6 +81,7 @@ export class DoramaController {
   @Patch('/')
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @ApiExcludeEndpoint()
   async updateDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('id' in req.body && 'name' in req.body && 'image_url' in req.body) {
@@ -130,6 +144,8 @@ export class DoramaController {
 
   @Get('/:mdlSlug')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagDorama)
+  @ApiParam({ name: 'mdlSlug', type: 'string' })
   async getDetailDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const mdlId = req.params['mdlSlug'].split('-')[0];
     try {

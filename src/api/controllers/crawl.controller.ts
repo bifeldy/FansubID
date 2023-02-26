@@ -4,10 +4,12 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { Browser, Page } from 'puppeteer';
 
 import { Controller, Get, HttpCode, HttpStatus, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { GlobalService } from '../services/global.service';
 
+@ApiExcludeController()
 @Controller('/crawl')
 export class CrawlController {
 

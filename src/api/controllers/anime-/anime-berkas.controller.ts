@@ -1,4 +1,5 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ILike, In } from 'typeorm';
 
@@ -6,6 +7,7 @@ import { UserModel } from '../../../models/req-res.model';
 
 import { BerkasService } from '../../repository/berkas.service';
 
+@ApiExcludeController()
 @Controller('/anime-berkas')
 export class AnimeBerkasController {
 

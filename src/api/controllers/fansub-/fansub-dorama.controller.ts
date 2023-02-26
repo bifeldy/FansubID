@@ -1,8 +1,10 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { BerkasService } from '../../repository/berkas.service';
 
+@ApiExcludeController()
 @Controller('/fansub-dorama')
 export class FansubDoramaController {
 

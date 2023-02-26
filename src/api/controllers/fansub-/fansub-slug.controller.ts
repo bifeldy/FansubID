@@ -1,4 +1,5 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ILike } from 'typeorm';
 
@@ -6,6 +7,7 @@ import { CONSTANTS } from '../../../constants';
 
 import { FansubService } from '../../repository/fansub.service';
 
+@ApiExcludeController()
 @Controller('/fansub-slug')
 export class FansubSlugController {
 

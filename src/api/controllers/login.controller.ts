@@ -1,7 +1,10 @@
 import { Controller, HttpCode, Post, Req, Res } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { UserModel } from '../../models/req-res.model';
+import { CONSTANTS } from '../../constants';
+
+import { JsonResponse, UserModel } from '../../models/req-res.model';
 
 @Controller('/login')
 export class LoginController {
@@ -14,7 +17,18 @@ export class LoginController {
 
   @Post('/')
   @HttpCode(201)
-  login(@Req() req: Request, @Res({ passthrough: true }) res: Response): any {
+  @ApiTags(CONSTANTS.apiTagAuthSes)
+  @ApiBody({
+    schema: {
+      properties: {
+        userNameOrEmail: { type: 'string' },
+        password: { type: 'string' },
+        rememberMe: { type: 'boolean' }
+      },
+      required: ['userNameOrEmail', 'password']
+    }
+  })
+  login(@Req() req: Request, @Res({ passthrough: true }) res: Response): JsonResponse {
     const user: UserModel = res.locals['user'];
     return {
       info: '😚 201 - Login API :: Berhasil Masuk Yeay 🤩',

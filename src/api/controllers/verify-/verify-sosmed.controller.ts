@@ -2,6 +2,7 @@
 import { URL, URLSearchParams } from 'node:url';
 
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Equal } from 'typeorm';
 import { Request, Response } from 'express';
 
@@ -19,6 +20,7 @@ import { GlobalService } from '../../services/global.service';
 import { UserService } from '../../repository/user.service';
 import { SocialMediaService } from '../../repository/social-media.service';
 
+@ApiExcludeController()
 @Controller('/verify-sosmed')
 export class VerifySosmedController {
 

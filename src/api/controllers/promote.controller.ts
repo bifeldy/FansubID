@@ -1,4 +1,5 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, Not, In, ILike } from 'typeorm';
 
@@ -13,6 +14,7 @@ import { DiscordService } from '../services/discord.service';
 
 import { UserService } from '../repository/user.service';
 
+@ApiExcludeController()
 @Controller('/promote')
 export class PromoteController {
 

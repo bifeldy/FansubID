@@ -1,7 +1,10 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
+import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { UserModel } from '../../models/req-res.model';
+import { CONSTANTS } from '../../constants';
+
+import { JsonResponse, UserModel } from '../../models/req-res.model';
 
 import { environment } from '../../environments/api/environment';
 
@@ -18,7 +21,17 @@ export class VerifyController {
 
   @Patch('/')
   @HttpCode(202)
-  verify(@Req() req: Request, @Res({ passthrough: true }) res: Response): any {
+  @ApiTags(CONSTANTS.apiTagAuthSes)
+  @ApiQuery({ name: 'token', required: false, type: 'string' })
+  @ApiBody({
+    schema: {
+      properties: {
+        token: { type: 'string' }
+      },
+      required: ['token']
+    }
+  })
+  verify(@Req() req: Request, @Res({ passthrough: true }) res: Response): JsonResponse {
     const user: UserModel = res.locals['user'];
     const token: string = res.locals['token'];
     if (user) {

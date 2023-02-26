@@ -7,6 +7,7 @@ import { AbortController } from 'abort-controller';
 import { environment } from '../environments/api/environment';
 
 import { INestApplication } from '@nestjs/common';
+import { DocumentBuilder, SwaggerDocumentOptions, SwaggerModule } from '@nestjs/swagger';
 import { NestFactory } from '@nestjs/core';
 import { urlencoded, json, Request, Response, NextFunction } from 'express';
 
@@ -19,7 +20,6 @@ import { CONSTANTS } from '../constants';
 import { ApiKeyService } from './repository/api-key.service';
 import { GlobalService } from './services/global.service';
 import { SocketIoService } from './services/socket-io.service';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 let gs: GlobalService = null;
 let aks: ApiKeyService = null;
@@ -72,12 +72,18 @@ export async function app(): Promise<INestApplication> {
   nestApp.enableCors(aks.getCorsOptions());
   nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
   nestApp.use(reqResEvent);
-  const config = new DocumentBuilder()
+  const swaggerCfg = new DocumentBuilder()
     .setTitle(environment.siteName)
     .setDescription(environment.siteDescription)
+    .setContact(environment.siteName, environment.baseUrl, `noreply@${environment.domain}`)
+    .addApiKey({ type: 'apiKey', in: 'query', name: 'key' })
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
-  const document = SwaggerModule.createDocument(nestApp, config);
-  SwaggerModule.setup('api', nestApp, document);
+  const swaggerOpt: SwaggerDocumentOptions = {
+    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey
+  };
+  const swaggerDoc = SwaggerModule.createDocument(nestApp, swaggerCfg, swaggerOpt);
+  SwaggerModule.setup('api', nestApp, swaggerDoc);
   return nestApp;
 }
 

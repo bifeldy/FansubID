@@ -3,6 +3,7 @@ import { readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { ApiExcludeEndpoint, ApiParam, ApiTags } from '@nestjs/swagger';
 import { DiskFile } from '@uploadx/core';
 
 import { Request, Response } from 'express';
@@ -40,6 +41,7 @@ export class AttachmentController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async searchLampiran(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -94,6 +96,7 @@ export class AttachmentController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async uploadLampiran(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const file = req.body as DiskFile;
     try {
@@ -151,6 +154,8 @@ export class AttachmentController {
   @HttpCode(206)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiTags(CONSTANTS.apiTagAttachment)
+  @ApiParam({ name: 'id', type: 'string' })
   async getById(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
       const attachment =  await this.attachmentRepo.findOneOrFail({
@@ -228,6 +233,7 @@ export class AttachmentController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const attachment =  await this.attachmentRepo.findOneOrFail({

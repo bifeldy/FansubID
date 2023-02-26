@@ -1,10 +1,12 @@
 import { Controller, HttpCode, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { RegistrationModel } from '../../models/req-res.model';
 
 import { MailService } from '../services/mail.service';
 
+@ApiExcludeController()
 @Controller('/register')
 export class RegisterController {
 

@@ -5,9 +5,12 @@ import translate from '@iamtraction/google-translate';
 import { URL } from 'node:url';
 
 import { CACHE_MANAGER, Controller, Get, HttpCode, HttpException, HttpStatus, Inject, Patch, Req, Res } from '@nestjs/common';
+import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
 import { Equal } from 'typeorm';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -36,9 +39,19 @@ export class AnimeController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagAnime)
+  @ApiQuery({ name: 'q', required: true, type: 'string' })
   async searchAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
+      if (searchQuery.length <= 3) {
+        throw new HttpException({
+          info: '🙄 400 - Anime API :: Gagal Menarik Data 😪',
+          result: {
+            message: 'Minimal 3 Huruf Untuk Pencarian!'
+          }
+        }, HttpStatus.BAD_REQUEST);
+      }
       const url = new URL(`${environment.externalApiAnime}/anime?nsfw=true&fields=media_type,num_episodes`);
       url.searchParams.append('q', searchQuery as string);
       const res_raw = await this.api.getData(url, this.header);
@@ -74,6 +87,7 @@ export class AnimeController {
 
   @Patch('/')
   @HttpCode(202)
+  @ApiExcludeEndpoint()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async updateAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
@@ -133,6 +147,8 @@ export class AnimeController {
 
   @Get('/:malSlug')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagAnime)
+  @ApiParam({ name: 'malSlug', type: 'number' })
   async getDetailAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const malId = req.params['malSlug'].split('-')[0];
     try {

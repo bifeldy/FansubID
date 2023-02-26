@@ -1,5 +1,6 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Put, Req, Res } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { RoleModel } from '../../models/req-res.model';
@@ -9,6 +10,7 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { ConfigService } from '../services/config.service';
 
+@ApiExcludeController()
 @Controller('/task-cron-job')
 export class TaskCronJobController {
 

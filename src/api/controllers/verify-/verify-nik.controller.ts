@@ -2,6 +2,7 @@
 import { URL, URLSearchParams } from 'node:url';
 
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { environment } from '../../../environments/api/environment';
@@ -14,6 +15,7 @@ import { ApiKeyService } from '../../repository/api-key.service';
 import { ApiService } from '../../services/api.service';
 import { GlobalService } from '../../services/global.service';
 
+@ApiExcludeController()
 @Controller('/verify-nik')
 export class VerifyNikController {
 

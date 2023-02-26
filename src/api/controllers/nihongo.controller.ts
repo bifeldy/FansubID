@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, Patch, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
 
@@ -9,6 +10,7 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { NihongoService } from '../repository/nihongo.service';
 
+@ApiExcludeController()
 @Controller('/nihongo')
 export class NihongoController {
 

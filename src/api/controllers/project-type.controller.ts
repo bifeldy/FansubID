@@ -1,4 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal } from 'typeorm';
 
@@ -10,6 +11,7 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 import { BerkasService } from '../repository/berkas.service';
 import { ProjectTypeService } from '../repository/project-type.service';
 
+@ApiExcludeController()
 @Controller('/project-type')
 export class ProjectTypeController {
 
