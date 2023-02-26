@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { JsonResponseArray } from '../../../models/req-res.model';
+import { JsonResponse } from '../../../models/req-res.model';
 
 import { RoomInfoModel } from '../../../models/socket-io.model';
 
@@ -36,7 +36,7 @@ export class QuizService {
     this.ss.socketEmit('quiz-answer', data);
   }
 
-  getQuizLeaderboard(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray> {
+  getQuizLeaderboard(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse> {
     return this.api.getData(`/quiz-leaderboard?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 

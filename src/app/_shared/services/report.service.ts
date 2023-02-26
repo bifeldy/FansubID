@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { JsonResponse, JsonResponseArray, LikeDislikeModel } from '../../../models/req-res.model';
+import { JsonResponse, LikeDislikeModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -20,7 +20,7 @@ export class ReportService {
     }
   }
 
-  getAllReport(): Observable<JsonResponseArray<LikeDislikeModel>> {
+  getAllReport(): Observable<JsonResponse<LikeDislikeModel>> {
     return this.api.getData(`/likedislike`);
   }
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { JsonResponse, JsonResponseArray, MailboxModel } from '../../../models/req-res.model';
+import { JsonResponse, MailboxModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -21,7 +21,7 @@ export class MailService {
     }
   }
 
-  getMailbox(type = 'inbox', q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<MailboxModel>> {
+  getMailbox(type = 'inbox', q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<MailboxModel>> {
     return this.api.getData(`/mail-${type}?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 

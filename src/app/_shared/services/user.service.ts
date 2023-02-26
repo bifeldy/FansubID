@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { BannedModel, BerkasModel, JsonResponse, JsonResponseArray, KomentarModel, LikeDislikeModel, FansubMemberModel, UserModel } from '../../../models/req-res.model';
+import { BannedModel, BerkasModel, JsonResponse, KomentarModel, LikeDislikeModel, FansubMemberModel, UserModel } from '../../../models/req-res.model';
 import { TrackModel } from '../../../models/socket-io.model';
 
 import { ApiService } from './api.service';
@@ -25,11 +25,11 @@ export class UserService {
     }
   }
 
-  checkBanned(userId): Observable<JsonResponseArray<BannedModel>> {
+  checkBanned(userId): Observable<JsonResponse<BannedModel>> {
     return this.api.getData(`/banned?id=${userId}`);
   }
 
-  getAllUser(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<UserModel>> {
+  getAllUser(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<UserModel>> {
     return this.api.getData(`/user?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
@@ -44,19 +44,19 @@ export class UserService {
     }));
   }
 
-  getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<BerkasModel>> {
+  getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<BerkasModel>> {
     return this.api.getData(`/user/${username}/feed-berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getUserFeedComment(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<KomentarModel>> {
+  getUserFeedComment(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<KomentarModel>> {
     return this.api.getData(`/user/${username}/feed-comment?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getUserFeedLikeDislike(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<LikeDislikeModel>> {
+  getUserFeedLikeDislike(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<LikeDislikeModel>> {
     return this.api.getData(`/user/${username}/feed-likedislike?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getUserFeedVisit(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<TrackModel>> {
+  getUserFeedVisit(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<TrackModel>> {
     return this.api.getData(`/user/${username}/feed-visit?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
@@ -75,7 +75,7 @@ export class UserService {
     return this.api.postData('/verify-sosmed', data);
   }
 
-  getUserGroup(username: string): Observable<JsonResponseArray<FansubMemberModel>> {
+  getUserGroup(username: string): Observable<JsonResponse<FansubMemberModel>> {
     return this.api.getData(`/user/${username}/group`);
   }
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { JsonResponse, JsonResponseArray, ProjectTypeModel } from '../../../models/req-res.model';
+import { JsonResponse, ProjectTypeModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -21,7 +21,7 @@ export class ProjectService {
     }
   }
 
-  getProject(): Observable<JsonResponseArray<ProjectTypeModel>> {
+  getProject(): Observable<JsonResponse<ProjectTypeModel>> {
     return this.api.getData(`/project-type`);
   }
 

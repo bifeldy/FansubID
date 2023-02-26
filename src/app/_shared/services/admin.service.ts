@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/app/environment';
 
-import { ApiKeyModel, BannedModel, JsonResponse, JsonResponseArray, NotificationModel, UserModel } from '../../../models/req-res.model';
+import { ApiKeyModel, BannedModel, JsonResponse, NotificationModel, UserModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -95,7 +95,7 @@ export class AdminService {
     }
   }
 
-  getAllNotif(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<NotificationModel>> {
+  getAllNotif(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<NotificationModel>> {
     return this.api.getData(`/notification?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
@@ -107,7 +107,7 @@ export class AdminService {
     return this.api.deleteData(`/notification/${notifId}`);
   }
 
-  getAllBanned(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<BannedModel>> {
+  getAllBanned(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<BannedModel>> {
     return this.api.getData(`/banned?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
@@ -123,7 +123,7 @@ export class AdminService {
     return this.api.postData(`/promote`, promoteData);
   }
 
-  getAllCors(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<ApiKeyModel>> {
+  getAllCors(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<ApiKeyModel>> {
     return this.api.getData(`/api-key?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 

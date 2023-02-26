@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { JsonResponse, FansubModel, JsonResponseArray, FansubMemberModel } from '../../../models/req-res.model';
+import { JsonResponse, FansubModel, FansubMemberModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -20,7 +20,7 @@ export class FansubService {
     }
   }
 
-  searchFansub(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<FansubModel>> {
+  searchFansub(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<FansubModel>> {
     return this.api.getData(`/fansub?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
@@ -36,7 +36,7 @@ export class FansubService {
     return this.api.getData(`/fansub/${fansubSlug}`);
   }
 
-  getAllFansub(): Observable<JsonResponseArray<FansubModel>> {
+  getAllFansub(): Observable<JsonResponse<FansubModel>> {
     return this.api.getData(`/fansub-all`);
   }
 
@@ -44,23 +44,23 @@ export class FansubService {
     return this.api.patchData(`/fansub-slug`, fansubData);
   }
 
-  getBerkasFansub(fansubId = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray> {
+  getBerkasFansub(fansubId = [], q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse> {
     return this.api.patchData(`/fansub-berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`, { id: fansubId });
   }
 
-  getAnimeFansub(fansubId = [], page = 1, row = 10): Observable<JsonResponseArray> {
+  getAnimeFansub(fansubId = [], page = 1, row = 10): Observable<JsonResponse> {
     return this.api.patchData(`/fansub-anime?page=${page}&row=${row}`, { id: fansubId });
   }
 
-  getDoramaFansub(fansubId = [], page = 1, row = 10): Observable<JsonResponseArray> {
+  getDoramaFansub(fansubId = [], page = 1, row = 10): Observable<JsonResponse> {
     return this.api.patchData(`/fansub-dorama?page=${page}&row=${row}`, { id: fansubId });
   }
 
-  getRssFeedFansubAllActiveOnly(): Observable<JsonResponseArray> {
+  getRssFeedFansubAllActiveOnly(): Observable<JsonResponse> {
     return this.api.getData('/fansub-rss-feed-active');
   }
 
-  getRssFeedFansubAll(): Observable<JsonResponseArray> {
+  getRssFeedFansubAll(): Observable<JsonResponse> {
     return this.api.getData('/fansub-rss-feed-all');
   }
 
@@ -68,11 +68,11 @@ export class FansubService {
     return this.api.getData(`/fansub/${fansubSlug}/rss`);
   }
 
-  getFansubMember(fansubSlug: string): Observable<JsonResponseArray<FansubMemberModel>> {
+  getFansubMember(fansubSlug: string): Observable<JsonResponse<FansubMemberModel>> {
     return this.api.getData(`/fansub/${fansubSlug}/member`);
   }
 
-  getAllFansubMember(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<FansubMemberModel>> {
+  getAllFansubMember(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<FansubMemberModel>> {
     return this.api.getData(`/fansub-member?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
@@ -88,7 +88,7 @@ export class FansubService {
     return this.api.deleteData(`/fansub-member/${fansubMemberId}`);
   }
 
-  getAllSubDomain(q = '', page = 1, row = 12, sort = '', order = ''): Observable<JsonResponseArray<any>> {
+  getAllSubDomain(q = '', page = 1, row = 12, sort = '', order = ''): Observable<JsonResponse<any>> {
     return this.api.getData(`/fansub-dns?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 

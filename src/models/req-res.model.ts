@@ -3,43 +3,14 @@ export interface JsonCache {
   body?: any;
 }
 
-export interface JsonDefault {
-  id?: string;
-  title?: string;
-  name?: string;
-  message?: string;
-  token?: string;
-  url?: string;
-  mime?: string;
-  extension?: string;
-  size?: number;
-  time?: number;
-  expiration?: number;
-  data?: any;
-  myReport?: any;
-  statistics?: any;
-}
-
-export interface JsonResponse<T = JsonDefault> {
+export interface JsonResponse<T = any> {
   info: string;
   result?: T;
+  results?: T[];
+  count?: number;
+  pages?: number;
   token?: string;
   imageUrl?: string;
-}
-
-export interface JsonResponseArray<T = any> {
-  info: string;
-  results?: T[];
-  count?: number;
-  pages?: number;
-}
-
-export interface JsonResponseMulti<T> {
-  info: string;
-  result?: T;
-  results?: T[];
-  count?: number;
-  pages?: number;
 }
 
 export interface MailModel {

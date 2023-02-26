@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { JsonResponse, BerkasModel, JsonResponseArray } from '../../../models/req-res.model';
+import { JsonResponse, BerkasModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -21,7 +21,7 @@ export class BerkasService {
     }
   }
 
-  getAllBerkas(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<BerkasModel>> {
+  getAllBerkas(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<BerkasModel>> {
     return this.api.getData(`/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 

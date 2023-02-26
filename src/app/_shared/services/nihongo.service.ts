@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { EdictModel, HirakataModel, JsonResponse, JsonResponseArray, KanjiModel, NihongoCategoryModel, NihongoModel } from '../../../models/req-res.model';
+import { EdictModel, HirakataModel, JsonResponse, KanjiModel, NihongoCategoryModel, NihongoModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -21,11 +21,11 @@ export class NihongoService {
     }
   }
 
-  getAllNihongo(category = '', q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<NihongoModel>> {
+  getAllNihongo(category = '', q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<NihongoModel>> {
     return this.api.getData(`/nihongo?category=${category}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getAllKategori(): Observable<JsonResponseArray<NihongoCategoryModel>> {
+  getAllKategori(): Observable<JsonResponse<NihongoCategoryModel>> {
     return this.api.patchData(`/nihongo`);
   }
 
@@ -37,15 +37,15 @@ export class NihongoService {
     return this.api.putData(`/nihongo/${nihongoId}`, nihongoData);
   }
 
-  getHirakata(): Observable<JsonResponseArray<HirakataModel>> {
+  getHirakata(): Observable<JsonResponse<HirakataModel>> {
     return this.api.getData(`/nihongo-hirakata-all`);
   }
 
-  getAllKanji(jlpt = '', school = '', q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<KanjiModel>> {
+  getAllKanji(jlpt = '', school = '', q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<KanjiModel>> {
     return this.api.getData(`/nihongo-kanji?jlpt=${jlpt}&school=${school}&q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  getAllEdict(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponseArray<EdictModel>> {
+  getAllEdict(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<EdictModel>> {
     return this.api.getData(`/nihongo-edict?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 

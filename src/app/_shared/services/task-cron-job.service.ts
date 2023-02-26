@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { JsonResponse, JsonResponseArray, TaskCronJobModel } from '../../../models/req-res.model';
+import { JsonResponse, TaskCronJobModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -21,7 +21,7 @@ export class TaskCronJobService {
     }
   }
 
-  getAllTaskCronJobs(): Observable<JsonResponseArray<TaskCronJobModel>> {
+  getAllTaskCronJobs(): Observable<JsonResponse<TaskCronJobModel>> {
     return this.api.getData(`/task-cron-job?ngsw-bypass=true`);
   }
 
