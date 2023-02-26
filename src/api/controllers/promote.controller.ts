@@ -82,8 +82,6 @@ export class PromoteController {
             )
           );
           delete resUserSave.email;
-          delete resUserSave.password;
-          delete resUserSave.session_token;
           delete resUserSave.kartu_tanda_penduduk_;
           delete resUserSave.profile_;
           return {

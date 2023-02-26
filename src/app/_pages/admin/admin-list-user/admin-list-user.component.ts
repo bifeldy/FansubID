@@ -94,7 +94,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 Role: r.role,
                 Image: r.image_url,
                 Username: r.username,
-                Email: r.__email,
+                Email: r._email,
                 'Nama Lengkap': r.kartu_tanda_penduduk_.nama,
                 banned: (Object.keys(result.results[r.id]).length > 0),
                 Aksi: (

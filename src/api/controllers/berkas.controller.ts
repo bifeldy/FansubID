@@ -108,9 +108,6 @@ export class BerkasController {
           delete f.dorama_.updated_at;
         }
         if ('user_' in f && f.user_) {
-          delete f.user_.email;
-          delete f.user_.password;
-          delete f.user_.session_token;
           delete f.user_.created_at;
           delete f.user_.updated_at;
         }
@@ -333,9 +330,6 @@ export class BerkasController {
           delete resFileSave.project_type_.updated_at;
         }
         if ('user_' in resFileSave && resFileSave.user_) {
-          delete resFileSave.user_.email;
-          delete resFileSave.user_.password;
-          delete resFileSave.user_.session_token;
           delete resFileSave.user_.created_at;
           delete resFileSave.user_.updated_at;
         }
@@ -421,9 +415,6 @@ export class BerkasController {
         delete file.dorama_.updated_at;
       }
       if ('user_' in file && file.user_) {
-        delete file.user_.email;
-        delete file.user_.password;
-        delete file.user_.session_token;
         delete file.user_.created_at;
         delete file.user_.updated_at;
       }
@@ -612,9 +603,6 @@ export class BerkasController {
             delete resFileSave.project_type_.updated_at;
           }
           if ('user_' in resFileSave && resFileSave.user_) {
-            delete resFileSave.user_.email;
-            delete resFileSave.user_.password;
-            delete resFileSave.user_.session_token;
             delete resFileSave.user_.created_at;
             delete resFileSave.user_.updated_at;
           }
@@ -690,9 +678,6 @@ export class BerkasController {
       });
       const deletedBerkas = await this.berkasRepo.remove(berkas);
       if ('user_' in deletedBerkas && deletedBerkas.user_) {
-        delete deletedBerkas.user_.email;
-        delete deletedBerkas.user_.password;
-        delete deletedBerkas.user_.session_token;
         delete deletedBerkas.user_.created_at;
         delete deletedBerkas.user_.updated_at;
       }

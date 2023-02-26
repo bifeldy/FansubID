@@ -73,9 +73,6 @@ export class BannedController {
           }
           for (const b of banneds) {
             if ('user_' in b && b.user_) {
-              delete b.user_.email;
-              delete b.user_.password;
-              delete b.user_.session_token;
               delete b.user_.created_at;
               delete b.user_.updated_at;
               results[b.user_.id] = b;
@@ -116,16 +113,10 @@ export class BannedController {
           });
           for (const b of banneds) {
             if ('user_' in b && b.user_) {
-              delete b.user_.email;
-              delete b.user_.password;
-              delete b.user_.session_token;
               delete b.user_.created_at;
               delete b.user_.updated_at;
             }
             if ('banned_by_' in b && b.banned_by_) {
-              delete b.banned_by_.email;
-              delete b.banned_by_.password;
-              delete b.banned_by_.session_token;
               delete b.banned_by_.created_at;
               delete b.banned_by_.updated_at;
             }
@@ -192,16 +183,10 @@ export class BannedController {
         banned.banned_by_ = adminMod;
         const bannedUser = await this.bannedRepo.save(banned);
         if ('user_' in bannedUser && bannedUser.user_) {
-          delete bannedUser.user_.email;
-          delete bannedUser.user_.password;
-          delete bannedUser.user_.session_token;
           delete bannedUser.user_.created_at;
           delete bannedUser.user_.updated_at;
         }
         if ('banned_by_' in bannedUser && bannedUser.banned_by_) {
-          delete bannedUser.banned_by_.email;
-          delete bannedUser.banned_by_.password;
-          delete bannedUser.banned_by_.session_token;
           delete bannedUser.banned_by_.created_at;
           delete bannedUser.banned_by_.updated_at;
         }
@@ -272,16 +257,10 @@ export class BannedController {
       });
       const unBannedUser = await this.bannedRepo.remove(banned);
       if ('user_' in unBannedUser && unBannedUser.user_) {
-        delete unBannedUser.user_.email;
-        delete unBannedUser.user_.password;
-        delete unBannedUser.user_.session_token;
         delete unBannedUser.user_.created_at;
         delete unBannedUser.user_.updated_at;
       }
       if ('banned_by_' in unBannedUser && unBannedUser.banned_by_) {
-        delete unBannedUser.banned_by_.email;
-        delete unBannedUser.banned_by_.password;
-        delete unBannedUser.banned_by_.session_token;
         delete unBannedUser.banned_by_.created_at;
         delete unBannedUser.banned_by_.updated_at;
       }

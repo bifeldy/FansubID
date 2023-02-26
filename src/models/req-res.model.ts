@@ -138,7 +138,7 @@ export interface UserModel {
   updated_at?: number | Date;
   kartu_tanda_penduduk_?: KartuTandaPendudukModel;
   profile_?: ProfileModel;
-  __email?: string;
+  _email?: string;
 }
 
 export interface ApiKeyModel {

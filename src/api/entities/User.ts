@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import { KartuTandaPendudukModel, ProfileModel, RoleModel, UserModel } from '../../models/req-res.model';
@@ -56,10 +56,5 @@ export class User implements UserModel {
   @OneToOne(type => Profile)
   @JoinColumn()
   profile_: ProfileModel;
-
-  @Expose()
-  get _email(): string {
-    return this.email;
-  }
 
 }

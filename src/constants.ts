@@ -1,7 +1,8 @@
 export const CONSTANTS = {
   apiTagAnime: 'Anime',
+  apiTagApiKey: 'API Key',
   apiTagAttachment: 'Atachment DDL',
-  apiTagAuthSes: 'Auth & Session',
+  apiTagAuthSes: 'Auth Session',
   apiTagBerkas: 'Berkas',
   apiTagDorama: 'Dorama',
   apiTagFansub: 'Fansub',

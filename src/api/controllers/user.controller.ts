@@ -92,30 +92,14 @@ export class UserController {
       for (const u of user) {
         if (adminMod) {
           if (adminMod.role === RoleModel.ADMIN || adminMod.role === RoleModel.MODERATOR) {
-            (u as any).__email = u._email;
+            (u as any)._email = u.email;
           }
         }
-        delete u.email;
-        delete u.password;
-        delete u.session_token;
         if ('kartu_tanda_penduduk_' in u && u.kartu_tanda_penduduk_) {
-          delete u.kartu_tanda_penduduk_.id;
-          delete u.kartu_tanda_penduduk_.agama;
-          delete u.kartu_tanda_penduduk_.alamat;
-          delete u.kartu_tanda_penduduk_.golongan_darah;
-          delete u.kartu_tanda_penduduk_.kecamatan;
-          delete u.kartu_tanda_penduduk_.kelurahan_desa;
-          delete u.kartu_tanda_penduduk_.kewarganegaraan;
-          delete u.kartu_tanda_penduduk_.nik;
-          delete u.kartu_tanda_penduduk_.pekerjaan;
-          delete u.kartu_tanda_penduduk_.rt;
-          delete u.kartu_tanda_penduduk_.rw;
-          delete u.kartu_tanda_penduduk_.status_perkawinan;
           delete u.kartu_tanda_penduduk_.created_at;
           delete u.kartu_tanda_penduduk_.updated_at;
         }
         if ('profile_' in u && u.profile_) {
-          delete u.profile_.id;
           delete u.profile_.created_at;
           delete u.profile_.updated_at;
         }
@@ -150,21 +134,7 @@ export class UserController {
         relations: ['kartu_tanda_penduduk_', 'profile_']
       });
       delete selectedUser.email;
-      delete selectedUser.password;
-      delete selectedUser.session_token;
       if ('kartu_tanda_penduduk_' in selectedUser && selectedUser.kartu_tanda_penduduk_) {
-        delete selectedUser.kartu_tanda_penduduk_.id;
-        delete selectedUser.kartu_tanda_penduduk_.agama;
-        delete selectedUser.kartu_tanda_penduduk_.alamat;
-        delete selectedUser.kartu_tanda_penduduk_.golongan_darah;
-        delete selectedUser.kartu_tanda_penduduk_.kecamatan;
-        delete selectedUser.kartu_tanda_penduduk_.kelurahan_desa;
-        delete selectedUser.kartu_tanda_penduduk_.kewarganegaraan;
-        delete selectedUser.kartu_tanda_penduduk_.nik;
-        delete selectedUser.kartu_tanda_penduduk_.pekerjaan;
-        delete selectedUser.kartu_tanda_penduduk_.rt;
-        delete selectedUser.kartu_tanda_penduduk_.rw;
-        delete selectedUser.kartu_tanda_penduduk_.status_perkawinan;
         delete selectedUser.kartu_tanda_penduduk_.created_at;
         delete selectedUser.kartu_tanda_penduduk_.updated_at;
       }
@@ -242,12 +212,10 @@ export class UserController {
               }
             )
           );
-          delete resUserSave.email;
-          delete resUserSave.password;
-          delete resUserSave.session_token;
           delete resUserSave.kartu_tanda_penduduk_;
           delete resUserSave.profile_;
-          selectedUser.session_token = this.cs.credentialEncode({ user: resUserSave }, false);
+          const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
+          selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes }, false);
           resUserSave = await this.userRepo.save(selectedUser);
           res.cookie(environment.tokenName, resUserSave.session_token, {
             httpOnly: true,
@@ -316,8 +284,6 @@ export class UserController {
       const deletedKtp = await this.ktpRepo.remove(ktp);
       const deletedProfile = await this.profileRepo.remove(profile);
       delete (deletedUser as any).email;
-      delete (deletedUser as any).password;
-      delete (deletedUser as any).session_token;
       return {
         info: `😅 202 - User API :: Berhasil Menghapus User ${req.params['username']} 🤣`,
         result: {
@@ -395,9 +361,6 @@ export class UserController {
           delete f.anime_.updated_at;
         }
         if ('user_' in f && f.user_) {
-          delete f.user_.email;
-          delete f.user_.password;
-          delete f.user_.session_token;
           delete f.user_.created_at;
           delete f.user_.updated_at;
         }
@@ -458,9 +421,6 @@ export class UserController {
       });
       for (const k of komens) {
         if ('user_' in k && k.user_) {
-          delete k.user_.email;
-          delete k.user_.password;
-          delete k.user_.session_token;
           delete k.user_.created_at;
           delete k.user_.updated_at;
         }
@@ -571,32 +531,14 @@ export class UserController {
           delete ldl.fansub_.updated_at;
         }
         if ('user_' in ldl && ldl.user_) {
-          delete ldl.user_.email;
-          delete ldl.user_.password;
-          delete ldl.user_.session_token;
           delete ldl.user_.created_at;
           delete ldl.user_.updated_at;
           if ('kartu_tanda_penduduk_' in ldl.user_ && ldl.user_.kartu_tanda_penduduk_) {
-            delete ldl.user_.kartu_tanda_penduduk_.id;
-            delete ldl.user_.kartu_tanda_penduduk_.agama;
-            delete ldl.user_.kartu_tanda_penduduk_.alamat;
-            delete ldl.user_.kartu_tanda_penduduk_.golongan_darah;
-            delete ldl.user_.kartu_tanda_penduduk_.kecamatan;
-            delete ldl.user_.kartu_tanda_penduduk_.kelurahan_desa;
-            delete ldl.user_.kartu_tanda_penduduk_.kewarganegaraan;
-            delete ldl.user_.kartu_tanda_penduduk_.nik;
-            delete ldl.user_.kartu_tanda_penduduk_.pekerjaan;
-            delete ldl.user_.kartu_tanda_penduduk_.rt;
-            delete ldl.user_.kartu_tanda_penduduk_.rw;
-            delete ldl.user_.kartu_tanda_penduduk_.status_perkawinan;
             delete ldl.user_.kartu_tanda_penduduk_.created_at;
             delete ldl.user_.kartu_tanda_penduduk_.updated_at;
           }
         }
         if ('report_by_' in ldl && ldl.report_by_) {
-          delete ldl.report_by_.email;
-          delete ldl.report_by_.password;
-          delete ldl.report_by_.session_token;
           delete ldl.report_by_.created_at;
           delete ldl.report_by_.updated_at;
         }
@@ -688,8 +630,12 @@ export class UserController {
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const t of tracks) {
-        if (user.username !== selectedUser.username && user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+        if (!user) {
           delete t.ip;
+        } else {
+          if (user.username !== selectedUser.username && user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+            delete t.ip;
+          }
         }
         if ('news_' in t && t.news_) {
           delete t.news_.content;
@@ -711,32 +657,14 @@ export class UserController {
           delete t.fansub_.updated_at;
         }
         if ('user_' in t && t.user_) {
-          delete t.user_.email;
-          delete t.user_.password;
-          delete t.user_.session_token;
           delete t.user_.created_at;
           delete t.user_.updated_at;
           if ('kartu_tanda_penduduk_' in t.user_ && t.user_.kartu_tanda_penduduk_) {
-            delete t.user_.kartu_tanda_penduduk_.id;
-            delete t.user_.kartu_tanda_penduduk_.agama;
-            delete t.user_.kartu_tanda_penduduk_.alamat;
-            delete t.user_.kartu_tanda_penduduk_.golongan_darah;
-            delete t.user_.kartu_tanda_penduduk_.kecamatan;
-            delete t.user_.kartu_tanda_penduduk_.kelurahan_desa;
-            delete t.user_.kartu_tanda_penduduk_.kewarganegaraan;
-            delete t.user_.kartu_tanda_penduduk_.nik;
-            delete t.user_.kartu_tanda_penduduk_.pekerjaan;
-            delete t.user_.kartu_tanda_penduduk_.rt;
-            delete t.user_.kartu_tanda_penduduk_.rw;
-            delete t.user_.kartu_tanda_penduduk_.status_perkawinan;
             delete t.user_.kartu_tanda_penduduk_.created_at;
             delete t.user_.kartu_tanda_penduduk_.updated_at;
           }
         }
         if ('track_by_' in t && t.track_by_) {
-          delete t.track_by_.email;
-          delete t.track_by_.password;
-          delete t.track_by_.session_token;
           delete t.track_by_.created_at;
           delete t.track_by_.updated_at;
         }
@@ -793,16 +721,10 @@ export class UserController {
           delete group.fansub_.user_;
         }
         if ('user_' in group && group.user_) {
-          delete group.user_.email;
-          delete group.user_.password;
-          delete group.user_.session_token;
           delete group.user_.created_at;
           delete group.user_.updated_at;
         }
         if ('approved_by_' in group && group.approved_by_) {
-          delete group.approved_by_.email;
-          delete group.approved_by_.password;
-          delete group.approved_by_.session_token;
           delete group.approved_by_.created_at;
           delete group.approved_by_.updated_at;
         }

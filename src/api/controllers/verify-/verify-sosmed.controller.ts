@@ -105,8 +105,6 @@ export class VerifySosmedController {
                 user.discord = res_json2.id;
                 const resUserSave = await this.userRepo.save(user as User);
                 delete resUserSave.email;
-                delete resUserSave.password;
-                delete resUserSave.session_token;
                 delete resUserSave.kartu_tanda_penduduk_;
                 delete resUserSave.profile_;
                 return {

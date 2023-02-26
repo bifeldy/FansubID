@@ -1,7 +1,9 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
-import { ApiExcludeController } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike, In, IsNull, Not, Raw } from 'typeorm';
+
+import { CONSTANTS } from '../../constants';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
@@ -10,7 +12,6 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { ApiKeyService } from '../repository/api-key.service';
 
-@ApiExcludeController()
 @Controller('/api-key')
 export class ApiKeyController {
 
@@ -23,18 +24,22 @@ export class ApiKeyController {
   @Get('/')
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @ApiTags(CONSTANTS.apiTagApiKey)
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
-      const queryId = req.query['id'];
-      if (queryId) {
-        const userId = (queryId as string).split(',').map(Number);
-        if (Array.isArray(userId) && userId.length > 0) {
+      const queryUserName = req.query['username'];
+      if (queryUserName) {
+        const userName = (queryUserName as string).split(',');
+        if (Array.isArray(userName) && userName.length > 0) {
           if (
-            ((userId.length > 1) || (userId.length === 1 && userId[0] !== user.id)) &&
+            ((userName.length > 1) || (userName.length === 1 && userName[0] !== user.username)) &&
             user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR
           ) {
             throw new HttpException({
@@ -48,21 +53,18 @@ export class ApiKeyController {
             where: [
               {
                 user_: {
-                  id: In(userId)
+                  username: In(userName)
                 }
               }
             ],
             relations: ['user_']
           });
           const results: any = {};
-          for (const i of userId) {
-            results[i] = {};
+          for (const u of userName) {
+            results[u] = {};
           }
           for (const c of corss) {
             if ('user_' in c && c.user_) {
-              delete c.user_.email;
-              delete c.user_.password;
-              delete c.user_.session_token;
               delete c.user_.created_at;
               delete c.user_.updated_at;
               results[c.user_.id] = c;
@@ -110,9 +112,6 @@ export class ApiKeyController {
           });
           for (const c of corss) {
             if ('user_' in c && c.user_) {
-              delete c.user_.email;
-              delete c.user_.password;
-              delete c.user_.session_token;
               delete c.user_.created_at;
               delete c.user_.updated_at;
             }
@@ -147,6 +146,7 @@ export class ApiKeyController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('name' in req.body && 'ip_domain' in req.body) {
@@ -170,7 +170,7 @@ export class ApiKeyController {
           throw new HttpException({
             info: '🙄 403 - Cors API :: Gagal Menambah Cors Baru 😪',
             result: {
-              message: 'Tiap Pengguna Hanya Bisa Memiliki 1 Api Key!'
+              message: 'Pengguna Biasa Hanya Bisa Memiliki 1 Api Key!'
             }
           }, HttpStatus.FORBIDDEN);
         } else {
@@ -180,9 +180,6 @@ export class ApiKeyController {
           cors.user_ = user;
           const resCorsSave = await this.apiKeyRepo.save(cors);
           if ('user_' in resCorsSave && resCorsSave.user_) {
-            delete resCorsSave.user_.email;
-            delete resCorsSave.user_.password;
-            delete resCorsSave.user_.session_token;
             delete resCorsSave.user_.created_at;
             delete resCorsSave.user_.updated_at;
           }
@@ -208,6 +205,7 @@ export class ApiKeyController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('name' in req.body || 'ip_domain' in req.body) {
@@ -227,9 +225,6 @@ export class ApiKeyController {
           }
           const resCorsSave = await this.apiKeyRepo.save(cors);
           if ('user_' in resCorsSave && resCorsSave.user_) {
-            delete resCorsSave.user_.email;
-            delete resCorsSave.user_.password;
-            delete resCorsSave.user_.session_token;
             delete resCorsSave.user_.created_at;
             delete resCorsSave.user_.updated_at;
           }
@@ -268,6 +263,7 @@ export class ApiKeyController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const cors = await this.apiKeyRepo.findOneOrFail({
@@ -281,9 +277,6 @@ export class ApiKeyController {
       });
       const revokedUser = await this.apiKeyRepo.remove(cors);
       if ('user_' in revokedUser && revokedUser.user_) {
-        delete revokedUser.user_.email;
-        delete revokedUser.user_.password;
-        delete revokedUser.user_.session_token;
         delete revokedUser.user_.created_at;
         delete revokedUser.user_.updated_at;
       }

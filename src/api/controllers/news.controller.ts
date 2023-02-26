@@ -58,9 +58,6 @@ export class NewsController {
         delete n.content;
         n.tags = JSON.parse(n.tags);
         if ('user_' in n && n.user_) {
-          delete n.user_.email;
-          delete n.user_.password;
-          delete n.user_.session_token;
           delete n.user_.created_at;
           delete n.user_.updated_at;
         }
@@ -104,9 +101,6 @@ export class NewsController {
         news.user_ = user;
         const resNewsSave = await this.newsRepo.save(news);
         if ('user_' in resNewsSave && resNewsSave.user_) {
-          delete resNewsSave.user_.email;
-          delete resNewsSave.user_.password;
-          delete resNewsSave.user_.session_token;
           delete resNewsSave.user_.created_at;
           delete resNewsSave.user_.updated_at;
         }
@@ -161,9 +155,6 @@ export class NewsController {
       });
       news.tags = JSON.parse(news.tags);
       if ('user_' in news && news.user_) {
-        delete news.user_.email;
-        delete news.user_.password;
-        delete news.user_.session_token;
         delete news.user_.created_at;
         delete news.user_.updated_at;
       }
@@ -216,9 +207,6 @@ export class NewsController {
           }
           const resNewsSave = await this.newsRepo.save(news);
           if ('user_' in resNewsSave && resNewsSave.user_) {
-            delete resNewsSave.user_.email;
-            delete resNewsSave.user_.password;
-            delete resNewsSave.user_.session_token;
             delete resNewsSave.user_.created_at;
             delete resNewsSave.user_.updated_at;
           }
@@ -286,9 +274,6 @@ export class NewsController {
       });
       const deletedNews = await this.newsRepo.remove(news);
       if ('user_' in deletedNews && deletedNews.user_) {
-        delete deletedNews.user_.email;
-        delete deletedNews.user_.password;
-        delete deletedNews.user_.session_token;
         delete deletedNews.user_.created_at;
         delete deletedNews.user_.updated_at;
       }

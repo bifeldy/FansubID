@@ -73,8 +73,6 @@ export class VerifyKtpController {
           user.verified = true;
           let resUserSave = await this.userRepo.save(user as User);
           delete resUserSave.email;
-          delete resUserSave.password;
-          delete resUserSave.session_token;
           if ('kartu_tanda_penduduk_' in resUserSave) {
             delete resUserSave.kartu_tanda_penduduk_;
           }

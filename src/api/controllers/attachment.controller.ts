@@ -64,9 +64,6 @@ export class AttachmentController {
       });
       for (const a of attachments) {
         if ('user_' in a && a.user_) {
-          delete a.user_.email;
-          delete a.user_.password;
-          delete a.user_.session_token;
           delete a.user_.created_at;
           delete a.user_.updated_at;
         }
@@ -110,9 +107,6 @@ export class AttachmentController {
         tempAttachment.user_ = user;
         const resAttachmentSave = await this.tempAttachmentRepo.save(tempAttachment);
         if ('user_' in resAttachmentSave && resAttachmentSave.user_) {
-          delete resAttachmentSave.user_.email;
-          delete resAttachmentSave.user_.password;
-          delete resAttachmentSave.user_.session_token;
           delete resAttachmentSave.user_.created_at;
           delete resAttachmentSave.user_.updated_at;
         }
@@ -244,9 +238,6 @@ export class AttachmentController {
       this.gs.deleteAttachment(attachment.name);
       const deletedAttachment = await this.attachmentRepo.remove(attachment);
       if ('user_' in deletedAttachment && deletedAttachment.user_) {
-        delete deletedAttachment.user_.email;
-        delete deletedAttachment.user_.password;
-        delete deletedAttachment.user_.session_token;
         delete deletedAttachment.user_.created_at;
         delete deletedAttachment.user_.updated_at;
       }

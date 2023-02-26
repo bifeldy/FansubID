@@ -51,9 +51,6 @@ export class NotificationController {
       });
       for (const n of notifications) {
         if ('user_' in n && n.user_) {
-          delete n.user_.email;
-          delete n.user_.password;
-          delete n.user_.session_token;
           delete n.user_.created_at;
           delete n.user_.updated_at;
         }
@@ -151,9 +148,6 @@ export class NotificationController {
       });
       const deletedNotification = await this.notificationRepo.remove(notification);
       if ('user_' in deletedNotification && deletedNotification.user_) {
-        delete deletedNotification.user_.email;
-        delete deletedNotification.user_.password;
-        delete deletedNotification.user_.session_token;
         delete deletedNotification.user_.created_at;
         delete deletedNotification.user_.updated_at;
       }

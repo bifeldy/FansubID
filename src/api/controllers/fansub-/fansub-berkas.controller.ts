@@ -71,9 +71,6 @@ export class FansubBerkasController {
             delete f.dorama_.updated_at;
           }
           if ('user_' in f && f.user_) {
-            delete f.user_.email;
-            delete f.user_.password;
-            delete f.user_.session_token;
             delete f.user_.created_at;
             delete f.user_.updated_at;
           }
