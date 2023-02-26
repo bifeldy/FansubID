@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable, NestMiddleware, Next, Req, Res } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
+import { environment } from '../../environments/api/environment';
+
 import { UserModel } from '../../models/req-res.model';
 
 import { ApiKeyService } from '../repository/api-key.service';
@@ -19,7 +21,7 @@ export class ApiKeyMiddleware implements NestMiddleware {
   }
 
   async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
-    const key = (req.query['key'] || '').toString();
+    const key = (req.cookies[environment.apiKeyName] || req.header['x-api-key'] || req.query['key'] || '').toString();
     const clientOriginIpCc = this.aks.getOriginIpCc(req);
     this.gs.log('[API_KEY_MIDDLEWARE-ORIGIN_KEY] 🌸', `${key} @ ${clientOriginIpCc.origin_ip}`);
     if (!req.originalUrl.includes('/api') || req.originalUrl.includes('/api/aktivasi')) {

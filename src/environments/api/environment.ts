@@ -37,6 +37,7 @@ export const environment = {
   siteDescription: 'Di Kamar Saja!',
   author: 'Bifeldy',
   jwtSecretKey: SECRETS().JWT_SECRET_KEY,                                         // ''
+  apiKeyName: 'FansubID_ApiKey',
   tokenName: 'FansubID_Token',
   domain: SECRETS().DOMAIN,                                                       // 'localhost',
   domain_alt: SECRETS().DOMAIN_ALT,                                               // 'localhost',
