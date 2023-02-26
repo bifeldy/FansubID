@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 
 import { CONSTANTS } from '../../constants';
 
-import { JsonResponse, UserModel } from '../../models/req-res.model';
+import { UserModel } from '../../models/req-res.model';
 
 import { environment } from '../../environments/api/environment';
 
@@ -31,7 +31,7 @@ export class VerifyController {
       required: ['token']
     }
   })
-  verify(@Req() req: Request, @Res({ passthrough: true }) res: Response): JsonResponse {
+  verify(@Req() req: Request, @Res({ passthrough: true }) res: Response): any {
     const user: UserModel = res.locals['user'];
     const token: string = res.locals['token'];
     if (user) {

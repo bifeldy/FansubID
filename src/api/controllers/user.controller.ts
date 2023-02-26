@@ -384,6 +384,7 @@ export class UserController {
 
   @Get('/:username/feed-comment')
   @HttpCode(200)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiTags(CONSTANTS.apiTagUser)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
@@ -444,6 +445,7 @@ export class UserController {
 
   @Get('/:username/feed-likedislike')
   @HttpCode(200)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiTags(CONSTANTS.apiTagUser)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
@@ -562,6 +564,7 @@ export class UserController {
 
   @Get('/:username/feed-visit')
   @HttpCode(200)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiTags(CONSTANTS.apiTagUser)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
@@ -630,12 +633,8 @@ export class UserController {
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const t of tracks) {
-        if (!user) {
+        if (user.username !== selectedUser.username && user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
           delete t.ip;
-        } else {
-          if (user.username !== selectedUser.username && user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
-            delete t.ip;
-          }
         }
         if ('news_' in t && t.news_) {
           delete t.news_.content;

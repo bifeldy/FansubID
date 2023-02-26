@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 
 import { CONSTANTS } from '../../constants';
 
-import { JsonResponse, UserModel } from '../../models/req-res.model';
+import { UserModel } from '../../models/req-res.model';
 
 @Controller('/login')
 export class LoginController {
@@ -28,7 +28,7 @@ export class LoginController {
       required: ['userNameOrEmail', 'password']
     }
   })
-  login(@Req() req: Request, @Res({ passthrough: true }) res: Response): JsonResponse {
+  login(@Req() req: Request, @Res({ passthrough: true }) res: Response): any {
     const user: UserModel = res.locals['user'];
     return {
       info: '😚 201 - Login API :: Berhasil Masuk Yeay 🤩',

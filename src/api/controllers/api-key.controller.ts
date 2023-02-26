@@ -28,6 +28,7 @@ export class ApiKeyController {
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
   @ApiQuery({ name: 'page', required: false, type: 'number' })
+  @ApiQuery({ name: 'username', type: 'string' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
@@ -61,13 +62,13 @@ export class ApiKeyController {
           });
           const results: any = {};
           for (const u of userName) {
-            results[u] = {};
+            results[u] = null;
           }
           for (const c of corss) {
             if ('user_' in c && c.user_) {
               delete c.user_.created_at;
               delete c.user_.updated_at;
-              results[c.user_.id] = c;
+              results[c.user_.username] = c;
             }
           }
           return {
