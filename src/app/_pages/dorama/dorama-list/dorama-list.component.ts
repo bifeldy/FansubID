@@ -135,7 +135,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
     this.subsSeasonalDorama = this.dorama.getSeasonalDorama(this.currentYear, this.selectedSeasonName).subscribe({
       next: res => {
         this.gs.log('[DORAMA_SEASONAL_SUCCESS]', res);
-        this.seasonalDorama = res.results.sort((a, b) => b.rating - a.rating);
+        this.seasonalDorama = res.results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         this.doramaCountry = [];
         for (const sD of this.seasonalDorama) {
           sD.mdl_id = sD.id;
@@ -176,7 +176,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
           this.seasonalDoramaWithFansub.push({
             url: sD.url,
             country: sD.country,
-            Jenis: sD.type,
+            Jenis: `${sD.type} • ${sD.rating || 0}`,
             Poster: sD.image_url,
             'Judul Dorama': sD.title,
             'Nama Fansub': sD.namaFansubs,

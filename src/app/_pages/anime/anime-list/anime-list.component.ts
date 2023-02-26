@@ -125,7 +125,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     this.subsSeasonalAnime = this.anime.getSeasonalAnime(this.currentYear, this.selectedSeasonName).subscribe({
       next: res => {
         this.gs.log('[ANIME_SEASONAL_SUCCESS]', res);
-        this.seasonalAnime = res.results.sort((a, b) => (b.score || 0) - (a.score || 0));
+        this.seasonalAnime = res.results.sort((a, b) => (b.mean || 0) - (a.mean || 0));
         if (showFab) {
           this.fs.initializeFab('settings_backup_restore', null, 'Kembali Ke Musim Sekarang', '/anime', false);
         }
