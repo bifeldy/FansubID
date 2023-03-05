@@ -148,7 +148,7 @@ export class AdminListFansubMemberComponent implements OnInit {
           this.bs.busy();
           this.subsMemberPut = this.fansub.approveRejectFansubMember(data.id, {
             approved: ac,
-            keterangan: re.keterangan?.inputText?.substring(0, 10) || null
+            keterangan: re.keterangan?.substring(0, 10)
           }).subscribe({
             next: res => {
               this.gs.log('[FANSUB_MEMBER_APPROVE_REJECT_SUCCESS]', res);

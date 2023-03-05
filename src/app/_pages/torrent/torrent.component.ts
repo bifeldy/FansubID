@@ -181,10 +181,10 @@ export class TorrentComponent implements OnInit, OnDestroy {
     });
   }
 
-  uploadFiles(userInput: any): void {
-    this.gs.log('[TORRENT_SEED_USER_INFORMATION]', userInput);
+  uploadFiles(torrentName: string): void {
+    this.gs.log('[TORRENT_SEED_USER_INFORMATION]', torrentName);
     this.isProcessing = true;
-    this.torrent.uploadFiles(userInput, this.files, (error, result) => {
+    this.torrent.uploadFiles(torrentName, this.files, (error, result) => {
       this.isProcessing = false;
       this.refreshAllGraph();
     });
@@ -196,15 +196,15 @@ export class TorrentComponent implements OnInit, OnDestroy {
       this.files.push(b);
     }
     const userInput = {
-      torrentBerkasName: {
+      torrent_name: {
         inputLabel: 'Nama Torrent',
         inputText: `Torrent # ${this.ss.mySocket.id} @ ${new Date().toUTCString()}`,
         inputRequired: true
       }
     };
     if (this.files.length === 1) {
-      userInput.torrentBerkasName.inputText = this.files[0].name;
-      this.uploadFiles(userInput);
+      userInput.torrent_name.inputText = this.files[0].name;
+      this.uploadFiles(userInput.torrent_name.inputText);
     } else if (this.files.length > 1) {
       this.subsDialog = this.ds.openInputDialog({
         data: {
@@ -218,7 +218,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
         next: re => {
           this.gs.log('[INPUT_DIALOG_CLOSED]', re);
           if (re) {
-            this.uploadFiles(re);
+            this.uploadFiles(re.torrent_name);
           }
           this.subsDialog.unsubscribe();
         }

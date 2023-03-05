@@ -177,11 +177,7 @@ export class TorrentService {
                 )
               );
             }
-            this.uploadFiles({
-              torrentBerkasName: {
-                inputText: this.torrentsQueue[key].name
-              }
-            }, files, callback);
+            this.uploadFiles(this.torrentsQueue[key].name, files, callback);
           }).catch(err => this.gs.log('[INDEXDB-OPEN_FAILED]', err, 'error'));
         }
       }
@@ -241,13 +237,13 @@ export class TorrentService {
     });
   }
 
-  uploadFiles(userInput: any, files: Array<File>, callback): void {
+  uploadFiles(torrentName: string, files: Array<File>, callback): void {
     this.gs.log('[TORRENT_CLIENT_QUEUE_UPLOAD]', files);
-    this.gs.log('[TORRENT_CLIENT_QUEUE_UPLOAD]', userInput);
+    this.gs.log('[TORRENT_CLIENT_QUEUE_UPLOAD]', torrentName);
     this.refCallback = callback;
     this.webClient.seed(files, ({
       ...this.torrentOptions,
-      name: userInput.torrentBerkasName.inputText
+      name: torrentName
     } as any), torrent => {
       this.gs.log('[TORRENT_FILE_SEED_READY]', torrent);
       this.toast.info('Memulai Seeding ...', 'Seeding', null, true);

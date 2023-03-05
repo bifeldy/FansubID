@@ -159,7 +159,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
           this.bs.busy();
           this.subsUserDelete = this.adm.ban({
             id: data.id,
-            reason: re.reason.inputText
+            reason: re.reason
           }).subscribe({
             next: res => {
               this.gs.log('[USER_LIST_CLICK_BAN_SUCCESS]', res);
@@ -167,7 +167,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
               this.getUser();
               this.ss.socketEmitVolatile('force-logout', {
                 username: data.username,
-                reason: re.reason.inputText
+                reason: re.reason
               });
             },
             error: err => {

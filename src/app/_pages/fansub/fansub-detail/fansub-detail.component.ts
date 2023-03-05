@@ -496,9 +496,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
               this.bs.busy();
               this.subsClaimSubDomain = this.fansub.claimSubDomain({
                 slug: this.fansubSlug,
-                server_target: re.server_target?.inputText || null,
-                verification_name: re.verification_name?.inputText || null,
-                verification_target: re.verification_target?.inputText || null
+                server_target: re.server_target,
+                verification_name: re.verification_name,
+                verification_target: re.verification_target
               }).subscribe({
                 next: res => {
                   this.gs.log('[FANSUB_CLAIM_SUBDOMAIN_SUCCESS]', res);
