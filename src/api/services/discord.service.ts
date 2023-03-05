@@ -194,7 +194,9 @@ export class DiscordService {
             ],
             relations: ['kartu_tanda_penduduk_', 'profile_']
           });
-          if (user.verified) {
+          if (!decoded.discord.verified) {
+            return await msg.reply({ content: `<@${msg.author.id}> Akun discord anda belum terverifikasi 🤔` });
+          } else if (user.verified) {
             return await msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
           } else if (args[1] === SosMedModel.DISCORD) {
             user.verified = true;

@@ -104,14 +104,23 @@ export class VerifySosmedController {
                 }
                 user.discord = res_json2.id;
                 const resUserSave = await this.userRepo.save(user as User);
-                delete resUserSave.email;
-                delete resUserSave.kartu_tanda_penduduk_;
-                delete resUserSave.profile_;
                 return {
                   info: `😅 201 - Discord API :: Masuk & Verify 🤣`,
                   result: {
                     title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam 3 Menit! #🚮-bot-spam`,
-                    message: '~verify DISCORD ' + this.cs.jwtEncrypt({ discord: res_json2, user: resUserSave }) + ' DELETE_CHAT'
+                    message: '~verify DISCORD ' + this.cs.jwtEncrypt({
+                      discord: {
+                        id: res_json2.id,
+                        username: res_json2.username,
+                        discriminator: res_json2.discriminator,
+                        verified: res_json2.verified
+                      },
+                      user: {
+                        id: resUserSave.id,
+                        username: resUserSave.username,
+                        verified: resUserSave.verified
+                      }
+                    }) + ' DELETE_CHAT'
                   }
                 };
               } catch (err) {
