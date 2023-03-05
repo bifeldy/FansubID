@@ -75,7 +75,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
       confirm: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       cancel: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       close: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      broadcast: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])]
+      broadcast: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])]
     });
   }
 

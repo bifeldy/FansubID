@@ -145,6 +145,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
           reason: {
             inputLabel: 'Alasan',
             inputText: `Manually Banned By ${this.as.currentUserSubject?.value?.role}`,
+            inputRequired: true
           }
         },
         confirmText: 'Ya, BAN Akun',

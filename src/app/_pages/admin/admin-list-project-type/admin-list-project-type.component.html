@@ -45,7 +45,7 @@
                 <div class="row">
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Nama</mat-label>
-                    <input matInput formControlName="name" placeholder="**_BD" />
+                    <input matInput formControlName="name" placeholder="**_BD" required />
                     <mat-icon matSuffix>short_text</mat-icon>
                     <mat-hint align="end">Untuk Jenis Berkas</mat-hint>
                     <mat-error>
@@ -55,7 +55,7 @@
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Deskripsi</mat-label>
-                    <input matInput formControlName="description" placeholder="Edisi Terbatas" />
+                    <input matInput formControlName="description" placeholder="Edisi Terbatas" required />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('description').hasError('required')">Deskripsi Tidak Boleh Kosong</div>

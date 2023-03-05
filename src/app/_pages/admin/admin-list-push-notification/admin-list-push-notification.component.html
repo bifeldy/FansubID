@@ -18,7 +18,7 @@
             <div class="row">
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Judul</mat-label>
-                <input matInput formControlName="title" placeholder="Perhatian!" />
+                <input matInput formControlName="title" placeholder="Perhatian!" required />
                 <mat-icon matSuffix>short_text</mat-icon>
                 <mat-hint align="end">Teks Tebal Di Kiri</mat-hint>
                 <mat-error>
@@ -28,7 +28,7 @@
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-8" [color]="'accent'">
                 <mat-label>Konten / Isi</mat-label>
-                <input matInput formControlName="content" placeholder="Akan Diadakan Maintenance Pada ..." />
+                <input matInput formControlName="content" placeholder="Akan Diadakan Maintenance Pada ..." required />
                 <mat-icon matSuffix>wysiwyg</mat-icon>
                 <mat-error>
                   <div *ngIf="fg.get('content').hasError('required')">Isi Tidak Boleh Kosong</div>
@@ -37,7 +37,7 @@
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Jenis Warna</mat-label>
-                <mat-select formControlName="type" placeholder="Class Warna Bootstrap">
+                <mat-select formControlName="type" placeholder="Class Warna Bootstrap" required>
                   <mat-option value="danger">Merah</mat-option>
                   <mat-option value="warning">Kuning</mat-option>
                   <mat-option value="success">Hijau</mat-option>
@@ -54,7 +54,7 @@
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Dapat Ditutup</mat-label>
-                <mat-select formControlName="dismissible" placeholder="Ya / Tidak">
+                <mat-select formControlName="dismissible" placeholder="Ya / Tidak" required>
                   <mat-option value="1">Ya</mat-option>
                   <mat-option value="0">Tidak</mat-option>
                 </mat-select>

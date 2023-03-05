@@ -466,15 +466,18 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         const userInput = {
           server_target: {
             inputLabel: 'Server Target',
-            inputText: `ghs.google.com`
+            inputText: `ghs.google.com`,
+            inputRequired: true
           },
           verification_name: {
             inputLabel: 'Tambahan Khusus Blogger :: Name',
-            inputText: `blablabla-name`
+            inputText: `blablabla-name`,
+            inputRequired: false
           },
           verification_target: {
             inputLabel: 'Tambahan Khusus Blogger :: Target',
-            inputText: `blablabla-target.dv.googlehosted.com`
+            inputText: `blablabla-target.dv.googlehosted.com`,
+            inputRequired: false
           }
         };
         this.subsDialog = this.ds.openInputDialog({

@@ -18,17 +18,17 @@
             <div class="row">
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Kode ID</mat-label>
-                <input matInput formControlName="id" placeholder="ID_DIALOG" />
+                <input matInput formControlName="id" placeholder="ID_DIALOG" required />
                 <mat-icon matSuffix>short_text</mat-icon>
                 <mat-hint align="end">ID Untuk Request API</mat-hint>
                 <mat-error>
-                  <div *ngIf="fg.get('id').hasError('required')">Judul Tidak Boleh Kosong</div>
-                  <div *ngIf="fg.get('id').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</div>
+                  <div *ngIf="fg.get('id').hasError('required')">Kode Tidak Boleh Kosong</div>
+                  <div *ngIf="fg.get('id').hasError('pattern')">Kode Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-8" [color]="'accent'">
                 <mat-label>Judul Dialog</mat-label>
-                <input matInput formControlName="title" placeholder="Judul Dialog" />
+                <input matInput formControlName="title" placeholder="Judul Dialog" required />
                 <mat-icon matSuffix>short_text</mat-icon>
                 <mat-error>
                   <div *ngIf="fg.get('title').hasError('required')">Judul Tidak Boleh Kosong</div>
@@ -41,11 +41,11 @@
                 <div class="row">
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Tombol OK</mat-label>
-                    <input matInput formControlName="confirm" placeholder="OK!" />
+                    <input matInput formControlName="confirm" placeholder="OK!" required />
                     <mat-icon matSuffix>short_text</mat-icon>
                     <mat-error>
-                      <div *ngIf="fg.get('confirm').hasError('required')">Judul Tidak Boleh Kosong</div>
-                      <div *ngIf="fg.get('confirm').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</div>
+                      <div *ngIf="fg.get('confirm').hasError('required')">Tombol OK Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('confirm').hasError('pattern')">Tombol OK Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
@@ -59,7 +59,7 @@
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Cegah Klik Tutup Dimana Saja</mat-label>
-                    <mat-select formControlName="close" placeholder="Ya / Tidak">
+                    <mat-select formControlName="close" placeholder="Ya / Tidak" required>
                       <mat-option value="0">Tidak</mat-option>
                       <mat-option value="1">Ya</mat-option>
                     </mat-select>
@@ -71,7 +71,7 @@
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Langsung Disiarkan Saja</mat-label>
-                    <mat-select formControlName="broadcast" placeholder="Ya / Tidak">
+                    <mat-select formControlName="broadcast" placeholder="Ya / Tidak" required>
                       <mat-option value="0">Tidak</mat-option>
                       <mat-option value="1">Ya</mat-option>
                     </mat-select>
@@ -85,7 +85,7 @@
               </div>
               <div class="col-12 col-md-7 col-xl-8 pt-3">
                 <div class="row">
-                  <angular-editor class="p-3 w-100" formControlName="content" [config]="GS.angularEditorConfig"></angular-editor>
+                  <angular-editor class="p-3 w-100" formControlName="content" [config]="GS.angularEditorConfig" required></angular-editor>
                 </div>
               </div>
             </div>

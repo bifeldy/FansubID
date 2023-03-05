@@ -199,6 +199,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
       torrentBerkasName: {
         inputLabel: 'Nama Torrent',
         inputText: `Torrent # ${this.ss.mySocket.id} @ ${new Date().toUTCString()}`,
+        inputRequired: true
       }
     };
     if (this.files.length === 1) {

@@ -130,6 +130,7 @@ export class AdminListFansubMemberComponent implements OnInit {
       keterangan: {
         inputLabel: 'Keterangan',
         inputText: `Pemilik, Translator, Timer, QA / QC, TypeSetter, dll.`,
+        inputRequired: true
       }
     };
     this.subsDialog = this.ds.openInputDialog({
