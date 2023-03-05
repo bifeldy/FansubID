@@ -193,12 +193,13 @@ export class DiscordService {
               { id: Equal(decoded.user.id) }
             ],
             relations: ['kartu_tanda_penduduk_', 'profile_']
-          });
-          if (!decoded.discord.verified) {
-            return await msg.reply({ content: `<@${msg.author.id}> Akun discord anda belum terverifikasi 🤔` });
-          } else if (user.verified) {
+          })
+          if (user.verified) {
             return await msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
           } else if (args[1] === SosMedModel.DISCORD) {
+            if (!decoded.discord.verified) {
+              return await msg.reply({ content: `<@${msg.author.id}> Akun discord belum terverifikasi 🤔` });
+            }
             user.verified = true;
             await this.userRepo.save(user);
             const laboratoryRatsRole = msg.guild.roles.cache.get(environment.laboratoryRatsRoleId);

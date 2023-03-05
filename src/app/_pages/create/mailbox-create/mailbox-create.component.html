@@ -20,7 +20,7 @@
                 <div class="row">
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Penerima</mat-label>
-                    <input matInput formControlName="to" placeholder="user@domain.tld" matTooltip="Gunakan , Jika Lebih Dari 1" />
+                    <input matInput formControlName="to" placeholder="user@domain.tld" matTooltip="Gunakan , Jika Lebih Dari 1" required />
                     <mat-icon matSuffix>short_text</mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('to').hasError('required')">Alamat Surel Tidak Boleh Kosong</div>
@@ -49,14 +49,14 @@
                 <div class="row">
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Judul</mat-label>
-                    <input matInput formControlName="subject" placeholder="Judul Pesan Blablabla ..." />
+                    <input matInput formControlName="subject" placeholder="Judul Pesan Blablabla ..." required />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('subject').hasError('required')">Judul Berita Tidak Boleh Kosong</div>
                       <div *ngIf="fg.get('subject').hasError('pattern')">Judul Berita Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="message" [config]="GS.angularEditorConfig"></angular-editor>
+                  <angular-editor class="p-3 w-100" formControlName="message" [config]="GS.angularEditorConfig" required></angular-editor>
                 </div>
               </div>
             </div>

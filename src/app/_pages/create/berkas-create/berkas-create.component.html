@@ -49,7 +49,7 @@
                   </div>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Jenis Proyek</mat-label>
-                    <mat-select formControlName="projectType_id" placeholder="Anime / Drama">
+                    <mat-select formControlName="projectType_id" placeholder="Anime / Drama" required>
                       <mat-option *ngFor="let p of projectList" [value]="p.id">{{ p.name }}</mat-option>
                     </mat-select>
                     <mat-error>
@@ -107,7 +107,7 @@
                       <div class="row" [formGroupName]="i">
                         <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
                           <mat-label>Fansub Terkait</mat-label>
-                          <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" />
+                          <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" required />
                           <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i === 0">short_text</mat-icon>
                           <button mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value && i > 0">
                             <mat-icon>close</mat-icon>
@@ -149,7 +149,7 @@
                 <div class="row">
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Nama Berkas</mat-label>
-                    <input matInput formControlName="name" placeholder="[Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32].mkv" />
+                    <input matInput formControlName="name" placeholder="[Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32].mkv" required />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('name').hasError('required')">Nama Berkas Tidak Boleh Kosong</div>
@@ -212,7 +212,7 @@
                     <div class="row" [formGroupName]="i" matTooltip="Silahkan Isi Alamat Website Kamu Jika Ingin Mendapatkan Traffic Pengunjung">
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'">
                         <mat-label>Nama Website</mat-label>
-                        <input matInput formControlName="name" placeholder="Halaman Web" />
+                        <input matInput formControlName="name" placeholder="Halaman Web" required />
                         <mat-icon matSuffix *ngIf="dl.get('name').value || i === 0">web</mat-icon>
                         <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && i > 0">
                           <mat-icon>close</mat-icon>
@@ -224,7 +224,7 @@
                       </mat-form-field>
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
                         <mat-label>Tautan Luar</mat-label>
-                        <input matInput formControlName="url" placeholder="https://webshit.saya.com/01/02/halaman-post-download.html" />
+                        <input matInput formControlName="url" placeholder="https://webshit.saya.com/01/02/halaman-post-download.html" required />
                         <mat-icon matSuffix *ngIf="dl.get('url').value || i === 0">link</mat-icon>
                         <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && i > 0">
                           <mat-icon>close</mat-icon>

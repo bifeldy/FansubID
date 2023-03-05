@@ -45,7 +45,7 @@
                 <div class="row">
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Judul</mat-label>
-                    <input matInput formControlName="title" placeholder="Berita Terkini Blablabla ..." />
+                    <input matInput formControlName="title" placeholder="Berita Terkini Blablabla ..." required />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('title').hasError('required')">Judul Berita Tidak Boleh Kosong</div>
@@ -65,7 +65,7 @@
                     </mat-chip-list>
                     <mat-hint align="end">Isi Dengan Bebas, Pisahkan Dengan Koma</mat-hint>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="content" [config]="GS.angularEditorConfig"></angular-editor>
+                  <angular-editor class="p-3 w-100" formControlName="content" [config]="GS.angularEditorConfig" required></angular-editor>
                 </div>
               </div>
             </div>
