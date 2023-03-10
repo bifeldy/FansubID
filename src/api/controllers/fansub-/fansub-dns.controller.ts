@@ -178,7 +178,10 @@ export class FansubDnsController {
           let verification_name: string = this.gs.cleanUpUrlStringRecord(req.body.verification_name);
           let verification_target: string = this.gs.cleanUpUrlStringRecord(req.body.verification_target);
           if (verification_target && verification_target && serverTarget === 'ghs.google.com') {
-            await this.cfs.createDns(verification_name, verification_target, 'CNAME');
+            const dns_alt = await this.cfs.createDns(verification_name, verification_target, 'CNAME');
+            if (dns_alt.status >= 200 && dns_alt.status < 400) {
+              fansub.dns_id_alt = dns_alt.result.id;
+            }
           }
           fansub.dns_id = dns.result.id;
           const fansubUrls = JSON.parse(fansub.urls);

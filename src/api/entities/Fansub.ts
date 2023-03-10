@@ -49,6 +49,9 @@ export class Fansub implements FansubModel {
   @Column({ type: 'text', nullable: true })
   dns_id: string;
 
+  @Column({ type: 'text', nullable: true })
+  dns_id_alt: string;
+
   @Column({ type: 'boolean', default: true })
   editable: boolean;
 
