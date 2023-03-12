@@ -78,7 +78,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.subsGetApiKey?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsCreateApiKey?.unsubscribe();
-    this.subsRevokeApiKey.unsubscribe();
+    this.subsRevokeApiKey?.unsubscribe();
   }
 
   getUserFeedComment(): void {

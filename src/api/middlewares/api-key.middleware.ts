@@ -1,12 +1,14 @@
 import { HttpException, HttpStatus, Injectable, NestMiddleware, Next, Req, Res } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
+import { Equal } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
 import { UserModel } from '../../models/req-res.model';
 
 import { ApiKeyService } from '../repository/api-key.service';
-import { ConfigService } from '../services/config.service';
+import { UserService } from '../repository/user.service';
+
 import { GlobalService } from '../services/global.service';
 
 @Injectable()
@@ -14,8 +16,8 @@ export class ApiKeyMiddleware implements NestMiddleware {
 
   constructor(
     private aks: ApiKeyService,
-    private cfg: ConfigService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private userRepo: UserService
   ) {
     //
   }
@@ -31,15 +33,22 @@ export class ApiKeyMiddleware implements NestMiddleware {
     res.locals['key'] = key;
     const check = await this.aks.checkKey(clientOriginIpCc.origin_ip, key);
     if (check.allowed) {
-      const user: UserModel = check.user;
+      let user: UserModel = check.user;
       if (user) {
-        if (![user.session_origin, ...this.cfg.domainIpBypass].includes(clientOriginIpCc.origin_ip)) {
-          throw new HttpException({
-            info: '🙄 401 - API Key :: Sesi Sudah Habis 😪',
-            result: {
-              message: `🎉 Silahkan Login Ulang ✨`
-            }
-          }, HttpStatus.UNAUTHORIZED);
+        try {
+          user = await this.userRepo.findOneOrFail({
+            where: [
+              {
+                user_: {
+                  id: Equal(user.id)
+                }
+              }
+            ]
+          });
+          user.session_origin = clientOriginIpCc.origin_ip;
+          user = await this.userRepo.save(user as any);
+        } catch (error) {
+          user = null;
         }
       }
       res.locals['user'] = user;

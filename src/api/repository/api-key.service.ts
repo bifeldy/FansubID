@@ -125,7 +125,7 @@ export class ApiKeyService {
             api_key: Equal(key)
           }
         ],
-        relations: ['user_', 'user_.kartu_tanda_penduduk_', 'user_.profile_']
+        relations: ['user_']
       });
       this.gs.log('[API_KEY_SERVICE-CHECK_KEY_SUCCESS] 🏓', apiKey);
       return { allowed: true, user: apiKey.user_ };

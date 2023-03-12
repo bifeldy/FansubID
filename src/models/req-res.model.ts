@@ -139,6 +139,7 @@ export interface UserModel {
   kartu_tanda_penduduk_?: KartuTandaPendudukModel;
   profile_?: ProfileModel;
   _email?: string;
+  _session_origin?: string;
 }
 
 export interface ApiKeyModel {

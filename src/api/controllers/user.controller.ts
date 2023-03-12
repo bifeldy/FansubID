@@ -93,6 +93,7 @@ export class UserController {
         if (adminMod) {
           if (adminMod.role === RoleModel.ADMIN || adminMod.role === RoleModel.MODERATOR) {
             (u as any)._email = u.email;
+            (u as any)._session_origin = u.session_origin;
           }
         }
         if ('kartu_tanda_penduduk_' in u && u.kartu_tanda_penduduk_) {

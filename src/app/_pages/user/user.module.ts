@@ -20,8 +20,6 @@ import { MaterialExpansionPanelModule } from '../../_shared/components/material-
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { ReportModule } from '../../_shared/components/report/report.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
-import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
-import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { NoDataModule } from '../../_shared/components/no-data/no-data.module';
 
 import { UserDetailComponent } from './user-detail/user-detail.component';
@@ -82,8 +80,6 @@ const routes: Routes = [
     AngularEditorModule,
     ReportModule,
     NotificationsModule,
-    BannerDiscordModule,
-    StatsServerModule,
     CustomPipeModule,
     NoDataModule
   ]
