@@ -34,33 +34,33 @@ export class VerifyController {
   verify(@Req() req: Request, @Res({ passthrough: true }) res: Response): any {
     const user: UserModel = res.locals['user'];
     const token: string = res.locals['token'];
+    const key: string = res.locals['key'];
     if (user) {
-      res.cookie(environment.tokenName, token, {
-        httpOnly: true,
-        secure: environment.production,
-        sameSite: 'strict',
-        expires: new Date(this.cs.jwtView(token).exp * 1000),
-        domain: environment.domain
-      });
+      if (token) {
+        res.cookie(environment.tokenName, token, {
+          httpOnly: true,
+          secure: environment.production,
+          sameSite: 'strict',
+          expires: new Date(this.cs.jwtView(token).exp * 1000),
+          domain: environment.domain
+        });
+      }
       (user as any)._email = (user as any).email;
       (user as any)._session_origin = (user as any)._session_origin;
-      delete user.kartu_tanda_penduduk_.created_at;
-      delete user.kartu_tanda_penduduk_.updated_at;
-      delete user.profile_.created_at;
-      delete user.profile_.updated_at;
+      if ('kartu_tanda_penduduk_' in user && user.kartu_tanda_penduduk_) {
+        delete user.kartu_tanda_penduduk_.created_at;
+        delete user.kartu_tanda_penduduk_.updated_at;
+      }
+      if ('profile_' in user && user.profile_) {
+        delete user.profile_.created_at;
+        delete user.profile_.updated_at;
+      }
       return {
         info: '😍 202 - Verifikasi API :: Token Selesai Di Verifikasi UwUu 🥰',
         result: user,
-        token
+        token,
+        key
       };
-    }
-    if (token) {
-      throw new HttpException({
-        info: '🙄 401 - Verifikasi API :: Authorisasi Sesi Gagal 😪',
-        result: {
-          message: 'Akses Token Ditolak!'
-        }
-      }, HttpStatus.UNAUTHORIZED);
     }
     throw new HttpException({
       info: '🤧 400 - Verifikasi API :: JWT Token Tidak Ada 😷',

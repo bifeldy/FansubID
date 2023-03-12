@@ -213,8 +213,14 @@ export class UserController {
               }
             )
           );
-          delete resUserSave.kartu_tanda_penduduk_;
-          delete resUserSave.profile_;
+          (resUserSave as any)._email = resUserSave.email;
+          (resUserSave as any)._session_origin = resUserSave.session_origin;
+          if ('kartu_tanda_penduduk_' in resUserSave && resUserSave.kartu_tanda_penduduk_) {
+            delete resUserSave.kartu_tanda_penduduk_;
+          }
+          if ('profile_' in resUserSave && resUserSave.profile_) {
+            delete resUserSave.profile_;
+          }
           const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
           selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes }, false);
           resUserSave = await this.userRepo.save(selectedUser);
@@ -284,7 +290,6 @@ export class UserController {
       const deletedUser = await this.userRepo.remove(user);
       const deletedKtp = await this.ktpRepo.remove(ktp);
       const deletedProfile = await this.profileRepo.remove(profile);
-      delete (deletedUser as any).email;
       return {
         info: `😅 202 - User API :: Berhasil Menghapus User ${req.params['username']} 🤣`,
         result: {

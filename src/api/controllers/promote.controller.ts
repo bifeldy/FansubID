@@ -81,9 +81,12 @@ export class PromoteController {
               }
             )
           );
-          delete resUserSave.email;
-          delete resUserSave.kartu_tanda_penduduk_;
-          delete resUserSave.profile_;
+          if ('kartu_tanda_penduduk_' in resUserSave && resUserSave.kartu_tanda_penduduk_) {
+            delete resUserSave.kartu_tanda_penduduk_;
+          }
+          if ('profile_' in resUserSave && resUserSave.profile_) {
+            delete resUserSave.profile_;
+          }
           return {
             info: `😅 201 - Promote API :: Berhasil Mempromosikan User 🤣`,
             result: resUserSave

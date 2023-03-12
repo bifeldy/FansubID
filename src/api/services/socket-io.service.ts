@@ -131,8 +131,10 @@ export class SocketIoService {
           ],
           relations: ['profile_']
         });
-        delete selectedUser.profile_.description;
-        delete selectedUser.profile_.updated_at;
+        if ('profile_' in selectedUser && selectedUser.profile_) {
+          delete selectedUser.profile_.description;
+          delete selectedUser.profile_.updated_at;
+        }
         this.rooms[data.newRoom][socket.id].profile_ = selectedUser.profile_;
         if (data.newRoom.startsWith('/nihongo/')) {
           if (!this.qs.quiz[data.newRoom]) {

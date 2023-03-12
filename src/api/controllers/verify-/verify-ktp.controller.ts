@@ -72,20 +72,20 @@ export class VerifyKtpController {
           user.kartu_tanda_penduduk_ = resKtpSave;
           user.verified = true;
           let resUserSave = await this.userRepo.save(user as User);
-          delete resUserSave.email;
           if ('kartu_tanda_penduduk_' in resUserSave) {
             delete resUserSave.kartu_tanda_penduduk_;
           }
           if ('profile_' in resUserSave) {
             delete resUserSave.profile_;
           }
-          user.session_token = this.cs.credentialEncode({ user: resUserSave }, false);
+          const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
+          user.session_token = this.cs.credentialEncode({ user: noPwdSes }, false);
           resUserSave = await this.userRepo.save(user as User);
           res.cookie(environment.tokenName, resUserSave.session_token, {
             httpOnly: true,
             secure: environment.production,
             sameSite: 'strict',
-            expires: new Date(this.cs.jwtView(user.session_token).exp * 1000),
+            expires: new Date(this.cs.jwtView(resUserSave.session_token).exp * 1000),
             domain: environment.domain
           });
           return {
