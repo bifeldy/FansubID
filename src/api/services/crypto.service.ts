@@ -6,7 +6,6 @@ import { SHA512 } from 'crypto-js';
 import { sign, verify, decode, Algorithm } from 'jsonwebtoken';
 
 import { Injectable } from '@nestjs/common';
-import { Request } from 'express';
 
 import { CONSTANTS } from '../../constants';
 
@@ -62,15 +61,14 @@ export class CryptoService {
     );
   }
 
-  credentialDecode(req: Request): any {
+  credentialDecode(token: string): any {
     try {
-      let token: string = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query['token'] || '';
       if (token.startsWith('Bearer ')) {
         token = token.slice(7, token.length);
       }
-      const decoded: {} = this.jwtDecrypt(token);
+      const decoded = this.jwtDecrypt(token);
       this.gs.log('[CRYPTO_SERVICE-CREDENTIAL_DECODE_SUCCESS] 🍪', decoded);
-      return { ...decoded, token };
+      return decoded;
     } catch (error) {
       this.gs.log('[CRYPTO_SERVICE-CREDENTIAL_DECODE_ERROR] 🍪', error);
       throw error;

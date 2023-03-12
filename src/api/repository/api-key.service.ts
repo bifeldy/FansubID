@@ -7,6 +7,8 @@ import { Request } from 'express';
 
 import { ApiKey } from '../entities/ApiKey';
 
+import { UserModel } from '../../models/req-res.model';
+
 import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
 
@@ -104,10 +106,9 @@ export class ApiKeyService {
     };
   }
 
-  async checkKey(origin: string, key: string): Promise<boolean> {
-    let isAllowed = false;
+  async checkKey(origin: string, key: string): Promise<{ allowed: boolean, user: UserModel }> {
     if (this.cfg.domainIpBypass.includes(origin)) {
-      return true;
+      return { allowed: true, user: null };
     }
     try {
       if (!key) {
@@ -123,14 +124,15 @@ export class ApiKeyService {
             ip_domain: Equal('*'),
             api_key: Equal(key)
           }
-        ]
+        ],
+        relations: ['user_', 'user_.kartu_tanda_penduduk_', 'user_.profile_']
       });
       this.gs.log('[API_KEY_SERVICE-CHECK_KEY_SUCCESS] 🏓', apiKey);
-      isAllowed = true;
+      return { allowed: true, user: apiKey.user_ };
     } catch (error) {
       this.gs.log('[API_KEY_SERVICE-CHECK_KEY_ERROR] 🏓', error, 'error');
+      return { allowed: false, user: null };
     }
-    return isAllowed;
   }
 
 }

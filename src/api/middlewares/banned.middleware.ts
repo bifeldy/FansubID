@@ -21,9 +21,14 @@ export class BannedMiddleware implements NestMiddleware {
   }
 
   async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
+    let user: UserModel = res.locals['user'];
+    const key = res.locals['key'];
+    const token = (req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query['token'] || '').toString();
     try {
-      const decoded = this.cs.credentialDecode(req);
-      const user: UserModel = await this.as.getUserRequest(decoded.user.id, decoded.token);
+      if (!key) {
+        const decoded = this.cs.credentialDecode(token);
+        user = await this.as.getUserRequestJwt(decoded.user.id, token);
+      }
       this.gs.log('[BANNED_MIDDLEWARE-USER] 🧨', user);
       if (!user) {
         throw new Error('User Not Login!');
@@ -37,14 +42,12 @@ export class BannedMiddleware implements NestMiddleware {
           }
         }, HttpStatus.FORBIDDEN);
       }
-      res.locals['user'] = user;
-      res.locals['token'] = decoded.token;
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      res.locals['user'] = null;
-      res.locals['token'] = req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query['token'] || '';
       res.locals['error'] = error;
     }
+    res.locals['user'] = user;
+    res.locals['token'] = token;
     return next();
   }
 

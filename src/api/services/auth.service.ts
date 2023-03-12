@@ -27,13 +27,13 @@ export class AuthService {
     //
   }
 
-  async getUserRequest(userId: number, token: string): Promise<User> {
+  async getUserRequestJwt(userId: number, token: string): Promise<User> {
     try {
       const user = await this.userRepo.findOneOrFail({
         where: [
           { id: Equal(userId), session_token: Equal(token) }
         ],
-        relations: ['kartu_tanda_penduduk_', 'profile_'],
+        relations: ['kartu_tanda_penduduk_', 'profile_']
       });
       return user;
     } catch (err) {

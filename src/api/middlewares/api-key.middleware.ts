@@ -21,14 +21,17 @@ export class ApiKeyMiddleware implements NestMiddleware {
   }
 
   async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
-    const key = (req.cookies[environment.apiKeyName] || req.header['x-api-key'] || req.query['key'] || '').toString();
+    const key = (req.cookies[environment.apiKeyName] || req.headers['x-api-key'] || req.body.key || req.query['key'] || '').toString();
     const clientOriginIpCc = this.aks.getOriginIpCc(req);
     this.gs.log('[API_KEY_MIDDLEWARE-ORIGIN_KEY] 🌸', `${key} @ ${clientOriginIpCc.origin_ip}`);
     if (!req.originalUrl.includes('/api') || req.originalUrl.includes('/api/aktivasi')) {
+      res.locals['user'] = null;
       return next();
     }
-    if (await this.aks.checkKey(clientOriginIpCc.origin_ip, key)) {
-      const user: UserModel = res.locals['user'];
+    res.locals['key'] = key;
+    const check = await this.aks.checkKey(clientOriginIpCc.origin_ip, key);
+    if (check.allowed) {
+      const user: UserModel = check.user;
       if (user) {
         if (![user.session_origin, ...this.cfg.domainIpBypass].includes(clientOriginIpCc.origin_ip)) {
           throw new HttpException({
@@ -39,6 +42,7 @@ export class ApiKeyMiddleware implements NestMiddleware {
           }, HttpStatus.UNAUTHORIZED);
         }
       }
+      res.locals['user'] = user;
       return next();
     }
     throw new HttpException({
