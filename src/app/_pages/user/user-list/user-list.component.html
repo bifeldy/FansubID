@@ -105,6 +105,44 @@
               </a>
             </div>
           </div>
+          <div class="row">
+            <div class="col-12 sticky-top bg-bifeldy">
+              <h2 class="pt-3 border-bottom-dotted">
+                <b class="text-bifeldy" matTooltip="Khusus Pengguna Terverifikasi">API Key</b>
+              </h2>
+            </div>
+            <div class="col-12 mb-2">
+              <a mat-button class="w-100" color="accent" (click)="generateNewApiKey()">
+                <mat-icon class="me-1">webhook</mat-icon> Buat / Ganti API Key Baru
+              </a>
+              <p class="px-2 text-truncate" *ngIf="apiKey.length <= 0">
+                <span class="text-success">Gunakan Tombol Diatas Untuk Membuat Baru</span>
+              </p>
+              <div class="my-2" *ngFor="let ak of apiKey" (click)="copyApiKey(ak)">
+                <p class="ps-2 pe-2 pt-2 text-truncate my-0">
+                  Nama ::
+                  <span class="text-success">
+                    {{ ak.name }}
+                  </span>
+                </p>
+                <p class="ps-2 pe-2 pt-0 text-truncate my-0">
+                  Origin ::
+                  <span class="text-success">
+                    {{ ak.ip_domain }}
+                  </span>
+                </p>
+                <p class="ps-2 pe-2 pb-2 text-truncate my-0">
+                  Key ::
+                  <span class="text-success">
+                    {{ ak.api_key }}
+                  </span>
+                </p>
+                <a mat-button class="w-100" color="accent" (click)="revokeApiKey(ak); $event.stopPropagation()">
+                  <mat-icon class="me-1">delete_sweep</mat-icon> Hapus Akses
+                </a>
+              </div>
+            </div>
+          </div>
           <app-banner-discord></app-banner-discord>
           <app-stats-server></app-stats-server>
         </div>

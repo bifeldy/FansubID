@@ -62,13 +62,13 @@ export class ApiKeyController {
           });
           const results: any = {};
           for (const u of userName) {
-            results[u] = null;
+            results[u] = [];
           }
           for (const c of corss) {
             if ('user_' in c && c.user_) {
               delete c.user_.created_at;
               delete c.user_.updated_at;
-              results[c.user_.username] = c;
+              results[c.user_.username].push(c);
             }
           }
           return {
@@ -145,7 +145,7 @@ export class ApiKeyController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
@@ -165,13 +165,12 @@ export class ApiKeyController {
         if (
           corss.length >= 1 &&
           user.role !== RoleModel.ADMIN &&
-          user.role !== RoleModel.MODERATOR &&
-          user.role !== RoleModel.FANSUBBER
+          user.role !== RoleModel.MODERATOR
         ) {
           throw new HttpException({
             info: '🙄 403 - Cors API :: Gagal Menambah Cors Baru 😪',
             result: {
-              message: 'Pengguna Biasa Hanya Bisa Memiliki 1 Api Key!'
+              message: 'Fansubber Hanya Bisa Memiliki 1 Api Key!'
             }
           }, HttpStatus.FORBIDDEN);
         } else {
@@ -276,14 +275,14 @@ export class ApiKeyController {
         ],
         relations: ['user_']
       });
-      const revokedUser = await this.apiKeyRepo.remove(cors);
-      if ('user_' in revokedUser && revokedUser.user_) {
-        delete revokedUser.user_.created_at;
-        delete revokedUser.user_.updated_at;
+      const revokedApiKey = await this.apiKeyRepo.remove(cors);
+      if ('user_' in revokedApiKey && revokedApiKey.user_) {
+        delete revokedApiKey.user_.created_at;
+        delete revokedApiKey.user_.updated_at;
       }
       return {
         info: `😅 202 - Cors API :: Berhasil Revoke ${req.params['id']} 🤣`,
-        result: revokedUser
+        result: revokedApiKey
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
