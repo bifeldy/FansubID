@@ -46,7 +46,7 @@ export class VerifyController {
         });
       }
       (user as any)._email = (user as any).email;
-      (user as any)._session_origin = (user as any)._session_origin;
+      (user as any)._session_origin = (user as any).session_origin;
       if ('kartu_tanda_penduduk_' in user && user.kartu_tanda_penduduk_) {
         delete user.kartu_tanda_penduduk_.created_at;
         delete user.kartu_tanda_penduduk_.updated_at;

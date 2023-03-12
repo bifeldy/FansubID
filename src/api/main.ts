@@ -77,7 +77,6 @@ export async function app(): Promise<INestApplication> {
     .setDescription(environment.siteDescription)
     .setContact(environment.siteName, environment.baseUrl, `noreply@${environment.domain}`)
     .addApiKey({ type: 'apiKey', in: 'query', name: 'key' })
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
   const swaggerOpt: SwaggerDocumentOptions = {
     operationIdFactory: (controllerKey: string, methodKey: string) => methodKey
