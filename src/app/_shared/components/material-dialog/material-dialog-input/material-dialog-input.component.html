@@ -13,8 +13,8 @@
   </form>
 </div>
 <div mat-dialog-actions>
-  <small *ngIf="DATA.infoText" class="text-start">
-    <i>*{{ DATA.infoText }}</i>
+  <small *ngIf="DATA.infoText" class="text-start m-2">
+    <i>* {{ DATA.infoText }}</i>
   </small>
   <button mat-button [mat-dialog-close]="BALIKAN" class="ms-auto text-success shiny" [disabled]="fg.invalid">{{ DATA.confirmText }}</button>
   <button mat-button [mat-dialog-close]="false" *ngIf="DATA.cancelText">{{ DATA.cancelText }}</button>

@@ -150,13 +150,13 @@ export class UserListComponent implements OnInit, OnDestroy {
   generateNewApiKey(): void {
     const userInput = {
       name: {
-        inputLabel: 'Nama',
+        inputLabel: 'Nama / Deskripsi',
         inputText: `${this.as.currentUserSubject?.value?.username}_${new Date().getTime()}`,
         inputRequired: true
       },
       ip_domain: {
-        inputLabel: 'Origin',
-        inputText: '*; example.com; 1.1.1.1',
+        inputLabel: 'Origin Tanpa http://',
+        inputText: 'example.com; 1.1.1.1; *',
         inputRequired: true
       }
     };
@@ -166,7 +166,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         input: userInput,
         confirmText: 'OK',
         cancelText: 'Batal',
-        infoText: 'Origin Domain Huruf Kecil Tanpa http:// Gunakan Titik Koma ; Untuk Lebih Dari 1'
+        infoText: 'Gunakan * Saja Untuk Perbolehkan Semua Dan Titik Koma ; Untuk Lebih Dari Satu'
       },
       disableClose: true
     }).afterClosed().subscribe({

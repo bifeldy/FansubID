@@ -136,7 +136,15 @@ export class SocketIoService {
           delete selectedUser.profile_.updated_at;
         }
         this.rooms[data.newRoom][socket.id].profile_ = selectedUser.profile_;
-        if (data.newRoom.startsWith('/nihongo/')) {
+        if (
+          data.newRoom.startsWith('/nihongo/hiragana') ||
+          data.newRoom.startsWith('/nihongo/katakana') ||
+          data.newRoom.startsWith('/nihongo/angka') ||
+          data.newRoom.startsWith('/nihongo/latihan-') ||
+          data.newRoom.startsWith('/nihongo/kelas-') ||
+          data.newRoom.startsWith('/nihongo/jlpt') ||
+          data.newRoom.startsWith('/nihongo/semua-kanji')
+        ) {
           if (!this.qs.quiz[data.newRoom]) {
             try {
               await this.qs.getNewQuestion(data.newRoom);
