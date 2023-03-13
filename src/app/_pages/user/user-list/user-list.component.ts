@@ -156,7 +156,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       },
       ip_domain: {
         inputLabel: 'Origin',
-        inputText: '*',
+        inputText: '*; example.com; 1.1.1.1',
         inputRequired: true
       }
     };
@@ -166,7 +166,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         input: userInput,
         confirmText: 'OK',
         cancelText: 'Batal',
-        infoText: 'Isi * (Bintang) Pada Origin Jika Ingin Dapat Diakses Dari Mana Saja'
+        infoText: 'Origin Domain Huruf Kecil Tanpa http:// Gunakan Titik Koma ; Untuk Lebih Dari 1'
       },
       disableClose: true
     }).afterClosed().subscribe({

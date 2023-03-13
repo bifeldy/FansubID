@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { Equal, ILike, In, IsNull, Not, Raw } from 'typeorm';
+import { Equal, ILike, In, Raw } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -72,7 +72,7 @@ export class ApiKeyController {
             }
           }
           return {
-            info: `😅 200 - Cors API :: User 🤣`,
+            info: `😅 200 - ApiKey API :: User 🤣`,
             count,
             pages: 1,
             results
@@ -118,7 +118,7 @@ export class ApiKeyController {
             }
           }
           return {
-            info: `😅 200 - Cors API :: List All 🤣`,
+            info: `😅 200 - ApiKey API :: List All 🤣`,
             count,
             pages: Math.ceil(count / (queryRow ? queryRow : 10)),
             results: corss
@@ -135,7 +135,7 @@ export class ApiKeyController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Cors API :: Gagal Mendapatkan All Cors 😪`,
+        info: `🙄 400 - ApiKey API :: Gagal Mendapatkan All Cors 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }
@@ -168,7 +168,7 @@ export class ApiKeyController {
           user.role !== RoleModel.MODERATOR
         ) {
           throw new HttpException({
-            info: '🙄 403 - Cors API :: Gagal Menambah Cors Baru 😪',
+            info: '🙄 403 - ApiKey API :: Gagal Menambah Cors Baru 😪',
             result: {
               message: 'Fansubber Hanya Bisa Memiliki 1 Api Key!'
             }
@@ -184,7 +184,7 @@ export class ApiKeyController {
             delete resCorsSave.user_.updated_at;
           }
           return {
-            info: `😅 201 - Cors API :: Tambah Baru 🤣`,
+            info: `😅 201 - ApiKey API :: Tambah Baru 🤣`,
             result: resCorsSave
           };
         }
@@ -193,7 +193,7 @@ export class ApiKeyController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: '🙄 400 - Cors API :: Gagal Menambah Cors Baru 😪',
+        info: '🙄 400 - ApiKey API :: Gagal Menambah Cors Baru 😪',
         result: {
           message: 'Data Tidak Lengkap!'
         }
@@ -203,7 +203,7 @@ export class ApiKeyController {
 
   @Put('/:id')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
@@ -216,7 +216,7 @@ export class ApiKeyController {
           ],
           relations: ['user_']
         });
-        if (user.id === cors.user_.id) {
+        if (user.id === cors.user_.id || user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
           if ('name' in req.body) {
             cors.name = req.body.name;
           }
@@ -229,20 +229,20 @@ export class ApiKeyController {
             delete resCorsSave.user_.updated_at;
           }
           return {
-            info: `😅 201 - Cors API :: Ubah ${req.params['id']} 🤣`,
+            info: `😅 201 - ApiKey API :: Ubah ${req.params['id']} 🤣`,
             result: resCorsSave
           };
         } else {
           throw new HttpException({
-            info: '🙄 403 - Cors API :: Authorisasi Kepemilikan Gagal 😪',
+            info: '🙄 403 - ApiKey API :: Authorisasi Kepemilikan Gagal 😪',
             result: {
-              message: 'Cors Milik Orang Lain!'
+              message: 'ApiKey Milik Orang Lain!'
             }
           }, HttpStatus.FORBIDDEN);
         }
       } else {
         throw new HttpException({
-          info: `🙄 400 - Cors API :: Gagal Mengubah Cors ${req.params['id']} 😪`,
+          info: `🙄 400 - ApiKey API :: Gagal Mengubah Cors ${req.params['id']} 😪`,
           result: {
             message: 'Data Tidak Lengkap!'
           }
@@ -251,9 +251,9 @@ export class ApiKeyController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 404 - Cors API :: Gagal Mencari Cors ${req.params['id']} 😪`,
+        info: `🙄 404 - ApiKey API :: Gagal Mencari Cors ${req.params['id']} 😪`,
         result: {
-          message: 'Cors Tidak Ditemukan!'
+          message: 'ApiKey Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }
@@ -261,35 +261,41 @@ export class ApiKeyController {
 
   @Delete('/:id')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
+      const user: UserModel = res.locals['user'];
       const cors = await this.apiKeyRepo.findOneOrFail({
         where: [
-          {
-            id: Equal(parseInt(req.params['id'])),
-            user_: Not(IsNull())
-          }
+          { id: Equal(parseInt(req.params['id'])) }
         ],
         relations: ['user_']
       });
-      const revokedApiKey = await this.apiKeyRepo.remove(cors);
-      if ('user_' in revokedApiKey && revokedApiKey.user_) {
-        delete revokedApiKey.user_.created_at;
-        delete revokedApiKey.user_.updated_at;
+      if (cors.user_.id === user.id || user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
+        const revokedApiKey = await this.apiKeyRepo.remove(cors);
+        if ('user_' in revokedApiKey && revokedApiKey.user_) {
+          delete revokedApiKey.user_.created_at;
+          delete revokedApiKey.user_.updated_at;
+        }
+        return {
+          info: `😅 202 - ApiKey API :: Berhasil Revoke ${req.params['id']} 🤣`,
+          result: revokedApiKey
+        };
       }
-      return {
-        info: `😅 202 - Cors API :: Berhasil Revoke ${req.params['id']} 🤣`,
-        result: revokedApiKey
-      };
+      throw new HttpException({
+        info: '🙄 403 - ApiKey API :: Authorisasi Kepemilikan Gagal 😪',
+        result: {
+          message: 'ApiKey Milik Orang Lain!'
+        }
+      }, HttpStatus.FORBIDDEN);
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 404 - Cors API :: Gagal Mencari Cors ${req.params['id']} 😪`,
+        info: `🙄 404 - ApiKey API :: Gagal Mencari Cors ${req.params['id']} 😪`,
         result: {
-          message: 'Cors Tidak Ditemukan!'
+          message: 'ApiKey Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }
