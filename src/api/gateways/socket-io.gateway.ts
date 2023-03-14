@@ -8,7 +8,6 @@ import { RoleModel } from '../../models/req-res.model';
 import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel } from '../../models/socket-io.model';
 
 import { ConfigService } from '../services/config.service';
-import { CryptoService } from '../services/crypto.service';
 import { GlobalService } from '../services/global.service';
 import { QuizService } from '../services/quiz.service';
 import { SocketIoService } from '../services/socket-io.service';
@@ -28,7 +27,6 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   constructor(
     private cfg: ConfigService,
     private berkasRepo: BerkasService,
-    private cs:CryptoService,
     private fansubRepo: FansubService,
     private gs: GlobalService,
     private newsRepo: NewsService,
@@ -60,6 +58,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     this.ts.updateVisitor();
   }
 
+  /** */
+
   @SubscribeMessage('ping-pong')
   pingPong(client: Socket, payload: PayloadModel): PingPongModel {
     return {
@@ -69,11 +69,10 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   }
 
   @SubscribeMessage('server-set')
-  serverSet(client: Socket, payload: PayloadModel): void {
+  async serverSet(client: Socket, payload: PayloadModel): Promise<void> {
     try {
-      if (payload.token) {
-        const decoded = this.cs.jwtDecrypt(payload.token);
-        payload.user = decoded.user;
+      await this.sis.checkUserLogin(client, payload);
+      if (payload.user) {
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           this.cfg.serverSet(payload);
           this.sis.emitToBroadcast('server-config', this.cfg.serverGet());
@@ -179,7 +178,6 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
   @SubscribeMessage('track-set')
   async trackSet(client: Socket, payload: PayloadModel): Promise<void> {
-    this.sis.checkUserLogin(client, payload);
     if (
       payload.pathUrl.startsWith('/berkas/') ||
       payload.pathUrl.startsWith('/fansub/') ||
@@ -187,6 +185,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       payload.pathUrl.startsWith('/user/')
     ) {
       try {
+        await this.sis.checkUserLogin(client, payload);
         const trackType = payload.pathUrl.split('?')[0].split('/')[1];
         const idSlugUsername = payload.pathUrl.split('?')[0].split('/')[2];
         let selectedRepo = null;
@@ -286,12 +285,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   @SubscribeMessage('leave-join-room')
   async leaveJoinRoom(client: Socket, payload: PayloadModel): Promise<void> {
     try {
-      if (payload.token) {
-        const decoded = this.cs.jwtDecrypt(payload.token);
-        payload.user = decoded.user;
-      } else {
-        payload.user = null;
-      }
+      await this.sis.checkUserLogin(client, payload);
       await this.sis.leaveRoom(client, payload);
       await this.sis.joinOrUpdateRoom(client, payload);
       await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameGlobalPublic });
@@ -317,11 +311,10 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   }
 
   @SubscribeMessage('force-logout')
-  forceLogout(client: Socket, payload: PayloadModel): void {
+  async forceLogout(client: Socket, payload: PayloadModel): Promise<void> {
     try {
-      if (payload.token) {
-        const decoded = this.cs.jwtDecrypt(payload.token);
-        payload.user = decoded.user;
+      await this.sis.checkUserLogin(client, payload);
+      if (payload.user) {
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           const multipleSocketId = [];
           for (const socketId of Object.keys(this.sis.rooms[CONSTANTS.socketRoomNameGlobalPublic])) {
@@ -343,11 +336,10 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   }
 
   @SubscribeMessage('send-chat')
-  sendChat(client: Socket, payload: PayloadModel): void {
+  async sendChat(client: Socket, payload: PayloadModel): Promise<void> {
     try {
-      if (payload.token) {
-        const decoded = this.cs.jwtDecrypt(payload.token);
-        payload.user = decoded.user;
+      await this.sis.checkUserLogin(client, payload);
+      if (payload.user) {
         const chatData = {
           room_id: payload.roomId,
           sender: payload.user,
@@ -371,9 +363,8 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   @SubscribeMessage('quiz-answer')
   async quizAnswer(client: Socket, payload: PayloadModel): Promise<void> {
     try {
-      if (payload.token) {
-        const decoded = this.cs.jwtDecrypt(payload.token);
-        payload.user = decoded.user;
+      await this.sis.checkUserLogin(client, payload);
+      if (payload.user) {
         if (this.qs.quiz[payload.roomId]) {
           if (this.qs.quiz[payload.roomId].randomInteger === payload.randomInteger && !this.qs.quiz[payload.roomId].isAnswering) {
             this.qs.quiz[payload.roomId].isAnswering = true;

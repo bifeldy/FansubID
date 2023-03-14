@@ -1,6 +1,6 @@
 import { ExecutionContext, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 import { ApiKeyService } from '../repository/api-key.service';
 import { ConfigService } from '../services/config.service';
@@ -25,7 +25,8 @@ export class RateLimitGuard extends ThrottlerGuard {
     if (this.cfg.domainIpBypass.includes(clientOriginIpCc.origin_ip)) {
       return true;
     }
-    const key = this.generateKey(context, clientOriginIpCc.origin_ip);
+    const res = http.getResponse<Response>();
+    const key = res.locals['key'] || this.generateKey(context, clientOriginIpCc.origin_ip);
     const ttls = await this.storageService.getRecord(key);
     this.gs.log('[RATE_LIMIT_GUARD-SESSION] ⌛', ttls);
     if (ttls.length >= limit) {

@@ -83,6 +83,7 @@ export class GlobalService {
   }
 
   cleanIpOrigin(ipOrigin: string): string {
+    ipOrigin = ipOrigin || '';
     // Remove Prefixes
     if (ipOrigin.startsWith('::ffff:')) {
       ipOrigin = ipOrigin.slice(7, ipOrigin.length);

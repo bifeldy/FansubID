@@ -3,7 +3,6 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { EntityMetadata, Equal, FindManyOptions, FindOneOptions, FindConditions, InsertResult, Repository, UpdateResult, ILike } from 'typeorm';
-import { Request } from 'express';
 
 import { ApiKey } from '../entities/ApiKey';
 
@@ -82,7 +81,7 @@ export class ApiKeyService {
 
   /** */
 
-  getOriginIpCc(req: Request, ipOnly = false): { origin_ip: string, country_code: string } {
+  getOriginIpCc(req: any, ipOnly = false): { origin_ip: string, country_code: string } {
     let originIp = '';
     if (!ipOnly) {
       originIp = originIp || req.headers.origin || req.headers.referer || '';
@@ -98,11 +97,12 @@ export class ApiKeyService {
 
   getCorsOptions(): CorsOptions {
     return {
-      origin: async (origin, callback) => {
+      origin: async (org, callback) => {
+        const o = this.gs.cleanIpOrigin(org);
+        this.gs.log('[API_KEY_SERVICE-ORIGIN] 🏓', o);
         return callback(null, true);
       },
-      credentials: true,
-      methods: ['GET', 'OPTIONS', 'PATCH']
+      credentials: true
     };
   }
 

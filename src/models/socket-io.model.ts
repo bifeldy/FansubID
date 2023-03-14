@@ -2,6 +2,7 @@ import { BerkasModel, FansubModel, HirakataModel, KanjiModel, NewsModel, UserMod
 
 export interface PayloadModel {
   token?: string;
+  key?: string;
   user?: UserModel;
   ip?: string;
   pathUrl?: string;

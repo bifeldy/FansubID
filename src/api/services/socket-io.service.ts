@@ -4,10 +4,12 @@ import { Server, Socket } from 'socket.io';
 import { Equal, MoreThanOrEqual } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
+import { UserModel } from '../../models/req-res.model';
 
 import { RoomModel, RoomInfoInOutModel, RoomInfoModel, PayloadModel } from '../../models/socket-io.model';
 import { NotificationService } from '../repository/notification.service';
 
+import { ApiKeyService } from '../repository/api-key.service';
 import { ProfileService } from '../repository/profile.service';
 import { UserService } from '../repository/user.service';
 
@@ -26,6 +28,7 @@ export class SocketIoService {
   constructor(
     private cs:CryptoService,
     private gs: GlobalService,
+    private aks: ApiKeyService,
     private profileRepo: ProfileService,
     private notificationRepo: NotificationService,
     private qs: QuizService,
@@ -214,17 +217,32 @@ export class SocketIoService {
     return (points * -1);
   }
 
-  checkUserLogin(client: Socket, payload: PayloadModel): void {
-    const ip = client.handshake.headers['cf-connecting-ip'] || client.handshake.address || '';
-    payload.ip = this.gs.cleanIpOrigin(ip as string);
-    if (payload.token) {
-      try {
+  async checkUserLogin(client: Socket, payload: PayloadModel): Promise<void> {
+    try {
+      const ip = client.handshake.headers['cf-connecting-ip'] || client.handshake.address || '';
+      payload.ip = this.gs.cleanIpOrigin(ip as string);
+      let user: UserModel = null;
+      if (payload.key) {
+        const check = await this.aks.checkKey(payload.ip, payload.key);
+        if (!check.allowed) {
+          throw 'User Not Allowed';
+        } else if (check.user) {
+          user = check.user;
+        }
+      } else if (payload.token) {
         const decoded = this.cs.jwtDecrypt(payload.token);
-        payload.user = decoded.user;
-      } catch (error) {
-        payload.user = null;
+        user = decoded.user;
       }
-    } else {
+      if (!user) {
+        throw 'User Not Login';
+      }
+      payload.user = await this.userRepo.findOneOrFail({
+        where: [
+          { id: Equal(user.id) }
+        ],
+        relations: ['kartu_tanda_penduduk_', 'profile_']
+      });;
+    } catch (error) {
       payload.user = null;
     }
   }
