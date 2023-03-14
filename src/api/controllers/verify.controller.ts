@@ -1,5 +1,5 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
-import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 import { CONSTANTS } from '../../constants';
@@ -22,15 +22,6 @@ export class VerifyController {
   @Patch('/')
   @HttpCode(202)
   @ApiTags(CONSTANTS.apiTagSession)
-  @ApiQuery({ name: 'token', required: false, type: 'string' })
-  @ApiBody({
-    schema: {
-      properties: {
-        token: { type: 'string' }
-      },
-      required: ['token']
-    }
-  })
   verify(@Req() req: Request, @Res({ passthrough: true }) res: Response): any {
     const user: UserModel = res.locals['user'];
     const token: string = res.locals['token'];

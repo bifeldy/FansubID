@@ -76,7 +76,8 @@ export async function app(): Promise<INestApplication> {
     .setTitle(environment.siteName)
     .setDescription(environment.siteDescription)
     .setContact(environment.siteName, environment.baseUrl, `noreply@${environment.domain}`)
-    .addApiKey({ type: 'apiKey', in: 'query', name: 'key' })
+    .addSecurity('apiKey', { type: 'apiKey', in: 'query', name: 'key' })
+    .addSecurityRequirements('apiKey')
     .build();
   const swaggerOpt: SwaggerDocumentOptions = {
     operationIdFactory: (controllerKey: string, methodKey: string) => methodKey

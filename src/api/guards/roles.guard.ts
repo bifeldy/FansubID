@@ -41,7 +41,9 @@ export class RolesGuard implements CanActivate {
     }
     throw new HttpException({
       info: '😡 401 - Authorization :: Whoops, Akses Ditolak 😤',
-      result: res.locals['error']
+      result: {
+        message: '💩 Anda Belum Login! 🤬'
+      }
     }, HttpStatus.UNAUTHORIZED);
   }
 
