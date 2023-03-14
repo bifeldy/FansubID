@@ -1,7 +1,9 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
-import { ApiExcludeController } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike, In, Not } from 'typeorm';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -15,7 +17,6 @@ import { DiscordService } from '../services/discord.service';
 import { BannedService } from '../repository/banned.service';
 import { UserService } from '../repository/user.service';
 
-@ApiExcludeController()
 @Controller('/banned')
 export class BannedController {
 
@@ -29,16 +30,18 @@ export class BannedController {
 
   @Get('/')
   @HttpCode(200)
+  @ApiTags(CONSTANTS.apiTagBanned)
+  @ApiQuery({ name: 'username', type: 'string' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
-      const queryId = req.query['id'];
-      if (queryId) {
-        const userId = (queryId as string).split(',').map(Number);
-        if (Array.isArray(userId) && userId.length > 0) {
-          if (userId.length > 1) {
+      const queryUserName = req.query['username'];
+      if (queryUserName) {
+        const username = (queryUserName as string).split(',');
+        if (Array.isArray(username) && username.length > 0) {
+          if (username.length > 1) {
             if (user) {
               if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
                 throw new HttpException({
@@ -61,21 +64,21 @@ export class BannedController {
             where: [
               {
                 user_: {
-                  id: In(userId)
+                  username: In(username)
                 }
               }
             ],
             relations: ['user_']
           });
           const results: any = {};
-          for (const i of userId) {
+          for (const i of username) {
             results[i] = {};
           }
           for (const b of banneds) {
             if ('user_' in b && b.user_) {
               delete b.user_.created_at;
               delete b.user_.updated_at;
-              results[b.user_.id] = b;
+              results[b.user_.username] = b;
             }
           }
           return {
@@ -149,6 +152,7 @@ export class BannedController {
 
   @Post('/')
   @HttpCode(201)
+  @ApiExcludeEndpoint()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
@@ -235,6 +239,7 @@ export class BannedController {
 
   @Delete('/:id')
   @HttpCode(202)
+  @ApiExcludeEndpoint()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {

@@ -148,11 +148,11 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   checkBanned(): void {
     this.bs.busy();
-    this.subsBanned = this.us.checkBanned(this.userData.id).subscribe({
+    this.subsBanned = this.us.checkBanned(this.userData.username).subscribe({
       next: res => {
         this.gs.log('[USER_CHECK_BANNED_SUCCESS]', res);
-        if (Object.keys(res.results[this.userData.id]).length > 0) {
-          this.userBanned = res.results[this.userData.id];
+        if (Object.keys(res.results[this.userData.username]).length > 0) {
+          this.userBanned = res.results[this.userData.username];
         }
         this.bs.idle();
       },

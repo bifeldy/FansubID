@@ -3,6 +3,7 @@ export const CONSTANTS = {
   apiTagApiKey: 'API Key',
   apiTagAttachment: 'Atachment DDL',
   apiTagAuthSes: 'Auth Session',
+  apiTagBanned: 'Banned',
   apiTagBerkas: 'Berkas',
   apiTagDorama: 'Dorama',
   apiTagFansub: 'Fansub',

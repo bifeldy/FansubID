@@ -77,7 +77,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
         this.gs.log('[USER_LIST_SUCCESS]', res);
         this.count = res.count;
         this.bs.busy();
-        this.subsBannedGet = this.user.checkBanned(res.results.map(r => r.id)).subscribe({
+        this.subsBannedGet = this.user.checkBanned(res.results.map(r => r.username)).subscribe({
           next: result => {
             this.gs.log('[BANNED_LIST_SUCCESS]', res);
             const userDataRow = [];
@@ -96,17 +96,17 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 Username: r.username,
                 Email: r._email,
                 'Nama Lengkap': r.kartu_tanda_penduduk_.nama,
-                banned: (Object.keys(result.results[r.id]).length > 0),
+                banned: (Object.keys(result.results[r.username]).length > 0),
                 Aksi: (
-                  (Object.keys(result.results[r.id]).length > 0) ||
-                  (r.id === this.as.currentUserSubject?.value?.id) ||
+                  (Object.keys(result.results[r.username]).length > 0) ||
+                  (r.username === this.as.currentUserSubject?.value?.username) ||
                   this.gs.includesOneOf(r.role, excludedRole)
                 ) ? [] : [
-                  { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username },
-                  { type: 'button', icon: 'handyman', name: 'ADMIN', id: r.id, username: r.username },
-                  { type: 'button', icon: 'security', name: 'MODERATOR', id: r.id, username: r.username },
-                  { type: 'button', icon: 'rate_review', name: 'FANSUBBER', id: r.id, username: r.username },
-                  { type: 'button', icon: 'person', name: 'USER', id: r.id, username: r.username }
+                  { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username, email: r._email },
+                  { type: 'button', icon: 'handyman', name: 'ADMIN', id: r.id, username: r.username, email: r._email },
+                  { type: 'button', icon: 'security', name: 'MODERATOR', id: r.id, username: r.username, email: r._email },
+                  { type: 'button', icon: 'rate_review', name: 'FANSUBBER', id: r.id, username: r.username, email: r._email },
+                  { type: 'button', icon: 'person', name: 'USER', id: r.id, username: r.username, email: r._email }
                 ]
               });
             }
@@ -160,6 +160,8 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
           this.bs.busy();
           this.subsUserDelete = this.adm.ban({
             id: data.id,
+            email: data.email,
+            username: data.username,
             reason: re.reason
           }).subscribe({
             next: res => {

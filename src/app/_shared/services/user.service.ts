@@ -25,8 +25,8 @@ export class UserService {
     }
   }
 
-  checkBanned(userId): Observable<JsonResponse<BannedModel>> {
-    return this.api.getData(`/banned?id=${userId}`);
+  checkBanned(username): Observable<JsonResponse<BannedModel>> {
+    return this.api.getData(`/banned?username=${username}`);
   }
 
   getAllUser(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<UserModel>> {
