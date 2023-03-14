@@ -107,7 +107,7 @@ export class ApiKeyService {
   }
 
   async checkKey(origin: string, key: string): Promise<{ allowed: boolean, user: UserModel }> {
-    if (this.cfg.domainIpBypass.includes(origin)) {
+    if (this.cfg.domainIpBypass.includes(origin) && !key) {
       return { allowed: true, user: null };
     }
     try {
