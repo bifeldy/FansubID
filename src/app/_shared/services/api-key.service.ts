@@ -29,6 +29,10 @@ export class ApiKeyService {
     return this.api.postData(`/api-key`, apiKeyData);
   }
 
+  editApiKey(apiKeyId, apiKeyData): Observable<JsonResponse<ApiKeyModel>> {
+    return this.api.putData(`/api-key/${apiKeyId}`, apiKeyData);
+  }
+
   revokeApiKey(apiKeyId): Observable<JsonResponse<ApiKeyModel>> {
     return this.api.deleteData(`/api-key/${apiKeyId}`);
   }

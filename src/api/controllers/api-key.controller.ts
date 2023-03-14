@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike, In, Raw } from 'typeorm';
 
@@ -147,7 +147,16 @@ export class ApiKeyController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
-  @ApiExcludeEndpoint()
+  @ApiTags(CONSTANTS.apiTagApiKey)
+  @ApiBody({
+    schema: {
+      properties: {
+        name: { type: 'string' },
+        ip_domain: { type: 'string' }
+      },
+      required: ['name', 'ip_domain']
+    }
+  })
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('name' in req.body && 'ip_domain' in req.body) {
@@ -205,7 +214,16 @@ export class ApiKeyController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
-  @ApiExcludeEndpoint()
+  @ApiTags(CONSTANTS.apiTagApiKey)
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiBody({
+    schema: {
+      properties: {
+        name: { type: 'string' },
+        ip_domain: { type: 'string' }
+      }
+    }
+  })
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('name' in req.body || 'ip_domain' in req.body) {
@@ -263,7 +281,7 @@ export class ApiKeyController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
-  @ApiExcludeEndpoint()
+  @ApiTags(CONSTANTS.apiTagApiKey)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

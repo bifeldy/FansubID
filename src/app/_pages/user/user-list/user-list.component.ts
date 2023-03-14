@@ -28,6 +28,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   subsGetApiKey = null;
   subsDialog = null;
   subsCreateApiKey = null;
+  subsEditApiKey = null;
   subsRevokeApiKey = null;
 
   apiKey = [];
@@ -78,6 +79,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.subsGetApiKey?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsCreateApiKey?.unsubscribe();
+    this.subsEditApiKey?.unsubscribe();
     this.subsRevokeApiKey?.unsubscribe();
   }
 
@@ -148,22 +150,23 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   generateNewApiKey(): void {
-    const userInput = {
-      name: {
-        inputLabel: 'Nama / Deskripsi',
-        inputText: `${this.as.currentUserSubject?.value?.username}_${new Date().getTime()}`,
-        inputRequired: true
-      },
-      ip_domain: {
-        inputLabel: 'Origin Tanpa http://',
-        inputText: 'example.com; 1.1.1.1; *',
-        inputRequired: true
-      }
-    };
     this.subsDialog = this.ds.openInputDialog({
       data: {
         title: `Tambah API Key Baru`,
-        input: userInput,
+        input: {
+          name: {
+            inputLabel: 'Nama / Deskripsi',
+            inputPlaceholder: `${this.as.currentUserSubject?.value?.username}_${new Date().getTime()}`,
+            inputValue: null,
+            inputRequired: true
+          },
+          ip_domain: {
+            inputLabel: 'Origin Tanpa http://',
+            inputPlaceholder: 'example.com; 1.1.1.1; *',
+            inputValue: null,
+            inputRequired: true
+          }
+        },
         confirmText: 'OK',
         cancelText: 'Batal',
         infoText: 'Gunakan * Saja Untuk Perbolehkan Semua Dan Titik Koma ; Untuk Lebih Dari Satu'
@@ -185,6 +188,55 @@ export class UserListComponent implements OnInit, OnDestroy {
             },
             error: err => {
               this.gs.log('[USER_CREATE_APIKEY_ERROR]', err, 'error');
+              this.bs.idle();
+              this.getUserApiKey();
+            }
+          });
+        }
+        this.subsDialog.unsubscribe();
+      }
+    });
+  }
+
+  editApiKey(ak: any): void {
+    this.subsDialog = this.ds.openInputDialog({
+      data: {
+        title: `Ubah API Key`,
+        input: {
+          name: {
+            inputLabel: 'Nama / Deskripsi',
+            inputPlaceholder: ak.name,
+            inputValue: ak.name,
+            inputRequired: true
+          },
+          ip_domain: {
+            inputLabel: 'Origin Tanpa http://',
+            inputPlaceholder: ak.ip_domain,
+            inputValue: ak.ip_domain,
+            inputRequired: true
+          }
+        },
+        confirmText: 'OK',
+        cancelText: 'Batal',
+        infoText: 'Gunakan * Saja Untuk Perbolehkan Semua Dan Titik Koma ; Untuk Lebih Dari Satu'
+      },
+      disableClose: true
+    }).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INPUT_DIALOG_CLOSED]', re);
+        if (re) {
+          this.bs.busy();
+          this.subsEditApiKey = this.aks.editApiKey(ak.id, {
+            name: re.name,
+            ip_domain: re.ip_domain
+          }).subscribe({
+            next: res => {
+              this.gs.log('[USER_EDIT_APIKEY_SUCCESS]', res);
+              this.bs.idle();
+              this.getUserApiKey();
+            },
+            error: err => {
+              this.gs.log('[USER_EDIT_APIKEY_ERROR]', err, 'error');
               this.bs.idle();
               this.getUserApiKey();
             }

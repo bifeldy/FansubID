@@ -118,7 +118,7 @@
               <a mat-button class="w-100" color="accent" (click)="generateNewApiKey()">
                 <mat-icon class="me-1">webhook</mat-icon> Buat API Key Baru
               </a>
-              <div class="my-2 gradient-border" *ngFor="let ak of apiKey" (click)="copyApiKey(ak)">
+              <div class="my-2 gradient-border" *ngFor="let ak of apiKey" (click)="copyApiKey(ak); editApiKey(ak)">
                 <p class="ps-2 pe-2 pt-2 text-truncate my-0">
                   Nama ::
                   <span class="text-success">
