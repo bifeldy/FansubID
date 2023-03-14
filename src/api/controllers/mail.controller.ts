@@ -1,4 +1,5 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Get, Req, Res, Post } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Equal, ILike } from 'typeorm';
 import { Request, Response } from 'express';
@@ -69,6 +70,8 @@ export class MailController {
     }
   }
 
+  // Special API Limit => 1 / 4
+  @Throttle(25, 3600)
   @Post('/')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)

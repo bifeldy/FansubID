@@ -52,8 +52,8 @@
                     <input matInput formControlName="subject" placeholder="Judul Pesan Blablabla ..." required />
                     <mat-icon matSuffix>wysiwyg</mat-icon>
                     <mat-error>
-                      <div *ngIf="fg.get('subject').hasError('required')">Judul Berita Tidak Boleh Kosong</div>
-                      <div *ngIf="fg.get('subject').hasError('pattern')">Judul Berita Hanya Boleh Huruf Standar Papan Ketik</div>
+                      <div *ngIf="fg.get('subject').hasError('required')">Judul Pesan Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('subject').hasError('pattern')">Judul Pesan Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="message" [config]="GS.angularEditorConfig" required></angular-editor>
