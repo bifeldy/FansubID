@@ -2,7 +2,6 @@ export const CONSTANTS = {
   apiTagAnime: 'Anime',
   apiTagApiKey: 'API Key',
   apiTagAttachment: 'Atachment DDL',
-  apiTagAuthSes: 'Auth Session',
   apiTagBanned: 'Banned',
   apiTagBerkas: 'Berkas',
   apiTagDorama: 'Dorama',
@@ -10,6 +9,7 @@ export const CONSTANTS = {
   apiTagNews: 'News',
   apiTagNihongo: 'Nihongo',
   apiTagQuiz: 'Quiz',
+  apiTagSession: 'Session',
   apiTagUser: 'User',
   attachmentSpeedLimiterBps: 512 * 1000, // 512 KB/s
   blacklistedWords: [

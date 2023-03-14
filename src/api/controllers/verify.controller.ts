@@ -21,7 +21,7 @@ export class VerifyController {
 
   @Patch('/')
   @HttpCode(202)
-  @ApiTags(CONSTANTS.apiTagAuthSes)
+  @ApiTags(CONSTANTS.apiTagSession)
   @ApiQuery({ name: 'token', required: false, type: 'string' })
   @ApiBody({
     schema: {
