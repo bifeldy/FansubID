@@ -43,7 +43,7 @@ export class MaterialDialogInputComponent implements OnInit {
       if (value['inputRequired']) {
         defVal.push(Validators.required);
       }
-      dataFormGroup[key] = [null, Validators.compose(defVal)];
+      dataFormGroup[key] = [value['inputValue'], Validators.compose(defVal)];
     }
     this.fg = this.fb.group(dataFormGroup);
   }

@@ -126,17 +126,17 @@ export class AdminListFansubMemberComponent implements OnInit {
   }
 
   approveOrRejectFansubMember(data, ac: boolean): void {
-    const userInput = {
-      keterangan: {
-        inputLabel: 'Keterangan',
-        inputText: `Pemilik, Translator, Timer, QA / QC, TypeSetter, dll.`,
-        inputRequired: true
-      }
-    };
     this.subsDialog = this.ds.openInputDialog({
       data: {
         title: `Keterangan ${ac ? 'Approve' : 'Reject'}`,
-        input: userInput,
+        input: {
+          keterangan: {
+            inputLabel: 'Keterangan',
+            inputPlaceholder: `Pemilik, Translator, Timer, QA / QC, TypeSetter, dll.`,
+            inputValue: null,
+            inputRequired: true
+          }
+        },
         confirmText: 'OK',
         cancelText: 'Batal'
       },

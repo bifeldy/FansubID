@@ -198,13 +198,14 @@ export class TorrentComponent implements OnInit, OnDestroy {
     const userInput = {
       torrent_name: {
         inputLabel: 'Nama Torrent',
-        inputText: `Torrent # ${this.ss.mySocket.id} @ ${new Date().toUTCString()}`,
+        inputPlaceholder: `Torrent # ${this.ss.mySocket.id} @ ${new Date().toUTCString()}`,
+        inputValue: null,
         inputRequired: true
       }
     };
     if (this.files.length === 1) {
-      userInput.torrent_name.inputText = this.files[0].name;
-      this.uploadFiles(userInput.torrent_name.inputText);
+      userInput.torrent_name.inputPlaceholder = this.files[0].name;
+      this.uploadFiles(userInput.torrent_name.inputPlaceholder);
     } else if (this.files.length > 1) {
       this.subsDialog = this.ds.openInputDialog({
         data: {

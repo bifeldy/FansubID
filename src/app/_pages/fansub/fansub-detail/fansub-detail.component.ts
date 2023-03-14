@@ -463,27 +463,29 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   getSubDomain(): void {
     if (this.as.currentUserSubject?.value) {
       if (this.joinedAsMember || this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR) {
-        const userInput = {
-          server_target: {
-            inputLabel: 'Server Target',
-            inputText: `ghs.google.com`,
-            inputRequired: true
-          },
-          verification_name: {
-            inputLabel: 'Tambahan Khusus Blogger :: Name',
-            inputText: `blablabla-name`,
-            inputRequired: false
-          },
-          verification_target: {
-            inputLabel: 'Tambahan Khusus Blogger :: Target',
-            inputText: `blablabla-target.dv.googlehosted.com`,
-            inputRequired: false
-          }
-        };
         this.subsDialog = this.ds.openInputDialog({
           data: {
             title: `CNAME / A IPv4`,
-            input: userInput,
+            input: {
+              server_target: {
+                inputLabel: 'Server Target',
+                inputPlaceholder: `ghs.google.com`,
+                inputValue: null,
+                inputRequired: true
+              },
+              verification_name: {
+                inputLabel: 'Tambahan Khusus Blogger :: Name',
+                inputPlaceholder: `blablabla-name`,
+                inputValue: null,
+                inputRequired: false
+              },
+              verification_target: {
+                inputLabel: 'Tambahan Khusus Blogger :: Target',
+                inputPlaceholder: `blablabla-target.dv.googlehosted.com`,
+                inputValue: null,
+                inputRequired: false
+              }
+            },
             confirmText: 'OK',
             cancelText: 'Batal',
             infoText: 'Abaikan 2 Input Terakhir Jika Bukan Blogger'
