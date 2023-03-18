@@ -93,7 +93,7 @@
     <div class="col-lg-4 col-xl-3">
       <div class="row sticky-top">
         <div class="col-12">
-          <div class="row" *ngIf="AS.currentUserSubject?.value">
+          <div class="row pb-3">
             <div class="col-12 sticky-top bg-bifeldy">
               <h2 class="pt-3 border-bottom-dotted">
                 <b class="text-bifeldy" matTooltip="Khusus Pengguna Terverifikasi">Alamat Email</b>
@@ -105,7 +105,7 @@
               </a>
             </div>
           </div>
-          <div class="row">
+          <div class="row py-3">
             <div class="col-12 sticky-top bg-bifeldy">
               <h2 class="pt-3 border-bottom-dotted">
                 <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserApiKey()">
@@ -140,6 +140,31 @@
                 <a mat-button class="w-100" color="accent" (click)="revokeApiKey(ak); $event.stopPropagation()">
                   <mat-icon class="me-1">delete_sweep</mat-icon> Hapus Akses
                 </a>
+              </div>
+            </div>
+          </div>
+          <div class="row pt-3">
+            <div class="col-12 sticky-top bg-bifeldy">
+              <h2 class="border-bottom-dotted">
+                <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserGroup()">
+                  Refresh
+                </span>
+                <b class="text-bifeldy">DNS Fansub</b>
+              </h2>
+            </div>
+            <div class="col-12" style="max-height: 288px;">
+              <div class="h-100" style="overflow-y: auto;">
+                <mat-selection-list [multiple]="false">
+                  <mat-list-option class="h-100" *ngFor="let f of groupFansub" (click)="editSubDomain(f.fansub_)">
+                    <img matListAvatar src="{{ f.fansub_.image_url }}" class="ms-3" />
+                    <a class="text-truncate text-decoration-none">
+                      <span class="bg-bifeldy ps-3 pe-2 me-1 text-warning" style="position: absolute; right: 0;">
+                        {{ f.updated_at | date:'d-MM-y' }}
+                      </span>
+                      <span class="text-success">{{ f.fansub_.slug }}</span>
+                    </a>
+                  </mat-list-option>
+                </mat-selection-list>
               </div>
             </div>
           </div>

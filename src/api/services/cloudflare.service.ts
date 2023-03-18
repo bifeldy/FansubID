@@ -69,11 +69,41 @@ export class CloudflareService {
         res.result = res_json.result;
       } else {
         this.gs.log(`[CLOUDFLARE_SERVICE-CREATE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json);
-        res.result = res_json.errors[0]?.message;
+        res.result = {
+          message: res_json.errors[0]?.message
+        };
       }
       return res;
     } catch (err) {
       this.gs.log('[CLOUDFLARE_SERVICE-CREATE_DNS_ERROR] 🔥', err, 'error');
+      return null;
+    }
+  }
+
+  async detailDns(id: string): Promise<any> {
+    try {
+      const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records/${id}`);
+      const res_raw = await this.api.getData(url, {
+        'Authorization': `Bearer ${environment.cloudflare.key}`,
+        ...environment.nodeJsXhrHeader
+      });
+      const res = {
+        status: res_raw.status,
+        result: null
+      };
+      const res_json: any = await res_raw.json();
+      if (res_raw.ok) {
+        this.gs.log(`[CLOUDFLARE_SERVICE-DETAIL_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json);
+        res.result = res_json.result;
+      } else {
+        this.gs.log(`[CLOUDFLARE_SERVICE-DETAIL_DNS_FAIL] 🔥 ${res_raw.status}`, res_json);
+        res.result = {
+          message: res_json.errors[0]?.message
+        };
+      }
+      return res;
+    } catch (err) {
+      this.gs.log('[CLOUDFLARE_SERVICE-DETAIL_DNS_ERROR] 🔥', err, 'error');
       return null;
     }
   }
@@ -85,17 +115,19 @@ export class CloudflareService {
         'Authorization': `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
       });
+      const res = {
+        status: res_raw.status,
+        result: null
+      };
+      const res_json: any = await res_raw.json();
       if (res_raw.ok) {
-        const res_json: any = await res_raw.json();
         this.gs.log(`[CLOUDFLARE_SERVICE-DELETE_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json);
-        return {
-          info: `😅 ${res_raw.status} - Cloudflare API :: Hapus Sub-Domain ${id} 🤣`,
-          result: {
-            id: res_json.result?.id
-          }
-        };
+        res.result = res_json.result;
+      } else {
+        this.gs.log(`[CLOUDFLARE_SERVICE-DELETE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json);
+        res.result = res_json.errors[0]?.message;
       }
-      throw new Error('Cloudflare API Error');
+      return res;
     } catch (err) {
       this.gs.log('[CLOUDFLARE_SERVICE-DELETE_DNS_ERROR] 🔥', err, 'error');
       return null;

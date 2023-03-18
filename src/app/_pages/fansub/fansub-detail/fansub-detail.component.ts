@@ -465,7 +465,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
       if (this.joinedAsMember || this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR) {
         this.subsDialog = this.ds.openInputDialog({
           data: {
-            title: `CNAME / A IPv4`,
+            title: `Buat CNAME / A Record IP v4 v6`,
             input: {
               server_target: {
                 inputLabel: 'Server Target',
@@ -509,7 +509,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
                     data: {
                       title: `Klaim Berhasil`,
                       htmlMessage: `
-                        Domain '${res.result.name}' sudah didaftarkan dan dapat digunakan,
+                        Domain '${this.fansubSlug}.${this.ENV.domain}' sudah didaftarkan dan dapat digunakan,
                         silahkan migrasi domain pada situs penyedia layanan anda (ex. Blogger / Wordpress / etc.)
                         kemudian tunggu hingga propagasi DNS selesai.
                         Terima Kasih.

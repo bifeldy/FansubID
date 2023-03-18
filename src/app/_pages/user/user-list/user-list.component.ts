@@ -10,6 +10,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { ApiKeyService } from '../../../_shared/services/api-key.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
+import { FansubService } from '../../../_shared/services/fansub.service';
 
 @Component({
   selector: 'app-user-list',
@@ -30,8 +31,12 @@ export class UserListComponent implements OnInit, OnDestroy {
   subsCreateApiKey = null;
   subsEditApiKey = null;
   subsRevokeApiKey = null;
+  subsGroupGet = null;
+  subsUpdateSubDomain = null;
+  subsGetSubDomain = null;
 
   apiKey = [];
+  groupFansub = [];
 
   constructor(
     private snackBar: MatSnackBar,
@@ -41,6 +46,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     private fs: FabService,
     private bs: BusyService,
     private us: UserService,
+    private fansub: FansubService,
     private aks: ApiKeyService
   ) {
     this.gs.bannerImg = null;
@@ -62,6 +68,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       this.getUserFeedLikeDislike();
       this.getUserFeedVisit();
       this.getUserApiKey();
+      this.getUserGroup();
       this.fs.initializeFab(
         'arrow_forward',
         null,
@@ -81,6 +88,9 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.subsCreateApiKey?.unsubscribe();
     this.subsEditApiKey?.unsubscribe();
     this.subsRevokeApiKey?.unsubscribe();
+    this.subsGroupGet?.unsubscribe();
+    this.subsUpdateSubDomain?.unsubscribe();
+    this.subsGetSubDomain?.unsubscribe();
   }
 
   getUserFeedComment(): void {
@@ -258,6 +268,90 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.gs.log('[USER_REVOKE_APIKEY_ERROR]', err, 'error');
         this.bs.idle();
         this.getUserApiKey();
+      }
+    });
+  }
+
+  getUserGroup(): void {
+    this.bs.busy();
+    this.subsGroupGet = this.us.getUserGroup(this.as.currentUserSubject?.value?.username).subscribe({
+      next: res => {
+        this.gs.log('[USER_GROUP_LIST_SUCCESS]', res);
+        this.groupFansub = res.results;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[USER_GROUP_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  editSubDomain(f: any): void {
+    this.bs.busy();
+    this.subsGetSubDomain = this.fansub.getSubDomain(f.slug).subscribe({
+      next: res => {
+        this.gs.log('[USER_FANSUB_SUBDOMAIN_SUCCESS]', res);
+        this.bs.idle();
+        const subDomain = res.result;
+        this.subsDialog = this.ds.openInputDialog({
+          data: {
+            title: `Ubah CNAME / A Record IP v4 v6`,
+            input: {
+              server_target: {
+                inputLabel: 'Server Target',
+                inputPlaceholder: `ghs.google.com`,
+                inputValue: subDomain.dns_id.content,
+                inputRequired: true
+              },
+              verification_name: {
+                inputLabel: 'Tambahan Khusus Blogger :: Name',
+                inputPlaceholder: `blablabla-name`,
+                inputValue: subDomain.dns_id_alt?.name,
+                inputRequired: false
+              },
+              verification_target: {
+                inputLabel: 'Tambahan Khusus Blogger :: Target',
+                inputPlaceholder: `blablabla-target.dv.googlehosted.com`,
+                inputValue: subDomain.dns_id_alt?.content,
+                inputRequired: false
+              }
+            },
+            confirmText: 'OK',
+            cancelText: 'Batal',
+            infoText: 'Abaikan 2 Input Terakhir Jika Bukan Blogger'
+          },
+          disableClose: true
+        }).afterClosed().subscribe({
+          next: re => {
+            this.gs.log('[INPUT_DIALOG_CLOSED]', re);
+            if (re) {
+              this.bs.busy();
+              this.subsUpdateSubDomain = this.fansub.updateSubDomain(f.slug, {
+                server_target: re.server_target,
+                verification_name: re.verification_name,
+                verification_target: re.verification_target
+              }).subscribe({
+                next: r => {
+                  this.gs.log('[FANSUB_UPDATE_SUBDOMAIN_SUCCESS]', r);
+                  this.bs.idle();
+                  this.getUserGroup();
+                },
+                error: e => {
+                  this.gs.log('[FANSUB_UPDATE_SUBDOMAIN_ERROR]', e, 'error');
+                  this.bs.idle();
+                  this.getUserGroup();
+                }
+              });
+            }
+            this.subsDialog.unsubscribe();
+          }
+        });
+      },
+      error: err => {
+        this.gs.log('[USER_FANSUB_SUBDOMAIN_ERROR]', err, 'error');
+        this.bs.idle();
+        this.getUserGroup();
       }
     });
   }

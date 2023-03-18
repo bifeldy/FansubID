@@ -96,4 +96,12 @@ export class FansubService {
     return this.api.postData(`/fansub-dns`, dnsData);
   }
 
+  getSubDomain(fansubSlug: string): Observable<JsonResponse<any>> {
+    return this.api.getData(`/fansub-dns/${fansubSlug}`);
+  }
+
+  updateSubDomain(fansubSlug: string, dnsData): Observable<JsonResponse<any>> {
+    return this.api.putData(`/fansub-dns/${fansubSlug}`, dnsData);
+  }
+
 }
