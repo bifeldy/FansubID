@@ -37,10 +37,10 @@ export class ApiKeyController {
       const queryRow = parseInt(req.query['row'] as string);
       const queryUserName = req.query['username'];
       if (queryUserName) {
-        const userName = (queryUserName as string).split(',');
-        if (Array.isArray(userName) && userName.length > 0) {
+        const username = (queryUserName as string).split(',');
+        if (Array.isArray(username) && username.length > 0) {
           if (
-            ((userName.length > 1) || (userName.length === 1 && userName[0] !== user.username)) &&
+            ((username.length > 1) || (username.length === 1 && username[0] !== user.username)) &&
             user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR
           ) {
             throw new HttpException({
@@ -54,14 +54,14 @@ export class ApiKeyController {
             where: [
               {
                 user_: {
-                  username: In(userName)
+                  username: In(username)
                 }
               }
             ],
             relations: ['user_']
           });
           const results: any = {};
-          for (const u of userName) {
+          for (const u of username) {
             results[u] = [];
           }
           for (const c of corss) {

@@ -42,22 +42,21 @@ export class BannedController {
         const username = (queryUserName as string).split(',');
         if (Array.isArray(username) && username.length > 0) {
           if (username.length > 1) {
-            if (user) {
-              if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
-                throw new HttpException({
-                  info: '🙄 403 - Banned API :: Authorisasi Pengguna Gagal 😪',
-                  result: {
-                    message: 'Khusus Admin / Moderator!'
-                  }
-                }, HttpStatus.FORBIDDEN);
-              }
-            } else {
+            if (!user) {
               throw new HttpException({
                 info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
                 result: {
                   message: 'Harap Login Terlebih Dahulu!'
                 }
               }, HttpStatus.UNAUTHORIZED);
+            }
+            if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+              throw new HttpException({
+                info: '🙄 403 - Banned API :: Authorisasi Pengguna Gagal 😪',
+                result: {
+                  message: 'Khusus Admin / Moderator!'
+                }
+              }, HttpStatus.FORBIDDEN);
             }
           }
           const [banneds, count] = await this.bannedRepo.findAndCount({
