@@ -93,7 +93,7 @@
     <div class="col-lg-4 col-xl-3">
       <div class="row sticky-top">
         <div class="col-12">
-          <div class="row pb-3">
+          <div class="row">
             <div class="col-12 sticky-top bg-bifeldy">
               <h2 class="pt-3 border-bottom-dotted">
                 <b class="text-bifeldy" matTooltip="Khusus Pengguna Terverifikasi">Alamat Email</b>
@@ -105,7 +105,7 @@
               </a>
             </div>
           </div>
-          <div class="row py-3">
+          <div class="row">
             <div class="col-12 sticky-top bg-bifeldy">
               <h2 class="pt-3 border-bottom-dotted">
                 <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserApiKey()">
@@ -114,7 +114,7 @@
                 <b class="text-bifeldy" matTooltip="Aktivitas Terakhir :: {{ AS.currentUserSubject?.value?._session_origin }}">API Key</b>
               </h2>
             </div>
-            <div class="col-12">
+            <div class="col-12 mb-2">
               <a mat-button class="w-100" color="accent" (click)="generateNewApiKey()">
                 <mat-icon class="me-1">webhook</mat-icon> Buat API Key Baru
               </a>
@@ -143,7 +143,7 @@
               </div>
             </div>
           </div>
-          <div class="row pt-3">
+          <div class="row mt-4">
             <div class="col-12 sticky-top bg-bifeldy">
               <h2 class="border-bottom-dotted">
                 <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserGroup()">
@@ -152,7 +152,7 @@
                 <b class="text-bifeldy">DNS Fansub</b>
               </h2>
             </div>
-            <div class="col-12" style="max-height: 288px;" *ngIf="groupFansub.length > 0; else noData;">
+            <div class="col-12 mb-2" style="max-height: 288px;" *ngIf="groupFansub.length > 0; else noData;">
               <div class="h-100" style="overflow-y: auto;">
                 <mat-selection-list [multiple]="false">
                   <mat-list-option class="h-100" *ngFor="let f of groupFansub" (click)="editSubDomain(f.fansub_)">
