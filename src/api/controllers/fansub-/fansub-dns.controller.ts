@@ -274,7 +274,8 @@ export class FansubDnsController {
   // GET `/api/fansub-dns/:slug`
   @Get('/:slug')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
+  @VerifiedOnly()
   async getBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
@@ -348,11 +349,12 @@ export class FansubDnsController {
 
   // PUT `/api/fansub-dns/:slug`
   @Put('/:slug')
-  @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @HttpCode(201)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
+  @VerifiedOnly()
   async updateBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      if ('slug' in req.body && 'server_target' in req.body) {
+      if ('server_target' in req.body) {
         const user: UserModel = res.locals['user'];
         const group = await this.fansubMemberRepo.findOneOrFail({
           where: [
