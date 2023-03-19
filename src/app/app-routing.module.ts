@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'docs'
+    redirectTo: 'home'
   },
   {
     path: 'admin-mod',

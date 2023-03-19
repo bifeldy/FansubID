@@ -157,7 +157,7 @@ export class DiscordService {
       } else if (msg.content.startsWith('~verify ')) {
         await this.verifyAccount(msg);
       } else {
-        await msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs 💩` });
+        await msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs dan ${environment.baseUrl}/api` });
       }
       if (msg.content.includes('DELETE_CHAT')) {
         await msg.delete();
