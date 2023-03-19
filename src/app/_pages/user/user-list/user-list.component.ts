@@ -258,6 +258,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   revokeApiKey(ak: any): void {
+    this.bs.busy();
     this.subsRevokeApiKey = this.aks.revokeApiKey(ak.id).subscribe({
       next: res => {
         this.gs.log('[USER_REVOKE_APIKEY_SUCCESS]', res);
