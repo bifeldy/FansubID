@@ -296,7 +296,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         const subDomain = res.result;
         this.subsDialog = this.ds.openInputDialog({
           data: {
-            title: `Ubah CNAME / A Record IP v4 v6`,
+            title: `Ubah CNAME / A Record IP v4 v6 :: ${f.slug}`,
             input: {
               server_target: {
                 inputLabel: 'Server Target',

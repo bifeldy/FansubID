@@ -465,7 +465,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
       if (this.joinedAsMember || this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR) {
         this.subsDialog = this.ds.openInputDialog({
           data: {
-            title: `Buat CNAME / A Record IP v4 v6`,
+            title: `Buat CNAME / A Record IP v4 v6 :: ${this.fansubSlug}`,
             input: {
               server_target: {
                 inputLabel: 'Server Target',
