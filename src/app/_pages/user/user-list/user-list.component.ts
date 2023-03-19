@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { environment } from '../../../../environments/app/environment';
@@ -39,6 +40,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   groupFansub = [];
 
   constructor(
+    private router: Router,
     private snackBar: MatSnackBar,
     private as: AuthService,
     private ds: DialogService,
@@ -297,7 +299,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         const subDomain = res.result;
         this.subsDialog = this.ds.openInputDialog({
           data: {
-            title: `Ubah CNAME / A Record IP v4 v6 :: ${f.slug}`,
+            title: `Ubah CNAME / A Record IP v4 v6 :: '${f.slug}'`,
             input: {
               server_target: {
                 inputLabel: 'Server Target',
@@ -352,7 +354,25 @@ export class UserListComponent implements OnInit, OnDestroy {
       error: err => {
         this.gs.log('[USER_FANSUB_SUBDOMAIN_ERROR]', err, 'error');
         this.bs.idle();
-        this.getUserGroup();
+        this.subsDialog = this.ds.openInfoDialog({
+          data: {
+            title: `Sub-Domain '${f.slug}' Belum Di Klaim`,
+            htmlMessage: 'Silahkan ambil sub-domain pada halaman fansub, ingin ke sana sekarang?',
+            confirmText: 'Ya',
+            cancelText: 'Tidak'
+          },
+          disableClose: false
+        }).afterClosed().subscribe({
+          next: re => {
+            this.gs.log('[INFO_DIALOG_CLOSED]', re);
+            if (re === true) {
+              this.router.navigateByUrl(`/fansub/${f.slug}`);
+            } else {
+              this.getUserGroup();
+            }
+            this.subsDialog.unsubscribe();
+          }
+        });
       }
     });
   }

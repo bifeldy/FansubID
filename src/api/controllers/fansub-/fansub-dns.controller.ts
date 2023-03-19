@@ -251,7 +251,7 @@ export class FansubDnsController {
         const r = await this.createNewDns({ req, user, fansub });
         fansub = r.fansub;
         const result = r.result;
-        if (result.dns_id || result.dns_id_alt) {
+        if (result.dns_id) {
           return {
             info: `😅 200 - Cloudflare API :: Pengubahan SubDomain Berhasil 🥰`,
             result,
@@ -329,7 +329,7 @@ export class FansubDnsController {
           };
         }
       }
-      if (result.dns_id || result.dns_id_alt) {
+      if (result.dns_id) {
         return {
           info: `😅 200 - Cloudflare API :: DNS ${req.params['slug']} 🤣`,
           result
@@ -391,7 +391,7 @@ export class FansubDnsController {
         const r = await this.createNewDns({ req, user, fansub });
         fansub = r.fansub;
         const result = r.result;
-        if (result.dns_id || result.dns_id_alt) {
+        if (result.dns_id) {
           return {
             info: `😅 200 - Cloudflare API :: Pengubahan SubDomain Berhasil 🥰`,
             result,
@@ -399,11 +399,11 @@ export class FansubDnsController {
           };
         }
       }
-      throw new Error('Gagal Tarik Data DNS Zone');
+      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 404 - Cloudflare API :: Gagal Mencari DNS ${req.params['slug']} 😪`,
+        info: `🙄 404 - Cloudflare API :: Gagal Mengubah DNS ${req.params['slug']} 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }
