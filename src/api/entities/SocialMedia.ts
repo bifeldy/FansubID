@@ -7,7 +7,7 @@ import { User } from './User';
 @Entity({ name: 'social_media' })
 export class SocialMedia implements SocialMediaModel {
 
-  @PrimaryColumn({ type: 'varchar', length: 255 })
+  @PrimaryColumn({ type: 'text' })
   id: string;
 
   @Column({ type: 'varchar', length: 255 })

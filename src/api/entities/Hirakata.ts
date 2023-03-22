@@ -1,11 +1,11 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
 
 import { HirakataModel } from '../../models/req-res.model';
 
 @Entity({ name: 'hirakata' })
 export class Hirakata implements HirakataModel {
 
-  @Column({ primary: true, type: 'varchar', length: 255 })
+  @PrimaryColumn({ type: 'text' })
   romaji: string;
 
   @Column({ type: 'text' })

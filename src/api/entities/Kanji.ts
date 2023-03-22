@@ -1,11 +1,11 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
 
 import { KanjiModel } from '../../models/req-res.model';
 
 @Entity({ name: 'kanji' })
 export class Kanji implements KanjiModel {
 
-  @Column({ primary: true, type: 'varchar', length: 255 })
+  @PrimaryColumn({ type: 'text' })
   character: string;
 
   @Column({ type: 'int', default: 0 })

@@ -1,11 +1,11 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
 
 import { DoramaModel } from '../../models/req-res.model';
 
 @Entity({ name: 'dorama' })
 export class Dorama implements DoramaModel {
 
-  @Column({ primary: true, type: 'int' })
+  @PrimaryColumn({ type: 'int' })
   id: number;
 
   @Column({ type: 'varchar', length: 255 })

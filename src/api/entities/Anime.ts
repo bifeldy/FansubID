@@ -1,11 +1,11 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
 
 import { AnimeModel } from '../../models/req-res.model';
 
 @Entity({ name: 'anime' })
 export class Anime implements AnimeModel {
 
-  @Column({ primary: true, type: 'int' })
+  @PrimaryColumn({ type: 'int' })
   id: number;
 
   @Column({ type: 'varchar', length: 255 })

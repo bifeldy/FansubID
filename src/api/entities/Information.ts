@@ -1,4 +1,4 @@
-import { Entity, Column, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
 
 import { InformationModel, UserModel } from '../../models/req-res.model';
 
@@ -7,7 +7,7 @@ import { User } from './User';
 @Entity({ name: 'information' })
 export class Information implements InformationModel {
 
-  @Column({ primary: true, type: 'text' })
+  @PrimaryColumn({ type: 'text' })
   id: string;
 
   @Column({ type: 'text' })
