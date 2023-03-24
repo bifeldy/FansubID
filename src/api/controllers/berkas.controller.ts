@@ -274,35 +274,44 @@ export class BerkasController {
             }
             // Upload Video -- Mp4, Mkv, etc
             if (environment.production) {
-              this.ds.sendAttachment(resAttachmentSave, async (chunkParent) => {
-                videoUploadCompleted = true;
-                resAttachmentSave.discord = chunkParent;
-                await this.attachmentRepo.save(resAttachmentSave);
-                if (videoExtractCompleted) {
-                  this.gs.deleteAttachment(files[fIdx].name);
+              let streamable = false;
+              if ('streamable' in req.body) {
+                if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER) {
+                  streamable = (req.body.streamable === true);
                 }
-              });
-              // this.gdrive.gDrive(true).then(async (gdrive) => {
-              //   const dfile = await gdrive.files.create({
-              //     requestBody: {
-              //       name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-              //       parents: [environment.gdriveFolderId],
-              //       mimeType: resAttachmentSave.mime
-              //     },
-              //     media: {
-              //       mimeType: resAttachmentSave.mime,
-              //       body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
-              //     },
-              //     fields: 'id'
-              //   }, { signal: null });
-              //   resAttachmentSave.mime = dfile.data.mimeType;
-              //   resAttachmentSave.google_drive = dfile.data.id;
-              //   await this.attachmentRepo.save(resAttachmentSave);
-              //   videoUploadCompleted = true;
-              //   if (videoExtractCompleted) {
-              //     this.gs.deleteAttachment(files[fIdx].name);
-              //   }
-              // }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+              }
+              if (streamable) {
+                this.gdrive.gDrive(true).then(async (gdrive) => {
+                  const dfile = await gdrive.files.create({
+                    requestBody: {
+                      name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                      parents: [environment.gdriveFolderId],
+                      mimeType: resAttachmentSave.mime
+                    },
+                    media: {
+                      mimeType: resAttachmentSave.mime,
+                      body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
+                    },
+                    fields: 'id'
+                  }, { signal: null });
+                  resAttachmentSave.mime = dfile.data.mimeType;
+                  resAttachmentSave.google_drive = dfile.data.id;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                  videoUploadCompleted = true;
+                  if (videoExtractCompleted) {
+                    this.gs.deleteAttachment(files[fIdx].name);
+                  }
+                }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+              } else {
+                this.ds.sendAttachment(resAttachmentSave, async (chunkParent) => {
+                  videoUploadCompleted = true;
+                  resAttachmentSave.discord = chunkParent;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                  if (videoExtractCompleted) {
+                    this.gs.deleteAttachment(files[fIdx].name);
+                  }
+                });
+              }
             }
           } else {
             await this.attachmentRepo.remove(resAttachmentSave);

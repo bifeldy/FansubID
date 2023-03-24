@@ -8,6 +8,8 @@ import { Uploader, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
 
+import { RoleModel } from '../../../../models/req-res.model';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
@@ -106,6 +108,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   get fileTypeAttachmentAllowed(): string {
     return CONSTANTS.fileTypeAttachmentAllowed.join(', ');
+  }
+
+  get isStreamable(): boolean {
+    const role: RoleModel = this.AS.currentUserSubject?.value?.role;
+    return role === RoleModel.ADMIN || role === RoleModel.MODERATOR || role === RoleModel.FANSUBBER
   }
 
   ngOnInit(): void {
@@ -209,7 +216,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([this.createDownloadLink()]),
-      private: [false, Validators.compose([Validators.required])]
+      private: [false, Validators.compose([Validators.required])],
+      streamable: [false, Validators.compose([Validators.required])]
     });
     this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
       debounceTime(500),
@@ -491,6 +499,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       name: this.fg.value.name,
       description: this.fg.value.description,
       private: this.fg.value.private,
+      streamable: this.fg.value.streamable,
       projectType_id: this.fg.value.projectType_id,
       anime_id: this.fg.value.anime_id,
       dorama_id: this.fg.value.dorama_id,

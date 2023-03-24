@@ -47,6 +47,11 @@
                       Jadikan Private, Akses Hanya Dengan URL
                     </mat-slide-toggle>
                   </div>
+                  <div class="col-12 p-3" *ngIf="isStreamable">
+                    <mat-slide-toggle formControlName="streamable" matTooltip="Akan Kena Limit Kecepatan Server">
+                      Perbolehkan Stream Media Player
+                    </mat-slide-toggle>
+                  </div>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Jenis Proyek</mat-label>
                     <mat-select formControlName="projectType_id" placeholder="Anime / Drama" required>
