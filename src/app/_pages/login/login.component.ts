@@ -118,7 +118,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         },
         error: err => {
           this.gs.log('[LOGIN_FORM_ERROR]', err, 'error');
-          this.loginInfo = err.result.message || err.info;
+          this.loginInfo = err.result?.message || err.info;
           this.submitted = false;
           this.bs.idle();
         }

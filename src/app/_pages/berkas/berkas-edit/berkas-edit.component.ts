@@ -473,7 +473,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.fg.controls['image'].patchValue(null);
         this.fg.controls['image'].markAsPristine();
         this.submitted = false;
-        this.imageErrorText = err.result.message || err.info;
+        this.imageErrorText = err.result?.message || err.info;
       }
     });
   }

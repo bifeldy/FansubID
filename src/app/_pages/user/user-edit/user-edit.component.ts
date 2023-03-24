@@ -188,7 +188,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.fg.controls['image_photo'].patchValue(null);
         this.fg.controls['image_photo'].markAsPristine();
         this.submitted = false;
-        this.imagePhotoErrorText = err.result.message || err.info;
+        this.imagePhotoErrorText = err.result?.message || err.info;
       }
     });
   }
@@ -243,7 +243,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.fg.controls['image_cover'].patchValue(null);
         this.fg.controls['image_cover'].markAsPristine();
         this.submitted = false;
-        this.imageCoverErrorText = err.result.message || err.info;
+        this.imageCoverErrorText = err.result?.message || err.info;
       }
     });
   }

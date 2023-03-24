@@ -178,7 +178,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.submitted = false;
-        this.imageErrorText = err.result.message || err.info;
+        this.imageErrorText = err.result?.message || err.info;
       }
     });
   }
@@ -230,7 +230,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[COVER_ERROR]', err, 'error');
         this.fg.controls['cover'].patchValue(null);
         this.submitted = false;
-        this.coverErrorText = err.result.message || err.info;
+        this.coverErrorText = err.result?.message || err.info;
       }
     });
   }

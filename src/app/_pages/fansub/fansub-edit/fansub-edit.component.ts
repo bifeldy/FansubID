@@ -259,7 +259,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         this.fg.controls['image'].patchValue(null);
         this.fg.controls['image'].markAsPristine();
         this.submitted = false;
-        this.imageErrorText = err.result.message || err.info;
+        this.imageErrorText = err.result?.message || err.info;
       }
     });
   }
@@ -314,7 +314,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
         this.fg.controls['cover'].patchValue(null);
         this.fg.controls['cover'].markAsPristine();
         this.submitted = false;
-        this.coverErrorText = err.result.message || err.info;
+        this.coverErrorText = err.result?.message || err.info;
       }
     });
   }

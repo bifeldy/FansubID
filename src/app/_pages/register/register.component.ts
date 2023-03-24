@@ -129,7 +129,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.submitted = false;
           this.captchaRef.reset();
-          this.registerInfo = err.result.message || err.info;
+          this.registerInfo = err.result?.message || err.info;
           this.usernameUsed = err.result.username;
           this.emailUsed = err.result.email;
         }

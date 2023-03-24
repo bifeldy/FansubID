@@ -222,7 +222,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
       error: err => {
         this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
-        this.imageErrorText = err.result.message || err.info;
+        this.imageErrorText = err.result?.message || err.info;
         this.submitted = false;
       }
     });
