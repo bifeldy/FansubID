@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpEventType } from '@angular/common/http';
-import { forkJoin, Observable, tap } from 'rxjs';
+import { concat, Observable } from 'rxjs';
 
 import { saveAs } from 'file-saver';
 
@@ -36,17 +36,16 @@ export class DownloadManagerService {
       this.attachmentsDownload[attachment.id].download_count = attachment.download_count;
       this.attachmentsDownload[attachment.id].google_drive = attachment.google_drive;
       this.attachmentsDownload[attachment.id].discord = attachment.discord;
-      this.attachmentsDownload[attachment.id].loaded = 0;
-      this.attachmentsDownload[attachment.id].total = 0;
-      this.attachmentsDownload[attachment.id].percentage = 0;
       this.attachmentsDownload[attachment.id].mode = 'indeterminate';
       this.attachmentsDownload[attachment.id].isDownloading = false;
       this.attachmentsDownload[attachment.id].isCompleted = false;
       this.attachmentsDownload[attachment.id].data = null;
       this.attachmentsDownload[attachment.id].handler = null;
-      this.attachmentsDownload[attachment.id].speed = 0;
-      this.attachmentsDownload[attachment.id].previousLoaded = 0;
       this.attachmentsDownload[attachment.id].toast = null;
+      this.attachmentsDownload[attachment.id].totals = 0;
+      this.attachmentsDownload[attachment.id].percentage = 0;
+      this.attachmentsDownload[attachment.id].speed = 0;
+      this.attachmentsDownload[attachment.id].loaded = 0;
     }
     return this.attachmentsDownload[attachment.id];
   }
@@ -59,25 +58,15 @@ export class DownloadManagerService {
     }
   }
 
-  onProgress(attachment, e): void {
-    if (e.loaded) {
-      this.gs.log('[DOWNLOAD_PROGRESS]', e);
+  onProgress(attachment, evt): void {
+    if (evt.loaded) {
+      this.gs.log('[DOWNLOAD_PROGRESS]', evt);
       attachment.mode = 'determinate';
-      attachment.loaded = e.loaded;
-      if ((event as any).total) {
-        attachment.total = e.total;
-        attachment.percentage = Math.round(attachment.loaded / attachment.total * 100);
-        if (attachment.percentage < 100) {
-          attachment.speed = (attachment.loaded - attachment.previousLoaded) / 1000;
-          attachment.previousLoaded = attachment.loaded;
-          if (attachment.speed <= 0) {
-            attachment.speed = 0;
-          }
-        }
-      } else {
-        attachment.percentage = '?';
-        attachment.speed = '?';
-      }
+      const selisih = evt.loaded - attachment.loaded;
+      attachment.totals += selisih;
+      attachment.speed = selisih / 1000;
+      attachment.percentage = Math.round(attachment.totals / attachment.size * 100);
+      attachment.loaded = evt.loaded;
       attachment.toast.toastRef.componentInstance.message = `${attachment.percentage}% @ ${attachment.speed} KB/s`;
     }
   }
@@ -100,12 +89,11 @@ export class DownloadManagerService {
         this.dls.getListDdl(attachmentId).subscribe({
           next: async res => {
             this.gs.log('[DOWNLOAD_LIST_DDL]', res);
-            attachment.mode = 'determinate';
-            const handlers: Observable<any>[] = [];
+            const sortedResults = res.results.sort((a, b) => a.chunk_idx - b.chunk_idx);
             // TODO :: Create Chrome / Firefox Extension
             // r.id -> Send To Server (Download Proxy, Bypass CORS)
             // r.url -> Direct Download, Need Bypass CORS Discord
-            const sortedResults = res.results.sort((a, b) => a.chunk_idx - b.chunk_idx);
+            const handlers: Observable<any>[] = [];
             for (const sr of sortedResults) {
               let handler = null;
               if (directDownload) {
@@ -115,29 +103,26 @@ export class DownloadManagerService {
               }
               handlers.push(handler);
             }
-            attachment.handler = forkJoin(
-              handlers.map(req => {
-                return req.pipe(
-                  tap(e => {
-                    if (e.type === HttpEventType.DownloadProgress) {
-                      this.onProgress(attachment, e);
-                    }
-                    if (e.type === HttpEventType.Response) {
-                      this.gs.log('[DOWNLOAD_COMPLETED]', e);
-                    }
-                  })
-                );
-              })
-            ).subscribe({
-              next: async re => {
-                const chunks: Uint8Array[] = [];
-                for (let i = 0; i < sortedResults.length; i++) {
-                  const partBlob: Blob = re[i].body;
+            const chunks: Uint8Array[] = [];
+            attachment.handler = concat(...handlers).subscribe({
+              next: async evt => {
+                if (evt.type === HttpEventType.DownloadProgress) {
+                  this.onProgress(attachment, evt);
+                }
+                if (evt.type === HttpEventType.Response) {
+                  attachment.loaded = 0;
+                  const partBlob: Blob = evt.body;
                   const partBuff: ArrayBuffer = await partBlob.arrayBuffer();
                   const chunk = new Uint8Array(partBuff);
-                  this.gs.log(`[DOWNLOAD_CHUNK_${i}]`, partBuff.byteLength);
+                  this.gs.log('[DOWNLOAD_CHUNK]', partBuff.byteLength);
                   chunks.push(chunk);
                 }
+              },
+              error: err => {
+                this.gs.log('[DOWNLOAD_ERROR]', err);
+                this.stopFail(attachment);
+              },
+              complete: () => {
                 const fullBuff = Buffer.concat(chunks)
                 const fullBlob = new Blob([fullBuff]);
                 attachment.mode = 'determinate';
@@ -146,10 +131,6 @@ export class DownloadManagerService {
                 attachment.data = fullBlob;
                 this.toast.remove(attachment.toast.toastId);
                 this.saveFileAs(attachmentId);
-              },
-              error: err => {
-                this.gs.log('[DOWNLOAD_ERROR]', err);
-                this.stopFail(attachment);
               }
             });
           },
@@ -160,17 +141,16 @@ export class DownloadManagerService {
         });
       } else {
         attachment.handler = this.dls.downloadLampiran(attachmentId).subscribe({
-          next: e => {
-            this.gs.log('[DOWNLOAD_EVENTS]', e);
-            if (e.type === HttpEventType.DownloadProgress) {
-              this.onProgress(attachment, e);
+          next: evt => {
+            if (evt.type === HttpEventType.DownloadProgress) {
+              this.onProgress(attachment, evt);
             }
-            if (e.type === HttpEventType.Response) {
-              this.gs.log('[DOWNLOAD_COMPLETED]', e);
+            if (evt.type === HttpEventType.Response) {
+              this.gs.log('[DOWNLOAD_COMPLETED]', evt);
               attachment.mode = 'determinate';
               attachment.isDownloading = false;
               attachment.isCompleted = true;
-              attachment.data = e.body;
+              attachment.data = evt.body;
               this.toast.remove(attachment.toast.toastId);
               this.saveFileAs(attachmentId);
             }

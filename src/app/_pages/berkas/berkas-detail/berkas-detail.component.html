@@ -76,7 +76,7 @@
                   <div class="col">
                     <div class="px-3" *ngIf="lampiran.isDownloading && !lampiran.isCompleted">
                       {{ lampiran.percentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }}
-                      {{ lampiran.loaded }} Bytes <br />
+                      {{ lampiran.totals }} Bytes <br />
                       {{ lampiran.percentage }}% @ {{ lampiran.speed }} KB/s
                       <br />
                       <mat-progress-bar color="accent" [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>

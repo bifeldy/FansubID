@@ -115,6 +115,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     return role === RoleModel.ADMIN || role === RoleModel.MODERATOR || role === RoleModel.FANSUBBER
   }
 
+  get isAttachmentUploaded(): boolean {
+    return this.fg.controls['attachment_id'].value !== null;
+  }
+
   ngOnInit(): void {
     this.pi.updatePageMetaData(
       `Berkas - Buat Baru`,

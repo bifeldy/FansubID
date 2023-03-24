@@ -1,5 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpEventType } from '@angular/common/http';
+import { concat, Observable, tap } from 'rxjs';
+
+import { environment } from '../../../../environments/app/environment';
 
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -8,12 +12,10 @@ import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
-import { VjsService } from '../../../_shared/services/vjs.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
-
-import { environment } from '../../../../environments/app/environment';
+import { DdlLampiranService } from '../../../_shared/services/ddl-lampiran.service';
 
 @Component({
   selector: 'app-berkas-detail',
@@ -28,6 +30,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   subsBerkas = null;
   subsParam = null;
   subsDialog = null;
+  subsSubtitlesFonts = null;
 
   subtitles = [];
   fonts = [];
@@ -44,11 +47,11 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService,
-    private vjs: VjsService,
     private as: AuthService,
     private dm: DownloadManagerService,
     private wb: WinboxService,
-    private ss: StatsServerService
+    private ss: StatsServerService,
+    private dls: DdlLampiranService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -75,6 +78,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     this.subsBerkas?.unsubscribe();
     this.subsParam?.unsubscribe();
     this.subsDialog?.unsubscribe();
+    this.subsSubtitlesFonts?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -169,9 +173,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
       this.subsDialog = (await this.ds.openKonfirmasiDialog(
         `Ekstensi CORS Unblock`,
         `
-          Jika Gagal Download, Silahkan Pasang Ekstensi CORS Unblock, Kemudian Nyalakan, Dan Download Ulang.
-          Lalu Saat Setelah Selesai, Dapat Dimatikan Kembali.
-          Keuntungan Menggunakan Ekstensi Ini Yaitu Tanpa Adanya Batasan Kecepatan Server.
+          <br />
+          Jika gagal download, silahkan pasang ekstensi cors unblock, kemudian nyalakan, dan download ulang.
+          Lalu saat setelah selesai, dapat dimatikan kembali.
+          Keuntungan menggunakan ekstensi yaitu tanpa adanya batasan kecepatan server, koneksi langsung.
           <br />
           Chrome ::
           <br />
@@ -185,7 +190,12 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           <a href="https://addons.mozilla.org/en-US/firefox/addon/cors-unblock" target="_blank">
             https://addons.mozilla.org/en-US/firefox/addon/cors-unblock
           </a>
-        `
+          <br />
+          <br />
+          Klik 'Ya', jika sudah ada ekstensi, atau 'Tidak' jika ingin melanjutkan dengan kecepatan terbatas.
+          <br />
+        `,
+        false
       )).afterClosed().subscribe({
         next: re => {
           this.gs.log('[INFO_DIALOG_CLOSED]', re);
@@ -195,7 +205,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             this.dm.startDownload(id);
           } else if (re === false) {
             // r.id -> Send To Server (Download Proxy, Bypass CORS)
-            // this.dm.startDownload(id, false);
+            this.dm.startDownload(id, false);
           }
           this.subsDialog.unsubscribe();
         }
@@ -223,31 +233,50 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   setupVjs(): void {
     if (this.isHaveDDL) {
+      const handlers: Observable<any>[] = [];
+      const subtitleFiles = [];
+      const fontFiles = [];
       if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
-        this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
-          this.subtitles = data;
-          this.checkVjs();
-        });
-      }
-      if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
-        this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
-          this.fonts = data;
-          this.checkVjs();
-        });
-      }
-    }
-  }
-
-  checkVjs(): void {
-    if (this.isHaveDDL) {
-      if ('subtitles_' in this.berkasData.attachment_ && 'fonts_' in this.berkasData.attachment_) {
-        if (
-          this.subtitles.length === this.berkasData.attachment_.subtitles_.length &&
-          this.fonts.length === this.berkasData.attachment_.fonts_.length
-        ) {
-          this.vjsReady = true;
+        for (const s of this.berkasData.attachment_.subtitles_) {
+          const handler = this.dls.downloadLampiran(s.id).pipe(
+            tap(evt => {
+              if (evt.type === HttpEventType.Response) {
+                this.gs.log('[DOWNLOAD_COMPLETED]', evt);
+                subtitleFiles.push(URL.createObjectURL(new Blob([evt.body])));
+              }
+            })
+          );
+          handlers.push(handler);
         }
       }
+      if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
+        for (const f of this.berkasData.attachment_.fonts_) {
+          const handler = this.dls.downloadLampiran(f.id).pipe(
+            tap(evt => {
+              if (evt.type === HttpEventType.Response) {
+                this.gs.log('[DOWNLOAD_COMPLETED]', evt);
+                fontFiles.push(URL.createObjectURL(new Blob([evt.body])));
+              }
+            })
+          );
+          handlers.push(handler);
+        }
+      }
+      this.subsSubtitlesFonts = concat(...handlers).subscribe({
+        next: evt => {
+          if (evt.type === HttpEventType.DownloadProgress) {
+            this.gs.log('[DOWNLOAD_PROGRESS]', evt);
+          }
+        },
+        error: err => {
+          this.gs.log('[DOWNLOAD_ERROR]', err);
+        },
+        complete: () => {
+          this.subtitles = subtitleFiles;
+          this.fonts = fontFiles;
+          this.vjsReady = true;
+        }
+      });
     }
   }
 

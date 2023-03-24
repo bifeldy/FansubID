@@ -302,7 +302,10 @@ export class AppModule {
     mc.apply(RegisterMiddleware).forRoutes({ path:'/register', method: RequestMethod.POST });
     mc.apply(LogoutMiddleware).forRoutes({ path:'/logout', method: RequestMethod.DELETE });
     mc.apply(CacheMiddleware).forRoutes({ path: '*', method: RequestMethod.GET });
-    mc.apply(throttle(CONSTANTS.attachmentSpeedLimiterBps)).forRoutes({ path: '/attachment', method: RequestMethod.GET });
+    mc.apply(throttle(CONSTANTS.attachmentSpeedLimiterBps)).forRoutes(
+      { path: '/attachment', method: RequestMethod.GET },
+      { path: '/ddl-file', method: RequestMethod.GET }
+    );
     mc.apply(
       uploadx.upload({
         path: '/attachment',

@@ -47,8 +47,8 @@
                       Jadikan Private, Akses Hanya Dengan URL
                     </mat-slide-toggle>
                   </div>
-                  <div class="col-12 p-3" *ngIf="isStreamable">
-                    <mat-slide-toggle formControlName="streamable" matTooltip="Akan Kena Limit Kecepatan Server">
+                  <div class="col-12 p-3" *ngIf="isStreamable && isAttachmentUploaded">
+                    <mat-slide-toggle formControlName="streamable" matTooltip="Akan kena limit kecepatan server">
                       Perbolehkan Stream Media Player
                     </mat-slide-toggle>
                   </div>
