@@ -141,41 +141,72 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return this.dm.getAttachmentDownloadFile(this.berkasData.attachment_);
   }
 
+  get ddlVideo(): string {
+    return this.ddlUrlLink(this.berkasData.attachment_.id);
+  }
+
+  get ddlSubtitles(): string {
+    return (this.subtitles.length > 0) ? this.subtitles[0] : '';
+  }
+
+  get ddlFonts(): any[] {
+    return (this.fonts.length > 0) ? this.fonts : [];
+  }
+
+  get isHaveDDL(): boolean {
+    if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
+      return typeof (this.berkasData.attachment_) !== 'string';
+    }
+    return false;
+  }
+
+  get isGDrive(): boolean {
+    return this.isHaveDDL && this.berkasData.attachment_?.google_drive;
+  }
+
+  get isDiscord(): boolean {
+    return this.isHaveDDL && this.berkasData.attachment_?.discord;
+  }
+
   async ddl(id): Promise<void> {
-    this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `Ekstensi CORS Unblock`,
-      `
-        Jika Gagal Download, Silahkan Pasang Ekstensi CORS Unblock, Kemudian Nyalakan, Dan Download Ulang.
-        Lalu Saat Setelah Selesai, Dapat Dimatikan Kembali.
-        Keuntungan Menggunakan Ekstensi Ini Yaitu Tanpa Adanya Batasan Kecepatan Server.
-        <br />
-        Chrome ::
-        <br />
-        <a href="https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino" target="_blank">
-          https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino
-        </a>
-        <br />
-        <br />
-        Firefox ::
-        <br />
-        <a href="https://addons.mozilla.org/en-US/firefox/addon/cors-unblock" target="_blank">
-          https://addons.mozilla.org/en-US/firefox/addon/cors-unblock
-        </a>
-      `
-    )).afterClosed().subscribe({
-      next: re => {
-        this.gs.log('[INFO_DIALOG_CLOSED]', re);
-        // TODO :: Create Chrome / Firefox Extension
-        if (re === true) {
-          // r.url -> Direct Download, Need Bypass CORS Discord
-          this.dm.startDownload(id, true);
-        } else if (re === false) {
-          // r.id -> Send To Server (Download Proxy, Bypass CORS)
-          // this.dm.startDownload(id, false);
+    if (this.isDiscord) {
+      this.subsDialog = (await this.ds.openKonfirmasiDialog(
+        `Ekstensi CORS Unblock`,
+        `
+          Jika Gagal Download, Silahkan Pasang Ekstensi CORS Unblock, Kemudian Nyalakan, Dan Download Ulang.
+          Lalu Saat Setelah Selesai, Dapat Dimatikan Kembali.
+          Keuntungan Menggunakan Ekstensi Ini Yaitu Tanpa Adanya Batasan Kecepatan Server.
+          <br />
+          Chrome ::
+          <br />
+          <a href="https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino" target="_blank">
+            https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino
+          </a>
+          <br />
+          <br />
+          Firefox ::
+          <br />
+          <a href="https://addons.mozilla.org/en-US/firefox/addon/cors-unblock" target="_blank">
+            https://addons.mozilla.org/en-US/firefox/addon/cors-unblock
+          </a>
+        `
+      )).afterClosed().subscribe({
+        next: re => {
+          this.gs.log('[INFO_DIALOG_CLOSED]', re);
+          // TODO :: Create Chrome / Firefox Extension
+          if (re === true) {
+            // r.url -> Direct Download, Need Bypass CORS Discord
+            this.dm.startDownload(id);
+          } else if (re === false) {
+            // r.id -> Send To Server (Download Proxy, Bypass CORS)
+            // this.dm.startDownload(id, false);
+          }
+          this.subsDialog.unsubscribe();
         }
-        this.subsDialog.unsubscribe();
-      }
-    });
+      });
+    } else {
+      this.dm.startDownload(id);
+    }
   }
 
   cancel_dl(id): void {
@@ -194,51 +225,25 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
   }
 
-  get ddlVideo(): string {
-    return this.ddlUrlLink(this.berkasData.attachment_.id);
-  }
-
-  get ddlSubtitles(): string {
-    return (this.subtitles.length > 0) ? this.subtitles[0] : '';
-  }
-
-  get ddlFonts(): any[] {
-    return (this.fonts.length > 0) ? this.fonts : [];
-  }
-
-  get isHaveDDL(): boolean {
-    return typeof (this.berkasData.attachment_) !== 'string';
-  }
-
-  get isGDrive(): boolean {
-    return this.isHaveDDL && this.berkasData.attachment_.google_drive;
-  }
-
-  get isDiscord(): boolean {
-    return this.isHaveDDL && this.berkasData.attachment_.discord;
-  }
-
   setupVjs(): void {
-    if ('attachment_' in this.berkasData && this.berkasData.attachment_) {
-      if (this.isHaveDDL) {
-        if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
-          this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
-            this.subtitles = data;
-            this.checkVjs();
-          });
-        }
-        if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
-          this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
-            this.fonts = data;
-            this.checkVjs();
-          });
-        }
+    if (this.isHaveDDL) {
+      if ('subtitles_' in this.berkasData.attachment_ && this.berkasData.attachment_.subtitles_) {
+        this.vjs.loadSubtitle(this.berkasData.attachment_.subtitles_, (data) => {
+          this.subtitles = data;
+          this.checkVjs();
+        });
+      }
+      if ('fonts_' in this.berkasData.attachment_ && this.berkasData.attachment_.fonts_) {
+        this.vjs.loadFonts(this.berkasData.attachment_.fonts_, (data) => {
+          this.fonts = data;
+          this.checkVjs();
+        });
       }
     }
   }
 
   checkVjs(): void {
-    if (this.berkasData && this.berkasData.attachment_) {
+    if (this.isHaveDDL) {
       if ('subtitles_' in this.berkasData.attachment_ && 'fonts_' in this.berkasData.attachment_) {
         if (
           this.subtitles.length === this.berkasData.attachment_.subtitles_.length &&

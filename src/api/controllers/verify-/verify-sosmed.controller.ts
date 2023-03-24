@@ -149,7 +149,7 @@ export class VerifySosmedController {
             }, res_raw1.status || HttpStatus.BAD_REQUEST);
           }
         }
-        // TODO :: If Other SosMed
+        // TODO :: Other Social Media Platform
       }
       throw new Error('Data Tidak Lengkap!');
     } catch (error) {
