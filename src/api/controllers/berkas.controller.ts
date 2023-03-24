@@ -294,7 +294,6 @@ export class BerkasController {
                     },
                     fields: 'id'
                   }, { signal: null });
-                  resAttachmentSave.mime = dfile.data.mimeType;
                   resAttachmentSave.google_drive = dfile.data.id;
                   await this.attachmentRepo.save(resAttachmentSave);
                   videoUploadCompleted = true;

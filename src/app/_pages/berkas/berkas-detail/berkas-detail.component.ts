@@ -160,10 +160,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  get isGDrive(): boolean {
-    return this.isHaveDDL && this.berkasData.attachment_?.google_drive;
-  }
-
   get isDiscord(): boolean {
     return this.isHaveDDL && this.berkasData.attachment_?.discord;
   }

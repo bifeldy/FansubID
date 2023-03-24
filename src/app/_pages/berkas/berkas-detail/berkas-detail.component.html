@@ -82,13 +82,11 @@
                       <mat-progress-bar color="accent" [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
                     </div>
                   </div>
-                  <div class="col" *ngIf="isGDrive">
+                  <div class="col" *ngIf="isHaveDDL && !isDiscord">
                     <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdl(berkasData.attachment_.id)" style="cursor: pointer;">
                       Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
                     </div>
                   </div>
-                </div>
-                <div class="px-3" *ngIf="isGDrive">
                   <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
                     (click)="standardDdl(s.id)" matTooltip="{{ s.name }}">
                     <mat-icon class="me-1">notes</mat-icon>
@@ -152,12 +150,12 @@
               <div class="col-12">
                 <div class="py-2 px-3">Dapat Digunakan Sebagai Referensi Untuk Pratinjau, Namun Kemungkinan Jenis Huruf Tulisan Gagal Dimuat Sehingga Nantinya Akan Muncul Huruf Dengan Gambar 🔳 Misalnya Kanji, Lalu Juga Memungkinkan Terjadinya Gerakan Patah - Patah Jika Browser Tidak Kuat Untuk Render .ASS Subtitle Dengan Efek Yang Terlalu Banyak.</div>
                 <div class="px-3">
-                  <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isGDrive && !vjsInit && !vjsReady">
+                  <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isHaveDDL && !isDiscord && !vjsInit && !vjsReady">
                     <mat-icon class="me-1">play_arrow</mat-icon>
                     Mulai Streaming Video
                   </button>
-                  <mat-progress-bar color="accent" mode="buffer" *ngIf="isGDrive && vjsInit && !vjsReady"></mat-progress-bar>
-                  <app-vjs-player *ngIf="isGDrive && vjsInit && vjsReady"
+                  <mat-progress-bar color="accent" mode="buffer" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
+                  <app-vjs-player *ngIf="isHaveDDL && vjsInit && vjsReady"
                     [videoUrl]="ddlVideo"
                     [videoType]="lampiran.ext"
                     [subtitleUrl]="ddlSubtitles"
