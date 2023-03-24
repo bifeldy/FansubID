@@ -10,7 +10,7 @@ export class SocialMedia implements SocialMediaModel {
   @PrimaryColumn({ type: 'text' })
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   refresh_token: string;
 
   @PrimaryColumn({ type: 'enum', enum: SosMedModel })

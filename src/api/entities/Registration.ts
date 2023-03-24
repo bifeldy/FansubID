@@ -8,16 +8,16 @@ export class Registration implements RegistrationModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'text', unique: true })
   username: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'text', unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   password: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   nama: string;
 
   @Column({ type: 'text', nullable: true })

@@ -10,7 +10,7 @@ export class News implements NewsModel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   title: string;
 
   @Column({ type: 'text' })

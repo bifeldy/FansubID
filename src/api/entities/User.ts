@@ -12,11 +12,11 @@ export class User implements UserModel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'text', unique: true })
   username: string;
 
   @Exclude()
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'text', unique: true })
   email: string;
 
   @Column({ type: 'text', default: '/assets/img/favicon.png' })
@@ -26,7 +26,7 @@ export class User implements UserModel {
   role: RoleModel;
 
   @Exclude()
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   password: string;
 
   @Column({ type: 'boolean', default: false })

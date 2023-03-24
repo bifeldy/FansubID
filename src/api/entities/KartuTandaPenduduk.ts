@@ -13,10 +13,10 @@ export class KartuTandaPenduduk implements KartuTandaPendudukModel {
   @Column({ type: 'bigint', nullable: true })
   nik: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   nama: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   tempat_lahir: string;
 
   @Exclude()
@@ -31,7 +31,7 @@ export class KartuTandaPenduduk implements KartuTandaPendudukModel {
   golongan_darah: GolonganDarahModel;
 
   @Exclude()
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   alamat: string;
 
   @Exclude()
@@ -43,11 +43,11 @@ export class KartuTandaPenduduk implements KartuTandaPendudukModel {
   rw: number;
 
   @Exclude()
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   kelurahan_desa: string;
 
   @Exclude()
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   kecamatan: string;
 
   @Exclude()
@@ -55,11 +55,11 @@ export class KartuTandaPenduduk implements KartuTandaPendudukModel {
   agama: AgamaModel;
 
   @Exclude()
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   status_perkawinan: string;
 
   @Exclude()
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   pekerjaan: string;
 
   @Exclude()

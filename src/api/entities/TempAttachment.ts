@@ -13,7 +13,7 @@ export class TempAttachment implements TempAttachmentModel {
   @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   ext: string;
   
   @Column({ type: 'int' })

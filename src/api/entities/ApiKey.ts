@@ -10,10 +10,10 @@ export class ApiKey implements ApiKeyModel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'varchar', length: 255, default: '*' })
+  @Column({ type: 'text', default: '*' })
   ip_domain: string;
 
   @Column({ generated: 'uuid', nullable: true, unique: true })

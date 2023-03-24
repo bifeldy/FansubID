@@ -8,13 +8,13 @@ export class Dorama implements DoramaModel {
   @PrimaryColumn({ type: 'int' })
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   slug: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   type: string;
 
   @Column({ type: 'text', default: '/assets/img/favicon.png' })

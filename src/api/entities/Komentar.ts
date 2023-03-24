@@ -13,7 +13,7 @@ export class Komentar implements KomentarModel {
   @Column({ type: 'text' })
   comment: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   path: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

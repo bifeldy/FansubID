@@ -14,7 +14,7 @@ export class Track implements TrackModel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   ip: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

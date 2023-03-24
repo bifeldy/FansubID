@@ -10,13 +10,13 @@ export class Fansub implements FansubModel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   name: string;
 
   @Column({ type: 'text', default: '// No Description' })
   description: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'text', unique: true })
   slug: string;
 
   @Column({ type: 'date' })

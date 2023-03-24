@@ -15,7 +15,7 @@ export class Berkas implements BerkasModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   name: string;
 
   @Column({ type: 'text', nullable: true })

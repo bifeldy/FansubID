@@ -8,7 +8,7 @@ export class ProjectType implements ProjectTypeModel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   name: string;
 
   @Column({ type: 'text', default: '// No Description' })
