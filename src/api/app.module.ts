@@ -33,6 +33,7 @@ import { BannedController } from './controllers/banned.controller';
 import { BerkasController } from './controllers/berkas.controller';
 import { CommentController } from './controllers/comment.controller';
 import { CrawlController } from './controllers/crawl.controller';
+import { DdlFileController } from './controllers/ddl-file.controller';
 import { DoramaController } from './controllers/dorama.controller';
 import { DoramaBerkasController } from './controllers/dorama-/dorama-berkas.controller';
 import { DoramaFansubController } from './controllers/dorama-/dorama-fansub.controller';
@@ -117,6 +118,7 @@ import { ApiKeyService } from './repository/api-key.service';
 import { AttachmentService } from './repository/attachment.service';
 import { BannedService } from './repository/banned.service';
 import { BerkasService } from './repository/berkas.service';
+import { DdlFileService } from './repository/ddl-file';
 import { DoramaService } from './repository/dorama.service';
 import { EdictService } from './repository/edict.service';
 import { FansubService } from './repository/fansub.service';
@@ -168,6 +170,7 @@ import { UserService } from './repository/user.service';
     BerkasController,
     CommentController,
     CrawlController,
+    DdlFileController,
     DoramaController,
     DoramaBerkasController,
     DoramaFansubController,
@@ -260,6 +263,7 @@ import { UserService } from './repository/user.service';
     AttachmentService,
     BannedService,
     BerkasService,
+    DdlFileService,
     DoramaService,
     EdictService,
     FansubService,

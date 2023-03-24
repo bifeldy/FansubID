@@ -20,13 +20,36 @@ export class DdlLampiranService {
   }
 
   downloadLampiran(attachmentId): Observable<any> {
-    return this.api.getData(`/attachment/${attachmentId}?ngsw-bypass=true`, {
+    return this.api.getData(`/attachment/${attachmentId}`, {
       responseType: 'blob',
       observe: 'events',
       reportProgress: true,
       headers: {
         'ngsw-bypass': 'true'
       }
+    });
+  }
+
+  getListDdl(attachmentId): Observable<any> {
+    return this.api.getData(`/attachment/${attachmentId}?ngsw-bypass=true`);
+  }
+
+  downloadDdlProxy(ddlId): Observable<any> {
+    return this.api.getData(`/ddl-file/${ddlId}`, {
+      responseType: 'blob',
+      observe: 'events',
+      reportProgress: true,
+      headers: {
+        'ngsw-bypass': 'true'
+      }
+    });
+  }
+
+  downloadDdlDirect(url): Observable<any> {
+    return this.api.getData(url, {
+      responseType: 'blob',
+      observe: 'events',
+      reportProgress: true
     });
   }
 

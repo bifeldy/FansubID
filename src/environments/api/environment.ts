@@ -5,6 +5,7 @@ import { Attachment } from '../../api/entities/Attachment';
 import { ApiKey } from '../../api/entities/ApiKey';
 import { Banned } from '../../api/entities/Banned';
 import { Berkas } from '../../api/entities/Berkas';
+import { DdlFile } from '../../api/entities/DdlFile';
 import { Dorama } from '../../api/entities/Dorama';
 import { Edict } from '../../api/entities/Edict';
 import { Fansub } from '../../api/entities/Fansub';
@@ -58,6 +59,7 @@ export const environment = {
       ApiKey,
       Banned,
       Berkas,
+      DdlFile,
       Dorama,
       Edict,
       Fansub,
@@ -138,6 +140,7 @@ export const environment = {
   laboratoryRatsRoleId: '479208130534703108',
   discordBotChannelEventId: '790158935045701652',
   discordBotChannelBotId: '426384107795251206',
+  discordBotChannelDdlId: '1087668627718803557',
   discordBotLoginToken: SECRETS().DISCORD_BOT_LOGIN_TOKEN,                        // '',
   nodeJsXhrHeader: {
     Accept: 'application/json',

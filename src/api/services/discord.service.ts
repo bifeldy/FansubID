@@ -11,18 +11,22 @@ import {
   EmbedAuthorData,
   EmbedFooterData,
   GuildMember,
-  PartialGuildMember
+  PartialGuildMember,
+  MessageAttachment
 } from 'discord.js';
 
 // NodeJS Library
+import { createReadStream } from 'node:fs';
 import { URL } from 'node:url';
 
 import { Injectable } from '@nestjs/common';
 import { Equal, In, Not } from 'typeorm';
 
+import { CONSTANTS } from '../../constants';
+
 import { environment } from '../../environments/api/environment';
 
-import { RoleModel, SosMedModel } from '../../models/req-res.model';
+import { AttachmentModel, RoleModel, SosMedModel } from '../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { ConfigService } from './config.service';
@@ -31,6 +35,7 @@ import { GlobalService } from './global.service';
 
 import { FansubMemberService } from '../repository/fansub-member.service';
 import { UserService } from '../repository/user.service';
+import { DdlFileService } from '../repository/ddl-file';
 
 @Injectable()
 export class DiscordService {
@@ -43,7 +48,8 @@ export class DiscordService {
     private cs: CryptoService,
     private gs: GlobalService,
     private userRepo: UserService,
-    private fansubMemberRepo: FansubMemberService
+    private fansubMemberRepo: FansubMemberService,
+    private ddlFileRepo: DdlFileService
   ) {
     if (environment.production) {
       this.startBot();
@@ -88,7 +94,7 @@ export class DiscordService {
         this.gs.log(`[DISCORD_SERVICE-READY] 🎉 ${this.bot.user.username}#${this.bot.user.discriminator} - ${this.bot.user.id} 🎶`);
         this.changeBotNickname();
       } catch (error) {
-        this.gs.log('[DISCORD_SERVICE-FAILED] 🎉', error, 'error')
+        this.gs.log('[DISCORD_SERVICE-FAILED] 🎉', error, 'error');
         this.cfg.github = null;
       }
     });
@@ -107,8 +113,51 @@ export class DiscordService {
         await msg?.crosspost();
       }
     }  catch (error) {
-      this.gs.log('[DISCORD_SERVICE-SEND_NEWS] 🎉', error, 'error')
+      this.gs.log('[DISCORD_SERVICE-SEND_NEWS] 🎉', error, 'error');
     }
+  }
+
+  async sendAttachment(attachment: AttachmentModel, callback, chunkIdx = null): Promise<void> {
+    let currentChunkIdx: number = 0;
+    let chunkParent: string = null;
+    const crs = createReadStream(
+      `${environment.uploadFolder}/${attachment.name}`,
+      {
+        highWaterMark: CONSTANTS.fileSizeAttachmentChunkDiscordLimit
+      }
+    );
+    for await (const c of crs) {
+      this.gs.log('[DISCORD_SERVICE-CHUNK] 🎉', c.length);
+      if (!chunkIdx || chunkIdx === currentChunkIdx) {
+        try {
+          const botDdlChannel = this.bot ? (this.bot.channels.cache.get(environment.discordBotChannelDdlId) as NewsChannel) : null;
+          if (botDdlChannel) {
+            const msg = await botDdlChannel.send({
+              files: [new MessageAttachment(c, `${attachment.name}_${currentChunkIdx}`)]
+            });
+            if (currentChunkIdx === 0) {
+              chunkParent = msg.id;
+            } else if (attachment.discord) {
+              chunkParent = attachment.discord;
+            }
+            const ddlFile = this.ddlFileRepo.new();
+            ddlFile.msg_id = chunkParent;
+            ddlFile.chunk_idx = currentChunkIdx;
+            ddlFile.user_ = attachment.user_;
+            ddlFile.id = msg.attachments.first().id;
+            ddlFile.name = msg.attachments.first().name;
+            ddlFile.url = msg.attachments.first().url;
+            ddlFile.size = msg.attachments.first().size;
+            ddlFile.mime = msg.attachments.first().contentType || 'application/octet-stream';
+            await this.ddlFileRepo.save(ddlFile);
+          }
+        } catch (error) {
+          this.gs.log('[DISCORD_SERVICE-SEND_ATTACHMMENT_ERROR] 🎉', error, 'error');
+        }
+      }
+      currentChunkIdx++;
+    }
+    callback(chunkParent);
   }
 
   createEmbedMessageEmptyRawTemplate(): MessageEmbed {
@@ -163,7 +212,7 @@ export class DiscordService {
         await msg.delete();
       }
     } catch (error) {
-      this.gs.log('[DISCORD_SERVICE-HANDLE_MESSAGE] 🎉', error, 'error')
+      this.gs.log('[DISCORD_SERVICE-HANDLE_MESSAGE] 🎉', error, 'error');
     }
   }
 
@@ -178,7 +227,7 @@ export class DiscordService {
       }
       throw new Error('Github API Error');
     } catch (error) {
-      this.gs.log('[DISCORD_SERVICE-CHANGE_BOT_NICKNAME] 🎉', error, 'error')
+      this.gs.log('[DISCORD_SERVICE-CHANGE_BOT_NICKNAME] 🎉', error, 'error');
     }
   }
 

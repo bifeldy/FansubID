@@ -28,6 +28,9 @@ export class Attachment implements AttachmentModel {
   @Column({ type: 'text', nullable: true })
   google_drive: string;
 
+  @Column({ type: 'text', nullable: true })
+  discord: string;
+
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number | Date;
 

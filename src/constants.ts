@@ -1,10 +1,11 @@
 export const CONSTANTS = {
   apiTagAnime: 'Anime',
   apiTagApiKey: 'API Key',
-  apiTagAttachment: 'Atachment DDL',
+  apiTagAttachment: 'Attachment',
   apiTagBanned: 'Banned',
   apiTagBerkas: 'Berkas',
   apiTagDorama: 'Dorama',
+  apiTagDdlFile: 'DDL File',
   apiTagFansub: 'Fansub',
   apiTagNews: 'News',
   apiTagNihongo: 'Nihongo',
@@ -26,8 +27,9 @@ export const CONSTANTS = {
     'video/x-matroska',
     'video/mp4'
   ],
-  fileSizeAttachmentChunkLimit: 96 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
-  fileSizeAttachmentTotalLimit: 512 * 1000 * 1000, // Max Upload Limits -- < 512 MB Streamable
+  fileSizeAttachmentChunkCloudflareLimit: 64 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
+  fileSizeAttachmentChunkDiscordLimit: 8 * 1000 * 1000, // Discord -- Without Nitro Is 8 MB ~ T.T
+  fileSizeAttachmentTotalLimit: 256 * 1000 * 1000, // Max Upload Limits -- < 256 MB Streamable
   fileSizeImageLimit: 256 * 1000, // 256 KB
   jwtAlgorithm: 'HS512',
   jwtExpiredIn: 24 * 60 * 60, // 1 Day

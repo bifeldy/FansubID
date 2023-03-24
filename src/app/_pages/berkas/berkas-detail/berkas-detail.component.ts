@@ -11,6 +11,7 @@ import { DownloadManagerService } from '../../../_shared/services/download-manag
 import { VjsService } from '../../../_shared/services/vjs.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 import { environment } from '../../../../environments/app/environment';
 
@@ -26,6 +27,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   subsBerkas = null;
   subsParam = null;
+  subsDialog = null;
 
   subtitles = [];
   fonts = [];
@@ -38,6 +40,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private bs: BusyService,
+    private ds: DialogService,
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService,
@@ -71,6 +74,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsBerkas?.unsubscribe();
     this.subsParam?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -137,8 +141,41 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return this.dm.getAttachmentDownloadFile(this.berkasData.attachment_);
   }
 
-  ddl(id): void {
-    this.dm.startDownload(id);
+  async ddl(id): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Ekstensi CORS Unblock`,
+      `
+        Jika Gagal Download, Silahkan Pasang Ekstensi CORS Unblock, Kemudian Nyalakan, Dan Download Ulang.
+        Lalu Saat Setelah Selesai, Dapat Dimatikan Kembali.
+        Keuntungan Menggunakan Ekstensi Ini Yaitu Tanpa Adanya Batasan Kecepatan Server.
+        <br />
+        Chrome ::
+        <br />
+        <a href="https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino" target="_blank">
+          https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino
+        </a>
+        <br />
+        <br />
+        Firefox ::
+        <br />
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/cors-unblock" target="_blank">
+          https://addons.mozilla.org/en-US/firefox/addon/cors-unblock
+        </a>
+      `
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        // TODO :: Create Chrome / Firefox Extension
+        if (re === true) {
+          // r.url -> Direct Download, Need Bypass CORS Discord
+          this.dm.startDownload(id, true);
+        } else if (re === false) {
+          // r.id -> Send To Server (Download Proxy, Bypass CORS)
+          // this.dm.startDownload(id, false);
+        }
+        this.subsDialog.unsubscribe();
+      }
+    });
   }
 
   cancel_dl(id): void {
@@ -171,6 +208,14 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   get isHaveDDL(): boolean {
     return typeof (this.berkasData.attachment_) !== 'string';
+  }
+
+  get isGDrive(): boolean {
+    return this.isHaveDDL && this.berkasData.attachment_.google_drive;
+  }
+
+  get isDiscord(): boolean {
+    return this.isHaveDDL && this.berkasData.attachment_.discord;
   }
 
   setupVjs(): void {

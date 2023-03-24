@@ -67,8 +67,8 @@ export async function app(): Promise<INestApplication> {
   }));
   nestApp.use(compression());
   nestApp.use(cookieParser());
-  nestApp.use(json({ limit: '512mb' }));
-  nestApp.use(urlencoded({ extended: false, limit: '512mb' }));
+  nestApp.use(json({ limit: '128mb' }));
+  nestApp.use(urlencoded({ extended: false, limit: '128mb' }));
   nestApp.enableCors(aks.getCorsOptions());
   nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
   nestApp.use(reqResEvent);

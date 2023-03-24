@@ -87,7 +87,7 @@ import { environment } from '../environments/app/environment';
       retryConfig: {
         maxAttempts: 3
       },
-      maxChunkSize: CONSTANTS.fileSizeAttachmentChunkLimit
+      maxChunkSize: CONSTANTS.fileSizeAttachmentChunkCloudflareLimit
     })
   ],
   providers: [

@@ -42,7 +42,7 @@ export class MailWebhookController {
       {
         dest: environment.uploadFolder,
         limits: {
-          fileSize: CONSTANTS.fileSizeAttachmentChunkLimit
+          fileSize: CONSTANTS.fileSizeAttachmentChunkCloudflareLimit
         }
       }
     )

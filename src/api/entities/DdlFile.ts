@@ -1,26 +1,35 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
 
-import { TempAttachmentModel, UserModel } from '../../models/req-res.model';
+import { DdlFileModel, UserModel } from '../../models/req-res.model';
 
 import { User } from './User';
 
-@Entity({ name: 'temp_attachment' })
-export class TempAttachment implements TempAttachmentModel {
+@Entity({ name: 'ddl_file' })
+export class DdlFile implements DdlFileModel {
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('text')
   id: string;
 
   @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  ext: string;
-  
+  @Column({ type: 'text' })
+  url: string;
+
   @Column({ type: 'int' })
   size: number;
 
   @Column({ type: 'text', nullable: true })
   mime: string;
+
+  @Column({ type: 'int', default: 0 })
+  download_count: number;
+
+  @Column({ type: 'text' })
+  msg_id: string;
+
+  @Column({ type: 'int' })
+  chunk_idx: number;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number | Date;

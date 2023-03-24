@@ -160,6 +160,7 @@ export interface AttachmentModel {
   mime?: string;
   download_count?: number;
   google_drive?: string;
+  discord?: string;
   created_at?: number | Date;
   updated_at?: number | Date;
   user_?: UserModel;
@@ -427,7 +428,6 @@ export interface TempAttachmentModel {
   ext?: string;
   size?: number;
   mime?: string;
-  download_count?: number;
   created_at?: number | Date;
   updated_at?: number | Date;
   user_?: UserModel;
@@ -438,4 +438,18 @@ export interface TaskCronJobModel {
   last_date?: number | Date;
   next_date?: number | Date;
   running?: boolean;
-} 
+}
+
+export interface DdlFileModel {
+  id?: string;
+  name?: string;
+  url?: string;
+  size?: number;
+  mime?: string;
+  download_count: number;
+  msg_id?: string;
+  chunk_idx?: number;
+  created_at?: number | Date;
+  updated_at?: number | Date;
+  user_?: UserModel;
+}

@@ -20,6 +20,7 @@ import { VerifiedOnly } from '../decorators/verified.decorator';
 
 import { AttachmentService } from '../repository/attachment.service';
 import { TempAttachmentService } from '../repository/temp-attachment.service';
+import { DdlFileService } from '../repository/ddl-file';
 
 import { GdriveService } from '../services/gdrive.service';
 import { GlobalService } from '../services/global.service';
@@ -32,6 +33,7 @@ export class AttachmentController {
     private attachmentRepo: AttachmentService,
     private gdrive: GdriveService,
     private gs: GlobalService,
+    private ddlFileRepo: DdlFileService,
     private tempAttachmentRepo: TempAttachmentService
   ) {
     //
@@ -73,7 +75,7 @@ export class AttachmentController {
         }
       }
       return {
-        info: `😅 200 - Temp Attachment API :: List All 🤣`,
+        info: `😅 200 - Attachment API :: List All 🤣`,
         count,
         pages: Math.ceil(count / (queryRow ? queryRow : 10)),
         results: attachments
@@ -81,7 +83,7 @@ export class AttachmentController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: '🙄 400 - Temp Attachment API :: Gagal Mendapatkan All Lampiran 😪',
+        info: '🙄 400 - Attachment API :: Gagal Mendapatkan All Lampiran 😪',
         result: {
           message: 'Data Tidak Lengkap!'
         }
@@ -111,7 +113,7 @@ export class AttachmentController {
           delete resAttachmentSave.user_.updated_at;
         }
         this.sr.addTimeout(
-          `${CONSTANTS.timeoutDeleteTempAttachmentKey}-${new Date().getTime()}`,
+          `${CONSTANTS.timeoutDeleteTempAttachmentKey}@${resAttachmentSave.id}`,
           setTimeout(async () => {
             try {
               const attachmentToBeDeleted = await this.tempAttachmentRepo.findOneOrFail({
@@ -136,7 +138,7 @@ export class AttachmentController {
       this.gs.deleteAttachment(file.id);
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: '🙄 400 - Temp Attachment API :: Gagal Mengunggah Lampiran 😪',
+        info: '🙄 400 - Attachment API :: Gagal Mengunggah Lampiran 😪',
         result: {
           message: 'Data Tidak Lengkap!'
         }
@@ -157,7 +159,36 @@ export class AttachmentController {
           { id: Equal(req.params['id']) }
         ]
       });
-      if (attachment.google_drive) {
+      if (attachment.discord) {
+        const [ddlFiles, count] = await this.ddlFileRepo.findAndCount({
+          where: [
+            { msg_id: Equal(attachment.discord) }
+          ],
+          order: {
+            chunk_idx: 'ASC'
+          },
+          relations: ['user_']
+        });
+        for (const ddlFile of ddlFiles) {
+          if ('user_' in ddlFile && ddlFile.user_) {
+            delete ddlFile.user_.created_at;
+            delete ddlFile.user_.updated_at;
+          }
+        }
+        const body: any = {
+          info: `😅 200 - Attachment API :: DDL List 🤣`,
+          results: ddlFiles,
+          count,
+          pages: 1
+        };
+        res.status(HttpStatus.OK);
+        if (res.locals['xml']) {
+          res.set('Content-Type', 'application/xml');
+          res.send(this.gs.OBJ2XML(body));
+        } else {
+          res.json(body);
+        }
+      } else if (attachment.google_drive) {
         const gdrive = await this.gdrive.gDrive();
         const dfile = await gdrive.files.get(
           {
@@ -174,14 +205,7 @@ export class AttachmentController {
           }
         );
         res.writeHead(dfile.status, dfile.headers);
-        res.on('pipe', src => {
-          this.gs.log('[RES-PIPE_FLOW] 💦', src.readableFlowing);
-        }).on('unpipe', src => {
-          this.gs.log('[RES-UNPIPE_FLOW] 💦', src.readableFlowing);
-        });
-        dfile.data.on('data', chunk => {
-          this.gs.log('[DRIVE-DATA_FLOW] 💦', chunk.length);
-        }).on('error', e => {
+        dfile.data.on('error', e => {
           this.gs.log('[DRIVE-ERROR] 💦', e, 'error');
         }).on('end', async () => {
           attachment.download_count++;
@@ -208,7 +232,7 @@ export class AttachmentController {
       }
     } catch (error) {
       const body: any = {
-        info: `🙄 404 - Temp Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
+        info: `🙄 404 - Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }
@@ -242,13 +266,13 @@ export class AttachmentController {
         delete deletedAttachment.user_.updated_at;
       }
       return {
-        info: `😅 202 - Temp Attachment API :: Berhasil Menghapus Lampiran ${req.params['id']} 🤣`,
+        info: `😅 202 - Attachment API :: Berhasil Menghapus Lampiran ${req.params['id']} 🤣`,
         result: deletedAttachment
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 404 - Temp Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
+        info: `🙄 404 - Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }

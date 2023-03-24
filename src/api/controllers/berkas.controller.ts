@@ -3,6 +3,7 @@ import { writeFile, createReadStream, readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { Request, Response } from 'express';
 import { Equal, ILike, In } from 'typeorm';
 
@@ -33,6 +34,7 @@ import { SocketIoService } from '../services/socket-io.service';
 export class BerkasController {
 
   constructor(
+    private sr: SchedulerRegistry,
     private animeRepo: AnimeService,
     private attachmentRepo: AttachmentService,
     private berkasRepo: BerkasService,
@@ -192,6 +194,7 @@ export class BerkasController {
         berkas.project_type_ = project;
         berkas.user_ = user;
         if ('attachment_id' in req.body) {
+          this.sr.deleteTimeout(`${CONSTANTS.timeoutDeleteTempAttachmentKey}@${req.body.attachment_id}`);
           const tempAttachment = await this.tempAttachmentRepo.findOneOrFail({
             relations: ['user_'],
             where: [
@@ -271,27 +274,35 @@ export class BerkasController {
             }
             // Upload Video -- Mp4, Mkv, etc
             if (environment.production) {
-              this.gdrive.gDrive(true).then(async (gdrive) => {
-                const dfile = await gdrive.files.create({
-                  requestBody: {
-                    name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-                    parents: [environment.gdriveFolderId],
-                    mimeType: resAttachmentSave.mime
-                  },
-                  media: {
-                    mimeType: resAttachmentSave.mime,
-                    body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
-                  },
-                  fields: 'id'
-                }, { signal: null });
-                resAttachmentSave.mime = dfile.data.mimeType;
-                resAttachmentSave.google_drive = dfile.data.id;
-                await this.attachmentRepo.save(resAttachmentSave);
+              this.ds.sendAttachment(resAttachmentSave, async (chunkParent) => {
                 videoUploadCompleted = true;
+                resAttachmentSave.discord = chunkParent;
+                await this.attachmentRepo.save(resAttachmentSave);
                 if (videoExtractCompleted) {
                   this.gs.deleteAttachment(files[fIdx].name);
                 }
-              }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+              });
+              // this.gdrive.gDrive(true).then(async (gdrive) => {
+              //   const dfile = await gdrive.files.create({
+              //     requestBody: {
+              //       name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+              //       parents: [environment.gdriveFolderId],
+              //       mimeType: resAttachmentSave.mime
+              //     },
+              //     media: {
+              //       mimeType: resAttachmentSave.mime,
+              //       body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
+              //     },
+              //     fields: 'id'
+              //   }, { signal: null });
+              //   resAttachmentSave.mime = dfile.data.mimeType;
+              //   resAttachmentSave.google_drive = dfile.data.id;
+              //   await this.attachmentRepo.save(resAttachmentSave);
+              //   videoUploadCompleted = true;
+              //   if (videoExtractCompleted) {
+              //     this.gs.deleteAttachment(files[fIdx].name);
+              //   }
+              // }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
             }
           } else {
             await this.attachmentRepo.remove(resAttachmentSave);
@@ -316,7 +327,6 @@ export class BerkasController {
           }
         }
         if ('attachment_' in resFileSave && resFileSave.attachment_) {
-          delete resFileSave.attachment_.google_drive;
           delete resFileSave.attachment_.user_;
           delete resFileSave.attachment_.created_at;
           delete resFileSave.attachment_.updated_at;
@@ -349,7 +359,7 @@ export class BerkasController {
               .addField('Fansub', fansubEmbedData.join(', '), false)
               .addFields(
                 { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
-                { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
+                { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
                 { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
               )
               .setImage(resFileSave.image_url.startsWith('/') ? environment.baseUrl + resFileSave.image_url : resFileSave.image_url)
@@ -426,7 +436,6 @@ export class BerkasController {
           }
         } else {
           if ('attachment_' in file && file.attachment_) {
-            delete file.attachment_.google_drive;
             delete file.attachment_.created_at;
             delete file.attachment_.updated_at;
             const subtitles = await this.attachmentRepo.find({
@@ -447,7 +456,6 @@ export class BerkasController {
               relations: ['parent_attachment_']
             });
             for (const s of subtitles) {
-              delete s.google_drive;
               delete s.created_at;
               delete s.updated_at;
               delete s.parent_attachment_;
@@ -471,7 +479,6 @@ export class BerkasController {
               relations: ['parent_attachment_']
             });
             for (const f of fonts) {
-              delete f.google_drive;
               delete f.created_at;
               delete f.updated_at;
               delete f.parent_attachment_;
@@ -622,7 +629,7 @@ export class BerkasController {
                 .addField('Fansub', fansubEmbedData.join(', '), false)
                 .addFields(
                   { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
-                  { name: 'Ddl/Stream', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
+                  { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
                   { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
                 )
                 .setImage(resFileSave.image_url.startsWith('/') ? environment.baseUrl + resFileSave.image_url : resFileSave.image_url)
