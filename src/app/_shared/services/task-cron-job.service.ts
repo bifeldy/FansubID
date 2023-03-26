@@ -26,7 +26,7 @@ export class TaskCronJobService {
   }
 
   toggleOnOffTaskCronJob(tcrId): Observable<JsonResponse<TaskCronJobModel>> {
-    return this.api.putData(`/task-cron-job/${tcrId}?ngsw-bypass=true`);
+    return this.api.putData(`/task-cron-job/${tcrId}`);
   }
 
 }

@@ -58,6 +58,9 @@
       <div class="row" *ngIf="cronJobs.length > 0">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
+            <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getAllTaskCronJobs()">
+              Refresh
+            </span>
             <b class="text-bifeldy">Cron & Task Scheduler</b>
           </h2>
         </div>
