@@ -173,27 +173,38 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
       this.subsDialog = (await this.ds.openKonfirmasiDialog(
         `Ekstensi CORS Unblock`,
         `
-          <br />
-          Jika gagal download, silahkan pasang ekstensi cors unblock, kemudian nyalakan, dan download ulang.
-          Lalu saat setelah selesai, dapat dimatikan kembali.
-          Keuntungan menggunakan ekstensi yaitu tanpa adanya batasan kecepatan server, koneksi langsung.
-          <br />
-          Chrome ::
-          <br />
-          <a href="https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino" target="_blank">
-            https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino
-          </a>
-          <br />
-          <br />
-          Firefox ::
-          <br />
-          <a href="https://addons.mozilla.org/en-US/firefox/addon/cors-unblock" target="_blank">
-            https://addons.mozilla.org/en-US/firefox/addon/cors-unblock
-          </a>
-          <br />
-          <br />
-          Klik 'Ya', jika sudah ada ekstensi, atau 'Tidak' jika ingin melanjutkan dengan kecepatan terbatas.
-          <br />
+          <div class="col-12 text-center mb-3">
+            <img src="/assets/img/ddl-ext.png" class="w-50" />
+          </div>
+          <p>
+            Jika gagal download, silahkan pasang ekstensi CORS Unblock, kemudian nyalakan (logo icon berwarna menyala), dan download ulang berkasnya.
+            Lalu saat setelah selesai, dapat dimatikan kembali (tidak wajib sih, hanya saja nanti takutnya mengganggu saat browsing).
+            Keuntungan menggunakan ekstensi yaitu tanpa adanya batasan kecepatan server, yakni koneksi langsung.
+          </p>
+          <p>
+            Chrome ::
+            <br />
+            <a href="https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino" target="_blank">
+              https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino
+            </a>
+          </p>
+          <p>
+            Edge ::
+            <br />
+            <a href="https://microsoftedge.microsoft.com/addons/detail/cors-unblock/hkjklmhkbkdhlgnnfbbcihcajofmjgbh" target="_blank">
+              https://microsoftedge.microsoft.com/addons/detail/cors-unblock/hkjklmhkbkdhlgnnfbbcihcajofmjgbh
+            </a>
+          </p>
+          <p>
+            Firefox ::
+            <br />
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/cors-unblock" target="_blank">
+              https://addons.mozilla.org/en-US/firefox/addon/cors-unblock
+            </a>
+          </p>
+          <p>
+            Klik 'Ya', jika sudah ada ekstensi, atau 'Tidak' jika ingin melanjutkan dengan kecepatan terbatas.
+          </p>
         `,
         false
       )).afterClosed().subscribe({
