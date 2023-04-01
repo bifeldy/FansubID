@@ -119,7 +119,10 @@ export class FansubController {
           const filteredUrls = [];
           for (const u of req.body.urls) {
             if ('url' in u && 'name' in u && u.url && u.name) {
-              filteredUrls.push(u);
+              filteredUrls.push({
+                url: u.url,
+                name: u.name
+              });
             }
           }
           fansub.urls = JSON.stringify(filteredUrls);
@@ -326,7 +329,7 @@ export class FansubController {
             fansub.rss_feed = rssFeed;
           }
         }
-        if ('tags' in req.body) {
+        if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
           const filteredTagsUnique = [...new Set(req.body.tags)];
           fansub.tags = JSON.stringify(filteredTagsUnique);
         }
@@ -334,7 +337,10 @@ export class FansubController {
           const filteredUrls = [];
           for (const u of req.body.urls) {
             if ('url' in u && 'name' in u && u.url && u.name) {
-              filteredUrls.push(u);
+              filteredUrls.push({
+                url: u.url,
+                name: u.name
+              });
             }
           }
           fansub.urls = JSON.stringify(filteredUrls);

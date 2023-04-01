@@ -148,7 +148,10 @@ export class BerkasController {
         const filteredUrls = [];
         for (const u of req.body.download_url) {
           if ('url' in u && 'name' in u && u.url && u.name) {
-            filteredUrls.push(u);
+            filteredUrls.push({
+              url: u.url,
+              name: u.name
+            });
           }
         }
         berkas.name = req.body.name;
@@ -567,7 +570,10 @@ export class BerkasController {
             const filteredUrls = [];
             for (const u of req.body.download_url) {
               if ('url' in u && 'name' in u && u.url && u.name) {
-                filteredUrls.push(u);
+                filteredUrls.push({
+                  url: u.url,
+                  name: u.name
+                });
               }
             }
             file.download_url = JSON.stringify(filteredUrls);

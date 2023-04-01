@@ -201,7 +201,7 @@ export class NewsController {
           if ('image' in req.body) {
             news.image_url = req.body.image;
           }
-          if ('tags' in req.body) {
+          if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
             const filteredTagsUnique = [...new Set(req.body.tags)];
             news.tags = JSON.stringify(filteredTagsUnique);
           }

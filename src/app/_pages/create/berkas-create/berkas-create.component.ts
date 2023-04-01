@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -207,6 +207,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     });
   }
 
+  hasRequiredField(abstractControl: AbstractControl, controlName: string): boolean {
+    return abstractControl.get(controlName).hasValidator(Validators.required);
+  }
+
   initForm(): void {
     this.fg = this.fb.group({
       name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
@@ -219,10 +223,13 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       fansub_list: this.fb.array([this.createFansub()]),
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      download_url: this.fb.array([this.createDownloadLink()]),
+      download_url: this.fb.array([]),
       private: [false, Validators.compose([Validators.required])],
       streamable: [false, Validators.compose([Validators.required])]
     });
+    if (!this.as.currentUserSubject?.value?.verified) {
+      this.addDownloadLink();
+    }
     this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -313,10 +320,15 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   createDownloadLink(): any {
-    return this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      url: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexUrl)])]
+    const fbGroup = this.fb.group({
+      name: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      url: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
+    if (!this.as.currentUserSubject?.value?.verified) {
+      fbGroup.controls['name'].addValidators([Validators.required]);
+      fbGroup.controls['url'].addValidators([Validators.required]);
+    }
+    return fbGroup;
   }
 
   removeDownloadLink(i: number): void {

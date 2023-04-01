@@ -217,9 +217,9 @@
                     <div class="row" [formGroupName]="i" matTooltip="Silahkan Isi Alamat Website Kamu Jika Ingin Mendapatkan Traffic Pengunjung">
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'">
                         <mat-label>Nama Website</mat-label>
-                        <input matInput formControlName="name" placeholder="Halaman Web" required />
-                        <mat-icon matSuffix *ngIf="dl.get('name').value || i === 0">web</mat-icon>
-                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && i > 0">
+                        <input matInput formControlName="name" placeholder="Google Drive" [required]="hasRequiredField(dl, 'name')" />
+                        <mat-icon matSuffix *ngIf="dl.get('name').value || (i === 0 && hasRequiredField(dl, 'name'))">web</mat-icon>
+                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && (i > 0 || !hasRequiredField(dl, 'name'))">
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
@@ -228,10 +228,10 @@
                         </mat-error>
                       </mat-form-field>
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
-                        <mat-label>Tautan Luar</mat-label>
-                        <input matInput formControlName="url" placeholder="https://webshit.saya.com/01/02/halaman-post-download.html" required />
-                        <mat-icon matSuffix *ngIf="dl.get('url').value || i === 0">link</mat-icon>
-                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && i > 0">
+                        <mat-label>Tautan Link</mat-label>
+                        <input matInput formControlName="url" placeholder="https://webshit.saya.com/01/02/halaman-post-download.html" [required]="hasRequiredField(dl, 'url')" />
+                        <mat-icon matSuffix *ngIf="dl.get('url').value || (i === 0 && hasRequiredField(dl, 'url'))">link</mat-icon>
+                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && (i > 0 || !hasRequiredField(dl, 'url'))">
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
@@ -249,7 +249,7 @@
                   <div class="col pb-3">
                     <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="addDownloadLink()">
                       <mat-icon class="me-1">add</mat-icon>
-                      Tambah URL
+                      Tambah URL Eksternal
                     </button>
                   </div>
                 </div>
