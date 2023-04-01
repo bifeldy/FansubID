@@ -117,7 +117,7 @@ export class DiscordService {
     }
   }
 
-  async sendAttachment(attachment: AttachmentModel, callback, chunkIdx = null): Promise<void> {
+  async sendAttachment(attachment: AttachmentModel, chunkIdx = null): Promise<string> {
     let currentChunkIdx: number = 0;
     let chunkParent: string = null;
     const crs = createReadStream(
@@ -157,7 +157,7 @@ export class DiscordService {
       }
       currentChunkIdx++;
     }
-    callback(chunkParent);
+    return chunkParent;
   }
 
   createEmbedMessageEmptyRawTemplate(): MessageEmbed {

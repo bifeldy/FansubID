@@ -73,7 +73,7 @@
                 <mat-hint align="end">Muncul Setiap Halaman Di Refresh</mat-hint>
                 <mat-error>
                   <div *ngIf="fg.get('deadline').hasError('matDatetimePickerParse')">Tanggal Tidak Valid</div>
-                  <div *ngIf="fg.get('deadline').hasError('matDatetimePickerMax')">Paling Lama 7 Hari Mendatang</div>
+                  <div *ngIf="fg.get('deadline').hasError('matDatetimePickerMax')">Paling Lama {{ maxNotificationDays }} Hari Mendatang</div>
                   <div *ngIf="fg.get('deadline').hasError('matDatetimePickerMin')">Paling Cepat Detik Ini Sekarang</div>
                   <div *ngIf="fg.get('deadline').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>

@@ -72,6 +72,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.fg.controls;
   }
 
+  get maxRememberMeDays(): number {
+    return CONSTANTS.timeLoginRememberMe / 24 / 60 / 60;
+  }
+
   initForm(): void {
     this.fg = this.fb.group({
       userNameOrEmail: [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],

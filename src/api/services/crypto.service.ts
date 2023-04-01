@@ -75,7 +75,7 @@ export class CryptoService {
     }
   }
 
-  jwtEncrypt(data, expTimeSecond = 3 * 60): string {
+  jwtEncrypt(data, expTimeSecond = CONSTANTS.timeJwtEncryption): string {
     return this.credentialEncode(data, false, expTimeSecond);
   }
   

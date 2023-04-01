@@ -62,6 +62,10 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
     }
   }
 
+  get maxNotificationDays(): number {
+    return CONSTANTS.timeMaxDaysNotification / 24 / 60 / 60 / 1000;
+  }
+
   ngOnDestroy(): void {
     this.subsNotifCreate?.unsubscribe();
     this.subsNotifGet?.unsubscribe();

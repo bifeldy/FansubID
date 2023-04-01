@@ -210,13 +210,9 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
       )).afterClosed().subscribe({
         next: re => {
           this.gs.log('[INFO_DIALOG_CLOSED]', re);
-          // TODO :: Create Chrome / Firefox Extension
-          if (re === true) {
-            // r.url -> Direct Download, Need Bypass CORS Discord
-            this.dm.startDownload(id);
-          } else if (re === false) {
-            // r.id -> Send To Server (Download Proxy, Bypass CORS)
-            this.dm.startDownload(id, false);
+          // TODO :: Create My Own Browser Extension For Bypassing CORS (?)
+          if (re !== undefined) {
+            this.dm.startDownload(id, re);
           }
           this.subsDialog.unsubscribe();
         }

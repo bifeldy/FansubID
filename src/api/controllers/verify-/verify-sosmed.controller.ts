@@ -6,6 +6,8 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import { Equal } from 'typeorm';
 import { Request, Response } from 'express';
 
+import { CONSTANTS } from '../../../constants';
+
 import { environment } from '../../../environments/api/environment';
 
 import { RoleModel, SosMedModel, UserModel } from '../../../models/req-res.model';
@@ -107,7 +109,7 @@ export class VerifySosmedController {
                 return {
                   info: `😅 201 - Discord API :: Masuk & Verify 🤣`,
                   result: {
-                    title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam 3 Menit! #🚮-bot-spam`,
+                    title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam ${CONSTANTS.timeJwtEncryption / 60} Menit! #🚮-bot-spam`,
                     message: '~verify DISCORD ' + this.cs.jwtEncrypt({
                       discord: {
                         id: res_json2.id,

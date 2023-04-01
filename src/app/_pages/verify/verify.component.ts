@@ -128,7 +128,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
           if (sosmedApp.toUpperCase() === SosMedModel.DISCORD) {
             this.openVerifyDiscordUrl();
           }
-          // TODO :: Other SOcial Media Platform
+          // TODO :: Other Social Media Platform
         }
         this.subsDialog.unsubscribe();
       }

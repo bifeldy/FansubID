@@ -31,10 +31,10 @@ export class AppController {
     return {
       url: `
         https://discord.com/api/oauth2/authorize
-          ?redirect_uri=${encodeURIComponent(environment.baseUrl)}%2Fverify%3Fapp%3Ddiscord
+          ?redirect_uri=${encodeURIComponent(`${environment.baseUrl}/verify?app=discord`)}
           &client_id=${environment.discordClientId}
           &response_type=code
-          &scope=identify%20email
+          &scope=${encodeURIComponent('identify email')}
       `.replace(/\s+/g, '').trim(),
       statusCode: 301
     };
@@ -56,7 +56,7 @@ export class AppController {
       }
       throw new Error('Lampiran Tidak Ditemukan!');
     } catch (error) {
-      return res.download(`${environment.viewFolder}/assets/img/backdrop-null.png`, 'backdrop-null.png', async (e) => {
+      return res.download(`${environment.viewFolder}/assets/img/backdrop/null.png`, 'null.png', async (e) => {
         if (e) {
           this.gs.log('[RES_DOWNLOAD_IMAGE_BACKDROP-ERROR] 🔻', e, 'error');
         }

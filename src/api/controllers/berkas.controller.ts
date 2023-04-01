@@ -305,14 +305,14 @@ export class BerkasController {
                   }
                 }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
               } else {
-                this.ds.sendAttachment(resAttachmentSave, async (chunkParent) => {
+                this.ds.sendAttachment(resAttachmentSave).then(async (chunkParent) => {
                   videoUploadCompleted = true;
                   resAttachmentSave.discord = chunkParent;
                   await this.attachmentRepo.save(resAttachmentSave);
                   if (videoExtractCompleted) {
                     this.gs.deleteAttachment(files[fIdx].name);
                   }
-                });
+                }).catch(e => this.gs.log('[DISCORD-ERROR] 💽', e, 'error'));
               }
             }
           } else {

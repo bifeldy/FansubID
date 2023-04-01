@@ -129,7 +129,7 @@ export class AttachmentController {
           }, CONSTANTS.timeoutDeleteTempAttachmentTime)
         );
         return {
-          info: `😅 201 - Temp Attachment API :: Harap Lengkapi Data Berkas Dalam 3 Menit 🤣`,
+          info: `😅 201 - Temp Attachment API :: Harap Lengkapi Data Berkas Dalam ${CONSTANTS.timeoutDeleteTempAttachmentTime / 60 / 1000} Menit 🤣`,
           result: resAttachmentSave
         };
       }
