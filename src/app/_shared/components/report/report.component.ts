@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ChartType, ChartOptions } from 'chart.js';
@@ -19,9 +19,7 @@ import { BusyService } from '../../services/busy.service';
 })
 export class ReportComponent implements OnInit, OnDestroy {
 
-  @Input() showChartKetertarikan = true;
-  @Input() showChartUnique = true;
-  @Input() showChartVisitor = true;
+  toggleAllStatsValue = false;
 
   summary = {
     like: 0,
@@ -158,9 +156,13 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   get SHOWALLSTATS(): boolean {
+    return this.toggleAllStatsValue;
+  }
+
+  get SHOWALLSTATSVERIFIEDONLY(): boolean {
     const role = this.as.currentUserSubject?.value?.role;
     if (role) {
-      return role === RoleModel.ADMIN || role === RoleModel.MODERATOR || role === RoleModel.FANSUBBER;
+      return (role === RoleModel.ADMIN || role === RoleModel.MODERATOR || role === RoleModel.FANSUBBER) && this.SHOWALLSTATS;
     }
     return false;
   }
@@ -193,6 +195,10 @@ export class ReportComponent implements OnInit, OnDestroy {
       });
       this.getReport();
     }
+  }
+
+  toggleAllStats(): void {
+    this.toggleAllStatsValue = !this.toggleAllStatsValue;
   }
 
   login(): void {
