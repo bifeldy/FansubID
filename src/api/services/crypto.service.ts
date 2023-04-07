@@ -70,7 +70,7 @@ export class CryptoService {
       this.gs.log('[CRYPTO_SERVICE-CREDENTIAL_DECODE_SUCCESS] 🍪', decoded);
       return decoded;
     } catch (error) {
-      this.gs.log('[CRYPTO_SERVICE-CREDENTIAL_DECODE_ERROR] 🍪', error, 'error');
+      // this.gs.log('[CRYPTO_SERVICE-CREDENTIAL_DECODE_ERROR] 🍪', error, 'error');
       throw error;
     }
   }

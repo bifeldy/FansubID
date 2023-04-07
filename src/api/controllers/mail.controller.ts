@@ -103,6 +103,7 @@ export class MailController {
               email: to
             }
           }),
+          category: 'User Mail',
           subject: mailbox.subject,
           html: mailbox.html,
           text: mailbox.text
