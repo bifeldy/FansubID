@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -56,9 +57,9 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     this.fg = this.fb.group({
-      to: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEmailMulti)])],
-      cc: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
-      bcc: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
+      to: [[], Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEmailMulti)])],
+      cc: [[], Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
+      bcc: [[], Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
       subject: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       message: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])]
     });
@@ -85,6 +86,63 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
         this.bs.idle();
       }
     });
+  }
+
+  addTo(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+    if ((value || '').trim()) {
+      this.fg.value.to.push(value.trim());
+    }
+    if (input) {
+      input.value = '';
+    }
+    this.fg.controls['to'].patchValue(this.fg.value.to.filter((a, b, c) => c.findIndex(d => (d === a)) === b));
+  }
+
+  removeTo(to: any): void {
+    const index = this.fg.value.to.indexOf(to);
+    if (index >= 0) {
+      this.fg.value.to.splice(index, 1);
+    }
+  }
+
+  addCc(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+    if ((value || '').trim()) {
+      this.fg.value.cc.push(value.trim());
+    }
+    if (input) {
+      input.value = '';
+    }
+    this.fg.controls['cc'].patchValue(this.fg.value.cc.filter((a, b, c) => c.findIndex(d => (d === a)) === b));
+  }
+
+  removeCc(cc: any): void {
+    const index = this.fg.value.cc.indexOf(cc);
+    if (index >= 0) {
+      this.fg.value.cc.splice(index, 1);
+    }
+  }
+
+  addBcc(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+    if ((value || '').trim()) {
+      this.fg.value.bcc.push(value.trim());
+    }
+    if (input) {
+      input.value = '';
+    }
+    this.fg.controls['bcc'].patchValue(this.fg.value.bcc.filter((a, b, c) => c.findIndex(d => (d === a)) === b));
+  }
+
+  removeBcc(bcc: any): void {
+    const index = this.fg.value.bcc.indexOf(bcc);
+    if (index >= 0) {
+      this.fg.value.bcc.splice(index, 1);
+    }
   }
 
 }

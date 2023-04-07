@@ -13,25 +13,6 @@ export interface JsonResponse<T = any> {
   imageUrl?: string;
 }
 
-export interface MailModel {
-  from?: string;
-  subject?: string;
-  to?: string;
-  cc?: string;
-  bcc?: string;
-  template?: string;
-  variables?: {
-    nama?: string;
-    username?: string;
-    baseUrl?: string;
-    siteName?: string;
-    activationToken?: string;
-    id?: string;
-  };
-  html?: string;
-  text?: string;
-};
-
 export interface MailboxModel {
   id?: string;
   mail?: string;

@@ -255,7 +255,7 @@ export class DiscordService {
             if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
               await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
             }
-            await msg.reply({ content: `<@${msg.author.id}> 😚 .: Berhasil :: ${user.username}@${environment.mailGun.domain} :. 🤩` });
+            await msg.reply({ content: `<@${msg.author.id}> 😚 .: Berhasil :: ${user.username}@${environment.mailTrap.domain} :. 🤩` });
             return await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
               embeds: [
                 new MessageEmbed()

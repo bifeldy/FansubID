@@ -88,6 +88,7 @@
     "jsonwebtoken": "^8.5.1",
     "kuroshiro": "^1.1.2",
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
+    "mailtrap": "^3.1.1",
     "morgan": "^1.10.0",
     "nest-morgan": "^2.0.0",
     "ng-recaptcha": "^9.0.0",

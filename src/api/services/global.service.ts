@@ -25,7 +25,7 @@ export class GlobalService {
   }
 
   log(message: any, data: any = null, type: string = 'log'): void {
-    if (!environment.production) {
+    if (!environment.production || type === 'error') {
       let logger = null;
       if (type === 'warn') {
         logger = console.warn;

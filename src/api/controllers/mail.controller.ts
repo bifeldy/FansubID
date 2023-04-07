@@ -1,3 +1,6 @@
+// 3rd Party Library
+import { Mail } from 'mailtrap';
+
 import { Controller, HttpCode, HttpException, HttpStatus, Get, Req, Res, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { ApiExcludeController } from '@nestjs/swagger';
@@ -6,7 +9,7 @@ import { Request, Response } from 'express';
 
 import { environment } from '../../environments/api/environment';
 
-import { MailModel, RoleModel, UserModel } from '../../models/req-res.model';
+import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
@@ -79,35 +82,52 @@ export class MailController {
   async sendNewMail(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
-        'to' in req.body &&
+        'to' in req.body && Array.isArray(req.body.to) && req.body.to.length > 0 &&
         'subject' in req.body &&
         'message' in req.body
       ) {
         const user: UserModel = res.locals['user'];
         const mailbox = this.mailboxRepo.new();
-        mailbox.from = `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailGun.domain}>`;
-        mailbox.to = req.body.to;
+        mailbox.from = `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailTrap.domain}>`;
+        mailbox.to = [...new Set<string>(req.body.to)].join(', ');
         mailbox.subject = req.body.subject;
         mailbox.html = req.body.message;
         mailbox.text = this.gs.htmlToText(req.body.message);
-        const mailBody: MailModel = {
-          from: mailbox.from,
-          to: mailbox.to,
+        const mailBody: Mail = {
+          from: {
+            name: user.kartu_tanda_penduduk_.nama,
+            email: `${user.username}@${environment.mailTrap.domain}`
+          },
+          to: [...new Set<string>(req.body.to)].map(to => {
+            return {
+              email: to
+            }
+          }),
           subject: mailbox.subject,
           html: mailbox.html,
           text: mailbox.text
         };
-        if (req.body.cc) {
-          mailbox.cc = req.body.cc;
-          mailBody.cc = req.body.cc;
+        if (req.body.cc && Array.isArray(req.body.cc) && req.body.cc.length > 0) {
+          const ccs = [...new Set<string>(req.body.cc)];
+          mailbox.cc = ccs.join(', ');
+          mailBody.cc = ccs.map(cc => {
+            return {
+              email: cc
+            }
+          });
         }
-        if (req.body.bcc) {
-          mailbox.bcc = req.body.bcc;
-          mailBody.bcc = req.body.bcc;
+        if (req.body.bcc && Array.isArray(req.body.bcc) && req.body.bcc.length > 0) {
+          const bccs = [...new Set<string>(req.body.bcc)];
+          mailbox.bcc = bccs.join(', ');
+          mailBody.bcc = bccs.map(bcc => {
+            return {
+              email: bcc
+            }
+          });
         }
-        const mailSend = await this.ms.mailGunSend(mailBody);
+        const mailSend = await this.ms.mailTrapSend(mailBody);
         if (mailSend) {
-          mailbox.mail = mailSend.id;
+          mailbox.mail = mailSend.message_ids[0];
           mailbox.date = new Date();
           const mailboxSave = await this.mailboxRepo.save(mailbox);
           return {
@@ -142,10 +162,10 @@ export class MailController {
         relations: ['attachment_'],
       });
       if (
-        !mailbox.from.includes(`${user.username}@${environment.mailGun.domain}`) &&
-        !mailbox.to.includes(`${user.username}@${environment.mailGun.domain}`) &&
-        !mailbox.cc.includes(`${user.username}@${environment.mailGun.domain}`) &&
-        !mailbox.bcc.includes(`${user.username}@${environment.mailGun.domain}`) &&
+        !mailbox.from.includes(`${user.username}@${environment.mailTrap.domain}`) &&
+        !mailbox.to.includes(`${user.username}@${environment.mailTrap.domain}`) &&
+        !mailbox.cc.includes(`${user.username}@${environment.mailTrap.domain}`) &&
+        !mailbox.bcc.includes(`${user.username}@${environment.mailTrap.domain}`) &&
         user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR
       ) {
         throw new HttpException({

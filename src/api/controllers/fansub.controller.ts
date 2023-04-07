@@ -139,7 +139,7 @@ export class FansubController {
             fansub.cover_url = req.body.cover;
           }
           if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
-            const filteredTagsUnique = [...new Set(req.body.tags)];
+            const filteredTagsUnique = [...new Set<string>(req.body.tags)];
             fansub.tags = JSON.stringify(filteredTagsUnique);
           }
           if ('description' in req.body) {
@@ -330,7 +330,7 @@ export class FansubController {
           }
         }
         if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
-          const filteredTagsUnique = [...new Set(req.body.tags)];
+          const filteredTagsUnique = [...new Set<string>(req.body.tags)];
           fansub.tags = JSON.stringify(filteredTagsUnique);
         }
         if ('urls' in req.body) {

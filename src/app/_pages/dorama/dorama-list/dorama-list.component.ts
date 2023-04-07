@@ -142,7 +142,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
           sD.image_url = sD.cover;
           this.doramaCountry.push(sD.country);
         }
-        this.doramaCountry = [...new Set(this.doramaCountry)].sort();
+        this.doramaCountry = [...new Set<string>(this.doramaCountry)].sort();
         if (showFab) {
           this.fs.initializeFab('settings_backup_restore', null, 'Kembali Ke Musim Sekarang', '/dorama', false);
         }

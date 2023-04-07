@@ -36,15 +36,15 @@ export class MailInboxController {
         where: [
           {
             subject: ILike(`%${searchQuery}%`),
-            to: ILike(`%${user.username}@${environment.mailGun.domain}%`)
+            to: ILike(`%${user.username}@${environment.mailTrap.domain}%`)
           },
           {
             subject: ILike(`%${searchQuery}%`),
-            cc: ILike(`%${user.username}@${environment.mailGun.domain}%`)
+            cc: ILike(`%${user.username}@${environment.mailTrap.domain}%`)
           },
           {
             subject: ILike(`%${searchQuery}%`),
-            bcc: ILike(`%${user.username}@${environment.mailGun.domain}%`),
+            bcc: ILike(`%${user.username}@${environment.mailTrap.domain}%`),
           }
         ],
         order: {

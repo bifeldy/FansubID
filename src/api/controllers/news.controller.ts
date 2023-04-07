@@ -95,7 +95,7 @@ export class NewsController {
           news.image_url = req.body.image;
         }
         if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
-          const filteredTagsUnique = [...new Set(req.body.tags)];
+          const filteredTagsUnique = [...new Set<string>(req.body.tags)];
           news.tags = JSON.stringify(filteredTagsUnique);
         }
         news.user_ = user;
@@ -202,7 +202,7 @@ export class NewsController {
             news.image_url = req.body.image;
           }
           if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
-            const filteredTagsUnique = [...new Set(req.body.tags)];
+            const filteredTagsUnique = [...new Set<string>(req.body.tags)];
             news.tags = JSON.stringify(filteredTagsUnique);
           }
           const resNewsSave = await this.newsRepo.save(news);

@@ -18,30 +18,57 @@
             <div class="row">
               <div class="col-12 col-md-5 col-xl-4 p-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Penerima</mat-label>
-                    <input matInput formControlName="to" placeholder="user@domain.tld" matTooltip="Gunakan , Jika Lebih Dari 1" required />
+                    <mat-chip-list #to>
+                      <mat-chip *ngFor="let t of fg.value.to" (removed)="removeTo(t)" color="accent" selected [removable]="true">
+                        {{ t }}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                      </mat-chip>
+                    </mat-chip-list>
+                    <input placeholder="user@domain.tld" [matChipInputSeparatorKeyCodes]="GS.separatorKeysCodes"
+                      [matChipInputFor]="to" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addTo($event)" required />
                     <mat-icon matSuffix>short_text</mat-icon>
-                    <mat-error>
-                      <div *ngIf="fg.get('to').hasError('required')">Alamat Surel Tidak Boleh Kosong</div>
-                      <div *ngIf="fg.get('to').hasError('pattern')">Email Tidak Valid</div>
-                    </mat-error>
+                    <mat-hint align="end">
+                      <mat-error>
+                        <div *ngIf="fg.get('to').hasError('required')">Alamat Surel Tidak Boleh Kosong</div>
+                        <div *ngIf="fg.get('to').hasError('pattern')">Alamat Surel Tidak Valid</div>
+                      </mat-error>
+                    </mat-hint>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Carbon Copy</mat-label>
-                    <input matInput formControlName="cc" placeholder="user@domain.tld,user@domain.tld" matTooltip="Gunakan , Jika Lebih Dari 1" />
+                    <mat-chip-list #cc>
+                      <mat-chip *ngFor="let c of fg.value.cc" (removed)="removeCc(c)" color="accent" selected [removable]="true">
+                        {{ c }}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                      </mat-chip>
+                    </mat-chip-list>
+                    <input placeholder="user@domain.tld" [matChipInputSeparatorKeyCodes]="GS.separatorKeysCodes"
+                      [matChipInputFor]="cc" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addCc($event)" />
                     <mat-icon matSuffix>short_text</mat-icon>
-                    <mat-error>
-                      <div *ngIf="fg.get('cc').hasError('pattern')">Email Tidak Valid</div>
-                    </mat-error>
+                    <mat-hint align="end">
+                      <mat-error>
+                        <div *ngIf="fg.get('cc').hasError('pattern')">Alamat Surel Tidak Valid</div>
+                      </mat-error>
+                    </mat-hint>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Blind Carbon Copy</mat-label>
-                    <input matInput formControlName="bcc" placeholder="user@domain.tld, user@domain.tld" matTooltip="Gunakan , Jika Lebih Dari 1" />
+                    <mat-chip-list #bcc>
+                      <mat-chip *ngFor="let b of fg.value.bcc" (removed)="removeBcc(b)" color="accent" selected [removable]="true">
+                        {{ b }}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                      </mat-chip>
+                    </mat-chip-list>
+                    <input placeholder="user@domain.tld" [matChipInputSeparatorKeyCodes]="GS.separatorKeysCodes"
+                      [matChipInputFor]="bcc" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addBcc($event)" />
                     <mat-icon matSuffix>short_text</mat-icon>
-                    <mat-error>
-                      <div *ngIf="fg.get('bcc').hasError('pattern')">Email Tidak Valid</div>
-                    </mat-error>
+                    <mat-hint align="end">
+                      <mat-error>
+                        <div *ngIf="fg.get('bcc').hasError('pattern')">Alamat Surel Tidak Valid</div>
+                      </mat-error>
+                    </mat-hint>
                   </mat-form-field>
                 </div>
               </div>

@@ -1,79 +1,56 @@
-// NodeJS Library
-import { URL, URLSearchParams } from 'node:url';
+// 3rd Party Library
+import { Mail, MailtrapClient, SendResponse } from 'mailtrap';
 
 import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { MailModel, RegistrationModel } from '../../models/req-res.model';
+import { RegistrationModel } from '../../models/req-res.model';
 
-import { ApiService } from './api.service';
-import { CryptoService } from './crypto.service';
 import { GlobalService } from './global.service';
 
 @Injectable()
 export class MailService {
 
+  client = new MailtrapClient({
+    endpoint: environment.mailTrap.clientOptions.url, 
+    token: environment.mailTrap.clientOptions.key
+  });
+
   constructor(
-    private api: ApiService,
-    private cs: CryptoService,
     private gs: GlobalService
   ) {
-    //** MailGun Need To Allow / Whitelist From Public IP Server Origin */
-    // https://app.mailgun.com/app/account/security/api_keys
+    // https://mailtrap.io/api-tokens
   }
 
-  async mailGunSend(mailBody: MailModel): Promise<any> {
+  async mailTrapSend(mailBody: Mail): Promise<SendResponse> {
     try {
-      const url = new URL(`${environment.mailGun.clientOptions.url}/${environment.mailGun.domain}/messages`);
-      const form = new URLSearchParams();
-      form.append('from', mailBody.from);
-      form.append('subject', mailBody.subject);
-      form.append('to', mailBody.to);
-      if (mailBody.cc) {
-        form.append('cc', mailBody.cc);
+      const resp = await this.client.send(mailBody);
+      if (resp.success) {
+        this.gs.log(`[MAILTRAP_SERVICE-SEND_EMAIL_SUCCESS] 💌`, resp.message_ids);
+        return resp;
       }
-      if (mailBody.bcc) {
-        form.append('cc', mailBody.bcc);
-      }
-      if (mailBody.template && mailBody.variables) {
-        form.append('template', mailBody.template);
-        form.append('h:x-mailgun-variables', JSON.stringify(mailBody.variables));
-      } else if (mailBody.html) {
-        form.append('html', mailBody.html);
-      } else {
-        form.append('text', mailBody.text);
-      }
-      const res_raw = await this.api.postData(url, form, {
-        'Authorization': `Basic ${this.cs.convertToBase64(`${environment.mailGun.clientOptions.username}:${environment.mailGun.clientOptions.key}`)}`,
-        ...environment.nodeJsXhrHeader
-      });
-      if (res_raw.ok) {
-        const res_json: any = await res_raw.json();
-        this.gs.log(`[MAILGUN_SERVICE-SEND_EMAIL_SUCCESS] 💌 ${res_raw.status}`, res_json);
-        return res_json;
-      }
-      throw new Error('Mailgun API Error');
+      throw new Error('MailTrap API Error');
     } catch (err) {
-      this.gs.log('[MAILGUN_SERVICE-SEND_EMAIL_ERROR] 💌', err, 'error');
+      this.gs.log('[MAILTRAP_SERVICE-SEND_EMAIL_ERROR] 💌', err, 'error');
       return null;
     }
   }
 
   async sendRegisterActivationMail(user: RegistrationModel): Promise<any> {
-    const content: MailModel = {
-      from: `${environment.mailGun.fullName} <${environment.mailGun.clientOptions.username}@${environment.mailGun.domain}>`,
-      to: user.email,
-      subject: `${environment.siteName} | Aktivasi Akun`,
-      template: 'register',
-      variables: {
-        nama: user.nama,
-        username: user.username,
-        baseUrl: environment.baseUrl,
-        siteName: environment.siteName,
-        activationToken: user.activation_token,
-        id: user.id,
+    const content: Mail = {
+      from: {
+        name: environment.mailTrap.fullName,
+        email: `${environment.mailTrap.clientOptions.username}@${environment.mailTrap.domain}`
       },
+      to: [
+        { 
+          name: user.nama,
+          email: user.email
+        }
+      ],
+      subject: `${environment.siteName} | Aktivasi Akun`,
+      category: 'Aktivasi',
       html: `
         <h1>${user.nama} (<i>${user.username}</i>).</h1>
         <h2>
@@ -111,7 +88,7 @@ export class MailService {
         .: ${user.id} :.
       `.replace(/\s\s+/g, ' ').trim()
     };
-    return await this.mailGunSend(content);
+    return await this.mailTrapSend(content);
   }
 
 }

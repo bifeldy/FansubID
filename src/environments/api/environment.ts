@@ -118,11 +118,11 @@ export const environment = {
       client_x509_cert_url: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL    // ''
     }
   },
-  mailGun: {
+  mailTrap: {
     clientOptions: {
       username: 'noreply',
-      key: SECRETS().MAILGUN_KEY,                                                 // '',
-      url: 'https://api.eu.mailgun.net/v3',
+      key: SECRETS().MAILTRAP_KEY,                                                 // '',
+      url: 'https://send.api.mailtrap.io',
     },
     fullName: `FansubID | No-Reply`,
     domain: 'fansub.id'
