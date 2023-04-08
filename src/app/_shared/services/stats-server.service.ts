@@ -18,6 +18,7 @@ import { AuthService } from './auth.service';
 import { DialogService } from './dialog.service';
 import { ServiceWorkerService } from './service-worker.service';
 import { ToastService } from './toast.service';
+import { BusyService } from './busy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,7 @@ export class StatsServerService {
     private as: AuthService,
     private router: Router,
     private gs: GlobalService,
+    private bs: BusyService,
     private notif: NotificationsService,
     private lms: LeftMenuService,
     private toast: ToastService,
@@ -281,6 +283,7 @@ export class StatsServerService {
       this.gs.log('[SOCKET_MULTIPLE-CONNECTION]', multipleConnection);
       this.toast.warning('Sesi lain telah aktif!', 'Koneksi Duplikat', null, true);
       this.mySocket.io.reconnection(false);
+      this.bs.clear();
       if (callback) {
         callback();
       }

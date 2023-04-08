@@ -27,7 +27,7 @@ import { SharedMaterialModule } from './_shared/modules/shared-material.module';
 
 import { HttpCancelInterceptor } from './_shared/interceptors/http-cancel.interceptor';
 import { HttpRequestInterceptor } from './_shared/interceptors/http-request.interceptor';
-import { HttpErrorInterceptor } from './_shared/interceptors/http-error.interceptor';
+import { HttpResponseInterceptor } from './_shared/interceptors/http-response.interceptor';
 
 import { AppComponent } from './app.component';
 
@@ -97,7 +97,7 @@ import { environment } from '../environments/app/environment';
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 10000 } },
     { provide: HTTP_INTERCEPTORS, useClass: HttpCancelInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpResponseInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
