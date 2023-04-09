@@ -1,0 +1,24 @@
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+  
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy">
+          <h2 class="pt-3 border-bottom-dotted">
+            <b class="text-bifeldy">Semua Email Pengguna</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <app-material-table [tableDataColumn]="mailData.column" [tableDataRow]="mailData.row" [count]="count"
+            [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (rowClicked)="onRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -29,6 +29,7 @@ import { AdminListFansubMemberComponent } from './admin-list-fansub-member/admin
 import { AdminListBannedComponent } from './admin-list-banned/admin-list-banned.component';
 import { AdminListCorsComponent } from './admin-list-cors/admin-list-cors.component';
 import { AdminListInformationDialogComponent } from './admin-list-information-dialog/admin-list-information-dialog.component';
+import { AdminListEmailComponent } from './admin-list-email/admin-list-email.component';
 
 const routes: Routes = [
   {
@@ -109,6 +110,15 @@ const routes: Routes = [
       description: 'Atur Informasi Dialog',
       keywords: 'Informations'
     }
+  },
+  {
+    path: 'email',
+    component: AdminListEmailComponent,
+    data: {
+      title: 'Admin - List All Email',
+      description: 'Email Inbox & Outbox',
+      keywords: 'Surat Elektronik'
+    }
   }
 ];
 
@@ -122,7 +132,8 @@ const routes: Routes = [
     AdminListFansubMemberComponent,
     AdminListBannedComponent,
     AdminListCorsComponent,
-    AdminListInformationDialogComponent
+    AdminListInformationDialogComponent,
+    AdminListEmailComponent
   ],
   imports: [
     CommonModule,

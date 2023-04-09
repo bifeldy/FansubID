@@ -41,7 +41,9 @@ export class MailController {
       const queryRow = parseInt(req.query['row'] as string);
       const [mailboxs, count] = await this.mailboxRepo.findAndCount({
         where: [
-          { subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) }
+          { from: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
+          { to: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
+          { subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
         ],
         order: {
           date: 'DESC'
