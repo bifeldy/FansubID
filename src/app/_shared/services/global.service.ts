@@ -79,9 +79,9 @@ export class GlobalService {
 
   seasonalWeather = [
     { id: 1, name: SEASONS.WINTER, cssClassName: 'snow', img: '/assets/img/season/winter.png' },
-    { id: 2, name: SEASONS.SPRING, cssClassName: null, img: '/assets/img/season/spring.png' },
+    { id: 2, name: SEASONS.SPRING, cssClassName: 'sakura', img: '/assets/img/season/spring.png' },
     { id: 3, name: SEASONS.SUMMER, cssClassName: null, img: '/assets/img/season/summer.png' },
-    { id: 4, name: SEASONS.FALL, cssClassName: 'sakura', img: '/assets/img/season/fall.png' }
+    { id: 4, name: SEASONS.FALL, cssClassName: 'fall', img: '/assets/img/season/fall.png' }
   ];
 
   constructor(

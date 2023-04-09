@@ -551,6 +551,17 @@ re-captcha > div {
   border-radius: 50% !important;
 }
 
+.fall {
+  z-index: 999999999;
+  pointer-events: none;
+  position: absolute;
+  background: linear-gradient(
+    120deg,
+    #de5833,
+    #ffd17a
+  ) !important;
+}
+
 .mouse_scroll {
   display: block;
   margin: 0 auto;
