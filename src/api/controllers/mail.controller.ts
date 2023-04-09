@@ -18,6 +18,7 @@ import { MailboxService } from '../repository/mailbox.service';
 
 import { GlobalService } from '../services/global.service';
 import { MailService } from '../services/mail.service';
+import { CONSTANTS } from '../../constants';
 
 @ApiExcludeController()
 @Controller('/mail')
@@ -96,6 +97,9 @@ export class MailController {
         const mailbox = this.mailboxRepo.new();
         mailbox.from = `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailTrap.domain}>`;
         mailbox.to = [...new Set<string>(req.body.to)].join(', ');
+        if (!mailbox.to.match(CONSTANTS.regexEmailMulti)) {
+          throw new Error('Alamat Tidak Valid!');
+        }
         mailbox.subject = req.body.subject;
         mailbox.html = req.body.message;
         mailbox.text = this.gs.htmlToText(req.body.message);
@@ -105,9 +109,10 @@ export class MailController {
             email: `${user.username}@${environment.mailTrap.domain}`
           },
           to: [...new Set<string>(req.body.to)].map(to => {
-            return {
-              email: to
+            if (!to.match(CONSTANTS.regexEmail)) {
+              throw new Error('Alamat Tidak Valid!');
             }
+            return { email: to };
           }),
           category: 'User Mail',
           subject: mailbox.subject,
@@ -118,18 +123,20 @@ export class MailController {
           const ccs = [...new Set<string>(req.body.cc)];
           mailbox.cc = ccs.join(', ');
           mailBody.cc = ccs.map(cc => {
-            return {
-              email: cc
+            if (!cc.match(CONSTANTS.regexEmail)) {
+              throw new Error('Alamat Tidak Valid!');
             }
+            return { email: cc };
           });
         }
         if (req.body.bcc && Array.isArray(req.body.bcc) && req.body.bcc.length > 0) {
           const bccs = [...new Set<string>(req.body.bcc)];
           mailbox.bcc = bccs.join(', ');
           mailBody.bcc = bccs.map(bcc => {
-            return {
-              email: bcc
+            if (!bcc.match(CONSTANTS.regexEmail)) {
+              throw new Error('Alamat Tidak Valid!');
             }
+            return { email: bcc };
           });
         }
         const mailSend = await this.ms.mailTrapSend(mailBody);
