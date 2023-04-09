@@ -32,9 +32,7 @@ export class RegisterController {
           Silahkan Periksa Email Untuk Menyelesaikan Pendaftaran. <br />
           Petunjuk Sudah Dikirimkan Ke '<span class="text-danger">${registration.email}</span>'. <br />
           Hanya berlaku selama ${CONSTANTS.timeoutCancelRegisterTime / 60 / 1000} menit. <br />
-          Jika masih belum diaktifkan, siapapun dapat mendaftar ulang sebagai '${registration.username}'. <br />
-          <br />
-          .: ${registration.id} :.
+          Jika masih belum diaktifkan, siapapun dapat mendaftar ulang sebagai '${registration.username}'.
         `
       }
     }

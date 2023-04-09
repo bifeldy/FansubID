@@ -142,7 +142,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
       data: {
         title: res.result.title,
         htmlMessage: res.result.message,
-        confirmText: 'Kirim Ulang Email'
+        confirmText: 'Kirim Ulang Email',
+        infoText: res.result.id
       },
       disableClose: true
     }).afterClosed().subscribe({
