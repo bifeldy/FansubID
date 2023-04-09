@@ -46,7 +46,11 @@ export class MailController {
           { subject: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
         ],
         order: {
-          date: 'DESC'
+          ...((req.query['sort'] && req.query['order']) ? {
+            [req.query['sort'] as string]: (req.query['order'] as string).toUpperCase()
+          } : {
+            date: 'DESC'
+          })
         },
         relations: ['attachment_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,

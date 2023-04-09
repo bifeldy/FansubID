@@ -25,7 +25,7 @@ export interface MailboxModel {
   text?: string;
   date?: number | Date;
   attachment_count?: number;
-  attachment?: AttachmentModel[];
+  attachment_?: AttachmentModel[];
 };
 
 export enum RoleModel {

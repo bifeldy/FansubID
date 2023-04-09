@@ -72,20 +72,20 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
   }
 
   filterLampiran(attachment: any) {
-    let lmprn = '';
+    let lampiran = '';
     if (attachment) {
       for (const a of attachment) {
-        if (lmprn) {
-          lmprn += ', ';
+        if (lampiran) {
+          lampiran += ', ';
         }
-        lmprn += `
+        lampiran += `
           <a href="${environment.apiUrl}/attachment/${a.id}?ngsw-bypass=true" target="_blank">
             ${a.name}.${a.ext} (${a.size} Bytes)
           </a>
         `;
       }
     }
-    return lmprn;
+    return lampiran;
   }
 
   getAllMail(): void {
@@ -137,7 +137,7 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
               <br /> <br />
               Date: ${new Date(res.result.date)}
               <br />
-              Lampiran: ${this.filterLampiran(res.result.attachment)}
+              Lampiran: ${this.filterLampiran(res.result.attachment_)}
               <hr class="my-3">
               ${res.result.html || res.result.text}
             `,
@@ -148,6 +148,7 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
         }).afterClosed().subscribe({
           next: r => {
             this.gs.log('[INFO_DIALOG_CLOSED]', r);
+            this.getAllMail();
             this.subsDialog.unsubscribe();
           }
         });
@@ -155,6 +156,7 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
       error: err => {
         this.gs.log('[MAIL_DETAIL_ERROR]', err, 'error');
         this.bs.idle();
+        this.getAllMail();
       }
     });
   }
@@ -181,6 +183,11 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
     this.gs.log('[MAIL_LIST_CLICK_ORDER]', data);
     this.q = data.q;
     this.sort = data.active;
+    if (this.sort === 'created_at') {
+      this.sort = 'date';
+    } else if (this.sort === 'title') {
+      this.sort = 'subject';
+    }
     this.order = data.direction;
     this.getAllMail();
   }

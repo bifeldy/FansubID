@@ -133,6 +133,11 @@ export class MailboxListComponent implements OnInit, OnDestroy {
     this.gs.log('[MAILBOX_LIST_CLICK_ORDER]', data);
     this.q = data.q;
     this.sort = data.active;
+    if (this.sort === 'created_at') {
+      this.sort = 'date';
+    } else if (this.sort === 'title') {
+      this.sort = 'subject';
+    }
     this.order = data.direction;
     this.getMailbox();
   }
