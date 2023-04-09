@@ -52,6 +52,32 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
     this.subsMail?.unsubscribe();
   }
 
+  getFromTo(fromRaw: any, toRaw: any): any {
+    let from = '';
+    for (const fr of fromRaw.split(',')) {
+      if (from) {
+        from += ', ';
+      }
+      if (fr.includes('<') && fr.includes('>')) {
+        from += fr.split('<')[1].split('>')[0].trim();
+      } else {
+        from += fr.trim();
+      }
+    }
+    let to = '';
+    for (const tr of toRaw.split(',')) {
+      if (to) {
+        to += ', ';
+      }
+      if (tr.includes('<') && tr.includes('>')) {
+        to += tr.split('<')[1].split('>')[0].trim();
+      } else {
+        to += tr.trim();
+      }
+    }
+    return { from, to };
+  }
+
   getAllMail(): void {
     this.bs.busy();
     if (this.subsMail) {
@@ -64,11 +90,12 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
         this.count = res.count;
         this.mailData.row = [];
         for (const r of res.results) {
+          const fromTo = this.getFromTo(r.from, r.to);
           this.mailData.row.push({
             id: r.id,
             Tanggal: r.date,
-            Pengirim: r.from,
-            Penerima: r.to,
+            Pengirim: fromTo.from,
+            Penerima: fromTo.to,
             Topik: r.subject,
             Lampiran: `${r.attachment_count} Berkas`
           });
@@ -87,13 +114,14 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[MAIL_DETAIL_SUCCESS]', res);
         this.bs.idle();
+        const fromTo = this.getFromTo(res.result.from, res.result.to);
         this.subsDialog = this.ds.openInfoDialog({
           data: {
             title: res.result.id,
             htmlMessage: `
-              From: ${res.result.from}
+              From: ${fromTo.from}
               <br />
-              To: ${res.result.to}
+              To: ${fromTo.to}
               <br /> <br />
               Subject: ${res.result.subject}
               <br />
