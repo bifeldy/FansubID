@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { CONSTANTS } from '../../../../../constants';
 
-import { DialogNihongoDataModel } from '../../../models/Dialog';
+import { DialogNihongoDataModel } from '../../../../../models/dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
 import { ImgbbService } from '../../../services/imgbb.service';

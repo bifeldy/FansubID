@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Warna } from '../../../_shared/models/Warna';
+import { WARNA } from '../../../../models/warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -65,7 +65,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
             if (this.gs.isBrowser) {
               if (Array.isArray(this.newsData.tags)) {
                 for (let i = 0; i < this.newsData.tags.length; i++) {
-                  this.chipData.push({ id_tag: i, name: this.newsData.tags[i], color: Warna.PINK, selected: true });
+                  this.chipData.push({ id_tag: i, name: this.newsData.tags[i], color: WARNA.PINK, selected: true });
                 }
               }
               this.fs.initializeFab('edit', null, 'Ubah Data Berita', `/news/${this.newsId}/edit`, false);

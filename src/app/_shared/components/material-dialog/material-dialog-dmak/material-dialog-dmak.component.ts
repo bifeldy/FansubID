@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { DialogDmakDataModel } from '../../../models/Dialog';
+import { DialogDmakDataModel } from '../../../../../models/dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
 

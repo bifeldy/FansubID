@@ -7,7 +7,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 
 import { Moment } from 'moment';
 
-import { Seasons } from '../../../_shared/models/Seasons';
+import { SEASONS } from '../../../../models/seasons';
 
 import { moment, MY_FORMATS } from '../../../_shared/helpers/moment';
 
@@ -103,10 +103,10 @@ export class DoramaListComponent implements OnInit, OnDestroy {
         this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
         this.selectedSeasonName = p['season'] ? (
           [
-            Seasons.WINTER,
-            Seasons.SPRING,
-            Seasons.SUMMER,
-            Seasons.FALL
+            SEASONS.WINTER,
+            SEASONS.SPRING,
+            SEASONS.SUMMER,
+            SEASONS.FALL
           ].indexOf(p['season']) >= 0 ? p['season'] : this.findSeasonNameByMonthNumber(this.currentMonth)
         ) : this.findSeasonNameByMonthNumber(this.currentMonth);
         this.gs.bannerImg = this.gs.seasonalWeather.find(sB => sB.name === this.selectedSeasonName).img;

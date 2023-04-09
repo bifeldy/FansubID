@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { DialogInfoDataModel } from '../../../models/Dialog';
+import { DialogInfoDataModel } from '../../../../../models/dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
 

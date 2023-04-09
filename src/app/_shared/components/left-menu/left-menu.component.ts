@@ -9,7 +9,7 @@ import { GlobalService } from '../../services/global.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { DialogService } from '../../services/dialog.service';
 
-import { Menu } from '../../models/Menu';
+import { Menu } from '../../../../models/menu';
 
 @Component({
   selector: 'app-left-menu',

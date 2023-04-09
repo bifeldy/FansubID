@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Warna } from '../../../_shared/models/Warna';
+import { WARNA } from '../../../../models/warna';
 
 import { AnimeService } from '../../../_shared/services/anime.service';
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -113,7 +113,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             this.bs.idle();
             if (this.gs.isBrowser) {
               this.chipData = this.animeData.genres;
-              this.chipData.map(g => (g.selected = true, g.color = Warna.PINK));
+              this.chipData.map(g => (g.selected = true, g.color = WARNA.PINK));
               this.panelData = [];
               this.panelData.push({
                 title: 'Ringkasan Cerita',

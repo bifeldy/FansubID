@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../environments/app/environment';
 
 import { RoleModel, FansubMemberModel } from '../../../../models/req-res.model';
-import { Warna } from '../../../_shared/models/Warna';
+import { WARNA } from '../../../../models/warna';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -162,7 +162,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         if (this.gs.isBrowser) {
           if (Array.isArray(this.fansubData.tags)) {
             for (let i = 0; i < this.fansubData.tags.length; i++) {
-              this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: Warna.BIRU, selected: true });
+              this.chipData.push({ id_tag: i, name: this.fansubData.tags[i], color: WARNA.BIRU, selected: true });
             }
           }
           this.panelData = [];

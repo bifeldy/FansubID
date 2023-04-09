@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { GlobalService } from './global.service';
 
-import { Menu } from '../models/Menu';
+import { Menu } from '../../../models/menu';
 
 @Injectable({
   providedIn: 'root'

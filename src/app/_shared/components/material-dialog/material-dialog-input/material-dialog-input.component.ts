@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { CONSTANTS } from '../../../../../constants';
 
-import { DialogInputDataModel } from '../../../models/Dialog';
+import { DialogInputDataModel } from '../../../../../models/dialog';
 
 import { GlobalService } from '../../../../_shared/services/global.service';
 

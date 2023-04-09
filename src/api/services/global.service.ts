@@ -8,14 +8,14 @@ import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { Seasons } from '../../app/_shared/models/Seasons';
+import { SEASONS } from '../../models/seasons';
 
 @Injectable()
 export class GlobalService {
 
   seasonal = [
-    { id: 1, name: Seasons.WINTER }, { id: 2, name: Seasons.SPRING },
-    { id: 3, name: Seasons.SUMMER }, { id: 4, name: Seasons.FALL }
+    { id: 1, name: SEASONS.WINTER }, { id: 2, name: SEASONS.SPRING },
+    { id: 3, name: SEASONS.SUMMER }, { id: 4, name: SEASONS.FALL }
   ];
 
   constructor(

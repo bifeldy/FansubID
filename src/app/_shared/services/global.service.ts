@@ -8,7 +8,7 @@ import { stripHtml } from 'string-strip-html';
 
 import { environment } from '../../../environments/app/environment';
 
-import { Seasons } from '../models/Seasons';
+import { SEASONS } from '../../../models/seasons';
 
 declare const Sakura: any;
 
@@ -78,10 +78,10 @@ export class GlobalService {
   };
 
   seasonalWeather = [
-    { id: 1, name: Seasons.WINTER, cssClassName: 'snow', img: '/assets/img/season/winter.png' },
-    { id: 2, name: Seasons.SPRING, cssClassName: null, img: '/assets/img/season/spring.png' },
-    { id: 3, name: Seasons.SUMMER, cssClassName: null, img: '/assets/img/season/summer.png' },
-    { id: 4, name: Seasons.FALL, cssClassName: 'sakura', img: '/assets/img/season/fall.png' }
+    { id: 1, name: SEASONS.WINTER, cssClassName: 'snow', img: '/assets/img/season/winter.png' },
+    { id: 2, name: SEASONS.SPRING, cssClassName: null, img: '/assets/img/season/spring.png' },
+    { id: 3, name: SEASONS.SUMMER, cssClassName: null, img: '/assets/img/season/summer.png' },
+    { id: 4, name: SEASONS.FALL, cssClassName: 'sakura', img: '/assets/img/season/fall.png' }
   ];
 
   constructor(

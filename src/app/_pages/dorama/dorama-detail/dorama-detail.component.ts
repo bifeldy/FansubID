@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Warna } from '../../../_shared/models/Warna';
+import { WARNA } from '../../../../models/warna';
 
 import { DoramaService } from '../../../_shared/services/dorama.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -109,7 +109,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
                     name: g,
                     url: '',
                     selected: true,
-                    color: Warna.PINK
+                    color: WARNA.PINK
                   });
                 }
               }
