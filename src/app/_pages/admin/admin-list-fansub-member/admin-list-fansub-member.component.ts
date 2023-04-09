@@ -139,8 +139,7 @@ export class AdminListFansubMemberComponent implements OnInit {
         },
         confirmText: 'OK',
         cancelText: 'Batal'
-      },
-      disableClose: true
+      }
     }).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INPUT_DIALOG_CLOSED]', re);

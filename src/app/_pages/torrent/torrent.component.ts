@@ -213,8 +213,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
           input: userInput,
           confirmText: 'Ya, Mulai SEED',
           cancelText: 'Tidak, Batal'
-        },
-        disableClose: true
+        }
       }).afterClosed().subscribe({
         next: re => {
           this.gs.log('[INPUT_DIALOG_CLOSED]', re);

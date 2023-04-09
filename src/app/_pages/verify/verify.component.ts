@@ -112,8 +112,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         htmlMessage: res.result.message,
         confirmText: 'Tutup',
         cancelText: 'Ulangi'
-      },
-      disableClose: true
+      }
     }).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);

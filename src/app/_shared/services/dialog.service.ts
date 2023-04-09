@@ -134,7 +134,7 @@ export class DialogService {
         confirmText: 'Ok, Saya Mengerti!',
         cancelText: null
       },
-      disableClose: true,
+      disableClose: false,
       maxWidth: this.maxWidth
     };
     await this.fetchInformation(defaultData);
@@ -150,7 +150,7 @@ export class DialogService {
         confirmText: 'Via Discord',
         cancelText: 'Batal'
       },
-      disableClose: true,
+      disableClose: false,
       maxWidth: this.maxWidth
     };
     await this.fetchInformation(defaultData);

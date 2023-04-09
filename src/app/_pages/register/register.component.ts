@@ -144,8 +144,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         htmlMessage: res.result.message,
         confirmText: 'Kirim Ulang Email',
         infoText: res.result.id
-      },
-      disableClose: true
+      }
     }).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);

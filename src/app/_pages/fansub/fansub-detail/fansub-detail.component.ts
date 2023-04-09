@@ -415,8 +415,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
               title: `Permintaan Gabung Berhasil`,
               htmlMessage: 'Silahkan Menghubungi Anggota Yang Sudah Tergabung / Admin / Moderator Fansub Untuk Menerima Permintaan Anda.',
               confirmText: 'Tutup'
-            },
-            disableClose: true
+            }
           }).afterClosed().subscribe({
             next: r => {
               this.gs.log('[INFO_DIALOG_CLOSED]', r);
@@ -489,8 +488,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             confirmText: 'OK',
             cancelText: 'Batal',
             infoText: 'Abaikan 2 Input Terakhir Jika Bukan Blogger'
-          },
-          disableClose: true
+          }
         }).afterClosed().subscribe({
           next: re => {
             this.gs.log('[INPUT_DIALOG_CLOSED]', re);
@@ -515,8 +513,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
                         Terima Kasih.
                       `,
                       confirmText: 'Tutup'
-                    },
-                    disableClose: true
+                    }
                   }).afterClosed().subscribe({
                     next: r => {
                       this.gs.log('[INFO_DIALOG_CLOSED]', r);

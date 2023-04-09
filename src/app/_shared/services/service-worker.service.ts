@@ -59,8 +59,7 @@ export class ServiceWorkerService {
             htmlMessage: `Ingin Refresh Halaman (?)`,
             confirmText: 'Ya',
             cancelText: 'Tidak'
-          },
-          disableClose: true
+          }
         });
         this.subsDialog = this.dialogRef?.afterClosed().subscribe({
           next: re => {
@@ -97,8 +96,7 @@ export class ServiceWorkerService {
                 <div>Tersedia :: ${event.latestVersion?.hash?.slice(0, 8)}</div>
               `,
               confirmText: 'OK'
-            },
-            disableClose: true
+            }
           });
         }
         if (event.type === 'VERSION_INSTALLATION_FAILED') {
@@ -111,8 +109,7 @@ export class ServiceWorkerService {
               `,
               confirmText: 'Ulangi',
               cancelText: 'Lewati'
-            },
-            disableClose: true
+            }
           });
         }
         this.subsDialog = this.dialogRef?.afterClosed().subscribe({
@@ -137,8 +134,7 @@ export class ServiceWorkerService {
             title: 'Service Worker Bermasalah',
             htmlMessage: `Kesalahan :: ${event.reason}`,
             confirmText: 'Refresh Halaman'
-          },
-          disableClose: true
+          }
         });
         this.subsDialog = this.dialogRef?.afterClosed().subscribe({
           next: re => {

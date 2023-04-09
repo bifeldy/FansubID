@@ -249,8 +249,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
           dataset,
           confirmText: 'Simpan',
           cancelText: 'Tutup'
-        },
-        disableClose: true
+        }
       }).afterClosed().subscribe({
         next: re => {
           this.gs.log('[BELAJAR_DATASET_DIALOG_CLOSED]', re);

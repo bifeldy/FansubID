@@ -182,8 +182,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         confirmText: 'OK',
         cancelText: 'Batal',
         infoText: 'Gunakan * Saja Untuk Perbolehkan Semua Dan Titik Koma ; Untuk Lebih Dari Satu'
-      },
-      disableClose: true
+      }
     }).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INPUT_DIALOG_CLOSED]', re);
@@ -231,8 +230,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         confirmText: 'OK',
         cancelText: 'Batal',
         infoText: 'Gunakan * Saja Untuk Perbolehkan Semua Dan Titik Koma ; Untuk Lebih Dari Satu'
-      },
-      disableClose: true
+      }
     }).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INPUT_DIALOG_CLOSED]', re);
@@ -323,8 +321,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             confirmText: 'OK',
             cancelText: 'Batal',
             infoText: 'Abaikan 2 Input Terakhir Jika Bukan Blogger'
-          },
-          disableClose: true
+          }
         }).afterClosed().subscribe({
           next: re => {
             this.gs.log('[INPUT_DIALOG_CLOSED]', re);
