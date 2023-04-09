@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -52,30 +54,38 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
     this.subsMail?.unsubscribe();
   }
 
-  getFromTo(fromRaw: any, toRaw: any): any {
-    let from = '';
-    for (const fr of fromRaw.split(',')) {
-      if (from) {
-        from += ', ';
-      }
-      if (fr.includes('<') && fr.includes('>')) {
-        from += fr.split('<')[1].split('>')[0].trim();
-      } else {
-        from += fr.trim();
-      }
-    }
-    let to = '';
-    for (const tr of toRaw.split(',')) {
-      if (to) {
-        to += ', ';
-      }
-      if (tr.includes('<') && tr.includes('>')) {
-        to += tr.split('<')[1].split('>')[0].trim();
-      } else {
-        to += tr.trim();
+  filterAddress(raw: string) {
+    let addr = '';
+    if (raw) {
+      for (const rw of raw.split(',')) {
+        if (addr) {
+          addr += ', ';
+        }
+        if (rw.includes('<') && rw.includes('>')) {
+          addr += rw.split('<')[1].split('>')[0].trim();
+        } else {
+          addr += rw.trim();
+        }
       }
     }
-    return { from, to };
+    return addr;
+  }
+
+  filterLampiran(attachment: any) {
+    let lmprn = '';
+    if (attachment) {
+      for (const a of attachment) {
+        if (lmprn) {
+          lmprn += ', ';
+        }
+        lmprn += `
+          <a href="${environment.apiUrl}/attachment/${a.id}?ngsw-bypass=true" target="_blank">
+            ${a.name}.${a.ext} (${a.size} Bytes)
+          </a>
+        `;
+      }
+    }
+    return lmprn;
   }
 
   getAllMail(): void {
@@ -90,12 +100,11 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
         this.count = res.count;
         this.mailData.row = [];
         for (const r of res.results) {
-          const fromTo = this.getFromTo(r.from, r.to);
           this.mailData.row.push({
             id: r.id,
             Tanggal: r.date,
-            Pengirim: fromTo.from,
-            Penerima: fromTo.to,
+            Pengirim: this.filterAddress(r.from),
+            Penerima: this.filterAddress(r.to),
             Topik: r.subject,
             Lampiran: `${r.attachment_count} Berkas`
           });
@@ -114,18 +123,21 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[MAIL_DETAIL_SUCCESS]', res);
         this.bs.idle();
-        const fromTo = this.getFromTo(res.result.from, res.result.to);
         this.subsDialog = this.ds.openInfoDialog({
           data: {
-            title: res.result.id,
+            title: res.result.subject,
             htmlMessage: `
-              From: ${fromTo.from}
+              From: ${this.filterAddress(res.result.from)}
               <br />
-              To: ${fromTo.to}
+              To: ${this.filterAddress(res.result.to)}
+              <br />
+              Cc: ${this.filterAddress(res.result.cc)}
+              <br />
+              Bcc: ${this.filterAddress(res.result.bcc)}
               <br /> <br />
-              Subject: ${res.result.subject}
-              <br />
               Date: ${new Date(res.result.date)}
+              <br />
+              Lampiran: ${this.filterLampiran(res.result.attachment)}
               <hr class="my-3">
               ${res.result.html || res.result.text}
             `,
