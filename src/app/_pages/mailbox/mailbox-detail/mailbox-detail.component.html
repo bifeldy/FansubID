@@ -53,7 +53,7 @@
               </div>
               <div class="col-12">
                 <mat-selection-list [multiple]="false">
-                  <mat-list-option *ngFor="let mt of mailData.to?.split(', ')">
+                  <mat-list-option *ngFor="let mt of filterAddress(mailData.to)">
                     <mat-icon mat-list-icon class="ms-3">account_circle</mat-icon>
                     <h4>{{ mt }}</h4>
                   </mat-list-option>
@@ -68,7 +68,7 @@
               </div>
               <div class="col-12">
                 <mat-selection-list [multiple]="false">
-                  <mat-list-option *ngFor="let mc of mailData.cc?.split(', ')">
+                  <mat-list-option *ngFor="let mc of filterAddress(mailData.cc)">
                     <mat-icon mat-list-icon class="ms-3">account_circle</mat-icon>
                     <h4>{{ mc }}</h4>
                   </mat-list-option>
@@ -83,7 +83,7 @@
               </div>
               <div class="col-12">
                 <mat-selection-list [multiple]="false">
-                  <mat-list-option *ngFor="let mb of mailData.bcc?.split(', ')">
+                  <mat-list-option *ngFor="let mb of filterAddress(mailData.bcc)">
                     <mat-icon mat-list-icon class="ms-3">account_circle</mat-icon>
                     <h4>{{ mb }}</h4>
                   </mat-list-option>

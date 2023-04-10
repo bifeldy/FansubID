@@ -51,6 +51,10 @@ export class MailboxDetailComponent implements OnInit, OnDestroy {
     this.subsMail?.unsubscribe();
   }
 
+  filterAddress(raw: string): string[] {
+    return !raw ? [] : raw.split(',').map(rw => rw.trim());
+  }
+
   getMail(): void {
     this.subsParam = this.activatedRoute.params.subscribe({
       next: p => {

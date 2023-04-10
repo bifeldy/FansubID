@@ -76,6 +76,23 @@ export class MailboxListComponent implements OnInit, OnDestroy {
     this.subsMailbox?.unsubscribe();
   }
 
+  filterAddress(raw: string) {
+    let addr = '';
+    if (raw) {
+      for (const rw of raw.split(',')) {
+        if (addr) {
+          addr += ', ';
+        }
+        if (rw.includes('<') && rw.includes('>')) {
+          addr += rw.split('<')[1].split('>')[0].trim();
+        } else {
+          addr += rw.trim();
+        }
+      }
+    }
+    return addr;
+  }
+
   getMailbox(): void {
     this.bs.busy();
     if (this.subsMailbox) {
@@ -91,8 +108,8 @@ export class MailboxListComponent implements OnInit, OnDestroy {
           this.mailData[this.selectedMailBox].row.push({
             id: r.id,
             Tanggal: r.date,
-            Pengirim: r.from,
-            Penerima: r.to,
+            Pengirim: this.filterAddress(r.from),
+            Penerima: this.filterAddress(r.to),
             Topik: r.subject,
             Lampiran: `${r.attachment_count} Berkas`
           });
