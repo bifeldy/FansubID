@@ -33,10 +33,10 @@ export class RateLimitGuard extends ThrottlerGuard {
     if (ttls.length >= limit) {
       throw new HttpException({
         info: '💩 429 - Rate Limit :: Kebanjiran Permintaan 🤬',
-        limit,
-        ttl,
         result: {
           message: 'Sabar Wheiy, Jangan Nge-SPAM',
+          limit,
+          ttl
         }
       }, HttpStatus.TOO_MANY_REQUESTS);
     }
