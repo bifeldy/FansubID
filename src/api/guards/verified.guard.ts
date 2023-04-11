@@ -34,14 +34,14 @@ export class VerifiedGuard implements CanActivate {
       throw new HttpException({
         info: '😡 418 - Authorization :: Whoops, Akses Ditolak 😤',
         result: {
-          message: `💩 Khusus Pengguna Terverifikasi! 🤬`
+          message: `Khusus Pengguna Terverifikasi!`
         }
       }, HttpStatus.I_AM_A_TEAPOT);
     }
     throw new HttpException({
       info: '😡 401 - Authorization :: Whoops, Akses Ditolak 😤',
       result: {
-        message: '💩 Anda Belum Login! 🤬'
+        message: 'Anda Belum Login!'
       }
     }, HttpStatus.UNAUTHORIZED);
   }

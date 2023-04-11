@@ -32,11 +32,11 @@ export class RateLimitGuard extends ThrottlerGuard {
     this.gs.log('[RATE_LIMIT_GUARD-SESSION] ⌛', ttls);
     if (ttls.length >= limit) {
       throw new HttpException({
-        info: '😡 429 - Rate Limit :: Kebanjiran Permintaan 😤',
+        info: '💩 429 - Rate Limit :: Kebanjiran Permintaan 🤬',
         limit,
         ttl,
         result: {
-          message: '💩 Sabar Wheiy, Jangan Nge-SPAM 🤬',
+          message: 'Sabar Wheiy, Jangan Nge-SPAM',
         }
       }, HttpStatus.TOO_MANY_REQUESTS);
     }

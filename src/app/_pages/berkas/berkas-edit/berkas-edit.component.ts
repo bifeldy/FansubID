@@ -481,7 +481,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.bs.busy();
     const body = this.gs.getDirtyValues(this.fg);
-    this.gs.log('[FANSUB_EDIT_DIRTY]', body);
     if ('fansub_list' in body) {
       const fansubId = [];
       for (const fs of this.fg.value.fansub_list) {
@@ -490,6 +489,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       body.fansub_id = fansubId;
       delete body.fansub_list;
     }
+    this.gs.log('[BERKAS_EDIT_DIRTY]', body);
     this.submitted = true;
     if (this.fg.invalid) {
       this.submitted = false;

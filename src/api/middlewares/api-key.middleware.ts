@@ -55,7 +55,7 @@ export class ApiKeyMiddleware implements NestMiddleware {
         key,
         origin: clientOriginIpCc.origin_ip,
         country: clientOriginIpCc.country_code,
-        message: `💩 Api Key Salah / Tidak Terdaftar! 🤬`
+        message: `Api Key Salah / Tidak Terdaftar!`
       }
     }, HttpStatus.UNAUTHORIZED);
   }

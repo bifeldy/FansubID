@@ -31,14 +31,16 @@ export class BannedMiddleware implements NestMiddleware {
       if (!key) {
         const decoded = this.cs.credentialDecode(token);
         user = await this.as.getUserRequestJwt(decoded.user.id, token);
-        const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
-        if (user.session_origin !== clientOriginIpCc.origin_ip) {
-          throw new HttpException({
-            info: '🙄 401 - JWT :: Session Hijacked 😪',
-            result: {
-              message: `💩 Kredensial Tidak Cocok! 🤬`
-            }
-          }, HttpStatus.UNAUTHORIZED);
+        if (user) {
+          const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
+          if (user.session_origin !== clientOriginIpCc.origin_ip) {
+            throw new HttpException({
+              info: '🙄 401 - Sesion :: Expired 😪',
+              result: {
+                message: 'Silahkan Login Ulang!'
+              }
+            }, HttpStatus.UNAUTHORIZED);
+          }
         }
       }
       this.gs.log('[BANNED_MIDDLEWARE-USER] 🧨', user);
@@ -50,7 +52,7 @@ export class BannedMiddleware implements NestMiddleware {
         throw new HttpException({
           info: '🙄 403 - Banned :: Akun Dikunci 😪',
           result: {
-            message: `💩 Akun Tidak Dapat Digunakan :: ${banned.reason} 🤬`
+            message: `Akun Tidak Dapat Digunakan :: ${banned.reason}`
           }
         }, HttpStatus.FORBIDDEN);
       }

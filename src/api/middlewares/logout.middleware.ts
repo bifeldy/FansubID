@@ -49,7 +49,7 @@ export class LogoutMiddleware implements NestMiddleware {
       throw new HttpException({
         info: '🙄 401 - Authentication API :: Logout Gagal 😪',
         result: {
-          message: 'Sesi Anda Tidak Dapat Dicocokkan!'
+          message: 'Sesi Tidak Ditemukan!'
         }
       }, HttpStatus.UNAUTHORIZED);
     }

@@ -54,9 +54,9 @@ export class VerifyController {
       };
     }
     throw new HttpException({
-      info: '🤧 400 - Verifikasi API :: JWT Token Tidak Ada 😷',
+      info: '🤧 400 - Verifikasi API :: JWT / Key Tidak Ada 😷',
       result: {
-        message: 'Data Tidak Lengkap!'
+        message: 'Anda Belum Login!'
       }
     }, HttpStatus.BAD_REQUEST);
   }

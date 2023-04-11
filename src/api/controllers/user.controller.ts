@@ -167,9 +167,10 @@ export class UserController {
     try {
       if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body) {
         const user: UserModel = res.locals['user'];
+        const old_password = this.cs.hashPassword(req.body.old_password);
         const selectedUser = await this.userRepo.findOneOrFail({
           where: [
-            { username: ILike(req.params['username']) }
+            { username: ILike(req.params['username']), password: Equal(old_password) }
           ],
           relations: ['kartu_tanda_penduduk_', 'profile_']
         });

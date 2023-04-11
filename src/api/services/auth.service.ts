@@ -31,10 +31,7 @@ export class AuthService {
     try {
       const user = await this.userRepo.findOneOrFail({
         where: [
-          {
-            id: Equal(userId),
-            session_token: Equal(token) 
-          }
+          { id: Equal(userId), session_token: Equal(token) }
         ],
         relations: ['kartu_tanda_penduduk_', 'profile_']
       });

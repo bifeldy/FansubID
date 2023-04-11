@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, NestMiddleware, Next, Req, Res } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { ILike } from 'typeorm';
+import { Equal, ILike } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
@@ -30,8 +30,8 @@ export class LoginMiddleware implements NestMiddleware {
         const reqBodyPassword = this.cs.hashPassword(req.body.password);
         const selectedUser = await this.userRepo.findOneOrFail({
           where: [
-            { username: ILike(req.body.userNameOrEmail), password: ILike(reqBodyPassword) },
-            { email: ILike(req.body.userNameOrEmail), password: ILike(reqBodyPassword) }
+            { username: ILike(req.body.userNameOrEmail), password: Equal(reqBodyPassword) },
+            { email: ILike(req.body.userNameOrEmail), password: Equal(reqBodyPassword) }
           ]
         });
         const { password, session_token, session_origin, ...noPwdSes } = selectedUser;
@@ -45,7 +45,7 @@ export class LoginMiddleware implements NestMiddleware {
           throw new HttpException({
             info: '🙄 403 - Banned :: Akun Dikunci 😪',
             result: {
-              message: `💩 Akun Tidak Dapat Digunakan :: ${banned.reason} 🤬`
+              message: `Akun Tidak Dapat Digunakan :: ${banned.reason}`
             }
           }, HttpStatus.FORBIDDEN);
         }

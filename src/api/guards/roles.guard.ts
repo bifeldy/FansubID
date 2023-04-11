@@ -35,14 +35,14 @@ export class RolesGuard implements CanActivate {
       throw new HttpException({
         info: '😡 403 - Authorization :: Whoops, Akses Ditolak 😤',
         result: {
-          message: `💩 Membutuhkan Hak ${requiredRoles.join(', ')} 🤬`
+          message: `Membutuhkan Hak ${requiredRoles.join(', ')}`
         }
       }, HttpStatus.FORBIDDEN);
     }
     throw new HttpException({
       info: '😡 401 - Authorization :: Whoops, Akses Ditolak 😤',
       result: {
-        message: '💩 Anda Belum Login! 🤬'
+        message: 'Anda Belum Login!'
       }
     }, HttpStatus.UNAUTHORIZED);
   }

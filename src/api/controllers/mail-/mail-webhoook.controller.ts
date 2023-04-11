@@ -67,7 +67,7 @@ export class MailWebhookController {
         throw new HttpException({
           info: '🙄 401 - API Key :: Kunci Tidak Dapat Digunakan 😪',
           result: {
-            message: `💩 Api Key Bukan Milik System Bawaan! 🤬`
+            message: `Api Key Bukan Milik System Bawaan!`
           }
         }, HttpStatus.UNAUTHORIZED);
       }

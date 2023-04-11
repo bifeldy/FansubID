@@ -119,15 +119,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   initForm(data): void {
     this.fg = this.fb.group({
-      description: [data.profile_.description, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      new_password: [
-        null,
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(5),
-          Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)
-        ])
-      ],
+      description: [data.profile_.description, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      old_password: [null, Validators.compose([Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      new_password: [null, Validators.compose([Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       image_photo: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       image_cover: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
@@ -251,10 +245,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.bs.busy();
     const body = this.gs.getDirtyValues(this.fg);
-    this.gs.log('[USER_EDIT_DIRTY]', body);
-    if ('new_password' in body) {
+    body.old_password = this.cs.hashPassword(this.fg.value.old_password);
+    if ('new_password' in body && body.new_password) {
       body.new_password = this.cs.hashPassword(this.fg.value.new_password);
     }
+    this.gs.log('[USER_EDIT_DIRTY]', body);
     this.submitted = true;
     if (this.fg.invalid) {
       this.submitted = false;
