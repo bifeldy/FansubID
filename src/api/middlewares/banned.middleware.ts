@@ -5,6 +5,8 @@ import { environment } from '../../environments/api/environment';
 
 import { UserModel } from '../../models/req-res.model';
 
+import { ApiKeyService } from '../repository/api-key.service';
+
 import { AuthService } from '../services/auth.service';
 import { CryptoService } from '../services/crypto.service';
 import { GlobalService } from '../services/global.service';
@@ -13,6 +15,7 @@ import { GlobalService } from '../services/global.service';
 export class BannedMiddleware implements NestMiddleware {
 
   constructor(
+    private aks: ApiKeyService,
     private as: AuthService,
     private cs: CryptoService,
     private gs: GlobalService
@@ -28,6 +31,15 @@ export class BannedMiddleware implements NestMiddleware {
       if (!key) {
         const decoded = this.cs.credentialDecode(token);
         user = await this.as.getUserRequestJwt(decoded.user.id, token);
+        const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
+        if (user.session_origin !== clientOriginIpCc.origin_ip) {
+          throw new HttpException({
+            info: '🙄 401 - JWT :: Session Hijacked 😪',
+            result: {
+              message: `💩 Kredensial Tidak Cocok! 🤬`
+            }
+          }, HttpStatus.UNAUTHORIZED);
+        }
       }
       this.gs.log('[BANNED_MIDDLEWARE-USER] 🧨', user);
       if (!user) {

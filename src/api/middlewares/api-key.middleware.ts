@@ -42,8 +42,6 @@ export class ApiKeyMiddleware implements NestMiddleware {
             ],
             relations: ['kartu_tanda_penduduk_', 'profile_']
           });
-          user.session_origin = clientOriginIpCc.origin_ip;
-          user = await this.userRepo.save(user as any);
         } catch (error) {
           user = null;
         }
