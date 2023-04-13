@@ -150,7 +150,7 @@
               <div class="col-12">
                 <div class="py-2 px-3">Dapat Digunakan Sebagai Referensi Untuk Pratinjau, Namun Kemungkinan Jenis Huruf Tulisan Gagal Dimuat Sehingga Nantinya Akan Muncul Huruf Dengan Gambar 🔳 Misalnya Kanji, Lalu Juga Memungkinkan Terjadinya Gerakan Patah - Patah Jika Browser Tidak Kuat Untuk Render .ASS Subtitle Dengan Efek Yang Terlalu Banyak.</div>
                 <div class="px-3">
-                  <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isHaveDDL && !isDiscord && !vjsInit && !vjsReady">
+                  <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isHaveDDL && !vjsInit && !vjsReady">
                     <mat-icon class="me-1">play_arrow</mat-icon>
                     Mulai Streaming Video
                   </button>
@@ -165,10 +165,6 @@
                   <button class="w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">
                     <mat-icon class="me-1">enhanced_encryption</mat-icon>
                     {{ berkasData.attachment_ }}
-                  </button>
-                  <button class="w-100" mat-stroked-button color="accent" *ngIf="isDiscord">
-                    <mat-icon class="me-1">event_busy</mat-icon>
-                    Media Player Tidak Tersedia
                   </button>
                 </div>
               </div>

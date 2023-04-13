@@ -81,12 +81,8 @@ export class MailboxDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  downloadAttachment(attachmentId): void {
-    this.wb.winboxOpenUri(this.ddlUrlLink(attachmentId));
-  }
-
-  ddlUrlLink(id): string {
-    return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
+  downloadAttachment(id): void {
+    this.wb.winboxOpenUri(`${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`);
   }
 
 }

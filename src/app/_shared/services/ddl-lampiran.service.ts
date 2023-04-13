@@ -35,7 +35,7 @@ export class DdlLampiranService {
   }
 
   downloadDdlProxy(ddlId): Observable<any> {
-    return this.api.getData(`/ddl-file/${ddlId}`, {
+    return this.api.patchData(`/ddl-file/${ddlId}`, {}, false, {
       responseType: 'blob',
       observe: 'events',
       reportProgress: true,

@@ -110,9 +110,9 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     return CONSTANTS.fileTypeAttachmentAllowed.join(', ');
   }
 
-  get isStreamable(): boolean {
+  get permanentStorage(): boolean {
     const role: RoleModel = this.AS.currentUserSubject?.value?.role;
-    return role === RoleModel.ADMIN || role === RoleModel.MODERATOR || role === RoleModel.FANSUBBER
+    return role === RoleModel.ADMIN || role === RoleModel.MODERATOR;
   }
 
   get isAttachmentUploaded(): boolean {
@@ -225,7 +225,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([]),
       private: [false, Validators.compose([Validators.required])],
-      streamable: [false, Validators.compose([Validators.required])]
+      permanent_storage: [false, Validators.compose([Validators.required])]
     });
     if (!this.as.currentUserSubject?.value?.verified) {
       this.addDownloadLink();
@@ -515,7 +515,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       name: this.fg.value.name,
       description: this.fg.value.description,
       private: this.fg.value.private,
-      streamable: this.fg.value.streamable,
+      permanent_storage: this.fg.value.permanent_storage,
       projectType_id: this.fg.value.projectType_id,
       anime_id: this.fg.value.anime_id,
       dorama_id: this.fg.value.dorama_id,

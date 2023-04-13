@@ -235,7 +235,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   ddlUrlLink(id): string {
-    return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
+    if (!this.isDiscord) {
+      return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
+    }
+    return `${environment.apiUrl}/ddl-file/${id}?ngsw-bypass=true`;
   }
 
   setupVjs(): void {

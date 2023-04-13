@@ -277,13 +277,15 @@ export class BerkasController {
             }
             // Upload Video -- Mp4, Mkv, etc
             if (environment.production) {
-              let streamable = false;
-              if ('streamable' in req.body) {
-                if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER) {
-                  streamable = (req.body.streamable === true);
+              let permanent_storage = false;
+              if ('permanent_storage' in req.body) {
+                if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
+                  permanent_storage = (req.body.permanent_storage === true);
+                } else {
+                  permanent_storage = false;
                 }
               }
-              if (streamable) {
+              if (permanent_storage) {
                 this.gdrive.gDrive(true).then(async (gdrive) => {
                   const dfile = await gdrive.files.create({
                     requestBody: {

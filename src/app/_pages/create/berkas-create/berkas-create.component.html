@@ -47,9 +47,9 @@
                       Jadikan Private, Akses Hanya Dengan URL
                     </mat-slide-toggle>
                   </div>
-                  <div class="col-12 p-3" *ngIf="isStreamable && isAttachmentUploaded">
-                    <mat-slide-toggle formControlName="streamable" matTooltip="Akan kena limit kecepatan server">
-                      Perbolehkan Stream Media Player
+                  <div class="col-12 p-3" *ngIf="permanentStorage && isAttachmentUploaded">
+                    <mat-slide-toggle formControlName="permanent_storage" matTooltip="Berkas terjamin tidak akan hilang / expired">
+                      Permanent Storage
                     </mat-slide-toggle>
                   </div>
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
