@@ -85,6 +85,13 @@ export class DdlFileController {
       res_raw_headers.set('Content-Range', `bytes ${res_raw_header_range_start}-${res_raw_headers_content_length_minus_1}/${attachment.size}`);
       res_raw_headers.delete('Content-Disposition');
       res_raw_headers.set('Content-Disposition', `attachment; filename="${attachment.name}.${attachment.ext}"`);
+      res_raw_headers.delete('Content-Type');
+      if (attachment.mime.startsWith('video/')) {
+        // Paksa 'Content-Type' ke 'video/webm' untuk video playback browser
+        res_raw_headers.set('Content-Type', 'video/webm');
+      } else {
+        res_raw_headers.set('Content-Type', attachment.mime);
+      }
       res.writeHead(res_raw.status, res_raw_headers.raw());
       res_raw.body.on('error', e => {
         this.gs.log('[DISCORD-ERROR] 💦', e, 'error');

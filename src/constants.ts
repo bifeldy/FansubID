@@ -23,6 +23,8 @@ export const CONSTANTS = {
   cronTrackerStatistics: 'CRON_TRACKER_STATISTICS',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
+  extSubs: ['ass', 'srt'],
+  extFonts: ['ttf', 'otf', 'woff', 'woff2'],
   fileTypeAttachmentAllowed: [
     'video/x-matroska',
     'video/mp4'

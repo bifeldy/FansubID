@@ -258,6 +258,13 @@ export class BerkasController {
                           mkvAttachment.size = ef.size;
                           mkvAttachment.user_ = resAttachmentSave.user_;
                           mkvAttachment.parent_attachment_ = resAttachmentSave;
+                          if (CONSTANTS.extSubs.includes(fileExt)) {
+                            mkvAttachment.mime = 'text/plain';
+                          } else if (CONSTANTS.extFonts.includes(fileExt)) {
+                            mkvAttachment.mime = `font/${fileExt}`;
+                          } else {
+                            mkvAttachment.mime = 'application/octet-stream';
+                          }
                           const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
                           // Upload Video Attachment -- Subtitles, Fonts, etc
                           if (environment.production) {
@@ -277,15 +284,15 @@ export class BerkasController {
                               const otherAttachment = await this.attachmentRepo.find({
                                 where: [
                                   {
-                                    name: Equal(fileName),
-                                    ext: Equal(fileExt),
-                                    size: Equal(ef.size),
+                                    name: Equal(resMkvAttachmentSave.name),
+                                    ext: Equal(resMkvAttachmentSave.ext),
+                                    size: Equal(resMkvAttachmentSave.size),
+                                    mime: Equal(resMkvAttachmentSave.mime),
                                     google_drive: IsNull()
                                   }
                                 ]
                               });
                               for (const oa of otherAttachment) {
-                                oa.mime = dfile.data.mimeType;
                                 oa.google_drive = dfile.data.id;
                               }
                               await this.attachmentRepo.save(otherAttachment);
@@ -486,13 +493,7 @@ export class BerkasController {
             const subtitles = await this.attachmentRepo.find({
               where: [
                 {
-                  ext: ILike('ass'),
-                  parent_attachment_: {
-                    id: Equal(file.attachment_.id)
-                  }
-                },
-                {
-                  ext: ILike('srt'),
+                  ext: In(CONSTANTS.extSubs),
                   parent_attachment_: {
                     id: Equal(file.attachment_.id)
                   }
@@ -509,13 +510,7 @@ export class BerkasController {
             const fonts = await this.attachmentRepo.find({
               where: [
                 {
-                  ext: ILike('ttf'),
-                  parent_attachment_: {
-                    id: Equal(file.attachment_.id)
-                  }
-                },
-                {
-                  ext: ILike('otf'),
+                  ext: In(CONSTANTS.extFonts),
                   parent_attachment_: {
                     id: Equal(file.attachment_.id)
                   }
