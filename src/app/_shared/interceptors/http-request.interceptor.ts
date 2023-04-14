@@ -23,7 +23,9 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.gs.isBrowser && request.url.startsWith(environment.apiUrl)) {
+    const urlTarget = request.url;
+    const intercept = urlTarget.startsWith(environment.baseUrl) || urlTarget.startsWith(environment.apiUrl);
+    if (this.gs.isBrowser && intercept) {
       request = request.clone({
         withCredentials: !this.gs.isDevMode
       });

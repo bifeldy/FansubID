@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 import { BannedModel, BerkasModel, JsonResponse, KomentarModel, LikeDislikeModel, FansubMemberModel, UserModel } from '../../../models/req-res.model';
 import { TrackModel } from '../../../models/socket-io.model';
@@ -38,10 +38,11 @@ export class UserService {
   }
 
   updateUser(username, userData): Observable<JsonResponse<UserModel>> {
-    return this.api.putData(`/user/${username}`, userData).pipe(map(respUpdateUser => {
-      this.as.token = respUpdateUser.result.token;
-      return respUpdateUser;
-    }));
+    return this.api.putData(`/user/${username}`, userData).pipe(
+      tap(respUpdateUser => {
+        this.as.token = respUpdateUser.result.token;
+      })
+    );
   }
 
   getUserBerkas(username, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<BerkasModel>> {
@@ -65,10 +66,11 @@ export class UserService {
   }
 
   verifyKTP(userData): Observable<JsonResponse> {
-    return this.api.postData('/verify-ktp', userData).pipe(map(respVerifyKTP => {
-      this.as.token = respVerifyKTP.result.token;
-      return respVerifyKTP;
-    }));
+    return this.api.postData('/verify-ktp', userData).pipe(
+      tap(respVerifyKTP => {
+        this.as.token = respVerifyKTP.result.token;
+      })
+    );
   }
 
   sosmedLogin(data): Observable<JsonResponse> {

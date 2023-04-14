@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 import { JsonResponse, UserModel } from '../../../models/req-res.model';
 
@@ -34,11 +34,12 @@ export class AuthService {
 
   verify(token: any): Observable<JsonResponse<UserModel>> {
     this.gs.log('[AUTH_VERIFY]', token);
-    return this.api.patchData(`/verify`, { token }).pipe(map(respVerify => {
-      this.currentUserSubject.next(respVerify.result);
-      this.token = respVerify.token;
-      return respVerify;
-    }));
+    return this.api.patchData(`/verify`, { token }).pipe(
+      tap(respVerify => {
+        this.currentUserSubject.next(respVerify.result);
+        this.token = respVerify.token;
+      })
+    );
   }
 
   resendActivation(id: any): Observable<JsonResponse> {
@@ -49,9 +50,8 @@ export class AuthService {
   login(loginData: any): Observable<JsonResponse> {
     this.gs.log('[AUTH_LOGIN]', loginData);
     return this.api.postData(`/login`, loginData).pipe(
-      map(respLogin => {
+      tap(respLogin => {
         this.token = respLogin.result.token;
-        return respLogin;
       })
     );
   }

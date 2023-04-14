@@ -95,9 +95,9 @@ import { environment } from '../environments/app/environment';
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: MyTooltipConfig },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'always' } },
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 10000 } },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpCancelInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpResponseInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpCancelInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
