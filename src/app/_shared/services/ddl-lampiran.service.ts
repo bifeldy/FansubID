@@ -49,7 +49,10 @@ export class DdlLampiranService {
     return this.api.getData(url, {
       responseType: 'blob',
       observe: 'events',
-      reportProgress: true
+      reportProgress: true,
+      headers: {
+        'ngsw-bypass': 'true'
+      }
     });
   }
 

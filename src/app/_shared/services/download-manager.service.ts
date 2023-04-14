@@ -171,6 +171,8 @@ export class DownloadManagerService {
     attachment.mode = 'indeterminate';
     attachment.percentage = 0;
     attachment.speed = 0;
+    attachment.totals = 0;
+    attachment.loaded = 0;
     attachment.isDownloading = false;
     attachment.isCompleted = false;
     if (attachment.handler) {

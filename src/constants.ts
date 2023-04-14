@@ -12,7 +12,7 @@ export const CONSTANTS = {
   apiTagQuiz: 'Quiz',
   apiTagSession: 'Session',
   apiTagUser: 'User',
-  attachmentSpeedLimiterBps: 512 * 1000, // 512 KB/s
+  attachmentSpeedLimiterBps: 256 * 1000, // 256 KB/s
   blacklistedWords: [
     '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id',
     'localhost', 'mail', 'email', 'e-mail', 'tracker', 'fansub', 'fansubber',
