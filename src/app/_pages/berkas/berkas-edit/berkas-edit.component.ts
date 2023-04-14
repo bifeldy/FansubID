@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
@@ -158,6 +158,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.bs.idle();
       }
     });
+  }
+
+  hasRequiredField(abstractControl: AbstractControl, controlName: string): boolean {
+    return abstractControl.get(controlName).hasValidator(Validators.required);
   }
 
   initForm(data): void {

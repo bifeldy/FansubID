@@ -56,7 +56,7 @@ export class NewsController {
       });
       for (const n of news) {
         delete n.content;
-        n.tags = JSON.parse(n.tags);
+        (n as any).tags = JSON.parse(n.tags);
         if ('user_' in n && n.user_) {
           delete n.user_.created_at;
           delete n.user_.updated_at;
@@ -153,7 +153,7 @@ export class NewsController {
         ],
         relations: ['user_'],
       });
-      news.tags = JSON.parse(news.tags);
+      (news as any).tags = JSON.parse(news.tags);
       if ('user_' in news && news.user_) {
         delete news.user_.created_at;
         delete news.user_.updated_at;

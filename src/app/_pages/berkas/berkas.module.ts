@@ -23,6 +23,7 @@ import { RolesGuard } from '../../_shared/guards/roles.guard';
 import { BerkasDetailComponent } from './berkas-detail/berkas-detail.component';
 import { BerkasEditComponent } from './berkas-edit/berkas-edit.component';
 import { BerkasListComponent } from './berkas-list/berkas-list.component';
+import { NoDataModule } from '../../_shared/components/no-data/no-data.module';
 
 const routes: Routes = [
   {
@@ -72,7 +73,8 @@ const routes: Routes = [
     VjsPlayerModule,
     DiscussionModule,
     ReportModule,
-    CustomPipeModule
+    CustomPipeModule,
+    NoDataModule
   ]
 })
 export class BerkasModule { }

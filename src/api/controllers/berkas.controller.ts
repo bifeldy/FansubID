@@ -155,7 +155,7 @@ export class BerkasController {
             }
           }
         }
-        if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER) {
+        if (user.verified) {
           if (filteredUrls.length <= 0 && !req.body.attachment_id) {
             throw new HttpException({
               info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
@@ -174,8 +174,8 @@ export class BerkasController {
             }, HttpStatus.BAD_REQUEST);
           }
         }
-        berkas.name = req.body.name;
         berkas.download_url = JSON.stringify(filteredUrls);
+        berkas.name = req.body.name;
         if ('description' in req.body) {
           berkas.description = req.body.description;
         }
@@ -360,12 +360,12 @@ export class BerkasController {
           }
         }
         const resFileSave = await this.berkasRepo.save(berkas);
-        resFileSave.download_url = JSON.parse(resFileSave.download_url);
+        (resFileSave as any).download_url = JSON.parse(resFileSave.download_url);
         const fansubEmbedData = [];
         if ('fansub_' in resFileSave && resFileSave.fansub_) {
           for (const f of resFileSave.fansub_) {
-            f.tags = JSON.parse(f.tags);
-            f.urls = JSON.parse(f.urls);
+            (f as any).tags = JSON.parse(f.tags);
+            (f as any).urls = JSON.parse(f.urls);
             delete f.created_at;
             delete f.updated_at;
             fansubEmbedData.push(f.name);
@@ -474,7 +474,7 @@ export class BerkasController {
         delete file.user_.updated_at;
       }
       if (user) {
-        file.download_url = JSON.parse(file.download_url);
+        (file as any).download_url = JSON.parse(file.download_url);
         if (!user.verified) {
           if (file.attachment_) {
             (file as any).attachment_ = 'Harap Verifikasi Akun!';
@@ -570,6 +570,37 @@ export class BerkasController {
           relations: ['user_', 'attachment_', 'anime_', 'dorama_', 'project_type_', 'fansub_']
         });
         if (user.id === file.user_.id) {
+          if ('download_url' in req.body) {
+            const filteredUrls = [];
+            for (const u of req.body.download_url) {
+              if ('url' in u && 'name' in u && u.url && u.name) {
+                filteredUrls.push({
+                  url: u.url,
+                  name: u.name
+                });
+              }
+            }
+            if (user.verified) {
+              if (filteredUrls.length <= 0 && !file.attachment_?.id) {
+                throw new HttpException({
+                  info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+                  result: {
+                    message: 'Wajib Mengisi Min 1 URL Eksternal / Upload 1 DDL Stream!'
+                  }
+                }, HttpStatus.BAD_REQUEST);
+              }
+            } else {
+              if (filteredUrls.length <= 0) {
+                throw new HttpException({
+                  info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+                  result: {
+                    message: 'Wajib Mengisi Min 1 URL Eksternal!'
+                  }
+                }, HttpStatus.BAD_REQUEST);
+              }
+            }
+            file.download_url = JSON.stringify(filteredUrls);
+          }
           if ('name' in req.body) {
             file.name = req.body.name;
           }
@@ -600,18 +631,6 @@ export class BerkasController {
             file.anime_ = null;
             file.dorama_ = dorama;
           }
-          if ('download_url' in req.body) {
-            const filteredUrls = [];
-            for (const u of req.body.download_url) {
-              if ('url' in u && 'name' in u && u.url && u.name) {
-                filteredUrls.push({
-                  url: u.url,
-                  name: u.name
-                });
-              }
-            }
-            file.download_url = JSON.stringify(filteredUrls);
-          }
           if ('fansub_id' in req.body) {
             const fansub = await this.fansubRepo.find({
               where: [
@@ -629,12 +648,12 @@ export class BerkasController {
             file.project_type_ = project;
           }
           const resFileSave = await this.berkasRepo.save(file);
-          resFileSave.download_url = JSON.parse(resFileSave.download_url);
+          (resFileSave as any).download_url = JSON.parse(resFileSave.download_url);
           const fansubEmbedData = [];
           if ('fansub_' in resFileSave && resFileSave.fansub_) {
             for (const f of resFileSave.fansub_) {
-              f.tags = JSON.parse(f.tags);
-              f.urls = JSON.parse(f.urls);
+              (f as any).tags = JSON.parse(f.tags);
+              (f as any).urls = JSON.parse(f.urls);
               delete f.created_at;
               delete f.updated_at;
               fansubEmbedData.push(f.name);

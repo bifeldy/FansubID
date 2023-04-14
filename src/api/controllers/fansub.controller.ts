@@ -64,8 +64,8 @@ export class FansubController {
       });
       for (const f of fansubs) {
         delete f.description;
-        f.urls = JSON.parse(f.urls);
-        f.tags = JSON.parse(f.tags);
+        (f as any).urls = JSON.parse(f.urls);
+        (f as any).tags = JSON.parse(f.tags);
       }
       return {
         info: `😅 200 - Fansub API :: List All 🤣`,
@@ -210,8 +210,8 @@ export class FansubController {
         ],
         relations: ['user_']
       });
-      fansub.urls = JSON.parse(fansub.urls);
-      fansub.tags = JSON.parse(fansub.tags);
+      (fansub as any).urls = JSON.parse(fansub.urls);
+      (fansub as any).tags = JSON.parse(fansub.tags);
       if ('user_' in fansub && fansub.user_) {
         delete fansub.user_.created_at;
         delete fansub.user_.updated_at;
