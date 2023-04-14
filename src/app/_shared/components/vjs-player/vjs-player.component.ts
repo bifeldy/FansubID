@@ -4,6 +4,8 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 
 import { VideoJsPlayer } from 'video.js';
 
+import { CONSTANTS } from '../../../../constants';
+
 import { GlobalService } from '../../services/global.service';
 
 declare const SubtitlesOctopus: any;
@@ -47,7 +49,7 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
           controls: true,
           fluid: true,
           muted: false,
-          sources: [{ src: this.videoUrl, type: 'video/webm' }],
+          sources: [{ src: this.videoUrl, type: CONSTANTS.mimeStreamableVideo }],
           poster: this.poster
         }, () => {
           this.gs.log('[VIDEO-JS_READY]', this.player);

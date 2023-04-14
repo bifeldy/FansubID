@@ -206,8 +206,8 @@ export class AttachmentController {
         );
         const dfile_header = dfile.headers;
         if (attachment.mime.startsWith('video/')) {
-          // Paksa 'Content-Type' ke 'video/webm' untuk video playback browser
-          dfile_header['content-type'] = 'video/webm';
+          // Paksa 'Content-Type' untuk video playback browser
+          dfile_header['content-type'] = CONSTANTS.mimeStreamableVideo;
         } else {
           dfile_header['content-type'] = attachment.mime;
         }
@@ -223,8 +223,8 @@ export class AttachmentController {
         const fIdx = files.findIndex(f => f.name.includes(attachment.name));
         if (fIdx >= 0) {
           if (attachment.mime.startsWith('video/')) {
-            // Paksa 'Content-Type' ke 'video/webm' untuk video playback browser
-            res.setHeader('content-type', 'video/webm');
+            // Paksa 'Content-Type' untuk video playback browser
+            res.setHeader('content-type', CONSTANTS.mimeStreamableVideo);
           } else {
             res.setHeader('content-type', attachment.mime);
           }

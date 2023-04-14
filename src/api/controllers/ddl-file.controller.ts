@@ -87,8 +87,8 @@ export class DdlFileController {
       res_raw_headers.set('Content-Disposition', `attachment; filename="${attachment.name}.${attachment.ext}"`);
       res_raw_headers.delete('Content-Type');
       if (attachment.mime.startsWith('video/')) {
-        // Paksa 'Content-Type' ke 'video/webm' untuk video playback browser
-        res_raw_headers.set('Content-Type', 'video/webm');
+        // Paksa 'Content-Type' untuk video playback browser
+        res_raw_headers.set('Content-Type', CONSTANTS.mimeStreamableVideo);
       } else {
         res_raw_headers.set('Content-Type', attachment.mime);
       }
