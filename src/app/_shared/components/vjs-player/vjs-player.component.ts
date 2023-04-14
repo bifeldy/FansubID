@@ -24,7 +24,6 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
   subtitlesOctopus = null;
 
   @Input() videoUrl = '';
-  @Input() videoType = 'x-matroska';
 
   @Input() subtitleUrl = '';
   @Input() subtitleFonts = [];
@@ -42,18 +41,16 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       if (this.target && this.videoUrl) {
+        this.gs.log('[VIDEO-JS_INIT_URL]', this.videoUrl);
         this.player = videojs(this.target.nativeElement, {
           autoplay: false,
           controls: true,
           fluid: true,
           muted: false,
-          sources: [{
-            src: this.videoUrl,
-            type: `video/${this.videoType === 'mkv' ? 'mp4' : this.videoType}`
-          }],
+          sources: [{ src: this.videoUrl, type: 'video/webm' }],
           poster: this.poster
         }, () => {
-          this.gs.log('[VIDEO-JS_INIT]', this.player);
+          this.gs.log('[VIDEO-JS_READY]', this.player);
           if (this.subtitleUrl) {
             this.subtitlesOctopus = new SubtitlesOctopus({
               video: this.target.nativeElement,

@@ -212,7 +212,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           this.gs.log('[INFO_DIALOG_CLOSED]', re);
           // TODO :: Create My Own Browser Extension For Bypassing CORS (?)
           if (re !== undefined) {
-            this.dm.startDownload(id, re);
+            this.dm.startDownload(id, (re === true));
           }
           this.subsDialog.unsubscribe();
         }
@@ -277,14 +277,15 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           if (evt.type === HttpEventType.DownloadProgress) {
             this.gs.log('[DOWNLOAD_PROGRESS]', evt);
           }
+          if (evt.type === HttpEventType.Response) {
+            this.gs.log('[DOWNLOAD_COMPLETED]', evt);
+            this.subtitles = subtitleFiles;
+            this.fonts = fontFiles;
+            this.vjsReady = true;
+          }
         },
         error: err => {
           this.gs.log('[DOWNLOAD_ERROR]', err);
-        },
-        complete: () => {
-          this.subtitles = subtitleFiles;
-          this.fonts = fontFiles;
-          this.vjsReady = true;
         }
       });
     }

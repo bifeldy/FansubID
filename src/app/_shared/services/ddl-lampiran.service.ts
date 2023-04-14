@@ -34,8 +34,8 @@ export class DdlLampiranService {
     return this.api.getData(`/attachment/${attachmentId}?ngsw-bypass=true`);
   }
 
-  downloadDdlProxy(ddlId): Observable<any> {
-    return this.api.patchData(`/ddl-file/${ddlId}`, {}, false, {
+  downloadDdlProxy(attachmentId, ddlId): Observable<any> {
+    return this.api.getData(`/ddl-file/${attachmentId}/${ddlId}`, {
       responseType: 'blob',
       observe: 'events',
       reportProgress: true,

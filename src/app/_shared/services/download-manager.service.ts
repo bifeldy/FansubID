@@ -99,7 +99,7 @@ export class DownloadManagerService {
               if (directDownload) {
                 handler = this.dls.downloadDdlDirect(sr.url);
               } else {
-                handler = this.dls.downloadDdlProxy(sr.id);
+                handler = this.dls.downloadDdlProxy(attachmentId, sr.id);
               }
               handlers.push(handler);
             }
@@ -114,23 +114,23 @@ export class DownloadManagerService {
                   const partBlob: Blob = evt.body;
                   const partBuff: ArrayBuffer = await partBlob.arrayBuffer();
                   const chunk = new Uint8Array(partBuff);
-                  this.gs.log('[DOWNLOAD_CHUNK]', partBuff.byteLength);
+                  this.gs.log('[DOWNLOAD_CHUNK_APPEND]', partBuff.byteLength);
                   chunks.push(chunk);
+                }
+                if (evt.type === HttpEventType.Response && chunks.length === sortedResults.length) {
+                  this.gs.log('[DOWNLOAD_CHUNK_COMPLETED]', chunks);
+                  const fullBlob = new Blob(chunks);
+                  attachment.mode = 'determinate';
+                  attachment.isDownloading = false;
+                  attachment.isCompleted = true;
+                  attachment.data = fullBlob;
+                  this.toast.remove(attachment.toast.toastId);
+                  this.saveFileAs(attachmentId);
                 }
               },
               error: err => {
-                this.gs.log('[DOWNLOAD_ERROR]', err);
+                this.gs.log('[DOWNLOAD_CHUNK_ERROR]', err);
                 this.stopFail(attachment);
-              },
-              complete: () => {
-                const fullBuff = Buffer.concat(chunks)
-                const fullBlob = new Blob([fullBuff]);
-                attachment.mode = 'determinate';
-                attachment.isDownloading = false;
-                attachment.isCompleted = true;
-                attachment.data = fullBlob;
-                this.toast.remove(attachment.toast.toastId);
-                this.saveFileAs(attachmentId);
               }
             });
           },
