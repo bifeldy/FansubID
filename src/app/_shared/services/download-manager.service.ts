@@ -99,7 +99,7 @@ export class DownloadManagerService {
               if (directDownload) {
                 handler = this.dls.downloadDdlDirect(sr.url);
               } else {
-                handler = this.dls.downloadDdlProxy(attachmentId, sr.id);
+                handler = this.dls.downloadDdlProxy(sr.id);
               }
               handlers.push(handler);
             }

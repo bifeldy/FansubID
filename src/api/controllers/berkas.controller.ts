@@ -219,17 +219,22 @@ export class BerkasController {
         if ('attachment_id' in req.body) {
           this.sr.deleteTimeout(`${CONSTANTS.timeoutDeleteTempAttachmentKey}@${req.body.attachment_id}`);
           const tempAttachment = await this.tempAttachmentRepo.findOneOrFail({
-            relations: ['user_'],
             where: [
-              { id: Equal(req.body.attachment_id) }
-            ]
+              {
+                id: Equal(req.body.attachment_id),
+                user_: {
+                  id: Equal(user.id)
+                }
+              }
+            ],
+            relations: ['user_']
           });
           const attachment = this.attachmentRepo.new();
           attachment.name = tempAttachment.name;
           attachment.size = tempAttachment.size;
           attachment.ext = tempAttachment.ext;
           attachment.mime = tempAttachment.mime;
-          attachment.user_ = tempAttachment.user_;
+          attachment.user_ = user;
           const resAttachmentSave = await this.attachmentRepo.save(attachment);
           await this.tempAttachmentRepo.remove(tempAttachment);
           const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
@@ -256,7 +261,7 @@ export class BerkasController {
                           mkvAttachment.name = fileName;
                           mkvAttachment.ext = fileExt;
                           mkvAttachment.size = ef.size;
-                          mkvAttachment.user_ = resAttachmentSave.user_;
+                          mkvAttachment.user_ = user;
                           mkvAttachment.parent_attachment_ = resAttachmentSave;
                           if (CONSTANTS.extSubs.includes(fileExt)) {
                             mkvAttachment.mime = 'text/plain';
@@ -346,7 +351,7 @@ export class BerkasController {
                   }
                 }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
               } else {
-                this.ds.sendAttachment(resAttachmentSave).then(async (chunkParent) => {
+                this.ds.sendAttachment(resAttachmentSave, user).then(async (chunkParent) => {
                   videoUploadCompleted = true;
                   resAttachmentSave.discord = chunkParent;
                   await this.attachmentRepo.save(resAttachmentSave);

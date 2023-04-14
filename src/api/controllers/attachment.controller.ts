@@ -205,12 +205,7 @@ export class AttachmentController {
           }
         );
         const dfile_header = dfile.headers;
-        if (attachment.mime.startsWith('video/')) {
-          // Paksa 'Content-Type' untuk video playback browser
-          dfile_header['content-type'] = CONSTANTS.mimeStreamableVideo;
-        } else {
-          dfile_header['content-type'] = attachment.mime;
-        }
+        dfile_header['content-type'] = attachment.mime;
         res.writeHead(dfile.status, dfile_header);
         dfile.data.on('error', e => {
           this.gs.log('[DRIVE-ERROR] 💦', e, 'error');
@@ -222,12 +217,7 @@ export class AttachmentController {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name.includes(attachment.name));
         if (fIdx >= 0) {
-          if (attachment.mime.startsWith('video/')) {
-            // Paksa 'Content-Type' untuk video playback browser
-            res.setHeader('content-type', CONSTANTS.mimeStreamableVideo);
-          } else {
-            res.setHeader('content-type', attachment.mime);
-          }
+          res.setHeader('content-type', attachment.mime);
           return res.download(
             `${environment.uploadFolder}/${files[fIdx].name}`,
             `${attachment.name}.${attachment.ext}`,

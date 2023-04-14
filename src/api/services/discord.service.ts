@@ -26,7 +26,7 @@ import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
-import { AttachmentModel, RoleModel, SosMedModel } from '../../models/req-res.model';
+import { AttachmentModel, RoleModel, SosMedModel, UserModel } from '../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { ConfigService } from './config.service';
@@ -117,7 +117,7 @@ export class DiscordService {
     }
   }
 
-  async sendAttachment(attachment: AttachmentModel, chunkIdx = null): Promise<string> {
+  async sendAttachment(attachment: AttachmentModel, user: UserModel, chunkIdx = null): Promise<string> {
     let currentChunkIdx: number = 0;
     let chunkParent: string = null;
     const crs = createReadStream(
@@ -143,12 +143,12 @@ export class DiscordService {
             const ddlFile = this.ddlFileRepo.new();
             ddlFile.msg_id = chunkParent;
             ddlFile.chunk_idx = currentChunkIdx;
-            ddlFile.user_ = attachment.user_;
+            ddlFile.user_ = user;
             ddlFile.id = msg.attachments.first().id;
             ddlFile.name = msg.attachments.first().name;
             ddlFile.url = msg.attachments.first().url;
             ddlFile.size = msg.attachments.first().size;
-            ddlFile.mime = msg.attachments.first().contentType || 'application/octet-stream';
+            ddlFile.mime = attachment.mime;
             await this.ddlFileRepo.save(ddlFile);
           }
         } catch (error) {

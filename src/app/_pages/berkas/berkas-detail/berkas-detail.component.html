@@ -150,7 +150,10 @@
                 </h2>
               </div>
               <div class="col-12">
-                <div class="py-2 px-3">Dapat Digunakan Sebagai Referensi Untuk Pratinjau, Namun Kemungkinan Jenis Huruf Tulisan Gagal Dimuat Sehingga Nantinya Akan Muncul Huruf Dengan Gambar 🔳 Misalnya Kanji, Lalu Juga Memungkinkan Terjadinya Gerakan Patah - Patah Jika Browser Tidak Kuat Untuk Render .ASS Subtitle Dengan Efek Yang Terlalu Banyak.</div>
+                <div class="py-2 px-3">
+                  Dapat Digunakan Sebagai Referensi Untuk Pratinjau Namun Kemungkinan Jenis Huruf Tulisan Gagal Dimuat Sehingga Nantinya Akan Muncul Huruf Dengan Gambar 🔳 Misalnya Kanji, Lalu Juga Memungkinkan Terjadinya Gerakan Patah - Patah Jika Browser Tidak Kuat Untuk Render .ASS Subtitle Dengan Efek Yang Terlalu Banyak.
+                  <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1422891" class="text-warning text-decoration-none"> * Browser Firefox Sudah Pasti Tidak Bisa Memutar Video </a>
+                </div>
                 <div class="px-3">
                   <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isHaveDDL && !vjsInit && !vjsReady">
                     <mat-icon class="me-1">play_arrow</mat-icon>
@@ -159,9 +162,9 @@
                   <mat-progress-bar color="accent" mode="buffer" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
                   <app-vjs-player *ngIf="isHaveDDL && vjsInit && vjsReady"
                     [videoUrl]="ddlVideo"
+                    [videoThumb]="videoThumb"
                     [subtitleUrl]="ddlSubtitles"
-                    [subtitleFonts]="ddlFonts"
-                    [poster]="ENV.baseUrl + '/assets/img/favicon.png'">
+                    [subtitleFonts]="ddlFonts">
                   </app-vjs-player>
                   <button class="w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">
                     <mat-icon class="me-1">enhanced_encryption</mat-icon>

@@ -4,8 +4,6 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 
 import { VideoJsPlayer } from 'video.js';
 
-import { CONSTANTS } from '../../../../constants';
-
 import { GlobalService } from '../../services/global.service';
 
 declare const SubtitlesOctopus: any;
@@ -25,12 +23,12 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
   player: VideoJsPlayer;
   subtitlesOctopus = null;
 
-  @Input() videoUrl = '';
+  @Input() videoUrl = null;
+  @Input() videoThumb = null;
 
-  @Input() subtitleUrl = '';
+  @Input() subtitleUrl = null;
   @Input() subtitleFonts = [];
 
-  @Input() poster = '';
 
   constructor(
     private gs: GlobalService
@@ -49,8 +47,8 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
           controls: true,
           fluid: true,
           muted: false,
-          sources: [{ src: this.videoUrl, type: CONSTANTS.mimeStreamableVideo }],
-          poster: this.poster
+          sources: [{ src: this.videoUrl, type: 'video/mp4' }],
+          poster: this.videoThumb
         }, () => {
           this.gs.log('[VIDEO-JS_READY]', this.player);
           if (this.subtitleUrl) {

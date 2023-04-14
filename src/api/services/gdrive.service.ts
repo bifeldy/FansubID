@@ -31,22 +31,18 @@ export class GdriveService {
   //   token_type: 'Bearer'
   // }
   async gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
-    try {
-      const url = new URL(this.gcp.serviceAccount.token_uri);
-      const form = new URLSearchParams();
-      form.append('grant_type', 'refresh_token');
-      form.append('client_id', this.gcp.clientId);
-      form.append('client_secret', this.gcp.clientSecret);
-      form.append('refresh_token', refreshToken);
-      const googleClient = new google.auth.OAuth2(this.gcp.clientId, this.gcp.clientSecret);
-      const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
-      const res_json: any = await res_raw.json();
-      this.gs.log(`[gApp] 🔑 ${res_raw.status}`, res_json);
-      googleClient.setCredentials(res_json);
-      return googleClient;
-    } catch (err) {
-      throw err;
-    }
+    const url = new URL(this.gcp.serviceAccount.token_uri);
+    const form = new URLSearchParams();
+    form.append('grant_type', 'refresh_token');
+    form.append('client_id', this.gcp.clientId);
+    form.append('client_secret', this.gcp.clientSecret);
+    form.append('refresh_token', refreshToken);
+    const googleClient = new google.auth.OAuth2(this.gcp.clientId, this.gcp.clientSecret);
+    const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
+    const res_json: any = await res_raw.json();
+    this.gs.log(`[gApp] 🔑 ${res_raw.status}`, res_json);
+    googleClient.setCredentials(res_json);
+    return googleClient;
   }
 
   //
@@ -55,25 +51,21 @@ export class GdriveService {
   // userPersonalUserAccountInsteadOfServiceAccount = false (for upload)
   //
   async gDrive(userPersonalUserAccountInsteadOfServiceAccount = false): Promise<drive_v3.Drive> {
-    try {
-      let auth = null;
-      if (userPersonalUserAccountInsteadOfServiceAccount) {
-        auth = await this.gAuthPersonalAccount(this.gcp.gDrive.refreshToken);
-      } else {
-        auth = new google.auth.JWT(
-          this.gcp.serviceAccount.client_email,
-          null,
-          this.gcp.serviceAccount.private_key,
-          this.gcp.gDrive.scopes,
-          null
-        );
-      }
-      const drive = google.drive({ version: 'v3', auth });
-      this.gs.log(`[GDRIVE] ⛅`, drive);
-      return drive;
-    } catch (err) {
-      throw err;
+    let auth = null;
+    if (userPersonalUserAccountInsteadOfServiceAccount) {
+      auth = await this.gAuthPersonalAccount(this.gcp.gDrive.refreshToken);
+    } else {
+      auth = new google.auth.JWT(
+        this.gcp.serviceAccount.client_email,
+        null,
+        this.gcp.serviceAccount.private_key,
+        this.gcp.gDrive.scopes,
+        null
+      );
     }
+    const drive = google.drive({ version: 'v3', auth });
+    this.gs.log(`[GDRIVE] ⛅`, drive);
+    return drive;
   }
 
 }

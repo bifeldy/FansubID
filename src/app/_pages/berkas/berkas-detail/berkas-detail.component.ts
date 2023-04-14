@@ -66,10 +66,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return this.as;
   }
 
-  get ENV(): any {
-    return environment;
-  }
-
   get SS(): StatsServerService {
     return this.ss;
   }
@@ -147,6 +143,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   get ddlVideo(): string {
     return this.ddlUrlLink(this.berkasData.attachment_.id);
+  }
+
+  get videoThumb(): string {
+    return this.berkasData.image_url;
   }
 
   get ddlSubtitles(): string {
@@ -238,7 +238,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     if (!this.isDiscord) {
       return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
     }
-    return `${environment.apiUrl}/ddl-file/${id}?ngsw-bypass=true`;
+    return `${environment.apiUrl}/ddl-single/${id}?ngsw-bypass=true`;
   }
 
   setupVjs(): void {

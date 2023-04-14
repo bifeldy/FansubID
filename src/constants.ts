@@ -35,7 +35,6 @@ export const CONSTANTS = {
   fileSizeImageLimit: 256 * 1000, // 256 KB
   jwtAlgorithm: 'HS512',
   jwtExpiredIn: 24 * 60 * 60, // 1 Day
-  mimeStreamableVideo: 'video/mp4',
   quizOptionsCountHirakata: 5,
   quizOptionsCountCategory: 6,
   quizOptionsCountKanji: 6,
