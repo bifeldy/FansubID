@@ -140,18 +140,38 @@ export class BerkasController {
       if (
         'name' in req.body && 'projectType_id' in req.body &&
         ('anime_id' in req.body || 'dorama_id' in req.body) &&
-        'download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0 &&
         'fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0
       ) {
         const user: UserModel = res.locals['user'];
         const berkas = this.berkasRepo.new();
         const filteredUrls = [];
-        for (const u of req.body.download_url) {
-          if ('url' in u && 'name' in u && u.url && u.name) {
-            filteredUrls.push({
-              url: u.url,
-              name: u.name
-            });
+        if ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) {
+          for (const u of req.body.download_url) {
+            if ('url' in u && 'name' in u && u.url && u.name) {
+              filteredUrls.push({
+                url: u.url,
+                name: u.name
+              });
+            }
+          }
+        }
+        if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER) {
+          if (filteredUrls.length <= 0 && !req.body.attachment_id) {
+            throw new HttpException({
+              info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+              result: {
+                message: 'Wajib Mengisi Min 1 URL Eksternal / Upload 1 DDL Stream!'
+              }
+            }, HttpStatus.BAD_REQUEST);
+          }
+        } else {
+          if (filteredUrls.length <= 0) {
+            throw new HttpException({
+              info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+              result: {
+                message: 'Wajib Mengisi Min 1 URL Eksternal!'
+              }
+            }, HttpStatus.BAD_REQUEST);
           }
         }
         berkas.name = req.body.name;
