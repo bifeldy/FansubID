@@ -105,9 +105,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
                 const genres = this.doramaData.others.genres;
                 for (const g of genres) {
                   this.chipData.push({
-                    mdl_id: 8,
                     name: g,
-                    url: '',
                     selected: true,
                     color: WARNA.PINK
                   });

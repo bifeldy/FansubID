@@ -112,8 +112,15 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             );
             this.bs.idle();
             if (this.gs.isBrowser) {
-              this.chipData = this.animeData.genres;
-              this.chipData.map(g => (g.selected = true, g.color = WARNA.PINK));
+              const genres = this.animeData.genres;
+              for (const g of genres) {
+                this.chipData.push({
+                  id: g.id,
+                  name: g.name,
+                  selected: true,
+                  color: WARNA.PINK
+                });
+              }
               this.panelData = [];
               this.panelData.push({
                 title: 'Ringkasan Cerita',
