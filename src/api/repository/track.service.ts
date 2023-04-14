@@ -44,7 +44,7 @@ export class TrackService {
     return this.trackRepo.findOneOrFail(options);
   }
 
-  save(track: Track): Promise<Track> {
+  save<T = Track | Track[]>(track: T): Promise<T> {
     this.gs.log('[TRACK_SERVICE-SAVE] 🛤', track);
     return this.trackRepo.save(track);
   }

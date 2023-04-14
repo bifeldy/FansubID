@@ -49,7 +49,7 @@ export class ApiKeyService {
     return this.apiKeyRepo.findOneOrFail(options);
   }
 
-  save(apiKey: ApiKey): Promise<ApiKey> {
+  save<T = ApiKey | ApiKey[]>(apiKey: T): Promise<T> {
     this.gs.log('[API_KEY_SERVICE-SAVE] 🏓', apiKey);
     return this.apiKeyRepo.save(apiKey);
   }

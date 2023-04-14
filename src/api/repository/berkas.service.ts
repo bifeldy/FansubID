@@ -44,7 +44,7 @@ export class BerkasService {
     return this.berkasRepo.findOneOrFail(options);
   }
 
-  save(berkas: Berkas): Promise<Berkas> {
+  save<T = Berkas | Berkas[]>(berkas: T): Promise<T> {
     this.gs.log('[BERKAS_SERVICE-SAVE] 📂', berkas);
     return this.berkasRepo.save(berkas);
   }

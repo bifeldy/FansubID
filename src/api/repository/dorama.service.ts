@@ -44,7 +44,7 @@ export class DoramaService {
     return this.doramaRepo.findOneOrFail(options);
   }
 
-  save(dorama: Dorama): Promise<Dorama> {
+  save<T = Dorama | Dorama[]>(dorama: T): Promise<T> {
     this.gs.log('[DORAMA_SERVICE-SAVE] 🎬', dorama);
     return this.doramaRepo.save(dorama);
   }

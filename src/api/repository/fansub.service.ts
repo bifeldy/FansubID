@@ -44,7 +44,7 @@ export class FansubService {
     return this.fansubRepo.findOneOrFail(options);
   }
 
-  save(fansub: Fansub): Promise<Fansub> {
+  save<T = Fansub | Fansub[]>(fansub: T): Promise<T> {
     this.gs.log('[FANSUB_SERVICE-SAVE] 🍿', fansub);
     return this.fansubRepo.save(fansub);
   }

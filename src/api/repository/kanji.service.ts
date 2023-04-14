@@ -44,7 +44,7 @@ export class KanjiService {
     return this.kanjiRepo.findOneOrFail(options);
   }
 
-  save(kanji: Kanji): Promise<Kanji> {
+  save<T = Kanji | Kanji[]>(kanji: T): Promise<T> {
     this.gs.log('[KANJI_SERVICE-SAVE] 🗾', kanji);
     return this.kanjiRepo.save(kanji);
   }

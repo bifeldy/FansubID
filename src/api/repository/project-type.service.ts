@@ -44,7 +44,7 @@ export class ProjectTypeService {
     return this.projectTypeRepo.findOneOrFail(options);
   }
 
-  save(projectType: ProjectType): Promise<ProjectType> {
+  save<T = ProjectType | ProjectType[]>(projectType: T): Promise<T> {
     this.gs.log('[PROJECT_TYPE_SERVICE-SAVE] 💉', projectType);
     return this.projectTypeRepo.save(projectType);
   }

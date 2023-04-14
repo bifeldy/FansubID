@@ -44,7 +44,7 @@ export class ProfileService {
     return this.profileRepo.findOneOrFail(options);
   }
 
-  save(profile: Profile): Promise<Profile> {
+  save<T = Profile | Profile[]>(profile: T): Promise<T> {
     this.gs.log('[PROFILE_SERVICE-SAVE] 👬', profile);
     return this.profileRepo.save(profile);
   }

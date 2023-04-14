@@ -44,7 +44,7 @@ export class AttachmentService {
     return this.attachmentRepo.findOneOrFail(options);
   }
 
-  save(attachment: Attachment): Promise<Attachment> {
+  save<T = Attachment | Attachment[]>(attachment: T): Promise<T> {
     this.gs.log('[ATTACHMENT_SERVICE-SAVE] 💾', attachment);
     return this.attachmentRepo.save(attachment);
   }

@@ -44,7 +44,7 @@ export class RegistrationService {
     return this.registrationRepo.findOneOrFail(options);
   }
 
-  save(registration: Registration): Promise<Registration> {
+  save<T = Registration | Registration[]>(registration: T): Promise<T> {
     this.gs.log('[REGISTRATION_SERVICE-SAVE] 🔏', registration);
     return this.registrationRepo.save(registration);
   }

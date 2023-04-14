@@ -44,7 +44,7 @@ export class TempAttachmentService {
     return this.tempAttachmentRepo.findOneOrFail(options);
   }
 
-  save(tempAttachment: TempAttachment): Promise<TempAttachment> {
+  save<T = TempAttachment | TempAttachment[]>(tempAttachment: T): Promise<T> {
     this.gs.log('[TEMP_ATTACHMENT_SERVICE-SAVE] 💾', tempAttachment);
     return this.tempAttachmentRepo.save(tempAttachment);
   }

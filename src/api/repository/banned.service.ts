@@ -44,7 +44,7 @@ export class BannedService {
     return this.bannedRepo.findOneOrFail(options);
   }
 
-  save(banned: Banned): Promise<Banned> {
+  save<T = Banned | Banned[]>(banned: T): Promise<T> {
     this.gs.log('[BANNED_SERVICE-SAVE] 🔓', banned);
     return this.bannedRepo.save(banned);
   }

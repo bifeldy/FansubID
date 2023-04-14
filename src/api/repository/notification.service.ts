@@ -44,7 +44,7 @@ export class NotificationService {
     return this.notificationRepo.findOneOrFail(options);
   }
 
-  save(notification: Notification): Promise<Notification> {
+  save<T = Notification | Notification[]>(notification: T): Promise<T> {
     this.gs.log('[NOTIFICATION_SERVICE-SAVE] 🔔', notification);
     return this.notificationRepo.save(notification);
   }

@@ -44,7 +44,7 @@ export class NihongoService {
     return this.nihongoRepo.findOneOrFail(options);
   }
 
-  save(nihongo: Nihongo): Promise<Nihongo> {
+  save<T = Nihongo | Nihongo[]>(nihongo: T): Promise<T> {
     this.gs.log('[NIHONGO_SERVICE-SAVE] 🗾', nihongo);
     return this.nihongoRepo.save(nihongo);
   }

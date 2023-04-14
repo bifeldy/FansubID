@@ -44,7 +44,7 @@ export class HirakataService {
     return this.hirakataRepo.findOneOrFail(options);
   }
 
-  save(hirakata: Hirakata): Promise<Hirakata> {
+  save<T = Hirakata | Hirakata[]>(hirakata: T): Promise<T> {
     this.gs.log('[HIRAKATA_SERVICE-SAVE] 🗾', hirakata);
     return this.hirakataRepo.save(hirakata);
   }

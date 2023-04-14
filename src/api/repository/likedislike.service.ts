@@ -44,7 +44,7 @@ export class LikedislikeService {
     return this.likeDislikeRepo.findOneOrFail(options);
   }
 
-  save(likeDislike: LikeDislike): Promise<LikeDislike> {
+  save<T = LikeDislike | LikeDislike[]>(likeDislike: T): Promise<T> {
     this.gs.log('[LIKE_DISLIKE_SERVICE-SAVE] 💖', likeDislike);
     return this.likeDislikeRepo.save(likeDislike);
   }

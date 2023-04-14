@@ -44,7 +44,7 @@ export class KanjivgService {
     return this.kanjiVgRepo.findOneOrFail(options);
   }
 
-  save(kanjiVg: KanjiVg): Promise<KanjiVg> {
+  save<T = KanjiVg | KanjiVg[]>(kanjiVg: T): Promise<T> {
     this.gs.log('[KANJIVG_SERVICE-SAVE] 🗾', kanjiVg);
     return this.kanjiVgRepo.save(kanjiVg);
   }

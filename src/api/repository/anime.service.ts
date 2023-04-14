@@ -44,7 +44,7 @@ export class AnimeService {
     return this.animeRepo.findOneOrFail(options);
   }
 
-  save(anime: Anime): Promise<Anime> {
+  save<T = Anime | Anime[]>(anime: T): Promise<T> {
     this.gs.log('[ANIME_SERVICE-SAVE] 🐱‍👤', anime);
     return this.animeRepo.save(anime);
   }

@@ -44,7 +44,7 @@ export class TatoebaService {
     return this.tatoebaRepo.findOneOrFail(options);
   }
 
-  save(tatoeba: Tatoeba): Promise<Tatoeba> {
+  save<T = Tatoeba | Tatoeba[]>(tatoeba: T): Promise<T> {
     this.gs.log('[TATOEBA_SERVICE-SAVE] 🗾', tatoeba);
     return this.tatoebaRepo.save(tatoeba);
   }

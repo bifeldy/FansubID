@@ -44,7 +44,7 @@ export class UserService {
     return this.userRepo.findOneOrFail(options);
   }
 
-  save(user: User): Promise<User> {
+  save<T = User | User[]>(user: T): Promise<T> {
     this.gs.log('[USER_SERVICE-SAVE] 🤖', user);
     return this.userRepo.save(user);
   }

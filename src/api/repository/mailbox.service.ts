@@ -44,7 +44,7 @@ export class MailboxService {
     return this.mailboxRepo.findOneOrFail(options);
   }
 
-  save(mailbox: Mailbox): Promise<Mailbox> {
+  save<T = Mailbox | Mailbox[]>(mailbox: T): Promise<T> {
     this.gs.log('[MAILBOX_SERVICE-SAVE] 💾', mailbox);
     return this.mailboxRepo.save(mailbox);
   }

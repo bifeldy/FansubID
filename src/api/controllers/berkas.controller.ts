@@ -5,7 +5,7 @@ import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Request, Response } from 'express';
-import { Equal, ILike, In } from 'typeorm';
+import { Equal, ILike, In, IsNull } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -254,9 +254,21 @@ export class BerkasController {
                                 },
                                 fields: 'id'
                               }, { signal: null });
-                              resMkvAttachmentSave.mime = dfile.data.mimeType;
-                              resMkvAttachmentSave.google_drive = dfile.data.id;
-                              await this.attachmentRepo.save(resMkvAttachmentSave);
+                              const otherAttachment = await this.attachmentRepo.find({
+                                where: [
+                                  {
+                                    name: Equal(fileName),
+                                    ext: Equal(fileExt),
+                                    size: Equal(ef.size),
+                                    google_drive: IsNull()
+                                  }
+                                ]
+                              });
+                              for (const oa of otherAttachment) {
+                                oa.mime = dfile.data.mimeType;
+                                oa.google_drive = dfile.data.id;
+                              }
+                              await this.attachmentRepo.save(otherAttachment);
                               this.gs.deleteAttachment(`${fileName}.${fileExt}`);
                             }).catch(e5 => this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error'));
                           }

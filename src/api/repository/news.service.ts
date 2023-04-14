@@ -44,7 +44,7 @@ export class NewsService {
     return this.newsRepo.findOneOrFail(options);
   }
 
-  save(news: News): Promise<News> {
+  save<T = News | News[]>(news: T): Promise<T> {
     this.gs.log('[NEWS_SERVICE-SAVE] 📰', news);
     return this.newsRepo.save(news);
   }

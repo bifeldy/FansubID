@@ -44,7 +44,7 @@ export class InformationService {
     return this.informationRepo.findOneOrFail(options);
   }
 
-  save(information: Information): Promise<Information> {
+  save<T = Information | Information[]>(information: T): Promise<T> {
     this.gs.log('[INFORMATION_SERVICE-SAVE] 🔔', information);
     return this.informationRepo.save(information);
   }

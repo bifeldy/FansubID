@@ -44,7 +44,7 @@ export class DdlFileService {
     return this.ddlFileRepo.findOneOrFail(options);
   }
 
-  save(ddlFile: DdlFile): Promise<DdlFile> {
+  save<T = DdlFile | DdlFile[]>(ddlFile: T): Promise<T> {
     this.gs.log('[DDL_FILE_SERVICE-SAVE] 💾', ddlFile);
     return this.ddlFileRepo.save(ddlFile);
   }

@@ -44,7 +44,7 @@ export class FansubMemberService {
     return this.fansubMemberRepo.findOneOrFail(options);
   }
 
-  save(fansubMember: FansubMember): Promise<FansubMember> {
+  save<T = FansubMember | FansubMember[]>(fansubMember: T): Promise<T> {
     this.gs.log('[FANSUB_MEMBER_SERVICE-SAVE] 🕵️‍♀️', fansubMember);
     return this.fansubMemberRepo.save(fansubMember);
   }

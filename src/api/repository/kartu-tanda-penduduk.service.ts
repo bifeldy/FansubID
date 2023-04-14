@@ -44,7 +44,7 @@ export class KartuTandaPendudukService {
     return this.kartuTandaPendudukRepo.findOneOrFail(options);
   }
 
-  save(kartuTandaPenduduk: KartuTandaPenduduk): Promise<KartuTandaPenduduk> {
+  save<T = KartuTandaPenduduk | KartuTandaPenduduk[]>(kartuTandaPenduduk: T): Promise<T> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-SAVE] 👨‍👩‍👧‍👦', kartuTandaPenduduk);
     return this.kartuTandaPendudukRepo.save(kartuTandaPenduduk);
   }

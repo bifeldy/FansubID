@@ -44,7 +44,7 @@ export class EdictService {
     return this.edictRepo.findOneOrFail(options);
   }
 
-  save(edict: Edict): Promise<Edict> {
+  save<T = Edict | Edict[]>(edict: T): Promise<T> {
     this.gs.log('[EDICT_SERVICE-SAVE] 🗾', edict);
     return this.edictRepo.save(edict);
   }

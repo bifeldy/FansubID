@@ -44,7 +44,7 @@ export class SocialMediaService {
     return this.socialMediaRepo.findOneOrFail(options);
   }
 
-  save(sosmed: SocialMedia): Promise<SocialMedia> {
+  save<T = SocialMedia | SocialMedia[]>(sosmed: T): Promise<T> {
     this.gs.log('[SOCIAL_MEDIA_SERVICE-SAVE] 🙇‍♂️', sosmed);
     return this.socialMediaRepo.save(sosmed);
   }

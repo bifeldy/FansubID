@@ -44,7 +44,7 @@ export class KomentarService {
     return this.komentarRepo.findOneOrFail(options);
   }
 
-  save(komentar: Komentar): Promise<Komentar> {
+  save<T = Komentar | Komentar[]>(komentar: T): Promise<T> {
     this.gs.log('[KOMENTAR_SERVICE-SAVE] 💬', komentar);
     return this.komentarRepo.save(komentar);
   }
