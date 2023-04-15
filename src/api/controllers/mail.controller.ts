@@ -204,8 +204,8 @@ export class MailController {
       if (
         !mailbox.from.includes(`${user.username}@${environment.mailTrap.domain}`) &&
         !mailbox.to.includes(`${user.username}@${environment.mailTrap.domain}`) &&
-        !mailbox.cc.includes(`${user.username}@${environment.mailTrap.domain}`) &&
-        !mailbox.bcc.includes(`${user.username}@${environment.mailTrap.domain}`) &&
+        !mailbox.cc?.includes(`${user.username}@${environment.mailTrap.domain}`) &&
+        !mailbox.bcc?.includes(`${user.username}@${environment.mailTrap.domain}`) &&
         user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR
       ) {
         throw new HttpException({
