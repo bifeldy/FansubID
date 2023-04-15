@@ -3,7 +3,7 @@ import { Mail } from 'mailtrap';
 
 import { Controller, HttpCode, HttpException, HttpStatus, Get, Req, Res, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { ApiExcludeController } from '@nestjs/swagger';
+import { ApiBody, ApiExcludeEndpoint, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Equal, ILike } from 'typeorm';
 import { Request, Response } from 'express';
 
@@ -20,7 +20,6 @@ import { GlobalService } from '../services/global.service';
 import { MailService } from '../services/mail.service';
 import { CONSTANTS } from '../../constants';
 
-@ApiExcludeController()
 @Controller('/mail')
 export class MailController {
 
@@ -36,6 +35,7 @@ export class MailController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @ApiExcludeEndpoint()
   async mailInbox(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -86,6 +86,28 @@ export class MailController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiTags(CONSTANTS.apiTagMail)
+  @ApiBody({
+    schema: {
+      properties: {
+        to: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        cc: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        bcc: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        subject: { type: 'string' },
+        message: { type: 'string' }
+      },
+      required: ['to', 'subject', 'message']
+    }
+  })
   async sendNewMail(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -119,7 +141,7 @@ export class MailController {
           html: mailbox.html,
           text: mailbox.text
         };
-        if (req.body.cc && Array.isArray(req.body.cc) && req.body.cc.length > 0) {
+        if ('cc' in req.body && req.body.cc && Array.isArray(req.body.cc) && req.body.cc.length > 0) {
           const ccs = [...new Set<string>(req.body.cc)];
           mailbox.cc = ccs.join(', ');
           mailBody.cc = ccs.map(cc => {
@@ -129,7 +151,7 @@ export class MailController {
             return { email: cc };
           });
         }
-        if (req.body.bcc && Array.isArray(req.body.bcc) && req.body.bcc.length > 0) {
+        if ('bcc' in req.body && req.body.bcc && Array.isArray(req.body.bcc) && req.body.bcc.length > 0) {
           const bccs = [...new Set<string>(req.body.bcc)];
           mailbox.bcc = bccs.join(', ');
           mailBody.bcc = bccs.map(bcc => {
@@ -166,6 +188,8 @@ export class MailController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiTags(CONSTANTS.apiTagMail)
+  @ApiParam({ name: 'id', type: 'string' })
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

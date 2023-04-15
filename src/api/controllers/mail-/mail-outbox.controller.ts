@@ -1,7 +1,9 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Get, Req, Res } from '@nestjs/common';
-import { ApiExcludeController } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ILike } from 'typeorm';
 import { Request, Response } from 'express';
+
+import { CONSTANTS } from '../../../constants';
 
 import { environment } from '../../../environments/api/environment';
 
@@ -12,7 +14,6 @@ import { VerifiedOnly } from '../../decorators/verified.decorator';
 
 import { MailboxService } from '../../repository/mailbox.service';
 
-@ApiExcludeController()
 @Controller('/mail-outbox')
 export class MailOutboxController {
 
@@ -26,6 +27,10 @@ export class MailOutboxController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @ApiTags(CONSTANTS.apiTagMail)
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   async mailOutbox(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

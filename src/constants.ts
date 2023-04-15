@@ -7,6 +7,7 @@ export const CONSTANTS = {
   apiTagDorama: 'Dorama',
   apiTagDdlFile: 'DDL File',
   apiTagFansub: 'Fansub',
+  apiTagMail: 'Surat Elektronik',
   apiTagNews: 'News',
   apiTagNihongo: 'Nihongo',
   apiTagQuiz: 'Quiz',
