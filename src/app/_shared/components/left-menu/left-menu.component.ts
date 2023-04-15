@@ -95,7 +95,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
       this.subsDialog = this.ds.openInfoDialog({
         data: {
           title: `.: Web-Torrent :.`,
-          htmlMessage: 'Fitur ini tergolong cukup berat karena dikhususkan untuk pengguna desktop, akan ada kemungkinan juga tampilan menjadi berantakan, yakin ingin melanjutkan ?',
+          htmlMessage: 'Fitur Ini Tergolong Cukup Berat Karena Dikhususkan Untuk Pengguna Desktop, Akan Ada Kemungkinan Juga Tampilan Menjadi Berantakan, Yakin Ingin Melanjutkan ?',
           confirmText: 'Ya, Lanjutkan',
           cancelText: 'Tidak, Batal'
         },

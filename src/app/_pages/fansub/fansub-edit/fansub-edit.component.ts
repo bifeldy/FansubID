@@ -122,7 +122,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
                 if (index >= 0 || this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR || this.as.currentUserSubject?.value?.id === res.result.user_.id) {
                   this.initForm(res.result);
                 } else {
-                  this.toast.warning('Anda Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!', null, true);
+                  this.toast.warning('Harus Menjadi Anggota Untuk Mengubah Data!', 'Whoops!', null, true);
                   this.router.navigateByUrl(`/fansub/${this.fansubSlug}`);
                 }
               },

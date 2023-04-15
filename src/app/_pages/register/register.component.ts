@@ -101,7 +101,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.emailUsed = null;
     this.gs.log('[REGISTER_FORM_REQUEST]', this.fg.value);
     if (this.fg.invalid) {
-      this.registerInfo = 'Periksa Dan Isi Kembali Data Anda!';
+      this.registerInfo = 'Periksa Dan Isi Kembali Data!';
       this.submitted = false;
       this.bs.idle();
       return;

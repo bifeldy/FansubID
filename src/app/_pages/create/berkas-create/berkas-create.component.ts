@@ -136,7 +136,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
             this.gs.log('[UPLOAD_COMPLETED]', state.response);
             this.fg.controls['attachment_id'].patchValue(state.response.result.id);
             this.uploadToast = this.toast.warning(
-              `Segera Kirim Data Berkas Anda!`,
+              `Segera Kirim Data Berkas!`,
               `Lampiran Akan Dihapus ...`,
               {
                 closeButton: false,

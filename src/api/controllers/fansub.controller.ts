@@ -277,7 +277,7 @@ export class FansubController {
             throw new HttpException({
               info: `🙄 403 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
               result: {
-                message: `Anda Harus Menjadi Anggota Untuk Mengubah Data!`
+                message: `Harus Menjadi Anggota Untuk Mengubah Data!`
               }
             }, HttpStatus.FORBIDDEN);
           }

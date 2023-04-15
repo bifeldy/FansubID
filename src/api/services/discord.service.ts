@@ -279,7 +279,7 @@ export class DiscordService {
           }
           throw new Error('Format Data Salah / Token Expired!');
         }
-        return await msg.reply({ content: `<@${msg.author.id}> Anda siapa ya? Ini milik orang lain 🤔` });
+        return await msg.reply({ content: `<@${msg.author.id}> Siapa ya? Ini milik orang lain 🤔` });
       }
       return await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
     } catch (error) {

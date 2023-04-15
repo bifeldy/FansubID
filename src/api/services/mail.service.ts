@@ -68,7 +68,7 @@ export class MailService {
             ${environment.baseUrl}/api/aktivasi?token=${user.activation_token}
           </a>
         </p>
-        <p>Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser anda.</p>
+        <p>Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.</p>
         <p>(つ≧▽≦)つ</p>
         <p>Terima kasih dan selamat datang.</p>
         <p>(っ.❛ ᴗ ❛.)っ</p>
@@ -81,7 +81,7 @@ export class MailService {
         Hai, terima kasih telah mendaftar di ${environment.siteName}.
         Untuk mengaktifkan akun, silahkan klik link berikut ini.
         ${environment.baseUrl}/api/aktivasi?token=${user.activation_token}
-        Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser anda.
+        Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.
         (つ≧▽≦)つ
         Terima kasih dan selamat datang.
         (っ.❛ ᴗ ❛.)っ

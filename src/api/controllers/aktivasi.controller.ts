@@ -79,9 +79,8 @@ export class AktivasiController {
           id: registration.id,
           title: 'Pengiriman Ulang Aktivasi',
           message: `
-            Silahkan Periksa Kembali Email Anda. <br />
+            Silahkan Periksa Email Lagi. <br />
             '<span class="text-danger">${registration.email}</span>' <br />
-            .: ${registration.id} :.
           `
         }
       };

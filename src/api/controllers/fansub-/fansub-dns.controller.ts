@@ -244,9 +244,9 @@ export class FansubDnsController {
             user = member.user_;
           } catch (e) {
             throw new HttpException({
-              info: `😅 403 - Cloudflare API :: Pendaftaran SubDomain Ditolak 🤣`,
+              info: `😅 403 - Cloudflare API :: Pendaftaran Sub-Domain Ditolak 🤣`,
               result: {
-                message: `Anda Harus Menjadi Anggota Untuk Klaim SubDomain!`
+                message: `Harus Menjadi Anggota Untuk Klaim Sub-Domain!`
               }
             }, HttpStatus.FORBIDDEN);
           }
@@ -256,7 +256,7 @@ export class FansubDnsController {
         const result = r.result;
         if (result.dns_id) {
           return {
-            info: `😅 200 - Cloudflare API :: Pengubahan SubDomain Berhasil 🥰`,
+            info: `😅 200 - Cloudflare API :: Pengubahan Sub-Domain Berhasil 🥰`,
             result,
             fansub
           };
@@ -398,7 +398,7 @@ export class FansubDnsController {
         const result = r.result;
         if (result.dns_id) {
           return {
-            info: `😅 200 - Cloudflare API :: Pengubahan SubDomain Berhasil 🥰`,
+            info: `😅 200 - Cloudflare API :: Pengubahan Sub-Domain Berhasil 🥰`,
             result,
             fansub
           };

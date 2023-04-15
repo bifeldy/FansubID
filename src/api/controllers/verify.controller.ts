@@ -56,7 +56,7 @@ export class VerifyController {
     throw new HttpException({
       info: '🤧 400 - Verifikasi API :: JWT / Key Tidak Ada 😷',
       result: {
-        message: 'Anda Belum Login!'
+        message: 'Silahkan Login Terlebih Dahulu!'
       }
     }, HttpStatus.BAD_REQUEST);
   }

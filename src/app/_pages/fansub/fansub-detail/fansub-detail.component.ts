@@ -413,7 +413,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           this.subsDialog = this.ds.openInfoDialog({
             data: {
               title: `Permintaan Gabung Berhasil`,
-              htmlMessage: 'Silahkan Menghubungi Anggota Yang Sudah Tergabung / Admin / Moderator Fansub Untuk Menerima Permintaan Anda.',
+              htmlMessage: 'Silahkan Menghubungi Anggota Yang Sudah Tergabung / Admin / Moderator Fansub Untuk Menerima Permintaan Gabung.',
               confirmText: 'Tutup'
             }
           }).afterClosed().subscribe({
@@ -507,9 +507,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
                     data: {
                       title: `Klaim Berhasil`,
                       htmlMessage: `
-                        Domain '${this.fansubSlug}.${this.ENV.domain}' sudah didaftarkan dan dapat digunakan,
-                        silahkan migrasi domain pada situs penyedia layanan anda (ex. Blogger / Wordpress / etc.)
-                        kemudian tunggu hingga propagasi DNS selesai.
+                        Domain '${this.fansubSlug}.${this.ENV.domain}' Sudah Didaftarkan Dan Dapat Digunakan,
+                        Silahkan Migrasi Domain Pada Situs Penyedia Layanan (Ex. Blogger / Wordpress / Etc.)
+                        Kemudian Tunggu Hingga Propagasi Dns Selesai.
                         Terima Kasih.
                       `,
                       confirmText: 'Tutup'
@@ -533,7 +533,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           }
         });
       } else {
-        this.toast.warning('Anda Harus Menjadi Anggota Untuk Klaim SubDomain!', 'Whoops!', null, true);
+        this.toast.warning('Harus Menjadi Anggota Untuk Klaim Sub-Domain!', 'Whoops!', null, true);
       }
     } else {
       this.router.navigate(['/login'], {

@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginInfo = 'Harap Menunggu ...';
     this.gs.log('[LOGIN_FORM_REQUEST]', this.fg.value);
     if (this.fg.invalid) {
-      this.loginInfo = 'Periksa Dan Isi Kembali Data Anda!';
+      this.loginInfo = 'Periksa Dan Isi Kembali Data!';
       this.submitted = false;
       this.bs.idle();
       return;

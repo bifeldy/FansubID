@@ -183,9 +183,9 @@ export class FansubMemberController {
         } else {
           let message = null;
           if (members[0].approved) {
-            message = 'Anda Sudah Menjadi Anggota!';
+            message = 'Sudah Menjadi Anggota!';
           } else {
-            message = 'Anda Sudah Membuat Permintaan Untuk Bergabung!';
+            message = 'Sudah Membuat Permintaan Untuk Bergabung!';
           }
           throw new HttpException({
             info: `😅 406 - Fansub API :: Permintaan Bergabung Gagal 🤣`,
