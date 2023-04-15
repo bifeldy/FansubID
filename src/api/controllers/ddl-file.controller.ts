@@ -105,7 +105,7 @@ export class DdlSeekController {
   @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagDdlFile)
   @ApiParam({ name: 'id', type: 'string' })
-  @ApiHeader({ name: 'Range', required: true })
+  @ApiHeader({ name: 'range', required: true })
   async streamFull(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
       let headerRangeFull = req.headers.range || 'bytes=0-';
