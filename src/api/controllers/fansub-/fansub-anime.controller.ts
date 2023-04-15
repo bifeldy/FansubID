@@ -2,6 +2,8 @@ import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
 import { BerkasService } from '../../repository/berkas.service';
 
 @ApiExcludeController()
@@ -17,6 +19,7 @@ export class FansubAnimeController {
   // PATCH `/api/fansub-anime?id=`
   @Patch('/')
   @HttpCode(202)
+  @FilterApiKeyAccess()
   async animeFansub(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);

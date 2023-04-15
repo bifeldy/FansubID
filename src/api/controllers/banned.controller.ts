@@ -9,6 +9,7 @@ import { environment } from '../../environments/api/environment';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -152,6 +153,7 @@ export class BannedController {
   @Post('/')
   @HttpCode(201)
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
@@ -239,6 +241,7 @@ export class BannedController {
   @Delete('/:id')
   @HttpCode(202)
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {

@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 
 import { environment } from '../../environments/api/environment';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
+
 import { RegistrationModel } from '../../models/req-res.model';
 
 import { AuthService } from '../services/auth.service';
@@ -27,6 +29,7 @@ export class AktivasiController {
   @Get('/')
   @HttpCode(301)
   @Redirect()
+  @FilterApiKeyAccess()
   async activateAccount(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const userActivated = await this.as.activateAccount(res.locals['token'] as string);
     if (userActivated) {
@@ -65,6 +68,7 @@ export class AktivasiController {
 
   @Post('/')
   @HttpCode(201)
+  @FilterApiKeyAccess()
   async reSendActivation(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const registration: RegistrationModel = await this.as.reSendActivation(req.body);
     if (registration) {

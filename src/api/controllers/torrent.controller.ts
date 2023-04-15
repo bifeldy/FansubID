@@ -7,6 +7,8 @@ import { Request, Response } from 'express';
 
 import { environment } from '../../environments/api/environment';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
+
 import { GlobalService } from '../services/global.service';
 
 @ApiExcludeController()
@@ -21,6 +23,7 @@ export class TorrentController {
 
   @Post('/')
   @HttpCode(201)
+  @FilterApiKeyAccess()
   async addNew(@Req() req: Request, @Res(/* { passthrough: true } */) res: Response): Promise<any> {
     try {
       if ('magnetHash' in req.body) {

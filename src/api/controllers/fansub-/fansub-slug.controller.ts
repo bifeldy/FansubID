@@ -5,6 +5,8 @@ import { ILike } from 'typeorm';
 
 import { CONSTANTS } from '../../../constants';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
 import { FansubService } from '../../repository/fansub.service';
 
 @ApiExcludeController()
@@ -20,6 +22,7 @@ export class FansubSlugController {
   // PATCH `/api/fansub-slug`
   @Patch('/')
   @HttpCode(202)
+  @FilterApiKeyAccess()
   async checkSlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('slug' in req.body && req.body.slug) {

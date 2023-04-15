@@ -5,6 +5,8 @@ import { FindManyOptions, In } from 'typeorm';
 
 import { Berkas } from '../../entities/Berkas';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
 import { BerkasService } from '../../repository/berkas.service';
 
 @ApiExcludeController()
@@ -20,6 +22,7 @@ export class DoramaFansubController {
   // PATCH `/api/dorama-fansubs?id=`
   @Patch('/')
   @HttpCode(202)
+  @FilterApiKeyAccess()
   async fansubDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);

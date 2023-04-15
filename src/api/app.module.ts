@@ -56,7 +56,7 @@ import { LogoutController } from './controllers/logout.controller';
 import { MailController } from './controllers/mail.controller';
 import { MailInboxController } from './controllers/mail-/mail-inbox.controller';
 import { MailOutboxController } from './controllers/mail-/mail-outbox.controller';
-import { MailWebhookController } from './controllers/mail-/mail-webhoook.controller';
+import { MailWebhookController } from './controllers/mail-/mail-webhook.controller';
 import { NewsController } from './controllers/news.controller';
 import { NihongoController } from './controllers/nihongo.controller';
 import { NihongoEdictController } from './controllers/nihongo-/nihongo-edict.controller';
@@ -86,6 +86,7 @@ import { RegisterMiddleware } from './middlewares/register.middleware';
 import { LogoutMiddleware } from './middlewares/logout.middleware';
 import { CacheMiddleware } from './middlewares/cache.middleware';
 
+import { FilterApiKeyAccessGuard } from './guards/filter-api-key-access.guard';
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { VerifiedGuard } from './guards/verified.guard';
@@ -219,6 +220,7 @@ import { UserService } from './repository/user.service';
   providers: [
     // Global Lifecycle - Middleware => Guards => Interceptors => Controller
     // https://docs.nestjs.com/faq/request-lifecycle
+    { provide: APP_GUARD, useClass: FilterApiKeyAccessGuard },
     { provide: APP_GUARD, useClass: RateLimitGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: VerifiedGuard },

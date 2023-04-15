@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 
 import { UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
+
 @ApiExcludeController()
 @Controller('/login')
 export class LoginController {
@@ -16,6 +18,7 @@ export class LoginController {
 
   @Post('/')
   @HttpCode(201)
+  @FilterApiKeyAccess()
   login(@Req() req: Request, @Res({ passthrough: true }) res: Response): any {
     const user: UserModel = res.locals['user'];
     return {

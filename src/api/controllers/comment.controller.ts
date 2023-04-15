@@ -5,6 +5,7 @@ import { Equal, ILike, IsNull } from 'typeorm';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -22,6 +23,7 @@ export class CommentController {
 
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPath = req.query['path'];
@@ -87,6 +89,7 @@ export class CommentController {
   @Post('/')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @FilterApiKeyAccess()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('path' in req.body && 'comment' in req.body) {
@@ -127,6 +130,7 @@ export class CommentController {
 
   @Get('/:id')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -187,6 +191,7 @@ export class CommentController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const komen =  await this.komentarRepo.findOneOrFail({

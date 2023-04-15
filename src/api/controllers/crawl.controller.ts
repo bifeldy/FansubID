@@ -7,6 +7,8 @@ import { Controller, Get, HttpCode, HttpStatus, Req, Res } from '@nestjs/common'
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
+
 import { GlobalService } from '../services/global.service';
 
 @ApiExcludeController()
@@ -49,6 +51,7 @@ export class CrawlController {
 
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async crawl(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     let url: any = req.query['url'];
     let page: Page = null;

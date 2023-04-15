@@ -5,6 +5,7 @@ import { Equal, Not, In, ILike } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -29,6 +30,7 @@ export class PromoteController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async promote(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {

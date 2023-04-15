@@ -5,6 +5,7 @@ import { Equal, ILike } from 'typeorm';
 
 import { NotificationModel, RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -27,6 +28,7 @@ export class NotificationController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
@@ -76,6 +78,7 @@ export class NotificationController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -138,6 +141,7 @@ export class NotificationController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const notification = await this.notificationRepo.findOneOrFail({

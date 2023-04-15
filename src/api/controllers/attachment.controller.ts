@@ -15,6 +15,7 @@ import { environment } from '../../environments/api/environment';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -44,6 +45,7 @@ export class AttachmentController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async searchLampiran(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -96,6 +98,7 @@ export class AttachmentController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async uploadLampiran(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const file = req.body as DiskFile;
     try {
@@ -255,6 +258,7 @@ export class AttachmentController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const attachment =  await this.attachmentRepo.findOneOrFail({

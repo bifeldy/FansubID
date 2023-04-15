@@ -9,6 +9,7 @@ import { environment } from '../../environments/api/environment';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -84,6 +85,7 @@ export class NewsController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('title' in req.body && 'content' in req.body) {
@@ -178,6 +180,7 @@ export class NewsController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -265,6 +268,7 @@ export class NewsController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const news =  await this.newsRepo.findOneOrFail({

@@ -12,15 +12,17 @@ import { environment } from '../../../environments/api/environment';
 
 import { RoleModel, SosMedModel, UserModel } from '../../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 
 import { User } from '../../entities/User';
 
+import { UserService } from '../../repository/user.service';
+import { SocialMediaService } from '../../repository/social-media.service';
+
 import { ApiService } from '../../services/api.service';
 import { CryptoService } from '../../services/crypto.service';
 import { GlobalService } from '../../services/global.service';
-import { UserService } from '../../repository/user.service';
-import { SocialMediaService } from '../../repository/social-media.service';
 
 @ApiExcludeController()
 @Controller('/verify-sosmed')
@@ -39,6 +41,7 @@ export class VerifySosmedController {
   @Post('/')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @FilterApiKeyAccess()
   async verifySosmed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

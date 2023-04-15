@@ -7,13 +7,15 @@ import { environment } from '../../../environments/api/environment';
 
 import { RoleModel, UserModel } from '../../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 
 import { User } from '../../entities/User';
 
-import { CryptoService } from '../../services/crypto.service';
 import { KartuTandaPendudukService } from '../../repository/kartu-tanda-penduduk.service';
 import { UserService } from '../../repository/user.service';
+
+import { CryptoService } from '../../services/crypto.service';
 
 @ApiExcludeController()
 @Controller('/verify-ktp')
@@ -30,6 +32,7 @@ export class VerifyKtpController {
   @Post('/')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @FilterApiKeyAccess()
   async verifyKtp(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

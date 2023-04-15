@@ -8,6 +8,8 @@ import { Cache } from 'cache-manager';
 
 import { environment } from '../../../environments/api/environment';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
 import { JsonCache } from '../../../models/req-res.model';
 
 import { GlobalService } from '../../services/global.service';
@@ -26,6 +28,7 @@ export class FansubRssFeedAllController {
   // GET `/api/fansub-rss-feed-all`
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getFansubFeed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       let reqUrl = req.originalUrl.split('?')[0];

@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 
 import { RoleModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -23,6 +24,7 @@ export class TaskCronJobController {
 
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const cronJobs = this.sr.getCronJobs();
     const jobs = [];
@@ -46,6 +48,7 @@ export class TaskCronJobController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const cronJob = this.sr.getCronJob(req.params['id']);

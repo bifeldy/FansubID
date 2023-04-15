@@ -16,6 +16,7 @@ import { environment } from '../../environments/api/environment';
 
 import { RoleModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 
 import { ApiService } from '../services/api.service';
@@ -61,6 +62,7 @@ export class ImageController {
     )
   )
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @FilterApiKeyAccess()
   async imgBb(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const dateTime = new Date().getTime().toString();

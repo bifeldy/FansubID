@@ -2,6 +2,8 @@ import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
 import { FansubService } from '../../repository/fansub.service';
 
 @ApiExcludeController()
@@ -17,6 +19,7 @@ export class FansubAllController {
   // GET `/api/fansub-all`
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const [fansubs, count] = await this.fansubRepo.findAndCount({

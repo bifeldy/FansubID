@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 
 import { UserModel } from '../../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
 import { BerkasService } from '../../repository/berkas.service';
 
 @ApiExcludeController()
@@ -19,6 +21,7 @@ export class FansubBerkasController {
   // PATCH `/api/fansub-berkas?id=`
   @Patch('/')
   @HttpCode(202)
+  @FilterApiKeyAccess()
   async berkasFansub(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

@@ -7,6 +7,8 @@ import { Request, Response } from 'express';
 
 import { environment } from '../environments/api/environment';
 
+import { FilterApiKeyAccess } from './decorators/filter-api-key-access.decorator';
+
 import { GlobalService } from './services/global.service';
 
 @ApiExcludeController()
@@ -27,6 +29,7 @@ export class AppController {
   @Get('/discord-verifikasi')
   @HttpCode(301)
   @Redirect()
+  @FilterApiKeyAccess()
   async discordVerify(): Promise<any> {
     return {
       url: `
@@ -41,6 +44,7 @@ export class AppController {
   }
 
   @Get('/img-seasonal-backdrop')
+  @FilterApiKeyAccess()
   async resetPassword(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     const currDate = new Date();
     const season = this.gs.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
@@ -54,6 +58,7 @@ export class AppController {
   }
 
   // @Post('/reset-password')
+  // @FilterApiKeyAccess()
   // async resetPassword(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
   //   const user: UserModel = res.locals['user'];
   //   return {

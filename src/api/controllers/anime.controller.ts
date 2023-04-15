@@ -14,6 +14,7 @@ import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 
 import { RoleModel } from '../../models/req-res.model';
@@ -88,6 +89,7 @@ export class AnimeController {
   @Patch('/')
   @HttpCode(202)
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async updateAnime(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {

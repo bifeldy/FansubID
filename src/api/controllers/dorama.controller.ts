@@ -14,6 +14,7 @@ import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 
 import { RoleModel } from '../../models/req-res.model';
@@ -82,6 +83,7 @@ export class DoramaController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async updateDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('id' in req.body && 'name' in req.body && 'image_url' in req.body) {

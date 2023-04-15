@@ -5,6 +5,8 @@ import { ILike, In } from 'typeorm';
 
 import { UserModel } from '../../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
 import { BerkasService } from '../../repository/berkas.service';
 
 @ApiExcludeController()
@@ -20,6 +22,7 @@ export class DoramaBerkasController {
   // PATCH `/api/dorama-berkas?id=`
   @Patch('/')
   @HttpCode(202)
+  @FilterApiKeyAccess()
   async berkasDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

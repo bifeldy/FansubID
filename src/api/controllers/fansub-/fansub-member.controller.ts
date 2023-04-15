@@ -3,6 +3,7 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike } from 'typeorm';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { VerifiedOnly } from '../../decorators/verified.decorator';
 
@@ -34,6 +35,7 @@ export class FansubMemberController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
@@ -107,6 +109,7 @@ export class FansubMemberController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async requestJoinFansubMember(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('slug' in req.body) {
@@ -209,6 +212,7 @@ export class FansubMemberController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async approveJoinOrRejectFansubMember(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('approved' in req.body) {
@@ -339,6 +343,7 @@ export class FansubMemberController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async leaveFansubMember(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

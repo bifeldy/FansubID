@@ -6,6 +6,8 @@ import { CONSTANTS } from '../../constants';
 
 import { RegistrationModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
+
 import { MailService } from '../services/mail.service';
 
 @ApiExcludeController()
@@ -20,6 +22,7 @@ export class RegisterController {
 
   @Post('/')
   @HttpCode(201)
+  @FilterApiKeyAccess()
   async register(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const registration: RegistrationModel = res.locals['registration'];
     this.ms.sendRegisterActivationMail(registration);

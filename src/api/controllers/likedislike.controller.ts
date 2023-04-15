@@ -5,6 +5,7 @@ import { Equal, ILike } from 'typeorm';
 
 import { LikeAndDislikeModel, RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -34,6 +35,7 @@ export class LikedislikeController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -111,6 +113,7 @@ export class LikedislikeController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const likedislike = await this.likedislikeRepo.findOneOrFail({
@@ -159,6 +162,7 @@ export class LikedislikeController {
   @Post('/:type/:idSlugUsername')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @FilterApiKeyAccess()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
@@ -321,6 +325,7 @@ export class LikedislikeController {
 
   @Get('/:type/:idSlugUsername')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getByIdSlugUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

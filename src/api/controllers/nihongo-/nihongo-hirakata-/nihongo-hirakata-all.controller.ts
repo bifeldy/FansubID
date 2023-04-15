@@ -2,6 +2,8 @@ import { Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+import { FilterApiKeyAccess } from '../../../decorators/filter-api-key-access.decorator';
+
 import { HirakataService } from '../../../repository/hirakata.service';
 
 @ApiExcludeController()
@@ -16,6 +18,7 @@ export class NihongoHirakataAllController {
 
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const [hirakatas, count] = await this.hirakataRepo.findAndCount({

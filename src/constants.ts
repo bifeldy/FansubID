@@ -22,6 +22,7 @@ export const CONSTANTS = {
   ],
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
   cronTrackerStatistics: 'CRON_TRACKER_STATISTICS',
+  decoratorFilterApiKeyAccess: 'filter-api-key-access',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
   extSubs: ['ass', 'srt'],

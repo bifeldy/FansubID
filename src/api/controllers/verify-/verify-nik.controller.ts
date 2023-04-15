@@ -9,9 +9,11 @@ import { environment } from '../../../environments/api/environment';
 
 import { RoleModel } from '../../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 
 import { ApiKeyService } from '../../repository/api-key.service';
+
 import { ApiService } from '../../services/api.service';
 import { GlobalService } from '../../services/global.service';
 
@@ -30,6 +32,7 @@ export class VerifyNikController {
   @Post('/')
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @FilterApiKeyAccess()
   async verifyNik(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('nik' in req.body && 'nama' in req.body && 'g-recaptcha-response' in req.body) {

@@ -8,11 +8,13 @@ import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInt
 import { ApiExcludeController } from '@nestjs/swagger';
 import { AnyFilesInterceptor, } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
-import { Equal, In, IsNull } from 'typeorm';
+import { In } from 'typeorm';
 
 import { CONSTANTS } from '../../../constants';
 
 import { environment } from '../../../environments/api/environment';
+
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
 import { AttachmentService } from '../../repository/attachment.service';
 import { MailboxService } from '../../repository/mailbox.service';
@@ -20,7 +22,6 @@ import { UserService } from '../../repository/user.service';
 
 import { GdriveService } from '../../services/gdrive.service';
 import { GlobalService } from '../../services/global.service';
-import { ApiKeyService } from '../../repository/api-key.service';
 
 @ApiExcludeController()
 @Controller('/mail-webhook')
@@ -31,8 +32,7 @@ export class MailWebhookController {
     private gs: GlobalService,
     private attachmentRepo: AttachmentService,
     private mailboxRepo: MailboxService,
-    private userRepo: UserService,
-    private aks: ApiKeyService
+    private userRepo: UserService
   ) {
     //
   }
@@ -49,28 +49,9 @@ export class MailWebhookController {
       }
     )
   )
+  @FilterApiKeyAccess()
   async mailHook(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const apiKeySystem = await this.aks.count({
-        where: [
-          {
-            ip_domain: Equal('*'),
-            api_key: Equal(res.locals['key']),
-            user_: IsNull()
-          }
-        ]
-      });
-      if (apiKeySystem === 0) {
-        for (const file of req.files as any) {
-          this.gs.deleteAttachment(file.filename);
-        }
-        throw new HttpException({
-          info: '🙄 401 - API Key :: Kunci Tidak Dapat Digunakan 😪',
-          result: {
-            message: `Api Key Bukan Milik System Bawaan!`
-          }
-        }, HttpStatus.UNAUTHORIZED);
-      }
       const userTarget = [];
       let stringRecipient = req.body.To;
       if (req.body.Cc) {

@@ -9,6 +9,7 @@ import { environment } from '../../environments/api/environment';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -163,6 +164,7 @@ export class UserController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async updateByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body) {
@@ -270,6 +272,7 @@ export class UserController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
   @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user =  await this.userRepo.findOneOrFail({

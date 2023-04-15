@@ -5,6 +5,7 @@ import { Equal } from 'typeorm';
 
 import { RoleModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -24,6 +25,7 @@ export class ProjectTypeController {
 
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const projects = await this.projectTypeRepo.query(`
       SELECT
@@ -75,6 +77,7 @@ export class ProjectTypeController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -108,6 +111,7 @@ export class ProjectTypeController {
 
   @Get('/:id')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const projectType = await this.projectTypeRepo.findOneOrFail({
@@ -142,6 +146,7 @@ export class ProjectTypeController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -189,6 +194,7 @@ export class ProjectTypeController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const projectType =  await this.projectTypeRepo.findOneOrFail({

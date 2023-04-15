@@ -5,6 +5,7 @@ import { Equal, ILike } from 'typeorm';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
@@ -22,6 +23,7 @@ export class NihongoController {
 
   @Patch('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getCategories(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const categories = await this.nihongoRepo.query(`
@@ -55,6 +57,7 @@ export class NihongoController {
 
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     const searchCategory = req.query['category'] || '';
@@ -115,6 +118,7 @@ export class NihongoController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -159,6 +163,7 @@ export class NihongoController {
 
   @Get('/:id')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const kana = await this.nihongoRepo.findOneOrFail({
@@ -190,6 +195,7 @@ export class NihongoController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -257,6 +263,7 @@ export class NihongoController {
   @HttpCode(202)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const kana =  await this.nihongoRepo.findOneOrFail({

@@ -10,6 +10,7 @@ import { CONSTANTS } from '../../../constants';
 
 import { RoleModel, UserModel } from '../../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { VerifiedOnly } from '../../decorators/verified.decorator';
 
@@ -109,6 +110,7 @@ export class FansubDnsController {
   // GET `/api/fansub-dns`
   @Get('/')
   @HttpCode(200)
+  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryName = `${req.query['q'] ? req.query['q'] : ''}`;
@@ -214,6 +216,7 @@ export class FansubDnsController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async createNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('slug' in req.body && 'server_target' in req.body) {
@@ -276,6 +279,7 @@ export class FansubDnsController {
   @HttpCode(200)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async getBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
@@ -352,6 +356,7 @@ export class FansubDnsController {
   @HttpCode(201)
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
+  @FilterApiKeyAccess()
   async updateBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('server_target' in req.body) {
