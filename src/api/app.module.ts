@@ -33,7 +33,7 @@ import { BannedController } from './controllers/banned.controller';
 import { BerkasController } from './controllers/berkas.controller';
 import { CommentController } from './controllers/comment.controller';
 import { CrawlController } from './controllers/crawl.controller';
-import { DdlPartController, DdlSingleController } from './controllers/ddl-file.controller';
+import { DdlPartController, DdlSeekController } from './controllers/ddl-file.controller';
 import { DoramaController } from './controllers/dorama.controller';
 import { DoramaBerkasController } from './controllers/dorama-/dorama-berkas.controller';
 import { DoramaFansubController } from './controllers/dorama-/dorama-fansub.controller';
@@ -171,7 +171,7 @@ import { UserService } from './repository/user.service';
     CommentController,
     CrawlController,
     DdlPartController,
-    DdlSingleController,
+    DdlSeekController,
     DoramaController,
     DoramaBerkasController,
     DoramaFansubController,
@@ -306,7 +306,7 @@ export class AppModule {
     mc.apply(throttle(CONSTANTS.attachmentSpeedLimiterBps)).forRoutes(
       { path: '/attachment', method: RequestMethod.GET },
       { path: '/ddl-part', method: RequestMethod.GET },
-      { path: '/ddl-single', method: RequestMethod.GET }
+      { path: '/ddl-seek', method: RequestMethod.GET }
     );
     mc.apply(
       uploadx.upload({

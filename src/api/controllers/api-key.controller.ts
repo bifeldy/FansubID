@@ -282,6 +282,7 @@ export class ApiKeyController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagApiKey)
+  @ApiParam({ name: 'id', type: 'number' })
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

@@ -1,5 +1,5 @@
 import { Controller, Get, HttpCode, HttpStatus, Req, Res } from '@nestjs/common';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { Request, Response } from 'express';
 import { Equal } from 'typeorm';
@@ -87,8 +87,8 @@ export class DdlPartController {
 
 }
 
-@Controller('/ddl-single')
-export class DdlSingleController {
+@Controller('/ddl-seek')
+export class DdlSeekController {
 
   constructor(
     private api: ApiService,
@@ -105,6 +105,7 @@ export class DdlSingleController {
   @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagDdlFile)
   @ApiParam({ name: 'id', type: 'string' })
+  @ApiHeader({ name: 'Range', required: true })
   async streamFull(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
       let headerRangeFull = req.headers.range || 'bytes=0-';
