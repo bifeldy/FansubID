@@ -94,8 +94,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
               type: 'button',
               icon: 'delete_forever',
               name: 'Hapus',
-              id: r.id,
-              nama: r.name
+              row: r
             }]
           });
         }
@@ -149,14 +148,14 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
   async deleteProject(data): Promise<void> {
     this.gs.log('[PROJECT_LIST_CLICK_DELETE]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `Hapus Proyek -- '${data.id}' :: '${data.nama}'`,
+      `Hapus Proyek -- '${data.row.id}' :: '${data.row.nama}'`,
       'Menghapus Dapat Membuat Error / Menghapus Berkas Yang Menunjuk Ke Tipe Ini !'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsProjectDelete = this.project.deleteProject(data.id).subscribe({
+          this.subsProjectDelete = this.project.deleteProject(data.row.id).subscribe({
             next: res => {
               this.gs.log('[PROJECT_LIST_CLICK_DELETE_SUCCESS]', res);
               this.bs.idle();

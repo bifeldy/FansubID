@@ -77,9 +77,7 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
               type: 'button',
               icon: 'layers_clear',
               name: 'Revoke',
-              id: r.id,
-              ip_domain: r.ip_domain,
-              api_key: r.api_key
+              row: r
             }]
           });
         }
@@ -96,14 +94,14 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
   async revokeCors(data): Promise<void> {
     this.gs.log('[CORS_LIST_CLICK_REVOKE]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `Revoke Kunci -- '${data.id}' :: '${data.ip_domain}'`,
+      `Revoke Kunci -- '${data.row.id}' :: '${data.row.ip_domain}'`,
       'Apakah Yakin Untuk Menonaktifkan Kunci Ini ?'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsCorsDelete = this.adm.revokeCors(data.id).subscribe({
+          this.subsCorsDelete = this.adm.revokeCors(data.row.id).subscribe({
             next: res => {
               this.gs.log('[CORS_LIST_CLICK_REVOKE_SUCCESS]', res);
               this.bs.idle();

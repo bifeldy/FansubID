@@ -109,8 +109,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
               type: 'button',
               icon: 'close',
               name: 'Hapus',
-              id: r.id,
-              title: r.title
+              row: r
             }]
           });
         }
@@ -166,14 +165,14 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
   async deleteNotif(data): Promise<void> {
     this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `Hapus Notif -- '${data.id}' :: '${data.title}'`,
+      `Hapus Notif -- '${data.row.id}' :: '${data.row.title}'`,
       'Yakin Akan Menghapus Notifikasi Ini ?'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe({
+          this.subsNotifDelete = this.adm.deleteNotif(data.row.id).subscribe({
             next: res => {
               this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_SUCCESS]', res);
               this.bs.idle();

@@ -104,8 +104,7 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
               type: 'button',
               icon: 'close',
               name: 'Hapus',
-              id: r.id,
-              title: r.title
+              row: r
             }]
           });
         }
@@ -163,14 +162,14 @@ export class AdminListInformationDialogComponent implements OnInit, OnDestroy {
   async deleteInfo(data): Promise<void> {
     this.gs.log('[INFORMATION_LIST_CLICK_DELETE]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `Hapus Info -- '${data.id}' :: '${data.title}'`,
+      `Hapus Info -- '${data.row.id}' :: '${data.row.title}'`,
       'Yakin Akan Menghapus Informasi Ini ?'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsInfoDelete = this.info.deleteInfo(data.id).subscribe({
+          this.subsInfoDelete = this.info.deleteInfo(data.row.id).subscribe({
             next: res => {
               this.gs.log('[INFORMATION_LIST_CLICK_DELETE_SUCCESS]', res);
               this.bs.idle();

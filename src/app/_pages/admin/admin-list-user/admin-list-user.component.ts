@@ -102,11 +102,11 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                   (r.username === this.as.currentUserSubject?.value?.username) ||
                   this.gs.includesOneOf(r.role, excludedRole)
                 ) ? [] : [
-                  { type: 'button', icon: 'lock', name: 'BAN', id: r.id, username: r.username, email: r._email },
-                  { type: 'button', icon: 'handyman', name: 'ADMIN', id: r.id, username: r.username, email: r._email },
-                  { type: 'button', icon: 'security', name: 'MODERATOR', id: r.id, username: r.username, email: r._email },
-                  { type: 'button', icon: 'rate_review', name: 'FANSUBBER', id: r.id, username: r.username, email: r._email },
-                  { type: 'button', icon: 'person', name: 'USER', id: r.id, username: r.username, email: r._email }
+                  { type: 'button', icon: 'lock', name: 'BAN', row: r },
+                  { type: 'button', icon: 'handyman', name: RoleModel.ADMIN, row: r },
+                  { type: 'button', icon: 'security', name: RoleModel.MODERATOR, row: r },
+                  { type: 'button', icon: 'rate_review', name: RoleModel.FANSUBBER, row: r },
+                  { type: 'button', icon: 'person', name: RoleModel.USER, row: r }
                 ]
               });
             }
@@ -130,9 +130,9 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
   action(data): void {
     this.gs.log('[USER_LIST_CLICK_AKSI]', data);
     if (data.name === 'BAN') {
-      this.ban(data);
+      this.ban(data.row);
     } else {
-      this.proDemote(data);
+      this.proDemote(data.row);
     }
   }
 

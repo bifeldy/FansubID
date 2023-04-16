@@ -117,7 +117,7 @@ export class AdminListFansubMemberComponent implements OnInit {
   }
 
   action(data): void {
-    this.gs.log('[FANSUB_MEMBER_LIST_CLICK_AKSI]', data.row);
+    this.gs.log('[FANSUB_MEMBER_LIST_CLICK_AKSI]', data);
     if (data.name === 'KICK') {
       this.kickMember(data.row);
     } else if (data.name === 'ACCEPT') {

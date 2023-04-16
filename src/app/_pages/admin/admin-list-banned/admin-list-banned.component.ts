@@ -90,8 +90,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
               type: 'button',
               icon: 'lock_open',
               name: 'UnBAN',
-              id: r.id,
-              username: r.user_.username
+              row: r
             }]
           });
         }
@@ -108,14 +107,14 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
   async unBan(data): Promise<void> {
     this.gs.log('[BANNED_LIST_CLICK_UNBAN]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `UnBAN Akun -- '${data.username}'`,
+      `UnBAN Akun -- '${data.row.user_.username}'`,
       'Apakah Yakin Dan Akun Telah Direview Sebelum UnBAN ?'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsBannedDelete = this.adm.unBan(data.id).subscribe({
+          this.subsBannedDelete = this.adm.unBan(data.row.id).subscribe({
             next: res => {
               this.gs.log('[BANNED_LIST_CLICK_UNBAN_SUCCESS]', res);
               this.bs.idle();
