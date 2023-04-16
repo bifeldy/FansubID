@@ -56,7 +56,7 @@
                     <mat-list-option class="h-100" *ngFor="let m of approvedMembers" routerLink="/user/{{ m.user_.username }}">
                       <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" />
                       <a class="text-truncate text-decoration-none">
-                        <span class="bg-bifeldy ps-3 pe-2 me-1 text-warning" style="position: absolute; right: 0;">
+                        <span class="bg-bifeldy px-2 me-1 text-warning" style="position: absolute; right: 0;">
                           {{ m.keterangan }}
                         </span>
                         <span class="text-success">{{ m.user_.username }}</span>
@@ -129,7 +129,7 @@
               <mat-list-option *ngFor="let r of rssFeedData.items | slice:0:5" class="h-100">
                 <mat-icon mat-list-icon class="ps-3">rss_feed</mat-icon>
                 <a class="text-truncate text-decoration-none" (click)="openRssFeed($any(r).link)">
-                  <span class="bg-bifeldy ps-3 pe-2 me-1 text-danger" style="position: absolute; right: 0;">{{ ($any(r).created || $any(r).published) | dateAgo }}</span>
+                  <span class="bg-bifeldy px-2 me-1 text-danger" style="position: absolute; right: 0;">{{ ($any(r).created || $any(r).published) | dateAgo }}</span>
                   <span class="text-warning" [innerHtml]="$any(r).title"></span>
                 </a>
               </mat-list-option>

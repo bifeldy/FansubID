@@ -12,7 +12,7 @@
       <mat-list-option class="h-100" *ngFor="let l of leaderboardData | slice:0:10" routerLink="/user/{{ l.username }}">
         <img matListAvatar src="{{ l.image_url }}" class="ms-3" />
         <a class="text-truncate text-decoration-none">
-          <span class="bg-bifeldy ps-3 pe-2 me-1 text-warning" style="position: absolute; right: 0;">
+          <span class="bg-bifeldy px-2 me-1 text-warning" style="position: absolute; right: 0;">
             {{ l.points }}
           </span>
           <span class="me-3 text-danger">{{ l.rank }}</span>

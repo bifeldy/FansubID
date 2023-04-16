@@ -30,7 +30,7 @@
                     <mat-list-option class="h-100" *ngFor="let f of groupFansub" routerLink="/fansub/{{ f.fansub_.slug }}">
                       <img matListAvatar src="{{ f.fansub_.image_url }}" class="ms-3" />
                       <a class="text-truncate text-decoration-none">
-                        <span class="bg-bifeldy ps-3 pe-2 me-1 text-warning" style="position: absolute; right: 0;">
+                        <span class="bg-bifeldy px-2 me-1 text-warning" style="position: absolute; right: 0;">
                           {{ f.keterangan }}
                         </span>
                         <span class="text-success">{{ f.fansub_.slug }}</span>
