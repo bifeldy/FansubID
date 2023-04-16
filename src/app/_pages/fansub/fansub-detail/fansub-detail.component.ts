@@ -433,20 +433,44 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  approveOrRejectFansubMember(m: FansubMemberModel, ac: boolean): void {
-    this.bs.busy();
-    this.subsFansubMemberApproveReject = this.fansub.approveRejectFansubMember(m.id, {
-      approved: ac
-    }).subscribe({
-      next: res => {
-        this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_SUCCESS]', res);
-        this.getFansubMember();
-        this.bs.idle();
-      },
-      error: err => {
-        this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_ERROR]', err, 'error');
-        this.getFansubMember();
-        this.bs.idle();
+  approveOrRejectFansubMember(data: FansubMemberModel, ac: boolean): void {
+    this.subsDialog = this.ds.openInputDialog({
+      data: {
+        title: `Keterangan ${ac ? 'Approve' : 'Reject'} '${data.user_.username}' :: '${data.fansub_.slug}'`,
+        input: {
+          keterangan: {
+            inputLabel: 'Keterangan',
+            inputPlaceholder: `Pemilik, Translator, Timer, QA / QC, TypeSetter, dll.`,
+            inputValue: null,
+            inputRequired: true
+          }
+        },
+        confirmText: 'OK',
+        cancelText: 'Batal'
+      }
+    }).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INPUT_DIALOG_CLOSED]', re);
+        if (re) {
+          this.bs.busy();
+          this.subsFansubMemberApproveReject = this.fansub.approveRejectFansubMember(data.id, {
+            approved: ac
+          }).subscribe({
+            next: res => {
+              this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_SUCCESS]', res);
+              this.getFansubMember();
+              this.bs.idle();
+            },
+            error: err => {
+              this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_ERROR]', err, 'error');
+              this.getFansubMember();
+              this.bs.idle();
+            }
+          });
+        } else if (re === false) {
+          this.getFansubMember();
+        }
+        this.subsDialog.unsubscribe();
       }
     });
   }

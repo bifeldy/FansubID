@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { FansubMemberModel } from '../../../../models/req-res.model';
+
 import { BusyService } from '../../../_shared/services/busy.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
@@ -76,10 +78,10 @@ export class AdminListFansubMemberComponent implements OnInit {
             Aksi: (
               r.approved
             ) ? [
-              { type: 'button', icon: 'no_meeting_room', name: 'KICK', id: r.id, user: r.user_.username, fansub: r.fansub_.slug }
+              { type: 'button', icon: 'no_meeting_room', name: 'KICK', row: r }
             ] : [
-              { type: 'button', icon: 'done', name: 'ACCEPT', id: r.id, user: r.user_.username, fansub: r.fansub_.slug },
-              { type: 'button', icon: 'close', name: 'REJECT', id: r.id, user: r.user_.username, fansub: r.fansub_.slug }
+              { type: 'button', icon: 'done', name: 'ACCEPT', row: r },
+              { type: 'button', icon: 'close', name: 'REJECT', row: r }
             ]
           });
         }
@@ -115,20 +117,20 @@ export class AdminListFansubMemberComponent implements OnInit {
   }
 
   action(data): void {
-    this.gs.log('[FANSUB_MEMBER_LIST_CLICK_AKSI]', data);
+    this.gs.log('[FANSUB_MEMBER_LIST_CLICK_AKSI]', data.row);
     if (data.name === 'KICK') {
-      this.kickMember(data);
+      this.kickMember(data.row);
     } else if (data.name === 'ACCEPT') {
-      this.approveOrRejectFansubMember(data, true);
+      this.approveOrRejectFansubMember(data.row, true);
     } else if (data.name === 'REJECT') {
-      this.approveOrRejectFansubMember(data, false);
+      this.approveOrRejectFansubMember(data.row, false);
     }
   }
 
-  approveOrRejectFansubMember(data, ac: boolean): void {
+  approveOrRejectFansubMember(data: FansubMemberModel, ac: boolean): void {
     this.subsDialog = this.ds.openInputDialog({
       data: {
-        title: `Keterangan ${ac ? 'Approve' : 'Reject'}`,
+        title: `Keterangan ${ac ? 'Approve' : 'Reject'} '${data.user_.username}' :: '${data.fansub_.slug}'`,
         input: {
           keterangan: {
             inputLabel: 'Keterangan',
@@ -168,7 +170,7 @@ export class AdminListFansubMemberComponent implements OnInit {
     });
   }
 
-  async kickMember(data): Promise<void> {
+  async kickMember(data: FansubMemberModel): Promise<void> {
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
       `Kick Member -- '${data.user_.username}' :: '${data.fansub_.slug}'`,
       'Apakah Yakin Dan Akun Telah Direview Sebelum Dikeluarkan ?'

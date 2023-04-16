@@ -43,7 +43,7 @@
                     (click)="joinLeaveMember()" *ngIf="!showPendingMember">
                     {{ joinedAsMember ? 'Keluar' : 'Gabung' }}
                   </a>
-                  <b class="text-bifeldy" (click)="togglePendingMembers()" style="cursor: pointer;"
+                  <b class="text-bifeldy" style="cursor: pointer;"
                     matTooltip="Lihat Permintaan Gabung Keanggotaan">
                     {{ showPendingMember ? 'Permintaan Gabung' : 'Anggota' }}
                   </b>
@@ -67,7 +67,7 @@
                     <mat-list-option class="h-100" *ngFor="let m of pendingMembers">
                       <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" />
                       <a class="text-truncate text-decoration-none">
-                        <span class="bg-bifeldy ps-3 pe-2 me-1" style="position: absolute; right: 0;">
+                        <span class="bg-bifeldy px-2 me-1" style="position: absolute; right: 0;">
                           <small class="text-success" (click)="approveMember(m)" style="cursor: pointer;">
                             Terima
                           </small>
@@ -83,6 +83,11 @@
                     </mat-list-option>
                   </mat-selection-list>
                 </div>
+              </div>
+              <div class="col-12 text-center pt-3">
+                <button mat-button class="w-100" color="accent" (click)="togglePendingMembers()">
+                  <mat-icon class="me-1">manage_accounts</mat-icon> Lihat {{ showPendingMember ? 'Anggota' : 'Permintaan Gabung' }}
+                </button>
               </div>
             </div>
           </div>
