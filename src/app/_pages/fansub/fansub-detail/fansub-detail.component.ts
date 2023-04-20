@@ -446,7 +446,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           }
         },
         confirmText: 'OK',
-        cancelText: 'Batal'
+        cancelText: 'Batal',
+        infoText: 'Max. 10 Huruf'
       }
     }).afterClosed().subscribe({
       next: re => {
@@ -454,7 +455,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         if (re) {
           this.bs.busy();
           this.subsFansubMemberApproveReject = this.fansub.approveRejectFansubMember(data.id, {
-            approved: ac
+            approved: ac,
+            keterangan: re.keterangan?.substring(0, 10)
           }).subscribe({
             next: res => {
               this.gs.log('[FANSUB_DETAIL_MEMBER_APPROVE_REJECT_SUCCESS]', res);

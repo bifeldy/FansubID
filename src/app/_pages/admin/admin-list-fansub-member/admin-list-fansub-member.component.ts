@@ -140,7 +140,8 @@ export class AdminListFansubMemberComponent implements OnInit {
           }
         },
         confirmText: 'OK',
-        cancelText: 'Batal'
+        cancelText: 'Batal',
+        infoText: 'Max. 10 Huruf'
       }
     }).afterClosed().subscribe({
       next: re => {
