@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
-import { Uploader, UploadxService } from 'ngx-uploadx';
+import { Uploader, UploadState, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -52,7 +52,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   animeCheckOrAddResponse = null;
   doramaCheckOrAddResponse = null;
 
-  attachmentSelected: Uploader = null;
+  attachmentSelected: UploadState = null;
   attachmentErrorText = null;
   attachmentLimitExceeded = null;
 
@@ -545,7 +545,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.gs.log('[ATTACHMENT_SELECTED]', file);
     this.fg.controls['attachment_id'].patchValue(null);
     this.uploadService.disconnect();
-    this.uploadService.connect();
     try {
       if (file.size <= CONSTANTS.fileSizeAttachmentTotalLimit) {
         this.uploadService.handleFiles(file);
@@ -559,15 +558,17 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   submitAttachment(item: Uploader): void {
-    this.attachmentSelected = item;
-    item.status = 'queue';
+    const uploader = this.uploadService.state().find(x => x.uploadId === item.uploadId);
+    if (uploader) {
+      this.attachmentSelected = uploader;
+      item.status = 'queue';
+    }
   }
 
   failOrCancelUpload(err = null): void {
     this.attachmentSelected = null;
-    this.attachmentErrorText = err.result?.message || err.info;
+    this.attachmentErrorText = err?.result?.message || err?.info || 'Expired, Harap Upload Ulang!';
     this.uploadService.disconnect();
-    this.uploadService.connect();
     this.fg.controls['attachment_id'].patchValue(null);
     this.toast.remove(this.uploadToast.toastId);
     this.ddl.clear();
