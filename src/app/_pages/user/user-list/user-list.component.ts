@@ -353,7 +353,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.subsDialog = this.ds.openInfoDialog({
           data: {
-            title: `Sub-Domain '${f.slug}' Belum Di Klaim`,
+            title: `Sepertinya Sub-Domain '${f.slug}' Belum Di Klaim`,
             htmlMessage: 'Silahkan ambil sub-domain pada halaman fansub, ingin ke sana sekarang?',
             confirmText: 'Ya',
             cancelText: 'Tidak'
