@@ -180,11 +180,11 @@ export class DoramaController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: '🙄 400 - Dorama API :: Gagal Menarik Data 😪',
+        info: '🙄 404 - Dorama API :: Gagal Menarik Data 😪',
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'Dorama Tidak Ditemukan!'
         }
-      }, HttpStatus.BAD_REQUEST);
+      }, HttpStatus.NOT_FOUND);
     }
   }
 

@@ -345,9 +345,9 @@ export class FansubDnsController {
       throw new HttpException({
         info: `🙄 404 - Cloudflare API :: Gagal Mencari DNS ${req.params['slug']} 😪`,
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'DNS Fansub Tidak Ditemukan!'
         }
-      }, HttpStatus.BAD_REQUEST);
+      }, HttpStatus.NOT_FOUND);
     }
   }
 
@@ -412,7 +412,7 @@ export class FansubDnsController {
         result: {
           message: 'Data Tidak Lengkap!'
         }
-      }, HttpStatus.BAD_REQUEST);
+      }, HttpStatus.NOT_FOUND);
     }
   }
 

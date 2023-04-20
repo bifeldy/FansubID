@@ -480,11 +480,11 @@ export class FansubController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Fansub API :: Gagal Mendapatkan All Members 😪`,
+        info: `🙄 404 - Fansub API :: Gagal Mendapatkan All Members 😪`,
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'Member Fansub Tidak Ditemukan!'
         }
-      }, HttpStatus.BAD_REQUEST);
+      }, HttpStatus.NOT_FOUND);
     }
   }
 
@@ -554,11 +554,11 @@ export class FansubController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Fansub API :: Gagal Menarik Data 😪`,
+        info: `🙄 404 - Fansub API :: Gagal Menarik Data 😪`,
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'RSS Fansub Tidak Ditemukan!'
         }
-      }, HttpStatus.BAD_REQUEST);
+      }, HttpStatus.NOT_FOUND);
     }
   }
 

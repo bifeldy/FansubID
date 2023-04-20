@@ -184,11 +184,11 @@ export class AnimeController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: '🙄 400 - Anime API :: Gagal Menarik Data 😪',
+        info: '🙄 404 - Anime API :: Gagal Menarik Data 😪',
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'Anime Tidak Ditemukan!'
         }
-      }, HttpStatus.BAD_REQUEST);
+      }, HttpStatus.NOT_FOUND);
     }
   }
 

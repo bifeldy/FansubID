@@ -386,7 +386,7 @@ export class UserController {
       throw new HttpException({
         info: `🙄 404 - User API :: Gagal Mencari User ${req.params['username']} 😪`,
         result: {
-          message: 'User Tidak Ditemukan!'
+          message: 'Berkas User Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }
@@ -447,7 +447,7 @@ export class UserController {
       throw new HttpException({
         info: `🙄 404 - User API :: Gagal Mencari User ${req.params['username']} 😪`,
         result: {
-          message: 'User Tidak Ditemukan!'
+          message: 'Komentar User Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }
@@ -566,7 +566,7 @@ export class UserController {
       throw new HttpException({
         info: `🙄 404 - User API :: Gagal Mencari User ${req.params['username']} 😪`,
         result: {
-          message: 'User Tidak Ditemukan!'
+          message: 'Like Dislike User Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }
@@ -689,7 +689,7 @@ export class UserController {
       throw new HttpException({
         info: `🙄 404 - User API :: Gagal Mencari User ${req.params['username']} 😪`,
         result: {
-          message: 'User Tidak Ditemukan!'
+          message: 'Jejak User Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }
@@ -749,7 +749,7 @@ export class UserController {
       throw new HttpException({
         info: `🙄 400 - User API :: Gagal Mendapatkan All Groups 😪`,
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'Grup Data Tidak Lengkap!'
         }
       }, HttpStatus.BAD_REQUEST);
     }

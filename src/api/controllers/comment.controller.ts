@@ -179,11 +179,11 @@ export class CommentController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Komentar API :: Gagal Mendapatkan All Komentar 😪`,
+        info: `🙄 404 - Komentar API :: Gagal Mendapatkan All Komentar 😪`,
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'Komentar Tidak Ditemukan!'
         }
-      }, HttpStatus.BAD_REQUEST);
+      }, HttpStatus.NOT_FOUND);
     }
   }
 
