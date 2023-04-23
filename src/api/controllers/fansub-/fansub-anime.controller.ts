@@ -31,7 +31,8 @@ export class FansubAnimeController {
           .leftJoinAndSelect('berkas.anime_', 'anime_')
           .leftJoinAndSelect('berkas.fansub_', 'fansub_')
           .where('fansub_.id IN (:...id)', { id: fansubId })
-          .andWhere('berkas.anime_ IS NOT NULL');
+          .andWhere('berkas.anime_ IS NOT NULL')
+          .orderBy('anime_.name', 'ASC');
         if (fansubId.length === 1) {
           fileRepoQuery = fileRepoQuery
             .skip(queryPage > 0 ? (queryPage * queryRow - queryRow) : 0)
