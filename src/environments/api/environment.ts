@@ -131,7 +131,8 @@ export const environment = {
     url: 'https://api.cloudflare.com/client/v4',
     key: SECRETS().CLOUDFLARE_KEY,                                                // '',
     zoneId: '804863012d6a7700333d781170c4dd95',
-    domain: 'fansub.id'
+    domain: 'fansub.id',
+    comment: 'DOMAIN_KLAIM'
   },
   discordApiUrl: 'https://discord.com/api',
   discordGuildId: '342220398022098944',

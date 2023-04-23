@@ -55,7 +55,7 @@ export class DocsComponent implements OnInit {
         const records = [];
         for (const rec of res.results) {
           if (rec.fansub_) {
-		    records.push(rec);
+            records.push(rec);
           }
         }
         this.dnsData = [...this.dnsData, ...records];
