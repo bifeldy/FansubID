@@ -57,4 +57,7 @@ export const CONSTANTS = {
   timeJwtEncryption: 3 * 60, // 3 Minutes
   timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days
   timeMaxDaysNotification: 7 * 24 * 60 * 60 * 1000, // 7 Days
+  verificationDomain: [
+    'ghs.google.com'
+  ]
 };

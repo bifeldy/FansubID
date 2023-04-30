@@ -206,16 +206,19 @@ export class GlobalService {
   }
 
   linkify(text: string): string {
-    // http://, https://, ftp://
-    const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
-    // www. sans http:// or https://
-    const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-    // Email addresses
-    const emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
-    text = text.replace(urlPattern, '<a class="text-decoration-none" href="$&" target="_blank">$&</a>')
-      .replace(pseudoUrlPattern, '$1<a class="text-decoration-none" href="http://$2" target="_blank">$2</a>')
-      .replace(emailAddressPattern, '<a class="text-decoration-none" href="mailto:$&" target="_blank">$&</a>');
-    return text;
+    if (text) {
+      // http://, https://, ftp://
+      const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+      // www. sans http:// or https://
+      const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+      // Email addresses
+      const emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
+      text = text.replace(urlPattern, '<a class="text-decoration-none" href="$&" target="_blank">$&</a>')
+        .replace(pseudoUrlPattern, '$1<a class="text-decoration-none" href="http://$2" target="_blank">$2</a>')
+        .replace(emailAddressPattern, '<a class="text-decoration-none" href="mailto:$&" target="_blank">$&</a>');
+      return text;
+    }
+    return '';
   }
 
   toggleDarkTheme(firstRun = false): void {

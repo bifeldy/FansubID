@@ -83,54 +83,59 @@ export class GlobalService {
   }
 
   cleanIpOrigin(ipOrigin: string): string {
-    ipOrigin = ipOrigin || '';
-    // Remove Prefixes
-    if (ipOrigin.startsWith('::ffff:')) {
-      ipOrigin = ipOrigin.slice(7, ipOrigin.length);
-    }
-    if (ipOrigin.startsWith('http://')) {
-      ipOrigin = ipOrigin.slice(7, ipOrigin.length);
-    } else if (ipOrigin.startsWith('https://')) {
-      ipOrigin = ipOrigin.slice(8, ipOrigin.length);
-    }
-    if (ipOrigin.startsWith('www.')) {
-      ipOrigin = ipOrigin.slice(4, ipOrigin.length);
-    }
-    // Get Domain Or IP Maybe With Port Included And Remove Folder Path
-    ipOrigin = ipOrigin.split('/')[0];
-    // Remove Port
-    let totalColon = 0;
-    for (let i = 0; i < ipOrigin.length; i++) {
-      if (ipOrigin[i] === ':') {
-        totalColon++;
+    if (ipOrigin) {
+      // Remove Prefixes
+      if (ipOrigin.startsWith('::ffff:')) {
+        ipOrigin = ipOrigin.slice(7, ipOrigin.length);
       }
-      if (totalColon > 1) {
-        break;
+      if (ipOrigin.startsWith('http://')) {
+        ipOrigin = ipOrigin.slice(7, ipOrigin.length);
+      } else if (ipOrigin.startsWith('https://')) {
+        ipOrigin = ipOrigin.slice(8, ipOrigin.length);
       }
-    }
-    if (totalColon === 1) {
-      // IPv4
-      ipOrigin = ipOrigin.split(':')[0];
-    } else {
-      // IPv6
-      ipOrigin = ipOrigin.split(']')[0];
-      if (ipOrigin.startsWith('[')) {
-        ipOrigin = ipOrigin.slice(1, ipOrigin.length);
+      if (ipOrigin.startsWith('www.')) {
+        ipOrigin = ipOrigin.slice(4, ipOrigin.length);
       }
+      // Get Domain Or IP Maybe With Port Included And Remove Folder Path
+      ipOrigin = ipOrigin.split('/')[0];
+      // Remove Port
+      let totalColon = 0;
+      for (let i = 0; i < ipOrigin.length; i++) {
+        if (ipOrigin[i] === ':') {
+          totalColon++;
+        }
+        if (totalColon > 1) {
+          break;
+        }
+      }
+      if (totalColon === 1) {
+        // IPv4
+        ipOrigin = ipOrigin.split(':')[0];
+      } else {
+        // IPv6
+        ipOrigin = ipOrigin.split(']')[0];
+        if (ipOrigin.startsWith('[')) {
+          ipOrigin = ipOrigin.slice(1, ipOrigin.length);
+        }
+      }
+      return ipOrigin;
     }
-    return ipOrigin;
+    return '';
   }
 
   cleanUpUrlStringRecord(text: string): string {
-    if (text.startsWith('http://')) {
-      text = text.slice(7, text.length);
-    } else if (text.startsWith('https://')) {
-      text = text.slice(8, text.length);
+    if (text) {
+      if (text.startsWith('http://')) {
+        text = text.slice(7, text.length);
+      } else if (text.startsWith('https://')) {
+        text = text.slice(8, text.length);
+      }
+      if (text.startsWith('www.')) {
+        text = text.slice(4, text.length);
+      }
+      return text;
     }
-    if (text.startsWith('www.')) {
-      text = text.slice(4, text.length);
-    }
-    return text;
+    return '';
   }
 
 }
