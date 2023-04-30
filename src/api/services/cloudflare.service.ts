@@ -47,15 +47,17 @@ export class CloudflareService {
     }
   }
 
-  async createDns(name: string, content: string, type: string): Promise<any> {
+  async createDns(name: string, content: string, type: string, primarySubDomainUrl = null): Promise<any> {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records`);
-      const data = {
+      const data: any = {
         name: name.includes(`.${environment.cloudflare.domain}`) ? name : `${name}.${environment.cloudflare.domain}`,
         type, content, ttl: 1,
-        proxied: type === 'A' ? true : false,
-        comment: environment.cloudflare.comment
+        proxied: type === 'A' ? true : false
       };
+      if (primarySubDomainUrl) {
+        data.comment = environment.cloudflare.comment;
+      }
       const res_raw = await this.api.postData(url, JSON.stringify(data), {
         'Authorization': `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
@@ -105,6 +107,38 @@ export class CloudflareService {
       return res;
     } catch (err) {
       this.gs.log('[CLOUDFLARE_SERVICE-DETAIL_DNS_ERROR] 🔥', err, 'error');
+      return null;
+    }
+  }
+
+  async updateDns(id: string, name: string, content: string, type: string): Promise<any> {
+    try {
+      const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records/${id}`);
+      const data: any = {
+        name: name.includes(`.${environment.cloudflare.domain}`) ? name : `${name}.${environment.cloudflare.domain}`,
+        type, content
+      };
+      const res_raw = await this.api.putData(url, JSON.stringify(data), {
+        'Authorization': `Bearer ${environment.cloudflare.key}`,
+        ...environment.nodeJsXhrHeader
+      });
+      const res = {
+        status: res_raw.status,
+        result: null
+      };
+      const res_json: any = await res_raw.json();
+      if (res_raw.ok) {
+        this.gs.log(`[CLOUDFLARE_SERVICE-UPDATE_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json);
+        res.result = res_json.result;
+      } else {
+        this.gs.log(`[CLOUDFLARE_SERVICE-UPDATE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json);
+        res.result = {
+          message: res_json.errors[0]?.message
+        };
+      }
+      return res;
+    } catch (err) {
+      this.gs.log('[CLOUDFLARE_SERVICE-UPDATE_DNS_ERROR] 🔥', err, 'error');
       return null;
     }
   }

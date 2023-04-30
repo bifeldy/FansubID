@@ -8,7 +8,7 @@ import { environment } from '../../../environments/api/environment';
 
 import { CONSTANTS } from '../../../constants';
 
-import { RoleModel, UserModel } from '../../../models/req-res.model';
+import { FansubModel, RoleModel, UserModel } from '../../../models/req-res.model';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 import { Roles } from '../../decorators/roles.decorator';
@@ -34,10 +34,10 @@ export class FansubDnsController {
     //
   }
 
-  async createNewDns(obj): Promise<any> {
-    const req = obj.req;
-    const user = obj.user;
-    let fansub = obj.fansub;
+  async createNewOrUpdateDns(obj): Promise<any> {
+    const req: Request = obj.req;
+    const user: UserModel = obj.user;
+    let fansub: FansubModel = obj.fansub;
     const result = {
       dns_id: null,
       dns_id_alt: null
@@ -47,62 +47,108 @@ export class FansubDnsController {
     if (serverTarget.match(CONSTANTS.regexIpAddress)) {
       recordType = 'A';
     }
-    const dns_id = await this.cfs.createDns(fansub.slug, serverTarget, recordType);
-    if (dns_id) {
-      if (dns_id.status >= 200 && dns_id.status < 400) {
-        fansub.dns_id = dns_id.result.id;
-        result.dns_id = {
-          id: dns_id.result.id,
-          name: dns_id.result.name,
-          content: dns_id.result.content,
-          proxied: dns_id.result.proxied,
-          ttl: dns_id.result.ttl,
-          type: dns_id.result.type,
-          created_at: dns_id.result.created_on,
-          updated_at: dns_id.result.modified_on
-        };
+    if (recordType === 'A' && fansub.dns_id_alt) {
+      const dns_id_alt_delete = await this.cfs.deleteDns(fansub.dns_id_alt);
+      if (dns_id_alt_delete && dns_id_alt_delete.status >= 200 && dns_id_alt_delete.status < 400) {
+        fansub.dns_id_alt = null;
+        fansub = await this.fansubRepo.save(fansub);
+      }
+    }
+    let isUpdateMode = false;
+    if (fansub.dns_id) {
+      const dns_id_detail = await this.cfs.detailDns(fansub.dns_id);
+      if (dns_id_detail && dns_id_detail.status >= 200 && dns_id_detail.status < 400) {
+        if (dns_id_detail.result.type === recordType) {
+          isUpdateMode = true;
+        } else {
+          const dns_id_delete = await this.cfs.deleteDns(fansub.dns_id);
+          if (dns_id_delete && dns_id_delete.status >= 200 && dns_id_delete.status < 400) {
+            fansub.dns_id = null;
+            fansub = await this.fansubRepo.save(fansub);
+          }
+        }
+      }
+    }
+    let dns_id = null;
+    if (isUpdateMode) {
+      dns_id = await this.cfs.updateDns(fansub.dns_id, fansub.slug, serverTarget, recordType);
+    } else {
+      dns_id = await this.cfs.createDns(fansub.slug, serverTarget, recordType, true);
+    }
+    if (dns_id && dns_id.status >= 200 && dns_id.status < 400) {
+      fansub.dns_id = dns_id.result.id;
+      fansub = await this.fansubRepo.save(fansub);
+      result.dns_id = {
+        id: dns_id.result.id,
+        name: dns_id.result.name,
+        content: dns_id.result.content,
+        proxied: dns_id.result.proxied,
+        ttl: dns_id.result.ttl,
+        type: dns_id.result.type,
+        created_at: dns_id.result.created_on,
+        updated_at: dns_id.result.modified_on
+      };
+      if ('verification_name' in req.body && 'verification_target' in req.body) {
         let verification_name: string = this.gs.cleanUpUrlStringRecord(req.body.verification_name);
         let verification_target: string = this.gs.cleanUpUrlStringRecord(req.body.verification_target);
-        if (verification_target && verification_target && serverTarget === 'ghs.google.com') {
-          const dns_id_alt = await this.cfs.createDns(verification_name, verification_target, 'CNAME');
-          if (dns_id_alt) {
-            if (dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
-              fansub.dns_id_alt = dns_id_alt.result.id;
-              result.dns_id_alt = {
-                id: dns_id_alt.result.id,
-                name: dns_id_alt.result.name,
-                content: dns_id_alt.result.content,
-                proxied: dns_id_alt.result.proxied,
-                ttl: dns_id_alt.result.ttl,
-                type: dns_id_alt.result.type,
-                created_at: dns_id_alt.result.created_on,
-                updated_at: dns_id_alt.result.modified_on
-              };
-            }
-          }
-        }
-        const fansubUrls = JSON.parse(fansub.urls);
-        if (fansubUrls && Array.isArray(fansubUrls)) {
-          const idx = fansubUrls.findIndex(u => u.name === 'web');
-          if (idx >= 0) {
-            fansubUrls[idx].url = `https://${dns_id.result.name}`;
+        if (verification_name && verification_target && CONSTANTS.verificationDomain.includes(serverTarget)) {
+          let dns_id_alt = null;
+          if (fansub.dns_id_alt) {
+            dns_id_alt = await this.cfs.updateDns(fansub.dns_id_alt, verification_name, verification_target, 'CNAME');
           } else {
-            fansubUrls.push({ name: 'web', url: `https://${dns_id.result.name}` });
+            dns_id_alt = await this.cfs.createDns(verification_name, verification_target, 'CNAME');
+          }
+          if (dns_id_alt && dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
+            fansub.dns_id_alt = dns_id_alt.result.id;
+            fansub = await this.fansubRepo.save(fansub);
+            result.dns_id_alt = {
+              id: dns_id_alt.result.id,
+              name: dns_id_alt.result.name,
+              content: dns_id_alt.result.content,
+              proxied: dns_id_alt.result.proxied,
+              ttl: dns_id_alt.result.ttl,
+              type: dns_id_alt.result.type,
+              created_at: dns_id_alt.result.created_on,
+              updated_at: dns_id_alt.result.modified_on
+            };
+          } else {
+            throw new HttpException({
+              info: `💩 500 - Cloudflare API :: Gagal Memperbaharui Data 🤬`,
+              result: {
+                message: 'Gagal Terhubung Dengan DNS Server!'
+              }
+            }, HttpStatus.INTERNAL_SERVER_ERROR);
           }
         }
-        fansub.urls = JSON.stringify(fansubUrls);
-        fansub.user_ = user;
-        fansub = await this.fansubRepo.save(fansub);
-        delete fansub.urls;
-        delete fansub.tags;
-        delete fansub.view_count;
-        delete fansub.like_count;
-        delete fansub.description;
-        delete fansub.rss_feed;
-        delete fansub.created_at;
-        delete fansub.updated_at;
-        delete fansub.user_;
       }
+      const fansubUrls = JSON.parse(fansub.urls);
+      if (fansubUrls && Array.isArray(fansubUrls)) {
+        const idx = fansubUrls.findIndex(u => u.name === 'web');
+        if (idx >= 0) {
+          fansubUrls[idx].url = `https://${dns_id.result.name}`;
+        } else {
+          fansubUrls.push({ name: 'web', url: `https://${dns_id.result.name}` });
+        }
+      }
+      fansub.urls = JSON.stringify(fansubUrls);
+      fansub.user_ = user;
+      fansub = await this.fansubRepo.save(fansub);
+      delete fansub.urls;
+      delete fansub.tags;
+      delete fansub.view_count;
+      delete fansub.like_count;
+      delete fansub.description;
+      delete fansub.rss_feed;
+      delete fansub.created_at;
+      delete fansub.updated_at;
+      delete fansub.user_;
+    } else {
+      throw new HttpException({
+        info: `💩 500 - Cloudflare API :: Gagal Memperbaharui Data 🤬`,
+        result: {
+          message: 'Gagal Terhubung Dengan DNS Server!'
+        }
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return { result, fansub };
   }
@@ -120,7 +166,7 @@ export class FansubDnsController {
       const queryOrder = `${req.query['order'] ? req.query['order'] : 'asc'}`;
       const user: UserModel = res.locals['user'];
       const dnss = await this.cfs.getDnss(queryName, queryPage, queryRow, querySort, queryOrder);
-      if (dnss) {
+      if (dnss && dnss.status >= 200 && dnss.status < 400) {
         const records = [];
         for (const rec of dnss.results) {
           const fansubSlug = rec.name.split(`.${environment.cloudflare.domain}`)[0].toLowerCase();
@@ -251,7 +297,7 @@ export class FansubDnsController {
             }, HttpStatus.FORBIDDEN);
           }
         }
-        const r = await this.createNewDns({ req, user, fansub });
+        const r = await this.createNewOrUpdateDns({ req, user, fansub });
         fansub = r.fansub;
         const result = r.result;
         if (result.dns_id) {
@@ -306,7 +352,7 @@ export class FansubDnsController {
         dns_id_alt: null
       };
       const dns_id = await this.cfs.detailDns(group.fansub_.dns_id);
-      if (dns_id) {
+      if (dns_id && dns_id.status >= 200 && dns_id.status < 400) {
         result.dns_id = {
           id: dns_id.result.id,
           name: dns_id.result.name,
@@ -320,7 +366,7 @@ export class FansubDnsController {
       }
       if (group.fansub_.dns_id_alt) {
         const dns_id_alt = await this.cfs.detailDns(group.fansub_.dns_id_alt);
-        if (dns_id_alt) {
+        if (dns_id_alt && dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
           result.dns_id_alt = {
             id: dns_id_alt.result.id,
             name: dns_id_alt.result.name,
@@ -379,30 +425,17 @@ export class FansubDnsController {
           },
           relations: ['fansub_', 'user_']
         });
-        let fansub = await this.fansubRepo.findOneOrFail({
+        const fansub = await this.fansubRepo.findOneOrFail({
           where: [
             { slug: ILike(group.fansub_.slug) }
           ]
         });
-        if (group.fansub_.dns_id) {
-          await this.cfs.deleteDns(group.fansub_.dns_id);
-          fansub.dns_id = null;
-        }
-        if (group.fansub_.dns_id_alt) {
-          await this.cfs.deleteDns(group.fansub_.dns_id_alt);
-          fansub.dns_id_alt = null;
-        }
-        fansub = await this.fansubRepo.save(fansub);
-        const r = await this.createNewDns({ req, user, fansub });
-        fansub = r.fansub;
-        const result = r.result;
-        if (result.dns_id) {
-          return {
-            info: `😅 200 - Cloudflare API :: Pengubahan Sub-Domain Berhasil 🥰`,
-            result,
-            fansub
-          };
-        }
+        const r = await this.createNewOrUpdateDns({ req, user, fansub });
+        return {
+          info: `😅 200 - Cloudflare API :: Pengubahan Sub-Domain Berhasil 🥰`,
+          result: r.result,
+          fansub: r.fansub
+        };
       }
       throw new Error('Data Tidak Lengkap!');
     } catch (error) {
