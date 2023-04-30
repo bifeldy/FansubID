@@ -62,11 +62,11 @@ export class VerifyNikController {
             };
           }
           throw new HttpException({
-            info: `🙄 ${res_raw2.status || 400} - KTP API :: API Pemerintah Error 😪`,
+            info: `🙄 ${res_raw2.status || 500} - KTP API :: API Pemerintah Error 😪`,
             result: {
               message: 'Kayaknya Sudah Di Fix Deh Kebocoran Datanya?'
             }
-          }, res_raw2.status || HttpStatus.BAD_REQUEST);
+          }, res_raw2.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
         throw new HttpException({
           info: `🙄 ${res_raw1.status || 400} - Google API :: Captcha Bermasalah 😪`,

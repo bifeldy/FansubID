@@ -52,6 +52,13 @@ export class FansubDnsController {
       if (dns_id_alt_delete && dns_id_alt_delete.status >= 200 && dns_id_alt_delete.status < 400) {
         fansub.dns_id_alt = null;
         fansub = await this.fansubRepo.save(fansub);
+      } else {
+        throw new HttpException({
+          info: `💩 ${dns_id_alt_delete?.status || 500} - Cloudflare API :: Gagal Menambah / Memperbaharui Data 🤬`,
+          result: {
+            message: 'Gagal Terhubung Dengan DNS Server!'
+          }
+        }, dns_id_alt_delete?.status || HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
     let isUpdateMode = false;
@@ -65,8 +72,22 @@ export class FansubDnsController {
           if (dns_id_delete && dns_id_delete.status >= 200 && dns_id_delete.status < 400) {
             fansub.dns_id = null;
             fansub = await this.fansubRepo.save(fansub);
+          } else {
+            throw new HttpException({
+              info: `💩 ${dns_id_delete?.status || 500} - Cloudflare API :: Gagal Menambah / Memperbaharui Data 🤬`,
+              result: {
+                message: 'Gagal Terhubung Dengan DNS Server!'
+              }
+            }, dns_id_delete?.status || HttpStatus.INTERNAL_SERVER_ERROR);
           }
         }
+      } else {
+        throw new HttpException({
+          info: `💩 ${dns_id_detail?.status || 500} - Cloudflare API :: Gagal Mengambil Data 🤬`,
+          result: {
+            message: 'Gagal Terhubung Dengan DNS Server!'
+          }
+        }, dns_id_detail?.status || HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
     let dns_id = null;
@@ -113,11 +134,11 @@ export class FansubDnsController {
             };
           } else {
             throw new HttpException({
-              info: `💩 500 - Cloudflare API :: Gagal Memperbaharui Data 🤬`,
+              info: `💩 ${dns_id_alt?.status || 400} - Cloudflare API :: Gagal Menambah / Memperbaharui Data 🤬`,
               result: {
-                message: 'Gagal Terhubung Dengan DNS Server!'
+                message: 'Data Tidak Lengkap!'
               }
-            }, HttpStatus.INTERNAL_SERVER_ERROR);
+            }, dns_id_alt?.status || HttpStatus.BAD_REQUEST);
           }
         }
       }
@@ -144,11 +165,11 @@ export class FansubDnsController {
       delete fansub.user_;
     } else {
       throw new HttpException({
-        info: `💩 500 - Cloudflare API :: Gagal Memperbaharui Data 🤬`,
+        info: `💩 ${dns_id?.status || 400} - Cloudflare API :: Gagal Menambah / Memperbaharui Data 🤬`,
         result: {
-          message: 'Gagal Terhubung Dengan DNS Server!'
+          message: 'Data Tidak Lengkap!'
         }
-      }, HttpStatus.INTERNAL_SERVER_ERROR);
+      }, dns_id?.status || HttpStatus.BAD_REQUEST);
     }
     return { result, fansub };
   }
@@ -363,6 +384,13 @@ export class FansubDnsController {
           created_at: dns_id.result.created_on,
           updated_at: dns_id.result.modified_on
         };
+      } else {
+        throw new HttpException({
+          info: `💩 ${dns_id?.status || 404} - Cloudflare API :: Gagal Mengambil Data 🤬`,
+          result: {
+            message: 'Gagal Terhubung Dengan DNS Server!'
+          }
+        }, dns_id?.status || HttpStatus.NOT_FOUND);
       }
       if (group.fansub_.dns_id_alt) {
         const dns_id_alt = await this.cfs.detailDns(group.fansub_.dns_id_alt);
@@ -377,15 +405,14 @@ export class FansubDnsController {
             created_at: dns_id_alt.result.created_on,
             updated_at: dns_id_alt.result.modified_on
           };
+        } else {
+          // Not Required
         }
       }
-      if (result.dns_id) {
-        return {
-          info: `😅 200 - Cloudflare API :: DNS ${req.params['slug']} 🤣`,
-          result
-        };
-      }
-      throw new Error('Gagal Tarik Data DNS Zone');
+      return {
+        info: `😅 200 - Cloudflare API :: DNS ${req.params['slug']} 🤣`,
+        result
+      };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
