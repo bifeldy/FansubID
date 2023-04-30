@@ -104,6 +104,13 @@ export class LeftMenuService {
     this.linkText = this.sideNavExpanded;
   }
 
+  forceCloseSideNav() {
+    if (!this.gs.isDesktop && this.sideNav.opened) {
+      this.sideNav.close();
+    }
+    this.onMouseHoverOut();
+  }
+
   onSideNavToggleView(): void {
     if (this.sideNav.opened) {
       this.sideNav.close();

@@ -42,10 +42,6 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     return this.gs;
   }
 
-  get LMS(): LeftMenuService {
-    return this.lms;
-  }
-
   get mainMenus(): Menu[] {
     return this.lms.mainMenus;
   }
@@ -88,17 +84,21 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     }
   }
 
+  forceCloseSideNav(): void {
+    this.lms.forceCloseSideNav();
+  }
+
   logout(): void {
     this.as.logout();
   }
 
   openDocumentation(): void {
-    this.onMouseHoverOut();
+    this.forceCloseSideNav();
     this.router.navigateByUrl('/docs');
   }
 
   openWebTorrent(): void {
-    this.onMouseHoverOut();
+    this.forceCloseSideNav();
     if (!this.gs.isDesktop) {
       this.subsDialog = this.ds.openInfoDialog({
         data: {
