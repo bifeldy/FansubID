@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouteConfigLoadStart, RouteConfigLoadEnd, NavigationStart } from '@angular/router';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatDrawerMode, MatSidenav } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { onMainContentChange } from './_shared/animations/anim-side-menu';
@@ -33,6 +33,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:click', ['$event']) windowLeftClick;
   @HostListener('window:dblclick', ['$event']) windowDoubleClick;
   @HostListener('window:beforeunload', ['$event']) windowBeforeUnloaded;
+
+  get sideNavType(): MatDrawerMode {
+    return this.gs.isDesktop ? 'side' : 'over';
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {

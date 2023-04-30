@@ -73,11 +73,15 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   }
 
   onMouseHoverIn(): void {
-    this.lms.onMouseHoverIn();
+    if (this.gs.isDesktop) {
+      this.lms.onMouseHoverIn();
+    }
   }
 
   onMouseHoverOut(): void {
-    this.lms.onMouseHoverOut();
+    if (this.gs.isDesktop) {
+      this.lms.onMouseHoverOut();
+    }
   }
 
   logout(): void {

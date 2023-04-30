@@ -8,7 +8,7 @@
 <mat-sidenav-container class="sidenav-container" [hasBackdrop]="LMS.sideNavExpanded || rightSidePanel['isOpen']">
 
   <!-- Left Side Menu -->
-  <mat-sidenav #leftSideNav disableClose [mode]="'side'" [opened]="LMS.opened" [ngStyle]="{
+  <mat-sidenav #leftSideNav disableClose [mode]="sideNavType" [opened]="LMS.opened" [ngStyle]="{
     'background-image': 'url(' + GS.leftMenuImage + ')'
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-left-menu></app-left-menu>

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 
 import { GlobalService } from './global.service';
 
@@ -9,7 +10,7 @@ import { Menu } from '../../../models/menu';
 })
 export class LeftMenuService {
 
-  sideNav = null;
+  sideNav: MatSidenav = null;
   sideNavExpanded = false;
 
   linkText = false;
@@ -104,7 +105,17 @@ export class LeftMenuService {
   }
 
   onSideNavToggleView(): void {
-    this.sideNav.toggle();
+    if (this.sideNav.opened) {
+      this.sideNav.close();
+      if (!this.gs.isDesktop) {
+        this.onMouseHoverOut();
+      }
+    } else {
+      this.sideNav.open();
+      if (!this.gs.isDesktop) {
+        this.onMouseHoverIn();
+      }
+    }
   }
 
   onSideNavToggleExpanded(): void {
