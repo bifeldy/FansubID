@@ -17,7 +17,6 @@ import { FansubModel } from '../../models/req-res.model';
 
 import { FansubService } from '../repository/fansub.service';
 
-import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
 
 @Injectable()
@@ -26,7 +25,6 @@ export class RssFeedTasksService {
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
     private fansubRepo: FansubService,
-    private cfg: ConfigService,
     private gs: GlobalService
   ) {
     //
@@ -112,55 +110,51 @@ export class RssFeedTasksService {
     }
   )
   async fansubRssFeedAll(): Promise<void> {
-    if (!this.cfg.CRON[CONSTANTS.cronFansubRssFeed]) {
-      const startTime = new Date();
-      this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-START] 🐾', `${startTime}`);
-      this.cfg.CRON[CONSTANTS.cronFansubRssFeed] = true;
-      try {
-        const rssFeedAll = [];
-        const rssFeedActive = [];
-        const fansubs = await this.fansubRepo.find({
-          where: [
-            { rss_feed: Not(IsNull()) }
-          ],
-          order: {
-            updated_at: 'DESC'
-          }
-        });
-        const rgx = new RegExp(CONSTANTS.regexUrl);
-        for (const fs of fansubs) {
-          if (fs.rss_feed.match(rgx)) {
-            try {
-              const feed = await this.getFeedByUrl(fs.rss_feed);
-              this.sortRssFeedWhileAdding(fs, rssFeedAll, feed);
-              if (fs.active) {
-                this.sortRssFeedWhileAdding(fs, rssFeedActive, feed, 1);
-              }
-            } catch (e) {
-              this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR_PARSE] 🐾', e, 'error');
+    const startTime = new Date();
+    this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-START] 🐾', `${startTime}`);
+    try {
+      const rssFeedAll = [];
+      const rssFeedActive = [];
+      const fansubs = await this.fansubRepo.find({
+        where: [
+          { rss_feed: Not(IsNull()) }
+        ],
+        order: {
+          updated_at: 'DESC'
+        }
+      });
+      const rgx = new RegExp(CONSTANTS.regexUrl);
+      for (const fs of fansubs) {
+        if (fs.rss_feed.match(rgx)) {
+          try {
+            const feed = await this.getFeedByUrl(fs.rss_feed);
+            this.sortRssFeedWhileAdding(fs, rssFeedAll, feed);
+            if (fs.active) {
+              this.sortRssFeedWhileAdding(fs, rssFeedActive, feed, 1);
             }
+          } catch (e) {
+            this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR_PARSE] 🐾', e, 'error');
           }
         }
-        this.saveFeedToFileAndCache('fansub-rss-feed-all', {
-          info: `😅 200 - Fansub API :: RSS Feed All Full Fansubs 🤣`,
-          count: rssFeedAll.length,
-          pages: 1,
-          results: rssFeedAll
-        });
-        this.saveFeedToFileAndCache('fansub-rss-feed-active', {
-          info: `😅 200 - Fansub API :: RSS Feed All Active Fansubs 🤣`,
-          count: rssFeedActive.length,
-          pages: 1,
-          results: rssFeedActive
-        });
-      } catch (error) {
-        this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR] 🐾', error, 'error');
       }
-      this.cfg.CRON[CONSTANTS.cronFansubRssFeed] = false;
-      const endTime = new Date();
-      const elapsedTime = endTime.getTime() - startTime.getTime();
-      this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+      this.saveFeedToFileAndCache('fansub-rss-feed-all', {
+        info: `😅 200 - Fansub API :: RSS Feed All Full Fansubs 🤣`,
+        count: rssFeedAll.length,
+        pages: 1,
+        results: rssFeedAll
+      });
+      this.saveFeedToFileAndCache('fansub-rss-feed-active', {
+        info: `😅 200 - Fansub API :: RSS Feed All Active Fansubs 🤣`,
+        count: rssFeedActive.length,
+        pages: 1,
+        results: rssFeedActive
+      });
+    } catch (error) {
+      this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR] 🐾', error, 'error');
     }
+    const endTime = new Date();
+    const elapsedTime = endTime.getTime() - startTime.getTime();
+    this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
   }
 
 }

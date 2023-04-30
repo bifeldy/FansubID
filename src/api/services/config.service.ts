@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { CONSTANTS } from '../../constants';
-
 import { environment } from '../../environments/api/environment';
 
 import { ServerInfoModel } from '../../models/socket-io.model';
@@ -19,11 +17,6 @@ export class ConfigService {
     '::1',
     'localhost'
   ];
-
-  CRON = {
-    [CONSTANTS.cronFansubRssFeed]: false,
-    [CONSTANTS.cronTrackerStatistics]: false
-  };
 
   github = null;
 

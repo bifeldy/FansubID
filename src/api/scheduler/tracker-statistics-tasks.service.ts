@@ -9,7 +9,6 @@ import { CONSTANTS } from '../../constants';
 import { environment } from '../../environments/api/environment';
 
 import { ApiService } from '../services/api.service';
-import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
 import { SocketIoService } from '../services/socket-io.service';
 import { DiscordService } from '../services/discord.service';
@@ -30,7 +29,6 @@ export class TrackerStatisticsService {
   };
 
   constructor(
-    private cfg: ConfigService,
     private gs: GlobalService,
     private sis: SocketIoService,
     private api: ApiService,
@@ -61,25 +59,21 @@ export class TrackerStatisticsService {
     }
   )
   async statistics(): Promise<void> {
-    if (!this.cfg.CRON[CONSTANTS.cronTrackerStatistics] && environment.production) {
-      const startTime = new Date();
-      this.gs.log('[CRON_TASK_TRACKER_STATISTICS-START] 🐾', `${startTime}`);
-      this.cfg.CRON[CONSTANTS.cronTrackerStatistics] = true;
-      try {
-        const url = new URL(`http://tracker.${environment.domain}/stats.json`);
-        const res_raw = await this.api.getData(url, {
-          ...environment.nodeJsXhrHeader
-        });
-        this.torrentTracker = await res_raw.json();
-      } catch (error) {
-        this.gs.log('[CRON_TASK_TRACKER_STATISTICS-ERROR] 🐾', error, 'error');
-      }
-      this.updateVisitor();
-      this.cfg.CRON[CONSTANTS.cronTrackerStatistics] = false;
-      const endTime = new Date();
-      const elapsedTime = endTime.getTime() - startTime.getTime();
-      this.gs.log('[CRON_TASK_TRACKER_STATISTICS-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+    const startTime = new Date();
+    this.gs.log('[CRON_TASK_TRACKER_STATISTICS-START] 🐾', `${startTime}`);
+    try {
+      const url = new URL(`http://tracker.${environment.domain}/stats.json`);
+      const res_raw = await this.api.getData(url, {
+        ...environment.nodeJsXhrHeader
+      });
+      this.torrentTracker = await res_raw.json();
+    } catch (error) {
+      this.gs.log('[CRON_TASK_TRACKER_STATISTICS-ERROR] 🐾', error, 'error');
     }
+    this.updateVisitor();
+    const endTime = new Date();
+    const elapsedTime = endTime.getTime() - startTime.getTime();
+    this.gs.log('[CRON_TASK_TRACKER_STATISTICS-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
   }
 
 }

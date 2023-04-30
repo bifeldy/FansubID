@@ -9,15 +9,12 @@ import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorato
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
-import { ConfigService } from '../services/config.service';
-
 @ApiExcludeController()
 @Controller('/task-cron-job')
 export class TaskCronJobController {
 
   constructor(
-    private sr: SchedulerRegistry,
-    private cfg: ConfigService,
+    private sr: SchedulerRegistry
   ) {
     //
   }
@@ -55,7 +52,6 @@ export class TaskCronJobController {
       if (cronJob) {
         if (cronJob.running) {
           cronJob.stop();
-          this.cfg.CRON[req.params['id']] = false;
         } else {
           cronJob.start();
         }
