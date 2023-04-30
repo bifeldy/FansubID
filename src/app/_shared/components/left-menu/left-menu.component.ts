@@ -42,6 +42,10 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     return this.gs;
   }
 
+  get LMS(): LeftMenuService {
+    return this.lms;
+  }
+
   get mainMenus(): Menu[] {
     return this.lms.mainMenus;
   }
