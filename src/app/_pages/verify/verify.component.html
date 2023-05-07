@@ -11,7 +11,7 @@
           <div class="card bg-transparent border-0">
             <div class="card-body p-0">
               <div class="text-center p-3">
-                <img class="mb-4" src="{{ ENV.baseUrl }}/assets/img/favicon.png" />
+                <img class="mb-4" src="{{ ENV.baseUrl }}/assets/img/logo/verify.png" />
                 <h1 class="h3 mb-3 font-weight-normal">Yuhu~, Ayo Verifikasi! >_<"</h1>
                 <p class="text-warning">{{ verifyInfo }}</p>
               </div>
@@ -54,7 +54,7 @@
                     </div>
                     <div class="form-group row mb-0 py-2">
                       <div class="col offset-md-4">
-                        <re-captcha #captchaRef formControlName="g-recaptcha-response" siteKey="6Ld4Bt4UAAAAAKJQ_jfqtWdsq9BuARLHag2DBvqK"
+                        <re-captcha #captchaRef formControlName="g-recaptcha-response" [siteKey]="G_CAPTCHA_SITE_KEY"
                           (resolved)="cekNIK($event, captchaRef, stepper)"></re-captcha>
                       </div>
                     </div>

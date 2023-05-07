@@ -35,6 +35,7 @@ export const CONSTANTS = {
   fileSizeAttachmentChunkDiscordLimit: 8 * 1000 * 1000, // Discord -- Without Nitro Is 8 MB ~ T.T
   fileSizeAttachmentTotalLimit: 256 * 1000 * 1000, // Max Upload Limits -- < 256 MB Streamable
   fileSizeImageLimit: 256 * 1000, // 256 KB
+  gCaptchaSiteKey: '6Ld4Bt4UAAAAAKJQ_jfqtWdsq9BuARLHag2DBvqK',
   jwtAlgorithm: 'HS512',
   jwtExpiredIn: 24 * 60 * 60, // 1 Day
   quizOptionsCountHirakata: 5,

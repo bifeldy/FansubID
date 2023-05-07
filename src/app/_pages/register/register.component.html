@@ -106,7 +106,7 @@
                 </div>
                 <div class="form-group row py-2">
                   <div class="col offset-md-4">
-                    <re-captcha #captchaRef formControlName="g-recaptcha-response" siteKey="6Ld4Bt4UAAAAAKJQ_jfqtWdsq9BuARLHag2DBvqK"
+                    <re-captcha #captchaRef formControlName="g-recaptcha-response" [siteKey]="G_CAPTCHA_SITE_KEY"
                       (resolved)="captcha($event, captchaRef)"></re-captcha>
                   </div>
                 </div>

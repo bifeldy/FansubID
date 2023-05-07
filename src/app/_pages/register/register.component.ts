@@ -74,6 +74,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   }
 
+  get G_CAPTCHA_SITE_KEY(): string {
+    return CONSTANTS.gCaptchaSiteKey;
+  }
+
   get ENV(): any {
     return environment;
   }

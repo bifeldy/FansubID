@@ -86,6 +86,10 @@ export class VerifyComponent implements OnInit, OnDestroy {
     }
   }
 
+  get G_CAPTCHA_SITE_KEY(): string {
+    return CONSTANTS.gCaptchaSiteKey;
+  }
+
   sosmedVerify(sosmedApp: string, oAuthCode: string): void {
     this.bs.busy();
     this.subsSosmed = this.us.sosmedLogin({
@@ -157,7 +161,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
       nik: [null, [Validators.required, Validators.pattern(/^\d+$/)]],
       nama: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
       completed: [null, [Validators.required]],
-      'g-recaptcha-response': [null, [Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
+      'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
     });
     this.fg2 = this.fb.group({
       nik: [null, [Validators.pattern(/^\d+$/)]],
