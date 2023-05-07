@@ -55,6 +55,24 @@ const routes: Routes = [
     }
   },
   {
+    path: 'reset-password',
+    loadChildren: () => import('./_pages/reset-password/reset-password.module').then(m => m.ResetPasswordModule),
+    data: {
+      title: 'Reset Akun',
+      description: 'Halaman Atur Ulang Kata Sandi',
+      keywords: 'Reset Password'
+    }
+  },
+  {
+    path: 'privacy-policy',
+    loadChildren: () => import('./_pages/privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyModule),
+    data: {
+      title: 'Privacy Policy',
+      description: 'Halaman Kebijakan Privasi',
+      keywords: 'privacy-policy'
+    }
+  },
+  {
     path: 'verify',
     loadChildren: () => import('./_pages/verify/verify.module').then(m => m.VerifyModule),
     canActivate: [RolesGuard],

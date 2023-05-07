@@ -206,7 +206,18 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.timedOut = setTimeout(async () => {
         const aturanTatib = this.ls.getItem(this.gs.localStorageKeys.AturanTatib) === 'true';
         if (!aturanTatib) {
-          this.subsDialog = (await this.ds.openAturanTatibDialog()).afterClosed().subscribe({
+          const defaultData = {
+            id: 'ATURAN-TATA-TERTIB',
+            data: {
+              title: 'Aturan Dan Tata Tertib Komunitas',
+              htmlMessage: 'Gagal Memuat Aturan Dan Tata Tertib Komunitas',
+              confirmText: 'Ok, Saya Mengerti!',
+              cancelText: null
+            },
+            disableClose: false,
+            maxWidth: this.ds.maxWidth
+          };
+          this.subsDialog = (await this.ds.fetchInformationRegisterMode(defaultData)).afterClosed().subscribe({
             next: re => {
               this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
               if (typeof re === 'boolean') {

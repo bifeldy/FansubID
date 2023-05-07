@@ -83,6 +83,15 @@ export class LeftMenuService {
       link: '/admin-mod',
       icon: 'admin_panel_settings',
       badge: null
+    }
+  ];
+
+  otherMenus: Menu[] = [
+    {
+      name: 'Kebijakan Privasi',
+      link: '/privacy-policy',
+      icon: 'policy',
+      badge: null
     },
     {
       name: 'About',

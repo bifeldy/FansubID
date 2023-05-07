@@ -84,18 +84,7 @@ export class DialogService {
     return this.openInfoDialog(defaultData);
   }
 
-  async openAturanTatibDialog(registerMode = false): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
-    const defaultData = {
-      id: 'ATURAN-TATA-TERTIB',
-      data: {
-        title: 'Aturan Dan Tata Tertib Komunitas',
-        htmlMessage: 'Gagal Memuat Aturan Dan Tata Tertib Komunitas',
-        confirmText: 'Ok, Saya Mengerti!',
-        cancelText: null
-      },
-      disableClose: false,
-      maxWidth: this.maxWidth
-    };
+  async fetchInformationRegisterMode(defaultData: any, registerMode = false): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
     try {
       const res: JsonResponse<InformationModel> = await lastValueFrom(this.info.getInfo(defaultData.id));
       defaultData.data.title = res.result.title;
@@ -107,7 +96,7 @@ export class DialogService {
         defaultData.disableClose = true;
       }
     } catch (e) {
-      this.gs.log('[DIALOG_SERVICE-ATURAN_TATA_TERTIB_DIALOG_ERROR]', e.error);
+      this.gs.log('[DIALOG_SERVICE-FETCH_DIALOG_ERROR]', e.error);
     }
     return this.openInfoDialog(defaultData);
   }

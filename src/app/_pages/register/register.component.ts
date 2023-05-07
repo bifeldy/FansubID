@@ -92,7 +92,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
       name: [null, [Validators.required, Validators.pattern('^[a-zA-Z. ]+$')]],
       email: [null, [Validators.required, Validators.email, Validators.pattern(CONSTANTS.regexEmail)]],
       password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
-      agree: [null, [Validators.required]],
+      agree_tatib: [null, [Validators.required]],
+      agree_pp: [null, [Validators.required]],
       'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
     });
   }
@@ -117,7 +118,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
         name: this.fg.value.name,
         email: this.fg.value.email,
         password: this.cs.hashPassword(this.fg.value.password),
-        agree: this.fg.value.agree,
+        agree_tatib: this.fg.value.agree_tatib,
+        agree_pp: this.fg.value.agree_pp,
         'g-recaptcha-response': this.fg.value['g-recaptcha-response']
       }).subscribe({
         next: (res: any) => {
@@ -180,11 +182,45 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   async openAturanTatib(): Promise<void> {
-    if (this.fg.value.agree) {
-      this.subsDialog = (await this.ds.openAturanTatibDialog(true)).afterClosed().subscribe({
+    if (this.fg.value.agree_tatib) {
+      const defaultData = {
+        id: 'ATURAN-TATA-TERTIB',
+        data: {
+          title: 'Aturan Dan Tata Tertib Komunitas',
+          htmlMessage: 'Gagal Memuat Aturan Dan Tata Tertib Komunitas',
+          confirmText: 'Ok, Saya Mengerti!',
+          cancelText: null
+        },
+        disableClose: false,
+        maxWidth: this.ds.maxWidth
+      };
+      this.subsDialog = (await this.ds.fetchInformationRegisterMode(defaultData, true)).afterClosed().subscribe({
         next: re => {
           this.gs.log('[ATURAN_TATA_TERTIB_DIALOG_CLOSED]', re);
-          this.fg.controls['agree'].patchValue(re);
+          this.fg.controls['agree_tatib'].patchValue(re);
+          this.subsDialog.unsubscribe();
+        }
+      });
+    }
+  }
+
+  async openPrivacyPolicy(): Promise<void> {
+    if (this.fg.value.agree_pp) {
+      const defaultData = {
+        id: 'PRIVACY-POLICY',
+        data: {
+          title: 'Kebijakan Privasi',
+          htmlMessage: 'Gagal Memuat Aturan Dan Tata Tertib Komunitas',
+          confirmText: 'Ok, Saya Mengerti!',
+          cancelText: null
+        },
+        disableClose: false,
+        maxWidth: this.ds.maxWidth
+      };
+      this.subsDialog = (await this.ds.fetchInformationRegisterMode(defaultData, true)).afterClosed().subscribe({
+        next: re => {
+          this.gs.log('[PRIVACY_POLICY_DIALOG_CLOSED]', re);
+          this.fg.controls['agree_pp'].patchValue(re);
           this.subsDialog.unsubscribe();
         }
       });

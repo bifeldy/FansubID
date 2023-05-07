@@ -54,6 +54,10 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     return this.lms.miscMenus;
   }
 
+  get otherMenus(): Menu[] {
+    return this.lms.otherMenus;
+  }
+
   ngOnDestroy(): void {
     this.subsDialog?.unsubscribe();
   }
