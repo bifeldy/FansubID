@@ -29,7 +29,7 @@
     <div class="col-12" *ngFor="let n of NOTIF.notifications; let i = index">
       <div class="alert alert-{{ n.notifData.type }} alert-dismissible fade show">
         <strong class="me-1">{{ n.notifData.title }}</strong>
-        <span [innerHTML]="n.notifData.content"></span>
+        <span [innerHTML]="n.notifData.content | safeInnerHtml"></span>
         <strong class="ms-1" *ngIf="n.notifCreator">
           --
           <i>

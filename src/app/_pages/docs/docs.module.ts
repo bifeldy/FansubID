@@ -9,6 +9,8 @@ import { BannerDiscordModule } from '../../_shared/components/banner-discord/ban
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
+import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
+
 import { DocsComponent } from './docs.component';
 
 const routes: Routes = [
@@ -28,7 +30,8 @@ const routes: Routes = [
     StatsServerModule,
     NotificationsModule,
     SharedMaterialModule,
-    NgxTypedJsModule
+    NgxTypedJsModule,
+    CustomPipeModule
   ]
 })
 export class DocsModule { }

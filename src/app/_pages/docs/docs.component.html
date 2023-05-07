@@ -100,7 +100,7 @@
             </h2>
           </div>
           <div class="col-12">
-            <div class="row px-3 pb-3" [innerHTML]="tutorialData"></div>
+            <div class="row px-3 pb-3" [innerHTML]="tutorialData | safeInnerHtml"></div>
           </div>
         </div>
       </div>

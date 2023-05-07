@@ -6,7 +6,7 @@
         <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
-      <div class="p-3" [innerHTML]="tab.data"></div>
+      <div class="p-3" [innerHTML]="tab.data | safeInnerHtml"></div>
     </div>
     <div *ngIf="tab.type === 'grid'">
       <ng-template mat-tab-label>

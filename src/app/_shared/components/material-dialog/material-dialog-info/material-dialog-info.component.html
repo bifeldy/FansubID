@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{ DATA.title }}</h1>
-<div mat-dialog-content class="p-4" [innerHTML]="DATA.htmlMessage" class="text-break text-warning"></div>
+<div mat-dialog-content class="p-4" [innerHTML]="DATA.htmlMessage | safeInnerHtml" class="text-break text-warning"></div>
 <div mat-dialog-actions>
   <small *ngIf="DATA.infoText" class="text-start m-2">
     <i>* {{ DATA.infoText }}</i>

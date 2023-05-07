@@ -6,6 +6,7 @@ import { SharedMaterialModule } from '../../modules/shared-material.module';
 import { MaterialTableModule } from '../material-table/material-table.module';
 import { DiscussionModule } from '../discussion/discussion.module';
 import { NoDataModule } from '../no-data/no-data.module';
+import { CustomPipeModule } from '../../pipes/custom-pipe.module';
 
 import { MaterialTabComponent } from './material-tab.component';
 
@@ -16,7 +17,8 @@ import { MaterialTabComponent } from './material-tab.component';
     SharedMaterialModule,
     MaterialTableModule,
     DiscussionModule,
-    NoDataModule
+    NoDataModule,
+    CustomPipeModule
   ],
   exports: [MaterialTabComponent]
 })

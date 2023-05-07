@@ -43,7 +43,7 @@
             </h5>
           </div>
         </div>
-        <div class="col-12 pt-3 mt-3" [innerHTML]="newsData.content"></div>
+        <div class="col-12 pt-3 mt-3" [innerHTML]="newsData.content | safeInnerHtml"></div>
       </div>
     </div>
   </div>
