@@ -47,21 +47,21 @@ export class CloudflareService {
     }
   }
 
-  async createDns(name: string, content: string, type: string, primarySubDomainUrl = null): Promise<any> {
+  async createDns(name: string, content: string, type: string, comment: string): Promise<any> {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records`);
-      const data: any = {
-        name: name.includes(`.${environment.cloudflare.domain}`) ? name : `${name}.${environment.cloudflare.domain}`,
-        type, content, ttl: 1,
-        proxied: type === 'A' ? true : false
-      };
-      if (primarySubDomainUrl) {
-        data.comment = environment.cloudflare.comment;
-      }
-      const res_raw = await this.api.postData(url, JSON.stringify(data), {
-        'Authorization': `Bearer ${environment.cloudflare.key}`,
-        ...environment.nodeJsXhrHeader
-      });
+      const res_raw = await this.api.postData(
+        url,
+        JSON.stringify({
+          name: name.includes(`.${environment.cloudflare.domain}`) ? name : `${name}.${environment.cloudflare.domain}`,
+          type, content, comment, ttl: 1,
+          proxied: type === 'A' ? true : false
+        }),
+        {
+          'Authorization': `Bearer ${environment.cloudflare.key}`,
+          ...environment.nodeJsXhrHeader
+        }
+      );
       const res = {
         status: res_raw.status,
         result: null

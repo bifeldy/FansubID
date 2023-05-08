@@ -94,7 +94,7 @@ export class FansubDnsController {
     if (isUpdateMode) {
       dns_id = await this.cfs.updateDns(fansub.dns_id, fansub.slug, serverTarget, recordType);
     } else {
-      dns_id = await this.cfs.createDns(fansub.slug, serverTarget, recordType, true);
+      dns_id = await this.cfs.createDns(fansub.slug, serverTarget, recordType, environment.cloudflare.comment);
     }
     if (dns_id && dns_id.status >= 200 && dns_id.status < 400) {
       fansub.dns_id = dns_id.result.id;
@@ -117,7 +117,7 @@ export class FansubDnsController {
           if (fansub.dns_id_alt) {
             dns_id_alt = await this.cfs.updateDns(fansub.dns_id_alt, verification_name, verification_target, 'CNAME');
           } else {
-            dns_id_alt = await this.cfs.createDns(verification_name, verification_target, 'CNAME');
+            dns_id_alt = await this.cfs.createDns(verification_name, verification_target, 'CNAME', `${fansub.slug}@${fansub.dns_id}`);
           }
           if (dns_id_alt && dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
             fansub.dns_id_alt = dns_id_alt.result.id;
