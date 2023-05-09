@@ -28,7 +28,7 @@ export class TorrentController {
     try {
       if ('magnetHash' in req.body) {
         webtorrentHealth(req.body.magnetHash, {
-          trackers: environment.trackerAnnounce,
+          trackers: environment.torrent.trackerAnnounce,
           timeout: req.body.trackTimeout || 1234
         }, (err, data) => {
           if (err) {

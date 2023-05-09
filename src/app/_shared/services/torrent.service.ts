@@ -23,14 +23,14 @@ declare const WebTorrent: typeof webTorrent;
 })
 export class TorrentService {
 
-  trackerAnnounce = environment.trackerAnnounce;
+  trackerAnnounce = environment.torrent.trackerAnnounce;
 
   clientOptions: Options = {
     maxConns: 64,
     tracker: {
       announce: this.trackerAnnounce,
       rtcConfig: {
-        iceServers: environment.iceServers
+        iceServers: environment.torrent.iceServers
       }
     }
   };
