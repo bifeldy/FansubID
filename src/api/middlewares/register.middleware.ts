@@ -53,8 +53,8 @@ export class RegisterMiddleware implements NestMiddleware {
         'agree_pp' in req.body && (req.body.agree_pp === true) &&
         'g-recaptcha-response' in req.body
       ) {
-        const url = new URL(environment.recaptchaApiUrl);
-        url.searchParams.append('secret', environment.reCaptchaSecretKey);
+        const url = new URL(environment.reCaptcha.api_url);
+        url.searchParams.append('secret', environment.reCaptcha.secret_key);
         url.searchParams.append('response', req.body['g-recaptcha-response']);
         url.searchParams.append('remoteip', this.aks.getOriginIpCc(req, true).origin_ip);
         const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);

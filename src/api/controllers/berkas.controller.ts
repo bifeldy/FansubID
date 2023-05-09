@@ -279,7 +279,7 @@ export class BerkasController {
                               const dfile = await gdrive.files.create({
                                 requestBody: {
                                   name: `${resMkvAttachmentSave.name}.${resMkvAttachmentSave.ext}`,
-                                  parents: [environment.gdriveFolderId],
+                                  parents: [environment.gCloudPlatform.gDrive.folder_id],
                                   mimeType: resMkvAttachmentSave.mime
                                 },
                                 media: {
@@ -336,7 +336,7 @@ export class BerkasController {
                   const dfile = await gdrive.files.create({
                     requestBody: {
                       name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-                      parents: [environment.gdriveFolderId],
+                      parents: [environment.gCloudPlatform.gDrive.folder_id],
                       mimeType: resAttachmentSave.mime
                     },
                     media: {

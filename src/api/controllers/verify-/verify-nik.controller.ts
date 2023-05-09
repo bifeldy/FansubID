@@ -36,8 +36,8 @@ export class VerifyNikController {
   async verifyNik(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('nik' in req.body && 'nama' in req.body && 'g-recaptcha-response' in req.body) {
-        const url = new URL(environment.recaptchaApiUrl);
-        url.searchParams.append('secret', environment.reCaptchaSecretKey);
+        const url = new URL(environment.reCaptcha.api_url);
+        url.searchParams.append('secret', environment.reCaptcha.secret_key);
         url.searchParams.append('response', req.body['g-recaptcha-response']);
         url.searchParams.append('remoteip', this.aks.getOriginIpCc(req, true).origin_ip);
         const res_raw1 = await this.api.getData(url, environment.nodeJsXhrHeader);

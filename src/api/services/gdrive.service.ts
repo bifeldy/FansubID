@@ -34,10 +34,10 @@ export class GdriveService {
     const url = new URL(this.gcp.serviceAccount.token_uri);
     const form = new URLSearchParams();
     form.append('grant_type', 'refresh_token');
-    form.append('client_id', this.gcp.clientId);
-    form.append('client_secret', this.gcp.clientSecret);
+    form.append('client_id', this.gcp.gDrive.client_id);
+    form.append('client_secret', this.gcp.gDrive.client_secret);
     form.append('refresh_token', refreshToken);
-    const googleClient = new google.auth.OAuth2(this.gcp.clientId, this.gcp.clientSecret);
+    const googleClient = new google.auth.OAuth2(this.gcp.gDrive.client_id, this.gcp.gDrive.client_secret);
     const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
     const res_json: any = await res_raw.json();
     this.gs.log(`[gApp] 🔑 ${res_raw.status}`, res_json);
@@ -53,7 +53,7 @@ export class GdriveService {
   async gDrive(userPersonalUserAccountInsteadOfServiceAccount = false): Promise<drive_v3.Drive> {
     let auth = null;
     if (userPersonalUserAccountInsteadOfServiceAccount) {
-      auth = await this.gAuthPersonalAccount(this.gcp.gDrive.refreshToken);
+      auth = await this.gAuthPersonalAccount(this.gcp.gDrive.refresh_token);
     } else {
       auth = new google.auth.JWT(
         this.gcp.serviceAccount.client_email,
