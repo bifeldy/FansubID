@@ -113,7 +113,6 @@ export interface UserModel {
   role?: RoleModel;
   password?: string;
   verified?: boolean;
-  discord?: string;
   session_token?: string;
   session_origin?: string;
   created_at?: number | Date;

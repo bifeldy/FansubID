@@ -91,4 +91,56 @@ export class MailService {
     return await this.mailTrapSend(content);
   }
 
+  async sendVerifikasiMail(user: any, token: string): Promise<any> {
+    const content: Mail = {
+      from: {
+        name: environment.mailTrap.fullName,
+        email: `${environment.mailTrap.clientOptions.username}@${environment.mailTrap.domain}`
+      },
+      to: [
+        { 
+          name: user.nama,
+          email: user.email
+        }
+      ],
+      subject: `${environment.siteName} | Verifikasi Akun`,
+      category: 'Verifikasi',
+      html: `
+        <h1>${user.nama} (<i>${user.username}</i>).</h1>
+        <h2>
+          <a href="${environment.baseUrl}">
+            ${environment.baseUrl}
+          </a>
+        </h2>
+        <p>(づ￣ ³￣)づ</p>
+        <p>
+          Hai, terima kasih telah menjadi anggota di ${environment.siteName}. <br />
+          Untuk verifikasi akun, silahkan klik link berikut ini.
+        </p>
+        <p>
+          <a href="${environment.baseUrl}/api/verify-sosmed?token=${token}">
+            ${environment.baseUrl}/api/verify-sosmed?token=${token}
+          </a>
+        </p>
+        <p>Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.</p>
+        <p>(つ≧▽≦)つ</p>
+        <p>Terima kasih.</p>
+        <p>(っ.❛ ᴗ ❛.)っ</p>
+      `.replace(/\s\s+/g, ' ').trim(),
+      text: `
+        ${user.nama} (${user.username}).
+        ${environment.baseUrl}
+        (づ￣ ³￣)づ
+        Hai, terima kasih telah mendaftar di ${environment.siteName}.
+        Untuk verifikasi akun, silahkan klik link berikut ini.
+        ${environment.baseUrl}/api/verify-sosmed?token=${token}
+        Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.
+        (つ≧▽≦)つ
+        Terima kasih.
+        (っ.❛ ᴗ ❛.)っ
+      `.replace(/\s\s+/g, ' ').trim()
+    };
+    return await this.mailTrapSend(content);
+  }
+
 }

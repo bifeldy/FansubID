@@ -32,9 +32,6 @@ export class User implements UserModel {
   @Column({ type: 'boolean', default: false })
   verified: boolean;
 
-  @Column({ type: 'varchar', nullable: true, default: null, unique: true })
-  discord: string;
-
   @Exclude()
   @Column({ type: 'text', nullable: true })
   session_token: string;

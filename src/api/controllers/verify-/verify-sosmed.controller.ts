@@ -1,9 +1,12 @@
+// 3rd Party Library
+import { google } from 'googleapis';
+
 // NodeJS Library
 import { URL, URLSearchParams } from 'node:url';
 
-import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpException, HttpStatus, Post, Redirect, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { Equal } from 'typeorm';
+import { Equal, Not } from 'typeorm';
 import { Request, Response } from 'express';
 
 import { CONSTANTS } from '../../../constants';
@@ -15,14 +18,13 @@ import { RoleModel, SosMedModel, UserModel } from '../../../models/req-res.model
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 
-import { User } from '../../entities/User';
-
-import { UserService } from '../../repository/user.service';
 import { SocialMediaService } from '../../repository/social-media.service';
 
 import { ApiService } from '../../services/api.service';
 import { CryptoService } from '../../services/crypto.service';
 import { GlobalService } from '../../services/global.service';
+import { MailService } from '../../services/mail.service';
+import { AuthService } from '../../services/auth.service';
 
 @ApiExcludeController()
 @Controller('/verify-sosmed')
@@ -30,12 +32,221 @@ export class VerifySosmedController {
 
   constructor(
     private api: ApiService,
+    private as: AuthService,
     private cs: CryptoService,
     private gs: GlobalService,
     private sosmedRepo: SocialMediaService,
-    private userRepo: UserService
+    private ms: MailService
   ) {
     //
+  }
+
+  async insertOrUpdate(sosMedModel: SosMedModel, user: UserModel, sosmedId: string, refreshToken: string): Promise<any> {
+    try {
+      const count = await this.sosmedRepo.count({
+        where: [
+          {
+            id: Equal(sosmedId),
+            type: sosMedModel,
+            user_: {
+              id: Not(Equal(user.id))
+            }
+          }
+        ],
+        relations: ['user_']
+      });
+      if (count > 0) {
+        throw 'Akun Telah Digunakan!';
+      }
+      const sosmeds = await this.sosmedRepo.find({
+        where: [
+          {
+            type: sosMedModel,
+            user_: {
+              id: Equal(user.id)
+            }
+          }
+        ],
+        relations: ['user_']
+      });
+      if (sosmeds.length === 0) {
+        const sosmed = this.sosmedRepo.new();
+        sosmed.id = sosmedId;
+        sosmed.refresh_token = refreshToken;
+        sosmed.type = sosMedModel;
+        sosmed.user_ = user;
+        await this.sosmedRepo.insert(sosmed);
+      } else if (sosmeds.length === 1) {
+        await this.sosmedRepo.update({
+          type: sosMedModel,
+          user_: {
+            id: Equal(user.id)
+          }
+        }, {
+          id: sosmedId,
+          refresh_token: refreshToken
+        });
+      } else {
+        throw 'Akun Telah Digunakan!';
+      }
+    } catch (error) {
+      throw new HttpException({
+        info: '🙄 400 - Social Media :: Verifikasi Gagal! 😪',
+        result: {
+          title: 'Akun Telah Digunakan!',
+          message: 'Silahkan Ulangi Langkah Sebelumnya Atau Coba Dengan Akun Yang Lain!'
+        }
+      }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async discordApp(req: Request, user: UserModel): Promise<any> {
+    const url1 = new URL(`${environment.discord.api_uri}/oauth2/token`);
+    const form = new URLSearchParams();
+    form.append('client_id', environment.discord.client_id);
+    form.append('client_secret', environment.discord.client_secret);
+    form.append('grant_type', 'authorization_code');
+    form.append('code', req.body.code);
+    form.append('redirect_uri', `${environment.baseUrl}/verify?app=discord`);
+    form.append('scope', 'identify email guilds.join');
+    const res_raw1 = await this.api.postData(url1, form, environment.nodeJsXhrHeader);
+    if (res_raw1.ok) {
+      const res_json1: any = await res_raw1.json();
+      this.gs.log(`[oAuthDiscord] 🗝 ${res_raw1.status}`, res_json1);
+      const url2 = new URL(`${environment.discord.api_uri}/users/@me`);
+      const res_raw2 = await this.api.getData(url2, {
+        Authorization: `Bearer ${res_json1.access_token}`,
+        ...environment.nodeJsXhrHeader
+      });
+      if (res_raw2.ok) {
+        const res_json2: any = await res_raw2.json();
+        this.gs.log(`[apiDiscord] 🗝 ${res_raw2.status}`, res_json2);
+        if (!res_json2.verified) {
+          throw new HttpException({
+            info: `🙄 400 - Discord API :: Gagal Verify 😪`,
+            result: {
+              title: 'Akun Discord Belum Terverifikasi!',
+              message: 'Silahkan Verifikasi Akun Discord Terlebih Dahulu!'
+            }
+          }, HttpStatus.BAD_REQUEST);
+        }
+        const url3 = new URL(`${environment.discord.api_uri}/guilds/${environment.discord.guild_id}/members/${res_json2.id}`);
+        const res_raw3 = await this.api.putData(
+          url3,
+          JSON.stringify({
+            access_token: `Bearer ${res_json1.access_token}`
+          }),
+          {
+            Authorization: `Bot ${environment.discord.loginToken}`,
+            ...environment.nodeJsXhrHeader
+          }
+        );
+        if (res_raw3.ok) {
+          const res_json3: any = await res_raw3.json();
+          this.gs.log(`[apiDiscord] 🗝 ${res_raw3.status}`, res_json3);
+        } else {
+          const res_text3: any = await res_raw3.text();
+          this.gs.log(`[apiDiscord] 🗝 ${res_raw3.status}`, res_text3, 'error');
+        }
+        await this.insertOrUpdate(SosMedModel.DISCORD, user, res_json2.id, res_json1.refresh_token);
+        return {
+          info: `😅 201 - Discord API :: Masuk & Verify 🤣`,
+          result: {
+            title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam ${CONSTANTS.timeJwtEncryption / 60} Menit! #🚮-bot-spam`,
+            message: '~verify DISCORD ' + this.cs.jwtEncrypt({
+              discord: {
+                id: res_json2.id,
+                email: res_json2.email,
+                verified: res_json2.verified
+              },
+              user: {
+                id: user.id,
+                username: user.username,
+                verified: user.verified
+              }
+            }) + ' DELETE_CHAT'
+          }
+        };
+      } else {
+        throw new HttpException({
+          info: `🙄 ${res_raw2.status || 400} - Discord API :: Gagal Verify 😪`,
+          result: {
+            message: 'Kode oAuth Salah / Expired!'
+          }
+        }, res_raw2.status || HttpStatus.BAD_REQUEST);
+      }
+    } else {
+      throw new HttpException({
+        info: `🙄 ${res_raw1.status || 400} - Discord API :: Gagal Masuk 😪`,
+        result: {
+          message: 'Kode Token Salah / Tidak Valid!'
+        }
+      }, res_raw1.status || HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async googleApp(req: Request, user: UserModel): Promise<any> {
+    const oauth2Client = new google.auth.OAuth2({
+      clientId: environment.gCloudPlatform.app.client_id,
+      clientSecret: environment.gCloudPlatform.app.client_secret,
+      redirectUri: `${environment.baseUrl}/verify?app=google`
+    });
+    const { tokens } = await oauth2Client.getToken(req.body.code);
+    const url = new URL(environment.gCloudPlatform.app.profile_uri);
+    url.searchParams.append('alt', 'json');
+    url.searchParams.append('access_token', tokens.access_token);
+    const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
+    if (res_raw.ok) {
+      const res_json: any = await res_raw.json();
+      this.gs.log(`[oAuthGoogle] 🗝 ${res_raw.status}`, res_json);
+      if (!res_json.verified_email) {
+        throw new HttpException({
+          info: `🙄 400 - Google API :: Gagal Verify 😪`,
+          result: {
+            title: 'Akun Google Belum Terverifikasi!',
+            message: 'Silahkan Verifikasi Akun Google Terlebih Dahulu!'
+          }
+        }, HttpStatus.BAD_REQUEST);
+      }
+      await this.insertOrUpdate(SosMedModel.DISCORD, user, res_json.id, tokens.refresh_token);
+      this.ms.sendVerifikasiMail(
+        {
+          nama: user.kartu_tanda_penduduk_.nama,
+          email: res_json.email,
+          username: user.username,
+        },
+        this.cs.jwtEncrypt({
+          google: {
+            id: res_json.id,
+            email: res_json.email,
+            verified: res_json.verified_email
+          },
+          user: {
+            id: user.id,
+            username: user.username,
+            verified: user.verified
+          }
+        })
+      );
+      return {
+        info: `😅 201 - Google API :: Masuk & Verify 🤣`,
+        result: {
+          title: 'Verifikasi Akun',
+          message: `
+            Silahkan Periksa Email Untuk Menyelesaikan Verifikasi. <br />
+            Petunjuk Sudah Dikirimkan Ke '<span class="text-danger">${res_json.email}</span>'. <br />
+            Hanya berlaku selama ${CONSTANTS.timeJwtEncryption / 60} menit.
+          `
+        }
+      };
+    } else {
+      throw new HttpException({
+        info: `🙄 ${res_raw.status || 400} - Google API :: Gagal Masuk 😪`,
+        result: {
+          message: 'Kode Token Salah / Tidak Valid!'
+        }
+      }, res_raw.status || HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Post('/')
@@ -55,104 +266,9 @@ export class VerifySosmedController {
         };
       } else if ('app' in req.body && 'code' in req.body) {
         if (req.body.app === SosMedModel.DISCORD) {
-          const url = new URL(`${environment.discord.api_uri}/oauth2/token`);
-          const form = new URLSearchParams();
-          form.append('client_id', environment.discord.client_id);
-          form.append('client_secret', environment.discord.client_secret);
-          form.append('grant_type', 'authorization_code');
-          form.append('code', req.body.code);
-          form.append('redirect_uri', `${environment.baseUrl}/verify?app=discord`);
-          form.append('scope', 'identify email guilds.join');
-          const res_raw1 = await this.api.postData(url, form, environment.nodeJsXhrHeader);
-          if (res_raw1.ok) {
-            const res_json1: any = await res_raw1.json();
-            this.gs.log(`[oAuthDiscord] 🗝 ${res_raw1.status}`, res_json1);
-            const url = new URL(`${environment.discord.api_uri}/users/@me`);
-            const res_raw2 = await this.api.getData(url, {
-              Authorization: `Bearer ${res_json1.access_token}`,
-              ...environment.nodeJsXhrHeader
-            });
-            if (res_raw2.ok) {
-              const res_json2: any = await res_raw2.json();
-              this.gs.log(`[apiDiscord] 🗝 ${res_raw2.status}`, res_json2);
-              try {
-                const sosmeds = await this.sosmedRepo.find({
-                  where: [
-                    {
-                      type: SosMedModel.DISCORD,
-                      user_: {
-                        id: Equal(user.id)
-                      }
-                    }
-                  ],
-                  relations: ['user_']
-                });
-                if (sosmeds.length === 0) {
-                  const sosmed = this.sosmedRepo.new();
-                  sosmed.id = res_json2.id;
-                  sosmed.refresh_token = res_json1.refresh_token;
-                  sosmed.type = SosMedModel.DISCORD;
-                  sosmed.user_ = user;
-                  await this.sosmedRepo.insert(sosmed);
-                } else if (sosmeds.length === 1) {
-                  await this.sosmedRepo.update({
-                    type: SosMedModel.DISCORD,
-                    user_: {
-                      id: Equal(user.id)
-                    }
-                  }, {
-                    id: res_json2.id,
-                    refresh_token: res_json1.refresh_token
-                  });
-                } else {
-                  throw new Error('Data Duplikat');
-                }
-                user.discord = res_json2.id;
-                const resUserSave = await this.userRepo.save(user as User);
-                return {
-                  info: `😅 201 - Discord API :: Masuk & Verify 🤣`,
-                  result: {
-                    title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam ${CONSTANTS.timeJwtEncryption / 60} Menit! #🚮-bot-spam`,
-                    message: '~verify DISCORD ' + this.cs.jwtEncrypt({
-                      discord: {
-                        id: res_json2.id,
-                        username: res_json2.username,
-                        discriminator: res_json2.discriminator,
-                        verified: res_json2.verified
-                      },
-                      user: {
-                        id: resUserSave.id,
-                        username: resUserSave.username,
-                        verified: resUserSave.verified
-                      }
-                    }) + ' DELETE_CHAT'
-                  }
-                };
-              } catch (err) {
-                throw new HttpException({
-                  info: `🙄 400 - Discord API :: Gagal Masuk 😪`,
-                  result: {
-                    title: 'Akun Telah Digunakan!',
-                    message: 'Silahkan Ulangi Langkah Sebelumnya Atau Coba Dengan Akun Yang Lain!'
-                  }
-                }, HttpStatus.BAD_REQUEST);
-              }
-            } else {
-              throw new HttpException({
-                info: `🙄 ${res_raw2.status || 400} - Discord API :: Gagal Verify 😪`,
-                result: {
-                  message: 'Kode oAuth Salah / Expired!'
-                }
-              }, res_raw2.status || HttpStatus.BAD_REQUEST);
-            }
-          } else {
-            throw new HttpException({
-              info: `🙄 ${res_raw1.status || 400} - Discord API :: Gagal Masuk 😪`,
-              result: {
-                message: 'Kode Token Salah / Tidak Valid!'
-              }
-            }, res_raw1.status || HttpStatus.BAD_REQUEST);
-          }
+          return this.discordApp(req, user);
+        } else if (req.body.app === SosMedModel.GOOGLE) {
+          return this.googleApp(req, user);
         }
         // TODO :: Other Social Media Platform
       }
@@ -166,6 +282,30 @@ export class VerifySosmedController {
         }
       }, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @Get('/')
+  @HttpCode(301)
+  @Redirect()
+  @FilterApiKeyAccess()
+  async verifyAccount(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    const token = req.query['token'] || '';
+    if (token) {
+      const userVerified = await this.as.verifyAccount(token as string);
+      if (userVerified) {
+        res.cookie(environment.tokenName, userVerified.session_token, {
+          httpOnly: true,
+          secure: environment.production,
+          sameSite: 'strict',
+          expires: new Date(this.cs.jwtView(userVerified.session_token).exp * 1000),
+          domain: environment.domain
+        });
+      }
+    }
+    return {
+      url: '/verify',
+      statusCode: 301
+    };
   }
 
 }

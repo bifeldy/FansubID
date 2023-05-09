@@ -130,13 +130,13 @@ export const environment = {
       url: 'https://send.api.mailtrap.io',
     },
     fullName: `FansubID | No-Reply`,
-    domain: SECRETS().DOMAIN
+    domain: 'fansub.id',
   },
   cloudflare: {
     url: 'https://api.cloudflare.com/client/v4',
     key: SECRETS().CLOUDFLARE_KEY,                                                                                // '',
     zoneId: '804863012d6a7700333d781170c4dd95',
-    domain: SECRETS().DOMAIN,
+    domain: 'fansub.id',
     comment: 'DOMAIN_KLAIM'
   },
   discord: {
@@ -161,7 +161,7 @@ export const environment = {
   externalApiImage: 'https://api.imgbb.com/1/upload',
   torrent: {
     trackerAnnounce: [
-      `wss://tracker.${SECRETS().DOMAIN}`
+      `wss://tracker.fansub.id`
     ],
   },
   malClientId: SECRETS().MAL_CLIENT_ID,                                                                          // '',

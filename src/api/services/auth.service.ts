@@ -31,7 +31,10 @@ export class AuthService {
     try {
       const user = await this.userRepo.findOneOrFail({
         where: [
-          { id: Equal(userId), session_token: Equal(token) }
+          {
+            id: Equal(userId), 
+            session_token: Equal(token)
+          }
         ],
         relations: ['kartu_tanda_penduduk_', 'profile_']
       });
@@ -79,8 +82,8 @@ export class AuthService {
       newUser.kartu_tanda_penduduk_ = resKtpSave;
       newUser.profile_ = resProfileSave;
       const resUserSave = await this.userRepo.save(newUser);
-      const { password, session_token, ...noPwdSsToken } = resUserSave;
-      newUser.session_token = this.cs.credentialEncode({ user: noPwdSsToken }, false);
+      const { password, session_token, session_origin, ...noPwdSsToken } = resUserSave;
+      newUser.session_token = this.cs.credentialEncode({ user: noPwdSsToken });
       const user = await this.userRepo.save(newUser);
       return user;
     } catch (err) {
@@ -96,6 +99,24 @@ export class AuthService {
         ]
       });
       return registration;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  async verifyAccount(token: string): Promise<User> {
+    try {
+      const decoded = this.cs.jwtDecrypt(token);
+      const user = await this.userRepo.findOneOrFail({
+        where: [
+          { id: Equal(decoded.user.id) }
+        ]
+      });
+      user.verified = true;
+      const resUserSave = await this.userRepo.save(user);
+      const { password, session_token, session_origin, ...noPwdSsToken } = resUserSave;
+      user.session_token = this.cs.credentialEncode({ user: noPwdSsToken });
+      return await this.userRepo.save(user);
     } catch (err) {
       return null;
     }

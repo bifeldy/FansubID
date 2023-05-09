@@ -130,9 +130,9 @@ export class DialogService {
     return this.openInfoDialog(defaultData);
   }
 
-  async openVerifikasiDiscord(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
+  async openVerifikasiSosmed(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
     const defaultData = {
-      id: 'VERIFIKASI-DISCORD',
+      id: 'VERIFIKASI-SOSMED',
       data: {
         title: 'Metode Verifikasi Baru (｡>﹏<｡)',
         htmlMessage: 'Gagal Memuat Metode Verifikasi',

@@ -36,6 +36,7 @@ import { GlobalService } from './global.service';
 import { FansubMemberService } from '../repository/fansub-member.service';
 import { UserService } from '../repository/user.service';
 import { DdlFileService } from '../repository/ddl-file';
+import { SocialMediaService } from '../repository/social-media.service';
 
 @Injectable()
 export class DiscordService {
@@ -49,7 +50,8 @@ export class DiscordService {
     private gs: GlobalService,
     private userRepo: UserService,
     private fansubMemberRepo: FansubMemberService,
-    private ddlFileRepo: DdlFileService
+    private ddlFileRepo: DdlFileService,
+    private sosmedRepo: SocialMediaService
   ) {
     if (environment.production) {
       this.startBot();
@@ -294,26 +296,32 @@ export class DiscordService {
 
   async memberLeftRemoveVerifiedDemote(member: GuildMember | PartialGuildMember): Promise<void> {
     try {
+      const sosmed = await this.sosmedRepo.findOneOrFail({
+        where: [
+          {
+            id: Equal(member.user.id),
+            type: SosMedModel.DISCORD
+          }
+        ],
+        relations: ['user_']
+      });
       const user = await this.userRepo.findOneOrFail({
         where: [
           {
+            id: Equal(sosmed.user_.id),
             verified: true,
-            discord: Equal(member.user.id),
             role: Not(In([RoleModel.ADMIN, RoleModel.MODERATOR]))
           }
         ]
       });
-      await this.userRepo.update({
-        id: Equal(user.id)
-      }, {
-        verified: false,
-        role: RoleModel.USER
-      });
+      user.verified = false;
+      user.role = RoleModel.USER;
+      const resUserSave = await this.userRepo.save(user);
       const fansubMembers = await this.fansubMemberRepo.find({
         where: [
           {
             user_: {
-              id: Equal(user.id)
+              id: Equal(resUserSave.id)
             }
           }
         ],

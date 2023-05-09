@@ -35,9 +35,30 @@ export class AppController {
       url: `
         https://discord.com/api/oauth2/authorize
           ?redirect_uri=${encodeURIComponent(`${environment.baseUrl}/verify?app=discord`)}
-          &client_id=${environment.discordClientId}
+          &client_id=${environment.discord.client_id}
           &response_type=code
-          &scope=${encodeURIComponent('identify email')}
+          &scope=${encodeURIComponent('identify email guilds.join')}
+      `.replace(/\s+/g, '').trim(),
+      statusCode: 301
+    };
+  }
+
+  @Get('/google-verifikasi')
+  @HttpCode(301)
+  @Redirect()
+  @FilterApiKeyAccess()
+  async googleVerify(): Promise<any> {
+    return {
+      url: `
+        ${environment.gCloudPlatform.app.auth_uri}
+          ?redirect_uri=${encodeURIComponent(`${environment.baseUrl}/verify?app=google`)}
+          &client_id=${environment.gCloudPlatform.app.client_id}
+          &prompt=consent&response_type=code
+          &scope=${encodeURIComponent(environment.gCloudPlatform.app.scopes.join(' '))}
+          &access_type=offline
+          &service=lso
+          &o2v=2
+          &flowName=GeneralOAuthFlow
       `.replace(/\s+/g, '').trim(),
       statusCode: 301
     };
@@ -57,12 +78,22 @@ export class AppController {
     });
   }
 
-  // @Post('/reset-password')
+  // @Post('/lost-account-find')
   // @FilterApiKeyAccess()
-  // async resetPassword(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  // async lostAccoundFind(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
   //   const user: UserModel = res.locals['user'];
   //   return {
-  //     info: '😚 200 - Reset API :: Berhasil Reset Password Yeay 🤩',
+  //     info: '😚 200 - Lost API :: Berhasil Menemukan Akun 🤩',
+  //     result: user
+  //   };
+  // }
+
+  // @Post('/lost-account-reset')
+  // @FilterApiKeyAccess()
+  // async lostAccoundReset(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  //   const user: UserModel = res.locals['user'];
+  //   return {
+  //     info: '😚 200 - Lost API :: Berhasil Reset Password Yeay 🤩',
   //     result: {
   //       token: user.session_token
   //     }

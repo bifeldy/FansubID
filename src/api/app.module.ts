@@ -301,6 +301,8 @@ export class AppModule {
       { path:'/verify-sosmed', method: RequestMethod.GET }
     ).forRoutes({ path: '*', method: RequestMethod.ALL });
     mc.apply(BannedMiddleware).exclude(
+      { path:'/aktivasi', method: RequestMethod.GET },
+      { path:'/verify-sosmed', method: RequestMethod.GET },
       { path:'/login', method: RequestMethod.POST },
       { path:'/register', method: RequestMethod.POST },
       { path:'/lost-account-*', method: RequestMethod.POST }

@@ -130,6 +130,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
         } else if (re === false) {
           if (sosmedApp.toUpperCase() === SosMedModel.DISCORD) {
             this.openVerifyDiscordUrl();
+          } else if (sosmedApp.toUpperCase() === SosMedModel.GOOGLE) {
+            this.openVerifyGoogleUrl();
           }
           // TODO :: Other Social Media Platform
         }
@@ -139,12 +141,14 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   async verifyByKtpDisabled(): Promise<void> {
-    this.subsDialog = (await this.ds.openVerifikasiDiscord()).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.openVerifikasiSosmed()).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.openVerifyDiscordUrl();
         } else if (re === false) {
+          this.openVerifyGoogleUrl();
+        } else {
           this.router.navigateByUrl(this.returnUrl);
         }
         this.subsDialog.unsubscribe();
@@ -154,6 +158,10 @@ export class VerifyComponent implements OnInit, OnDestroy {
 
   openVerifyDiscordUrl(): void {
     this.wb.winboxOpenUri(`${environment.baseUrl}/api/discord-verifikasi`, '_self');
+  }
+
+  openVerifyGoogleUrl(): void {
+    this.wb.winboxOpenUri(`${environment.baseUrl}/api/google-verifikasi`, '_self');
   }
 
   initKTP(): void {
