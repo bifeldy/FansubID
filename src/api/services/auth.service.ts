@@ -110,7 +110,8 @@ export class AuthService {
       const user = await this.userRepo.findOneOrFail({
         where: [
           { id: Equal(decoded.user.id) }
-        ]
+        ],
+        relations: ['kartu_tanda_penduduk_', 'profile_']
       });
       user.verified = true;
       const resUserSave = await this.userRepo.save(user);
