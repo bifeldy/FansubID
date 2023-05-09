@@ -225,7 +225,7 @@ export class UserController {
             delete resUserSave.profile_;
           }
           const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
-          selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes }, false);
+          selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes });
           resUserSave = await this.userRepo.save(selectedUser);
           res.cookie(environment.tokenName, resUserSave.session_token, {
             httpOnly: true,

@@ -82,7 +82,7 @@ export class VerifyKtpController {
             delete resUserSave.profile_;
           }
           const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
-          user.session_token = this.cs.credentialEncode({ user: noPwdSes }, false);
+          user.session_token = this.cs.credentialEncode({ user: noPwdSes });
           resUserSave = await this.userRepo.save(user as User);
           res.cookie(environment.tokenName, resUserSave.session_token, {
             httpOnly: true,
