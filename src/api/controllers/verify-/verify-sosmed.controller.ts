@@ -25,6 +25,7 @@ import { CryptoService } from '../../services/crypto.service';
 import { GlobalService } from '../../services/global.service';
 import { MailService } from '../../services/mail.service';
 import { AuthService } from '../../services/auth.service';
+import { DiscordService } from '../../services/discord.service';
 
 @ApiExcludeController()
 @Controller('/verify-sosmed')
@@ -36,7 +37,8 @@ export class VerifySosmedController {
     private cs: CryptoService,
     private gs: GlobalService,
     private sosmedRepo: SocialMediaService,
-    private ms: MailService
+    private ms: MailService,
+    private ds: DiscordService
   ) {
     //
   }
@@ -300,6 +302,25 @@ export class VerifySosmedController {
           expires: new Date(this.cs.jwtView(userVerified.session_token).exp * 1000),
           domain: environment.domain
         });
+        this.ds.sendNews(
+          this.ds.createEmbedMessage(
+            '#69f0ae',
+            userVerified.kartu_tanda_penduduk_.nama,
+            `${environment.baseUrl}/user/${userVerified.username}`,
+            {
+              name: `${environment.siteName} - Verifikasi Pengguna`,
+              iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+              url: environment.baseUrl
+            },
+            userVerified.profile_.description,
+            userVerified.image_url,
+            userVerified.updated_at,
+            {
+              text: userVerified.username,
+              iconURL: userVerified.image_url
+            }
+          )
+        );
       }
     }
     return {
