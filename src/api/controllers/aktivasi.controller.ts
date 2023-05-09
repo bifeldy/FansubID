@@ -31,34 +31,38 @@ export class AktivasiController {
   @Redirect()
   @FilterApiKeyAccess()
   async activateAccount(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-    const userActivated = await this.as.activateAccount(res.locals['token'] as string);
-    if (userActivated) {
-      res.cookie(environment.tokenName, userActivated.session_token, {
-        httpOnly: true,
-        secure: environment.production,
-        sameSite: 'strict',
-        expires: new Date(this.cs.jwtView(userActivated.session_token).exp * 1000),
-        domain: environment.domain
-      });
-      this.ds.sendNews(
-        this.ds.createEmbedMessage(
-          '#0099ff',
-          userActivated.kartu_tanda_penduduk_.nama,
-          `${environment.baseUrl}/user/${userActivated.username}`,
-          {
-            name: `${environment.siteName} - Pendaftaran Pengguna Baru`,
-            iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
-            url: environment.baseUrl
-          },
-          userActivated.profile_.description,
-          userActivated.image_url,
-          userActivated.updated_at,
-          {
-            text: userActivated.username,
-            iconURL: userActivated.image_url
-          }
-        )
-      );
+    const token = req.query['token'] || '';
+    let userActivated = null;
+    if (token) {
+      userActivated = await this.as.activateAccount(token as string);
+      if (userActivated) {
+        res.cookie(environment.tokenName, userActivated.session_token, {
+          httpOnly: true,
+          secure: environment.production,
+          sameSite: 'strict',
+          expires: new Date(this.cs.jwtView(userActivated.session_token).exp * 1000),
+          domain: environment.domain
+        });
+        this.ds.sendNews(
+          this.ds.createEmbedMessage(
+            '#0099ff',
+            userActivated.kartu_tanda_penduduk_.nama,
+            `${environment.baseUrl}/user/${userActivated.username}`,
+            {
+              name: `${environment.siteName} - Pendaftaran Pengguna Baru`,
+              iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+              url: environment.baseUrl
+            },
+            userActivated.profile_.description,
+            userActivated.image_url,
+            userActivated.updated_at,
+            {
+              text: userActivated.username,
+              iconURL: userActivated.image_url
+            }
+          )
+        );
+      }
     }
     return {
       url: userActivated ? '/login' : '/register',

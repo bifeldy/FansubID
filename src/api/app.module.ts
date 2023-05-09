@@ -296,10 +296,14 @@ export class AppModule {
 
   configure(mc: MiddlewareConsumer) {
     mc.apply(UrlXmlMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
-    mc.apply(ApiKeyMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+    mc.apply(ApiKeyMiddleware).exclude(
+      { path:'/aktivasi', method: RequestMethod.GET },
+      { path:'/verify-sosmed', method: RequestMethod.GET }
+    ).forRoutes({ path: '*', method: RequestMethod.ALL });
     mc.apply(BannedMiddleware).exclude(
       { path:'/login', method: RequestMethod.POST },
-      { path:'/register', method: RequestMethod.POST }
+      { path:'/register', method: RequestMethod.POST },
+      { path:'/lost-account-*', method: RequestMethod.POST }
     ).forRoutes({ path: '*', method: RequestMethod.ALL });
     mc.apply(LoginMiddleware).forRoutes({ path:'/login', method: RequestMethod.POST });
     mc.apply(RegisterMiddleware).forRoutes({ path:'/register', method: RequestMethod.POST });
