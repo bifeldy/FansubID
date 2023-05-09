@@ -102,7 +102,12 @@ export const environment = {
     app: {
       auth_uri: 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount',
       client_id: '955612959719-q9i4dtl0qp5icvc341q0cef6ul7ujov0.apps.googleusercontent.com',
-      scopes: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+      client_secret: SECRETS().GCP_APP_CLIENT_SECRET,                                                             // '',
+      profile_uri: 'https://www.googleapis.com/oauth2/v1/userinfo',
+      scopes: [
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile'
+      ]
     },
     gDrive: {
       client_id: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_ID,                                                        // '',
