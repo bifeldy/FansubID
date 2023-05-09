@@ -8,10 +8,10 @@ export const environment = {
   apiUrl: '/api',
   apiKey: '00000000-0000-0000-0000-000000000000',
   discord: {
-    guild_id: '342220398022098944',
+    client_id: '789831990433153034',
+    join_url: 'https://discord.gg/xGWdExk',
+    guild_id: '342220398022098944'
   },
-  discordUrl: 'https://discord.gg/xGWdExk',
-  discordClientId: '789831990433153034',
   torrent: {
     trackerAnnounce: [
       'wss://tracker.fansub.id',
