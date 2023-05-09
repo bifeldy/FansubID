@@ -60,14 +60,6 @@
             <mat-icon class="me-1">access_time</mat-icon>
             {{ userData.created_at | date:'d/M/yyyy, hh:mm:ss a z' }}
           </button>
-          <button mat-stroked-button matLine class="col text-truncate" *ngIf="userData.kartu_tanda_penduduk_.tempat_lahir" matTooltip="Kota Kelahiran" color="accent" style="overflow: hidden;">
-            <mat-icon class="me-1">location_on</mat-icon>
-            {{ userData.kartu_tanda_penduduk_.tempat_lahir }}
-          </button>
-          <button mat-stroked-button matLine class="col text-truncate" *ngIf="userData.discord" matTooltip="Discord Profile" color="accent" (click)="openDiscordProfile()" style="overflow: hidden;">
-            <mat-icon class="me-1">chat</mat-icon>
-            {{ userData.discord }}
-          </button>
           <button mat-stroked-button matLine class="col text-truncate" matTooltip="Alamat Surel" color="accent" style="overflow: hidden;">
             <mat-icon class="me-1">email</mat-icon>
             {{ userData.username }}@{{ ENV.domain }}

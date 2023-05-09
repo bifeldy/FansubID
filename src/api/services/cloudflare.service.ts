@@ -22,7 +22,7 @@ export class CloudflareService {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records?name=${name}&type=${type}&page=${page}&per_page=${per_page}&order=${order}&direction=${direction}&comment=${environment.cloudflare.comment}`);
       const res_raw = await this.api.getData(url, {
-        'Authorization': `Bearer ${environment.cloudflare.key}`,
+        Authorization: `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
       });
       const res = {
@@ -58,7 +58,7 @@ export class CloudflareService {
           proxied: type === 'A' ? true : false
         }),
         {
-          'Authorization': `Bearer ${environment.cloudflare.key}`,
+          Authorization: `Bearer ${environment.cloudflare.key}`,
           ...environment.nodeJsXhrHeader
         }
       );
@@ -87,7 +87,7 @@ export class CloudflareService {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records/${id}`);
       const res_raw = await this.api.getData(url, {
-        'Authorization': `Bearer ${environment.cloudflare.key}`,
+        Authorization: `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
       });
       const res = {
@@ -119,7 +119,7 @@ export class CloudflareService {
         type, content
       };
       const res_raw = await this.api.putData(url, JSON.stringify(data), {
-        'Authorization': `Bearer ${environment.cloudflare.key}`,
+        Authorization: `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
       });
       const res = {
@@ -147,7 +147,7 @@ export class CloudflareService {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records/${id}`);
       const res_raw = await this.api.deleteData(url, {
-        'Authorization': `Bearer ${environment.cloudflare.key}`,
+        Authorization: `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
       });
       const res = {

@@ -10,7 +10,6 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
-import { WinboxService } from '../../../_shared/services/winbox.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
 
 @Component({
@@ -64,7 +63,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private fs: FabService,
     private pi: PageInfoService,
     private us: UserService,
-    private wb: WinboxService,
     private ss: StatsServerService
   ) {
     this.gs.bannerImg = null;
@@ -216,10 +214,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.sort = data.active;
     this.order = data.direction;
     this.getUserBerkas();
-  }
-
-  openDiscordProfile(): void {
-    this.wb.winboxOpenUri(`https://discordapp.com/users/${this.userData.discord}`);
   }
 
   getUserGroup(): void {
