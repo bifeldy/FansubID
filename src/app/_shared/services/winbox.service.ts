@@ -34,7 +34,7 @@ export class WinboxService {
 
   async confirmationOpenUrl(uriUrl, windowTarget): Promise<void> {
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      'Ingin Buka Di Tab Baru?',
+      `Ingin Buka Di Tab ${windowTarget === '_self' ? 'Ini' : 'Baru'} ?`,
       uriUrl,
       false
     )).afterClosed().subscribe({
