@@ -297,28 +297,28 @@ export class AppModule {
   configure(mc: MiddlewareConsumer) {
     mc.apply(UrlXmlMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
     mc.apply(ApiKeyMiddleware).exclude(
-      { path:'/aktivasi', method: RequestMethod.GET },
-      { path:'/verify-sosmed', method: RequestMethod.GET }
+      { path: '/api/aktivasi', method: RequestMethod.GET },
+      { path: '/api/verify-sosmed', method: RequestMethod.GET }
     ).forRoutes({ path: '*', method: RequestMethod.ALL });
     mc.apply(BannedMiddleware).exclude(
-      { path:'/aktivasi', method: RequestMethod.GET },
-      { path:'/verify-sosmed', method: RequestMethod.GET },
-      { path:'/login', method: RequestMethod.POST },
-      { path:'/register', method: RequestMethod.POST },
-      { path:'/lost-account-*', method: RequestMethod.POST }
+      { path: '/api/aktivasi', method: RequestMethod.GET },
+      { path: '/api/verify-sosmed', method: RequestMethod.GET },
+      { path: '/api/login', method: RequestMethod.POST },
+      { path: '/api/register', method: RequestMethod.POST },
+      { path: '/api/lost-account-*', method: RequestMethod.POST }
     ).forRoutes({ path: '*', method: RequestMethod.ALL });
-    mc.apply(LoginMiddleware).forRoutes({ path:'/login', method: RequestMethod.POST });
-    mc.apply(RegisterMiddleware).forRoutes({ path:'/register', method: RequestMethod.POST });
-    mc.apply(LogoutMiddleware).forRoutes({ path:'/logout', method: RequestMethod.DELETE });
+    mc.apply(LoginMiddleware).forRoutes({ path: '/api/login', method: RequestMethod.POST });
+    mc.apply(RegisterMiddleware).forRoutes({ path: '/api/register', method: RequestMethod.POST });
+    mc.apply(LogoutMiddleware).forRoutes({ path: '/api/logout', method: RequestMethod.DELETE });
     mc.apply(CacheMiddleware).forRoutes({ path: '*', method: RequestMethod.GET });
     mc.apply(throttle(CONSTANTS.attachmentSpeedLimiterBps)).forRoutes(
-      { path: '/attachment', method: RequestMethod.GET },
-      { path: '/ddl-part', method: RequestMethod.GET },
-      { path: '/ddl-seek', method: RequestMethod.GET }
+      { path: '/api/attachment', method: RequestMethod.GET },
+      { path: '/api/ddl-part', method: RequestMethod.GET },
+      { path: '/api/ddl-seek', method: RequestMethod.GET }
     );
     mc.apply(
       uploadx.upload({
-        path: '/attachment',
+        path: '/api/attachment',
         allowMIME: CONSTANTS.fileTypeAttachmentAllowed,
         directory: environment.uploadFolder,
         maxUploadSize: CONSTANTS.fileSizeAttachmentTotalLimit,
@@ -332,8 +332,8 @@ export class AppModule {
         }
       })
     ).forRoutes(
-      { path: '/attachment', method: RequestMethod.POST },
-      { path: '/attachment', method: RequestMethod.PUT }
+      { path: '/api/attachment', method: RequestMethod.POST },
+      { path: '/api/attachment', method: RequestMethod.PUT }
     );
   }
 
