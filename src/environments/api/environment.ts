@@ -33,26 +33,26 @@ import { Track } from '../../api/entities/Track';
 import { User } from '../../api/entities/User';
 
 export const environment = {
-  production: SECRETS().IS_PRODUCTION,                                            // false,
+  production: SECRETS().IS_PRODUCTION,                                                                            // false,
   siteName: 'FansubID',
   siteDescription: 'Di Kamar Saja!',
   author: 'Bifeldy',
-  jwtSecretKey: SECRETS().JWT_SECRET_KEY,                                         // ''
+  jwtSecretKey: SECRETS().JWT_SECRET_KEY,                                                                         // '',
   apiKeyName: 'FansubID_ApiKey',
   tokenName: 'FansubID_Token',
-  domain: SECRETS().DOMAIN,                                                       // 'localhost',
-  domain_alt: SECRETS().DOMAIN_ALT,                                               // 'localhost',
-  ip: SECRETS().IP,                                                               // '127.0.0.1',
-  baseUrl: SECRETS().BASE_URL,                                                    // 'http://localhost:4200',
+  domain: SECRETS().DOMAIN,                                                                                       // 'localhost',
+  domain_alt: SECRETS().DOMAIN_ALT,                                                                               // 'localhost',
+  ip: SECRETS().IP,                                                                                               // '127.0.0.1',
+  baseUrl: SECRETS().BASE_URL,                                                                                    // 'http://localhost:4200',
   typeorm: {
     type: 'postgres',
     host: 'localhost',
     port: 5432,
     database: 'fansubid',
     username: 'postgres',
-    password: SECRETS().DB_PASSWORD,                                              // 'postgres',
+    password: SECRETS().DB_PASSWORD,                                                                              // 'postgres',
     synchronize: true,
-    logging: !SECRETS().IS_PRODUCTION,                                            // true,
+    logging: !SECRETS().IS_PRODUCTION,                                                                            // true,
     entities: [
       Anime,
       Attachment,
@@ -91,58 +91,60 @@ export const environment = {
   tempFolder: 'dist/fansubid/temp',
   uploadFolder: 'dist/fansubid/uploads',
   jsonCacheFolder: 'dist/fansubid/caches',
-  gdriveFolderId: '1DEiBMKDMZzSzhnlRi92tuyL2dh56tZLa',
-  recaptchaApiUrl: 'https://www.google.com/recaptcha/api/siteverify',
-  reCaptchaSecretKey: SECRETS().RECAPTCHA_SECRET_KEY,                             // '',
-  apiPemerintahKTPUrl: SECRETS().API_PEMERINTAH_KTP_URL,                          // '',
-  apiPemerintahKTPSecretKey: SECRETS().API_PEMERINTAH_KTP_SECRET_KEY,             // '',
-  imgbbKey: SECRETS().IMGBB_KEY,                                                  // '',
+  apiPemerintahKTPUrl: SECRETS().API_PEMERINTAH_KTP_URL,                                                          // '',
+  apiPemerintahKTPSecretKey: SECRETS().API_PEMERINTAH_KTP_SECRET_KEY,                                             // '',
+  imgbbKey: SECRETS().IMGBB_KEY,                                                                                  // '',
+  reCaptcha: {
+    api_url: 'https://www.google.com/recaptcha/api/siteverify',
+    secret_key: SECRETS().RECAPTCHA_SECRET_KEY,                                                                   // '',
+  },
   gCloudPlatform: {
-    clientId: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_ID,                           // '',
-    clientSecret: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_SECRET,                   // '',
-    clientEmail: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_EMAIL,                     // '',
+    app: {
+      auth_uri: 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount',
+      client_id: '955612959719-q9i4dtl0qp5icvc341q0cef6ul7ujov0.apps.googleusercontent.com',
+      scopes: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+    },
     gDrive: {
-      refreshToken: SECRETS().GCP_PERSONAL_ACCOUNT_REFRESH_TOKEN,                 // '',
+      client_id: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_ID,                                                        // '',
+      client_secret: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_SECRET,                                                // '',
+      client_email: SECRETS().GCP_PERSONAL_ACCOUNT_CLIENT_EMAIL,                                                  // '',
+      folder_id: '1DEiBMKDMZzSzhnlRi92tuyL2dh56tZLa',
+      refresh_token: SECRETS().GCP_PERSONAL_ACCOUNT_REFRESH_TOKEN,                                                // '',
       scopes: ['https://www.googleapis.com/auth/drive']
     },
     serviceAccount: {
-      type: 'service_account',
-      project_id: 'hikki-bifeldy',
-      private_key_id: SECRETS().GCP_SERVICE_ACCOUNT_PRIVATE_KEY_ID,               // '',
-      private_key: SECRETS().GCP_SERVICE_ACCOUNT_PRIVATE_KEY,                     // '',
-      client_email: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_EMAIL,                   // '',
-      client_id: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_ID,                         // '',
-      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
-      token_uri: 'https://oauth2.googleapis.com/token',
-      auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
-      client_x509_cert_url: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL    // ''
+      client_email: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_EMAIL,                                                   // '',
+      private_key: SECRETS().GCP_SERVICE_ACCOUNT_PRIVATE_KEY,                                                     // '',
+      token_uri: 'https://oauth2.googleapis.com/token'
     }
   },
   mailTrap: {
     clientOptions: {
       username: 'noreply',
-      key: SECRETS().MAILTRAP_KEY,                                                 // '',
+      key: SECRETS().MAILTRAP_KEY,                                                                                 // '',
       url: 'https://send.api.mailtrap.io',
     },
     fullName: `FansubID | No-Reply`,
-    domain: 'fansub.id'
+    domain: SECRETS().DOMAIN
   },
   cloudflare: {
     url: 'https://api.cloudflare.com/client/v4',
-    key: SECRETS().CLOUDFLARE_KEY,                                                // '',
+    key: SECRETS().CLOUDFLARE_KEY,                                                                                // '',
     zoneId: '804863012d6a7700333d781170c4dd95',
-    domain: 'fansub.id',
+    domain: SECRETS().DOMAIN,
     comment: 'DOMAIN_KLAIM'
   },
-  discordApiUrl: 'https://discord.com/api',
-  discordGuildId: '342220398022098944',
-  discordClientId: '789831990433153034',
-  discordClientSecret: SECRETS().DISCORD_CLIENT_SECRET,                           // '',
-  laboratoryRatsRoleId: '479208130534703108',
-  discordBotChannelEventId: '790158935045701652',
-  discordBotChannelBotId: '426384107795251206',
-  discordBotChannelDdlId: '1087668627718803557',
-  discordBotLoginToken: SECRETS().DISCORD_BOT_LOGIN_TOKEN,                        // '',
+  discord: {
+    api_uri: 'https://discord.com/api',
+    client_id: '789831990433153034',
+    guild_id: '342220398022098944',
+    client_secret: SECRETS().DISCORD_CLIENT_SECRET,                                                               // '',
+    channelEventId: '790158935045701652',
+    channelBotId: '426384107795251206',
+    laboratoryRatsRoleId: '479208130534703108',
+    loginToken: SECRETS().DISCORD_BOT_LOGIN_TOKEN,                                                                // '',
+    channelDdlId: '1087668627718803557',
+  },
   nodeJsXhrHeader: {
     Accept: 'application/json',
     Connection: 'keep-alive',
@@ -152,8 +154,10 @@ export const environment = {
   externalApiAnime: 'https://api.myanimelist.net/v2',
   externalApiDorama: 'https://kuryana.vercel.app',
   externalApiImage: 'https://api.imgbb.com/1/upload',
-  trackerAnnounce: [
-    'wss://tracker.fansub.id'
-  ],
-  malClientId: SECRETS().MAL_CLIENT_ID,                                          // '',
+  torrent: {
+    trackerAnnounce: [
+      `wss://tracker.${SECRETS().DOMAIN}`
+    ],
+  },
+  malClientId: SECRETS().MAL_CLIENT_ID,                                                                          // '',
 };
