@@ -55,10 +55,10 @@ export class VerifySosmedController {
         };
       } else if ('app' in req.body && 'code' in req.body) {
         if (req.body.app === SosMedModel.DISCORD) {
-          const url = new URL(`${environment.discordApiUrl}/oauth2/token`);
+          const url = new URL(`${environment.discord.api_uri}/oauth2/token`);
           const form = new URLSearchParams();
-          form.append('client_id', environment.discordClientId);
-          form.append('client_secret', environment.discordClientSecret);
+          form.append('client_id', environment.discord.client_id);
+          form.append('client_secret', environment.discord.client_secret);
           form.append('grant_type', 'authorization_code');
           form.append('code', req.body.code);
           form.append('redirect_uri', `${environment.baseUrl}/verify?app=discord`);
@@ -67,7 +67,7 @@ export class VerifySosmedController {
           if (res_raw1.ok) {
             const res_json1: any = await res_raw1.json();
             this.gs.log(`[oAuthDiscord] 🗝 ${res_raw1.status}`, res_json1);
-            const url = new URL(`${environment.discordApiUrl}/users/@me`);
+            const url = new URL(`${environment.discord.api_uri}/users/@me`);
             const res_raw2 = await this.api.getData(url, {
               Authorization: `Bearer ${res_json1.access_token}`,
               ...environment.nodeJsXhrHeader

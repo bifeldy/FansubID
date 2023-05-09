@@ -84,7 +84,7 @@ export class DiscordService {
       ]
     });
     this.bot.on('messageCreate', (msg: Message) => {
-      if (msg.channel.id === environment.discordBotChannelBotId && msg.content.startsWith('~')) {
+      if (msg.channel.id === environment.discord.channelBotId && msg.content.startsWith('~')) {
         this.gs.log(`[${msg.guild.name}] 🎉 [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content} 🎶`);
         this.handleMessage(msg);
       }
@@ -102,12 +102,12 @@ export class DiscordService {
       this.gs.log(`[DISCORD_SERVICE-MEMBER_LEAVE] 🎉 ${member.user.username}#${member.user.discriminator} - ${member.user.id} 🎶`);
       this.memberLeftRemoveVerifiedDemote(member);
     });
-    this.bot.login(environment.discordBotLoginToken).catch(err => this.gs.log('[DISCORD_SERVICE-LOGIN] 🎉', err, 'error'));
+    this.bot.login(environment.discord.loginToken).catch(err => this.gs.log('[DISCORD_SERVICE-LOGIN] 🎉', err, 'error'));
   }
 
   async sendNews(message: MessageOptions): Promise<void> {
     try {
-      const botNewsChannel = this.bot ? (this.bot.channels.cache.get(environment.discordBotChannelEventId) as NewsChannel) : null;
+      const botNewsChannel = this.bot ? (this.bot.channels.cache.get(environment.discord.channelEventId) as NewsChannel) : null;
       if (botNewsChannel) {
         const msg = await botNewsChannel.send(message);
         await msg?.crosspost();
@@ -130,7 +130,7 @@ export class DiscordService {
       this.gs.log('[DISCORD_SERVICE-CHUNK] 🎉', c.length);
       if (!chunkIdx || chunkIdx === currentChunkIdx) {
         try {
-          const botDdlChannel = this.bot ? (this.bot.channels.cache.get(environment.discordBotChannelDdlId) as NewsChannel) : null;
+          const botDdlChannel = this.bot ? (this.bot.channels.cache.get(environment.discord.channelDdlId) as NewsChannel) : null;
           if (botDdlChannel) {
             const msg = await botDdlChannel.send({
               files: [new MessageAttachment(c, `${attachment.name}_${currentChunkIdx}`)]
@@ -223,7 +223,7 @@ export class DiscordService {
       if (res_raw.ok) {
         const gh: any = await res_raw.json();
         this.cfg.github = gh[0];
-        this.bot.guilds.cache.get(environment.discordGuildId)?.members.cache.get(this.bot.user.id)?.setNickname(`${environment.siteName} - ${this.cfg.github?.sha?.slice(0, 7)}`);
+        this.bot.guilds.cache.get(environment.discord.guild_id)?.members.cache.get(this.bot.user.id)?.setNickname(`${environment.siteName} - ${this.cfg.github?.sha?.slice(0, 7)}`);
       }
       throw new Error('Github API Error');
     } catch (error) {
@@ -251,12 +251,12 @@ export class DiscordService {
             }
             user.verified = true;
             await this.userRepo.save(user);
-            const laboratoryRatsRole = msg.guild.roles.cache.get(environment.laboratoryRatsRoleId);
+            const laboratoryRatsRole = msg.guild.roles.cache.get(environment.discord.laboratoryRatsRoleId);
             if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
               await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
             }
             await msg.reply({ content: `<@${msg.author.id}> 😚 .: Berhasil :: ${user.username}@${environment.mailTrap.domain} :. 🤩` });
-            return await (msg.guild.channels.cache.get(environment.discordBotChannelEventId) as TextChannel).send({
+            return await (msg.guild.channels.cache.get(environment.discord.channelEventId) as TextChannel).send({
               embeds: [
                 new MessageEmbed()
                   .setColor('#69f0ae')

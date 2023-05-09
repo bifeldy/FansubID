@@ -34,7 +34,7 @@ export class FooterComponent implements OnInit {
   }
 
   get discordUrl(): string {
-    return environment.discordUrl;
+    return environment.discord.join_url;
   }
 
   get author(): string {

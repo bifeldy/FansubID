@@ -30,11 +30,11 @@ export class BannerDiscordComponent implements OnInit {
   }
 
   get discordUrl(): string {
-    return environment.discordUrl;
+    return environment.discord.join_url;
   }
 
   get discordGuildId(): string {
-    return environment.discordGuildId;
+    return environment.discord.guild_id;
   }
 
 }

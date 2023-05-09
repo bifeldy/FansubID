@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   get discordUrl(): string {
-    return environment.discordUrl;
+    return environment.discord.join_url;
   }
 
   toggleSideNav(): void {
