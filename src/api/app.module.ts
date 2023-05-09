@@ -294,31 +294,58 @@ import { UserService } from './repository/user.service';
 })
 export class AppModule {
 
+  // Exclude route referring exact route path
+  // https://stackoverflow.com/questions/61152975/nestjs-middleware-for-all-routes-except-auth
   configure(mc: MiddlewareConsumer) {
-    mc.apply(UrlXmlMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+
+    mc.apply(UrlXmlMiddleware).forRoutes(
+      { path: '*', method: RequestMethod.ALL }
+    );
+
     mc.apply(ApiKeyMiddleware).exclude(
+      { path: '/api/discord-verifikasi', method: RequestMethod.GET },
+      { path: '/api/google-verifikasi', method: RequestMethod.GET },
       { path: '/api/aktivasi', method: RequestMethod.GET },
       { path: '/api/verify-sosmed', method: RequestMethod.GET }
-    ).forRoutes({ path: '*', method: RequestMethod.ALL });
+    ).forRoutes(
+      { path: '*', method: RequestMethod.ALL }
+    );
+
     mc.apply(BannedMiddleware).exclude(
       { path: '/api/aktivasi', method: RequestMethod.GET },
       { path: '/api/verify-sosmed', method: RequestMethod.GET },
       { path: '/api/login', method: RequestMethod.POST },
       { path: '/api/register', method: RequestMethod.POST },
       { path: '/api/lost-account-*', method: RequestMethod.POST }
-    ).forRoutes({ path: '*', method: RequestMethod.ALL });
-    mc.apply(LoginMiddleware).forRoutes({ path: '/api/login', method: RequestMethod.POST });
-    mc.apply(RegisterMiddleware).forRoutes({ path: '/api/register', method: RequestMethod.POST });
-    mc.apply(LogoutMiddleware).forRoutes({ path: '/api/logout', method: RequestMethod.DELETE });
-    mc.apply(CacheMiddleware).forRoutes({ path: '*', method: RequestMethod.GET });
-    mc.apply(throttle(CONSTANTS.attachmentSpeedLimiterBps)).forRoutes(
-      { path: '/api/attachment', method: RequestMethod.GET },
-      { path: '/api/ddl-part', method: RequestMethod.GET },
-      { path: '/api/ddl-seek', method: RequestMethod.GET }
+    ).forRoutes(
+      { path: '*', method: RequestMethod.ALL }
     );
+
+    mc.apply(LoginMiddleware).forRoutes(
+      { path: '/login', method: RequestMethod.POST }
+    );
+
+    mc.apply(RegisterMiddleware).forRoutes(
+      { path: '/register', method: RequestMethod.POST }
+    );
+
+    mc.apply(LogoutMiddleware).forRoutes(
+      { path: '/logout', method: RequestMethod.DELETE }
+    );
+
+    mc.apply(CacheMiddleware).forRoutes(
+      { path: '*', method: RequestMethod.GET }
+    );
+
+    mc.apply(throttle(CONSTANTS.attachmentSpeedLimiterBps)).forRoutes(
+      { path: '/attachment', method: RequestMethod.GET },
+      { path: '/ddl-part', method: RequestMethod.GET },
+      { path: '/ddl-seek', method: RequestMethod.GET }
+    );
+
     mc.apply(
       uploadx.upload({
-        path: '/api/attachment',
+        path: '/attachment',
         allowMIME: CONSTANTS.fileTypeAttachmentAllowed,
         directory: environment.uploadFolder,
         maxUploadSize: CONSTANTS.fileSizeAttachmentTotalLimit,
@@ -332,9 +359,10 @@ export class AppModule {
         }
       })
     ).forRoutes(
-      { path: '/api/attachment', method: RequestMethod.POST },
-      { path: '/api/attachment', method: RequestMethod.PUT }
+      { path: '/attachment', method: RequestMethod.POST },
+      { path: '/attachment', method: RequestMethod.PUT }
     );
+
   }
 
 }
