@@ -128,17 +128,6 @@ export class SocketIoService {
         this.gs.log('[SOCKET_IO-JOIN_UPDATE_ROOM] 📢', err, 'error');
       }
       if (data.user) {
-        const selectedUser = await this.userRepo.findOneOrFail({
-          where: [
-            { id: Equal(data.user.id) }
-          ],
-          relations: ['profile_']
-        });
-        if ('profile_' in selectedUser && selectedUser.profile_) {
-          delete selectedUser.profile_.description;
-          delete selectedUser.profile_.updated_at;
-        }
-        this.rooms[data.newRoom][socket.id].profile_ = selectedUser.profile_;
         if (
           data.newRoom.startsWith('/nihongo/hiragana') ||
           data.newRoom.startsWith('/nihongo/katakana') ||
@@ -241,7 +230,31 @@ export class SocketIoService {
           { id: Equal(user.id) }
         ],
         relations: ['kartu_tanda_penduduk_', 'profile_']
-      });;
+      });
+      delete payload.user.email;
+      delete payload.user.password;
+      delete payload.user.session_token;
+      delete payload.user.session_origin;
+      if ('kartu_tanda_penduduk_' in payload.user && payload.user.kartu_tanda_penduduk_) {
+        delete payload.user.kartu_tanda_penduduk_.nik;
+        delete payload.user.kartu_tanda_penduduk_.tanggal_lahir;
+        delete payload.user.kartu_tanda_penduduk_.golongan_darah;
+        delete payload.user.kartu_tanda_penduduk_.alamat;
+        delete payload.user.kartu_tanda_penduduk_.rt;
+        delete payload.user.kartu_tanda_penduduk_.rw;
+        delete payload.user.kartu_tanda_penduduk_.kelurahan_desa;
+        delete payload.user.kartu_tanda_penduduk_.kecamatan;
+        delete payload.user.kartu_tanda_penduduk_.agama;
+        delete payload.user.kartu_tanda_penduduk_.status_perkawinan;
+        delete payload.user.kartu_tanda_penduduk_.pekerjaan;
+        delete payload.user.kartu_tanda_penduduk_.kewarganegaraan;
+        delete payload.user.kartu_tanda_penduduk_.created_at;
+        delete payload.user.kartu_tanda_penduduk_.updated_at;
+      }
+      if ('profile_' in payload.user && payload.user.profile_) {
+        delete payload.user.profile_.description;
+        delete payload.user.profile_.updated_at;
+      }
     } catch (error) {
       payload.user = null;
     }

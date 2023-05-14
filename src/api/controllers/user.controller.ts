@@ -135,13 +135,11 @@ export class UserController {
         ],
         relations: ['kartu_tanda_penduduk_', 'profile_']
       });
-      delete selectedUser.email;
       if ('kartu_tanda_penduduk_' in selectedUser && selectedUser.kartu_tanda_penduduk_) {
         delete selectedUser.kartu_tanda_penduduk_.created_at;
         delete selectedUser.kartu_tanda_penduduk_.updated_at;
       }
       if ('profile_' in selectedUser && selectedUser.profile_) {
-        delete selectedUser.profile_.id;
         delete selectedUser.profile_.created_at;
         delete selectedUser.profile_.updated_at;
       }
