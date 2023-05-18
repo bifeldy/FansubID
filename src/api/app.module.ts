@@ -53,6 +53,8 @@ import { InformationController } from './controllers/information.controller';
 import { LikedislikeController } from './controllers/likedislike.controller';
 import { LoginController } from './controllers/login.controller';
 import { LogoutController } from './controllers/logout.controller';
+import { LostAccountFindController } from './controllers/lost-account-/lost-account-find.controller';
+import { LostAccountResetController } from './controllers/lost-account-/lost-account-reset.controller';
 import { MailController } from './controllers/mail.controller';
 import { MailInboxController } from './controllers/mail-/mail-inbox.controller';
 import { MailOutboxController } from './controllers/mail-/mail-outbox.controller';
@@ -192,6 +194,8 @@ import { UserService } from './repository/user.service';
     LikedislikeController,
     LoginController,
     LogoutController,
+    LostAccountFindController,
+    LostAccountResetController,
     MailController,
     MailInboxController,
     MailOutboxController,

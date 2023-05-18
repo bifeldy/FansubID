@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { RegistrationModel } from '../../models/req-res.model';
+import { RegistrationModel, UserModel } from '../../models/req-res.model';
 
 import { GlobalService } from './global.service';
 
@@ -134,6 +134,60 @@ export class MailService {
         Hai, terima kasih telah mendaftar di ${environment.siteName}.
         Untuk verifikasi akun, silahkan klik link berikut ini.
         ${environment.baseUrl}/api/verify-sosmed?token=${token}
+        Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.
+        (つ≧▽≦)つ
+        Terima kasih.
+        (っ.❛ ᴗ ❛.)っ
+      `.replace(/\s\s+/g, ' ').trim()
+    };
+    return await this.mailTrapSend(content);
+  }
+
+  async sendResetAccountMail(user: UserModel, token: string): Promise<any> {
+    const content: Mail = {
+      from: {
+        name: environment.mailTrap.fullName,
+        email: `${environment.mailTrap.clientOptions.username}@${environment.mailTrap.domain}`
+      },
+      to: [
+        { 
+          name: user.kartu_tanda_penduduk_.nama,
+          email: user.email
+        }
+      ],
+      subject: `${environment.siteName} | Reset Akun`,
+      category: 'Reset',
+      html: `
+        <h1>${user.kartu_tanda_penduduk_.nama} (<i>${user.username}</i>).</h1>
+        <h2>
+          <a href="${environment.baseUrl}">
+            ${environment.baseUrl}
+          </a>
+        </h2>
+        <p>(づ￣ ³￣)づ</p>
+        <p>
+          Hai, selamat datang kembali di ${environment.siteName}. <br />
+          Untuk mengatur ulang akun, silahkan gunakan informasi atau klik link berikut ini.
+        </p>
+        <p>Token :: ${token}</p>
+        <p>
+          <a href="${environment.baseUrl}/reset-password?token=${token}">
+            ${environment.baseUrl}/reset-password?token=${token}
+          </a>
+        </p>
+        <p>Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.</p>
+        <p>(つ≧▽≦)つ</p>
+        <p>Terima kasih.</p>
+        <p>(っ.❛ ᴗ ❛.)っ</p>
+      `.replace(/\s\s+/g, ' ').trim(),
+      text: `
+        ${user.kartu_tanda_penduduk_.nama} (${user.username}).
+        ${environment.baseUrl}
+        (づ￣ ³￣)づ
+        Hai, selamat datang kembali di ${environment.siteName}.
+        Untuk mengatur ulang akun, silahkan gunakan informasi atau klik link berikut ini.
+        Token :: ${token}
+        ${environment.baseUrl}/reset-password?token=${token}
         Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.
         (つ≧▽≦)つ
         Terima kasih.

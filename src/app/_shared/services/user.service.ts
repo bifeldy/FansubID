@@ -81,4 +81,12 @@ export class UserService {
     return this.api.getData(`/user/${username}/group`);
   }
 
+  findLostAccount(data): Observable<JsonResponse> {
+    return this.api.postData('/lost-account-find', data);
+  }
+
+  resetLostAccount(data): Observable<JsonResponse> {
+    return this.api.postData('/lost-account-reset', data);
+  }
+
 }

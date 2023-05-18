@@ -52,11 +52,12 @@ export const CONSTANTS = {
   socketRoomNameGlobalFansub: 'GLOBAL_FANSUB',
   socketRoomNameServerLogs: 'SERVER_LOGS',
   timeoutCancelRegisterKey: 'TIMEOUT_CANCEL_REGISTER',
-  timeoutCancelRegisterTime: 5 * 60 * 1000, // 3 Minutes
+  timeoutCancelRegisterTime: 5 * 60 * 1000, // 5 Minutes
   timeoutDeleteTempAttachmentKey: 'TIMEOUT_DELETE_TEMP_ATTACHMENT',
   timeoutDeleteTempAttachmentTime: 3 * 60 * 1000, // 3 Minutes
   timeJwtEncryption: 3 * 60, // 3 Minutes
   timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days
+  timeResetAccount: 5 * 60, // 5 Minutes
   timeMaxDaysNotification: 7 * 24 * 60 * 60 * 1000, // 7 Days
   verificationDomain: [
     'ghs.google.com'
