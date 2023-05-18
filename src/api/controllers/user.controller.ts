@@ -216,13 +216,13 @@ export class UserController {
           );
           (resUserSave as any)._email = resUserSave.email;
           (resUserSave as any)._session_origin = resUserSave.session_origin;
-          if ('kartu_tanda_penduduk_' in resUserSave && resUserSave.kartu_tanda_penduduk_) {
-            delete resUserSave.kartu_tanda_penduduk_;
-          }
-          if ('profile_' in resUserSave && resUserSave.profile_) {
-            delete resUserSave.profile_;
-          }
           const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
+          if ('kartu_tanda_penduduk_' in noPwdSes && noPwdSes.kartu_tanda_penduduk_) {
+            delete noPwdSes.kartu_tanda_penduduk_;
+          }
+          if ('profile_' in noPwdSes && noPwdSes.profile_) {
+            delete noPwdSes.profile_;
+          }
           selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes });
           resUserSave = await this.userRepo.save(selectedUser);
           res.cookie(environment.tokenName, resUserSave.session_token, {

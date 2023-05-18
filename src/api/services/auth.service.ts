@@ -82,8 +82,14 @@ export class AuthService {
       newUser.kartu_tanda_penduduk_ = resKtpSave;
       newUser.profile_ = resProfileSave;
       const resUserSave = await this.userRepo.save(newUser);
-      const { password, session_token, session_origin, ...noPwdSsToken } = resUserSave;
-      newUser.session_token = this.cs.credentialEncode({ user: noPwdSsToken });
+      const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
+      if ('kartu_tanda_penduduk_' in noPwdSes && noPwdSes.kartu_tanda_penduduk_) {
+        delete noPwdSes.kartu_tanda_penduduk_;
+      }
+      if ('profile_' in noPwdSes && noPwdSes.profile_) {
+        delete noPwdSes.profile_;
+      }
+      newUser.session_token = this.cs.credentialEncode({ user: noPwdSes });
       const user = await this.userRepo.save(newUser);
       return user;
     } catch (err) {
@@ -115,8 +121,14 @@ export class AuthService {
       });
       user.verified = true;
       const resUserSave = await this.userRepo.save(user);
-      const { password, session_token, session_origin, ...noPwdSsToken } = resUserSave;
-      user.session_token = this.cs.credentialEncode({ user: noPwdSsToken });
+      const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
+      if ('kartu_tanda_penduduk_' in noPwdSes && noPwdSes.kartu_tanda_penduduk_) {
+        delete noPwdSes.kartu_tanda_penduduk_;
+      }
+      if ('profile_' in noPwdSes && noPwdSes.profile_) {
+        delete noPwdSes.profile_;
+      }
+      user.session_token = this.cs.credentialEncode({ user: noPwdSes });
       return await this.userRepo.save(user);
     } catch (err) {
       return null;
