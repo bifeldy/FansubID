@@ -48,13 +48,13 @@ export class LostAccountResetController {
           }
         };
       }
-      throw new Error('Data Tidak Lengkap!');
+      throw new Error('Token Expired!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
         info: '🙄 400 - Lost Account API :: Pencarian Gagal 😪',
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'Token Expired!'
         }
       }, HttpStatus.BAD_REQUEST);
     }

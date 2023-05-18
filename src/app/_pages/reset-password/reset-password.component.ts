@@ -1,7 +1,8 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation } from '@angular/cdk/stepper';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 
@@ -23,11 +24,14 @@ import { CryptoService } from '../../_shared/services/crypto.service';
 })
 export class ResetPasswordComponent implements OnInit, OnDestroy {
 
+  @ViewChild('stepper', { static: true }) stepper: MatStepper;
+
   stepperOrientation: Observable<StepperOrientation>;
 
   fg1: FormGroup;
   fg2: FormGroup;
 
+  captchaRef = null;
   submitted = false;
 
   returnUrl = '/';
@@ -38,6 +42,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   subsVerify = null;
   subsDialog = null;
   subsUser = null;
+  timedOut = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -65,7 +70,12 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subsFindLostAccount?.unsubscribe();
+    this.subsResetLostAccount?.unsubscribe();
+    this.subsVerify?.unsubscribe();
+    this.subsDialog?.unsubscribe();
     this.subsUser?.unsubscribe();
+    this.timedOut?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -76,6 +86,14 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         next: user => {
           if (user) {
             this.router.navigateByUrl(this.returnUrl);
+          } else if (!this.timedOut) {
+            this.timedOut = setTimeout(() => {
+              const token = this.activatedRoute.snapshot.queryParamMap.get('token');
+              if (token) {
+                this.fg2.controls['token'].patchValue(token);
+                this.stepper.next();
+              }
+            }, 0);
           }
         }
       });
@@ -92,46 +110,60 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]]
     });
     this.fg2 = this.fb.group({
-      token: [this.activatedRoute.snapshot.queryParamMap.get('token'), [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
+      token: [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
       password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]]
     });
   }
 
-  findLostAccount(captchaResponse, captchaRef, stepper): void {
+  captcha(captchaResponse, captchaRef): void {
     this.gs.log(`[GOOGLE_CAPTCHA] ${captchaResponse}`);
     if (captchaResponse) {
+      this.captchaRef = captchaRef;
       this.fg1.controls['g-recaptcha-response'].patchValue(captchaResponse);
-      this.subsFindLostAccount = this.us.findLostAccount({
-        userNameOrEmail: this.fg1.value.userNameOrEmail,
-        'g-recaptcha-response': this.fg1.value['g-recaptcha-response']
-      }).subscribe({
-        next: res => {
-          this.gs.log('[USER_FIND_LOST_ACCOUNT_SUCCESS]', res);
-          this.subsDialog = this.ds.openInfoDialog({
-            data: {
-              title: res.result.title,
-              htmlMessage: res.result.message,
-              confirmText: 'Tutup'
-            }
-          }).afterClosed().subscribe({
-            next: re => {
-              this.gs.log('[INFO_DIALOG_CLOSED]', re);
-              this.subsDialog.unsubscribe();
-            }
-          });
-          stepper.next();
-          captchaRef.reset();
-        },
-        error: err => {
-          this.gs.log('[USER_FIND_LOST_ACCOUNT_ERROR]', err);
-          this.resetInfo = err.result?.message || err.info;
-          captchaRef.reset();
-        }
-      });
+    } else {
+      if (this.fg1.value['g-recaptcha-response']) {
+        this.fg1.controls['g-recaptcha-response'].patchValue(null);
+      }
     }
   }
 
-  resetAccount(stepper): void {
+  findAccount(): void {
+    this.bs.busy();
+    this.submitted = true;
+    this.subsFindLostAccount = this.us.findLostAccount({
+      userNameOrEmail: this.fg1.value.userNameOrEmail,
+      'g-recaptcha-response': this.fg1.value['g-recaptcha-response']
+    }).subscribe({
+      next: res => {
+        this.gs.log('[USER_FIND_LOST_ACCOUNT_SUCCESS]', res);
+        this.bs.idle();
+        this.submitted = false;
+        this.subsDialog = this.ds.openInfoDialog({
+          data: {
+            title: res.result.title,
+            htmlMessage: res.result.message,
+            confirmText: 'Tutup'
+          }
+        }).afterClosed().subscribe({
+          next: re => {
+            this.gs.log('[INFO_DIALOG_CLOSED]', re);
+            this.subsDialog.unsubscribe();
+          }
+        });
+        this.stepper.next();
+        this.captchaRef.reset();
+      },
+      error: err => {
+        this.gs.log('[USER_FIND_LOST_ACCOUNT_ERROR]', err);
+        this.bs.idle();
+        this.submitted = false;
+        this.resetInfo = err.result?.message || err.info;
+        this.captchaRef.reset();
+      }
+    });
+  }
+
+  resetAccount(): void {
     this.bs.busy();
     this.submitted = true;
     this.subsResetLostAccount = this.us.resetLostAccount({
@@ -163,7 +195,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.submitted = false;
         this.resetInfo = err.result?.message || err.info;
-        stepper.reset();
+        this.stepper.reset();
       }
     });
   }

@@ -175,9 +175,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   captcha(captchaResponse, captchaRef): void {
     this.gs.log(`[GOOGLE_CAPTCHA] ${captchaResponse}`);
-    this.captchaRef = captchaRef;
     if (captchaResponse) {
+      this.captchaRef = captchaRef;
       this.fg.controls['g-recaptcha-response'].patchValue(captchaResponse);
+    } else {
+      if (this.fg.value['g-recaptcha-response']) {
+        this.fg.controls['g-recaptcha-response'].patchValue(null);
+      }
     }
   }
 

@@ -9,7 +9,7 @@
   <!-- Detail -->
   <div class="row px-3">
     <div class="col-12">
-      <form [formGroup]="fg" (submit)="onSubmit();">
+      <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
         <div class="row mt-3 mb-3">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">

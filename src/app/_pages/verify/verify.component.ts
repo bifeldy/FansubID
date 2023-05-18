@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatStepper } from '@angular/material/stepper';
 
 import { SosMedModel } from '../../../models/req-res.model';
 
@@ -22,9 +23,12 @@ import { CONSTANTS } from '../../../constants';
 })
 export class VerifyComponent implements OnInit, OnDestroy {
 
+  @ViewChild('stepper', { static: true }) stepper: MatStepper;
+
   fg1: FormGroup;
   fg2: FormGroup;
 
+  captchaRef = null;
   submitted = false;
 
   returnUrl = '/';
@@ -190,43 +194,62 @@ export class VerifyComponent implements OnInit, OnDestroy {
     });
   }
 
-  cekNIK(captchaResponse, captchaRef, stepper): void {
+  captcha(captchaResponse, captchaRef): void {
     this.gs.log(`[GOOGLE_CAPTCHA] ${captchaResponse}`);
     if (captchaResponse) {
+      this.captchaRef = captchaRef;
       this.fg1.controls['g-recaptcha-response'].patchValue(captchaResponse);
-      this.subsCekNik = this.us.cekNik({
-        nik: this.fg1.value.nik,
-        nama: this.fg1.value.nama,
-        'g-recaptcha-response': this.fg1.value['g-recaptcha-response']
-      }).subscribe({
-        next: res => {
-          this.gs.log('[KPU_RI-CEK_NIK]', res);
-          if (res.result.message === 'success') {
-            this.kpuRiUserData = { ...res.result.data, nik: this.fg1.value.nik };
-            this.verifyInfo = `
-              ${this.kpuRiUserData.nama} - ${this.kpuRiUserData.jenis_kelamin} - ${this.kpuRiUserData.tempat_lahir} -
-              ${this.kpuRiUserData.nik} - ${this.kpuRiUserData.namaKel} - ${this.kpuRiUserData.namaKec} -
-              ${this.kpuRiUserData.namaKabko} - ${this.kpuRiUserData.namaPropinsi}
-            `.replace(/\n/g, ' ').replace(/ +(?= )/g, '').trim();
-            this.fg2.controls['nik'].patchValue(this.kpuRiUserData.nik);
-            this.fg2.controls['nama'].patchValue(this.kpuRiUserData.nama);
-            this.fg2.controls['jenis_kelamin'].patchValue(this.kpuRiUserData.jenis_kelamin);
-            this.fg2.controls['tempat_lahir'].patchValue(this.kpuRiUserData.tempat_lahir);
-            this.fg2.controls['kelurahan_desa'].patchValue(this.kpuRiUserData.namaKel);
-            this.fg2.controls['kecamatan'].patchValue(this.kpuRiUserData.namaKec);
-            this.fg1.controls['completed'].patchValue(true);
-            stepper.next();
-            captchaRef.reset();
-          } else {
-            this.verifyInfo = res.result.data.pesan;
-            this.fg1.controls['g-recaptcha-response'].patchValue(null);
-            this.fg1.controls['completed'].patchValue(null);
-            this.kpuRiUserData = null;
-            captchaRef.reset();
-          }
-        }
-      });
+    } else {
+      if (this.fg1.value['g-recaptcha-response']) {
+        this.fg1.controls['g-recaptcha-response'].patchValue(null);
+      }
     }
+  }
+
+  findNik(): void {
+    this.bs.busy();
+    this.submitted = true;
+    this.subsCekNik = this.us.cekNik({
+      nik: this.fg1.value.nik,
+      nama: this.fg1.value.nama,
+      'g-recaptcha-response': this.fg1.value['g-recaptcha-response']
+    }).subscribe({
+      next: res => {
+        this.gs.log('[KPU_RI_CEK_NIK]', res);
+        this.bs.idle();
+        this.submitted = false;
+        if (res.result.message === 'success') {
+          this.kpuRiUserData = { ...res.result.data, nik: this.fg1.value.nik };
+          this.verifyInfo = `
+            ${this.kpuRiUserData.nama} - ${this.kpuRiUserData.jenis_kelamin} - ${this.kpuRiUserData.tempat_lahir} -
+            ${this.kpuRiUserData.nik} - ${this.kpuRiUserData.namaKel} - ${this.kpuRiUserData.namaKec} -
+            ${this.kpuRiUserData.namaKabko} - ${this.kpuRiUserData.namaPropinsi}
+          `.replace(/\n/g, ' ').replace(/ +(?= )/g, '').trim();
+          this.fg2.controls['nik'].patchValue(this.kpuRiUserData.nik);
+          this.fg2.controls['nama'].patchValue(this.kpuRiUserData.nama);
+          this.fg2.controls['jenis_kelamin'].patchValue(this.kpuRiUserData.jenis_kelamin);
+          this.fg2.controls['tempat_lahir'].patchValue(this.kpuRiUserData.tempat_lahir);
+          this.fg2.controls['kelurahan_desa'].patchValue(this.kpuRiUserData.namaKel);
+          this.fg2.controls['kecamatan'].patchValue(this.kpuRiUserData.namaKec);
+          this.fg1.controls['completed'].patchValue(true);
+          this.stepper.next();
+          this.captchaRef.reset();
+        } else {
+          this.verifyInfo = res.result.data.pesan;
+          this.fg1.controls['g-recaptcha-response'].patchValue(null);
+          this.fg1.controls['completed'].patchValue(null);
+          this.kpuRiUserData = null;
+          this.captchaRef.reset();
+        }
+      },
+      error: err => {
+        this.gs.log('[KPU_RI_CEK_NIK_ERROR]', err);
+        this.bs.idle();
+        this.submitted = false;
+        this.verifyInfo = err.result?.message || err.info;
+        this.captchaRef.reset();
+      }
+    });
   }
 
   submitKTP(stepper): void {
