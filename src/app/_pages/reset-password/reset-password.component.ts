@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation } from '@angular/cdk/stepper';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { CryptoService } from '../../_shared/services/crypto.service';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })
-export class ResetPasswordComponent implements OnInit, OnDestroy {
+export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
@@ -75,7 +75,22 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     this.subsVerify?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsUser?.unsubscribe();
-    this.timedOut?.unsubscribe();
+    if (this.timedOut) {
+      clearTimeout(this.timedOut);
+      this.timedOut = null;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.timedOut) {
+      this.timedOut = setTimeout(() => {
+        const token = this.activatedRoute.snapshot.queryParamMap.get('token');
+        if (token && this.fg2 && this.stepper) {
+          this.fg2.controls['token'].patchValue(token);
+          this.stepper.next();
+        }
+      }, 0);
+    }
   }
 
   ngOnInit(): void {
@@ -86,14 +101,6 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         next: user => {
           if (user) {
             this.router.navigateByUrl(this.returnUrl);
-          } else if (!this.timedOut) {
-            this.timedOut = setTimeout(() => {
-              const token = this.activatedRoute.snapshot.queryParamMap.get('token');
-              if (token) {
-                this.fg2.controls['token'].patchValue(token);
-                this.stepper.next();
-              }
-            }, 0);
           }
         }
       });
