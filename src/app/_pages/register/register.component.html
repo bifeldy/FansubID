@@ -17,7 +17,7 @@
                   <div class="col-md-8">
                     <input type="text" id="username" class="text-bifeldy form-control {{
                         !fg.get('username').valid && fg.get('username').touched ? 'is-invalid' : ''
-                      }}" placeholder="Username Minimal 8 Huruf" required autofocus formControlName="username" autocomplete="username" />
+                      }}" placeholder="Username Minimal 8 Huruf" required formControlName="username" autocomplete="username" />
                     <span class="invalid-feedback" role="alert">
                       <strong *ngIf="fg.get('username').hasError('required')">
                         Username Tidak Boleh Kosong <br />
@@ -39,7 +39,7 @@
                   <div class="col-md-8">
                     <input type="text" id="name" class="text-bifeldy form-control {{
                         !fg.get('name').valid && fg.get('name').touched ? 'is-invalid' : ''
-                      }}" placeholder="Nama Lengkap" required autofocus formControlName="name" autocomplete="name" />
+                      }}" placeholder="Nama Lengkap" required formControlName="name" autocomplete="name" />
                     <span class="invalid-feedback" role="alert">
                       <strong *ngIf="fg.get('name').hasError('required')">
                         Nama Tidak Boleh Kosong <br />
@@ -55,7 +55,7 @@
                   <div class="col-md-8">
                     <input type="email" id="email" class="text-bifeldy form-control {{
                         !fg.get('email').valid && fg.get('email').touched ? 'is-invalid' : ''
-                      }}" placeholder="Alamat E-Mail" required autofocus formControlName="email" autocomplete="email" />
+                      }}" placeholder="Alamat E-Mail" required formControlName="email" autocomplete="email" />
                     <span class="invalid-feedback" role="alert">
                       <strong *ngIf="fg.get('email').hasError('required')">
                         Email Tidak Boleh Kosong <br />

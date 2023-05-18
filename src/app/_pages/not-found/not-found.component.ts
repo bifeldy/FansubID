@@ -26,7 +26,7 @@ export class NotFoundComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+      this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
       if (this.returnUrl) {
         this.timedOut = setTimeout(() => {
           this.router.navigateByUrl(this.returnUrl);

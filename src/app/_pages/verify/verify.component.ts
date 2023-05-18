@@ -68,7 +68,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.gs.previousUrl || '/home';
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
     if (this.returnUrl.includes('/login')) {
       this.returnUrl = '/';
     }

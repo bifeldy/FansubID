@@ -40,6 +40,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   subsUser = null;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
     private fb: FormBuilder,
     private router: Router,
@@ -68,7 +69,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.gs.previousUrl || '/home';
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
     if (this.gs.isBrowser) {
       this.initForm();
       this.subsUser = this.as.currentUser.subscribe({
@@ -91,7 +92,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]]
     });
     this.fg2 = this.fb.group({
-      token: [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
+      token: [this.activatedRoute.snapshot.queryParamMap.get('token'), [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
       password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]]
     });
   }

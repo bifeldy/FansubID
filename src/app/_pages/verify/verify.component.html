@@ -25,7 +25,7 @@
                       <div class="col-md-8">
                         <input type="text" id="nik" class="form-control {{
                             !fg1.get('nik').valid && fg1.get('nik').touched ? 'is-invalid' : ''
-                          }}" placeholder="Nomor Induk Kependudukan" required autofocus formControlName="nik" autocomplete="nik" />
+                          }}" placeholder="Nomor Induk Kependudukan" required formControlName="nik" autocomplete="nik" />
                         <span class="invalid-feedback" role="alert">
                           <strong *ngIf="fg1.get('nik').hasError('required')">
                             Nomor NIK Tidak Boleh Kosong! <br />
@@ -41,7 +41,7 @@
                       <div class="col-md-8">
                         <input type="text" id="nama" class="form-control {{
                             !fg1.get('nama').valid && fg1.get('nama').touched ? 'is-invalid' : ''
-                          }}" placeholder="Nama Depan" required autofocus formControlName="nama" autocomplete="nama" />
+                          }}" placeholder="Nama Depan" required formControlName="nama" autocomplete="nama" />
                         <span class="invalid-feedback" role="alert">
                           <strong *ngIf="fg1.get('nama').hasError('required')">
                             Nama Depan Tidak Boleh Kosong! <br />
@@ -69,7 +69,7 @@
                       <div class="col-md-8">
                         <input type="text" id="nik" class="form-control {{
                             !fg2.get('nik').valid && fg2.get('nik').touched ? 'is-invalid' : ''
-                          }}" placeholder="Nomor Induk Kependudukan" required autofocus formControlName="nik" autocomplete="nik" />
+                          }}" placeholder="Nomor Induk Kependudukan" required formControlName="nik" autocomplete="nik" />
                         <span class="invalid-feedback" role="alert">
                           <strong *ngIf="fg2.get('nik').hasError('required')">
                             NIK Tidak Boleh Kosong! <br />
@@ -85,7 +85,7 @@
                       <div class="col-md-8">
                         <input type="text" id="nama" class="form-control {{
                             !fg2.get('nama').valid && fg2.get('nama').touched ? 'is-invalid' : ''
-                          }}" placeholder="Nama Depan" required autofocus formControlName="nama" autocomplete="nama" />
+                          }}" placeholder="Nama Depan" required formControlName="nama" autocomplete="nama" />
                         <span class="invalid-feedback" role="alert">
                           <strong *ngIf="fg2.get('nama').hasError('required')">
                             Nama Depan Tidak Boleh Kosong! <br />
@@ -101,7 +101,7 @@
                       <div class="col-md-8">
                         <input type="text" id="tempat_lahir" class="form-control {{
                             !fg2.get('tempat_lahir').valid && fg2.get('tempat_lahir').touched ? 'is-invalid' : ''
-                          }}" placeholder="Tempat Lahir" required autofocus formControlName="tempat_lahir" autocomplete="tempat_lahir" />
+                          }}" placeholder="Tempat Lahir" required formControlName="tempat_lahir" autocomplete="tempat_lahir" />
                         <span class="invalid-feedback" role="alert">
                           <strong *ngIf="fg2.get('tempat_lahir').hasError('required')">
                             Tempat Lahir Tidak Boleh Kosong! <br />
@@ -117,7 +117,7 @@
                       <div class="col-md-8">
                         <input type="text" id="jenis_kelamin" class="form-control {{
                             !fg2.get('jenis_kelamin').valid && fg2.get('jenis_kelamin').touched ? 'is-invalid' : ''
-                          }}" placeholder="Jenis Kelamin" required autofocus formControlName="jenis_kelamin" autocomplete="jenis_kelamin" />
+                          }}" placeholder="Jenis Kelamin" required formControlName="jenis_kelamin" autocomplete="jenis_kelamin" />
                         <span class="invalid-feedback" role="alert">
                           <strong *ngIf="fg2.get('jenis_kelamin').hasError('required')">
                             Tempat Lahir Tidak Boleh Kosong! <br />
@@ -133,7 +133,7 @@
                       <div class="col-md-8">
                         <input type="text" id="kelurahan_desa" class="form-control {{
                             !fg2.get('kelurahan_desa').valid && fg2.get('kelurahan_desa').touched ? 'is-invalid' : ''
-                          }}" placeholder="Kelurahan / Desa" required autofocus formControlName="kelurahan_desa" autocomplete="kelurahan_desa" />
+                          }}" placeholder="Kelurahan / Desa" required formControlName="kelurahan_desa" autocomplete="kelurahan_desa" />
                         <span class="invalid-feedback" role="alert">
                           <strong *ngIf="fg2.get('kelurahan_desa').hasError('required')">
                             Kelurahan Tidak Boleh Kosong! <br />
@@ -149,7 +149,7 @@
                       <div class="col-md-8">
                         <input type="text" id="kecamatan / Kota" class="form-control {{
                             !fg2.get('kecamatan').valid && fg2.get('kecamatan').touched ? 'is-invalid' : ''
-                          }}" placeholder="Kelurahan" required autofocus formControlName="kecamatan" autocomplete="kecamatan" />
+                          }}" placeholder="Kelurahan" required formControlName="kecamatan" autocomplete="kecamatan" />
                         <span class="invalid-feedback" role="alert">
                           <strong *ngIf="fg2.get('kecamatan').hasError('required')">
                             Kecamatan Tidak Boleh Kosong! <br />
