@@ -219,12 +219,8 @@ export class UserController {
           (resUserSave as any)._email = resUserSave.email;
           (resUserSave as any)._session_origin = resUserSave.session_origin;
           const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
-          if ('kartu_tanda_penduduk_' in noPwdSes && noPwdSes.kartu_tanda_penduduk_) {
-            delete noPwdSes.kartu_tanda_penduduk_;
-          }
-          if ('profile_' in noPwdSes && noPwdSes.profile_) {
-            delete noPwdSes.profile_;
-          }
+          delete noPwdSes.kartu_tanda_penduduk_;
+          delete noPwdSes.profile_;
           const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
           selectedUser.session_origin = clientOriginIpCc.origin_ip;
           selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes });

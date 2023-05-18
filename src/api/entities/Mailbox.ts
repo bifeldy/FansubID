@@ -16,22 +16,22 @@ export class Mailbox implements MailboxModel {
   @Column({ type: 'text' })
   from: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   to: string;
 
-  @Column({ type: 'text', default: null })
+  @Column({ type: 'text', nullable: true })
   cc: string;
 
-  @Column({ type: 'text', default: null })
+  @Column({ type: 'text', nullable: true })
   bcc: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   subject: string;
 
-  @Column({ type: 'text', default: null })
+  @Column({ type: 'text', nullable: true })
   html: string;
 
-  @Column({ type: 'text', default: null })
+  @Column({ type: 'text', nullable: true })
   text: string;
 
   @Column({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

@@ -52,113 +52,116 @@ export class MailWebhookController {
   @FilterApiKeyAccess()
   async mailHook(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const userTarget = [];
-      let stringRecipient = req.body.To;
-      if (req.body.Cc) {
-        stringRecipient += `, ${req.body.Cc}`;
-      }
-      if (req.body.Bcc) {
-        stringRecipient += `, ${req.body.Bcc}`;
-      }
-      for (const recipient of stringRecipient.split(', ')) {
-        if (recipient.includes(`@${environment.mailTrap.domain}`)) {
-          let email = recipient;
-          if (recipient.includes('<') && recipient.includes('>')) {
-            email = recipient.split('<')[1].split('>')[0];
-          }
-          userTarget.push(email.split('@')[0]);
+      if ('From' in req.body) {
+        const userTarget = [];
+        let stringRecipient = req.body.To;
+        if (req.body.Cc) {
+          stringRecipient += `, ${req.body.Cc}`;
         }
-      }
-      const usersCount = await this.userRepo.count({
-        where: [
-          {
-            username: In(userTarget),
-            verified: true
-          }
-        ]
-      });
-      if (usersCount === 0) {
-        throw new HttpException({
-          info: `🙄 404 - Mail Webhook API :: Gagal Menyimpan Email 😪`,
-          result: {
-            message: 'Pengguna Tidak Terdaftar!'
-          }
-        }, HttpStatus.NOT_FOUND);
-      }
-      const mailbox = this.mailboxRepo.new();
-      mailbox.mail = req.body['Message-Id'];
-      mailbox.from = req.body.From;
-      mailbox.to = req.body.To;
-      mailbox.cc = req.body.Cc;
-      mailbox.bcc = req.body.Bcc;
-      mailbox.subject = req.body.Subject;
-      mailbox.html = req.body['body-html'];
-      mailbox.text = req.body['body-plain'];
-      mailbox.date = new Date(req.body.Date);
-      if (req.files?.length > 0) {
-        const abortController = new AbortController();
-        let attachments = [];
-        for (const file of req.files as any) {
-          const attachment = this.attachmentRepo.new();
-          attachment.name = file.filename;
-          attachment.ext = file.originalname.split('.').pop().toLowerCase();
-          attachment.size = file.size;
-          attachment.mime = file.mimetype;
-          const resAttachmentSave = await this.attachmentRepo.save(attachment);
-          const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-          const fIdx = files.findIndex(f => f.name.includes(resAttachmentSave.name));
-          if (fIdx >= 0) {
-            attachments.push(resAttachmentSave);
-            // Upload Attachment -- Jpg, Png, etc
-            if (environment.production) {
-              this.gdrive.gDrive(true).then(async (gdrive) => {
-                const dfile = await gdrive.files.create({
-                  requestBody: {
-                    name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-                    parents: [environment.gCloudPlatform.gDrive.folder_id],
-                    mimeType: resAttachmentSave.mime
-                  },
-                  media: {
-                    mimeType: resAttachmentSave.mime,
-                    body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
-                  },
-                  fields: 'id'
-                }, { signal: abortController.signal });
-                resAttachmentSave.mime = dfile.data.mimeType;
-                resAttachmentSave.google_drive = dfile.data.id;
-                await this.attachmentRepo.save(resAttachmentSave);
-                this.gs.deleteAttachment(files[fIdx].name);
-              }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+        if (req.body.Bcc) {
+          stringRecipient += `, ${req.body.Bcc}`;
+        }
+        for (const recipient of stringRecipient.split(', ')) {
+          if (recipient.includes(`@${environment.mailTrap.domain}`)) {
+            let email = recipient;
+            if (recipient.includes('<') && recipient.includes('>')) {
+              email = recipient.split('<')[1].split('>')[0];
             }
-          } else {
-            abortController.abort();
-            await this.attachmentRepo.remove(resAttachmentSave);
-            for (const a of attachments) {
-              if (a.google_drive) {
+            userTarget.push(email.split('@')[0]);
+          }
+        }
+        const usersCount = await this.userRepo.count({
+          where: [
+            {
+              username: In(userTarget),
+              verified: true
+            }
+          ]
+        });
+        if (usersCount === 0) {
+          throw new HttpException({
+            info: `🙄 404 - Mail Webhook API :: Gagal Menyimpan Email 😪`,
+            result: {
+              message: 'Pengguna Tidak Terdaftar!'
+            }
+          }, HttpStatus.NOT_FOUND);
+        }
+        const mailbox = this.mailboxRepo.new();
+        mailbox.mail = req.body['Message-Id'];
+        mailbox.from = req.body.From;
+        mailbox.to = req.body.To;
+        mailbox.cc = req.body.Cc;
+        mailbox.bcc = req.body.Bcc;
+        mailbox.subject = req.body.Subject;
+        mailbox.html = req.body['body-html'];
+        mailbox.text = req.body['body-plain'];
+        mailbox.date = new Date(req.body.Date);
+        if (req.files?.length > 0) {
+          const abortController = new AbortController();
+          let attachments = [];
+          for (const file of req.files as any) {
+            const attachment = this.attachmentRepo.new();
+            attachment.name = file.filename;
+            attachment.ext = file.originalname.split('.').pop().toLowerCase();
+            attachment.size = file.size;
+            attachment.mime = file.mimetype;
+            const resAttachmentSave = await this.attachmentRepo.save(attachment);
+            const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
+            const fIdx = files.findIndex(f => f.name.includes(resAttachmentSave.name));
+            if (fIdx >= 0) {
+              attachments.push(resAttachmentSave);
+              // Upload Attachment -- Jpg, Png, etc
+              if (environment.production) {
                 this.gdrive.gDrive(true).then(async (gdrive) => {
-                  await gdrive.files.delete({ fileId: a.google_drive }, { signal: null });
+                  const dfile = await gdrive.files.create({
+                    requestBody: {
+                      name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                      parents: [environment.gCloudPlatform.gDrive.folder_id],
+                      mimeType: resAttachmentSave.mime
+                    },
+                    media: {
+                      mimeType: resAttachmentSave.mime,
+                      body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
+                    },
+                    fields: 'id'
+                  }, { signal: abortController.signal });
+                  resAttachmentSave.mime = dfile.data.mimeType;
+                  resAttachmentSave.google_drive = dfile.data.id;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                  this.gs.deleteAttachment(files[fIdx].name);
                 }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
               }
-              await this.attachmentRepo.remove(a);
-            }
-            attachments = [];
-            throw new HttpException({
-              info: `🙄 404 - Mail Webhook API :: Gagal Mencari Lampiran 😪`,
-              result: {
-                message: 'Lampiran Tidak Ditemukan!'
+            } else {
+              abortController.abort();
+              await this.attachmentRepo.remove(resAttachmentSave);
+              for (const a of attachments) {
+                if (a.google_drive) {
+                  this.gdrive.gDrive(true).then(async (gdrive) => {
+                    await gdrive.files.delete({ fileId: a.google_drive }, { signal: null });
+                  }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+                }
+                await this.attachmentRepo.remove(a);
               }
-            }, HttpStatus.NOT_FOUND);
+              attachments = [];
+              throw new HttpException({
+                info: `🙄 404 - Mail Webhook API :: Gagal Mencari Lampiran 😪`,
+                result: {
+                  message: 'Lampiran Tidak Ditemukan!'
+                }
+              }, HttpStatus.NOT_FOUND);
+            }
           }
+          mailbox.attachment_ = attachments;
         }
-        mailbox.attachment_ = attachments;
+        const mailboxSave = await this.mailboxRepo.save(mailbox);
+        return {
+          info: '😍 201 - Mail Webhook API :: Receive New Email 🥰',
+          header: req.headers,
+          body: req.body,
+          result: mailboxSave
+        };
       }
-      const mailboxSave = await this.mailboxRepo.save(mailbox);
-      return {
-        info: '😍 201 - Mail Webhook API :: Receive New Email 🥰',
-        header: req.headers,
-        body: req.body,
-        result: mailboxSave
-      };
+      throw 'Data Tidak Lengkap!';
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

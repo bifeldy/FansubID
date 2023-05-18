@@ -163,6 +163,15 @@ export class MailController {
             return { email: bcc };
           });
         }
+        const recipient = `${mailbox.to} ${mailbox.cc} ${mailbox.bcc}`;
+        if (recipient.includes(`${user.username}@${environment.mailTrap.domain}`)) {
+          throw new HttpException({
+            info: `🙄 400 - Mail API :: Gagal Mengirim Email 😪`,
+            result: {
+              message: 'Tidak Boleh Mengirim Email Ke Diri Sendiri!'
+            }
+          }, HttpStatus.BAD_REQUEST);
+        }
         const mailSend = await this.ms.mailTrapSend(mailBody);
         if (mailSend) {
           mailbox.mail = mailSend.message_ids[0];
