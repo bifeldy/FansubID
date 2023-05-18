@@ -26,7 +26,7 @@
     "bifeldy:express": "ng run fansubid:server:production",
     "bifeldy:dev": "node --max_old_space_size=4096 node_modules\\@angular\\cli\\bin\\ng run fansubid:serve-ssr",
     "bifeldy:prod": "ng build --configuration production && ng run fansubid:server:production",
-    "bifeldy:start": "node dist\\fansubid\\server\\main.js",
+    "bifeldy:start": "mklink /D dist\\fansubid\\browser\\assets ..\\..\\..\\src\\assets && node dist\\fansubid\\server\\main.js",
     "bifeldy:lint": "node --max_old_space_size=4096 node_modules\\@angular\\cli\\bin\\ng lint",
     "postinstall": "ngcc"
   },
