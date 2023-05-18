@@ -13,6 +13,7 @@ import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorato
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified.decorator';
 
+import { ApiKeyService } from '../repository/api-key.service';
 import { BerkasService } from '../repository/berkas.service';
 import { FansubMemberService } from '../repository/fansub-member.service';
 import { KartuTandaPendudukService } from '../repository/kartu-tanda-penduduk.service';
@@ -29,6 +30,7 @@ import { DiscordService } from '../services/discord.service';
 export class UserController {
 
   constructor(
+    private aks: ApiKeyService,
     private berkasRepo: BerkasService,
     private cs: CryptoService,
     private ds: DiscordService,
@@ -223,6 +225,8 @@ export class UserController {
           if ('profile_' in noPwdSes && noPwdSes.profile_) {
             delete noPwdSes.profile_;
           }
+          const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
+          selectedUser.session_origin = clientOriginIpCc.origin_ip;
           selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes });
           resUserSave = await this.userRepo.save(selectedUser);
           res.cookie(environment.tokenName, resUserSave.session_token, {
