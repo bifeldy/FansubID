@@ -84,11 +84,11 @@ export class LostAccountFindController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: '🙄 404 - Lost Account API :: Pencarian Gagal 😪',
+        info: '🙄 400 - Lost Account API :: Pencarian Gagal 😪',
         result: {
           message: 'Akun Tidak Ditemukan!'
         }
-      }, HttpStatus.NOT_FOUND);
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 
