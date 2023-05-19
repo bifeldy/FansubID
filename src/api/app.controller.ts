@@ -78,26 +78,4 @@ export class AppController {
     });
   }
 
-  // @Post('/lost-account-find')
-  // @FilterApiKeyAccess()
-  // async lostAccoundFind(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-  //   const user: UserModel = res.locals['user'];
-  //   return {
-  //     info: '😚 200 - Lost API :: Berhasil Menemukan Akun 🤩',
-  //     result: user
-  //   };
-  // }
-
-  // @Post('/lost-account-reset')
-  // @FilterApiKeyAccess()
-  // async lostAccoundReset(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-  //   const user: UserModel = res.locals['user'];
-  //   return {
-  //     info: '😚 200 - Lost API :: Berhasil Reset Password Yeay 🤩',
-  //     result: {
-  //       token: user.session_token
-  //     }
-  //   };
-  // }
-
 }

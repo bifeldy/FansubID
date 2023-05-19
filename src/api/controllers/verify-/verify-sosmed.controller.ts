@@ -210,7 +210,7 @@ export class VerifySosmedController {
           }
         }, HttpStatus.BAD_REQUEST);
       }
-      await this.insertOrUpdate(SosMedModel.DISCORD, user, res_json.id, tokens.refresh_token);
+      await this.insertOrUpdate(SosMedModel.GOOGLE, user, res_json.id, tokens.refresh_token);
       this.ms.sendVerifikasiMail(
         {
           nama: user.kartu_tanda_penduduk_.nama,
