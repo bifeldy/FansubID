@@ -164,12 +164,12 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  get isDiscord(): boolean {
-    return this.isHaveDDL && this.berkasData.attachment_?.discord;
+  isDiscord(attachment): boolean {
+    return this.isHaveDDL && attachment?.discord;
   }
 
-  async ddl(id): Promise<void> {
-    if (this.isDiscord) {
+  async ddl(attachment): Promise<void> {
+    if (this.isDiscord(attachment)) {
       this.subsDialog = (await this.ds.openKonfirmasiDialog(
         `Ekstensi CORS Unblock`,
         `
@@ -212,33 +212,33 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           this.gs.log('[INFO_DIALOG_CLOSED]', re);
           // TODO :: Create My Own Browser Extension For Bypassing CORS (?)
           if (re !== undefined) {
-            this.dm.startDownload(id, (re === true));
+            this.dm.startDownload(attachment.id, (re === true));
           }
           this.subsDialog.unsubscribe();
         }
       });
     } else {
-      this.dm.startDownload(id);
+      this.dm.startDownload(attachment.id);
     }
   }
 
-  cancel_dl(id): void {
-    this.dm.cancelDownload(id);
+  cancel_dl(attachment): void {
+    this.dm.cancelDownload(attachment.id);
   }
 
-  saveFileAs(id): void {
-    this.dm.saveFileAs(id);
+  saveFileAs(attachment): void {
+    this.dm.saveFileAs(attachment.id);
   }
 
-  standardDdl(id): void {
-    this.wb.winboxOpenUri(this.ddlUrlLink(id));
+  standardDdl(attachment): void {
+    this.wb.winboxOpenUri(this.ddlUrlLink(attachment));
   }
 
-  ddlUrlLink(id): string {
-    if (!this.isDiscord) {
-      return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
+  ddlUrlLink(attachment): string {
+    if (!this.isDiscord(attachment)) {
+      return `${environment.apiUrl}/attachment/${attachment.id}?ngsw-bypass=true`;
     }
-    return `${environment.apiUrl}/ddl-seek/${id}?ngsw-bypass=true`;
+    return `${environment.apiUrl}/ddl-seek/${attachment.id}?ngsw-bypass=true`;
   }
 
   setupVjs(): void {
