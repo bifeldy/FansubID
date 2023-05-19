@@ -142,7 +142,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   }
 
   get ddlVideo(): string {
-    return this.ddlUrlLink(this.berkasData.attachment_.id);
+    return this.ddlUrlLinkVideo(this.berkasData.attachment_.id);
   }
 
   get videoThumb(): string {
@@ -164,12 +164,12 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  isDiscord(attachment): boolean {
-    return this.isHaveDDL && attachment?.discord;
+  get isDiscord(): boolean {
+    return this.isHaveDDL && this.berkasData.attachment_?.discord;
   }
 
-  async ddl(attachment): Promise<void> {
-    if (this.isDiscord(attachment)) {
+  async ddl(id): Promise<void> {
+    if (this.isDiscord) {
       this.subsDialog = (await this.ds.openKonfirmasiDialog(
         `Ekstensi CORS Unblock`,
         `
@@ -212,33 +212,41 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           this.gs.log('[INFO_DIALOG_CLOSED]', re);
           // TODO :: Create My Own Browser Extension For Bypassing CORS (?)
           if (re !== undefined) {
-            this.dm.startDownload(attachment.id, (re === true));
+            this.dm.startDownload(id, (re === true));
           }
           this.subsDialog.unsubscribe();
         }
       });
     } else {
-      this.dm.startDownload(attachment.id);
+      this.dm.startDownload(id);
     }
   }
 
-  cancel_dl(attachment): void {
-    this.dm.cancelDownload(attachment.id);
+  cancel_dl(id): void {
+    this.dm.cancelDownload(id);
   }
 
-  saveFileAs(attachment): void {
-    this.dm.saveFileAs(attachment.id);
+  saveFileAs(id): void {
+    this.dm.saveFileAs(id);
   }
 
-  standardDdl(attachment): void {
-    this.wb.winboxOpenUri(this.ddlUrlLink(attachment));
+  standardDdlVideo(id): void {
+    this.wb.winboxOpenUri(this.ddlUrlLinkVideo(id));
   }
 
-  ddlUrlLink(attachment): string {
-    if (!this.isDiscord(attachment)) {
-      return `${environment.apiUrl}/attachment/${attachment.id}?ngsw-bypass=true`;
+  ddlUrlLinkVideo(id): string {
+    if (!this.isDiscord) {
+      return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
     }
-    return `${environment.apiUrl}/ddl-seek/${attachment.id}?ngsw-bypass=true`;
+    return `${environment.apiUrl}/ddl-seek/${id}?ngsw-bypass=true`;
+  }
+
+  standardDdlSubsFont(id): void {
+    this.wb.winboxOpenUri(this.ddlUrlLinkSubsFont(id));
+  }
+
+  ddlUrlLinkSubsFont(id): string {
+    return `${environment.apiUrl}/attachment/${id}?ngsw-bypass=true`;
   }
 
   setupVjs(): void {

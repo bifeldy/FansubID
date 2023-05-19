@@ -68,17 +68,17 @@
               </div>
               <div class="col-12 text-center" *ngIf="isHaveDDL">
                 <div class="px-3">
-                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_)"
+                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
                     matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
                     <mat-icon class="me-1">movie</mat-icon>
                     {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
                   </button>
-                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="cancel_dl(berkasData.attachment_)"
+                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="cancel_dl(berkasData.attachment_.id)"
                     matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
                     <mat-icon class="me-1">close</mat-icon>
                     Batal Unduh
                   </button>
-                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_)" *ngIf="lampiran.data"
+                  <button class="m-1 w-100" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
                     matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x">
                     <mat-icon class="me-1">save</mat-icon>
                     {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }}
@@ -93,17 +93,17 @@
                     </div>
                   </div>
                   <div class="col" *ngIf="isHaveDDL && !isDiscord">
-                    <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdl(berkasData.attachment_)" style="cursor: pointer;">
+                    <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdlVideo(berkasData.attachment_.id)" style="cursor: pointer;">
                       Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
                     </div>
                   </div>
                   <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
-                    (click)="standardDdl(s)" matTooltip="{{ s.name }}">
+                    (click)="standardDdlSubsFont(s.id)" matTooltip="{{ s.name }}">
                     <mat-icon class="me-1">notes</mat-icon>
                     {{ s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
                   </button>
                   <button class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let f of berkasData.attachment_.fonts_"
-                    (click)="standardDdl(f)" matTooltip="{{ f.name }}">
+                    (click)="standardDdlSubsFont(f.id)" matTooltip="{{ f.name }}">
                     <mat-icon class="me-1">font_download</mat-icon>
                     {{ f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
                   </button>
