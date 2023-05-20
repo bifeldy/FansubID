@@ -165,4 +165,9 @@ export const environment = {
     ],
   },
   malClientId: SECRETS().MAL_CLIENT_ID,                                                                          // '',
+  idCloudHost: {
+    url: 'wss://api.idcloudhost.com/v1/jkt01/metrics-ws/index',
+    apiKey: SECRETS().ID_CLOUD_HOST_API_KEY,                                                                     // '',
+    uuid: "01b00d5a-905d-4328-bc8d-bf748f1fc3dc"                                                                 // '',
+  }
 };

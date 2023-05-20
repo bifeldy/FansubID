@@ -115,6 +115,7 @@ import { SocketIoService } from './services/socket-io.service';
 
 import { RssFeedTasksService } from './scheduler/rss-feed-tasks.service';
 import { TrackerStatisticsService } from './scheduler/tracker-statistics-tasks.service';
+import { StatsServerService } from './scheduler/stats-server-tasks.service';
 
 import { AnimeService } from './repository/anime.service';
 import { ApiKeyService } from './repository/api-key.service';
@@ -264,6 +265,7 @@ import { UserService } from './repository/user.service';
     // Service Task Schedulers
     RssFeedTasksService,
     TrackerStatisticsService,
+    StatsServerService,
     // Service Entities
     AnimeService,
     ApiKeyService,

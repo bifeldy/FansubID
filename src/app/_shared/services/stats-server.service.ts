@@ -31,6 +31,14 @@ export class StatsServerService {
 
   latency = 0;
 
+  statsServer = {
+    cpus: 0,
+    mem_ram: 0,
+    disk_io: 0,
+    net_tx: 0,
+    net_rx: 0
+  };
+
   messageChatUnreadCount = 0;
 
   badgeNews = [];
@@ -295,6 +303,14 @@ export class StatsServerService {
         this.quizRoom[room_id] = quiz;
         this.quizRoom[room_id].options = this.gs.shuffle(this.quizRoom[room_id].options);
       }
+    });
+    this.mySocket.on('stats-server', (data) => {
+      this.gs.log('[SOCKET_STATS_SERVER]', data);
+      this.statsServer.mem_ram = data.mem_ram;
+      this.statsServer.disk_io = data.disk_io;
+      this.statsServer.cpus = data.cpus;
+      this.statsServer.net_tx = data.net_tx;
+      this.statsServer.net_rx = data.net_rx;
     });
   }
 

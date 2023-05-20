@@ -28,6 +28,7 @@ interface SECRETS_DATA_TYPE {
   DISCORD_CLIENT_SECRET: string;
   DISCORD_BOT_LOGIN_TOKEN: string;
   MAL_CLIENT_ID: string;
+  ID_CLOUD_HOST_API_KEY: string;
 };
 
 let SECRETS_DATA: SECRETS_DATA_TYPE = null;

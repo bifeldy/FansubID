@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 
 import { StatsServerComponent } from './stats-server.component';
 
+import { CustomPipeModule } from '../../pipes/custom-pipe.module';
+
 @NgModule({
   declarations: [StatsServerComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    CustomPipeModule
   ],
   exports: [StatsServerComponent]
 })
