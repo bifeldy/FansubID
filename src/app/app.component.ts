@@ -237,7 +237,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateBackgroundImage(): void {
-    const urlPath = this.router.url.substring(1).split('/')[0].split('?')[0];
+    const urlPath = this.router.url.split('?')[0].substring(1).split('/')[0];
     this.gs.bgImgUrlPath = urlPath ? `/assets/img/router/${urlPath}.png` : '';
   }
 
@@ -246,7 +246,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subsVerify = this.as.verify(this.as.token).subscribe({
       next: success => {
         this.gs.log('[VERIFY_SUCCESS]', success);
-        this.ss.socketLeaveAndJoinNewRoom(this.gs.previousUrl, this.router.url);
+        this.ss.socketLeaveAndJoinNewRoom(this.gs.previousUrl, this.router.url.split('?')[0]);
         this.bs.idle();
       },
       error: error => {

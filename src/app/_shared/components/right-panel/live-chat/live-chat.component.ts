@@ -65,7 +65,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.liveChatResult = this.ls.getItem(this.gs.localStorageKeys.LiveChatResults, true) || this.liveChatResult;
-      this.liveChatResult.roomId = this.router.url;
+      this.liveChatResult.roomId = this.router.url.split('?')[0];
       this.subsCurrentRoom = this.ss.currentRoom.subscribe({
         next: current => {
           this.currentRoom = current;
@@ -194,7 +194,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   login(): void {
     this.router.navigate(['/login'], {
       queryParams: {
-        returnUrl: this.router.url
+        returnUrl: this.router.url.split('?')[0]
       }
     });
   }

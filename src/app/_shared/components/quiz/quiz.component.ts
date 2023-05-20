@@ -53,7 +53,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   get getQuiz(): any {
-    return this.quiz.getCurrentQuizQuestion(this.router.url);
+    return this.quiz.getCurrentQuizQuestion(this.router.url.split('?')[0]);
   }
 
   ngOnDestroy(): void {
@@ -73,7 +73,7 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   selectAnswer(data: any): void {
     this.quiz.answerQuestion({
-      roomId: this.router.url,
+      roomId: this.router.url.split('?')[0],
       randomInteger: this.getQuiz.randomInteger,
       answer: data
     });

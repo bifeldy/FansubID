@@ -564,7 +564,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['/login'], {
         queryParams: {
-          returnUrl: this.router.url
+          returnUrl: this.router.url.split('?')[0]
         }
       });
     }

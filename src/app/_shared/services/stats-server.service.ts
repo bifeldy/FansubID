@@ -140,7 +140,7 @@ export class StatsServerService {
       this.pingPong();
       this.notif.removeNotif(`${environment.siteName.toUpperCase()}_SOCKET_DISCONNECTED`);
       this.timedOut = setTimeout(() => {
-        this.socketLeaveAndJoinNewRoom(null, this.router.url);
+        this.socketLeaveAndJoinNewRoom(null, this.router.url.split('?')[0]);
       }, 1234);
     });
     this.mySocket.on('connect_error', () => {

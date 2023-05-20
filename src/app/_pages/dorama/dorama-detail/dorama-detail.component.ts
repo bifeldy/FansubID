@@ -121,7 +121,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
               this.fs.initializeFab(
                 null,
                 '/assets/img/logo/mdl.png', 'Buka Di MyDramaList',
-                `https://mydramalist.com/${this.router.url.split('/')[this.router.url.split('/').length - 1]}`,
+                `https://mydramalist.com/${this.router.url.split('?')[0].split('/')[this.router.url.split('?')[0].split('/').length - 1]}`,
                 true
               );
               this.getFansubDorama();

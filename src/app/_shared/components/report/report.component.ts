@@ -169,8 +169,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.reportTrackType = this.router.url.split('/')[1];
-      this.idSlugUsername = this.router.url.split('/')[2];
+      this.reportTrackType = this.router.url.split('?')[0].split('/')[1];
+      this.idSlugUsername = this.router.url.split('?')[0].split('/')[2];
       this.ss.socketEmit('track-get', {
         trackType: this.reportTrackType,
         idSlugUsername: this.idSlugUsername

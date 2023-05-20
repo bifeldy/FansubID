@@ -268,7 +268,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!', null, true);
         this.router.navigate(['/verify'], {
           queryParams: {
-            returnUrl: this.router.url
+            returnUrl: this.router.url.split('?')[0]
           }
         });
       }
