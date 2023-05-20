@@ -87,28 +87,29 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   async trackGet(client: Socket, payload: PayloadModel): Promise<CallbackModel> {
     try {
       let selected = null;
+      const idSlugUsername = payload.idSlugUsername.split('?')[0];
       if (payload.trackType === 'berkas') {
         selected = await this.berkasRepo.findOneOrFail({
           where: [
-            { id: Equal(payload.idSlugUsername) }
+            { id: Equal(idSlugUsername) }
           ]
         });
       } else if (payload.trackType === 'fansub') {
         selected = await this.fansubRepo.findOneOrFail({
           where: [
-            { slug: ILike(payload.idSlugUsername) }
+            { slug: ILike(idSlugUsername) }
           ]
         });
       } else if (payload.trackType === 'user') {
         selected = await this.userRepo.findOneOrFail({
           where: [
-            { username: ILike(payload.idSlugUsername) }
+            { username: ILike(idSlugUsername) }
           ]
         });
       } else if (payload.trackType === 'news') {
         selected = await this.newsRepo.findOneOrFail({
           where: [
-            { id: Equal(parseInt(payload.idSlugUsername)) }
+            { id: Equal(parseInt(idSlugUsername)) }
           ]
         });
       } else {
@@ -168,10 +169,12 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
         unique_user: 0,
         verified_user: 0,
         un_verified_user: 0,
-        visitor: {
-          visitor_date: new Date(),
-          visitor_count: 0
-        }
+        visitor: [
+          {
+            visitor_date: new Date(),
+            visitor_count: 0
+          }
+        ]
       };
     }
   }

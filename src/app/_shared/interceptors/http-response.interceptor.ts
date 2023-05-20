@@ -71,7 +71,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             if (pathUrl.startsWith(environment.apiUrl)) {
               pathUrl = pathUrl.slice(environment.apiUrl.length);
             }
-            this.ss.socketEmitVolatile('track-set', { pathUrl });
+            this.ss.socketEmitVolatile('track-set', { pathUrl: pathUrl.split('?')[0] });
           }
         }
       }),

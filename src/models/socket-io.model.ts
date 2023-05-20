@@ -22,10 +22,10 @@ export interface CallbackModel {
   unique_user?: number;
   verified_user?: number;
   un_verified_user?: number;
-  visitor?: {
+  visitor?: [{
     visitor_date?: number | Date;
     visitor_count?: number;
-  };
+  }];
   [data: string]: any;
 }
 
