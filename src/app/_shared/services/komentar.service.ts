@@ -37,4 +37,8 @@ export class KomentarService {
     return this.api.postData(`/comment`, commentData);
   }
 
+  getHighlight(commentData): Observable<JsonResponse<KomentarModel>> {
+    return this.api.patchData(`/comment`, commentData);
+  }
+
 }

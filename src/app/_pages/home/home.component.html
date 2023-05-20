@@ -96,7 +96,7 @@
           <mat-selection-list [multiple]="false">
             <mat-list-option *ngFor="let k of komentarData | slice:0:5" class="h-100">
               <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
-              <a class="text-truncate text-decoration-none" routerLink="{{ k.path }}">
+              <a class="text-truncate text-decoration-none" (click)="openComment(k)">
                 <span class="bg-bifeldy px-2 me-1 text-danger" style="position: absolute; right: 0;" matTooltip="{{ k.created_at | date:'d MMMM y, hh:mm:ss a z' }}">
                   {{ k.created_at | dateAgo }}
                 </span>

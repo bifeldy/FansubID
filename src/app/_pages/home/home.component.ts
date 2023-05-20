@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { GlobalService } from '../../_shared/services/global.service';
 import { NewsService } from '../../_shared/services/news.service';
@@ -23,6 +24,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   subsRssFeed = null;
 
   constructor(
+    private router: Router,
     private gs: GlobalService,
     private news: NewsService,
     private komen: KomentarService,
@@ -100,6 +102,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   openRssFeed(link: string): void {
     this.wb.winboxOpenUri(this.gs.rssLink(link));
+  }
+
+  openComment(k): void {
+    this.router.navigate([k.path], {
+      queryParams: {
+        comment: k.id
+      }
+    });
   }
 
 }

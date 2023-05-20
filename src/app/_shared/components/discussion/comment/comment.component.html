@@ -1,0 +1,70 @@
+<div class="row" *ngIf="rootCommentBox && AS.currentUserSubject?.value">
+  <mat-form-field appearance="outline" class="col-12" [color]="'accent'">
+    <mat-label>Buat Komentar Baru</mat-label>
+    <input matInput placeholder="Buat Baru ..." [(ngModel)]="commentToSend" />
+    <mat-icon matSuffix>quickreply</mat-icon>
+  </mat-form-field>
+  <div class="col-12 text-end pe-0 mb-3">
+    <button mat-button color="accent" (click)="sendComment(null)">
+      Kirim
+      <mat-icon class="ms-1">send</mat-icon>
+    </button>
+  </div>
+</div>
+<div class="row" appDomChange>
+  <div class="d-flex my-1" *ngFor="let k of komentar">
+    <div class="flex-shrink-0">
+      <img width="40" height="40" src="{{ k.user_.image_url }}" style="object-fit: contain; object-position: center;" />
+    </div>
+    <div class="flex-grow-1 ms-3 row {{ recursionCount === 0 ? 'me-2' : ''}}">
+      <div class="col-8 p-0" (click)="showHideCommentBox(k)">
+        <p class="m-0">
+          <b class="text-warning" style="cursor: pointer;" (click)="openUserProfile(k); $event.stopPropagation()">
+            {{ k.user_.username }}
+          </b>
+          <small class="ms-3 text-bifeldy" matTooltip="{{ k.created_at | date:'d MMMM y, hh:mm:ss a z' }}">
+            {{ k.created_at | dateAgo }}
+          </small>
+        </p>
+        <p class="mb-1" style="line-height: normal;">{{ k.comment }}</p>
+      </div>
+      <div class="col p-0 text-end">
+        <button mat-icon-button color="accent" (click)="copyCommentLink(k)" matTooltip="Salin Tautan">
+          <mat-icon>link</mat-icon>
+        </button>
+      </div>
+      <mat-form-field appearance="outline" class="mt-2 col-12" [color]="'accent'" *ngIf="k.reply_mode && AS.currentUserSubject?.value && recursionCount === 0">
+        <mat-label>Balas / Tanggapi</mat-label>
+        <input matInput placeholder="Balas ..." [(ngModel)]="k.reply_to_send" />
+        <mat-icon matSuffix>quickreply</mat-icon>
+      </mat-form-field>
+      <div class="col-12 p-0">
+        <div class="row">
+          <div class="col-6">
+            <button mat-button class="ps-1 pe-2" color="accent" *ngIf="k.reply_count > 0" (click)="showHideComment(k)">
+              <mat-icon class="me-1" *ngIf="!k.show_reply">expand_more</mat-icon>
+              <mat-icon class="me-1" *ngIf="k.show_reply">expand_less</mat-icon>
+              {{ k.show_reply ? 'Sembunyikan' : 'Tampilkan' }} {{ k.reply_count }} balasan
+            </button>
+          </div>
+          <div class="col-6 text-end">
+            <button mat-button color="accent" *ngIf="k.reply_mode && AS.currentUserSubject?.value && recursionCount === 0" (click)="sendComment(k)">
+              Kirim
+              <mat-icon class="ms-1">send</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <app-comment [parent]="k" [komentar]="k.reply" *ngIf="k.show_reply" [recursionCount]="recursionCount + 1"></app-comment>
+    </div>
+  </div>
+  <div class="col-12"*ngIf="(count >= 10 && !pageFinished) || (parent?.reply_count >= 10 && !parent?.reply_page_finised)">
+    <button mat-button color="accent" (click)="loadNextPage()">
+      <mat-icon class="me-1">subdirectory_arrow_right</mat-icon>
+      Load More ...
+    </button>
+  </div>
+</div>
+<div class="row" *ngIf="komentar && komentar.length <= 0">
+  <app-no-data class="col-12 p-3"></app-no-data>
+</div>

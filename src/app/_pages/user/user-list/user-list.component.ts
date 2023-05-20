@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { environment } from '../../../../environments/app/environment';
@@ -40,6 +41,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   groupFansub = [];
 
   constructor(
+    private clipboard: Clipboard,
     private router: Router,
     private snackBar: MatSnackBar,
     private as: AuthService,
@@ -156,9 +158,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   copyApiKey(ak: any): void {
-    navigator?.clipboard?.writeText(ak.api_key).then(() => {
-      this.snackBar.open(`API Key :: ${ak.api_key} :: Telah Di Salin Pada Clipboard`, 'Ok');
-    });
+    if (this.clipboard.copy(ak.api_key)) {
+      this.snackBar.open(`API Key :: Telah Di Salin Pada Clipboard`, 'Ok');
+    }
   }
 
   generateNewApiKey(): void {
@@ -370,6 +372,14 @@ export class UserListComponent implements OnInit, OnDestroy {
             this.subsDialog.unsubscribe();
           }
         });
+      }
+    });
+  }
+
+  openComment(k): void {
+    this.router.navigate([k.path], {
+      queryParams: {
+        comment: k.id
       }
     });
   }

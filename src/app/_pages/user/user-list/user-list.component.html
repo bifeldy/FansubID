@@ -20,7 +20,7 @@
           <mat-selection-list [multiple]="false">
             <mat-list-option *ngFor="let fk of feedKomentarData | slice:0:5" class="h-100">
               <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
-              <a class="text-truncate text-decoration-none" routerLink="{{ fk.path }}">
+              <a class="text-truncate text-decoration-none" (click)="openComment(fk)">
                 <span class="bg-bifeldy px-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
                 <span class="text-warning">{{ fk.comment }}</span>
               </a>

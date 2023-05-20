@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { CommentComponent } from './comment/comment.component';
 import { DiscussionComponent } from './discussion.component';
+import { HighlightComponent } from './highlight/highlight.component';
 
 import { CustomPipeModule } from '../../pipes/custom-pipe.module';
 
@@ -14,7 +16,9 @@ import { CustomDirectivesModule } from '../../directives/custom-directive.module
 
 @NgModule({
   declarations: [
-    DiscussionComponent
+    CommentComponent,
+    DiscussionComponent,
+    HighlightComponent
   ],
   imports: [
     CommonModule,

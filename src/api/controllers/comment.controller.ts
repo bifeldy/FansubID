@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Patch, Post, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike, IsNull } from 'typeorm';
@@ -95,7 +95,7 @@ export class CommentController {
       if ('path' in req.body && 'comment' in req.body) {
         const user: UserModel = res.locals['user'];
         const komen = this.komentarRepo.new();
-        komen.path = req.body.path;
+        komen.path = req.body.path.split('?')[0];
         komen.comment = req.body.comment;
         if ('parent' in req.body) {
           const comment =  await this.komentarRepo.findOneOrFail({
@@ -131,7 +131,7 @@ export class CommentController {
   @Get('/:id')
   @HttpCode(200)
   @FilterApiKeyAccess()
-  async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async getReplyByParentId(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
@@ -150,7 +150,7 @@ export class CommentController {
             id: 'DESC'
           })
         },
-        relations: ['parent_komentar_', 'user_'],
+        relations: ['user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
@@ -184,6 +184,51 @@ export class CommentController {
           message: 'Komentar Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @Patch('/')
+  @HttpCode(202)
+  @FilterApiKeyAccess()
+  async getHighlight(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    try {
+      if ('id' in req.body && 'path' in req.body) {
+        const komen = await this.komentarRepo.findOneOrFail({
+          where: [
+            {
+              id: Equal(req.body.id),
+              path: ILike(req.body.path.split('?')[0])
+            }
+          ],
+          relations: ['parent_komentar_', 'user_']
+        });
+        if ('user_' in komen && komen.user_) {
+          delete komen.user_.created_at;
+          delete komen.user_.updated_at;
+        }
+        (komen as any).reply_count = await this.komentarRepo.count({
+          where: [
+            {
+              parent_komentar_: {
+                id: Equal(komen.id)
+              }
+            }
+          ],
+          relations: ['parent_komentar_']
+        });
+        return {
+          info: `😅 200 - Komentar API :: Detail ${req.body.id} 🤣`,
+          result: komen
+        };
+      }
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: `🙄 400 - Komentar API :: Gagal Mendapatkan Komentar ${req.body.id} 😪`,
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 
