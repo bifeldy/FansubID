@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { ServerInfoModel } from '../../models/socket-io.model';
+import { ServerInfoModel, StatsServerModel } from '../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
 
@@ -19,6 +19,14 @@ export class ConfigService {
   ];
 
   github = null;
+
+  statsServer: StatsServerModel = {
+    cpus: 0,
+    mem_ram: 0,
+    disk_io: 0,
+    net_tx: 0,
+    net_rx: 0
+  };
 
   settings: ServerInfoModel = {
     isMaintenance: false,

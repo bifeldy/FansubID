@@ -140,6 +140,10 @@ export class StatsServerService {
         this.currentServerSubject.next(response.server);
       }
     });
+    this.socketEmitVolatile('stats-server', {}, (response: any) => {
+      this.gs.log('[SOCKET_STATS_SERVER]', response);
+      this.statsServer = response;
+    });
   }
 
   socketListen(): void {
@@ -303,14 +307,6 @@ export class StatsServerService {
         this.quizRoom[room_id] = quiz;
         this.quizRoom[room_id].options = this.gs.shuffle(this.quizRoom[room_id].options);
       }
-    });
-    this.mySocket.on('stats-server', (data) => {
-      this.gs.log('[SOCKET_STATS_SERVER]', data);
-      this.statsServer.mem_ram = data.mem_ram;
-      this.statsServer.disk_io = data.disk_io;
-      this.statsServer.cpus = data.cpus;
-      this.statsServer.net_tx = data.net_tx;
-      this.statsServer.net_rx = data.net_rx;
     });
   }
 

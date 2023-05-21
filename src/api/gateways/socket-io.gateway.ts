@@ -5,7 +5,7 @@ import { Equal, ILike, IsNull } from 'typeorm';
 import { CONSTANTS } from '../../constants';
 
 import { RoleModel } from '../../models/req-res.model';
-import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel } from '../../models/socket-io.model';
+import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel, StatsServerModel } from '../../models/socket-io.model';
 
 import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
@@ -65,7 +65,12 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     return {
       github: this.cfg.github,
       server: this.cfg.serverGet()
-    }
+    };
+  }
+
+  @SubscribeMessage('stats-server')
+  statsServer(client: Socket, payload: PayloadModel): StatsServerModel {
+    return this.cfg.statsServer;
   }
 
   @SubscribeMessage('server-set')

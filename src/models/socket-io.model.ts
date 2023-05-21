@@ -41,6 +41,14 @@ export interface PingPongModel {
   server?: ServerInfoModel;
 }
 
+export interface StatsServerModel {
+  cpus?: number,
+  mem_ram?: number,
+  disk_io?: number,
+  net_tx?: number,
+  net_rx?: number
+}
+
 export interface RoomModel {
   [roomId: string]: {
     [socketId: string]: UserModel;

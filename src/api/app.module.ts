@@ -108,6 +108,7 @@ import { CryptoService } from './services/crypto.service';
 import { DiscordService } from './services/discord.service';
 import { GdriveService } from './services/gdrive.service';
 import { GlobalService } from './services/global.service';
+import { IdCloudHostService } from './services/idcloudhost.service';
 import { MailService } from './services/mail.service';
 import { MkvExtractService } from './services/mkv-extract.service';
 import { QuizService } from './services/quiz.service';
@@ -115,7 +116,6 @@ import { SocketIoService } from './services/socket-io.service';
 
 import { RssFeedTasksService } from './scheduler/rss-feed-tasks.service';
 import { TrackerStatisticsService } from './scheduler/tracker-statistics-tasks.service';
-import { StatsServerService } from './scheduler/stats-server-tasks.service';
 
 import { AnimeService } from './repository/anime.service';
 import { ApiKeyService } from './repository/api-key.service';
@@ -258,6 +258,7 @@ import { UserService } from './repository/user.service';
     DiscordService,
     GdriveService,
     GlobalService,
+    IdCloudHostService,
     MkvExtractService,
     MailService,
     QuizService,
@@ -265,7 +266,6 @@ import { UserService } from './repository/user.service';
     // Service Task Schedulers
     RssFeedTasksService,
     TrackerStatisticsService,
-    StatsServerService,
     // Service Entities
     AnimeService,
     ApiKeyService,
