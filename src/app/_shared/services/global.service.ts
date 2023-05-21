@@ -209,7 +209,7 @@ export class GlobalService {
     if (text) {
       // http://, https://, ftp://
       const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
-      // www. sans http:// or https://
+      // www.
       const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
       // Email addresses
       const emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;

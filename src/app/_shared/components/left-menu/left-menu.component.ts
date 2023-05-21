@@ -68,11 +68,11 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  get sideNavExpanded(): any {
+  get sideNavExpanded(): boolean {
     return this.lms.sideNavExpanded;
   }
 
-  get linkText(): any {
+  get linkText(): boolean {
     return this.lms.linkText;
   }
 

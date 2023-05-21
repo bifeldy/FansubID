@@ -58,7 +58,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
-  get AS(): any {
+  get AS(): AuthService {
     return this.as;
   }
 

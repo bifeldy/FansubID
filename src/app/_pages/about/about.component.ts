@@ -70,7 +70,7 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this. library = pkg.dependencies;
+      this.library = pkg.dependencies;
       this.fs.initializeFab(null, '/assets/img/discord/pink.png', 'Discord Server', environment.discord.join_url, true);
     }
   }

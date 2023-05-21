@@ -103,11 +103,11 @@ export class StatsServerService {
     }
   }
 
-  get currentRoomValue(): any {
+  get currentRoomValue(): RoomInfoModel {
     return this.currentRoomSubject?.value || null;
   }
 
-  get globalRoomValue(): any {
+  get globalRoomValue(): RoomInfoModel {
     return this.globalRoomSubject?.value || null;
   }
 

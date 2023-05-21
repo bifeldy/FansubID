@@ -319,7 +319,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     return (this.fg.get('download_url') as FormArray);
   }
 
-  createDownloadLink(): any {
+  createDownloadLink(): FormGroup {
     const fbGroup = this.fb.group({
       name: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       url: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
@@ -335,7 +335,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.getDownloadUrlControl.removeAt(i);
   }
 
-  addDownloadLink(): any {
+  addDownloadLink(): void {
     this.getDownloadUrlControl.push(this.createDownloadLink());
   }
 
@@ -343,7 +343,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     return (this.fg.get('fansub_list') as FormArray);
   }
 
-  createFansub(): any {
+  createFansub(): FormGroup {
     const fbGroup = this.fb.group({
       fansub_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
       fansub_name: [null, Validators.compose([Validators.required])],
@@ -371,7 +371,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.subsFansubDetail.splice(i, 1);
   }
 
-  addFansub(): any {
+  addFansub(): void {
     this.getFansubControl.push(this.createFansub());
   }
 
