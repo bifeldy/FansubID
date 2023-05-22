@@ -21,11 +21,16 @@
                 </small>
               </mat-error>
             </div>
-            <div class="col-12" *ngIf="imagePhoto && !fg.value.image_photo">
+            <div class="col-12 mb-4" *ngIf="imagePhoto && !fg.value.image_photo">
               <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitPhotoImage()">
                 <mat-icon class="me-1">add_photo_alternate</mat-icon>
                 Unggah
               </button>
+            </div>
+            <div class="col-12 p-3">
+              <mat-slide-toggle formControlName="private" matTooltip="Hanya Tampilkan Informasi Profil">
+                Jadikan Private, Sembunyikan Aktivitas
+              </mat-slide-toggle>
             </div>
           </div>
         </div>

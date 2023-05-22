@@ -15,7 +15,7 @@ import { LocalStorageService } from './local-storage.service';
 export class AuthService {
 
   currentUserSubject: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(null);
-  currentUser: Observable<UserModel> = this.currentUserSubject.asObservable();
+  currentUser: Observable<UserModel> = this.currentUserSubject?.asObservable();
 
   token = null;
 
@@ -36,7 +36,7 @@ export class AuthService {
     this.gs.log('[AUTH_VERIFY]', token);
     return this.api.patchData(`/verify`, { token }).pipe(
       tap(respVerify => {
-        this.currentUserSubject.next(respVerify.result);
+        this.currentUserSubject?.next(respVerify.result);
         this.token = respVerify.token;
       })
     );
@@ -62,7 +62,7 @@ export class AuthService {
   }
 
   removeUser(): void {
-    this.currentUserSubject.next(null);
+    this.currentUserSubject?.next(null);
     this.token = null;
   }
 

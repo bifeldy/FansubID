@@ -32,6 +32,9 @@ export class User implements UserModel {
   @Column({ type: 'boolean', default: false })
   verified: boolean;
 
+  @Column({ type: 'boolean', default: false })
+  private: boolean;
+
   @Exclude()
   @Column({ type: 'text', nullable: true })
   session_token: string;

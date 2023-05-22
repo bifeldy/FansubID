@@ -2,7 +2,7 @@ import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { UserModel } from '../../../models/req-res.model';
+import { RoleModel, UserModel } from '../../../models/req-res.model';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
@@ -39,9 +39,19 @@ export class FansubBerkasController {
           .where('fansub_.id IN (:...id)', { id: fansubId })
           .andWhere('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` });
         if (user?.verified) {
-          // Verified User Can See Private Berkas
+          // Verified User Can See Private Berkas From Public Profile
         } else {
           fileRepoQuery = fileRepoQuery.andWhere('berkas.private = :isPrivate', { isPrivate: false });
+        }
+        fileRepoQuery = fileRepoQuery.andWhere('user_.private = :isPrivate', { isPrivate: false });
+        if (user) {
+          fileRepoQuery = fileRepoQuery.orWhere('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` });
+          if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
+            // Admin & Mod Can See Private Berkas From Private Profile
+          } else {
+            // Current User Can See Private Berkas From Their Private Profile
+            fileRepoQuery = fileRepoQuery.andWhere('user_.id = :userId', { userId: user.id });
+          }
         }
         if (req.query['sort'] && req.query['order']) {
           fileRepoQuery = fileRepoQuery.orderBy(`berkas.${req.query['sort']}`, (req.query['order'] as (any)).toUpperCase());

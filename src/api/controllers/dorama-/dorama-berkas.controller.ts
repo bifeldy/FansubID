@@ -3,7 +3,7 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ILike, In } from 'typeorm';
 
-import { UserModel } from '../../../models/req-res.model';
+import { RoleModel, UserModel } from '../../../models/req-res.model';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
@@ -30,20 +30,37 @@ export class DoramaBerkasController {
       const queryRow = parseInt(req.query['row'] as string);
       const doramaId = req.query['id'] ? (req.query['id'] as string).split(',') : req.body.id;
       if (Array.isArray(doramaId) && doramaId.length > 0) {
-        const [files, count] = await this.berkasRepo.findAndCount({
-          where: [
-            {
-              ...((user?.verified) ? {
-                // Verified User Can See Private Berkas
-              } : {
-                private: false
-              }),
-              name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
-              dorama_: {
-                id: In(doramaId)
-              }
+        const sqlWhere = [
+          {
+            ...((user?.verified) ? {
+              // Verified User Can See Private Berkas From Public Profile
+            } : {
+              private: false
+            }),
+            name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+            dorama_: {
+              id: In(doramaId)
+            },
+            user_: {
+              private: false
             }
-          ],
+          }
+        ];
+        const userFilesCriteria: any = {};
+        if (user) {
+          userFilesCriteria.name = ILike(`%${req.query['q'] ? req.query['q'] : ''}%`);
+          if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
+            // Admin & Mod Can See Private Berkas From All Private Profile
+          } else {
+            // Current User Can See Private Berkas From Their Private Profile
+            userFilesCriteria.user_ = {
+              id: user.id
+            };
+          }
+          sqlWhere.push(userFilesCriteria);
+        }
+        const [files, count] = await this.berkasRepo.findAndCount({
+          where: sqlWhere,
           order: {
             ...((req.query['sort'] && req.query['order']) ? {
               [req.query['sort'] as string]: (req.query['order'] as string).toUpperCase()

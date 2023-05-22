@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/app/environment';
 import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { UserService } from '../../../_shared/services/user.service';
@@ -29,17 +30,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   panelData = [];
 
-  tabData: any = [
-    {
-      name: 'Berkas',
-      icon: 'file_copy',
-      type: 'table',
-      data: {
-        column: ['Proyek', /* 'Image', */ 'Nama Berkas', 'Tanggal', 'Kunjungan', 'Pemilik'],
-        row: []
-      }
-    }
-  ];
+  tabData: any = [];
 
   count = 0;
   page = 1;
@@ -58,6 +49,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private as: AuthService,
     private gs: GlobalService,
     private bs: BusyService,
     private fs: FabService,
@@ -126,8 +118,25 @@ export class UserDetailComponent implements OnInit, OnDestroy {
               this.panelData.push({ title: 'Tentang Saya', icon: 'info', text: this.userData.profile_.description });
               this.fs.initializeFab('edit', null, 'Ubah Profil', `/user/${this.username}/edit`, false);
               this.checkBanned();
-              this.getUserBerkas();
               this.getUserGroup();
+              this.tabData = [];
+              if (
+                !this.userData.private ||
+                this.as.currentUserSubject?.value?.username === this.username ||
+                this.as.currentUserSubject?.value?.role === RoleModel.ADMIN ||
+                this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR
+              ) {
+                this.tabData.push({
+                  name: 'Berkas',
+                  icon: 'file_copy',
+                  type: 'table',
+                  data: {
+                    column: ['Proyek', /* 'Image', */ 'Nama Berkas', 'Tanggal', 'Kunjungan', 'Pemilik'],
+                    row: []
+                  }
+                });
+                this.getUserBerkas();
+              }
             }
           },
           error: err => {

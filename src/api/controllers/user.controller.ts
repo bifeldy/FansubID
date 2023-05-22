@@ -167,7 +167,7 @@ export class UserController {
   @FilterApiKeyAccess()
   async updateByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body) {
+      if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body || 'private' in req.body) {
         const user: UserModel = res.locals['user'];
         const old_password = this.cs.hashPassword(req.body.old_password);
         const selectedUser = await this.userRepo.findOneOrFail({
@@ -182,6 +182,9 @@ export class UserController {
           }
           if ('new_password' in req.body) {
             selectedUser.password = this.cs.hashPassword(req.body.new_password);
+          }
+          if ('private' in req.body) {
+            selectedUser.private = req.body.private;
           }
           const selectedProfile = await this.profileRepo.findOneOrFail({
             where: [
@@ -322,9 +325,17 @@ export class UserController {
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
+      const user: UserModel = res.locals['user'];
       const selectedUser = await this.userRepo.findOneOrFail({
         where: [
-          { username: ILike(req.params['username']) }
+          {
+            username: ILike(req.params['username']),
+            ...((user?.role === RoleModel.ADMIN || user?.role === RoleModel.MODERATOR || user?.username === req.params['username']) ? {
+              // Admin, Mod, & User Itself Can See Private Profile
+            } : {
+              private: false
+            })
+          }
         ]
       });
       const [files, count] = await this.berkasRepo.findAndCount({
@@ -402,9 +413,17 @@ export class UserController {
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
+      const user: UserModel = res.locals['user'];
       const selectedUser = await this.userRepo.findOneOrFail({
         where: [
-          { username: ILike(req.params['username']) }
+          {
+            username: ILike(req.params['username']),
+            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
+              // Admin, Mod, & User Itself Can See Private Profile
+            } : {
+              private: false
+            })
+          }
         ]
       });
       const [komens, count] = await this.komentarRepo.findAndCount({
@@ -464,9 +483,17 @@ export class UserController {
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
+      const user: UserModel = res.locals['user'];
       const selectedUser = await this.userRepo.findOneOrFail({
         where: [
-          { username: ILike(req.params['username']) }
+          {
+            username: ILike(req.params['username']),
+            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
+              // Admin, Mod, & User Itself Can See Private Profile
+            } : {
+              private: false
+            })
+          }
         ]
       });
       const [likedislikes, count] = await this.likeDislikeRepo.findAndCount({
@@ -586,7 +613,14 @@ export class UserController {
       const user: UserModel = res.locals['user'];
       const selectedUser = await this.userRepo.findOneOrFail({
         where: [
-          { username: ILike(req.params['username']) }
+          {
+            username: ILike(req.params['username']),
+            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
+              // Admin, Mod, & User Itself Can See Private Profile
+            } : {
+              private: false
+            })
+          }
         ]
       });
       const [tracks, count] = await this.trackRepo.findAndCount({

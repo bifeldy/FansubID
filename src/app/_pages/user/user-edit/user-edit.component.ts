@@ -123,7 +123,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
       old_password: [null, Validators.compose([Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       new_password: [null, Validators.compose([Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       image_photo: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
-      image_cover: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
+      image_cover: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      private: [data.private, Validators.compose([Validators.required])]
     });
     this.image_photo = data.image_url;
     this.image_photo_original = this.image_photo;

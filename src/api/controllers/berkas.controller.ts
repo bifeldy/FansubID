@@ -63,17 +63,34 @@ export class BerkasController {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
-      const [files, count] = await this.berkasRepo.findAndCount({
-        where: [
-          {
-            ...((user?.verified) ? {
-              // Verified User Can See Private Berkas
-            } : {
-              private: false
-            }),
-            name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+      const sqlWhere = [
+        {
+          ...((user?.verified) ? {
+            // Verified User Can See Private Berkas From Public Profile
+          } : {
+            private: false
+          }),
+          name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+          user_: {
+            private: false
           }
-        ],
+        }
+      ];
+      const userFilesCriteria: any = {};
+      if (user) {
+        userFilesCriteria.name = ILike(`%${req.query['q'] ? req.query['q'] : ''}%`);
+        if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
+          // Admin & Mod Can See Private Berkas From All Private Profile
+        } else {
+          // Current User Can See Private Berkas From Their Private Profile
+          userFilesCriteria.user_ = {
+            id: user.id
+          };
+        }
+        sqlWhere.push(userFilesCriteria);
+      }
+      const [files, count] = await this.berkasRepo.findAndCount({
+        where: sqlWhere,
         order: {
           ...((req.query['sort'] && req.query['order']) ? {
             [req.query['sort'] as string]: (req.query['order'] as string).toUpperCase()
