@@ -2,6 +2,9 @@
 import { WebSocket } from 'ws';
 
 import { Injectable } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -32,6 +35,7 @@ export class IdCloudHostService {
   ws: WebSocket;
 
   constructor(
+    private sr: SchedulerRegistry,
     private gs: GlobalService,
     private cfg: ConfigService
   ) {
@@ -44,11 +48,18 @@ export class IdCloudHostService {
 
   onError(err): void {
     this.gs.log('[ID_CLOUD_HOST_SERVICE-ON_ERROR] ⛈', err, 'error');
+    this.ws.close();
   }
 
   onClose(code, data): void {
-	const reason = data.toString();
+    const reason = data.toString();
     this.gs.log('[ID_CLOUD_HOST_SERVICE-ON_CLOSE] ⛈', { code, reason });
+    this.sr.addTimeout(
+      CONSTANTS.timeoutReconnectSocketKey,
+      setTimeout(() => {
+        this.connect();
+      }, CONSTANTS.timeoutReconnectSocketTime)
+    );
   }
 
   onMessage(data, isBinary): void {

@@ -56,6 +56,8 @@ export const CONSTANTS = {
   timeoutCancelRegisterTime: 5 * 60 * 1000, // 5 Minutes
   timeoutDeleteTempAttachmentKey: 'TIMEOUT_DELETE_TEMP_ATTACHMENT',
   timeoutDeleteTempAttachmentTime: 3 * 60 * 1000, // 3 Minutes
+  timeoutReconnectSocketKey: 'TIMEOUT_RECONNECT_SOCKET',
+  timeoutReconnectSocketTime: 5 * 1000, // 5 Seconds
   timeJwtEncryption: 3 * 60, // 3 Minutes
   timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days
   timeResetAccount: 5 * 60, // 5 Minutes
