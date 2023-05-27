@@ -39,7 +39,9 @@ export class IdCloudHostService {
     private gs: GlobalService,
     private cfg: ConfigService
   ) {
-    this.connect();
+    if (environment.production) {
+      this.connect();
+    }
   }
 
   onOpen(): void {

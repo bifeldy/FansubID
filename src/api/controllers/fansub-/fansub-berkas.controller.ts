@@ -36,16 +36,18 @@ export class FansubBerkasController {
           .leftJoinAndSelect('berkas.dorama_', 'dorama_')
           .leftJoinAndSelect('berkas.user_', 'user_')
           .leftJoinAndSelect('berkas.fansub_', 'fansub_')
-          .where('fansub_.id IN (:...id)', { id: fansubId })
-          .andWhere('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` });
+          .where('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` })
+          .andWhere('fansub_.id IN (:...id)', { id: fansubId })
+          .andWhere('user_.private = :isPrivate', { isPrivate: false });
         if (user?.verified) {
           // Verified User Can See Private Berkas From Public Profile
         } else {
           fileRepoQuery = fileRepoQuery.andWhere('berkas.private = :isPrivate', { isPrivate: false });
         }
-        fileRepoQuery = fileRepoQuery.andWhere('user_.private = :isPrivate', { isPrivate: false });
         if (user) {
-          fileRepoQuery = fileRepoQuery.orWhere('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` });
+          fileRepoQuery = fileRepoQuery
+            .orWhere('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` })
+            .andWhere('fansub_.id IN (:...id)', { id: fansubId })
           if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
             // Admin & Mod Can See Private Berkas From Private Profile
           } else {

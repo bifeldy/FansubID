@@ -326,24 +326,17 @@ export class UserController {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
       const user: UserModel = res.locals['user'];
-      const selectedUser = await this.userRepo.findOneOrFail({
-        where: [
-          {
-            username: ILike(req.params['username']),
-            ...((user?.role === RoleModel.ADMIN || user?.role === RoleModel.MODERATOR || user?.username === req.params['username']) ? {
-              // Admin, Mod, & User Itself Can See Private Profile
-            } : {
-              private: false
-            })
-          }
-        ]
-      });
       const [files, count] = await this.berkasRepo.findAndCount({
         where: [
           {
             name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             user_: {
-              id: Equal(selectedUser.id)
+              username: ILike(req.params['username']),
+              ...((user?.role === RoleModel.ADMIN || user?.role === RoleModel.MODERATOR || user?.username === req.params['username']) ? {
+                // Admin, Mod, & User Itself Can See Private Profile
+              } : {
+                private: false
+              })
             }
           }
         ],
@@ -414,24 +407,17 @@ export class UserController {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
       const user: UserModel = res.locals['user'];
-      const selectedUser = await this.userRepo.findOneOrFail({
-        where: [
-          {
-            username: ILike(req.params['username']),
-            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
-              // Admin, Mod, & User Itself Can See Private Profile
-            } : {
-              private: false
-            })
-          }
-        ]
-      });
       const [komens, count] = await this.komentarRepo.findAndCount({
         where: [
           {
             comment: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             user_: {
-              id: Equal(selectedUser.id)
+              username: ILike(req.params['username']),
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
+                // Admin, Mod, & User Itself Can See Private Profile
+              } : {
+                private: false
+              })
             }
           }
         ],
@@ -483,19 +469,7 @@ export class UserController {
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
-      const user: UserModel = res.locals['user'];
-      const selectedUser = await this.userRepo.findOneOrFail({
-        where: [
-          {
-            username: ILike(req.params['username']),
-            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
-              // Admin, Mod, & User Itself Can See Private Profile
-            } : {
-              private: false
-            })
-          }
-        ]
-      });
+      const user: UserModel = res.locals['user'];;
       const [likedislikes, count] = await this.likeDislikeRepo.findAndCount({
         where: [
           {
@@ -503,7 +477,12 @@ export class UserController {
               title: ILike(`%${searchQuery}%`)
             },
             report_by_: {
-              id: Equal(selectedUser.id)
+              username: ILike(req.params['username']),
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
+                // Admin, Mod, & User Itself Can See Private Profile
+              } : {
+                private: false
+              })
             }
           },
           {
@@ -511,7 +490,12 @@ export class UserController {
               name: ILike(`%${searchQuery}%`)
             },
             report_by_: {
-              id: Equal(selectedUser.id)
+              username: ILike(req.params['username']),
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
+                // Admin, Mod, & User Itself Can See Private Profile
+              } : {
+                private: false
+              })
             }
           },
           {
@@ -519,7 +503,12 @@ export class UserController {
               name: ILike(`%${searchQuery}%`)
             },
             report_by_: {
-              id: Equal(selectedUser.id)
+              username: ILike(req.params['username']),
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
+                // Admin, Mod, & User Itself Can See Private Profile
+              } : {
+                private: false
+              })
             }
           },
           {
@@ -529,7 +518,12 @@ export class UserController {
               }
             },
             report_by_: {
-              id: Equal(selectedUser.id)
+              username: ILike(req.params['username']),
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
+                // Admin, Mod, & User Itself Can See Private Profile
+              } : {
+                private: false
+              })
             }
           }
         ],

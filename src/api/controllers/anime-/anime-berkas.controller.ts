@@ -49,6 +49,9 @@ export class AnimeBerkasController {
         const userFilesCriteria: any = {};
         if (user) {
           userFilesCriteria.name = ILike(`%${req.query['q'] ? req.query['q'] : ''}%`);
+          userFilesCriteria.anime_ = {
+            id: In(animeId)
+          };
           if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
             // Admin & Mod Can See Private Berkas From All Private Profile
           } else {
