@@ -16,6 +16,7 @@
             <mat-icon class="mx-1" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned" style="cursor: pointer;">lock</mat-icon>
             <mat-icon class="mx-1" matTooltip="{{ accountAge }} Years of Service" *ngIf="accountAge > 0" style="cursor: pointer;">military_tech</mat-icon>
             <mat-icon class="mx-1" matTooltip="Sharing is Caring" *ngIf="count > 0" style="cursor: pointer;">volunteer_activism</mat-icon>
+            <mat-icon class="mx-1" matTooltip="Akun Private" *ngIf="userData.private" style="cursor: pointer;">sensor_occupied</mat-icon>
           </div>
           <div class="col-12" *ngIf="groupFansub.length > 0">
             <div class="row py-3">
