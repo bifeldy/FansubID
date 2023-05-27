@@ -170,44 +170,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   async ddl(id): Promise<void> {
     if (this.isDiscord) {
-      this.subsDialog = (await this.ds.openKonfirmasiDialog(
-        `Ekstensi CORS Unblock`,
-        `
-          <div class="col-12 text-center mb-3">
-            <img src="/assets/img/ddl-ext.png" class="w-50" />
-          </div>
-          <p>
-            Jika gagal download, silahkan pasang ekstensi CORS Unblock, kemudian nyalakan (logo icon berwarna menyala), dan download ulang berkasnya.
-            Lalu saat setelah selesai, dapat dimatikan kembali (tidak wajib sih, hanya saja nanti takutnya mengganggu saat browsing).
-            Keuntungan menggunakan ekstensi yaitu tanpa adanya batasan kecepatan server, yakni koneksi langsung.
-          </p>
-          <p>
-            Chrome ::
-            <br />
-            <a href="https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino" target="_blank">
-              https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino
-            </a>
-          </p>
-          <p>
-            Edge ::
-            <br />
-            <a href="https://microsoftedge.microsoft.com/addons/detail/cors-unblock/hkjklmhkbkdhlgnnfbbcihcajofmjgbh" target="_blank">
-              https://microsoftedge.microsoft.com/addons/detail/cors-unblock/hkjklmhkbkdhlgnnfbbcihcajofmjgbh
-            </a>
-          </p>
-          <p>
-            Firefox ::
-            <br />
-            <a href="https://addons.mozilla.org/en-US/firefox/addon/cors-unblock" target="_blank">
-              https://addons.mozilla.org/en-US/firefox/addon/cors-unblock
-            </a>
-          </p>
-          <p>
-            Klik 'Ya', jika sudah ada ekstensi, atau 'Tidak' jika ingin melanjutkan dengan kecepatan terbatas.
-          </p>
-        `,
-        false
-      )).afterClosed().subscribe({
+      this.subsDialog = (await this.ds.openCorsExtension()).afterClosed().subscribe({
         next: re => {
           this.gs.log('[INFO_DIALOG_CLOSED]', re);
           // TODO :: Create My Own Browser Extension For Bypassing CORS (?)

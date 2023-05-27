@@ -146,4 +146,20 @@ export class DialogService {
     return this.openInfoDialog(defaultData);
   }
 
+  async openCorsExtension(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
+    const defaultData = {
+      id: 'CORS-EXTENSION',
+      data: {
+        title: 'Ekstensi CORS Unblock',
+        htmlMessage: 'Gagal Memuat Metode Verifikasi',
+        confirmText: 'Ya',
+        cancelText: 'Tidak'
+      },
+      disableClose: false,
+      maxWidth: this.maxWidth
+    };
+    await this.fetchInformation(defaultData);
+    return this.openInfoDialog(defaultData);
+  }
+
 }
