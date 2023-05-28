@@ -58,7 +58,7 @@ export class SitemapService {
       }
     });
     for (const f of fansub) {
-      this.untrackedUrlsListFansub.push(`${environment.baseUrl}/fansub/${f.id}`);
+      this.untrackedUrlsListFansub.push(`${environment.baseUrl}/fansub/${f.slug}`);
     }
   }
 
@@ -78,7 +78,7 @@ export class SitemapService {
   }
 
   @Cron(
-    CronExpression.EVERY_5_MINUTES,
+    CronExpression.EVERY_HOUR,
     {
       name: CONSTANTS.cronSitemap
     }
