@@ -49,7 +49,7 @@
               "src/favicon.ico",
               "src/manifest.webmanifest",
               "src/robots.txt",
-              "src/sitemap.xml",
+              "src/sitemap.template.xml",
               "src/yandex_fce02fa8250544ee.html"
             ],
             "styles": [
@@ -161,7 +161,7 @@
               "src/favicon.ico",
               "src/manifest.webmanifest",
               "src/robots.txt",
-              "src/sitemap.xml",
+              "src/sitemap.template.xml",
               "src/yandex_fce02fa8250544ee.html"
             ],
             "styles": [

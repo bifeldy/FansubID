@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.fansub.id/login</loc>
-  </url>
-  <url>
-    <loc>https://www.fansub.id/register</loc>
-  </url>
-  <url>
-    <loc>https://www.fansub.id/verify</loc>
-  </url>
-  <url>
     <loc>https://www.fansub.id/home</loc>
   </url>
   <url>
@@ -20,12 +11,6 @@
   </url>
   <url>
     <loc>https://www.fansub.id/nihongo</loc>
-  </url>
-  <url>
-    <loc>https://www.fansub.id/nihongo/belajar</loc>
-  </url>
-  <url>
-    <loc>https://www.fansub.id/nihongo/kanji</loc>
   </url>
   <url>
     <loc>https://www.fansub.id/berkas</loc>
@@ -43,12 +28,9 @@
     <loc>https://www.fansub.id/rss-feed</loc>
   </url>
   <url>
-    <loc>https://www.fansub.id/torrent</loc>
-  </url>
-  <url>
     <loc>https://www.fansub.id/docs</loc>
   </url>
   <url>
-    <loc>https://www.fansub.id/error</loc>
+    <loc>https://www.fansub.id/privacy-policy</loc>
   </url>
 </urlset>

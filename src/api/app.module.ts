@@ -115,6 +115,7 @@ import { QuizService } from './services/quiz.service';
 import { SocketIoService } from './services/socket-io.service';
 
 import { RssFeedTasksService } from './scheduler/rss-feed-tasks.service';
+import { SitemapService } from './scheduler/sitemap-tasks.service';
 import { TrackerStatisticsService } from './scheduler/tracker-statistics-tasks.service';
 
 import { AnimeService } from './repository/anime.service';
@@ -265,6 +266,7 @@ import { UserService } from './repository/user.service';
     SocketIoService,
     // Service Task Schedulers
     RssFeedTasksService,
+    SitemapService,
     TrackerStatisticsService,
     // Service Entities
     AnimeService,

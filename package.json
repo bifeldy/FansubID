@@ -122,6 +122,7 @@
     "webtorrent-health": "^1.1.2",
     "winbox": "^0.2.1",
     "ws": "^8.13.0",
+    "xml-js": "^1.6.11",
     "xng-breadcrumb": "^7.2.0",
     "ytdl-core": "^4.9.1",
     "zone.js": "~0.11.4"
