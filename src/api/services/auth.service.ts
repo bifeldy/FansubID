@@ -116,7 +116,7 @@ export class AuthService {
       const sosmed = await this.sosmedRepo.findOneOrFail({
         where: [
           {
-            id: Equal(decoded.google.id),
+            id: Equal(decoded[sosMedModel.toLowerCase()].id),
             type: sosMedModel,
             user_: {
               id: Equal(decoded.user.id)
