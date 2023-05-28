@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Equal } from 'typeorm';
 
+import { SosMedModel } from '../../models/req-res.model';
+
 import { Banned } from '../entities/Banned';
 import { Registration } from '../entities/Registration';
 import { User } from '../entities/User';
@@ -9,6 +11,7 @@ import { BannedService } from '../repository/banned.service';
 import { KartuTandaPendudukService } from '../repository/kartu-tanda-penduduk.service';
 import { ProfileService } from '../repository/profile.service';
 import { RegistrationService } from '../repository/registration.service';
+import { SocialMediaService } from '../repository/social-media.service';
 import { UserService } from '../repository/user.service';
 
 import { CryptoService } from './crypto.service';
@@ -22,7 +25,8 @@ export class AuthService {
     private kartuTandaPendudukRepo: KartuTandaPendudukService,
     private profileRepo: ProfileService,
     private registrationRepo: RegistrationService,
-    private userRepo: UserService
+    private userRepo: UserService,
+    private sosmedRepo: SocialMediaService
   ) {
     //
   }
@@ -106,12 +110,24 @@ export class AuthService {
     }
   }
 
-  async verifyAccount(token: string): Promise<User> {
+  async verifySosmedAccount(token: string, sosMedModel: SosMedModel): Promise<User> {
     try {
       const decoded = this.cs.jwtDecrypt(token);
+      const sosmed = await this.sosmedRepo.findOneOrFail({
+        where: [
+          {
+            id: Equal(decoded.google.id),
+            type: sosMedModel,
+            user_: {
+              id: Equal(decoded.user.id)
+            }
+          }
+        ],
+        relations: ['user_']
+      });
       const user = await this.userRepo.findOneOrFail({
         where: [
-          { id: Equal(decoded.user.id) }
+          { id: Equal(sosmed.user_.id) }
         ],
         relations: ['kartu_tanda_penduduk_', 'profile_']
       });

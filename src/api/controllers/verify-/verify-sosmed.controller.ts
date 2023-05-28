@@ -293,7 +293,7 @@ export class VerifySosmedController {
   async verifyAccount(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const token = req.query['token'] || '';
     if (token) {
-      const userVerified = await this.as.verifyAccount(token as string);
+      const userVerified = await this.as.verifySosmedAccount(token as string, SosMedModel.GOOGLE);
       if (userVerified) {
         res.cookie(environment.tokenName, userVerified.session_token, {
           httpOnly: true,
