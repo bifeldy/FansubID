@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { GlobalService } from '../../_shared/services/global.service';
+import { ServerResponseService } from '../../_shared/services/server-response.service';
 
 @Component({
   selector: 'app-not-found',
@@ -17,11 +18,13 @@ export class NotFoundComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private ssr: ServerResponseService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+    this.ssr.setNotFound();
   }
 
   ngOnInit(): void {

@@ -175,6 +175,9 @@ SOFTWARE.
 @nguniversal/common
 MIT
 
+@nguniversal/express-engine
+MIT
+
 @videojs/vhs-utils
 MIT
 Copyright (c) brandonocasey <brandonocasey@gmail.com>
