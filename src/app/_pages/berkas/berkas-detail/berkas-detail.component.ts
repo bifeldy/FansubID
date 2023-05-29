@@ -170,16 +170,20 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   async ddl(id): Promise<void> {
     if (this.isDiscord) {
-      this.subsDialog = (await this.ds.openCorsExtension()).afterClosed().subscribe({
-        next: re => {
-          this.gs.log('[INFO_DIALOG_CLOSED]', re);
-          // TODO :: Create My Own Browser Extension For Bypassing CORS (?)
-          if (re !== undefined) {
-            this.dm.startDownload(id, (re === true));
+      if (this.gs.isDesktop) {
+        this.subsDialog = (await this.ds.openCorsExtension()).afterClosed().subscribe({
+          next: re => {
+            this.gs.log('[INFO_DIALOG_CLOSED]', re);
+            // TODO :: Create My Own Browser Extension For Bypassing CORS (?)
+            if (re !== undefined) {
+              this.dm.startDownload(id, (re === true));
+            }
+            this.subsDialog.unsubscribe();
           }
-          this.subsDialog.unsubscribe();
-        }
-      });
+        });
+      } else {
+        this.dm.startDownload(id, false);
+      }
     } else {
       this.dm.startDownload(id);
     }

@@ -35,7 +35,7 @@ export const CONSTANTS = {
   ],
   fileSizeAttachmentChunkCloudflareLimit: 64 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileSizeAttachmentChunkDiscordLimit: 8 * 1000 * 1000, // Discord -- Without Nitro Is 8 MB ~ T.T
-  fileSizeAttachmentTotalLimit: 256 * 1000 * 1000, // Max Upload Limits -- < 256 MB Streamable
+  fileSizeAttachmentTotalLimit: 512 * 1000 * 1000, // Max Upload Limits -- < 512 MB Streamable
   fileSizeImageLimit: 256 * 1000, // 256 KB
   gCaptchaSiteKey: '6Ld4Bt4UAAAAAKJQ_jfqtWdsq9BuARLHag2DBvqK',
   jwtAlgorithm: 'HS512',
