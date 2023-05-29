@@ -42,7 +42,7 @@ export class ApiService {
     );
   }
 
-  postData(path: string, model = {}, multipart = false, options = {}, timedOut = 60 * 1000): Observable<any> {
+  postData(path: string, model = {}, multipart = false, options = {}, timedOut = 30 * 1000): Observable<any> {
     this.gs.log('[API_POST]', path);
     let body = model;
     if (multipart) {
@@ -54,7 +54,7 @@ export class ApiService {
     );
   }
 
-  putData(path: string, model = {}, multipart = false, options = {}, timedOut = 60 * 1000): Observable<any> {
+  putData(path: string, model = {}, multipart = false, options = {}, timedOut = 30 * 1000): Observable<any> {
     this.gs.log('[API_PUT]', path);
     let body = model;
     if (multipart) {
@@ -66,7 +66,7 @@ export class ApiService {
     );
   }
 
-  patchData(path: string, model = {}, multipart = false, options = {}, timedOut = 60 * 1000): Observable<any> {
+  patchData(path: string, model = {}, multipart = false, options = {}, timedOut = 30 * 1000): Observable<any> {
     this.gs.log('[API_PATCH]', path);
     let body = model;
     if (multipart) {
