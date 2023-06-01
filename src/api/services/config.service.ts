@@ -21,11 +21,20 @@ export class ConfigService {
   github = null;
 
   statsServer: StatsServerModel = {
-    cpus: 0,
-    mem_ram: 0,
-    disk_io: 0,
-    net_tx: 0,
-    net_rx: 0
+    mainSite: {
+      cpus: 0,
+      mem_ram: 0,
+      disk_io: 0,
+      net_tx: 0,
+      net_rx: 0
+    },
+    torrentTracker: {
+      cpus: 0,
+      mem_ram: 0,
+      disk_io: 0,
+      net_tx: 0,
+      net_rx: 0
+    }
   };
 
   settings: ServerInfoModel = {

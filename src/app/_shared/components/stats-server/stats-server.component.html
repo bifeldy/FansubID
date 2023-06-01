@@ -47,28 +47,69 @@
         {{ SS.visitor }} Koneksi
       </span>
     </p>
+  </div>
+  <div class="col-12 sticky-top bg-bifeldy">
+    <h2 class="pt-3 border-bottom-dotted">
+      <b class="text-bifeldy">Main Site</b>
+    </h2>
+  </div>
+  <div class="col-12">
     <p class="px-2 text-truncate">
       CPUs Load ::
       <span class="text-warning">
-        {{ SS.statsServer.cpus | number:'1.2-2' }} %
+        {{ SS.statsServer.mainSite.cpus | number:'1.2-2' }} %
       </span>
     </p>
     <p class="px-2 text-truncate">
       RAM Usage ::
       <span class="text-warning">
-        {{ SS.statsServer.mem_ram | bytes:2 }}
+        {{ SS.statsServer.mainSite.mem_ram | bytes:2 }}
       </span>
     </p>
     <p class="px-2 text-truncate">
       Disk IO (/s) ::
       <span class="text-warning">
-        {{ SS.statsServer.disk_io | bytes:2 }}
+        {{ SS.statsServer.mainSite.disk_io | bytes:2 }}
       </span>
     </p>
     <p class="px-2 text-truncate">
       Net UD (/s) ::
       <span class="text-warning">
-        {{ SS.statsServer.net_tx | bytes:2 }} / {{ SS.statsServer.net_rx | bytes:2 }}
+        {{ SS.statsServer.mainSite.net_tx | bytes:2 }} / {{ SS.statsServer.mainSite.net_rx | bytes:2 }}
+      </span>
+    </p>
+  </div>
+  <div class="col-12 sticky-top bg-bifeldy">
+    <h2 class="pt-3 border-bottom-dotted">
+      <a class="float-end text-decoration-none text-warning" href="https://tracker.fansub.id/stats" style="font-size: small;">
+        Selengkapnya
+      </a>
+      <b class="text-bifeldy">Torrent Tracker</b>
+    </h2>
+  </div>
+  <div class="col-12">
+    <p class="px-2 text-truncate">
+      CPUs Load ::
+      <span class="text-warning">
+        {{ SS.statsServer.torrentTracker.cpus | number:'1.2-2' }} %
+      </span>
+    </p>
+    <p class="px-2 text-truncate">
+      RAM Usage ::
+      <span class="text-warning">
+        {{ SS.statsServer.torrentTracker.mem_ram | bytes:2 }}
+      </span>
+    </p>
+    <p class="px-2 text-truncate">
+      Disk IO (/s) ::
+      <span class="text-warning">
+        {{ SS.statsServer.torrentTracker.disk_io | bytes:2 }}
+      </span>
+    </p>
+    <p class="px-2 text-truncate">
+      Net UD (/s) ::
+      <span class="text-warning">
+        {{ SS.statsServer.torrentTracker.net_tx | bytes:2 }} / {{ SS.statsServer.torrentTracker.net_rx | bytes:2 }}
       </span>
     </p>
   </div>

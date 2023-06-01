@@ -166,8 +166,9 @@ export const environment = {
   },
   malClientId: SECRETS().MAL_CLIENT_ID,                                                                          // '',
   idCloudHost: {
-    url: 'wss://api.idcloudhost.com/v1/jkt01/metrics-ws/index',
+    url: 'wss://api.idcloudhost.com/v1',
     apiKey: SECRETS().ID_CLOUD_HOST_API_KEY,                                                                     // '',
-    uuid: "01b00d5a-905d-4328-bc8d-bf748f1fc3dc"                                                                 // '',
+    mainSite: "01b00d5a-905d-4328-bc8d-bf748f1fc3dc",                                                            // '',
+    torrentTracker: "ab01c243-5462-40a7-bfcf-0da6d5195306"                                                       // '',
   }
 };

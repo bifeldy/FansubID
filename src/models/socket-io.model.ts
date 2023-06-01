@@ -42,11 +42,20 @@ export interface PingPongModel {
 }
 
 export interface StatsServerModel {
-  cpus?: number,
-  mem_ram?: number,
-  disk_io?: number,
-  net_tx?: number,
-  net_rx?: number
+  mainSite?: {
+    cpus?: number,
+    mem_ram?: number,
+    disk_io?: number,
+    net_tx?: number,
+    net_rx?: number
+  };
+  torrentTracker: {
+    cpus?: number,
+    mem_ram?: number,
+    disk_io?: number,
+    net_tx?: number,
+    net_rx?: number
+  };
 }
 
 export interface RoomModel {
