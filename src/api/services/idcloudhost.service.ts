@@ -22,9 +22,9 @@ export class IdCloudHostService {
     private gs: GlobalService,
     private cfg: ConfigService
   ) {
-    // if (environment.production) {
+    if (environment.production) {
       this.connect();
-    // }
+    }
   }
 
   getStatsUrl(loc: string, vmUuid: string): string {
