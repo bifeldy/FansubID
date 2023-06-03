@@ -364,7 +364,8 @@ export class AppModule {
         },
         metaStorageConfig: {
           directory: environment.tempFolder
-        }
+        },
+        logLevel: environment.production ? 'error' : 'debug'
       })
     ).forRoutes(
       { path: '/attachment', method: RequestMethod.POST },

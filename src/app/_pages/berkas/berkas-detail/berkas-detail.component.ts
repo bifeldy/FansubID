@@ -5,6 +5,8 @@ import { concat, Observable, tap } from 'rxjs';
 
 import { environment } from '../../../../environments/app/environment';
 
+import { CONSTANTS } from '../../../../constants';
+
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -166,6 +168,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   get isDiscord(): boolean {
     return this.isHaveDDL && this.berkasData.attachment_?.discord;
+  }
+
+  get isStreamable(): boolean {
+    return this.isHaveDDL && this.gs.includesOneOf(this.berkasData.attachment_?.ext, CONSTANTS.fileTypeAttachmentStreamable);
   }
 
   async ddl(id): Promise<void> {

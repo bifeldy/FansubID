@@ -567,10 +567,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   failOrCancelUpload(err = null): void {
     this.attachmentSelected = null;
-    this.attachmentErrorText = err?.result?.message || err?.info || 'Expired, Harap Upload Ulang!';
+    this.attachmentErrorText = err?.result?.message || err?.info || err?.error?.message || 'Expired, Harap Upload Ulang!';
     this.uploadService.disconnect();
     this.fg.controls['attachment_id'].patchValue(null);
-    this.toast.remove(this.uploadToast.toastId);
+    if (this.uploadToast) {
+      this.toast.remove(this.uploadToast.toastId);
+    }
     this.ddl.clear();
   }
 
