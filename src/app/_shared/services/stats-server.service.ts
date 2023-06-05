@@ -9,7 +9,7 @@ import { CONSTANTS } from '../../../constants';
 
 import { environment } from '../../../environments/app/environment';
 
-import { RoomInfoModel, ServerInfoModel } from '../../../models/socket-io.model';
+import { RoomInfoModel, ServerInfoModel, StatsServerModel } from '../../../models/socket-io.model';
 
 import { GlobalService } from './global.service';
 import { NotificationsService } from './notifications.service';
@@ -31,15 +31,8 @@ export class StatsServerService {
 
   latency = 0;
 
-  statsServer = {
+  statsServer: StatsServerModel = {
     mainSite: {
-      cpus: 0,
-      mem_ram: 0,
-      disk_io: 0,
-      net_tx: 0,
-      net_rx: 0
-    },
-    torrentTracker: {
       cpus: 0,
       mem_ram: 0,
       disk_io: 0,

@@ -15,7 +15,6 @@ import { ConfigService } from '../services/config.service';
 export class IdCloudHostService {
 
   wsMainSite: WebSocket;
-  wsTorrentTracker: WebSocket;
 
   constructor(
     private sr: SchedulerRegistry,
@@ -97,31 +96,8 @@ export class IdCloudHostService {
     });
   }
 
-  torrentTracker(): void {
-    const urlTorrentTracker = this.getStatsUrl('sgp01', environment.idCloudHost.torrentTracker);
-    this.wsTorrentTracker = new WebSocket(urlTorrentTracker);
-
-    this.wsTorrentTracker.on('open', () => {
-      this.gs.log('[ID_CLOUD_HOST_SERVICE-ON_OPEN-torrentTracker] ⛈', urlTorrentTracker);
-    });
-
-    this.wsTorrentTracker.on('error', (err) => {
-      this.gs.log('[ID_CLOUD_HOST_SERVICE-ON_ERROR-torrentTracker] ⛈', err, 'error');
-      this.wsTorrentTracker.close();
-    });
-
-    this.wsTorrentTracker.on('close', (code, data) => {
-      this.onClose(code, data, 'torrentTracker');
-    });
-
-    this.wsTorrentTracker.on('message', (data, isBinary) => {
-      this.onMessage(data, isBinary, 'torrentTracker');
-    });
-  }
-
   connect(): void {
     this.mainSite();
-    this.torrentTracker();
   }
 
 }
