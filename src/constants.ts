@@ -59,6 +59,7 @@ export const CONSTANTS = {
   regexEnglishKeyboardKeys: /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/,
   regexJapaneseKeyboardKeys: /[一-龠ぁ-ゔァ-ヴーａ-ｚＡ-Ｚ０-９々〆〤、。]+/u,
   regexUrl: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+  retryDdlUploadMaxCount: 5,
   socketRoomNameGlobalPublic: 'GLOBAL_PUBLIK',
   socketRoomNameGlobalFansub: 'GLOBAL_FANSUB',
   socketRoomNameServerLogs: 'SERVER_LOGS',
