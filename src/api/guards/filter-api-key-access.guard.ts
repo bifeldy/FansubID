@@ -1,9 +1,10 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Response } from 'express';
-import { Equal, IsNull } from 'typeorm';
+import { Equal, In, IsNull } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
+import { RoleModel } from '../../models/req-res.model';
 
 import { ApiKeyService } from '../repository/api-key.service';
 
@@ -33,8 +34,15 @@ export class FilterApiKeyAccessGuard implements CanActivate {
               {
                 api_key: Equal(apiKey),
                 user_: IsNull()
+              },
+              {
+                api_key: Equal(apiKey),
+                user_: {
+                  role: In([RoleModel.ADMIN, RoleModel.MODERATOR])
+                }
               }
-            ]
+            ],
+            relations: ['user_']
           });
           if (apiKeySystemCount <= 0) {
             throw 'API-Key Tidak Memiliki Hak Akses!';

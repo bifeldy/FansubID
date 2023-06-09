@@ -60,6 +60,7 @@ export class DiscordService {
 
   startBot(): void {
     this.bot = new Client({
+      restRequestTimeout: 60 * 1000,
       intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MEMBERS,

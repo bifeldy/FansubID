@@ -560,12 +560,14 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   submitAttachment(item: Uploader): void {
     const uploader = this.uploadService.state().find(x => x.uploadId === item.uploadId);
     if (uploader) {
+      this.submitted = true;
       this.attachmentSelected = uploader;
       item.status = 'queue';
     }
   }
 
   failOrCancelUpload(err = null): void {
+    this.submitted = false;
     this.attachmentSelected = null;
     this.attachmentErrorText = err?.result?.message || err?.info || err?.error?.message || 'Expired, Harap Upload Ulang!';
     this.uploadService.disconnect();
