@@ -107,7 +107,7 @@ export class MailWebhookController {
             attachment.mime = file.mimetype;
             const resAttachmentSave = await this.attachmentRepo.save(attachment);
             const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-            const fIdx = files.findIndex(f => f.name.includes(resAttachmentSave.name));
+            const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
             if (fIdx >= 0) {
               attachments.push(resAttachmentSave);
               // Upload Attachment -- Jpg, Png, etc
