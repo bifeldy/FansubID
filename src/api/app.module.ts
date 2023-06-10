@@ -359,8 +359,9 @@ export class AppModule {
         maxUploadSize: CONSTANTS.fileSizeAttachmentTotalLimit,
         useRelativeLocation: true,
         expiration: {
-          maxAge: '1h',
-          purgeInterval: '10min'
+          maxAge: '3d',
+          purgeInterval: '20min',
+          rolling: true
         },
         metaStorageConfig: {
           directory: environment.tempFolder
