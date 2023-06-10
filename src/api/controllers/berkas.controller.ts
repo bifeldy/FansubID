@@ -257,7 +257,7 @@ export class BerkasController {
           const resAttachmentSave = await this.attachmentRepo.save(attachment);
           await this.tempAttachmentRepo.remove(tempAttachment);
           const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-          const fIdx = files.findIndex(f => f.name.includes(resAttachmentSave.name));
+          const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
           if (fIdx >= 0) {
             berkas.attachment_ = resAttachmentSave;
             let videoExtractCompleted = false;
@@ -310,18 +310,24 @@ export class BerkasController {
                                   {
                                     name: Equal(resMkvAttachmentSave.name),
                                     ext: Equal(resMkvAttachmentSave.ext),
-                                    size: Equal(resMkvAttachmentSave.size),
-                                    mime: Equal(resMkvAttachmentSave.mime),
                                     google_drive: IsNull()
                                   }
                                 ]
                               });
                               for (const oa of otherAttachment) {
                                 oa.google_drive = dfile.data.id;
+                                oa.pending = false;
                               }
                               await this.attachmentRepo.save(otherAttachment);
                               this.gs.deleteAttachment(`${fileName}.${fileExt}`);
-                            }).catch(e5 => this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error'));
+                            }).catch(async (e5) => {
+                              this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error');
+                              resMkvAttachmentSave.pending = false;
+                              await this.attachmentRepo.save(resMkvAttachmentSave);
+                            });
+                          } else {
+                            resMkvAttachmentSave.pending = false;
+                            await this.attachmentRepo.save(resMkvAttachmentSave);
                           }
                         } catch (e3) {
                           this.gs.log('[FILE_NOTE-ERROR] 🎼', e3, 'error');
@@ -363,22 +369,35 @@ export class BerkasController {
                     fields: 'id'
                   }, { signal: null });
                   resAttachmentSave.google_drive = dfile.data.id;
+                  resAttachmentSave.pending = false;
                   await this.attachmentRepo.save(resAttachmentSave);
                   videoUploadCompleted = true;
                   if (videoExtractCompleted) {
                     this.gs.deleteAttachment(files[fIdx].name);
                   }
-                }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
+                }).catch(async (e) => {
+                  this.gs.log('[GDRIVE-ERROR] 💽', e, 'error');
+                  resAttachmentSave.pending = false;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                });
               } else {
                 this.ds.sendAttachment(resAttachmentSave, user).then(async (chunkParent) => {
-                  videoUploadCompleted = true;
                   resAttachmentSave.discord = chunkParent;
+                  resAttachmentSave.pending = false;
                   await this.attachmentRepo.save(resAttachmentSave);
+                  videoUploadCompleted = true;
                   if (videoExtractCompleted) {
                     this.gs.deleteAttachment(files[fIdx].name);
                   }
-                }).catch(e => this.gs.log('[DISCORD-ERROR] 💽', e, 'error'));
+                }).catch(async (e) => {
+                  this.gs.log('[DISCORD-ERROR] 💽', e, 'error');
+                  resAttachmentSave.pending = false;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                });
               }
+            } else {
+              resAttachmentSave.pending = false;
+              await this.attachmentRepo.save(resAttachmentSave);
             }
           } else {
             await this.attachmentRepo.remove(resAttachmentSave);

@@ -143,6 +143,7 @@ export interface AttachmentModel {
   download_count?: number;
   google_drive?: string;
   discord?: string;
+  pending?: boolean;
   created_at?: number | Date;
   updated_at?: number | Date;
   user_?: UserModel;

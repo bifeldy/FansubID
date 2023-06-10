@@ -1,13 +1,13 @@
 // NodeJS Library
-import { readdirSync } from 'node:fs';
+import { createReadStream, readdirSync } from 'node:fs';
 
-import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Patch, Post, Req, Res } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { ApiExcludeEndpoint, ApiParam, ApiTags } from '@nestjs/swagger';
 import { DiskFile } from '@uploadx/core';
 
 import { Request, Response } from 'express';
-import { Equal, ILike } from 'typeorm';
+import { Equal, ILike, IsNull } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -25,6 +25,7 @@ import { DdlFileService } from '../repository/ddl-file';
 
 import { GdriveService } from '../services/gdrive.service';
 import { GlobalService } from '../services/global.service';
+import { DiscordService } from '../services/discord.service';
 
 @Controller('/attachment')
 export class AttachmentController {
@@ -35,6 +36,7 @@ export class AttachmentController {
     private gdrive: GdriveService,
     private gs: GlobalService,
     private ddlFileRepo: DdlFileService,
+    private ds: DiscordService,
     private tempAttachmentRepo: TempAttachmentService
   ) {
     //
@@ -46,7 +48,7 @@ export class AttachmentController {
   @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
-  async searchLampiran(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async searchLampiranPending(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
@@ -62,7 +64,7 @@ export class AttachmentController {
             name: 'ASC'
           })
         },
-        relations: ['user_', 'parent_attachment_'],
+        relations: ['user_', 'parent_attachment_', 'parent_attachment_.user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
@@ -218,7 +220,7 @@ export class AttachmentController {
         }).pipe(res);
       } else {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-        const fIdx = files.findIndex(f => f.name.includes(attachment.name));
+        const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
         if (fIdx >= 0) {
           res.setHeader('content-type', attachment.mime);
           return res.download(
@@ -250,6 +252,136 @@ export class AttachmentController {
       } else {
         res.json(body);
       }
+    }
+  }
+
+  @Patch('/')
+  @HttpCode(202)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @VerifiedOnly()
+  @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
+  async reUploadAttachment(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    try {
+      if ('id' in req.body) {
+        const user: UserModel = res.locals['user'];
+        const attachment = await this.attachmentRepo.findOneOrFail({
+          where: [
+            {
+              id: Equal(req.body.id),
+              discord: IsNull(),
+              google_drive: IsNull(),
+              pending: false
+            }
+          ],
+          relations: ['user_']
+        });
+        const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
+        const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
+        if (fIdx >= 0) {
+          const responseBody = {
+            info: `😅 201 - Attachment API :: ReUpload ${req.body.id} 🤣`,
+            results: attachment
+          };
+          if (environment.production) {
+            attachment.pending = true;
+            const resAttachmentSave = await this.attachmentRepo.save(attachment);
+            responseBody.results = resAttachmentSave;
+            if (CONSTANTS.fileTypeAttachmentAllowed.includes(resAttachmentSave.mime)) {
+              // Upload Video -- Mp4, Mkv, etc
+              let permanent_storage = false;
+              if ('permanent_storage' in req.body) {
+                permanent_storage = (req.body.permanent_storage === true);
+              }
+              if (permanent_storage) {
+                this.gdrive.gDrive(true).then(async (gdrive) => {
+                  const dfile = await gdrive.files.create({
+                    requestBody: {
+                      name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                      parents: [environment.gCloudPlatform.gDrive.folder_id],
+                      mimeType: resAttachmentSave.mime
+                    },
+                    media: {
+                      mimeType: resAttachmentSave.mime,
+                      body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
+                    },
+                    fields: 'id'
+                  }, { signal: null });
+                  resAttachmentSave.google_drive = dfile.data.id;
+                  resAttachmentSave.pending = false;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                  this.gs.deleteAttachment(files[fIdx].name);
+                }).catch(async (e) => {
+                  this.gs.log('[GDRIVE-ERROR] 💽', e, 'error');
+                  resAttachmentSave.pending = false;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                });
+              } else {
+                this.ds.sendAttachment(resAttachmentSave, resAttachmentSave?.user_ || user).then(async (chunkParent) => {
+                  resAttachmentSave.discord = chunkParent;
+                  resAttachmentSave.pending = false;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                  this.gs.deleteAttachment(files[fIdx].name);
+                }).catch(async (e) => {
+                  this.gs.log('[DISCORD-ERROR] 💽', e, 'error');
+                  resAttachmentSave.pending = false;
+                  await this.attachmentRepo.save(resAttachmentSave);
+                });
+              }
+            } else {
+              // Upload Video Attachment -- Subtitles, Fonts, etc
+              this.gdrive.gDrive(true).then(async (gdrive) => {
+                const dfile = await gdrive.files.create({
+                  requestBody: {
+                    name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                    parents: [environment.gCloudPlatform.gDrive.folder_id],
+                    mimeType: resAttachmentSave.mime
+                  },
+                  media: {
+                    mimeType: resAttachmentSave.mime,
+                    body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
+                  },
+                  fields: 'id'
+                }, { signal: null });
+                const otherAttachment = await this.attachmentRepo.find({
+                  where: [
+                    {
+                      name: Equal(resAttachmentSave.name),
+                      ext: Equal(resAttachmentSave.ext),
+                      google_drive: IsNull()
+                    }
+                  ]
+                });
+                for (const oa of otherAttachment) {
+                  oa.google_drive = dfile.data.id;
+                  oa.pending = false;
+                }
+                await this.attachmentRepo.save(otherAttachment);
+                this.gs.deleteAttachment(files[fIdx].name);
+              }).catch(async (e5) => {
+                this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error');
+                resAttachmentSave.pending = false;
+                await this.attachmentRepo.save(resAttachmentSave);
+              });
+            }
+          }
+          return responseBody;
+        }
+        throw new HttpException({
+          info: `🙄 404 - Berkas API :: Gagal Mencari Lampiran ${req.body.id} 😪`,
+          result: {
+            message: 'Lampiran Tidak Ditemukan!'
+          }
+        }, HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: '🙄 400 - Attachment API :: Gagal Reupload Lampiran 😪',
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 

@@ -31,6 +31,9 @@ export class Attachment implements AttachmentModel {
   @Column({ type: 'text', nullable: true })
   discord: string;
 
+  @Column({ type: 'boolean', default: true })
+  pending: boolean;
+
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   created_at: number | Date;
 

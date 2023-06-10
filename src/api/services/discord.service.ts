@@ -122,52 +122,64 @@ export class DiscordService {
 
   async sendAttachment(attachment: AttachmentModel, user: UserModel, chunkIdx = null): Promise<string> {
     let currentChunkIdx: number = 0;
-    let chunkParent: string = null;
+    let chunkParent: string = attachment?.discord;
     const crs = createReadStream(
       `${environment.uploadFolder}/${attachment.name}`,
       {
         highWaterMark: CONSTANTS.fileSizeAttachmentChunkDiscordLimit
       }
     );
-    const ddlChunks = [];
     for await (const c of crs) {
-      if (!chunkIdx || chunkIdx === currentChunkIdx) {
-        let uploadTryCount = 1;
-        while (uploadTryCount > 0) {
-          if (uploadTryCount > CONSTANTS.retryDdlUploadMaxCount) {
-            await this.ddlFileRepo.remove(ddlChunks);
-            throw 'Gagal Upload Ke Discord';
+      let canUpload = true;
+      if (chunkParent) {
+        const ddlFileChunkUploadedCount = await this.ddlFileRepo.count({
+          where: {
+            msg_id: Equal(chunkParent),
+            chunk_idx: Equal(currentChunkIdx)
           }
-          try {
-            this.gs.log(`[DISCORD_SERVICE-CHUNK_${currentChunkIdx}_TRY_${uploadTryCount}] 🎉`, c.length);
-            const botDdlChannel = this.bot ? (this.bot.channels.cache.get(environment.discord.channelDdlId) as NewsChannel) : null;
-            if (botDdlChannel) {
-              const msg = await botDdlChannel.send({
-                files: [new MessageAttachment(c, `${attachment.name}_${currentChunkIdx}`)]
-              });
-              if (currentChunkIdx === 0) {
-                chunkParent = msg.id;
-              } else if (attachment.discord) {
-                chunkParent = attachment.discord;
-              }
-              const ddlFile = this.ddlFileRepo.new();
-              ddlFile.msg_id = chunkParent;
-              ddlFile.chunk_idx = currentChunkIdx;
-              ddlFile.user_ = user;
-              ddlFile.id = msg.attachments.first().id;
-              ddlFile.name = msg.attachments.first().name;
-              ddlFile.url = msg.attachments.first().url;
-              ddlFile.size = msg.attachments.first().size;
-              ddlFile.mime = attachment.mime;
-              const resSaveDdlFile = await this.ddlFileRepo.save(ddlFile);
-              ddlChunks.push(resSaveDdlFile);
+        });
+        if (ddlFileChunkUploadedCount > 0) {
+          canUpload = false;
+        }
+      }
+      if (canUpload) {
+        if (chunkIdx === null || chunkIdx === currentChunkIdx) {
+          let uploadTryCount = 1;
+          while (uploadTryCount > 0) {
+            if (uploadTryCount > CONSTANTS.retryDdlUploadMaxCount) {
+              throw 'Gagal Upload Ke Discord';
             }
-            break;
-          } catch (error) {
-            this.gs.log(`[DISCORD_SERVICE-SEND_ATTACHMMENT_ERROR_${currentChunkIdx}_TRY_${uploadTryCount}] 🎉`, error, 'error');
-            uploadTryCount++;
+            try {
+              this.gs.log(`[DISCORD_SERVICE-CHUNK_${currentChunkIdx}_TRY_${uploadTryCount}] 🎉`, c.length);
+              const botDdlChannel = this.bot ? (this.bot.channels.cache.get(environment.discord.channelDdlId) as NewsChannel) : null;
+              if (botDdlChannel) {
+                const msg = await botDdlChannel.send({
+                  files: [new MessageAttachment(c, `${attachment.name}_${currentChunkIdx}`)]
+                });
+                if (currentChunkIdx === 0) {
+                  chunkParent = msg.id;
+                }
+                const ddlFile = this.ddlFileRepo.new();
+                ddlFile.msg_id = chunkParent;
+                ddlFile.chunk_idx = currentChunkIdx;
+                ddlFile.user_ = user;
+                ddlFile.id = msg.attachments.first().id;
+                ddlFile.name = msg.attachments.first().name;
+                ddlFile.url = msg.attachments.first().url;
+                ddlFile.size = msg.attachments.first().size;
+                ddlFile.mime = attachment.mime;
+                await this.ddlFileRepo.save(ddlFile);
+              }
+              break;
+            } catch (error) {
+              this.gs.log(`[DISCORD_SERVICE-SEND_ATTACHMMENT_ERROR_${currentChunkIdx}_TRY_${uploadTryCount}] 🎉`, error, 'error');
+              uploadTryCount++;
+            }
           }
         }
+      }
+      if (chunkIdx !== null) {
+        break;
       }
       currentChunkIdx++;
     }
