@@ -317,7 +317,7 @@ export class AttachmentController {
                   await this.attachmentRepo.save(resAttachmentSave);
                 });
               } else {
-                this.ds.sendAttachment(resAttachmentSave, resAttachmentSave?.user_ || user).then(async (chunkParent) => {
+                this.ds.sendAttachment(resAttachmentSave, resAttachmentSave.user_ || user).then(async (chunkParent) => {
                   resAttachmentSave.discord = chunkParent;
                   resAttachmentSave.pending = false;
                   await this.attachmentRepo.save(resAttachmentSave);

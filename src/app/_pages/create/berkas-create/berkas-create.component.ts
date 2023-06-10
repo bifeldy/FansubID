@@ -133,6 +133,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
         next: state => {
           this.gs.log('[UPLOAD_EVENTS]', state);
           if (state.status === 'complete') {
+            this.submitted = false;
             this.gs.log('[UPLOAD_COMPLETED]', state.response);
             this.fg.controls['attachment_id'].patchValue(state.response.result.id);
             this.uploadToast = this.toast.warning(
