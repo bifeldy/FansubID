@@ -1,9 +1,6 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { FindManyOptions, In } from 'typeorm';
-
-import { Berkas } from '../../entities/Berkas';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
@@ -29,45 +26,39 @@ export class DoramaFansubController {
       const queryRow = parseInt(req.query['row'] as string);
       const doramaId = req.query['id'] ? (req.query['id'] as string).split(',') : req.body.id;
       if (Array.isArray(doramaId) && doramaId.length > 0) {
-        const findOpt: FindManyOptions<Berkas> = {
-          where: [
-            {
-              dorama_: {
-                id: In(doramaId)
-              }
-            }
-          ],
-          relations: ['fansub_', 'dorama_']
-        };
-        if (doramaId.length === 1) {
-          findOpt.skip = queryPage > 0 ? (queryPage * queryRow - queryRow) : 0;
-          findOpt.take = (queryRow > 0 && queryRow <= 500) ? queryRow : 10;
-        }
-        const files = await this.berkasRepo.find(findOpt);
+        let fileRepoQuery = this.berkasRepo.instance()
+          .createQueryBuilder('berkas')
+          .leftJoinAndSelect('berkas.dorama_', 'dorama_')
+          .leftJoinAndSelect('berkas.fansub_', 'fansub_')
+          .where('dorama_.id IN (:...id)', { id: doramaId })
+          .orderBy('fansub_.name', 'ASC')
+          .addOrderBy('dorama_.id', 'ASC')
+          .select(['dorama_', 'fansub_'])
+          .groupBy('dorama_.id')
+          .addGroupBy('fansub_.id');
+        const files = await fileRepoQuery.getRawMany();
         const results: any = {};
         for (const i of doramaId) {
           results[i] = [];
         }
         for (const f of files) {
-          if ('fansub_' in f && f.fansub_) {
-            for (const fansub of f.fansub_) {
-              delete fansub.description;
-              delete fansub.urls;
-              delete fansub.tags;
-              delete fansub.created_at;
-              delete fansub.updated_at;
-              results[f.dorama_.id].push(fansub);
-            }
-          }
-        }
-        for (const [key, value] of Object.entries(results)) {
-          results[key] = (value as any)
-            .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
-            .sort((a, b) => (a.name > b.name) ? 1 : -1);
+          results[f.dorama__id].push({
+            id: f.fansub__id,
+            name: f.fansub__name,
+            slug: f.fansub__slug,
+            active: f.fansub__active,
+            image_url: f.fansub__image_url,
+            cover_url: f.fansub__cover_url
+          });
         }
         let count = 0;
         for (const i of doramaId) {
           count += results[i].length;
+          if (doramaId.length === 1) {
+            const start = (queryPage ? (queryPage - 1) * (queryRow ? queryRow : 10) : 0);
+            const end = (queryPage ? (queryPage - 1) * (queryRow ? queryRow : 10) : 0) + (queryRow ? queryRow : 10);
+            results[i] = results[i].slice(start, end);
+          }
         }
         return {
           info: `😅 202 - Dorama API :: Fansub 🤣`,

@@ -1,9 +1,6 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { FindManyOptions, In } from 'typeorm';
-
-import { Berkas } from '../../entities/Berkas';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
@@ -29,45 +26,39 @@ export class AnimeFansubController {
       const queryRow = parseInt(req.query['row'] as string);
       const animeId = req.query['id'] ? (req.query['id'] as string).split(',').map(Number) : req.body.id;
       if (Array.isArray(animeId) && animeId.length > 0) {
-        const findOpt: FindManyOptions<Berkas> = {
-          where: [
-            {
-              anime_: {
-                id: In(animeId)
-              }
-            }
-          ],
-          relations: ['fansub_', 'anime_']
-        };
-        if (animeId.length === 1) {
-          findOpt.skip = queryPage > 0 ? (queryPage * queryRow - queryRow) : 0;
-          findOpt.take = (queryRow > 0 && queryRow <= 500) ? queryRow : 10;
-        }
-        const files = await this.berkasRepo.find(findOpt);
+        let fileRepoQuery = this.berkasRepo.instance()
+          .createQueryBuilder('berkas')
+          .leftJoinAndSelect('berkas.anime_', 'anime_')
+          .leftJoinAndSelect('berkas.fansub_', 'fansub_')
+          .where('anime_.id IN (:...id)', { id: animeId })
+          .orderBy('fansub_.name', 'ASC')
+          .addOrderBy('anime_.id', 'ASC')
+          .select(['anime_', 'fansub_'])
+          .groupBy('anime_.id')
+          .addGroupBy('fansub_.id');
+        const files = await fileRepoQuery.getRawMany();
         const results: any = {};
         for (const i of animeId) {
           results[i] = [];
         }
         for (const f of files) {
-          if ('fansub_' in f && f.fansub_) {
-            for (const fansub of f.fansub_) {
-              delete fansub.description;
-              delete fansub.urls;
-              delete fansub.tags;
-              delete fansub.created_at;
-              delete fansub.updated_at;
-              results[f.anime_.id].push(fansub);
-            }
-          }
-        }
-        for (const [key, value] of Object.entries(results)) {
-          results[key] = (value as any)
-            .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
-            .sort((a, b) => (a.name > b.name) ? 1 : -1);
+          results[f.anime__id].push({
+            id: f.fansub__id,
+            name: f.fansub__name,
+            slug: f.fansub__slug,
+            active: f.fansub__active,
+            image_url: f.fansub__image_url,
+            cover_url: f.fansub__cover_url
+          });
         }
         let count = 0;
         for (const i of animeId) {
           count += results[i].length;
+          if (animeId.length === 1) {
+            const start = (queryPage ? (queryPage - 1) * (queryRow ? queryRow : 10) : 0);
+            const end = (queryPage ? (queryPage - 1) * (queryRow ? queryRow : 10) : 0) + (queryRow ? queryRow : 10);
+            results[i] = results[i].slice(start, end);
+          }
         }
         return {
           info: `😅 202 - Anime API :: Fansub 🤣`,
