@@ -181,9 +181,9 @@
                     <div class="row" [formGroupName]="i" matTooltip="Silahkan Isi Alamat Website Kamu Jika Ingin Mendapatkan Traffic Pengunjung">
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'">
                         <mat-label>Nama Website</mat-label>
-                        <input matInput formControlName="name" placeholder="Web Shit" [required]="hasRequiredField(dl, 'name')" />
-                        <mat-icon matSuffix *ngIf="dl.get('name').value || (i === 0 && hasRequiredField(dl, 'name'))">web</mat-icon>
-                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && (i > 0 || !hasRequiredField(dl, 'name'))">
+                        <input matInput formControlName="name" placeholder="Web Shit" required />
+                        <mat-icon matSuffix *ngIf="dl.get('name').value || (i === 0 && !AS.currentUserSubject?.value?.verified)">web</mat-icon>
+                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && (i > 0 || AS.currentUserSubject?.value?.verified)">
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
@@ -193,9 +193,9 @@
                       </mat-form-field>
                       <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
                         <mat-label>Tautan Link</mat-label>
-                        <input matInput formControlName="url" placeholder="https://drive.google.com/drive/u/2/folders/1KYTJZsmH9dyyHBXnQD4N0SjSBXcs8qD-" [required]="hasRequiredField(dl, 'url')" />
-                        <mat-icon matSuffix *ngIf="dl.get('url').value || (i === 0 && hasRequiredField(dl, 'url'))">link</mat-icon>
-                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && (i > 0 || !hasRequiredField(dl, 'url'))">
+                        <input matInput formControlName="url" placeholder="https://drive.google.com/drive/u/2/folders/1KYTJZsmH9dyyHBXnQD4N0SjSBXcs8qD-" required />
+                        <mat-icon matSuffix *ngIf="dl.get('url').value || (i === 0 && !AS.currentUserSubject?.value?.verified)">link</mat-icon>
+                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && (i > 0 || AS.currentUserSubject?.value?.verified)">
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>

@@ -132,8 +132,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       this.subsUpload = this.uploadService.events.subscribe({
         next: state => {
           this.gs.log('[UPLOAD_EVENTS]', state);
+          this.attachmentSelected = state;
           if (state.status === 'complete') {
-            this.submitted = false;
             this.gs.log('[UPLOAD_COMPLETED]', state.response);
             this.fg.controls['attachment_id'].patchValue(state.response.result.id);
             this.uploadToast = this.toast.warning(
@@ -321,15 +321,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   createDownloadLink(): FormGroup {
-    const fbGroup = this.fb.group({
-      name: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      url: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
+    return this.fb.group({
+      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      url: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexUrl)])]
     });
-    if (!this.as.currentUserSubject?.value?.verified) {
-      fbGroup.controls['name'].addValidators([Validators.required]);
-      fbGroup.controls['url'].addValidators([Validators.required]);
-    }
-    return fbGroup;
   }
 
   removeDownloadLink(i: number): void {
@@ -507,6 +502,15 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       this.bs.idle();
       return;
     }
+    if (this.fg.value.attachment_id === null && this.fg.value.download_url.lenth === 0) {
+      this.submitted = false;
+      this.uploadToast = this.toast.warning(
+        `Lampiran DDL / URL Eksternal!`,
+        `Harap Mengisi Setidaknya Salah Satu ...`
+      );
+      this.bs.idle();
+      return;
+    }
     const fansubId = [];
     for (const fs of this.fg.value.fansub_list) {
       fansubId.push(fs.fansub_id);
@@ -561,14 +565,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   submitAttachment(item: Uploader): void {
     const uploader = this.uploadService.state().find(x => x.uploadId === item.uploadId);
     if (uploader) {
-      this.submitted = true;
       this.attachmentSelected = uploader;
       item.status = 'queue';
     }
   }
 
   failOrCancelUpload(err = null): void {
-    this.submitted = false;
     this.attachmentSelected = null;
     this.attachmentErrorText = err?.result?.message || err?.info || err?.error?.message || 'Expired, Harap Upload Ulang!';
     this.uploadService.disconnect();

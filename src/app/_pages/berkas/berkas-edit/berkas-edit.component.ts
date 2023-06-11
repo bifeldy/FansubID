@@ -33,6 +33,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   projectList = [];
 
+  uploadToast = null;
+
   gambar = null;
 
   image = null;
@@ -111,6 +113,13 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
           if (this.as.currentUserSubject?.value?.id !== res.result.user_.id) {
             this.toast.warning('Berkas Ini Bukan Milikmu', 'Whoops!', null, true);
             this.router.navigateByUrl(`/berkas/${res.result.id}`);
+          } if (!this.as.currentUserSubject?.value?.verified && res.result.attachment_) {
+            if (typeof res.result.attachment_ === 'string') {
+              this.toast.warning(res.result.attachment_, 'Whoops!', null, true);
+            } else {
+              this.toast.warning('Harap Verifikasi Akun Terlebih Dahulu', 'Whoops!', null, true);
+            }
+            this.router.navigateByUrl(`/berkas/${res.result.id}`);
           } else {
             this.loadProjectList();
             this.initForm(res.result);
@@ -130,6 +139,9 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.uploadToast) {
+      this.toast.remove(this.uploadToast.toastId);
+    }
     this.subsProject?.unsubscribe();
     this.subsFansub?.unsubscribe();
     this.subsAnimeDetail?.unsubscribe();
@@ -492,6 +504,15 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       }
       body.fansub_id = fansubId;
       delete body.fansub_list;
+    }
+    if (this.attachmentFile === null && this.fg.value.download_url.lenth === 0) {
+      this.submitted = false;
+      this.uploadToast = this.toast.warning(
+        `Lampiran DDL / URL Eksternal!`,
+        `Harap Mengisi Setidaknya Salah Satu ...`
+      );
+      this.bs.idle();
+      return;
     }
     this.gs.log('[BERKAS_EDIT_DIRTY]', body);
     this.submitted = true;
