@@ -5,17 +5,13 @@ import { Request, Response } from 'express';
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
 import { BerkasService } from '../../repository/berkas.service';
-import { DoramaService } from '../../repository/dorama.service';
-import { FansubService } from '../../repository/fansub.service';
 
 @ApiExcludeController()
 @Controller('/fansub-dorama')
 export class FansubDoramaController {
 
   constructor(
-    private doramaRepo: DoramaService,
-    private berkasRepo: BerkasService,
-    private fansubRepo: FansubService
+    private berkasRepo: BerkasService
   ) {
     //
   }
@@ -37,49 +33,23 @@ export class FansubDoramaController {
           .where('fansub_.id IN (:...id)', { id: fansubId })
           .andWhere('berkas.dorama_ IS NOT NULL')
           .orderBy('dorama_.name', 'ASC')
-          .orderBy('fansub_.id', 'ASC')
+          .addOrderBy('fansub_.id', 'ASC')
           .select(['dorama_', 'fansub_'])
           .groupBy('dorama_.id')
           .addGroupBy('fansub_.id');
-        const filesRaw = await fileRepoQuery.getRawMany();
-        const files = [];
-        for (const fr of filesRaw) {
-          const berkas = this.berkasRepo.new();
-          berkas.dorama_ = this.doramaRepo.new();
-          berkas.fansub_ = [];
-          for (const [key, value] of Object.entries(fr)) {
-            const k = key.split('__');
-            if (Array.isArray(berkas[`${k[0]}_`])) {
-              const fansub_ = this.fansubRepo.new();
-              fansub_[k[1]] = value;
-              berkas[`${k[0]}_`].push(fansub_);
-            } else {
-              berkas[`${k[0]}_`][k[1]] = value;
-            }
-          }
-          files.push(berkas);
-        }
+        const files = await fileRepoQuery.getRawMany();
         const results: any = {};
         for (const i of fansubId) {
           results[i] = [];
         }
         for (const f of files) {
-          if ('dorama_' in f && f.dorama_) {
-            delete f.dorama_.created_at;
-            delete f.dorama_.updated_at;
-          }
-          if ('fansub_' in f && f.fansub_) {
-            for (const fansub of f.fansub_) {
-              if (fansubId.includes(fansub.id)) {
-                results[fansub.id].push(f.dorama_);
-              }
-            }
-          }
-        }
-        for (const [key, value] of Object.entries(results)) {
-          results[key] = (value as any)
-            .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
-            .sort((a, b) => (a.name > b.name) ? 1 : -1);
+          results[f.fansub__id].push({
+            id: f.dorama__id,
+            slug: f.dorama__slug,
+            name: f.dorama__name,
+            type: f.dorama__type,
+            image_url: f.dorama__image_url
+          });
         }
         let count = 0;
         for (const i of fansubId) {

@@ -4,18 +4,14 @@ import { Request, Response } from 'express';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
-import { AnimeService } from '../../repository/anime.service';
 import { BerkasService } from '../../repository/berkas.service';
-import { FansubService } from '../../repository/fansub.service';
 
 @ApiExcludeController()
 @Controller('/fansub-anime')
 export class FansubAnimeController {
 
   constructor(
-    private animeRepo: AnimeService,
-    private berkasRepo: BerkasService,
-    private fansubRepo: FansubService
+    private berkasRepo: BerkasService
   ) {
     //
   }
@@ -37,49 +33,22 @@ export class FansubAnimeController {
           .where('fansub_.id IN (:...id)', { id: fansubId })
           .andWhere('berkas.anime_ IS NOT NULL')
           .orderBy('anime_.name', 'ASC')
-          .orderBy('fansub_.id', 'ASC')
+          .addOrderBy('fansub_.id', 'ASC')
           .select(['anime_', 'fansub_'])
           .groupBy('anime_.id')
           .addGroupBy('fansub_.id');
-        const filesRaw = await fileRepoQuery.getRawMany();
-        const files = [];
-        for (const fr of filesRaw) {
-          const berkas = this.berkasRepo.new();
-          berkas.anime_ = this.animeRepo.new();
-          berkas.fansub_ = [];
-          for (const [key, value] of Object.entries(fr)) {
-            const k = key.split('__');
-            if (Array.isArray(berkas[`${k[0]}_`])) {
-              const fansub_ = this.fansubRepo.new();
-              fansub_[k[1]] = value;
-              berkas[`${k[0]}_`].push(fansub_);
-            } else {
-              berkas[`${k[0]}_`][k[1]] = value;
-            }
-          }
-          files.push(berkas);
-        }
+        const files = await fileRepoQuery.getRawMany();
         const results: any = {};
         for (const i of fansubId) {
           results[i] = [];
         }
         for (const f of files) {
-          if ('anime_' in f && f.anime_) {
-            delete f.anime_.created_at;
-            delete f.anime_.updated_at;
-          }
-          if ('fansub_' in f && f.fansub_) {
-            for (const fansub of f.fansub_) {
-              if (fansubId.includes(fansub.id)) {
-                results[fansub.id].push(f.anime_);
-              }
-            }
-          }
-        }
-        for (const [key, value] of Object.entries(results)) {
-          results[key] = (value as any)
-            .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
-            .sort((a, b) => (a.name > b.name) ? 1 : -1);
+          results[f.fansub__id].push({
+            id: f.anime__id,
+            name: f.anime__name,
+            type: f.anime__type,
+            image_url: f.anime__image_url
+          });
         }
         let count = 0;
         for (const i of fansubId) {
