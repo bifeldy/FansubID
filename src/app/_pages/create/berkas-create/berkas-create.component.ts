@@ -150,7 +150,9 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
             );
             this.timerTimeout = setTimeout(() => {
               this.gs.log('[UPLOAD_TIMEOUT]', CONSTANTS.timeoutDeleteTempAttachmentTime);
-              this.failOrCancelUpload();
+              this.failOrCancelUpload({
+                info: 'Expired, Silahkan Upload Ulang!'
+              });
             }, CONSTANTS.timeoutDeleteTempAttachmentTime);
           } else if (state.status === 'error') {
             this.gs.log('[UPLOAD_ERROR]', state.response, 'error');
@@ -572,7 +574,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
 
   failOrCancelUpload(err = null): void {
     this.attachmentSelected = null;
-    this.attachmentErrorText = err?.result?.message || err?.info || err?.error?.message || 'Expired, Harap Upload Ulang!';
+    this.attachmentErrorText = err?.result?.message || err?.info || err?.error?.message || 'Terjadi Kesalahan, Harap Reload Halaman!';
     this.uploadService.disconnect();
     this.fg.controls['attachment_id'].patchValue(null);
     if (this.uploadToast) {
