@@ -4,14 +4,18 @@ import { Request, Response } from 'express';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
+import { AnimeService } from '../../repository/anime.service';
 import { BerkasService } from '../../repository/berkas.service';
+import { FansubService } from '../../repository/fansub.service';
 
 @ApiExcludeController()
 @Controller('/fansub-anime')
 export class FansubAnimeController {
 
   constructor(
-    private berkasRepo: BerkasService
+    private animeRepo: AnimeService,
+    private berkasRepo: BerkasService,
+    private fansubRepo: FansubService
   ) {
     //
   }
@@ -32,13 +36,29 @@ export class FansubAnimeController {
           .leftJoinAndSelect('berkas.fansub_', 'fansub_')
           .where('fansub_.id IN (:...id)', { id: fansubId })
           .andWhere('berkas.anime_ IS NOT NULL')
-          .orderBy('anime_.name', 'ASC');
-        if (fansubId.length === 1) {
-          fileRepoQuery = fileRepoQuery
-            .skip(queryPage > 0 ? (queryPage * queryRow - queryRow) : 0)
-            .take((queryRow > 0 && queryRow <= 500) ? queryRow : 10);
+          .orderBy('anime_.name', 'ASC')
+          .orderBy('fansub_.id', 'ASC')
+          .select(['anime_', 'fansub_'])
+          .groupBy('anime_.id')
+          .addGroupBy('fansub_.id');
+        const filesRaw = await fileRepoQuery.getRawMany();
+        const files = [];
+        for (const fr of filesRaw) {
+          const berkas = this.berkasRepo.new();
+          berkas.anime_ = this.animeRepo.new();
+          berkas.fansub_ = [];
+          for (const [key, value] of Object.entries(fr)) {
+            const k = key.split('__');
+            if (Array.isArray(berkas[`${k[0]}_`])) {
+              const fansub_ = this.fansubRepo.new();
+              fansub_[k[1]] = value;
+              berkas[`${k[0]}_`].push(fansub_);
+            } else {
+              berkas[`${k[0]}_`][k[1]] = value;
+            }
+          }
+          files.push(berkas);
         }
-        const [files, count] = await fileRepoQuery.getManyAndCount();
         const results: any = {};
         for (const i of fansubId) {
           results[i] = [];
@@ -61,8 +81,14 @@ export class FansubAnimeController {
             .filter((a, b, c) => c.findIndex(d => (d.id === a.id)) === b)
             .sort((a, b) => (a.name > b.name) ? 1 : -1);
         }
-        if (fansubId.length > 1) {
-          for (const i of fansubId) {
+        let count = 0;
+        for (const i of fansubId) {
+          count += results[i].length;
+          if (fansubId.length === 1) {
+            const start = (queryPage ? (queryPage - 1) * (queryRow ? queryRow : 10) : 0);
+            const end = (queryPage ? (queryPage - 1) * (queryRow ? queryRow : 10) : 0) + (queryRow ? queryRow : 10);
+            results[i] = results[i].slice(start, end);
+          } else {
             results[i] = results[i].length;
           }
         }
