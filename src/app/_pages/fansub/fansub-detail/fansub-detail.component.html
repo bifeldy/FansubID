@@ -28,6 +28,12 @@
               Ruang Obrolan Discord
             </a>
           </div>
+          <div class="col-12 text-center pt-3" *ngIf="getUrlByName('twitter')">
+            <a [href]="getUrlByName('twitter')" mat-stroked-button class="w-100" matTooltip="Lihat Cuitan" style="color: rgb(114, 137, 218);">
+              <img src="/assets/img/twitter/blue.png" width="24px" />
+              Cuitan Twitter
+            </a>
+          </div>
           <div class="col-12 text-center pt-3">
             <button mat-button class="w-100 text-success" (click)="editFansubData()" style="color: rgb(255, 64, 129) !important;"
               matTooltip="{{ fansubData.user_ ? 'Terakhir Di Ubah Oleh :: ' + fansubData.user_.username : 'Perbaharui Data Fansub' }}">

@@ -132,7 +132,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
                     <mat-label>Tautan Website</mat-label>
                     <input matInput formControlName="web" placeholder="http://www.domain.id" />
                     <mat-icon matSuffix>web</mat-icon>
@@ -141,7 +141,7 @@
                       <div *ngIf="fg.get('web').hasError('pattern')">Website Link Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
                     <mat-label>Facebook Fanpage</mat-label>
                     <input matInput formControlName="facebook" placeholder="http://www.facebook.com" />
                     <mat-icon matSuffix>facebook</mat-icon>
@@ -149,7 +149,7 @@
                       <div *ngIf="fg.get('facebook').hasError('pattern')">Facebook Link Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
                     <mat-label>Tautan Discord</mat-label>
                     <input matInput formControlName="discord" placeholder="http://www.discord.gg" />
                     <mat-icon matSuffix>
@@ -157,6 +157,16 @@
                     </mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('discord').hasError('pattern')">Discord Link Tidak Valid</div>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
+                    <mat-label>Cuitan Twitter</mat-label>
+                    <input matInput formControlName="twitter" placeholder="http://www.twitter.com" />
+                    <mat-icon matSuffix>
+                      <img src="/assets/img/twitter/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" />
+                    </mat-icon>
+                    <mat-error>
+                      <div *ngIf="fg.get('twitter').hasError('pattern')">Twitter Link Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
                 </div>

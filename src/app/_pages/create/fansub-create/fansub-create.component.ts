@@ -96,6 +96,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
       web: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       facebook: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       discord: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      twitter: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       rss_feed: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
@@ -246,6 +247,9 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     }
     if (this.fg.value.discord) {
       urls.push({ name: 'discord', url: this.fg.value.discord });
+    }
+    if (this.fg.value.twitter) {
+      urls.push({ name: 'twitter', url: this.fg.value.twitter });
     }
     this.submitted = true;
     if (this.fg.invalid || urls.length === 0) {

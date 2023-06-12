@@ -160,6 +160,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     const WEB = urls.find(u => u.name === 'web');
     const FACEBOOK = urls.find(u => u.name === 'facebook');
     const DISCORD = urls.find(u => u.name === 'discord');
+    const TWITTER = urls.find(u => u.name === 'twitter');
     const ACTIVE = data.active === true ? '1' : '0';
     this.fg = this.fb.group({
       name: [data.name, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
@@ -173,6 +174,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       web: [(WEB?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      twitter: [(TWITTER?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       rss_feed: [data.rss_feed, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
@@ -331,6 +333,9 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     if (this.fg.value.discord) {
       urls.push({ name: 'discord', url: this.fg.value.discord });
     }
+    if (this.fg.value.twitter) {
+      urls.push({ name: 'twitter', url: this.fg.value.twitter });
+    }
     const body = this.gs.getDirtyValues(this.fg);
     if ('web' in body) {
       delete body.web;
@@ -340,6 +345,9 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     }
     if ('discord' in body) {
       delete body.discord;
+    }
+    if ('twitter' in body) {
+      delete body.twitter;
     }
     body.urls = urls;
     this.gs.log('[FANSUB_EDIT_DIRTY]', body);
