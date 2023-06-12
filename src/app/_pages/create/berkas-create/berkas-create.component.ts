@@ -161,6 +161,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
         },
         error: err => {
           this.gs.log('[UPLOAD_ERROR]', err, 'error');
+          this.attachmentSelected = null;
           this.failOrCancelUpload(err);
         }
       });
@@ -573,7 +574,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   failOrCancelUpload(err = null): void {
-    this.attachmentSelected = null;
     this.attachmentErrorText = err?.result?.message || err?.info || err?.error?.message || 'Terjadi Kesalahan, Harap Reload Halaman!';
     this.uploadService.disconnect();
     this.fg.controls['attachment_id'].patchValue(null);
