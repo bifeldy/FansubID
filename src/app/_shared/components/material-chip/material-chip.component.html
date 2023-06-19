@@ -1,6 +1,6 @@
 <!-- Chips -->
 <mat-chip-list>
-  <mat-chip *ngFor="let chip of chipData" (click)="onChipClicked(chip)"
+  <mat-chip *ngFor="let chip of chipData" (click)="$event.stopPropagation(); onChipClicked(chip)"
     [ngStyle]="{ 'background-color': chip.color }" [selected]="chip.selected">
     {{ chip.name }}
   </mat-chip>

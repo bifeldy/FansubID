@@ -137,7 +137,7 @@
                     {{ ak.api_key }}
                   </span>
                 </p>
-                <a mat-button class="w-100" color="accent" (click)="revokeApiKey(ak); $event.stopPropagation()">
+                <a mat-button class="w-100" color="accent" (click)="$event.stopPropagation(); revokeApiKey(ak)">
                   <mat-icon class="me-1">delete_sweep</mat-icon> Hapus Akses
                 </a>
               </div>

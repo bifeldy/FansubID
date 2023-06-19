@@ -19,7 +19,7 @@
     <div class="flex-grow-1 ms-3 row {{ recursionCount === 0 ? 'me-2' : ''}}">
       <div class="col-8 p-0" (click)="showHideCommentBox(k)">
         <p class="m-0">
-          <b class="text-warning" style="cursor: pointer;" (click)="openUserProfile(k); $event.stopPropagation()">
+          <b class="text-warning" style="cursor: pointer;" (click)="$event.stopPropagation(); openUserProfile(k);">
             {{ k.user_.username }}
           </b>
           <small class="ms-3 text-bifeldy" matTooltip="{{ k.created_at | date:'d MMMM y, hh:mm:ss a z' }}">
