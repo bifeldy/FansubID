@@ -132,7 +132,9 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       this.subsUpload = this.uploadService.events.subscribe({
         next: state => {
           this.gs.log('[UPLOAD_EVENTS]', state);
-          this.attachmentSelected = state;
+          if (state.status === 'uploading' || state.status === 'complete') {
+            this.attachmentSelected = state;
+          }
           if (state.status === 'complete') {
             this.gs.log('[UPLOAD_COMPLETED]', state.response);
             this.fg.controls['attachment_id'].patchValue(state.response.result.id);

@@ -260,13 +260,15 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           }
           if (evt.type === HttpEventType.Response) {
             this.gs.log('[DOWNLOAD_COMPLETED]', evt);
-            this.subtitles = subtitleFiles;
-            this.fonts = fontFiles;
-            this.vjsReady = true;
           }
         },
         error: err => {
           this.gs.log('[DOWNLOAD_ERROR]', err);
+        },
+        complete: () => {
+          this.subtitles = subtitleFiles;
+          this.fonts = fontFiles;
+          this.vjsReady = true;
         }
       });
     }

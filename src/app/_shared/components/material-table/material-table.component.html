@@ -7,7 +7,7 @@
 </mat-form-field>
 
 <!-- Table -->
-<table mat-table matSort [dataSource]="dataSource" class="bg-transparent">
+<table mat-table matSort [dataSource]="dataSource" class="bg-transparent" style="overflow-wrap: anywhere;">
   <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
     <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
       tdc.toUpperCase() !== 'NAMA BERKAS' && tdc.toUpperCase() !== 'NAMA LAMPIRAN' && tdc.toUpperCase() !== 'TANGGAL'  && tdc.toUpperCase() !== 'NAMA FANSUB' && tdc.toUpperCase() !== 'JUDUL DORAMA' &&
