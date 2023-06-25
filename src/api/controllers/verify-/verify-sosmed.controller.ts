@@ -135,7 +135,7 @@ export class VerifySosmedController {
         const res_raw3 = await this.api.putData(
           url3,
           JSON.stringify({
-            access_token: `Bearer ${res_json1.access_token}`
+            access_token: `${res_json1.token_type} ${res_json1.access_token}`
           }),
           {
             Authorization: `Bot ${environment.discord.loginToken}`,

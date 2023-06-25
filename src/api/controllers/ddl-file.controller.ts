@@ -47,7 +47,7 @@ export class DdlPartController {
       const res_raw = await this.api.getData(
         new URL(ddlFile.url),
         {
-          Authorization: `Bot ${environment.discord.loginToken}`,
+          // Authorization: `Bot ${environment.discord.loginToken}`,
           Range: req.headers.range || 'bytes=0-',
           ...environment.nodeJsXhrHeader
         },
@@ -143,7 +143,7 @@ export class DdlSeekController {
       const res_raw = await this.api.getData(
         new URL(ddlFile.url),
         {
-          Authorization: `Bot ${environment.discord.loginToken}`,
+          // Authorization: `Bot ${environment.discord.loginToken}`,
           Range: headerRangeFull,
           ...environment.nodeJsXhrHeader
         },
