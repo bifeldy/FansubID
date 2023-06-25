@@ -15,8 +15,6 @@ import { GlobalService } from './global.service';
 @Injectable()
 export class GdriveService {
 
-  gcp = environment.gCloudPlatform;
-
   constructor(
     private api: ApiService,
     private gs: GlobalService
@@ -31,13 +29,13 @@ export class GdriveService {
   //   token_type: 'Bearer'
   // }
   async gAuthPersonalAccount(refreshToken): Promise<OAuth2Client> {
-    const url = new URL(this.gcp.serviceAccount.token_uri);
+    const url = new URL(environment.gCloudPlatform.token_uri);
     const form = new URLSearchParams();
     form.append('grant_type', 'refresh_token');
-    form.append('client_id', this.gcp.gDrive.client_id);
-    form.append('client_secret', this.gcp.gDrive.client_secret);
+    form.append('client_id', environment.gCloudPlatform.gDrive.client_id);
+    form.append('client_secret', environment.gCloudPlatform.gDrive.client_secret);
     form.append('refresh_token', refreshToken);
-    const googleClient = new google.auth.OAuth2(this.gcp.gDrive.client_id, this.gcp.gDrive.client_secret);
+    const googleClient = new google.auth.OAuth2(environment.gCloudPlatform.gDrive.client_id, environment.gCloudPlatform.gDrive.client_secret);
     const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
     const res_json: any = await res_raw.json();
     this.gs.log(`[gApp] 🔑 ${res_raw.status}`, res_json);
@@ -53,13 +51,13 @@ export class GdriveService {
   async gDrive(userPersonalUserAccountInsteadOfServiceAccount = false): Promise<drive_v3.Drive> {
     let auth = null;
     if (userPersonalUserAccountInsteadOfServiceAccount) {
-      auth = await this.gAuthPersonalAccount(this.gcp.gDrive.refresh_token);
+      auth = await this.gAuthPersonalAccount(environment.gCloudPlatform.gDrive.refresh_token);
     } else {
       auth = new google.auth.JWT(
-        this.gcp.serviceAccount.client_email,
+        environment.gCloudPlatform.serviceAccount.client_email,
         null,
-        this.gcp.serviceAccount.private_key,
-        this.gcp.gDrive.scopes,
+        environment.gCloudPlatform.serviceAccount.private_key,
+        environment.gCloudPlatform.gDrive.scopes,
         null
       );
     }

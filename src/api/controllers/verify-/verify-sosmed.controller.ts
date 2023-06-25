@@ -110,7 +110,6 @@ export class VerifySosmedController {
     form.append('grant_type', 'authorization_code');
     form.append('code', req.body.code);
     form.append('redirect_uri', `${environment.baseUrl}/verify?app=discord`);
-    form.append('scope', 'identify email guilds.join');
     const res_raw1 = await this.api.postData(url1, form, environment.nodeJsXhrHeader);
     if (res_raw1.ok) {
       const res_json1: any = await res_raw1.json();

@@ -99,6 +99,7 @@ export const environment = {
     secret_key: SECRETS().RECAPTCHA_SECRET_KEY,                                                                   // '',
   },
   gCloudPlatform: {
+    token_uri: 'https://oauth2.googleapis.com/token',
     app: {
       auth_uri: 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount',
       client_id: '955612959719-q9i4dtl0qp5icvc341q0cef6ul7ujov0.apps.googleusercontent.com',
@@ -119,8 +120,7 @@ export const environment = {
     },
     serviceAccount: {
       client_email: SECRETS().GCP_SERVICE_ACCOUNT_CLIENT_EMAIL,                                                   // '',
-      private_key: SECRETS().GCP_SERVICE_ACCOUNT_PRIVATE_KEY,                                                     // '',
-      token_uri: 'https://oauth2.googleapis.com/token'
+      private_key: SECRETS().GCP_SERVICE_ACCOUNT_PRIVATE_KEY                                                      // ''
     }
   },
   mailTrap: {

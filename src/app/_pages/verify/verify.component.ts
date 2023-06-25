@@ -132,9 +132,10 @@ export class VerifyComponent implements OnInit, OnDestroy {
             }
           });
         } else if (re === false) {
-          if (sosmedApp.toUpperCase() === SosMedModel.DISCORD) {
+          const app = sosmedApp.toUpperCase();
+          if (app === SosMedModel.DISCORD) {
             this.openVerifyDiscordUrl();
-          } else if (sosmedApp.toUpperCase() === SosMedModel.GOOGLE) {
+          } else if (app === SosMedModel.GOOGLE) {
             this.openVerifyGoogleUrl();
           }
           // TODO :: Other Social Media Platform
