@@ -1,6 +1,3 @@
-// 3rd Party Library
-import { AbortController } from 'abort-controller';
-
 // NodeJS Library
 import { createReadStream, readdirSync } from 'node:fs';
 
@@ -97,7 +94,6 @@ export class MailWebhookController {
         mailbox.text = req.body['body-plain'];
         mailbox.date = new Date(req.body.Date);
         if (req.files?.length > 0) {
-          const abortController = new AbortController();
           let attachments = [];
           for (const file of req.files as any) {
             const attachment = this.attachmentRepo.new();
@@ -124,7 +120,7 @@ export class MailWebhookController {
                       body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
                     },
                     fields: 'id'
-                  }, { signal: abortController.signal });
+                  }, { signal: null });
                   resAttachmentSave.mime = dfile.data.mimeType;
                   resAttachmentSave.google_drive = dfile.data.id;
                   await this.attachmentRepo.save(resAttachmentSave);
@@ -132,7 +128,6 @@ export class MailWebhookController {
                 }).catch(e => this.gs.log('[GDRIVE-ERROR] 💽', e, 'error'));
               }
             } else {
-              abortController.abort();
               await this.attachmentRepo.remove(resAttachmentSave);
               for (const a of attachments) {
                 if (a.google_drive) {
