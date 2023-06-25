@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges, AfterViewInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -32,9 +33,15 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
 
   pageSizeOptions = [10, 25, 50, 75, 100];
 
+  urlPath = null;
   searchQuery = '';
 
+  subsQueryParam = null;
+  timedOut = null;
+
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
@@ -53,6 +60,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.tableDataRow);
     if (this.gs.isBrowser) {
+      this.urlPath = this.router.url.split('?')[0];
       if (!this.serverSide) {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -72,6 +80,11 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
 
   ngOnDestroy(): void {
     this.sort?.sortChange?.unsubscribe();
+    this.subsQueryParam?.unsubscribe();
+    if (this.timedOut) {
+      clearTimeout(this.timedOut);
+      this.timedOut = null;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -81,10 +94,19 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
         this.onServerSideOrder(data);
       }
     });
+    this.timedOut = setTimeout(() => {
+      this.searchQuery = this.activatedRoute.snapshot.queryParamMap.get('q') || '';
+      this.search();
+      this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
+        next: qp => {
+          this.searchQuery = qp['q'];
+          this.search();
+        }
+      });
+    }, 0);
   }
 
-  applyFilter(event: Event): void {
-    this.searchQuery = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  search(): void {
     if (!this.serverSide) {
       this.dataSource.filter = this.searchQuery;
       if (this.dataSource.paginator) {
@@ -93,6 +115,16 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
     } else {
       this.onServerSideFilter(this.searchQuery);
     }
+  }
+
+  applyFilter(event: Event): void {
+    this.searchQuery = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.router.navigate([this.urlPath], {
+      queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
+        q: this.searchQuery
+      }
+    });
   }
 
   onServerSideOrder(data: any): void {

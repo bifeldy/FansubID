@@ -53,7 +53,6 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy 
     private bs: BusyService,
     private ds: DialogService,
     private gs: GlobalService,
-    private route: ActivatedRoute,
     private as: AuthService,
     private cs: CryptoService
   ) {
@@ -84,7 +83,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     if (!this.timedOut) {
       this.timedOut = setTimeout(() => {
-        const token = this.activatedRoute.snapshot.queryParamMap.get('token');
+        const token = this.activatedRoute.snapshot.queryParamMap.get('token') || '';
         if (token && this.fg2 && this.stepper) {
           this.fg2.controls['token'].patchValue(token);
           this.stepper.next();
@@ -94,7 +93,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+    this.returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/';
     if (this.gs.isBrowser) {
       this.initForm();
       this.subsUser = this.as.currentUser.subscribe({

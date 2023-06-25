@@ -50,7 +50,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
     }
   ];
 
-  subsParam = null;
+  subsQueryParam = null;
   subsSeasonalAnime = null;
   subsFansubAnime = null;
 
@@ -68,7 +68,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subsParam?.unsubscribe();
+    this.subsQueryParam?.unsubscribe();
     this.subsSeasonalAnime?.unsubscribe();
     this.subsFansubAnime?.unsubscribe();
   }
@@ -87,21 +87,21 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   }
 
   watchUrlRoute(): void {
-    this.subsParam = this.activatedRoute.queryParams.subscribe({
-      next: p => {
+    this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
+      next: qp => {
         this.bs.busy();
-        this.currentYear = p['year'] ? (
-          Number.isNaN(parseInt(p['year'], 10)) ? this.currentYear : parseInt(p['year'], 10)
+        this.currentYear = qp['year'] ? (
+          Number.isNaN(parseInt(qp['year'], 10)) ? this.currentYear : parseInt(qp['year'], 10)
         ) : new Date().getFullYear();
         this.fg.controls['currentDate'].patchValue(moment(new Date(`${this.currentYear}-${this.currentMonth}-01`)));
         this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
-        this.selectedSeasonName = p['season'] ? (
+        this.selectedSeasonName = qp['season'] ? (
           this.gs.seasonalWeather.map(s => s.name)
-            .indexOf(p['season']) >= 0 ? p['season'] : this.findSeasonNameByMonthNumber(this.currentMonth)
+            .indexOf(qp['season']) >= 0 ? qp['season'] : this.findSeasonNameByMonthNumber(this.currentMonth)
         ) : this.findSeasonNameByMonthNumber(this.currentMonth);
         this.gs.bannerImg = this.gs.seasonalWeather.find(sB => sB.name === this.selectedSeasonName).img;
         this.bs.idle();
-        this.getSeasonalAnime(p['year'] && p['season']);
+        this.getSeasonalAnime(qp['year'] && qp['season']);
       }
     });
   }

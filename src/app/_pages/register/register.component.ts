@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private gs: GlobalService,
     private router: Router,
     private bs: BusyService,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private as: AuthService,
     private ds: DialogService,
     private cs: CryptoService
@@ -60,7 +60,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+    this.returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/';
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({
         next: user => {

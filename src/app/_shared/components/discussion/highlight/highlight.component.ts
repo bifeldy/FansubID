@@ -61,7 +61,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.urlPath = this.router.url.split('?')[0];
-      this.highlightId = Number(this.activatedRoute.snapshot.queryParamMap.get('comment'));
+      this.highlightId = Number(this.activatedRoute.snapshot.queryParamMap.get('comment') || '');
       if (this.highlightId > 0) {
         this.getHighlight();
       }

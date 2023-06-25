@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private snackBar: MatSnackBar,
     private renderer: Renderer2,
     private router: Router,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private bs: BusyService,
     private pi: PageInfoService,
     private as: AuthService,
@@ -167,7 +167,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
         else if (e1 instanceof NavigationEnd) {
-          let activatedRouteChild = this.route.firstChild;
+          let activatedRouteChild = this.activatedRoute.firstChild;
           for (const aRC of activatedRouteChild.children) {
             activatedRouteChild = aRC;
           }

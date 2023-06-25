@@ -50,7 +50,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private ds: DialogService,
     private gs: GlobalService,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private as: AuthService,
     private wb: WinboxService
   ) {
@@ -72,14 +72,14 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+    this.returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/';
     if (this.returnUrl.includes('/login')) {
       this.returnUrl = '/';
     }
     if (this.gs.isBrowser) {
       this.initKTP();
-      const app = this.route.snapshot.queryParamMap.get('app');
-      const code = this.route.snapshot.queryParamMap.get('code');
+      const app = this.activatedRoute.snapshot.queryParamMap.get('app' || '');
+      const code = this.activatedRoute.snapshot.queryParamMap.get('code') || '';
       if (app && code) {
         this.sosmedVerify(app, code);
       } else if (this.as.currentUserSubject?.value?.verified) {

@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private gs: GlobalService,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private bs: BusyService,
     private as: AuthService,
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || this.gs.previousUrl || '/';
+    this.returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || this.gs.previousUrl || '/';
     if (this.gs.isBrowser) {
       this.subsUser = this.as.currentUser.subscribe({
         next: user => {
