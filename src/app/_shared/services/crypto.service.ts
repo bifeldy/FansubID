@@ -1,6 +1,9 @@
 import cryptojs from 'crypto-js';
+import { decode } from 'jsonwebtoken';
 
 import { Injectable } from '@angular/core';
+
+import { environment } from '../../../environments/app/environment';
 
 import { GlobalService } from './global.service';
 
@@ -21,7 +24,7 @@ export class CryptoService {
     }
   }
 
-  encrypt(msg, pass): any {
+  encrypt(msg, pass = environment.apiKey): any {
     const salt = cryptojs.lib.WordArray.random(128 / 8);
     const key = cryptojs.PBKDF2(pass, salt, {
       keySize: this.keySize / 32,
@@ -37,7 +40,7 @@ export class CryptoService {
     return transitmessage;
   }
 
-  decrypt(transitmessage, pass): any {
+  decrypt(transitmessage, pass = environment.apiKey): any {
     const salt = cryptojs.enc.Hex.parse(transitmessage.substr(0, 32));
     const iv = cryptojs.enc.Hex.parse(transitmessage.substr(32, 32));
     const encrypted = transitmessage.substring(64);
@@ -55,6 +58,10 @@ export class CryptoService {
 
   hashPassword(password): any {
     return cryptojs.SHA512(password).toString();
+  }
+
+  viewJwt(jwt: string): any {
+    return decode(jwt);
   }
 
 }

@@ -10,6 +10,8 @@ import { GlobalService } from './global.service';
 import { ApiService } from './api.service';
 import { BusyService } from './busy.service';
 import { LocalStorageService } from './local-storage.service';
+import { CryptoService } from './crypto.service';
+import { ToastService } from './toast.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -19,12 +21,17 @@ export class AuthService {
 
   token = null;
 
+  timeOut = null;
+  timeoutToast = null;
+
   constructor(
     private router: Router,
     private gs: GlobalService,
     private bs: BusyService,
     private ls: LocalStorageService,
-    private api: ApiService
+    private api: ApiService,
+    private cs: CryptoService,
+    private toast: ToastService
   ) {
     if (this.gs.isBrowser) {
       this.token = this.ls.getItem(this.gs.localStorageKeys.token);
@@ -38,6 +45,33 @@ export class AuthService {
       tap(respVerify => {
         this.currentUserSubject?.next(respVerify.result);
         this.token = respVerify.token;
+        if (this.token) {
+          if (this.timeOut) {
+            clearTimeout(this.timeOut);
+            this.timeOut = null;
+          }
+          if (this.timeoutToast) {
+            this.toast.remove(this.timeoutToast.toastId);
+            this.timeoutToast = null;
+          }
+          const expires = new Date(this.cs.viewJwt(token).exp * 1000);
+          const minBefore = 5 * 60 * 1000;
+          const notifTime = expires.getTime() - minBefore;
+          this.timeOut = setTimeout(() => {
+            this.timeoutToast = this.toast.warning(
+              `Sesi Akun Akan Habis!`,
+              `Silahkan Logout & Login Ulang ...`,
+              {
+                closeButton: false,
+                timeOut: minBefore,
+                disableTimeOut: 'extendedTimeOut',
+                tapToDismiss: false,
+                progressAnimation: 'decreasing'
+              },
+              true
+            );
+          }, notifTime - Date.now());
+        }
       })
     );
   }
