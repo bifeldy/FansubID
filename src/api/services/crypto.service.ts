@@ -58,7 +58,7 @@ export class CryptoService {
     return Buffer.from(obj);
   }
 
-  msgEncrypt(message, keyPass = this.apiKey): any {
+  msgEncrypt(message, keyPass = this.apiKey): string {
     const salt = lib.WordArray.random(128 / 8);
     const key = PBKDF2(keyPass, salt, {
       keySize: this.keySize / 32,
@@ -74,7 +74,7 @@ export class CryptoService {
     return encryptedMessage;
   }
 
-  msgDecrypt(encryptedMessage, keyPass = this.apiKey): any {
+  msgDecrypt(encryptedMessage, keyPass = this.apiKey): string {
     const salt = enc.Hex.parse(encryptedMessage.substr(0, 32));
     const iv = enc.Hex.parse(encryptedMessage.substr(32, 32));
     const transitMessage = encryptedMessage.substring(64);

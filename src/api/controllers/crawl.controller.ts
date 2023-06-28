@@ -1,3 +1,6 @@
+// NodeJS Library
+import { Buffer } from 'node:buffer';
+
 // 3rd Party Library
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';

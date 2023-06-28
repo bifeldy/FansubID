@@ -1,5 +1,5 @@
+import { Buffer } from 'buffer'; 
 import { AES, enc, lib, mode, pad, PBKDF2, SHA512 } from 'crypto-js';
-import { decode } from 'jsonwebtoken';
 
 import { Injectable } from '@angular/core';
 
@@ -24,7 +24,30 @@ export class CryptoService {
     }
   }
 
-  msgEncrypt(message, keyPass = environment.apiKey): any {
+  universalBtoa(str: string): string {
+    return this.convertToBase64(str);
+  };
+
+  universalAtob(b64Encoded: string): string {
+    return this.convertFromBase64(b64Encoded);
+  };
+
+  convertToBase64(str: string | Uint8Array): string {
+    return this.convertEncoding(str).toString('base64');
+  };
+
+  convertFromBase64(b64Encoded: string): string {
+    return this.convertEncoding(b64Encoded, 'base64').toString();
+  };
+
+  convertEncoding(obj: any, enc: BufferEncoding = null): Buffer {
+    if (enc) {
+      return Buffer.from(obj, enc)
+    }
+    return Buffer.from(obj);
+  }
+
+  msgEncrypt(message, keyPass = environment.apiKey): string {
     const salt = lib.WordArray.random(128 / 8);
     const key = PBKDF2(keyPass, salt, {
       keySize: this.keySize / 32,
@@ -40,7 +63,7 @@ export class CryptoService {
     return encryptedMessage;
   }
 
-  msgDecrypt(encryptedMessage, keyPass = environment.apiKey): any {
+  msgDecrypt(encryptedMessage, keyPass = environment.apiKey): string {
     const salt = enc.Hex.parse(encryptedMessage.substr(0, 32));
     const iv = enc.Hex.parse(encryptedMessage.substr(32, 32));
     const transitMessage = encryptedMessage.substring(64);
@@ -56,12 +79,19 @@ export class CryptoService {
     return decryptedMessage;
   }
 
-  hashPassword(password): any {
+  hashPassword(password): string {
     return SHA512(password).toString();
   }
 
   jwtView(jwt: string): any {
-    return decode(jwt);
+    const base64Url = jwt.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      this.universalAtob(base64).split('').map((c) => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join('')
+    );
+    return JSON.parse(jsonPayload);
   }
 
 }
