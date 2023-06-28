@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from '../../../environments/app/environment';
-
 import { CryptoService } from './crypto.service';
 import { GlobalService } from './global.service';
 
@@ -11,7 +9,7 @@ import { GlobalService } from './global.service';
 export class LocalStorageService {
 
   constructor(
-    private crypt: CryptoService,
+    private cs: CryptoService,
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
@@ -26,7 +24,7 @@ export class LocalStorageService {
       } else {
         try {
           const encryptedString = localStorage.getItem(key);
-          const jsonString = this.crypt.decrypt(encryptedString, environment.apiKey);
+          const jsonString = this.cs.decrypt(encryptedString);
           return JSON.parse(jsonString);
         } catch (error) {
           this.removeItem(key);
@@ -44,7 +42,7 @@ export class LocalStorageService {
         localStorage.setItem(key, value);
       } else {
         const jsonString = JSON.stringify(value);
-        const encryptedString = this.crypt.encrypt(jsonString, environment.apiKey);
+        const encryptedString = this.cs.encrypt(jsonString);
         localStorage.setItem(key, encryptedString);
       }
     }
