@@ -105,7 +105,13 @@ export class RegisterMiddleware implements NestMiddleware {
             pengguna.nama = req.body.name;
             let penggunaSave = await this.registrationRepo.save(pengguna);
             const { password, activation_token, ...noPwdAcToken } = penggunaSave;
-            pengguna.activation_token = this.cs.jwtEncrypt({ user: noPwdAcToken }, CONSTANTS.timeoutCancelRegisterTime);
+            pengguna.activation_token = this.cs.credentialEncode(
+              {
+                user: noPwdAcToken
+              },
+              false,
+              CONSTANTS.timeoutCancelRegisterTime
+            );
             penggunaSave = await this.registrationRepo.save(pengguna);
             res.locals['registration'] = penggunaSave;
             this.sr.addTimeout(

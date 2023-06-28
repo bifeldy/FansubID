@@ -154,18 +154,22 @@ export class VerifySosmedController {
           info: `😅 201 - Discord API :: Masuk & Verify 🤣`,
           result: {
             title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam ${CONSTANTS.timeJwtEncryption / 60} Menit! #🚮-bot-spam`,
-            message: '~verify DISCORD ' + this.cs.jwtEncrypt({
-              discord: {
-                id: res_json2.id,
-                email: res_json2.email,
-                verified: res_json2.verified
+            message: '~verify DISCORD ' + this.cs.credentialEncode(
+              {
+                discord: {
+                  id: res_json2.id,
+                  email: res_json2.email,
+                  verified: res_json2.verified
+                },
+                user: {
+                  id: user.id,
+                  username: user.username,
+                  verified: user.verified
+                }
               },
-              user: {
-                id: user.id,
-                username: user.username,
-                verified: user.verified
-              }
-            }) + ' DELETE_CHAT'
+              false,
+              CONSTANTS.timeJwtEncryption
+            ) + ' DELETE_CHAT'
           }
         };
       } else {
@@ -216,18 +220,22 @@ export class VerifySosmedController {
           email: res_json.email,
           username: user.username,
         },
-        this.cs.jwtEncrypt({
-          google: {
-            id: res_json.id,
-            email: res_json.email,
-            verified: res_json.verified_email
+        this.cs.credentialEncode(
+          {
+            google: {
+              id: res_json.id,
+              email: res_json.email,
+              verified: res_json.verified_email
+            },
+            user: {
+              id: user.id,
+              username: user.username,
+              verified: user.verified
+            }
           },
-          user: {
-            id: user.id,
-            username: user.username,
-            verified: user.verified
-          }
-        })
+          false,
+          CONSTANTS.timeJwtEncryption
+        )
       );
       return {
         info: `😅 201 - Google API :: Masuk & Verify 🤣`,

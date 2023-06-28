@@ -1,4 +1,4 @@
-import cryptojs from 'crypto-js';
+import { AES, enc, lib, mode, pad, PBKDF2, SHA512 } from 'crypto-js';
 import { decode } from 'jsonwebtoken';
 
 import { Injectable } from '@angular/core';
@@ -24,43 +24,43 @@ export class CryptoService {
     }
   }
 
-  encrypt(msg, pass = environment.apiKey): any {
-    const salt = cryptojs.lib.WordArray.random(128 / 8);
-    const key = cryptojs.PBKDF2(pass, salt, {
+  msgEncrypt(message, keyPass = environment.apiKey): any {
+    const salt = lib.WordArray.random(128 / 8);
+    const key = PBKDF2(keyPass, salt, {
       keySize: this.keySize / 32,
       iterations: this.iterations
     });
-    const iv = cryptojs.lib.WordArray.random(128 / 8);
-    const encrypted = cryptojs.AES.encrypt(msg, key, {
+    const iv = lib.WordArray.random(128 / 8);
+    const transitMessage = AES.encrypt(message, key, {
       iv,
-      padding: cryptojs.pad.Pkcs7,
-      mode: cryptojs.mode.CBC
+      padding: pad.Pkcs7,
+      mode: mode.CBC
     });
-    const transitmessage = salt.toString() + iv.toString() + encrypted.toString();
-    return transitmessage;
+    const encryptedMessage = salt.toString() + iv.toString() + transitMessage.toString();
+    return encryptedMessage;
   }
 
-  decrypt(transitmessage, pass = environment.apiKey): any {
-    const salt = cryptojs.enc.Hex.parse(transitmessage.substr(0, 32));
-    const iv = cryptojs.enc.Hex.parse(transitmessage.substr(32, 32));
-    const encrypted = transitmessage.substring(64);
-    const key = cryptojs.PBKDF2(pass, salt, {
+  msgDecrypt(encryptedMessage, keyPass = environment.apiKey): any {
+    const salt = enc.Hex.parse(encryptedMessage.substr(0, 32));
+    const iv = enc.Hex.parse(encryptedMessage.substr(32, 32));
+    const transitMessage = encryptedMessage.substring(64);
+    const key = PBKDF2(keyPass, salt, {
       keySize: this.keySize / 32,
       iterations: this.iterations
     });
-    const decrypted = cryptojs.AES.decrypt(encrypted, key, {
+    const decryptedMessage = AES.decrypt(transitMessage, key, {
       iv,
-      padding: cryptojs.pad.Pkcs7,
-      mode: cryptojs.mode.CBC
-    }).toString(cryptojs.enc.Utf8);
-    return decrypted;
+      padding: pad.Pkcs7,
+      mode: mode.CBC
+    }).toString(enc.Utf8);
+    return decryptedMessage;
   }
 
   hashPassword(password): any {
-    return cryptojs.SHA512(password).toString();
+    return SHA512(password).toString();
   }
 
-  viewJwt(jwt: string): any {
+  jwtView(jwt: string): any {
     return decode(jwt);
   }
 

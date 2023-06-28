@@ -54,7 +54,7 @@ export class AuthService {
             this.toast.remove(this.timeoutToast.toastId);
             this.timeoutToast = null;
           }
-          const expires = new Date(this.cs.viewJwt(token).exp * 1000);
+          const expires = new Date(this.cs.jwtView(token).exp * 1000);
           const minBefore = 5 * 60 * 1000;
           const notifTime = expires.getTime() - minBefore;
           this.timeOut = setTimeout(() => {

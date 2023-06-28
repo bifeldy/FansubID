@@ -24,7 +24,7 @@ export class LocalStorageService {
       } else {
         try {
           const encryptedString = localStorage.getItem(key);
-          const jsonString = this.cs.decrypt(encryptedString);
+          const jsonString = this.cs.msgDecrypt(encryptedString);
           return JSON.parse(jsonString);
         } catch (error) {
           this.removeItem(key);
@@ -42,7 +42,7 @@ export class LocalStorageService {
         localStorage.setItem(key, value);
       } else {
         const jsonString = JSON.stringify(value);
-        const encryptedString = this.cs.encrypt(jsonString);
+        const encryptedString = this.cs.msgEncrypt(jsonString);
         localStorage.setItem(key, encryptedString);
       }
     }

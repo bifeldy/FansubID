@@ -68,7 +68,7 @@ export class AuthService {
 
   async activateAccount(token: string): Promise<User> {
     try {
-      const decoded = this.cs.jwtDecrypt(token);
+      const decoded = this.cs.jwtDecode(token);
       const selectedRegistration = await this.registrationRepo.findOneOrFail({
         where: [
           { id: Equal(decoded.user.id) }
@@ -112,7 +112,7 @@ export class AuthService {
 
   async verifySosmedAccount(token: string, sosMedModel: SosMedModel): Promise<User> {
     try {
-      const decoded = this.cs.jwtDecrypt(token);
+      const decoded = this.cs.jwtDecode(token);
       const sosmed = await this.sosmedRepo.findOneOrFail({
         where: [
           {

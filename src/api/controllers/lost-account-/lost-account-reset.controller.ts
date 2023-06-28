@@ -28,7 +28,7 @@ export class LostAccountResetController {
   async reset(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('token' in req.body && 'password' in req.body ) {
-        const decoded = this.cs.jwtDecrypt(req.body.token);
+        const decoded = this.cs.jwtDecode(req.body.token);
         const selectedUser = await this.userRepo.findOneOrFail({
           where: [
             { id: Equal(decoded.user.id) }

@@ -219,7 +219,7 @@ export class SocketIoService {
           user = check.user;
         }
       } else if (payload.token) {
-        const decoded = this.cs.jwtDecrypt(payload.token);
+        const decoded = this.cs.jwtDecode(payload.token);
         user = decoded.user;
       }
       if (!user) {

@@ -261,7 +261,7 @@ export class DiscordService {
     try {
       const args = msg.content.split(' ');
       if (args.length >= 3 && args.length <= 4) {
-        const decoded = this.cs.jwtDecrypt(args[2]);
+        const decoded = this.cs.jwtDecode(args[2]);
         if (decoded.discord.id === msg.author.id) {
           const user = await this.userRepo.findOneOrFail({
             where: [

@@ -2,7 +2,7 @@
 import { Buffer } from 'node:buffer';
 
 // 3rd Party Library
-import { SHA512 } from 'crypto-js';
+import { AES, enc, lib, mode, pad, PBKDF2, SHA512 } from 'crypto-js';
 import { sign, verify, decode, Algorithm } from 'jsonwebtoken';
 
 import { Injectable } from '@nestjs/common';
@@ -22,43 +22,80 @@ export class CryptoService {
   jwtSecretKey = this.hashPassword(environment.jwtSecretKey);
   jwtExpiredIn = CONSTANTS.jwtExpiredIn;
 
+  keySize = 256;
+  ivSize = 128;
+  iterations = 100;
+
+  // Encrypt & Decrypt With User API Key
+  apiKey = '00000000-0000-0000-0000-000000000000';
+
   constructor(
     private gs: GlobalService
   ) {
     //
   }
 
-  universalBtoa(str: string) {
+  universalBtoa(str: string): string {
     return this.convertToBase64(str);
   };
 
-  universalAtob(b64Encoded: string) {
+  universalAtob(b64Encoded: string): string {
     return this.convertFromBase64(b64Encoded);
   };
 
-  convertToBase64(str: string | Uint8Array) {
-    return Buffer.from(str).toString('base64');
+  convertToBase64(str: string | Uint8Array): string {
+    return this.convertEncoding(str).toString('base64');
   };
 
-  convertFromBase64(b64Encoded: string) {
-    return Buffer.from(b64Encoded, 'base64').toString();
+  convertFromBase64(b64Encoded: string): string {
+    return this.convertEncoding(b64Encoded, 'base64').toString();
   };
+
+  convertEncoding(obj: any, enc: BufferEncoding = null): Buffer {
+    if (enc) {
+      return Buffer.from(obj, enc)
+    }
+    return Buffer.from(obj);
+  }
+
+  msgEncrypt(message, keyPass = this.apiKey): any {
+    const salt = lib.WordArray.random(128 / 8);
+    const key = PBKDF2(keyPass, salt, {
+      keySize: this.keySize / 32,
+      iterations: this.iterations
+    });
+    const iv = lib.WordArray.random(128 / 8);
+    const transitMessage = AES.encrypt(message, key, {
+      iv,
+      padding: pad.Pkcs7,
+      mode: mode.CBC
+    });
+    const encryptedMessage = salt.toString() + iv.toString() + transitMessage.toString();
+    return encryptedMessage;
+  }
+
+  msgDecrypt(encryptedMessage, keyPass = this.apiKey): any {
+    const salt = enc.Hex.parse(encryptedMessage.substr(0, 32));
+    const iv = enc.Hex.parse(encryptedMessage.substr(32, 32));
+    const transitMessage = encryptedMessage.substring(64);
+    const key = PBKDF2(keyPass, salt, {
+      keySize: this.keySize / 32,
+      iterations: this.iterations
+    });
+    const decryptedMessage = AES.decrypt(transitMessage, key, {
+      iv,
+      padding: pad.Pkcs7,
+      mode: mode.CBC
+    }).toString(enc.Utf8);
+    return decryptedMessage;
+  }
 
   hashPassword(password: string): string {
     return SHA512(password).toString();
   }
 
   credentialEncode(data: any, rememberMe = false, expiresIn = null): string {
-    return sign(
-      data,
-      this.jwtSecretKey, 
-      {
-        algorithm: this.jwtAlgorithm,
-        issuer: this.jwtIssuer,
-        audience: this.jwtAudience,
-        expiresIn: rememberMe ? CONSTANTS.timeLoginRememberMe : (expiresIn || this.jwtExpiredIn),
-      }
-    );
+    return this.jwtEncode(data, rememberMe ? CONSTANTS.timeLoginRememberMe : (expiresIn || this.jwtExpiredIn));
   }
 
   credentialDecode(token: string): any {
@@ -66,7 +103,7 @@ export class CryptoService {
       if (token.startsWith('Bearer ')) {
         token = token.slice(7, token.length);
       }
-      const decoded = this.jwtDecrypt(token);
+      const decoded = this.jwtDecode(token);
       this.gs.log('[CRYPTO_SERVICE-CREDENTIAL_DECODE_SUCCESS] 🍪', decoded);
       return decoded;
     } catch (error) {
@@ -75,14 +112,23 @@ export class CryptoService {
     }
   }
 
-  jwtEncrypt(data, expTimeSecond = CONSTANTS.timeJwtEncryption): string {
-    return this.credentialEncode(data, false, expTimeSecond);
+  jwtEncode(data: any, exp: number): string {
+    return sign(
+      data,
+      this.jwtSecretKey, 
+      {
+        algorithm: this.jwtAlgorithm,
+        issuer: this.jwtIssuer,
+        audience: this.jwtAudience,
+        expiresIn: exp,
+      }
+    );
   }
-  
-  jwtDecrypt(token: string): any {
+
+  jwtDecode(token: string): any {
     return verify(token, this.jwtSecretKey);
   }
-  
+
   jwtView(token: string): any {
     return decode(token);
   }
