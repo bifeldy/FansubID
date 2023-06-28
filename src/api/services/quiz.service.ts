@@ -314,10 +314,9 @@ export class QuizService {
       }
       points = hasilPangkatDua;
     } else if (question.category) {
-      points = 12;
-    } else {
-      points = 1;
+      points = 4;
     }
+    // TODO :: Quiz Lain
     return points;
   }
 
