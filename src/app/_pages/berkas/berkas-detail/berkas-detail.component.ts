@@ -263,7 +263,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
           }
         },
         error: err => {
-          this.gs.log('[DOWNLOAD_ERROR]', err);
+          this.gs.log('[DOWNLOAD_ERROR]', err, 'error');
         },
         complete: () => {
           this.subtitles = subtitleFiles;

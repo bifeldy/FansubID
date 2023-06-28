@@ -38,7 +38,7 @@ export class ServiceWorkerService {
       try {
         this.isUpdateAvailable = await this.su.checkForUpdate();
       } catch (e) {
-        this.gs.log('[SERVICE_WORKER_CHECK_FOR_UPDATE_ERROR]', e);
+        this.gs.log('[SERVICE_WORKER_CHECK_FOR_UPDATE_ERROR]', e, 'error');
       }
     }
     this.gs.log('[SERVICE_WORKER_UPDATE_AVAILABLE]', this.isUpdateAvailable);
@@ -72,7 +72,7 @@ export class ServiceWorkerService {
           }
         });
       } catch (e) {
-        this.gs.log('[SERVICE_WORKER_ACTIVATE_UPDATE_ERROR]', e);
+        this.gs.log('[SERVICE_WORKER_ACTIVATE_UPDATE_ERROR]', e, 'error');
       }
     }
     this.gs.log('[SERVICE_WORKER_UPDATE_FINISH]', au);

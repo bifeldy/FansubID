@@ -99,7 +99,7 @@ export class TorrentService {
       }
     });
     this.webClient.on('error', err => {
-      this.gs.log('[TORRENT_CLIENT_ERROR]', err);
+      this.gs.log('[TORRENT_CLIENT_ERROR]', err, 'error');
       this.toast.error(err.toString(), 'Whoops!', null, true);
       this.error = err;
       if (this.refCallback) {
@@ -126,7 +126,7 @@ export class TorrentService {
       }
     });
     torrent.on('error', err => {
-      this.gs.log('[TORRENT_FILE_ERROR]', err);
+      this.gs.log('[TORRENT_FILE_ERROR]', err, 'error');
       this.toast.error(err.toString(), 'Whoops!', null, true);
       if (callback) {
         callback(err, null);
@@ -257,7 +257,7 @@ export class TorrentService {
       destroyStore: true
     }, err => {
       if (err) {
-        this.gs.log('[TORRENT_FILE_REMOVE_ERROR]', err);
+        this.gs.log('[TORRENT_FILE_REMOVE_ERROR]', err, 'error');
       }
       delete this.torrentsQueue[torrentId];
       if (saveLocalStorage) {

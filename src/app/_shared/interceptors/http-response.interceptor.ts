@@ -76,7 +76,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
         }
       }),
       catchError(e => {
-        this.gs.log(`[INTERCEPT_ERROR-${e.status}]`, e.statusText);
+        this.gs.log(`[INTERCEPT_ERROR-${e.status}]`, e.statusText, 'error');
         if (this.gs.isBrowser) {
           let errorMessage = 'Terjadi Kesalahan Pada Jaringan~';
           let errorTitle = 'Whoops, Server Sibuk T.T';

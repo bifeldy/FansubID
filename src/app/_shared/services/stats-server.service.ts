@@ -158,7 +158,7 @@ export class StatsServerService {
       }, 1234);
     });
     this.mySocket.on('connect_error', () => {
-      this.gs.log('[SOCKET_CONNECT_ERROR]', this.mySocket.io.opts);
+      this.gs.log('[SOCKET_CONNECT_ERROR]', this.mySocket.io.opts, 'error');
       this.mySocket.io.opts.transports = ['polling', 'websocket'];
     });
     this.mySocket.on('disconnect', reason => {

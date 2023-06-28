@@ -129,13 +129,13 @@ export class DownloadManagerService {
                 }
               },
               error: err => {
-                this.gs.log('[DOWNLOAD_CHUNK_ERROR]', err);
+                this.gs.log('[DOWNLOAD_CHUNK_ERROR]', err, 'error');
                 this.stopFail(attachment);
               }
             });
           },
           error: err => {
-            this.gs.log('[DOWNLOAD_ERROR]', err);
+            this.gs.log('[DOWNLOAD_ERROR]', err, 'error');
             this.stopFail(attachment);
           }
         });
@@ -156,7 +156,7 @@ export class DownloadManagerService {
             }
           },
           error: err => {
-            this.gs.log('[DOWNLOAD_ERROR]', err);
+            this.gs.log('[DOWNLOAD_ERROR]', err, 'error');
             this.stopFail(attachment);
           }
         });

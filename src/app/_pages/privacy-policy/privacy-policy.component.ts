@@ -49,7 +49,7 @@ export class PrivacyPolicyComponent implements OnInit, OnDestroy {
         this.lastUpdated = new Date(res.result.updated_at);
       },
       error: err => {
-        this.gs.log('[PRIVACY_POLICY_ERROR]', err);
+        this.gs.log('[PRIVACY_POLICY_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

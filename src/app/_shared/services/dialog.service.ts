@@ -96,7 +96,7 @@ export class DialogService {
         defaultData.disableClose = true;
       }
     } catch (e) {
-      this.gs.log('[DIALOG_SERVICE-FETCH_DIALOG_ERROR]', e.error);
+      this.gs.log('[DIALOG_SERVICE-FETCH_DIALOG_ERROR]', e.error, 'error');
     }
     return this.openInfoDialog(defaultData);
   }
@@ -110,7 +110,7 @@ export class DialogService {
       defaultData.data.cancelText = res.result.cancel;
       defaultData.disableClose = res.result.close;
     } catch (e) {
-      this.gs.log('[DIALOG_SERVICE-FETCH_DIALOG_ERROR]', e.error);
+      this.gs.log('[DIALOG_SERVICE-FETCH_DIALOG_ERROR]', e.error, 'error');
     }
   }
 
