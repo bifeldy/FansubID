@@ -9,7 +9,7 @@
     <div class="col-12">
       <div class="row">
         <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
-          <div class="col-12 sticky-top bg-bifeldy">
+          <div class="col-12 sticky-top bg-bifeldy pb-1">
             <h2 class="pt-3 border-bottom-dotted">
               <b class="text-bifeldy">Buat Tipe Jenis Proyek Baru</b>
             </h2>
@@ -95,7 +95,7 @@
             <b class="text-bifeldy">Hapus Jenis Proyek Yang Ada</b>
           </h2>
         </div>
-        <div class="col-12">
+        <div class="col-12 p-3">
           <app-material-table [tableDataColumn]="projectData.column" [tableDataRow]="projectData.row"
             (rowClicked)="openProject($event)" (buttonClicked)="deleteProject($event)"></app-material-table>
         </div>

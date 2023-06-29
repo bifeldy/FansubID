@@ -13,7 +13,7 @@
             <b class="text-bifeldy">Kelola API Key</b>
           </h2>
         </div>
-        <div class="col-12">
+        <div class="col-12 p-3">
           <app-material-table [tableDataColumn]="corsData.column" [tableDataRow]="corsData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
             (buttonClicked)="revokeCors($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (rowClicked)="openCors($event)"></app-material-table>
         </div>

@@ -9,7 +9,7 @@
     <div class="col-12">
       <div class="row">
         <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
-          <div class="col-12 sticky-top bg-bifeldy">
+          <div class="col-12 sticky-top bg-bifeldy pb-1">
             <h2 class="pt-3 border-bottom-dotted">
               <b class="text-bifeldy">Tambah / Ubah Informasi Dialog Pop-Up!</b>
             </h2>
@@ -117,7 +117,7 @@
             <b class="text-bifeldy">Informasi Dialog Pop-Up Tersimpan</b>
           </h2>
         </div>
-        <div class="col-12">
+        <div class="col-12 p-3">
           <app-material-table [tableDataColumn]="infoData.column" [tableDataRow]="infoData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
             (buttonClicked)="deleteInfo($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (rowClicked)="editInfo($event)"></app-material-table>
         </div>

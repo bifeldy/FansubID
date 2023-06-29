@@ -13,7 +13,7 @@
             <b class="text-bifeldy">Semua Email Pengguna</b>
           </h2>
         </div>
-        <div class="col-12">
+        <div class="col-12 p-3">
           <app-material-table [tableDataColumn]="mailData.column" [tableDataRow]="mailData.row" [count]="count"
             [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (rowClicked)="onRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
         </div>

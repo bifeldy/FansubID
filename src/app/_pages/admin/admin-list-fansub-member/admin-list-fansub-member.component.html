@@ -13,7 +13,7 @@
             <b class="text-bifeldy">Atur Keanggotaan Fansub</b>
           </h2>
         </div>
-        <div class="col-12">
+        <div class="col-12 p-3">
           <app-material-table [tableDataColumn]="memberData.column" [tableDataRow]="memberData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
             (buttonClicked)="action($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
         </div>
