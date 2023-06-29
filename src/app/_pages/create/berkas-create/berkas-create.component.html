@@ -140,7 +140,7 @@
                   <div class="col-12 mb-4">
                     <div class="row">
                       <div class="col"></div>
-                      <div class="col pb-3">
+                      <div class="col">
                         <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="addFansub()">
                           <mat-icon class="me-1">add</mat-icon>
                           Tambah Fansub
@@ -249,7 +249,7 @@
                   <div class="col"></div>
                   <div class="col"></div>
                   <div class="col"></div>
-                  <div class="col pb-3">
+                  <div class="col">
                     <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="addDownloadLink()">
                       <mat-icon class="me-1">add</mat-icon>
                       Tambah URL Eksternal
@@ -260,15 +260,15 @@
             </div>
             <div class="row">
               <div class="col-12 py-3">
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-12 col-md-3 pb-3">
+                <div class="row gy-3">
+                  <div class="col g-0"></div>
+                  <div class="col-12 col-md-3">
                     <a mat-stroked-button routerLink="/berkas" class="w-100" [disabled]="submitted">
                       <mat-icon class="me-1">undo</mat-icon>
                       Batal
                     </a>
                   </div>
-                  <div class="col-12 col-md-3 pb-3">
+                  <div class="col-12 col-md-3">
                     <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || attachmentSelected?.status === 'uploading'">
                       Simpan
                       <mat-icon class="ms-1">save</mat-icon>

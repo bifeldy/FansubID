@@ -126,13 +126,13 @@
                 </div>
                 <div class="form-group row mb-0 py-2">
                   <div class="col-md-8 offset-md-4">
-                    <div class="row">
-                      <div class="col-lg-6 col-12 pb-3">
+                    <div class="row gy-3">
+                      <div class="col-lg-6 col-12">
                         <button mat-flat-button color="primary" class="w-100" type="submit" [disabled]="submitted || fg.invalid || fg.get('agree_tatib').value === false || fg.get('agree_pp').value === false">
                           Daftar <mat-icon class="ms-1">emoji_people</mat-icon>
                         </button>
                       </div>
-                      <div class="col-lg-6 col-12 pb-3">
+                      <div class="col-lg-6 col-12">
                         <a mat-stroked-button color="accent" class="w-100" routerLink="/login" [disabled]="submitted">
                           Masuk ~
                         </a>
