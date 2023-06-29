@@ -74,7 +74,7 @@ export class GlobalService {
         name: 'text-decoration-none',
         class: 'text-decoration-none',
       },
-    ],
+    ]
   };
 
   seasonalWeather = [
