@@ -50,6 +50,10 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     return this.lms.contentMenus;
   }
 
+  get additionalMenus(): Menu[] {
+    return this.lms.additionalMenus;
+  }
+
   get miscMenus(): Menu[] {
     return this.lms.miscMenus;
   }

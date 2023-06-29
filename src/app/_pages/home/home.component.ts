@@ -1,12 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { environment } from '../../../environments/app/environment';
+
 import { GlobalService } from '../../_shared/services/global.service';
 import { NewsService } from '../../_shared/services/news.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { KomentarService } from '../../_shared/services/komentar.service';
 import { FansubService } from '../../_shared/services/fansub.service';
 import { WinboxService } from '../../_shared/services/winbox.service';
+import { FabService } from '../../_shared/services/fab.service';
 
 @Component({
   selector: 'app-home',
@@ -30,11 +33,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     private komen: KomentarService,
     private fansub: FansubService,
     private bs: BusyService,
-    private wb: WinboxService
+    private wb: WinboxService,
+    private fs: FabService
   ) {
-    this.gs.bannerImg = '/assets/img/banner/home.png';
+    this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get ENV(): any {
+    return environment;
   }
 
   get GS(): GlobalService {
@@ -52,6 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.getNews();
       this.getComment();
       this.getRssFeedAll();
+      this.fs.initializeFab(null, '/assets/img/discord/pink.png', 'Discord Server', environment.discord.join_url, true);
     }
   }
 

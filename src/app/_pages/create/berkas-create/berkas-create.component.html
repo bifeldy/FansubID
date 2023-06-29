@@ -171,6 +171,9 @@
                 <div *ngIf="AS.currentUserSubject?.value?.verified; then ddlVerified; else ddlNotVerified;"></div>
                 <ng-template #ddlVerified>
                   <div class="row">
+                    <div class="col-12 px-3">
+                      <small class="text-success">* <i>Resume-able Upload</i></small>
+                    </div>
                     <mat-form-field appearance="outline" class="px-3 pt-3 col" [color]="'accent'">
                       <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
                       <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event, ddl)" #ddl [disabled]="attachmentSelected !== null"

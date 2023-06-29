@@ -44,7 +44,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
     private news: NewsService,
     private fs: FabService
   ) {
-    this.gs.bannerImg = null;
+    this.gs.bannerImg = '/assets/img/banner/news.png';
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
   }

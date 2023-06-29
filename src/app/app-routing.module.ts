@@ -159,15 +159,6 @@ const routes: Routes = [
     }
   },
   {
-    path: 'about',
-    loadChildren: () => import('./_pages/about/about.module').then(m => m.AboutModule),
-    data: {
-      title: 'About',
-      description: 'Halaman Mengenai Website',
-      keywords: 'About'
-    }
-  },
-  {
     path: 'user',
     loadChildren: () => import('./_pages/user/user.module').then(m => m.UserModule),
     data: {

@@ -29,18 +29,6 @@ export class LeftMenuService {
       link: '/news',
       icon: 'receipt_long',
       badge: null
-    },
-    {
-      name: 'Nihongo 日本語',
-      link: '/nihongo',
-      icon: 'translate',
-      badge: null
-    },
-    {
-      name: 'E-Mail@FanSub.ID',
-      link: '/mailbox',
-      icon: 'mail_outline',
-      badge: null
     }
   ];
 
@@ -71,11 +59,17 @@ export class LeftMenuService {
     }
   ];
 
-  miscMenus: Menu[] = [
+  additionalMenus: Menu[] = [
     {
-      name: 'RSS Feed',
-      link: '/rss-feed',
-      icon: 'rss_feed',
+      name: 'E-Mail@FanSub.ID',
+      link: '/mailbox',
+      icon: 'mail_outline',
+      badge: null
+    },
+    {
+      name: 'Nihongo 日本語',
+      link: '/nihongo',
+      icon: 'translate',
       badge: null
     },
     {
@@ -86,17 +80,26 @@ export class LeftMenuService {
     }
   ];
 
+  miscMenus: Menu[] = [
+    // {
+    //   name: 'DDLs',
+    //   link: '/ddls',
+    //   icon: 'download',
+    //   badge: null
+    // },
+    {
+      name: 'RSS Feed',
+      link: '/rss-feed',
+      icon: 'rss_feed',
+      badge: null
+    }
+  ];
+
   otherMenus: Menu[] = [
     {
       name: 'Kebijakan Privasi',
       link: '/privacy-policy',
       icon: 'policy',
-      badge: null
-    },
-    {
-      name: 'About',
-      link: '/about',
-      icon: 'info',
       badge: null
     }
   ];

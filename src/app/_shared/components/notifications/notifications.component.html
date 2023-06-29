@@ -1,12 +1,12 @@
-<!-- Home Banner (1920px * 128px)-->
+<!-- Image Banner (1920px * 128px)-->
 <div class="container-fluid notif-banner align-items-center"
   [style.background-size]="GS.sizeContain ? 'contain' : 'cover'"
   [style.background-image]="'url(' + GS.bannerImg + ')'"
   [style.background-repeat]="GS.bgRepeat ? 'repeat-x' : 'no-repeat'"
-  [style.height]="(ROUTER.url === '/home' || ROUTER.url === '/berkas') ? '192px' : '128px'"
+  [style.height]="(ROUTER.url === '/news' || ROUTER.url === '/berkas') ? '192px' : '128px'"
   [style.background-position-y]="ROUTER.url === '/berkas' ? '22.5%' : ''"
   *ngIf="GS.bannerImg && (
-    ROUTER.url === '/home' || ROUTER.url === '/berkas' || ROUTER.url === '/fansub' || ROUTER.url === '/berkas' ||
+    ROUTER.url === '/news' || ROUTER.url === '/berkas' || ROUTER.url === '/fansub' || ROUTER.url === '/berkas' ||
     ROUTER.url === '/anime' || ROUTER.url.includes('/anime?') ||
     ROUTER.url === '/dorama' || ROUTER.url.includes('/dorama?')
   )">
