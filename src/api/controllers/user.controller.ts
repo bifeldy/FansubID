@@ -167,7 +167,12 @@ export class UserController {
   @FilterApiKeyAccess()
   async updateByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      if ('description' in req.body || 'new_password' in req.body || 'image_photo' in req.body || 'image_cover' in req.body || 'private' in req.body) {
+      if (
+        'old_password' in req.body && (
+          'nama' in req.body || 'description' in req.body || 'new_password' in req.body ||
+          'image_photo' in req.body || 'image_cover' in req.body || 'private' in req.body
+        )
+      ) {
         const user: UserModel = res.locals['user'];
         const old_password = this.cs.hashPassword(req.body.old_password);
         const selectedUser = await this.userRepo.findOneOrFail({
@@ -186,6 +191,14 @@ export class UserController {
           if ('private' in req.body) {
             selectedUser.private = req.body.private;
           }
+          const selectedKtp = await this.ktpRepo.findOneOrFail({
+            where: [
+              { id: Equal(selectedUser.kartu_tanda_penduduk_.id) }
+            ]
+          });
+          if ('nama' in req.body) {
+            selectedKtp.nama = req.body.nama;
+          }
           const selectedProfile = await this.profileRepo.findOneOrFail({
             where: [
               { id: selectedUser.profile_.id }
@@ -197,6 +210,8 @@ export class UserController {
           if ('description' in req.body) {
             selectedProfile.description = req.body.description;
           }
+          const resKtpSave = await this.ktpRepo.save(selectedKtp);
+          selectedUser.kartu_tanda_penduduk_ = resKtpSave;
           const resProfileSave = await this.profileRepo.save(selectedProfile);
           selectedUser.profile_ = resProfileSave;
           let resUserSave = await this.userRepo.save(selectedUser);
@@ -260,11 +275,11 @@ export class UserController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 404 - User API :: Gagal Mencari User ${req.params['username']} 😪`,
+        info: `🙄 400 - User API :: Gagal Mencari User ${req.params['username']} 😪`,
         result: {
-          message: 'User Tidak Ditemukan!'
+          message: 'Kredensial tidak tepat!'
         }
-      }, HttpStatus.NOT_FOUND);
+      }, HttpStatus.BAD_REQUEST);
     }
   }
 

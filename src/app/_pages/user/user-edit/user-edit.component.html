@@ -38,11 +38,22 @@
         <!-- Content -->
         <div class="col-md-8 col-xl-9 pt-3">
           <div class="row py-3 px-0 profile-height-large">
-            <h1 class="m-0 mt-auto">
-              <b>{{ userData.kartu_tanda_penduduk_.nama }}</b>
-            </h1>
+            <!--
+              <h1 class="m-0 mt-auto">
+                <b>{{ userData.kartu_tanda_penduduk_.nama }}</b>
+              </h1>
+            -->
           </div>
           <div class="row py-3">
+            <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+              <mat-label>Nama Lengkap</mat-label>
+              <input matInput formControlName="nama" placeholder="Nama Lengkap" />
+              <mat-icon matSuffix>wysiwyg</mat-icon>
+              <mat-error>
+                <div *ngIf="fg.get('nama').hasError('required')">Nama Tidak Boleh Kosong</div>
+                <div *ngIf="fg.get('nama').hasError('pattern')">Nama Hanya Boleh Huruf Standar Papan Ketik</div>
+              </mat-error>
+            </mat-form-field>
             <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
               <mat-label>Cover Image</mat-label>
               <ngx-mat-file-input class="w-100" placeholder="Basic Input" (change)="uploadCoverImage($event, coverImage)" #coverImage
