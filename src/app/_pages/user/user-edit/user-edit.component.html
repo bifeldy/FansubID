@@ -73,10 +73,6 @@
               </button>
             </div>
             <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
-            <mat-form-field appearance="outline" class="p-3 w-100" style="display: none;" [color]="'accent'">
-              <mat-label>Username / Email (Optional Autocomplete)</mat-label>
-              <input matInput value="{{ userData.username }}" disabled autocomplete="email, username" />
-            </mat-form-field>
             <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
               <mat-label>Konfirmasi Kata Sandi</mat-label>
               <input matInput [type]="passwordHide ? 'password' : 'text'" formControlName="old_password" required
