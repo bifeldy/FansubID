@@ -16,7 +16,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
-import { DialogService } from '../../../_shared/services/dialog.service';
+// import { DialogService } from '../../../_shared/services/dialog.service';
 import { DdlLampiranService } from '../../../_shared/services/ddl-lampiran.service';
 
 @Component({
@@ -45,7 +45,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private bs: BusyService,
-    private ds: DialogService,
+    // private ds: DialogService,
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService,
@@ -176,20 +176,20 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
 
   async ddl(id): Promise<void> {
     if (this.isDiscord) {
-      if (this.gs.isDesktop) {
-        this.subsDialog = (await this.ds.openCorsExtension()).afterClosed().subscribe({
-          next: re => {
-            this.gs.log('[INFO_DIALOG_CLOSED]', re);
-            // TODO :: Create My Own Browser Extension For Bypassing CORS (?)
-            if (re !== undefined) {
-              this.dm.startDownload(id, (re === true));
-            }
-            this.subsDialog.unsubscribe();
-          }
-        });
-      } else {
+      // if (this.gs.isDesktop) {
+      //   this.subsDialog = (await this.ds.openCorsExtension()).afterClosed().subscribe({
+      //     next: re => {
+      //       this.gs.log('[INFO_DIALOG_CLOSED]', re);
+      //       // TODO :: Create My Own Browser Extension For Bypassing CORS (?)
+      //       if (re !== undefined) {
+      //         this.dm.startDownload(id, (re === true));
+      //       }
+      //       this.subsDialog.unsubscribe();
+      //     }
+      //   });
+      // } else {
         this.dm.startDownload(id, false);
-      }
+      // }
     } else {
       this.dm.startDownload(id);
     }

@@ -90,7 +90,7 @@ export class DownloadManagerService {
           next: async res => {
             this.gs.log('[DOWNLOAD_LIST_DDL]', res);
             const sortedResults = res.results.sort((a, b) => a.chunk_idx - b.chunk_idx);
-            // TODO :: Create Chrome / Firefox Extension
+            // TODO :: Create Browser Extension
             // r.id -> Send To Server (Download Proxy, Bypass CORS)
             // r.url -> Direct Download, Need Bypass CORS Discord
             const handlers: Observable<any>[] = [];
