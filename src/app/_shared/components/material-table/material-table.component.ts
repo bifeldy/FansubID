@@ -99,7 +99,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
       this.search();
       this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
         next: qp => {
-          this.searchQuery = qp['q'];
+          this.searchQuery = qp['q'] || '';
           this.search();
         }
       });
