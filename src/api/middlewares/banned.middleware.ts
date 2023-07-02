@@ -34,12 +34,14 @@ export class BannedMiddleware implements NestMiddleware {
         if (user) {
           const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
           if (user.session_origin !== clientOriginIpCc.origin_ip) {
-            throw new HttpException({
-              info: '🙄 401 - Sesion :: Expired 😪',
-              result: {
-                message: 'Silahkan Login Ulang!'
-              }
-            }, HttpStatus.UNAUTHORIZED);
+            res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {
+              httpOnly: true,
+              secure: environment.production,
+              sameSite: 'strict',
+              maxAge: 0,
+              domain: environment.domain
+            });
+            return res.redirect(301, environment.baseUrl);
           }
         }
       }
