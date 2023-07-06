@@ -88,8 +88,8 @@ export class CommentController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @FilterApiKeyAccess()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('path' in req.body && 'comment' in req.body) {
@@ -234,9 +234,9 @@ export class CommentController {
 
   @Delete('/:id')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const komen =  await this.komentarRepo.findOneOrFail({

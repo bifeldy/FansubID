@@ -162,9 +162,9 @@ export class UserController {
 
   @Put('/:username')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async updateByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -285,10 +285,10 @@ export class UserController {
 
   @Delete('/:username')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user =  await this.userRepo.findOneOrFail({
@@ -411,12 +411,12 @@ export class UserController {
 
   @Get('/:username/feed-comment')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiTags(CONSTANTS.apiTagUser)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
   @ApiQuery({ name: 'page', required: false, type: 'number' })
   @ApiParam({ name: 'username', type: 'string' })
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getFeedCommentByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -473,12 +473,12 @@ export class UserController {
 
   @Get('/:username/feed-likedislike')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiTags(CONSTANTS.apiTagUser)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
   @ApiQuery({ name: 'page', required: false, type: 'number' })
   @ApiParam({ name: 'username', type: 'string' })
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getFeedLikeDislikeByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
@@ -608,12 +608,12 @@ export class UserController {
 
   @Get('/:username/feed-visit')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiTags(CONSTANTS.apiTagUser)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
   @ApiQuery({ name: 'page', required: false, type: 'number' })
   @ApiParam({ name: 'username', type: 'string' })
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getFeedVisitByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {

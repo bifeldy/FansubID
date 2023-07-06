@@ -28,9 +28,9 @@ export class PromoteController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async promote(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {

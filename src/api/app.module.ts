@@ -91,8 +91,9 @@ import { CacheMiddleware } from './middlewares/cache.middleware';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 import { RateLimitGuard } from './guards/rate-limit.guard';
-import { RolesGuard } from './guards/roles.guard';
+import { FilterApiKeyAccessGuard } from './guards/filter-api-key-access.guard';
 import { VerifiedOnlyGuard } from './guards/verified-only.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 import { ExcludeFieldInterceptor } from './interceptors/exclude-field.interceptor';
 import { ReqResInterceptor } from './interceptors/req-res.interceptor';
@@ -223,12 +224,13 @@ import { UserService } from './repository/user.service';
     VerifySosmedController
   ],
   providers: [
-    // Global Lifecycle - Exception Filter => Middleware => Guards => Interceptors => Controller
+    // Global Lifecycle :: Filter => Middleware => Guards => Interceptors => Controller
     // https://docs.nestjs.com/faq/request-lifecycle
     { provide: APP_FILTER, useClass: HttpExceptionFilter },
     { provide: APP_GUARD, useClass: RateLimitGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: FilterApiKeyAccessGuard },
     { provide: APP_GUARD, useClass: VerifiedOnlyGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_INTERCEPTOR, useClass: ExcludeFieldInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ReqResInterceptor },
     {

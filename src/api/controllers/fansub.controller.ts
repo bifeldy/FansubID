@@ -87,10 +87,10 @@ export class FansubController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -235,10 +235,10 @@ export class FansubController {
 
   @Put('/:slug')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async updateBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -398,10 +398,10 @@ export class FansubController {
 
   @Delete('/:slug')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async deleteBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const fansub =  await this.fansubRepo.findOneOrFail({

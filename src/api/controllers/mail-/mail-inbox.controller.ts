@@ -25,12 +25,12 @@ export class MailInboxController {
 
   @Get('/')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagMail)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
   @ApiQuery({ name: 'page', required: false, type: 'number' })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async mailInbox(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {

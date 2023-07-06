@@ -43,9 +43,9 @@ export class TaskCronJobController {
 
   @Put('/:id')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const cronJob = this.sr.getCronJob(req.params['id']);

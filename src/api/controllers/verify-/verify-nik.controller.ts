@@ -31,8 +31,8 @@ export class VerifyNikController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @FilterApiKeyAccess()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async verifyNik(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('nik' in req.body && 'nama' in req.body && 'g-recaptcha-response' in req.body) {

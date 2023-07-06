@@ -75,9 +75,9 @@ export class ProjectTypeController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -144,9 +144,9 @@ export class ProjectTypeController {
 
   @Put('/:id')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -192,9 +192,9 @@ export class ProjectTypeController {
 
   @Delete('/:id')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const projectType =  await this.projectTypeRepo.findOneOrFail({

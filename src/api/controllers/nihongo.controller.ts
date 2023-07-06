@@ -116,9 +116,9 @@ export class NihongoController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -193,9 +193,9 @@ export class NihongoController {
 
   @Put('/:id')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -261,9 +261,9 @@ export class NihongoController {
 
   @Delete('/:id')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const kana =  await this.nihongoRepo.findOneOrFail({

@@ -44,10 +44,10 @@ export class AttachmentController {
 
   @Get('/')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async searchLampiranPending(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -97,10 +97,10 @@ export class AttachmentController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async uploadLampiran(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const file = req.body as DiskFile;
     try {
@@ -153,10 +153,10 @@ export class AttachmentController {
 
   @Get('/:id')
   @HttpCode(206)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagAttachment)
   @ApiParam({ name: 'id', type: 'string' })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getById(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
       const attachment =  await this.attachmentRepo.findOneOrFail({
@@ -257,10 +257,10 @@ export class AttachmentController {
 
   @Patch('/')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async reUploadAttachment(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('id' in req.body) {
@@ -387,10 +387,10 @@ export class AttachmentController {
 
   @Delete('/:id')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const attachment =  await this.attachmentRepo.findOneOrFail({

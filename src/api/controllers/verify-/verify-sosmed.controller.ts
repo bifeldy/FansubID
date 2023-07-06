@@ -260,8 +260,8 @@ export class VerifySosmedController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @FilterApiKeyAccess()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async verifySosmed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

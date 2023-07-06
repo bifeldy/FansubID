@@ -34,10 +34,10 @@ export class MailController {
 
   @Get('/')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async mailInbox(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -82,12 +82,8 @@ export class MailController {
     }
   }
 
-  // Special API Limit => 1 / 4
-  @Throttle(25, 3600)
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagMail)
   @ApiBody({
     schema: {
@@ -110,6 +106,9 @@ export class MailController {
       required: ['to', 'subject', 'message']
     }
   })
+  @Throttle(25, 3600) // Special API Limit => 1 / 4
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async sendNewMail(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -197,10 +196,10 @@ export class MailController {
 
   @Get('/:id')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagMail)
   @ApiParam({ name: 'id', type: 'string' })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

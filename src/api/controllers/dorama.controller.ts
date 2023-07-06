@@ -81,9 +81,9 @@ export class DoramaController {
 
   @Patch('/')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async updateDorama(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('id' in req.body && 'name' in req.body && 'image_url' in req.body) {

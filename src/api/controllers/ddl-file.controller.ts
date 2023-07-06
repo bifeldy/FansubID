@@ -33,10 +33,10 @@ export class DdlPartController {
 
   @Get('/:id')
   @HttpCode(206)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagDdlFile)
   @ApiParam({ name: 'id', type: 'string' })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async downloadChunk(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
       const ddlFile = await this.ddlFileRepo.findOneOrFail({
@@ -102,11 +102,11 @@ export class DdlSeekController {
 
   @Get('/:id')
   @HttpCode(206)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagDdlFile)
   @ApiParam({ name: 'id', type: 'string' })
   @ApiHeader({ name: 'range', required: true })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async streamFull(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
       let headerRangeFull = req.headers.range || 'bytes=0-';

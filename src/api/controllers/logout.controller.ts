@@ -19,8 +19,8 @@ export class LogoutController {
 
   @Delete('/')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @FilterApiKeyAccess()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   logout(@Res({ passthrough: true }) res: Response): any {
     const user: UserModel = res.locals['user'];
     return {

@@ -25,12 +25,12 @@ export class MailOutboxController {
 
   @Get('/')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagMail)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
   @ApiQuery({ name: 'page', required: false, type: 'number' })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async mailOutbox(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

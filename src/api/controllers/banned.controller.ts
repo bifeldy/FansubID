@@ -154,8 +154,8 @@ export class BannedController {
   @HttpCode(201)
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const adminMod: UserModel = res.locals['user'];
@@ -242,8 +242,8 @@ export class BannedController {
   @HttpCode(202)
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const adminMod: UserModel = res.locals['user'];

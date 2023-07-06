@@ -23,12 +23,12 @@ export class ApiKeyController {
 
   @Get('/')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @ApiTags(CONSTANTS.apiTagApiKey)
   @ApiQuery({ name: 'q', required: false, type: 'string' })
   @ApiQuery({ name: 'row', required: false, type: 'number' })
   @ApiQuery({ name: 'page', required: false, type: 'number' })
   @ApiQuery({ name: 'username', type: 'string' })
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
@@ -145,8 +145,6 @@ export class ApiKeyController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagApiKey)
   @ApiBody({
     schema: {
@@ -157,6 +155,8 @@ export class ApiKeyController {
       required: ['name', 'ip_domain']
     }
   })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('name' in req.body && 'ip_domain' in req.body) {
@@ -212,8 +212,6 @@ export class ApiKeyController {
 
   @Put('/:id')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagApiKey)
   @ApiParam({ name: 'id', type: 'number' })
   @ApiBody({
@@ -224,6 +222,8 @@ export class ApiKeyController {
       }
     }
   })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('name' in req.body || 'ip_domain' in req.body) {
@@ -279,10 +279,10 @@ export class ApiKeyController {
 
   @Delete('/:id')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
-  @VerifiedOnly()
   @ApiTags(CONSTANTS.apiTagApiKey)
   @ApiParam({ name: 'id', type: 'number' })
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

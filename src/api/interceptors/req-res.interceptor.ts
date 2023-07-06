@@ -36,7 +36,7 @@ export class ReqResInterceptor implements NestInterceptor {
       case 'PUT':
         if (this.cfg.serverGetMaintenance()) {
           throw new HttpException({
-            info: '🤧 400 - Settings API :: Server Maintenance 😷',
+            info: '🤧 503 - Settings API :: Server Maintenance 😷',
             result: {
               message: 'Server Sedang Dalam Tahap Perawatan!'
             }

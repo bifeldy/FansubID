@@ -33,9 +33,9 @@ export class FansubMemberController {
   // GET `/api/fansub-member`
   @Get('/')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
@@ -107,9 +107,9 @@ export class FansubMemberController {
   // POST `/api/fansub-member`
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async requestJoinFansubMember(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('slug' in req.body) {
@@ -210,9 +210,9 @@ export class FansubMemberController {
   // PUT `/api/fansub-member/:id`
   @Put('/:id')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async approveJoinOrRejectFansubMember(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('approved' in req.body) {
@@ -341,9 +341,9 @@ export class FansubMemberController {
   // DELETE `/api/fansub-member/:id`
   @Delete('/:id')
   @HttpCode(202)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async leaveFansubMember(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];

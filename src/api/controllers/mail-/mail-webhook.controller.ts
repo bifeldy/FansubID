@@ -36,6 +36,7 @@ export class MailWebhookController {
 
   @Post('/')
   @HttpCode(201)
+  @FilterApiKeyAccess()
   @UseInterceptors(
     AnyFilesInterceptor(
       {
@@ -46,7 +47,6 @@ export class MailWebhookController {
       }
     )
   )
-  @FilterApiKeyAccess()
   async mailHook(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('From' in req.body) {

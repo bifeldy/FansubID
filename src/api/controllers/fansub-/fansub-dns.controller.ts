@@ -281,9 +281,9 @@ export class FansubDnsController {
 
   @Post('/')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async createNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('slug' in req.body && 'server_target' in req.body) {
@@ -344,9 +344,9 @@ export class FansubDnsController {
   // GET `/api/fansub-dns/:slug`
   @Get('/:slug')
   @HttpCode(200)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async getBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
@@ -427,9 +427,9 @@ export class FansubDnsController {
   // PUT `/api/fansub-dns/:slug`
   @Put('/:slug')
   @HttpCode(201)
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
-  @VerifiedOnly()
   @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async updateBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('server_target' in req.body) {

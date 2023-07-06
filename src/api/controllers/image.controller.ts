@@ -37,6 +37,8 @@ export class ImageController {
 
   @Post('/')
   @HttpCode(201)
+  @FilterApiKeyAccess()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   @UseInterceptors(
     FileInterceptor(
       'file',
@@ -61,8 +63,6 @@ export class ImageController {
       }
     )
   )
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  @FilterApiKeyAccess()
   async imgBb(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const dateTime = new Date().getTime().toString();
