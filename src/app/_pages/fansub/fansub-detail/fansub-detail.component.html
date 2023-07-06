@@ -1,6 +1,6 @@
 <div class="container" *ngIf="fansubData">
   <div class="fansub-info align-items-center">
-    <div class="media row py-3 px-2">
+    <div class="row py-3 px-2">
 
       <!-- Information -->
       <div class="col-md-4 col-xl-3 px-3">
@@ -147,14 +147,14 @@
             <app-report></app-report>
           </div>
         </div>
-        <div class="row py-3">
-          <div class="col-12">
-            <app-material-tab (listClicked)="openAnime($event)" (gridClicked)="openDorama($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
-              [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
-              [gridPageFinished]="doramaPageFinished" (gridLoadNextPage)="onDoramaLoadNextPage()"
-              [listPageFinished]="animePageFinished" (listLoadNextPage)="onAnimeLoadNextPage()"></app-material-tab>
-          </div>
-        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-material-tab (listClicked)="openAnime($event)" (gridClicked)="openDorama($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
+          [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
+          [gridPageFinished]="doramaPageFinished" (gridLoadNextPage)="onDoramaLoadNextPage()"
+          [listPageFinished]="animePageFinished" (listLoadNextPage)="onAnimeLoadNextPage()"></app-material-tab>
       </div>
     </div>
   </div>

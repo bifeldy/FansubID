@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 
 import { environment } from '../../../environments/app/environment';
 
+import { Menu } from '../../../models/menu';
+
 import { GlobalService } from '../../_shared/services/global.service';
+import { LeftMenuService } from '../../_shared/services/left-menu.service';
 import { NewsService } from '../../_shared/services/news.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { KomentarService } from '../../_shared/services/komentar.service';
@@ -29,6 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private gs: GlobalService,
+    private lms: LeftMenuService,
     private news: NewsService,
     private komen: KomentarService,
     private fansub: FansubService,
@@ -47,6 +51,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   get GS(): GlobalService {
     return this.gs;
+  }
+
+  get contentMenus(): Menu[] {
+    return this.lms.contentMenus;
   }
 
   ngOnDestroy(): void {

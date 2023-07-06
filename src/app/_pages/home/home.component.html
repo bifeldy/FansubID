@@ -5,12 +5,20 @@
       <div class="text-center my-3 mx-auto">
         <img class="p-5" src="{{ ENV.baseUrl }}/assets/img/favicon.png" />
         <h1 class="h3 font-weight-normal gradient-text">{{ ENV.siteName }}</h1>
-        <h2 class="text-warning py-3">
+        <h2 class="text-warning pt-3">
           <p class="col-12 col-lg-8 mx-auto">
             Tempat berbagi dan melacak sekaligus mengabadikan berkas proyek garapan tontonan
             baik animasi maupun film drama dari, oleh, untuk siapa saja.
           </p>
         </h2>
+        <div class="row pb-3">
+          <div class="col-12 col-lg-8 mx-auto">
+            <a class="m-1" mat-stroked-button color="warn" routerLink="{{ menu.link }}" *ngFor="let menu of contentMenus">
+              <mat-icon class="me-1">{{ menu.icon }}</mat-icon>
+              {{ menu.name }}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
