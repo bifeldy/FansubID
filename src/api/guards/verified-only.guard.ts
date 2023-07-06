@@ -9,7 +9,7 @@ import { UserModel } from '../../models/req-res.model';
 import { GlobalService } from '../services/global.service';
 
 @Injectable()
-export class VerifiedGuard implements CanActivate {
+export class VerifiedOnlyGuard implements CanActivate {
 
   constructor(
     private reflector: Reflector,

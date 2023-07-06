@@ -8,7 +8,7 @@ import { CONSTANTS } from '../../constants';
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { Roles } from '../decorators/roles.decorator';
-import { VerifiedOnly } from '../decorators/verified.decorator';
+import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
 import { ApiKeyService } from '../repository/api-key.service';
 

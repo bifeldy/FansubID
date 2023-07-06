@@ -7,7 +7,7 @@ import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
-import { VerifiedOnly } from '../decorators/verified.decorator';
+import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
 import { NihongoService } from '../repository/nihongo.service';
 

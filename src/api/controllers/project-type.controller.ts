@@ -7,7 +7,7 @@ import { RoleModel } from '../../models/req-res.model';
 
 import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
-import { VerifiedOnly } from '../decorators/verified.decorator';
+import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
 import { BerkasService } from '../repository/berkas.service';
 import { ProjectTypeService } from '../repository/project-type.service';

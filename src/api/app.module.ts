@@ -88,15 +88,14 @@ import { RegisterMiddleware } from './middlewares/register.middleware';
 import { LogoutMiddleware } from './middlewares/logout.middleware';
 import { CacheMiddleware } from './middlewares/cache.middleware';
 
-import { FilterApiKeyAccessGuard } from './guards/filter-api-key-access.guard';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
+
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { RolesGuard } from './guards/roles.guard';
-import { VerifiedGuard } from './guards/verified.guard';
+import { VerifiedOnlyGuard } from './guards/verified-only.guard';
 
 import { ExcludeFieldInterceptor } from './interceptors/exclude-field.interceptor';
 import { ReqResInterceptor } from './interceptors/req-res.interceptor';
-
-import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 import { SocketIoGateway } from './gateways/socket-io.gateway';
 
@@ -224,12 +223,12 @@ import { UserService } from './repository/user.service';
     VerifySosmedController
   ],
   providers: [
-    // Global Lifecycle - Middleware => Guards => Interceptors => Controller
+    // Global Lifecycle - Exception Filter => Middleware => Guards => Interceptors => Controller
     // https://docs.nestjs.com/faq/request-lifecycle
-    { provide: APP_GUARD, useClass: FilterApiKeyAccessGuard },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
     { provide: APP_GUARD, useClass: RateLimitGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
-    { provide: APP_GUARD, useClass: VerifiedGuard },
+    { provide: APP_GUARD, useClass: VerifiedOnlyGuard },
     { provide: APP_INTERCEPTOR, useClass: ExcludeFieldInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ReqResInterceptor },
     {
@@ -246,7 +245,6 @@ import { UserService } from './repository/user.service';
         ].join(' ~ ');
       })
     },
-    { provide: APP_FILTER, useClass: HttpExceptionFilter },
     // Gateway - Socket.IO
     SocketIoGateway,
     // Services - Service(s) Aren't Available Globally Like Angular
