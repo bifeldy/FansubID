@@ -5,8 +5,8 @@
       <!-- Information -->
       <div class="col-md-4 col-xl-3 px-3">
         <div class="row sticky-top pt-3">
-          <div class="col-12">
-            <img class="w-100" src="{{ userData.image_url }}" />
+          <div class="col-12 pt-4">
+            <img class="profile-image" src="{{ userData.image_url }}" />
           </div>
           <div class="col-12 my-3">
             <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === ADMIN" style="cursor: pointer;">handyman</mat-icon>
