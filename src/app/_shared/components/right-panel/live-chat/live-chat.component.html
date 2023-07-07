@@ -19,7 +19,7 @@
             <div class="col-6 p-0" *ngFor="let u of roomCurrentOrGlobal.member_list | keyvalue">
               <div class="card d-flex py-1 align-items-center p-1 text-success" routerLink="/user/{{ u.value['username'] }}" *ngIf="u.value">
                 <div class="flex-shrink-0">
-                  <img height="24" width="24" src="{{ u.value['image_url'] }}" class="ms-1 mt-1" style="border-radius: 0;" />
+                  <img height="24" width="24" src="{{ u.value['image_url'] }}" class="ms-1 mt-1" />
                 </div>
                 <div class="flex-grow-1 ms-1">
                   <h4 matLine class="m-0">
@@ -42,7 +42,7 @@
         <div style="overflow-y: auto;" #liveChatScroll [ngStyle]="{ 'height': (chatOnly ? '320px' : 'calc(50vh - 139px)') }">
           <div class="d-flex py-1 {{ i === chatCurrentOrGlobal.length - SS.messageChatUnreadCount ? 'border-top' : '' }}" *ngFor="let c of chatCurrentOrGlobal; let i = index">
             <div class="flex-shrink-0" *ngIf="c.sender.image_url">
-              <img height="24" width="24" src="{{ c.sender.image_url }}" class="ms-1 mt-1" style="border-radius: 0;" />
+              <img height="24" width="24" src="{{ c.sender.image_url }}" class="ms-1 mt-1" />
             </div>
             <div class="flex-grow-1 mx-1 my-auto">
               <h5 matLine class="m-0">

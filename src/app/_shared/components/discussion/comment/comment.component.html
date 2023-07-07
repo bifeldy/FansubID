@@ -14,7 +14,7 @@
 <div class="row" appDomChange>
   <div class="d-flex my-1" *ngFor="let k of komentar">
     <div class="flex-shrink-0">
-      <img width="40" height="40" src="{{ k.user_.image_url }}" style="object-fit: contain; object-position: center;" />
+      <img width="40" height="40" src="{{ k.user_.image_url }}" style="object-fit: cover; object-position: center;" />
     </div>
     <div class="flex-grow-1 ms-3 row {{ recursionCount === 0 ? 'me-2' : ''}}">
       <div class="col-8 p-0" (click)="showHideCommentBox(k)">

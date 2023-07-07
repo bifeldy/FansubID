@@ -64,7 +64,7 @@
                       </mat-option>
                       <ng-container *ngIf="!isLoading">
                         <mat-option *ngFor="let a of filteredAnime" [value]="a.id" class="px-1" (click)="filterAnimeSelected(a)">
-                          <img src="{{ a.image_url }}" style="border-radius: 0; height: 40px; width: 30px; object-fit: cover;" class="me-1" />
+                          <img src="{{ a.image_url }}" style="height: 40px; width: 30px; object-fit: cover;" class="me-1" />
                           <span class="ms-1">{{ a.id }} :: {{ a.media_type?.toUpperCase() }} :: {{ a.title }}</span>
                         </mat-option>
                       </ng-container>
@@ -85,7 +85,7 @@
                       </mat-option>
                       <ng-container *ngIf="!isLoading">
                         <mat-option *ngFor="let d of filteredDorama" [value]="d.mdl_id" class="px-1" (click)="filterDoramaSelected(d)">
-                          <img src="{{ d.image_url }}" style="border-radius: 0; height: 40px; width: 30px; object-fit: cover;" class="me-1" />
+                          <img src="{{ d.image_url }}" style="height: 40px; width: 30px; object-fit: cover;" class="me-1" />
                           <span class="ms-1">{{ d.mdl_id }} :: {{ d.title }}</span>
                         </mat-option>
                       </ng-container>
@@ -115,7 +115,7 @@
                             </mat-option>
                             <ng-container *ngIf="!isLoading">
                               <mat-option *ngFor="let f of filteredFansub" [value]="f.id" class="px-1" (click)="filterFansubSelected(f, i)">
-                                <img src="{{ f.image_url }}" style="border-radius: 0; height: 40px; width: 40px; object-fit: cover;" class="me-1" />
+                                <img src="{{ f.image_url }}" style="height: 40px; width: 40px; object-fit: cover;" class="me-1" />
                                 <span class="ms-1">{{ f.slug }} :: {{ f.name }}</span>
                               </mat-option>
                             </ng-container>

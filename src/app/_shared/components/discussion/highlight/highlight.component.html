@@ -1,7 +1,7 @@
 <div class="row pt-3 pb-2 mb-4 gradient-border rgb-border" appDomChange *ngIf="komentar.length > 0">
   <div class="d-flex my-1" *ngFor="let k of komentar">
     <div class="flex-shrink-0">
-      <img width="40" height="40" src="{{ k.user_.image_url }}" style="object-fit: contain; object-position: center;" />
+      <img width="40" height="40" src="{{ k.user_.image_url }}" style="object-fit: cover; object-position: center;" />
     </div>
     <div class="flex-grow-1 ms-3 me-2 row">
       <div class="col-8 p-0" (click)="showHideCommentBox(k)">
@@ -27,7 +27,7 @@
         <div class="row" *ngIf="komentarHighlight">
           <div class="ms-2 ps-3 d-flex my-1">
             <div class="flex-shrink-0">
-              <img width="40" height="40" src="{{ komentarHighlight.user_.image_url }}" style="object-fit: contain; object-position: center;" />
+              <img width="40" height="40" src="{{ komentarHighlight.user_.image_url }}" style="object-fit: cover; object-position: center;" />
             </div>
             <div class="flex-grow-1 ms-3 me-2 row">
               <div class="col-8 p-0">
