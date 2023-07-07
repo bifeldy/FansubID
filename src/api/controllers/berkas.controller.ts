@@ -358,14 +358,14 @@ export class BerkasController {
                           }
                           await this.attachmentRepo.save(otherAttachment2);
                           this.gs.deleteAttachment(`${fileName}.${fileExt}`);
-                        }).catch(async (e4) => {
-                          this.gs.log('[GDRIVE-ERROR] 💽', e4, 'error');
+                        }).catch(async (e3) => {
+                          this.gs.log('[GDRIVE-ERROR] 💽', e3, 'error');
                           resMkvAttachmentSave.pending = false;
                           await this.attachmentRepo.save(resMkvAttachmentSave);
                         });
                       }
-                    } catch (e3) {
-                      this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e3, 'error');
+                    } catch (e2) {
+                      this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e2, 'error');
                     }
                   }
                 }
