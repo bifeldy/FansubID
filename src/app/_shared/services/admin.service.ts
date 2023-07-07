@@ -111,6 +111,10 @@ export class AdminService {
     return this.api.getData(`/banned?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
+  getBanned(bannedUsername): Observable<JsonResponse<BannedModel>> {
+    return this.api.patchData('/banned', bannedUsername);
+  }
+
   unBan(bannedId): Observable<JsonResponse<BannedModel>> {
     return this.api.deleteData(`/banned/${bannedId}`);
   }

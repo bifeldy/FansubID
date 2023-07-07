@@ -77,15 +77,16 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
         this.gs.log('[USER_LIST_SUCCESS]', res);
         this.count = res.count;
         this.bs.busy();
-        this.subsBannedGet = this.user.checkBanned(res.results.map(r => r.username)).subscribe({
+        this.subsBannedGet = this.adm.getBanned({
+          username: res.results.map(r => r.username)
+        }).subscribe({
           next: result => {
             this.gs.log('[BANNED_LIST_SUCCESS]', res);
             const userDataRow = [];
             let excludedRole = [];
             if (this.as.currentUserSubject?.value?.role === RoleModel.ADMIN) {
               excludedRole = [RoleModel.ADMIN];
-            }
-            if (this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR) {
+            } else {
               excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
             }
             for (const r of res.results) {

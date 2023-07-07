@@ -1,7 +1,7 @@
-import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Patch, Post, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { Equal, ILike, In, Not } from 'typeorm';
+import { Equal, ILike, In } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -29,11 +29,12 @@ export class BannedController {
     //
   }
 
+  // GET `/api/banned?username=`
   @Get('/')
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagBanned)
   @ApiQuery({ name: 'username', type: 'string' })
-  async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async searchBan(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
@@ -41,25 +42,7 @@ export class BannedController {
       const queryUserName = req.query['username'];
       if (queryUserName) {
         const username = (queryUserName as string).split(',');
-        if (Array.isArray(username) && username.length > 0) {
-          if (username.length > 1) {
-            if (!user) {
-              throw new HttpException({
-                info: '🙄 401 - Banned API :: Authorisasi Pengguna Gagal 😪',
-                result: {
-                  message: 'Harap Login Terlebih Dahulu!'
-                }
-              }, HttpStatus.UNAUTHORIZED);
-            }
-            if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
-              throw new HttpException({
-                info: '🙄 403 - Banned API :: Authorisasi Pengguna Gagal 😪',
-                result: {
-                  message: 'Khusus Admin / Moderator!'
-                }
-              }, HttpStatus.FORBIDDEN);
-            }
-          }
+        if (Array.isArray(username) && username.length === 1) {
           const [banneds, count] = await this.bannedRepo.findAndCount({
             where: [
               {
@@ -160,7 +143,7 @@ export class BannedController {
     try {
       const adminMod: UserModel = res.locals['user'];
       if ('reason' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
-        let excludedRole = [adminMod.role];
+        let excludedRole = [];
         if (adminMod.role === RoleModel.ADMIN) {
           excludedRole = [RoleModel.ADMIN];
         } else {
@@ -168,20 +151,19 @@ export class BannedController {
         }
         const user =  await this.userRepo.findOneOrFail({
           where: [
-            {
-              id: Equal(req.body.id),
-              role: Not(In(excludedRole))
-            },
-            {
-              username: ILike(req.body.username),
-              role: Not(In(excludedRole))
-            },
-            {
-              email: ILike(req.body.email),
-              role: Not(In(excludedRole))
-            }
+            { id: Equal(req.body.id) },
+            { username: ILike(req.body.username) },
+            { email: ILike(req.body.email) }
           ]
         });
+        if (excludedRole.includes(user.role)) {
+          throw new HttpException({
+            info: `🙄 400 - Banned API :: Gagal BAN User 😪`,
+            result: {
+              message: 'Membutuhkan Role Yang Lebih Tinggi'
+            }
+          }, HttpStatus.FORBIDDEN);
+        }
         const banned = this.bannedRepo.new();
         banned.reason = req.body.reason;
         banned.user_ = user;
@@ -238,6 +220,56 @@ export class BannedController {
     }
   }
 
+  // PATCH `/api/banned?username=`
+  @Patch()
+  @HttpCode(202)
+  @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    try {
+      if ('username' in req.body && Array.isArray(req.body.username) && req.body.username.length > 0) {
+        const [banneds, count] = await this.bannedRepo.findAndCount({
+          where: [
+            {
+              user_: {
+                username: In(req.body.username)
+              }
+            }
+          ],
+          relations: ['user_']
+        });
+        const results: any = {};
+        for (const i of req.body.username) {
+          results[i] = {};
+        }
+        for (const b of banneds) {
+          if ('user_' in b && b.user_) {
+            delete b.user_.created_at;
+            delete b.user_.updated_at;
+            results[b.user_.username] = b;
+          }
+        }
+        return {
+          info: `😅 200 - Banned API :: User 🤣`,
+          count,
+          pages: 1,
+          results
+        };
+      }
+      throw new Error('Data Tidak Lengkap!');
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: `🙄 400 - Banned API :: Gagal Mencari Banned 😪`,
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Delete('/:id')
   @HttpCode(202)
   @ApiExcludeEndpoint()
@@ -247,21 +279,31 @@ export class BannedController {
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const adminMod: UserModel = res.locals['user'];
-      let excludedRole = [adminMod.role];
-      if (adminMod.role === RoleModel.MODERATOR) {
-        excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
-      }
       const banned = await this.bannedRepo.findOneOrFail({
         where: [
-          {
-            id: req.params['id'],
-            user_: {
-              role: Not(In(excludedRole))
-            }
-          }
+          { id: req.params['id'] }
         ],
         relations: ['user_', 'banned_by_']
       });
+      let excludedRole = [];
+      if (adminMod.role === RoleModel.ADMIN) {
+        excludedRole = [RoleModel.ADMIN];
+      } else {
+        excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
+      }
+      const user =  await this.userRepo.findOneOrFail({
+        where: [
+          { id: Equal(banned.user_.id) }
+        ]
+      });
+      if (excludedRole.includes(user.role)) {
+        throw new HttpException({
+          info: `🙄 400 - Banned API :: Gagal UnBAN User 😪`,
+          result: {
+            message: 'Membutuhkan Role Yang Lebih Tinggi'
+          }
+        }, HttpStatus.FORBIDDEN);
+      }
       const unBannedUser = await this.bannedRepo.remove(banned);
       if ('user_' in unBannedUser && unBannedUser.user_) {
         delete unBannedUser.user_.created_at;

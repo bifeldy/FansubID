@@ -63,7 +63,7 @@ const routes: Routes = [
       title: 'Admin - List All Berkas DDL',
       description: 'Kelola Berkas DDL',
       keywords: 'Kelola Berkas DDL',
-      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN]
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
   {

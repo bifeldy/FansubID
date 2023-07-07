@@ -38,18 +38,7 @@ export class ApiKeyController {
       const queryUserName = req.query['username'];
       if (queryUserName) {
         const username = (queryUserName as string).split(',');
-        if (Array.isArray(username) && username.length > 0) {
-          if (
-            ((username.length > 1) || (username.length === 1 && username[0] !== user.username)) &&
-            user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR
-          ) {
-            throw new HttpException({
-              info: '🙄 403 - Banned API :: Authorisasi Pengguna Gagal 😪',
-              result: {
-                message: 'Khusus Admin / Moderator!'
-              }
-            }, HttpStatus.FORBIDDEN);
-          }
+        if (Array.isArray(username) && username.length === 1) {
           const [corss, count] = await this.apiKeyRepo.findAndCount({
             where: [
               {
