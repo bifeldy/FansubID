@@ -74,8 +74,8 @@ export class GlobalService {
   }
 
   // Only MKV Video Attachment Files Don't Have Any Extension -- Temporary Server Storage
-  deleteAttachment(videoFileNameNoExt: string) {
-    unlink(`${environment.uploadFolder}/${videoFileNameNoExt}`, (err) => {
+  deleteAttachment(fullFileName: string) {
+    unlink(`${environment.uploadFolder}/${fullFileName}`, (err) => {
       if (err) {
         this.log('[NODE_FS_UNLINK-ERROR] 🔗', err, 'error');
       }

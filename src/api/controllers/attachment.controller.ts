@@ -330,6 +330,22 @@ export class AttachmentController {
               }
             } else {
               // Upload Video Attachment -- Subtitles, Fonts, etc
+              let otherAttachment = await this.attachmentRepo.find({
+                where: [
+                  {
+                    name: Equal(resAttachmentSave.name),
+                    ext: Equal(resAttachmentSave.ext),
+                    size: Equal(resAttachmentSave.size),
+                    google_drive: IsNull()
+                  }
+                ]
+              });
+              if (otherAttachment.length > 0) {
+                for (const oa of otherAttachment) {
+                  oa.pending = true;
+                }
+                otherAttachment = await this.attachmentRepo.save(otherAttachment);
+              }
               this.gdrive.gDrive(true).then(async (gdrive) => {
                 const dfile = await gdrive.files.create({
                   requestBody: {
@@ -343,25 +359,24 @@ export class AttachmentController {
                   },
                   fields: 'id'
                 }, { signal: null });
-                const otherAttachment = await this.attachmentRepo.find({
-                  where: [
-                    {
-                      name: Equal(resAttachmentSave.name),
-                      ext: Equal(resAttachmentSave.ext),
-                      google_drive: IsNull()
-                    }
-                  ]
-                });
-                for (const oa of otherAttachment) {
-                  oa.google_drive = dfile.data.id;
-                  oa.pending = false;
+                if (otherAttachment.length > 0) {
+                  for (const oa of otherAttachment) {
+                    oa.google_drive = dfile.data.id;
+                    oa.pending = false;
+                  }
+                  await this.attachmentRepo.save(otherAttachment);
                 }
-                await this.attachmentRepo.save(otherAttachment);
                 this.gs.deleteAttachment(files[fIdx].name);
               }).catch(async (e5) => {
                 this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error');
                 resAttachmentSave.pending = false;
                 await this.attachmentRepo.save(resAttachmentSave);
+                if (otherAttachment.length > 0) {
+                  for (const oa of otherAttachment) {
+                    oa.pending = false;
+                  }
+                  await this.attachmentRepo.save(otherAttachment);
+                }
               });
             }
           }

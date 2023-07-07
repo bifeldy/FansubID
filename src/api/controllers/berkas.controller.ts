@@ -1,5 +1,5 @@
 // NodeJS Library
-import { writeFile, createReadStream, readdirSync } from 'node:fs';
+import { existsSync, writeFileSync, createReadStream, readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -271,69 +271,102 @@ export class BerkasController {
                     const fileNameExt = ef.name.split('.');
                     const fileExt = fileNameExt.pop().toLowerCase();
                     const fileName = fileNameExt.join('.').toLowerCase();
-                    writeFile(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data, async (e2) => {
-                      if (e2) {
-                        this.gs.log('[NODE_FS_WRITE_FILE-ERROR] 📁', e2, 'error');
+                    try {
+                      const mkvAttachment = this.attachmentRepo.new();
+                      mkvAttachment.name = fileName;
+                      mkvAttachment.ext = fileExt;
+                      mkvAttachment.size = ef.size;
+                      mkvAttachment.pending = environment.production;
+                      mkvAttachment.user_ = user;
+                      mkvAttachment.parent_attachment_ = resAttachmentSave;
+                      if (CONSTANTS.extSubs.includes(fileExt)) {
+                        mkvAttachment.mime = 'text/plain';
+                      } else if (CONSTANTS.extFonts.includes(fileExt)) {
+                        mkvAttachment.mime = `font/${fileExt}`;
                       } else {
-                        try {
-                          const mkvAttachment = this.attachmentRepo.new();
-                          mkvAttachment.name = fileName;
-                          mkvAttachment.ext = fileExt;
-                          mkvAttachment.size = ef.size;
-                          mkvAttachment.user_ = user;
-                          mkvAttachment.parent_attachment_ = resAttachmentSave;
-                          if (CONSTANTS.extSubs.includes(fileExt)) {
-                            mkvAttachment.mime = 'text/plain';
-                          } else if (CONSTANTS.extFonts.includes(fileExt)) {
-                            mkvAttachment.mime = `font/${fileExt}`;
-                          } else {
-                            mkvAttachment.mime = 'application/octet-stream';
+                        mkvAttachment.mime = 'application/octet-stream';
+                      }
+                      let mkvAttachmentDuplicate = null;
+                      const otherAttachment1 = await this.attachmentRepo.find({
+                        where: [
+                          {
+                            name: Equal(fileName),
+                            ext: Equal(fileExt),
+                            size: Equal(ef.size)
                           }
-                          const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
-                          // Upload Video Attachment -- Subtitles, Fonts, etc
-                          if (environment.production) {
-                            this.gdrive.gDrive(true).then(async (gdrive) => {
-                              const dfile = await gdrive.files.create({
-                                requestBody: {
-                                  name: `${resMkvAttachmentSave.name}.${resMkvAttachmentSave.ext}`,
-                                  parents: [environment.gCloudPlatform.gDrive.folder_id],
-                                  mimeType: resMkvAttachmentSave.mime
-                                },
-                                media: {
-                                  mimeType: resMkvAttachmentSave.mime,
-                                  body: createReadStream(`${environment.uploadFolder}/${fileName}.${fileExt}`)
-                                },
-                                fields: 'id'
-                              }, { signal: null });
-                              const otherAttachment = await this.attachmentRepo.find({
-                                where: [
-                                  {
-                                    name: Equal(resMkvAttachmentSave.name),
-                                    ext: Equal(resMkvAttachmentSave.ext),
-                                    google_drive: IsNull()
-                                  }
-                                ]
-                              });
-                              for (const oa of otherAttachment) {
-                                oa.google_drive = dfile.data.id;
-                                oa.pending = false;
-                              }
-                              await this.attachmentRepo.save(otherAttachment);
-                              this.gs.deleteAttachment(`${fileName}.${fileExt}`);
-                            }).catch(async (e5) => {
-                              this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error');
-                              resMkvAttachmentSave.pending = false;
-                              await this.attachmentRepo.save(resMkvAttachmentSave);
-                            });
-                          } else {
-                            resMkvAttachmentSave.pending = false;
-                            await this.attachmentRepo.save(resMkvAttachmentSave);
+                        ]
+                      });
+                      if (otherAttachment1.length > 0) {
+                        for (const oa of otherAttachment1) {
+                          mkvAttachmentDuplicate = oa;
+                          if (oa.google_drive) {
+                            break;
                           }
-                        } catch (e3) {
-                          this.gs.log('[FILE_NOTE-ERROR] 🎼', e3, 'error');
                         }
                       }
-                    });
+                      const fileExist = existsSync(`${environment.uploadFolder}/${fileName}.${fileExt}`);
+                      if (mkvAttachmentDuplicate) {
+                        mkvAttachment.name = mkvAttachmentDuplicate.name;
+                        mkvAttachment.ext = mkvAttachmentDuplicate.ext;
+                        mkvAttachment.size = mkvAttachmentDuplicate.size;
+                        mkvAttachment.mime = mkvAttachmentDuplicate.mime;
+                        mkvAttachment.pending = false;
+                        if (mkvAttachmentDuplicate.google_drive) {
+                          mkvAttachment.google_drive = mkvAttachmentDuplicate.google_drive;
+                          this.gs.deleteAttachment(`${fileName}.${fileExt}`);
+                        } else {
+                          // Local File Missing
+                          if (!fileExist) {
+                            writeFileSync(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data);
+                          }
+                        }
+                      } else {
+                        // First Time Upload
+                        if (!fileExist) {
+                          writeFileSync(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data);
+                        }
+                      }
+                      const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
+                      // Upload Video Attachment -- Subtitles, Fonts, etc
+                      if (resMkvAttachmentSave.pending) {
+                        this.gdrive.gDrive(true).then(async (gdrive) => {
+                          const dfile = await gdrive.files.create({
+                            requestBody: {
+                              name: `${resMkvAttachmentSave.name}.${resMkvAttachmentSave.ext}`,
+                              parents: [environment.gCloudPlatform.gDrive.folder_id],
+                              mimeType: resMkvAttachmentSave.mime
+                            },
+                            media: {
+                              mimeType: resMkvAttachmentSave.mime,
+                              body: createReadStream(`${environment.uploadFolder}/${fileName}.${fileExt}`)
+                            },
+                            fields: 'id'
+                          }, { signal: null });
+                          const otherAttachment2 = await this.attachmentRepo.find({
+                            where: [
+                              {
+                                name: Equal(resMkvAttachmentSave.name),
+                                ext: Equal(resMkvAttachmentSave.ext),
+                                size: Equal(resMkvAttachmentSave.size),
+                                google_drive: IsNull()
+                              }
+                            ]
+                          });
+                          for (const oa of otherAttachment2) {
+                            oa.google_drive = dfile.data.id;
+                            oa.pending = false;
+                          }
+                          await this.attachmentRepo.save(otherAttachment2);
+                          this.gs.deleteAttachment(`${fileName}.${fileExt}`);
+                        }).catch(async (e4) => {
+                          this.gs.log('[GDRIVE-ERROR] 💽', e4, 'error');
+                          resMkvAttachmentSave.pending = false;
+                          await this.attachmentRepo.save(resMkvAttachmentSave);
+                        });
+                      }
+                    } catch (e3) {
+                      this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e3, 'error');
+                    }
                   }
                 }
                 videoExtractCompleted = true;
