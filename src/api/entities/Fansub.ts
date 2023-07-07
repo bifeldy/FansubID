@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 import { FansubModel, UserModel } from '../../models/req-res.model';
 
@@ -60,6 +61,10 @@ export class Fansub implements FansubModel {
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: number | Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
+  deleted_at: number | Date;
 
   @ManyToOne(type => User)
   user_: UserModel;

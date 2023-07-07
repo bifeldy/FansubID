@@ -1,4 +1,5 @@
-import { Entity, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Entity, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn, DeleteDateColumn } from 'typeorm';
 
 import { DdlFileModel, UserModel } from '../../models/req-res.model';
 
@@ -36,6 +37,10 @@ export class DdlFile implements DdlFileModel {
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: number | Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
+  deleted_at: number | Date;
 
   @ManyToOne(type => User)
   user_: UserModel;

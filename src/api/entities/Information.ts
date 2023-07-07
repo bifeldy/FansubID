@@ -1,4 +1,5 @@
-import { Entity, Column, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Entity, Column, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn, DeleteDateColumn } from 'typeorm';
 
 import { InformationModel, UserModel } from '../../models/req-res.model';
 
@@ -30,6 +31,10 @@ export class Information implements InformationModel {
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: number | Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
+  deleted_at: number | Date;
 
   @ManyToOne(type => User)
   @JoinColumn()

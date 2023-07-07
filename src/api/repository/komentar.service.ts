@@ -56,7 +56,7 @@ export class KomentarService {
 
   remove(komentar: Komentar | Komentar[]): Promise<Komentar | Komentar[]> {
     this.gs.log('[KOMENTAR_SERVICE-REMOVE] 💬', komentar);
-    return this.komentarRepo.remove(komentar as any);
+    return this.komentarRepo.softRemove(komentar as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

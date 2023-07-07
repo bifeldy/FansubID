@@ -56,7 +56,7 @@ export class FansubService {
 
   remove(fansub: Fansub | Fansub[]): Promise<Fansub | Fansub[]> {
     this.gs.log('[FANSUB_SERVICE-REMOVE] 🍿', fansub);
-    return this.fansubRepo.remove(fansub as any);
+    return this.fansubRepo.softRemove(fansub as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

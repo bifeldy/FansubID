@@ -56,7 +56,7 @@ export class AttachmentService {
 
   remove(attachment: Attachment | Attachment[]): Promise<Attachment | Attachment[]> {
     this.gs.log('[ATTACHMENT_SERVICE-REMOVE] 💾', attachment);
-    return this.attachmentRepo.remove(attachment as any);
+    return this.attachmentRepo.softRemove(attachment as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

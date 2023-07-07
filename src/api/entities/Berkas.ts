@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 import { AnimeModel, AttachmentModel, BerkasModel, DoramaModel, FansubModel, ProjectTypeModel, UserModel } from '../../models/req-res.model';
 
@@ -41,6 +42,10 @@ export class Berkas implements BerkasModel {
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: number | Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
+  deleted_at: number | Date;
 
   @ManyToOne(type => ProjectType)
   project_type_: ProjectTypeModel;

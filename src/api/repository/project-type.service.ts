@@ -56,7 +56,7 @@ export class ProjectTypeService {
 
   remove(projectType: ProjectType | ProjectType[]): Promise<ProjectType | ProjectType[]> {
     this.gs.log('[PROJECT_TYPE_SERVICE-REMOVE] 💉', projectType);
-    return this.projectTypeRepo.remove(projectType as any);
+    return this.projectTypeRepo.softRemove(projectType as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

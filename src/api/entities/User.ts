@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 import { KartuTandaPendudukModel, ProfileModel, RoleModel, UserModel } from '../../models/req-res.model';
 
@@ -48,6 +48,10 @@ export class User implements UserModel {
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: number | Date;
+
+  @Exclude()
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
+  deleted_at: number | Date;
 
   @OneToOne(type => KartuTandaPenduduk)
   @JoinColumn()

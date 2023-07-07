@@ -56,7 +56,7 @@ export class NewsService {
 
   remove(news: News | News[]): Promise<News | News[]> {
     this.gs.log('[NEWS_SERVICE-REMOVE] 📰', news);
-    return this.newsRepo.remove(news as any);
+    return this.newsRepo.softRemove(news as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {
