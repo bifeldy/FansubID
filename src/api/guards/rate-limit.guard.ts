@@ -30,7 +30,7 @@ export class RateLimitGuard extends ThrottlerGuard {
     const key = res.locals['key'] || this.generateKey(context, clientOriginIpCc.origin_ip);
     const ttls = await this.storageService.getRecord(key);
     this.gs.log('[RATE_LIMIT_GUARD-SESSION] ⌛', ttls);
-    if (ttls.length >= limit) {
+    if (ttls.length > limit) {
       throw new HttpException({
         info: '💩 429 - Rate Limit :: Kebanjiran Permintaan 🤬',
         result: {
