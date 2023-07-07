@@ -41,4 +41,8 @@ export class KomentarService {
     return this.api.patchData(`/comment`, commentData);
   }
 
+  deleteComment(commentId): Observable<JsonResponse<KomentarModel>> {
+    return this.api.deleteData(`/comment/${commentId}`);
+  }
+
 }

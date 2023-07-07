@@ -39,6 +39,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
   subsKomenSend = null;
   subsKomenGetKomen = null;
   subsKomenGetReply = null;
+  subsDelete = null;
 
   constructor(
     private clipboard: Clipboard,
@@ -73,6 +74,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
     this.subsKomenGetKomen?.unsubscribe();
     this.subsKomenGetReply?.unsubscribe();
     this.subsHighlight?.unsubscribe();
+    this.subsDelete?.unsubscribe();
     this.urlPath = null;
   }
 
@@ -228,6 +230,20 @@ export class HighlightComponent implements OnInit, OnDestroy {
     if (this.clipboard.copy(`${environment.baseUrl}/${this.urlPath}?comment=${k.id}`)) {
       this.snackBar.open(`URL Komentar :: Telah Di Salin Pada Clipboard`, 'Ok');
     }
+  }
+
+  deleteComment(k: KomentarModel): void {
+    this.gs.log('[KOMENTAR_DELETE_HIGHLIGHT]', k);
+    this.subsDelete = this.komen.deleteComment(k.id).subscribe({
+      next: res => {
+        this.gs.log('[KOMENTAR_DELETE_SUCCESS]', res);
+        this.getHighlight();
+      },
+      error: err => {
+        this.gs.log('[KOMENTAR_DELETE_ERROR]', err, 'error');
+        this.getHighlight();
+      }
+    });
   }
 
 }

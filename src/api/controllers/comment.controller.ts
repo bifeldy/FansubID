@@ -5,9 +5,7 @@ import { Equal, ILike, IsNull } from 'typeorm';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
-import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
-import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
 import { KomentarService } from '../repository/komentar.service';
 
@@ -23,7 +21,6 @@ export class CommentController {
 
   @Get('/')
   @HttpCode(200)
-  @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPath = req.query['path'];
@@ -51,9 +48,13 @@ export class CommentController {
         },
         relations: ['parent_komentar_', 'user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
-        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
+        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10,
+        withDeleted: queryPath ? true : false
       });
       for (const k of komens) {
+        if (k.deleted_at) {
+          k.comment = 'Komentar Telah Di Hapus ...';
+        }
         if ('user_' in k && k.user_) {
           delete k.user_.created_at;
           delete k.user_.updated_at;
@@ -88,7 +89,6 @@ export class CommentController {
 
   @Post('/')
   @HttpCode(201)
-  @FilterApiKeyAccess()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
@@ -130,7 +130,6 @@ export class CommentController {
 
   @Get('/:id')
   @HttpCode(200)
-  @FilterApiKeyAccess()
   async getReplyByParentId(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -152,9 +151,13 @@ export class CommentController {
         },
         relations: ['user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
-        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
+        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10,
+        withDeleted: true
       });
       for (const k of komens) {
+        if (k.deleted_at) {
+          k.comment = 'Komentar Telah Di Hapus ...';
+        }
         if ('user_' in k && k.user_) {
           delete k.user_.created_at;
           delete k.user_.updated_at;
@@ -189,7 +192,6 @@ export class CommentController {
 
   @Patch('/')
   @HttpCode(202)
-  @FilterApiKeyAccess()
   async getHighlight(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('id' in req.body && 'path' in req.body) {
@@ -200,8 +202,12 @@ export class CommentController {
               path: ILike(req.body.path.split('?')[0])
             }
           ],
-          relations: ['parent_komentar_', 'user_']
+          relations: ['parent_komentar_', 'user_'],
+          withDeleted: true
         });
+        if (komen.deleted_at) {
+          komen.comment = 'Komentar Telah Di Hapus ...';
+        }
         if ('user_' in komen && komen.user_) {
           delete komen.user_.created_at;
           delete komen.user_.updated_at;
@@ -234,25 +240,33 @@ export class CommentController {
 
   @Delete('/:id')
   @HttpCode(202)
-  @FilterApiKeyAccess()
-  @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
+      const user: UserModel = res.locals['user'];
       const komen =  await this.komentarRepo.findOneOrFail({
         where: [
           { id: Equal(parseInt(req.params['id'])) }
-        ]
+        ],
+        relations: ['user_']
       });
-      const deletedKomen = await this.komentarRepo.remove(komen);
-      if ('user_' in deletedKomen && deletedKomen.user_) {
-        delete deletedKomen.user_.created_at;
-        delete deletedKomen.user_.updated_at;
+      if (komen.user_.id === user.id || user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
+        const deletedKomen = await this.komentarRepo.remove(komen);
+        if ('user_' in deletedKomen && deletedKomen.user_) {
+          delete deletedKomen.user_.created_at;
+          delete deletedKomen.user_.updated_at;
+        }
+        return {
+          info: `😅 202 - Komentar API :: Berhasil Menghapus Komentar ${req.params['id']} 🤣`,
+          result: deletedKomen
+        };
       }
-      return {
-        info: `😅 202 - Komentar API :: Berhasil Menghapus Komentar ${req.params['id']} 🤣`,
-        result: deletedKomen
-      };
+      throw new HttpException({
+        info: '🙄 403 - Komentar API :: Authorisasi Kepemilikan Gagal 😪',
+        result: {
+          message: 'Komentar Milik Orang Lain!'
+        }
+      }, HttpStatus.FORBIDDEN);
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

@@ -16,6 +16,9 @@
         <p class="mb-1" style="line-height: normal;">{{ k.comment }}</p>
       </div>
       <div class="col p-0 text-end">
+        <button mat-icon-button color="accent" (click)="deleteComment(k)" matTooltip="Hapus">
+          <mat-icon>delete</mat-icon>
+        </button>
         <button mat-icon-button color="accent" (click)="copyCommentLink(k)" matTooltip="Salin Tautan">
           <mat-icon>link</mat-icon>
         </button>
@@ -39,6 +42,9 @@
                 <p class="mb-1" style="line-height: normal;">{{ komentarHighlight.comment }}</p>
               </div>
               <div class="col p-0 text-end">
+                <button mat-icon-button color="accent" (click)="deleteComment(k)" matTooltip="Hapus">
+                  <mat-icon>delete</mat-icon>
+                </button>
                 <button mat-icon-button color="accent" (click)="copyCommentLink(k)" matTooltip="Salin Tautan">
                   <mat-icon>link</mat-icon>
                 </button>

@@ -37,6 +37,7 @@ export class CommentComponent implements OnInit, OnDestroy {
   subsKomenSend = null;
   subsKomenGetKomen = null;
   subsKomenGetReply = null;
+  subsDelete = null;
 
   constructor(
     private clipboard: Clipboard,
@@ -66,6 +67,7 @@ export class CommentComponent implements OnInit, OnDestroy {
     this.subsKomenSend?.unsubscribe();
     this.subsKomenGetKomen?.unsubscribe();
     this.subsKomenGetReply?.unsubscribe();
+    this.subsDelete?.unsubscribe();
     this.urlPath = null;
   }
 
@@ -201,6 +203,28 @@ export class CommentComponent implements OnInit, OnDestroy {
     if (this.clipboard.copy(`${environment.baseUrl}/${this.urlPath}?comment=${k.id}`)) {
       this.snackBar.open(`URL Komentar :: Telah Di Salin Pada Clipboard`, 'Ok');
     }
+  }
+
+  deleteComment(k: KomentarModel): void {
+    this.gs.log('[KOMENTAR_DELETE_COMMENT]', k);
+    this.subsDelete = this.komen.deleteComment(k.id).subscribe({
+      next: res => {
+        this.gs.log('[KOMENTAR_DELETE_SUCCESS]', res);
+        if (this.parent) {
+          this.getReply(this.parent, true);
+        } else {
+          this.getComment(true);
+        }
+      },
+      error: err => {
+        this.gs.log('[KOMENTAR_DELETE_ERROR]', err, 'error');
+        if (this.parent) {
+          this.getReply(this.parent, true);
+        } else {
+          this.getComment(true);
+        }
+      }
+    });
   }
 
 }
