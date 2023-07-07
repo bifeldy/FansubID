@@ -24,8 +24,6 @@ export class SitemapService {
   untrackedUrlsListFansub = [];
   untrackedUrlsListBerkas = [];
 
-  urlsListToRemoveBerkas = [];
-
   xmlOpt = {
     compact: true,
     spaces: 2
@@ -43,37 +41,52 @@ export class SitemapService {
   async getNewsUrl(): Promise<void> {
     const news = await this.newsRepo.find({
       order: {
-        created_at: 'ASC'
+        created_at: 'DESC'
       }
     });
     for (const n of news) {
-      this.untrackedUrlsListNews.push(`${environment.baseUrl}/news/${n.id}`);
+      this.untrackedUrlsListNews.push({
+        url: `${environment.baseUrl}/news/${n.id}`,
+        lastmod: n.updated_at
+      });
     }
   }
 
   async getFansubUrl(): Promise<void> {
     const fansub = await this.fansubRepo.find({
       order: {
-        created_at: 'ASC'
+        created_at: 'DESC'
       }
     });
     for (const f of fansub) {
-      this.untrackedUrlsListFansub.push(`${environment.baseUrl}/fansub/${f.slug}`);
+      this.untrackedUrlsListFansub.push({
+        url: `${environment.baseUrl}/fansub/${f.slug}`,
+        lastmod: f.updated_at
+      });
     }
   }
 
   async getBerkasUrl(): Promise<void> {
     const berkas = await this.berkasRepo.find({
+      where: [
+        {
+          private: false,
+          user_: {
+            private: false
+          }
+        }
+      ],
       order: {
-        created_at: 'ASC'
-      }
+        created_at: 'DESC'
+      },
+      relations: ['user_'],
+      take: 500
     });
     for (const b of berkas) {
-      if (b.private) {
-        this.urlsListToRemoveBerkas.push(`${environment.baseUrl}/berkas/${b.id}`);
-      } else {
-        this.untrackedUrlsListBerkas.push(`${environment.baseUrl}/berkas/${b.id}`);
-      }
+      this.untrackedUrlsListBerkas.push({
+        url: `${environment.baseUrl}/berkas/${b.id}`,
+        lastmod: b.updated_at
+      });
     }
   }
 
@@ -91,31 +104,21 @@ export class SitemapService {
       await this.getFansubUrl();
       await this.getBerkasUrl();
       const untrackedUrlsList = [...this.untrackedUrlsListNews, ...this.untrackedUrlsListFansub, ...this.untrackedUrlsListBerkas];
-      const fileExist = existsSync(`${environment.viewFolder}/sitemap.xml`);
-      const filePath = fileExist ? '/sitemap.xml' : '/sitemap.template.xml';
-      const contentString = readFileSync(`${environment.viewFolder}/${filePath}`, 'utf8');
+      const contentString = readFileSync(`${environment.viewFolder}/sitemap.template.xml`, 'utf8');
       const objString = xml2json(contentString, this.xmlOpt);
       const existingSitemapList = JSON.parse(objString);
       for (const u of untrackedUrlsList) {
-        if (!existingSitemapList.urlset.url.find((e) => e.loc._text === u)) {
-          existingSitemapList.urlset.url.push({
-            loc: {
-              _text: u
-            },
-            lastmod: {
-              _text: new Date().toISOString()
-            }
-          });
-        }
-      }
-      for (const u of this.urlsListToRemoveBerkas) {
-        const index = existingSitemapList.urlset.url.findIndex((e) => e.loc._text === u);
-        if (index >= 0) {
-          existingSitemapList.urlset.url.splice(index, 1);
-        }
+        existingSitemapList.urlset.url.push({
+          loc: {
+            _text: u.url
+          },
+          lastmod: {
+            _text: new Date(u.lastmod).toISOString()
+          }
+        });
       }
       const xmlString = json2xml(existingSitemapList, this.xmlOpt);
-      if (fileExist) {
+      if (existsSync(`${environment.viewFolder}/sitemap.xml`)) {
         unlinkSync(`${environment.viewFolder}/sitemap.xml`);
       }
       writeFileSync(`${environment.viewFolder}/sitemap.xml`, xmlString, 'utf8');
