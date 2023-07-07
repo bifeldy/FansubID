@@ -240,9 +240,9 @@ export class UserController {
           delete noPwdSes.kartu_tanda_penduduk_;
           delete noPwdSes.profile_;
           const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
-          selectedUser.session_origin = clientOriginIpCc.origin_ip;
-          selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes });
-          resUserSave = await this.userRepo.save(selectedUser);
+          resUserSave.session_origin = clientOriginIpCc.origin_ip;
+          resUserSave.session_token = this.cs.credentialEncode({ user: noPwdSes });
+          resUserSave = await this.userRepo.save(resUserSave);
           res.cookie(environment.tokenName, resUserSave.session_token, {
             httpOnly: true,
             secure: environment.production,

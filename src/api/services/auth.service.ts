@@ -89,8 +89,8 @@ export class AuthService {
       const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
       delete noPwdSes.kartu_tanda_penduduk_;
       delete noPwdSes.profile_;
-      newUser.session_token = this.cs.credentialEncode({ user: noPwdSes });
-      const user = await this.userRepo.save(newUser);
+      resUserSave.session_token = this.cs.credentialEncode({ user: noPwdSes });
+      const user = await this.userRepo.save(resUserSave);
       return user;
     } catch (err) {
       return null;
@@ -136,8 +136,8 @@ export class AuthService {
       const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
       delete noPwdSes.kartu_tanda_penduduk_;
       delete noPwdSes.profile_;
-      user.session_token = this.cs.credentialEncode({ user: noPwdSes });
-      return await this.userRepo.save(user);
+      resUserSave.session_token = this.cs.credentialEncode({ user: noPwdSes });
+      return await this.userRepo.save(resUserSave);
     } catch (err) {
       return null;
     }

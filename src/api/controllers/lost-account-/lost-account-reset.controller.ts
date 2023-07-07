@@ -38,9 +38,9 @@ export class LostAccountResetController {
         let resUserSave = await this.userRepo.save(selectedUser);
         const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
         const clientOriginIpCc = this.aks.getOriginIpCc(req, true);
-        selectedUser.session_origin = clientOriginIpCc.origin_ip;
-        selectedUser.session_token = this.cs.credentialEncode({ user: noPwdSes });
-        resUserSave = await this.userRepo.save(selectedUser);
+        resUserSave.session_origin = clientOriginIpCc.origin_ip;
+        resUserSave.session_token = this.cs.credentialEncode({ user: noPwdSes });
+        resUserSave = await this.userRepo.save(resUserSave);
         return {
           info: '😚 201 - Lost Account API :: Berhasil Reset Akun 🤩',
           result: {
