@@ -1,7 +1,7 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { Equal, Not, In, ILike } from 'typeorm';
+import { Equal, ILike } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
@@ -35,8 +35,15 @@ export class PromoteController {
     try {
       if ('role' in req.body && ('id' in req.body || 'username' in req.body || 'email' in req.body)) {
         const adminMod: UserModel = res.locals['user'];
-        const excludedRole = adminMod.role === RoleModel.MODERATOR ? [RoleModel.ADMIN] : [RoleModel.ADMIN, RoleModel.MODERATOR];
-        if (adminMod.role !== RoleModel.ADMIN && excludedRole.includes(req.body.role)) {
+        let excludedRole = [];
+        if (adminMod.role === RoleModel.ADMIN) {
+          excludedRole = [];
+        } else if (adminMod.role === RoleModel.MODERATOR) {
+          excludedRole = [RoleModel.ADMIN];
+        } else {
+          excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
+        }
+        if (excludedRole.includes(req.body.role)) {
           throw new HttpException({
             info: '🙄 403 - Promote API :: Authorisasi Pengguna Gagal 😪',
             result: {
@@ -46,18 +53,9 @@ export class PromoteController {
         }
         const user = await this.userRepo.findOneOrFail({
           where: [
-            {
-              id: Equal(req.body.id),
-              role: Not(In(excludedRole))
-            },
-            {
-              username: ILike(req.body.username),
-              role: Not(In(excludedRole))
-            },
-            {
-              email: ILike(req.body.email),
-              role: Not(In(excludedRole))
-            }
+            { id: Equal(req.body.id) },
+            { username: ILike(req.body.username) },
+            { email: ILike(req.body.email) }
           ],
           relations: ['kartu_tanda_penduduk_', 'profile_']
         });
