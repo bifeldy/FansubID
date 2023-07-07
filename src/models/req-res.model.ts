@@ -30,8 +30,8 @@ export interface MailboxModel {
 
 export enum RoleModel {
   ADMIN = 'ADMIN',
-  FANSUBBER = 'FANSUBBER',
   MODERATOR = 'MODERATOR',
+  FANSUBBER = 'FANSUBBER',
   USER = 'USER'
 }
 

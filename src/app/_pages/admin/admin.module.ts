@@ -7,10 +7,6 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
-import { CONSTANTS } from '../../../constants';
-
-import { RoleModel } from '../../../models/req-res.model';
-
 import { RolesGuard } from '../../_shared/guards/roles.guard';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
@@ -62,8 +58,7 @@ const routes: Routes = [
     data: {
       title: 'Admin - List All Berkas DDL',
       description: 'Kelola Berkas DDL',
-      keywords: 'Kelola Berkas DDL',
-      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR]
+      keywords: 'Kelola Berkas DDL'
     }
   },
   {

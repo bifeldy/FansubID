@@ -48,8 +48,8 @@ export class FansubBerkasController {
           fileRepoQuery = fileRepoQuery
             .orWhere('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` })
             .andWhere('fansub_.id IN (:...id)', { id: fansubId })
-          if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
-            // Admin & Mod Can See Private Berkas From Private Profile
+          if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER) {
+            // Admin, Moderator, & Fansubber Can See Private Berkas From All Private Profile
           } else {
             // Current User Can See Private Berkas From Their Private Profile
             fileRepoQuery = fileRepoQuery.andWhere('user_.id = :userId', { userId: user.id });

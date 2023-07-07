@@ -90,7 +90,11 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get isAdminModFansubber(): boolean {
     if (this.as.currentUserSubject?.value) {
-      if (this.as.currentUserSubject?.value?.role === RoleModel.ADMIN || this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR || this.as.currentUserSubject?.value?.role === RoleModel.FANSUBBER) {
+      if (
+        this.as.currentUserSubject?.value?.role === RoleModel.ADMIN ||
+        this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR ||
+        this.as.currentUserSubject?.value?.role === RoleModel.FANSUBBER
+      ) {
         return true;
       }
     }

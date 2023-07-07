@@ -52,8 +52,8 @@ export class DoramaBerkasController {
           userFilesCriteria.dorama_ = {
             id: In(doramaId)
           };
-          if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
-            // Admin & Mod Can See Private Berkas From All Private Profile
+          if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER) {
+            // Admin, Moderator, & Fansubber Can See Private Berkas From All Private Profile
           } else {
             // Current User Can See Private Berkas From Their Private Profile
             userFilesCriteria.user_ = {

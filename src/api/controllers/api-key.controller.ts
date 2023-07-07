@@ -161,7 +161,7 @@ export class ApiKeyController {
           relations: ['user_']
         });
         if (
-          corss.length > 1 &&
+          corss.length >= 1 &&
           user.role !== RoleModel.ADMIN &&
           user.role !== RoleModel.MODERATOR
         ) {

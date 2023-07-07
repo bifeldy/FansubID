@@ -347,8 +347,8 @@ export class UserController {
             name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             user_: {
               username: ILike(req.params['username']),
-              ...((user?.role === RoleModel.ADMIN || user?.role === RoleModel.MODERATOR || user?.username === req.params['username']) ? {
-                // Admin, Mod, & User Itself Can See Private Profile
+              ...((user?.role === RoleModel.ADMIN || user?.role === RoleModel.MODERATOR || user?.role === RoleModel.FANSUBBER || user?.username === req.params['username']) ? {
+                // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
               })
@@ -428,8 +428,8 @@ export class UserController {
             comment: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             user_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
-                // Admin, Mod, & User Itself Can See Private Profile
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+                // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
               })
@@ -493,8 +493,8 @@ export class UserController {
             },
             report_by_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
-                // Admin, Mod, & User Itself Can See Private Profile
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+                // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
               })
@@ -506,8 +506,8 @@ export class UserController {
             },
             report_by_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
-                // Admin, Mod, & User Itself Can See Private Profile
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+                // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
               })
@@ -519,8 +519,8 @@ export class UserController {
             },
             report_by_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
-                // Admin, Mod, & User Itself Can See Private Profile
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+                // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
               })
@@ -534,8 +534,8 @@ export class UserController {
             },
             report_by_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
-                // Admin, Mod, & User Itself Can See Private Profile
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+                // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
               })
@@ -624,8 +624,8 @@ export class UserController {
         where: [
           {
             username: ILike(req.params['username']),
-            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.username === req.params['username']) ? {
-              // Admin, Mod, & User Itself Can See Private Profile
+            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+              // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
             } : {
               private: false
             })

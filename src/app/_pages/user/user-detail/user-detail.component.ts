@@ -124,7 +124,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
                 !this.userData.private ||
                 this.as.currentUserSubject?.value?.username === this.username ||
                 this.as.currentUserSubject?.value?.role === RoleModel.ADMIN ||
-                this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR
+                this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR ||
+                this.as.currentUserSubject?.value?.role === RoleModel.FANSUBBER
               ) {
                 this.tabData.push({
                   name: 'Berkas',

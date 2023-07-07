@@ -74,8 +74,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
         let excludedRole = [];
         if (this.as.currentUserSubject?.value?.role === RoleModel.ADMIN) {
           excludedRole = [RoleModel.ADMIN];
-        }
-        if (this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR) {
+        } else {
           excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
         }
         for (const r of res.results) {
