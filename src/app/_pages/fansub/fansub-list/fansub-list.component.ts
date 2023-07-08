@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
@@ -133,8 +133,10 @@ export class FansubListComponent implements OnInit, OnDestroy {
   subsFansub = null;
   subsAnime = null;
   subsDorama = null;
+  subsQueryParam = null;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private gs: GlobalService,
     private bs: BusyService,
@@ -154,12 +156,33 @@ export class FansubListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsFansub?.unsubscribe();
     this.subsAnime?.unsubscribe();
+    this.subsQueryParam?.unsubscribe();
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.getFansubData();
+      this.watchUrlRoute();
     }
+  }
+
+  watchUrlRoute(): void {
+    this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
+      next: qp => {
+        this.bs.busy();
+        this.allFansubId = [];
+        this.fansubData = [];
+        this.fansubActive = 0;
+        this.fansubInActive = 0;
+        this.doughnutChartGarapanLabels = [];
+        this.doughnutChartGarapanData = [];
+        this.barChartAnimeLabels = [];
+        this.barChartAnimeData = [];
+        this.barChartDoramaLabels = [];
+        this.barChartDoramaData = [];
+        this.bs.idle();
+        this.getFansubData();
+      }
+    });
   }
 
   getFansubData(): void {
