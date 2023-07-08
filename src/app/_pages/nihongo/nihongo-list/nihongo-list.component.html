@@ -28,7 +28,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-lg-6 col-xl-3 p-2" *ngFor="let t of testDasar">
               <mat-card class="gradient-border">
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
-                  <div mat-card-avatar style="background-size: cover; background-color: whitesmoke"
+                  <div mat-card-avatar style="background-size: cover; background-color: whitesmoke; border-radius: 0;"
                     [style.background-image]="'url(' + (t.image_url || '') + ')'">
                     <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
                   </div>
@@ -53,7 +53,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-lg-6 col-xl-3 p-2" *ngFor="let t of testMenengah">
               <mat-card>
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
-                  <div mat-card-avatar style="background-size: cover; background-color: whitesmoke"
+                  <div mat-card-avatar style="background-size: cover; background-color: whitesmoke; border-radius: 0;"
                     [style.background-image]="'url(' + (t.image_url || '') + ')'">
                     <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
                   </div>
@@ -80,7 +80,7 @@
                   t.name === 'All Kanji' ? 'gradient-border rgb-border' : ''
                 ) }}">
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
-                  <div mat-card-avatar style="background-size: cover; background-color: whitesmoke"
+                  <div mat-card-avatar style="background-size: cover; background-color: whitesmoke; border-radius: 0;"
                     [style.background-image]="'url(' + (t.image_url || '') + ')'">
                     <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
                   </div>

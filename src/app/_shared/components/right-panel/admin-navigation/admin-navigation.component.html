@@ -8,7 +8,7 @@
     <div class="col-12 p-2" *ngFor="let m of ADM.menuList">
       <mat-card>
         <mat-card-header routerLink="/admin-mod/{{ m.url }}" style="cursor: pointer;">
-          <div mat-card-avatar style="background-size: cover;"
+          <div mat-card-avatar style="background-size: cover; border-radius: 0;"
             [style.background-image]="'url(' + (m.image_url ? m.image_url : '') + ')'">
             <mat-icon style="font-size: 300%;" *ngIf="m.icon">{{ m.icon }}</mat-icon>
           </div>

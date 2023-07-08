@@ -25,14 +25,14 @@
             (tdc === 'Tanggal' || tdc === 'Pelaku' || tdc === 'Judul' || tdc === 'Anggota') ? '#28a745' :
               (tdc === 'Jenis' || tdc === 'Proyek') ? '#7289da' :
         (GS.isDarkMode ? '#acacac' : '#000000')">
-          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Pemilik' || tdc === 'Penulis'" />
-          <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Korban'" />
-          <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Pelaku'" />
-          <img matListAvatar [src]="row.foto_fansub" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Fansub'" />
-          <img matListAvatar [src]="row.foto_anggota" style="width: 32px; height: 32px; object-fit: cover;" class="me-1" *ngIf="tdc === 'Anggota'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover;" *ngIf="tdc === 'Logo'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover;" *ngIf="tdc === 'Image'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover;" *ngIf="tdc === 'Poster'" />
+          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc === 'Pemilik' || tdc === 'Penulis'" />
+          <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc === 'Korban'" />
+          <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc === 'Pelaku'" />
+          <img matListAvatar [src]="row.foto_fansub" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc === 'Fansub'" />
+          <img matListAvatar [src]="row.foto_anggota" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc === 'Anggota'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover; border-radius: 0;" *ngIf="tdc === 'Logo'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover; border-radius: 0;" *ngIf="tdc === 'Image'" />
+          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover; border-radius: 0;" *ngIf="tdc === 'Poster'" />
           <span *ngIf="tdc === 'Tanggal'" matTooltip="{{ row[tdc] | date:'d MMMM y, hh:mm:ss a z' }}">{{ row[tdc] | dateAgo }}</span>
           <span *ngIf="tdc === 'Deadline'">{{ row[tdc] | date:'d/M/yy, HH:mm:ss' }}</span>
           <span *ngIf="tdc === 'Anime'">{{ row[tdc] || 0 }} Anime</span>

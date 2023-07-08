@@ -60,7 +60,7 @@
                   <app-no-data *ngIf="(!showPendingMember && approvedMembers.length <= 0) || (showPendingMember && pendingMembers.length <= 0)"></app-no-data>
                   <mat-selection-list [multiple]="false" *ngIf="!showPendingMember && approvedMembers.length > 0">
                     <mat-list-option class="h-100" *ngFor="let m of approvedMembers" routerLink="/user/{{ m.user_.username }}">
-                      <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" />
+                      <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" style="border-radius: 0;" />
                       <a class="text-truncate text-decoration-none">
                         <span class="bg-bifeldy px-2 me-1 text-warning" style="position: absolute; right: 0;">
                           {{ m.keterangan }}
@@ -71,7 +71,7 @@
                   </mat-selection-list>
                   <mat-selection-list [multiple]="false" *ngIf="showPendingMember && pendingMembers.length > 0">
                     <mat-list-option class="h-100" *ngFor="let m of pendingMembers">
-                      <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" />
+                      <img matListAvatar src="{{ m.user_.image_url }}" class="ms-3" style="border-radius: 0;" />
                       <a class="text-truncate text-decoration-none">
                         <span class="bg-bifeldy px-2 me-1" style="position: absolute; right: 0;">
                           <small class="text-success" (click)="approveMember(m)" style="cursor: pointer;">

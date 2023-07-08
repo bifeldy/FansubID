@@ -73,7 +73,7 @@
               <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let c of dnsData">
                 <mat-card class="gradient-border rgb-border">
                   <mat-card-header routerLink="/fansub/{{ c.fansub_?.slug }}" style="cursor: pointer;">
-                    <div mat-card-avatar style="background-size: cover;"
+                    <div mat-card-avatar style="background-size: cover; border-radius: 0;"
                       [style.background-image]="'url(' + (c.fansub_?.image_url || ENV.baseUrl + '/assets/img/favicon.png') + ')'">
                     </div>
                     <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
