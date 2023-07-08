@@ -79,14 +79,6 @@ export class HighlightComponent implements OnInit, OnDestroy {
   watchUrlRoute(): void {
     this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
       next: qp => {
-        this.komentarHighlight = null;
-        this.count = 0;
-        this.page = 1;
-        this.pageFinished = false;
-        this.recursionCount = 0;
-        this.commentToSend = null;
-        this.parent = null;
-        this.komentar = [];
         this.urlPath = this.router.url.split('?')[0];
         this.highlightId = Number(qp['comment'] || '');
         if (this.highlightId > 0) {
