@@ -171,42 +171,43 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.watchUrlRoute();
+      this.reloadComponent();
+      this.subsRouter = this.router.events.subscribe({
+        next: evt => {
+          if (evt instanceof NavigationEnd) {
+            this.reloadComponent();
+          }
+        }
+      });
     }
   }
 
-  watchUrlRoute(): void {
-    this.subsRouter = this.router.events.subscribe({
-      next: evt => {
-        if (evt instanceof NavigationEnd) {
-          this.reportTrackType = this.router.url.split('?')[0].split('/')[1];
-          this.idSlugUsername = this.router.url.split('?')[0].split('/')[2];
-          this.ss.socketEmit('track-get', {
-            trackType: this.reportTrackType,
-            idSlugUsername: this.idSlugUsername
-          }, (response: any) => {
-            this.gs.log(`[SOCKET_TRACK-GET]`, response);
-            this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna', 'Terverifikasi', 'Belum Verifikasi'];
-            this.barChartUniqueData = [response.unique_ip, response.unique_user, response.verified_user, response.un_verified_user];
-            this.summary.unique_ip = response.unique_ip;
-            this.summary.unique_user = response.unique_user;
-            this.summary.verified_user = response.verified_user;
-            this.summary.un_verified_user = response.un_verified_user;
-            this.lineChartVisitorData = [];
-            this.lineChartVisitorLabels = [];
-            for (const v of response.visitor) {
-              this.lineChartVisitorData.push(v.visitor_count || 0);
-              this.lineChartVisitorLabels.push(
-                new Date(
-                  new Date(v.visitor_date).getTime() - (new Date(v.visitor_date).getTimezoneOffset() * 60 * 1000)
-                ).toISOString().split('T')[0]
-              );
-            }
-          });
-          this.getReport();
-        }
+  reloadComponent(): void {
+    this.reportTrackType = this.router.url.split('?')[0].split('/')[1];
+    this.idSlugUsername = this.router.url.split('?')[0].split('/')[2];
+    this.ss.socketEmit('track-get', {
+      trackType: this.reportTrackType,
+      idSlugUsername: this.idSlugUsername
+    }, (response: any) => {
+      this.gs.log(`[SOCKET_TRACK-GET]`, response);
+      this.barChartUniqueLabels = ['Alamat IP', 'Akun Pengguna', 'Terverifikasi', 'Belum Verifikasi'];
+      this.barChartUniqueData = [response.unique_ip, response.unique_user, response.verified_user, response.un_verified_user];
+      this.summary.unique_ip = response.unique_ip;
+      this.summary.unique_user = response.unique_user;
+      this.summary.verified_user = response.verified_user;
+      this.summary.un_verified_user = response.un_verified_user;
+      this.lineChartVisitorData = [];
+      this.lineChartVisitorLabels = [];
+      for (const v of response.visitor) {
+        this.lineChartVisitorData.push(v.visitor_count || 0);
+        this.lineChartVisitorLabels.push(
+          new Date(
+            new Date(v.visitor_date).getTime() - (new Date(v.visitor_date).getTimezoneOffset() * 60 * 1000)
+          ).toISOString().split('T')[0]
+        );
       }
     });
+    this.getReport();
   }
 
   toggleAllStats(): void {

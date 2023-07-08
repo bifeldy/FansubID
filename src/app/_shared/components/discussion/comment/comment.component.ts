@@ -59,7 +59,14 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.watchUrlRoute();
+      this.reloadComponent();
+      this.subsRouter = this.router.events.subscribe({
+        next: evt => {
+          if (evt instanceof NavigationEnd) {
+            this.reloadComponent();
+          }
+        }
+      });
     }
   }
 
@@ -72,24 +79,18 @@ export class CommentComponent implements OnInit, OnDestroy {
     this.urlPath = null;
   }
 
-  watchUrlRoute(): void {
-    this.subsRouter = this.router.events.subscribe({
-      next: evt => {
-        if (evt instanceof NavigationEnd) {
-          this.count = 0;
-          this.page = 1;
-          this.row = 10;
-          this.pageFinished = false;
-          this.recursionCount = 0;
-          this.rootCommentBox = false;
-          this.commentToSend = null;
-          this.parent = null;
-          this.komentar = [];
-          this.urlPath = this.router.url.split('?')[0];
-          this.getComment(true);
-        }
-      }
-    });
+  reloadComponent(): void {
+    this.count = 0;
+    this.page = 1;
+    this.row = 10;
+    this.pageFinished = false;
+    this.recursionCount = 0;
+    this.rootCommentBox = false;
+    this.commentToSend = null;
+    this.parent = null;
+    this.komentar = [];
+    this.urlPath = this.router.url.split('?')[0];
+    this.getComment(true);
   }
 
   sendComment(k: KomentarModel): void {

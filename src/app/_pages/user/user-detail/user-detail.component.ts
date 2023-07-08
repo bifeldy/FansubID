@@ -190,7 +190,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             'Nama Berkas': r.name
           });
         }
-        this.tabData[0].data.row = this.berkasData;
+        if (this.tabData?.length > 0) {
+          this.tabData[0].data.row = this.berkasData;
+        }
         this.bs.idle();
       },
       error: err => {
