@@ -215,7 +215,8 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   copyCommentLink(k: KomentarModel): void {
-    if (this.clipboard.copy(`${environment.baseUrl}/${this.urlPath}?comment=${k.id}`)) {
+    const url = (k.path.startsWith('/') ? environment.baseUrl : '') + k.path
+    if (this.clipboard.copy(`${url}?comment=${k.id}`)) {
       this.snackBar.open(`URL Komentar :: Telah Di Salin Pada Clipboard`, 'Ok');
     }
   }
