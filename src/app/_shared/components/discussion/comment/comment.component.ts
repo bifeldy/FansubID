@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { environment } from '../../../../../environments/app/environment';
@@ -38,6 +38,7 @@ export class CommentComponent implements OnInit, OnDestroy {
   subsKomenGetKomen = null;
   subsKomenGetReply = null;
   subsDelete = null;
+  subsRouter = null;
 
   constructor(
     private clipboard: Clipboard,
@@ -58,8 +59,7 @@ export class CommentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.urlPath = this.router.url.split('?')[0];
-      this.getComment(true);
+      this.watchUrlRoute();
     }
   }
 
@@ -68,7 +68,28 @@ export class CommentComponent implements OnInit, OnDestroy {
     this.subsKomenGetKomen?.unsubscribe();
     this.subsKomenGetReply?.unsubscribe();
     this.subsDelete?.unsubscribe();
+    this.subsRouter?.unsubscribe();
     this.urlPath = null;
+  }
+
+  watchUrlRoute(): void {
+    this.subsRouter = this.router.events.subscribe({
+      next: evt => {
+        if (evt instanceof NavigationEnd) {
+          this.count = 0;
+          this.page = 1;
+          this.row = 10;
+          this.pageFinished = false;
+          this.recursionCount = 0;
+          this.rootCommentBox = false;
+          this.commentToSend = null;
+          this.parent = null;
+          this.komentar = [];
+          this.urlPath = this.router.url.split('?')[0];
+          this.getComment(true);
+        }
+      }
+    });
   }
 
   sendComment(k: KomentarModel): void {

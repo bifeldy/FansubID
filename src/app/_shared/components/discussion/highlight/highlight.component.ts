@@ -40,6 +40,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
   subsKomenGetKomen = null;
   subsKomenGetReply = null;
   subsDelete = null;
+  subsQueryParam = null;
 
   constructor(
     private clipboard: Clipboard,
@@ -61,11 +62,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.urlPath = this.router.url.split('?')[0];
-      this.highlightId = Number(this.activatedRoute.snapshot.queryParamMap.get('comment') || '');
-      if (this.highlightId > 0) {
-        this.getHighlight();
-      }
+      this.watchUrlRoute();
     }
   }
 
@@ -75,7 +72,28 @@ export class HighlightComponent implements OnInit, OnDestroy {
     this.subsKomenGetReply?.unsubscribe();
     this.subsHighlight?.unsubscribe();
     this.subsDelete?.unsubscribe();
+    this.subsQueryParam?.unsubscribe();
     this.urlPath = null;
+  }
+
+  watchUrlRoute(): void {
+    this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
+      next: qp => {
+        this.komentarHighlight = null;
+        this.count = 0;
+        this.page = 1;
+        this.pageFinished = false;
+        this.recursionCount = 0;
+        this.commentToSend = null;
+        this.parent = null;
+        this.komentar = [];
+        this.urlPath = this.router.url.split('?')[0];
+        this.highlightId = Number(qp['comment'] || '');
+        if (this.highlightId > 0) {
+          this.getHighlight();
+        }
+      }
+    });
   }
 
   getHighlight(id = this.highlightId): void {
