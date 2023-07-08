@@ -87,9 +87,9 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./_pages/home/home.module').then(m => m.HomeModule),
     data: {
-      title: 'Beranda',
-      description: 'Halaman Beranda',
-      keywords: 'Beranda'
+      title: 'Database Fansub Indonesia',
+      description: 'Database Fansub Indonesia',
+      keywords: 'Fansub DB'
     }
   },
   {
