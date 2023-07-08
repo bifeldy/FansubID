@@ -26,7 +26,7 @@
             {{ k.created_at | dateAgo }}
           </small>
         </p>
-        <p class="mb-1" style="line-height: normal;">{{ k.comment }}</p>
+        <p class="mb-1" style="line-height: normal;" [innerHTML]="k.comment"></p>
       </div>
       <div class="col p-0 text-end">
         <button mat-icon-button color="accent" (click)="deleteComment(k)" matTooltip="Hapus">

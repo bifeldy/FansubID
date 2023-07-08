@@ -93,6 +93,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[HOME_KOMENTAR_LIST_SUCCESS]', res);
         this.komentarData = res.results;
+        for (const k of this.komentarData) {
+          k.comment = this.gs.htmlToText(k.comment);
+        }
         this.bs.idle();
       },
       error: err => {
