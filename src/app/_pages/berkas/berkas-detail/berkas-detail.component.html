@@ -161,11 +161,17 @@
                     <mat-icon class="me-1">play_arrow</mat-icon>
                     Mulai Streaming Video
                   </button>
+                  <mat-form-field appearance="outline" class="pt-3 col-12" [color]="'accent'" *ngIf="subtitles.length > 0">
+                    <mat-label>Pilih Subtitle / Takarir (.ASS Saja)</mat-label>
+                    <mat-select placeholder="Pilih Salah Satu" [(value)]="selectedSubsUrl">
+                      <mat-option [value]="s.url" *ngFor="let s of subtitles">{{ s.name }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
                   <mat-progress-bar color="accent" mode="buffer" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
                   <app-vjs-player *ngIf="isHaveDDL && vjsInit && vjsReady"
                     [videoUrl]="ddlVideo"
                     [videoThumb]="videoThumb"
-                    [subtitleUrl]="ddlSubtitles"
+                    [subtitleUrl]="selectedSubsUrl"
                     [subtitleFonts]="ddlFonts">
                   </app-vjs-player>
                   <button class="w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">

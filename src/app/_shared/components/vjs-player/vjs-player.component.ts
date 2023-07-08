@@ -1,6 +1,6 @@
 import videojs from 'video.js';
 
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { VideoJsPlayer } from 'video.js';
 
@@ -13,7 +13,7 @@ declare const SubtitlesOctopus: any;
   templateUrl: './vjs-player.component.html',
   styleUrls: ['./vjs-player.component.css']
 })
-export class VjsPlayerComponent implements OnInit, OnDestroy {
+export class VjsPlayerComponent implements OnInit, OnDestroy, OnChanges {
 
   // References:
   // https://github.com/videojs/video.js
@@ -51,16 +51,7 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
           poster: this.videoThumb
         }, () => {
           this.gs.log('[VIDEO-JS_READY]', this.player);
-          if (this.subtitleUrl) {
-            this.subtitlesOctopus = new SubtitlesOctopus({
-              video: this.target.nativeElement,
-              subUrl: this.subtitleUrl,
-              fonts: this.subtitleFonts,
-              workerUrl: '/assets/lib/subtitles-octopus-worker.js',
-              legacyWorkerUrl: '/assets/lib/subtitles-octopus-worker-legacy.js'
-            });
-            this.gs.log('[SUBTITLE_INIT]', this.subtitlesOctopus);
-          }
+          this.initSubtitle();
         });
       }
     }
@@ -69,6 +60,29 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subtitlesOctopus?.dispose();
     this.player?.dispose();
+  }
+
+  ngOnChanges(): void {
+    if (this.subtitlesOctopus) {
+      if (this.subtitleUrl) {
+        this.subtitlesOctopus.setTrackByUrl(this.subtitleUrl);
+      }
+    } else {
+      this.initSubtitle();
+    }
+  }
+
+  initSubtitle(): void {
+    if (this.subtitleUrl) {
+      this.subtitlesOctopus = new SubtitlesOctopus({
+        video: this.target.nativeElement,
+        subUrl: this.subtitleUrl,
+        fonts: this.subtitleFonts,
+        workerUrl: '/assets/lib/subtitles-octopus-worker.js',
+        legacyWorkerUrl: '/assets/lib/subtitles-octopus-worker-legacy.js'
+      });
+      this.gs.log('[SUBTITLE_INIT]', this.subtitlesOctopus);
+    }
   }
 
 }

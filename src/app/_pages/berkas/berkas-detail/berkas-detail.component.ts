@@ -37,6 +37,8 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   subtitles = [];
   fonts = [];
 
+  selectedSubsUrl = null;
+
   vjsInit = false;
   vjsReady = false;
 
@@ -151,10 +153,6 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return this.berkasData.image_url;
   }
 
-  get ddlSubtitles(): string {
-    return (this.subtitles.length > 0) ? this.subtitles[0] : '';
-  }
-
   get ddlFonts(): any[] {
     return (this.fonts.length > 0) ? this.fonts : [];
   }
@@ -233,7 +231,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             tap(evt => {
               if (evt.type === HttpEventType.Response) {
                 this.gs.log('[DOWNLOAD_COMPLETED]', evt);
-                subtitleFiles.push(URL.createObjectURL(new Blob([evt.body])));
+                subtitleFiles.push({
+                  name: s.name,
+                  url: URL.createObjectURL(new Blob([evt.body]))
+                });
               }
             })
           );
