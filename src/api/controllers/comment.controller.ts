@@ -53,7 +53,7 @@ export class CommentController {
       });
       for (const k of komens) {
         if (k.deleted_at) {
-          k.comment = 'Komentar Telah Di Hapus ...';
+          k.comment = '<span class="gradient-text">Komentar Telah Di Hapus ...</span>';
         }
         if ('user_' in k && k.user_) {
           delete k.user_.created_at;
@@ -156,7 +156,7 @@ export class CommentController {
       });
       for (const k of komens) {
         if (k.deleted_at) {
-          k.comment = 'Komentar Telah Di Hapus ...';
+          k.comment = '<span class="gradient-text">Komentar Telah Di Hapus ...</span>';
         }
         if ('user_' in k && k.user_) {
           delete k.user_.created_at;
@@ -206,7 +206,7 @@ export class CommentController {
           withDeleted: true
         });
         if (komen.deleted_at) {
-          komen.comment = 'Komentar Telah Di Hapus ...';
+          komen.comment = '<span class="gradient-text">Komentar Telah Di Hapus ...</span>';
         }
         if ('user_' in komen && komen.user_) {
           delete komen.user_.created_at;

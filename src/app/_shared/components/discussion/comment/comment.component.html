@@ -29,12 +29,19 @@
         <p class="mb-1" style="line-height: normal;" [innerHTML]="k.comment"></p>
       </div>
       <div class="col p-0 text-end">
-        <button mat-icon-button color="accent" (click)="deleteComment(k)" matTooltip="Hapus">
-          <mat-icon>delete</mat-icon>
+        <button mat-icon-button color="accent" [matMenuTriggerFor]="komentarMenu" matTooltip="Opsi">
+          <mat-icon>more_vert</mat-icon>
         </button>
-        <button mat-icon-button color="accent" (click)="copyCommentLink(k)" matTooltip="Salin Tautan">
-          <mat-icon>link</mat-icon>
-        </button>
+        <mat-menu #komentarMenu="matMenu">
+          <button mat-menu-item (click)="deleteComment(k)">
+            <mat-icon class="me-1">delete</mat-icon>
+            Hapus
+          </button>
+          <button mat-menu-item (click)="copyCommentLink(k)">
+            <mat-icon class="me-1">link</mat-icon>
+            Salin URL
+          </button>
+        </mat-menu>
       </div>
       <mat-form-field appearance="outline" class="mt-2 col-12" [color]="'accent'" *ngIf="k.reply_mode && AS.currentUserSubject?.value && recursionCount === 0">
         <mat-label>Balas / Tanggapi</mat-label>
