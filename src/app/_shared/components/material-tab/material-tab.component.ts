@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { MatTabGroup } from '@angular/material/tabs';
+import { ActivatedRoute } from '@angular/router';
 
 import { GlobalService } from '../../services/global.service';
 
@@ -9,7 +10,7 @@ import { GlobalService } from '../../services/global.service';
   templateUrl: './material-tab.component.html',
   styleUrls: ['./material-tab.component.css']
 })
-export class MaterialTabComponent implements OnInit, AfterViewInit {
+export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() count = 0;
   @Input() serverSide = false;
@@ -80,7 +81,10 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
   @Output() tableRowClicked = new EventEmitter();
   @Output() paginatorClicked = new EventEmitter();
 
+  subsQueryParam = null;
+
   constructor(
+    private activatedRoute: ActivatedRoute,
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
@@ -94,7 +98,7 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      //
+      this.watchUrlRoute();
     }
   }
 
@@ -102,8 +106,29 @@ export class MaterialTabComponent implements OnInit, AfterViewInit {
     this.totalTabsCount = this.tabData.length;
   }
 
+  ngOnDestroy(): void {
+    this.subsQueryParam?.unsubscribe();
+  }
+
   get backgroundColor(): ThemePalette {
     return ((this.gs.isDarkMode ? 'gelap' : 'terang') as ThemePalette);
+  }
+
+  watchUrlRoute(): void {
+    this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
+      next: qp => {
+        const highlightId = Number(qp['comment'] || '');
+        if (highlightId > 0) {
+          this.openCommentTab();
+        }
+      }
+    });
+  }
+
+  openCommentTab(): void {
+    if (this.tabData.length > 0) {
+      this.selectedIndexTab = this.tabData.length;
+    }
   }
 
   swipe(eType): void {
