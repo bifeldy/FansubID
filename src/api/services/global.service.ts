@@ -9,6 +9,7 @@ import { Injectable } from '@nestjs/common';
 import { environment } from '../../environments/api/environment';
 
 import { SEASONS } from '../../models/seasons';
+import { CONSTANTS } from '../../constants';
 
 @Injectable()
 export class GlobalService {
@@ -136,6 +137,21 @@ export class GlobalService {
       return text;
     }
     return '';
+  }
+
+  isFreeTime(): boolean {
+    const currentDate = new Date();
+    const startTime = CONSTANTS.freeTimeStart;
+    const endTime = CONSTANTS.freeTimeEnd;
+    const startDate = new Date(currentDate.getTime());
+    startDate.setHours(Number.parseInt(startTime.split(":")[0]));
+    startDate.setMinutes(Number.parseInt(startTime.split(":")[1]));
+    startDate.setSeconds(Number.parseInt(startTime.split(":")[2]));
+    const endDate = new Date(currentDate.getTime());
+    endDate.setHours(Number.parseInt(endTime.split(":")[0]));
+    endDate.setMinutes(Number.parseInt(endTime.split(":")[1]));
+    endDate.setSeconds(Number.parseInt(endTime.split(":")[2]));
+    return startDate < currentDate && endDate > currentDate;
   }
 
 }

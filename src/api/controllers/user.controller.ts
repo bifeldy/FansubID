@@ -25,6 +25,7 @@ import { UserService } from '../repository/user.service';
 
 import { CryptoService } from '../services/crypto.service';
 import { DiscordService } from '../services/discord.service';
+import { GlobalService } from '../services/global.service';
 
 @Controller('/user')
 export class UserController {
@@ -33,6 +34,7 @@ export class UserController {
     private aks: ApiKeyService,
     private berkasRepo: BerkasService,
     private cs: CryptoService,
+    private gs: GlobalService,
     private ds: DiscordService,
     private fansubMemberRepo: FansubMemberService,
     private ktpRepo: KartuTandaPendudukService,
@@ -347,7 +349,7 @@ export class UserController {
             name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             user_: {
               username: ILike(req.params['username']),
-              ...((user?.role === RoleModel.ADMIN || user?.role === RoleModel.MODERATOR || user?.role === RoleModel.FANSUBBER || user?.username === req.params['username']) ? {
+              ...((user?.role === RoleModel.ADMIN || user?.role === RoleModel.MODERATOR || user?.role === RoleModel.FANSUBBER || user?.username === req.params['username'] || (user && this.gs.isFreeTime())) ? {
                 // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
@@ -428,7 +430,7 @@ export class UserController {
             comment: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             user_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username'] || this.gs.isFreeTime()) ? {
                 // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
@@ -493,7 +495,7 @@ export class UserController {
             },
             report_by_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username'] || this.gs.isFreeTime()) ? {
                 // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
@@ -506,7 +508,7 @@ export class UserController {
             },
             report_by_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username'] || this.gs.isFreeTime()) ? {
                 // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
@@ -519,7 +521,7 @@ export class UserController {
             },
             report_by_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username'] || this.gs.isFreeTime()) ? {
                 // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
@@ -534,7 +536,7 @@ export class UserController {
             },
             report_by_: {
               username: ILike(req.params['username']),
-              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+              ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username'] || this.gs.isFreeTime()) ? {
                 // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
               } : {
                 private: false
@@ -624,7 +626,7 @@ export class UserController {
         where: [
           {
             username: ILike(req.params['username']),
-            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username']) ? {
+            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || user.username === req.params['username'] || this.gs.isFreeTime()) ? {
               // Admin, Moderator, Fansubber, & User Itself Can See Private Profile
             } : {
               private: false

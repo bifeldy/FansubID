@@ -8,13 +8,15 @@ import { RoleModel, UserModel } from '../../../models/req-res.model';
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
 import { BerkasService } from '../../repository/berkas.service';
+import { GlobalService } from '../../services/global.service';
 
 @ApiExcludeController()
 @Controller('/anime-berkas')
 export class AnimeBerkasController {
 
   constructor(
-    private berkasRepo: BerkasService
+    private berkasRepo: BerkasService,
+    private gs: GlobalService
   ) {
     //
   }
@@ -52,7 +54,7 @@ export class AnimeBerkasController {
           userFilesCriteria.anime_ = {
             id: In(animeId)
           };
-          if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER) {
+          if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || this.gs.isFreeTime()) {
             // Admin, Moderator, & Fansubber Can See Private Berkas From All Private Profile
           } else {
             // Current User Can See Private Berkas From Their Private Profile
