@@ -53,11 +53,11 @@ export class User implements UserModel {
   @DeleteDateColumn({ type: 'timestamp with time zone' })
   deleted_at: number | Date;
 
-  @OneToOne(type => KartuTandaPenduduk)
+  @OneToOne(type => KartuTandaPenduduk, { cascade: true })
   @JoinColumn()
   kartu_tanda_penduduk_: KartuTandaPendudukModel;
 
-  @OneToOne(type => Profile)
+  @OneToOne(type => Profile, { cascade: true })
   @JoinColumn()
   profile_: ProfileModel;
 

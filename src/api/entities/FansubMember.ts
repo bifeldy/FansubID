@@ -24,7 +24,7 @@ export class FansubMember implements FansubMemberModel {
   updated_at: number | Date;
 
   @ManyToOne(type => Fansub, { primary: true })
-  fansub_?: FansubModel;
+  fansub_: FansubModel;
 
   @ManyToOne(type => User, { primary: true })
   user_: UserModel;

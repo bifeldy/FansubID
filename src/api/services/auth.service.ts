@@ -74,17 +74,19 @@ export class AuthService {
           { id: Equal(decoded.user.id) }
         ]
       });
-      const newUserKtp = this.kartuTandaPendudukRepo.new();
-      newUserKtp.nama = selectedRegistration.nama;
-      const resKtpSave = await this.kartuTandaPendudukRepo.save(newUserKtp);
-      const newUserProfile = this.profileRepo.new();
-      const resProfileSave = await this.profileRepo.save(newUserProfile);
       const newUser = this.userRepo.new();
       newUser.username = selectedRegistration.username;
       newUser.email = selectedRegistration.email;
       newUser.password = selectedRegistration.password;
-      newUser.kartu_tanda_penduduk_ = resKtpSave;
-      newUser.profile_ = resProfileSave;
+      const newUserKtp = this.kartuTandaPendudukRepo.new();
+      newUserKtp.nama = selectedRegistration.nama;
+      // const resKtpSave = await this.kartuTandaPendudukRepo.save(newUserKtp);
+      // newUser.kartu_tanda_penduduk_ = resKtpSave;
+      newUser.kartu_tanda_penduduk_ = newUserKtp;
+      const newUserProfile = this.profileRepo.new();
+      // const resProfileSave = await this.profileRepo.save(newUserProfile);
+      // newUser.profile_ = resProfileSave;
+      newUser.profile_ = newUserProfile;
       const resUserSave = await this.userRepo.save(newUser);
       const { password, session_token, session_origin, ...noPwdSes } = resUserSave;
       delete noPwdSes.kartu_tanda_penduduk_;
