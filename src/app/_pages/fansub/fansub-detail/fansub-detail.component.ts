@@ -534,9 +534,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
                     data: {
                       title: `Klaim Berhasil`,
                       htmlMessage: `
-                        Domain '${this.fansubSlug}.${this.ENV.domain}' Sudah Didaftarkan Dan Dapat Digunakan,
-                        Silahkan Migrasi Domain Pada Situs Penyedia Layanan (Ex. Blogger / Wordpress / Etc.)
-                        Kemudian Tunggu Hingga Propagasi Dns Selesai.
+                        Domain '${this.fansubSlug}.${this.ENV.domain}' Selesai Didaftarkan.
+                        Silahkan Tunggu Hingga Propagasi Dns Selesai.
+                        Untuk Mengubah, Silahkan Menuju <a href="${environment.baseUrl}/user" target="_self" class="text-decoration-none">Halaman User</a>
+                        Apabila Ada Pertanyaan Dapat Langsung Menghubungi Admin / Moderator.
                         Terima Kasih.
                       `,
                       confirmText: 'Tutup'
