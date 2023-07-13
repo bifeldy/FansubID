@@ -7,10 +7,15 @@
         <h1 class="h3 font-weight-normal gradient-text">{{ ENV.siteName }}</h1>
         <h2 class="text-warning pt-3">
           <p class="col-12 col-lg-8 mx-auto">
-            Tempat berbagi (+ <i>backup</i>) dan melacak sekaligus mengabadikan berkas proyek garapan tontonan
-            baik animasi maupun film drama dari, oleh, untuk siapa saja.
+            Tempat berbagi (+ <i>backup</i>) dan melacak sekaligus mengabadikan berkas proyek garapan
+            animasi maupun film drama dari, oleh, untuk siapa saja.
           </p>
         </h2>
+        <h3 class="text-success" matTooltip="Khusus Berkas Yang Upload DDL">
+          <p class="col-12 col-lg-8 mx-auto">
+            * Tempat arsip abadi :: Anti <i><u>link</u></i> mati ~
+          </p>
+        </h3>
         <div class="row pb-3">
           <div class="col-12 col-lg-8 mx-auto">
             <a class="m-1" mat-stroked-button color="warn" routerLink="{{ menu.link }}" *ngFor="let menu of contentMenus">
