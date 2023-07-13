@@ -98,50 +98,6 @@ export class FansubDnsController {
     }
     if (dns_id && dns_id.status >= 200 && dns_id.status < 400) {
       fansub.dns_id = dns_id.result.id;
-      fansub = await this.fansubRepo.save(fansub);
-      result.dns_id = {
-        id: dns_id.result.id,
-        name: dns_id.result.name,
-        content: dns_id.result.content,
-        proxied: dns_id.result.proxied,
-        ttl: dns_id.result.ttl,
-        type: dns_id.result.type,
-        created_at: dns_id.result.created_on,
-        updated_at: dns_id.result.modified_on
-      };
-      if ('verification_name' in req.body && 'verification_target' in req.body) {
-        let verification_name: string = this.gs.cleanUpUrlStringRecord(req.body.verification_name);
-        let verification_target: string = this.gs.cleanUpUrlStringRecord(req.body.verification_target);
-        if (verification_name && verification_target && CONSTANTS.verificationDomain.includes(serverTarget)) {
-          let dns_id_alt = null;
-          if (fansub.dns_id_alt) {
-            dns_id_alt = await this.cfs.updateDns(fansub.dns_id_alt, verification_name, verification_target, 'CNAME');
-          } else {
-            dns_id_alt = await this.cfs.createDns(verification_name, verification_target, 'CNAME', `${fansub.slug}@${fansub.dns_id}`);
-          }
-          if (dns_id_alt && dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
-            fansub.dns_id_alt = dns_id_alt.result.id;
-            fansub = await this.fansubRepo.save(fansub);
-            result.dns_id_alt = {
-              id: dns_id_alt.result.id,
-              name: dns_id_alt.result.name,
-              content: dns_id_alt.result.content,
-              proxied: dns_id_alt.result.proxied,
-              ttl: dns_id_alt.result.ttl,
-              type: dns_id_alt.result.type,
-              created_at: dns_id_alt.result.created_on,
-              updated_at: dns_id_alt.result.modified_on
-            };
-          } else {
-            throw new HttpException({
-              info: `💩 ${dns_id_alt?.status || 400} - Cloudflare API :: Gagal Menambah / Memperbaharui Data 🤬`,
-              result: {
-                message: 'Data Tidak Lengkap!'
-              }
-            }, dns_id_alt?.status || HttpStatus.BAD_REQUEST);
-          }
-        }
-      }
       const fansubUrls = JSON.parse(fansub.urls);
       if (fansubUrls && Array.isArray(fansubUrls)) {
         const idx = fansubUrls.findIndex(u => u.name === 'web');
@@ -154,23 +110,52 @@ export class FansubDnsController {
       fansub.urls = JSON.stringify(fansubUrls);
       fansub.user_ = user;
       fansub = await this.fansubRepo.save(fansub);
-      delete fansub.urls;
-      delete fansub.tags;
-      delete fansub.view_count;
-      delete fansub.like_count;
-      delete fansub.description;
-      delete fansub.rss_feed;
-      delete fansub.created_at;
-      delete fansub.updated_at;
-      delete fansub.user_;
-    } else {
-      throw new HttpException({
-        info: `💩 ${dns_id?.status || 400} - Cloudflare API :: Gagal Menambah / Memperbaharui Data 🤬`,
-        result: {
-          message: 'Data Tidak Lengkap!'
-        }
-      }, dns_id?.status || HttpStatus.BAD_REQUEST);
+      result.dns_id = {
+        id: dns_id.result.id,
+        name: dns_id.result.name,
+        content: dns_id.result.content,
+        proxied: dns_id.result.proxied,
+        ttl: dns_id.result.ttl,
+        type: dns_id.result.type,
+        created_at: dns_id.result.created_on,
+        updated_at: dns_id.result.modified_on
+      };
     }
+    if ('verification_name' in req.body && 'verification_target' in req.body) {
+      let verification_name: string = this.gs.cleanUpUrlStringRecord(req.body.verification_name);
+      let verification_target: string = this.gs.cleanUpUrlStringRecord(req.body.verification_target);
+      if (verification_name && verification_target && CONSTANTS.verificationDomain.includes(serverTarget)) {
+        let dns_id_alt = null;
+        if (fansub.dns_id_alt) {
+          dns_id_alt = await this.cfs.updateDns(fansub.dns_id_alt, verification_name, verification_target, 'CNAME');
+        } else {
+          dns_id_alt = await this.cfs.createDns(verification_name, verification_target, 'CNAME', `${fansub.slug}@${fansub.dns_id}`);
+        }
+        if (dns_id_alt && dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
+          fansub.dns_id_alt = dns_id_alt.result.id;
+          fansub = await this.fansubRepo.save(fansub);
+          result.dns_id_alt = {
+            id: dns_id_alt.result.id,
+            name: dns_id_alt.result.name,
+            content: dns_id_alt.result.content,
+            proxied: dns_id_alt.result.proxied,
+            ttl: dns_id_alt.result.ttl,
+            type: dns_id_alt.result.type,
+            created_at: dns_id_alt.result.created_on,
+            updated_at: dns_id_alt.result.modified_on
+          };
+        }
+      }
+    }
+    delete fansub.urls;
+    delete fansub.tags;
+    delete fansub.view_count;
+    delete fansub.like_count;
+    delete fansub.description;
+    delete fansub.rss_feed;
+    delete fansub.created_at;
+    delete fansub.updated_at;
+    delete fansub.user_;
     return { result, fansub };
   }
 

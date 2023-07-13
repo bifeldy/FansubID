@@ -38,7 +38,7 @@ export class CloudflareService {
         res.pages = res_json.result_info?.total_pages || 1;
         res.results = res_json.result;
       } else {
-        this.gs.log(`[CLOUDFLARE_SERVICE-LIST_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json);
+        this.gs.log(`[CLOUDFLARE_SERVICE-LIST_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json, 'error');
       }
       return res;
     } catch (err) {
@@ -71,7 +71,7 @@ export class CloudflareService {
         this.gs.log(`[CLOUDFLARE_SERVICE-CREATE_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json);
         res.result = res_json.result;
       } else {
-        this.gs.log(`[CLOUDFLARE_SERVICE-CREATE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json);
+        this.gs.log(`[CLOUDFLARE_SERVICE-CREATE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json, 'error');
         res.result = {
           message: res_json.errors[0]?.message
         };
@@ -99,7 +99,7 @@ export class CloudflareService {
         this.gs.log(`[CLOUDFLARE_SERVICE-DETAIL_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json);
         res.result = res_json.result;
       } else {
-        this.gs.log(`[CLOUDFLARE_SERVICE-DETAIL_DNS_FAIL] 🔥 ${res_raw.status}`, res_json);
+        this.gs.log(`[CLOUDFLARE_SERVICE-DETAIL_DNS_FAIL] 🔥 ${res_raw.status}`, res_json, 'error');
         res.result = {
           message: res_json.errors[0]?.message
         };
@@ -131,7 +131,7 @@ export class CloudflareService {
         this.gs.log(`[CLOUDFLARE_SERVICE-UPDATE_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json);
         res.result = res_json.result;
       } else {
-        this.gs.log(`[CLOUDFLARE_SERVICE-UPDATE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json);
+        this.gs.log(`[CLOUDFLARE_SERVICE-UPDATE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json, 'error');
         res.result = {
           message: res_json.errors[0]?.message
         };
@@ -159,7 +159,7 @@ export class CloudflareService {
         this.gs.log(`[CLOUDFLARE_SERVICE-DELETE_DNS_SUCCESS] 🔥 ${res_raw.status}`, res_json);
         res.result = res_json.result;
       } else {
-        this.gs.log(`[CLOUDFLARE_SERVICE-DELETE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json);
+        this.gs.log(`[CLOUDFLARE_SERVICE-DELETE_DNS_FAIL] 🔥 ${res_raw.status}`, res_json, 'error');
         res.result = res_json.errors[0]?.message;
       }
       return res;
