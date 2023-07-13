@@ -19,24 +19,30 @@ export class ApiService {
   }
 
   async getData(url: URL, headers: HeadersInit, signal: AbortSignal = null) {
-    this.gs.log(`[FetchGET-HEADER] 🧩 ${url.toString()}`, headers);
+    this.gs.log(`[FETCH_GET-HEADER] 🧩 ${url.toString()}`, headers);
     return fetch(url.toString(), { method: 'GET', headers, signal });
   }
 
   async postData(url: URL, form: any, headers: HeadersInit, signal: AbortSignal = null) {
-    this.gs.log(`[FetchPOST-HEADER] 🧩 ${url.toString()}`, headers);
-    this.gs.log(`[FetchPOST-BODY] 🧩 ${url.toString()}`, form);
+    this.gs.log(`[FETCH_POST-HEADER] 🧩 ${url.toString()}`, headers);
+    this.gs.log(`[FETCH_POST-BODY] 🧩 ${url.toString()}`, form);
     return fetch(url.toString(), { method: 'POST', body: form, headers, signal });
   }
 
   async putData(url: URL, form: any, headers: HeadersInit, signal: AbortSignal = null) {
-    this.gs.log(`[FetchPUT-HEADER] 🧩 ${url.toString()}`, headers);
-    this.gs.log(`[FetchPUT-BODY] 🧩 ${url.toString()}`, form);
-    return fetch(url.toString(), { method: 'POST', body: form, headers, signal });
+    this.gs.log(`[FETCH_PUT-HEADER] 🧩 ${url.toString()}`, headers);
+    this.gs.log(`[FETCH_PUT-BODY] 🧩 ${url.toString()}`, form);
+    return fetch(url.toString(), { method: 'PUT', body: form, headers, signal });
+  }
+
+  async patchData(url: URL, form: any, headers: HeadersInit, signal: AbortSignal = null) {
+    this.gs.log(`[FETCH_PATCH-HEADER] 🧩 ${url.toString()}`, headers);
+    this.gs.log(`[FETCH_PATCH-BODY] 🧩 ${url.toString()}`, form);
+    return fetch(url.toString(), { method: 'PATCH', body: form, headers, signal });
   }
 
   async deleteData(url: URL, headers: HeadersInit, signal: AbortSignal = null) {
-    this.gs.log(`[FetchDELETE-HEADER] 🧩 ${url.toString()}`, headers);
+    this.gs.log(`[FETCH_DELETE-HEADER] 🧩 ${url.toString()}`, headers);
     return fetch(url.toString(), { method: 'DELETE', headers, signal });
   }
 
