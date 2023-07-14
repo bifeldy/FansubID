@@ -15,9 +15,9 @@ export const CONSTANTS = {
   apiTagUser: 'User',
   attachmentSpeedLimiterBps: 256 * 1000, // 256 KB/s
   blacklistedWords: [
-    '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id',
+    '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id', 'crawl', 'crawler',
     'localhost', 'mail', 'email', 'e-mail', 'tracker', 'fansub', 'fansubber',
-    'ferdion', 'bifeldy', 'dev', 'api', 'docs', 'cs', 'help', 'support',
+    'ferdion', 'bifeldy', 'dev', 'api', 'docs', 'cs', 'help', 'support', 'proxy',
     'admin', 'administrator', 'info', 'information', 'noreply', 'mod', 'moderator'
   ],
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
