@@ -44,7 +44,7 @@ export class NihongoKanjivgController {
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       return {
-        info: `😅 200 - KanjiVg API :: List All 🤣`,
+        info: `😅 200 - Kanjivg API :: List All 🤣`,
         count,
         pages: Math.ceil(count / (queryRow ? queryRow : 10)),
         results: kanjivgs
@@ -52,7 +52,7 @@ export class NihongoKanjivgController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - KanjiVg API :: Gagal Mendapatkan All KanjiVgs 😪`,
+        info: `🙄 400 - Kanjivg API :: Gagal Mendapatkan All Kanjivgs 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }
@@ -72,15 +72,15 @@ export class NihongoKanjivgController {
         ]
       });
       return {
-        info: `😅 200 - KanjiVg API :: Detail ${req.params['id']} 🤣`,
+        info: `😅 200 - Kanjivg API :: Detail ${req.params['id']} 🤣`,
         result: kanjivg
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 404 - KanjiVg API :: Gagal Mencari KanjiVg ${req.params['id']} 😪`,
+        info: `🙄 404 - Kanjivg API :: Gagal Mencari Kanjivg ${req.params['id']} 😪`,
         result: {
-          message: 'KanjiVg Tidak Ditemukan!'
+          message: 'Kanjivg Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }

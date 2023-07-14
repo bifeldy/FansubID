@@ -281,7 +281,7 @@ export interface KanjiModel {
   updated_at?: number | Date;
 }
 
-export interface KanjiVgModel {
+export interface KanjivgModel {
   id?: number;
   kanji?: string;
   level?: string;

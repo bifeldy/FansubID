@@ -1,9 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-import { KanjiVgModel } from '../../models/req-res.model';
+import { KanjivgModel } from '../../models/req-res.model';
 
 @Entity({ name: 'kanjivg' })
-export class KanjiVg implements KanjiVgModel {
+export class Kanjivg implements KanjivgModel {
 
   @PrimaryGeneratedColumn('increment')
   id: number;

@@ -14,7 +14,7 @@ import { Hirakata } from '../../api/entities/Hirakata';
 import { HirakataStats } from '../../api/entities/HirakataStats';
 import { Information } from '../../api/entities/Information';
 import { Kanji } from '../../api/entities/Kanji';
-import { KanjiVg } from '../../api/entities/KanjiVg';
+import { Kanjivg } from '../../api/entities/Kanjivg';
 import { KanjiStats } from '../../api/entities/KanjiStats';
 import { KartuTandaPenduduk } from '../../api/entities/KartuTandaPenduduk';
 import { Komentar } from '../../api/entities/Komentar';
@@ -68,7 +68,7 @@ export const environment = {
       HirakataStats,
       Information,
       Kanji,
-      KanjiVg,
+      Kanjivg,
       KanjiStats,
       KartuTandaPenduduk,
       Komentar,

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOneOptions, FindManyOptions, EntityMetadata, FindConditions, InsertResult, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { KanjiVg } from '../entities/KanjiVg';
+import { Kanjivg } from '../entities/Kanjivg';
 
 import { GlobalService } from '../services/global.service';
 
@@ -11,17 +11,17 @@ import { GlobalService } from '../services/global.service';
 export class KanjivgService {
 
   constructor(
-    @InjectRepository(KanjiVg) private kanjiVgRepo: Repository<KanjiVg>,
+    @InjectRepository(Kanjivg) private kanjiVgRepo: Repository<Kanjivg>,
     private gs: GlobalService,
   ) {
     //
   }
 
-  new(): KanjiVg {
-    return new KanjiVg();
+  new(): Kanjivg {
+    return new Kanjivg();
   }
 
-  instance(): Repository<KanjiVg> {
+  instance(): Repository<Kanjivg> {
     return this.kanjiVgRepo;
   }
 
@@ -29,32 +29,32 @@ export class KanjivgService {
     return this.kanjiVgRepo.metadata;
   }
 
-  find(options: FindManyOptions<KanjiVg>) {
+  find(options: FindManyOptions<Kanjivg>) {
     this.gs.log('[KANJIVG_SERVICE-FIND_ALL] 🗾', options);
     return this.kanjiVgRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<KanjiVg>) {
+  findAndCount(options: FindManyOptions<Kanjivg>) {
     this.gs.log('[KANJIVG_SERVICE-FIND_AND_COUNT] 🗾', options);
     return this.kanjiVgRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<KanjiVg>) {
+  findOneOrFail(options: FindOneOptions<Kanjivg>) {
     this.gs.log('[KANJIVG_SERVICE-GET_BY] 🗾', options);
     return this.kanjiVgRepo.findOneOrFail(options);
   }
 
-  save<T = KanjiVg | KanjiVg[]>(kanjiVg: T): Promise<T> {
+  save<T = Kanjivg | Kanjivg[]>(kanjiVg: T): Promise<T> {
     this.gs.log('[KANJIVG_SERVICE-SAVE] 🗾', kanjiVg);
     return this.kanjiVgRepo.save(kanjiVg);
   }
 
-  count(options: FindManyOptions<KanjiVg>): Promise<number> {
+  count(options: FindManyOptions<Kanjivg>): Promise<number> {
     this.gs.log('[KANJIVG_SERVICE-COUNT] 🗾', options);
     return this.kanjiVgRepo.count(options);
   }
 
-  remove(kanjiVg: KanjiVg | KanjiVg[]): Promise<KanjiVg | KanjiVg[]> {
+  remove(kanjiVg: Kanjivg | Kanjivg[]): Promise<Kanjivg | Kanjivg[]> {
     this.gs.log('[KANJIVG_SERVICE-REMOVE] 🗾', kanjiVg);
     return this.kanjiVgRepo.remove(kanjiVg as any);
   }
@@ -64,12 +64,12 @@ export class KanjivgService {
     return this.kanjiVgRepo.query(query, parameters);
   }
 
-  update(criteria: FindConditions<KanjiVg>, partialEntity: QueryDeepPartialEntity<KanjiVg>): Promise<UpdateResult> {
+  update(criteria: FindConditions<Kanjivg>, partialEntity: QueryDeepPartialEntity<Kanjivg>): Promise<UpdateResult> {
     this.gs.log('[KANJIVG_SERVICE-UPDATE] 🗾', criteria);
     return this.kanjiVgRepo.update(criteria, partialEntity);
   }
 
-  insert(kanjiVg: KanjiVg): Promise<InsertResult> {
+  insert(kanjiVg: Kanjivg): Promise<InsertResult> {
     this.gs.log('[KANJIVG_SERVICE-INSERT] 🗾', kanjiVg);
     return this.kanjiVgRepo.insert(kanjiVg);
   }
