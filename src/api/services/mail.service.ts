@@ -17,14 +17,14 @@ export class MailService {
     token: environment.mailTrap.clientOptions.key
   });
 
-  webhook = {
-    mail_id: {
-      col: {
-        bcc: '',
-        attachments: [],
-      },
-      timeout: true
-    }
+  webhook: any = {
+    // mail_id: {
+    //   col: {
+    //     bcc: '',
+    //     attachments: [],
+    //   },
+    //   timeout: true
+    // }
   };
 
   constructor(
