@@ -38,6 +38,32 @@ export class MailWebhookController {
     //
   }
 
+  async updateLater(mailId: string): Promise<void> {
+    if (this.ms.webhook[mailId].timeout) {
+      this.sr.deleteTimeout(mailId);
+    }
+    this.ms.webhook[mailId].timeout = true;
+    this.sr.addTimeout(
+      mailId,
+      setTimeout(async () => {
+        try {
+          const mailbox = await this.mailboxRepo.findOneOrFail({
+            where: [
+              { mail: Equal(mailId) }
+            ]
+          });
+          for (const [key, value] of Object.entries(this.ms.webhook[mailId].col)) {
+            mailbox[key] = value;
+          }
+          await this.mailboxRepo.save(mailbox);
+          delete this.ms.webhook[mailId];
+        } catch (err) {
+          this.gs.log('[MAIL_WEBHOOK_TIMEOUT-ERROR] 📧', err, 'error');
+        }
+      }, CONSTANTS.timeoutMailWebhookTime)
+    );
+  }
+
   @Post('/')
   @HttpCode(201)
   @FilterApiKeyAccess()
@@ -130,7 +156,13 @@ export class MailWebhookController {
               mailbox.date = new Date(req.body.Date);
               mailboxSave = await this.mailboxRepo.insert(mailbox);
               if (req.files?.length > 0) {
-                let attachments = [];
+                if (!this.ms.webhook[req.body['Message-Id']]) {
+                  this.ms.webhook[req.body['Message-Id']] = {};
+                }
+                if (!this.ms.webhook[req.body['Message-Id']].col) {
+                  this.ms.webhook[req.body['Message-Id']].col = {};
+                }
+                this.ms.webhook[req.body['Message-Id']].col.attachments = [];
                 for (const file of req.files as any) {
                   const fileExt = file.originalname.split('.').pop().toLowerCase();
                   const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
@@ -143,7 +175,7 @@ export class MailWebhookController {
                     attachment.size = file.size;
                     attachment.mime = file.mimetype;
                     const resAttachmentSave = await this.attachmentRepo.save(attachment);
-                    attachments.push(resAttachmentSave);
+                    this.ms.webhook[req.body['Message-Id']].col.attachments.push(resAttachmentSave);
                     // Upload Attachment -- Jpg, Png, etc
                     if (environment.production) {
                       this.gdrive.gDrive(true).then(async (gdrive) => {
@@ -171,11 +203,7 @@ export class MailWebhookController {
                     }
                   }
                 }
-                await this.mailboxRepo.update({
-                  mail: Equal(req.body['Message-Id'])
-                }, {
-                  attachment_: attachments
-                });
+                await this.updateLater(req.body['Message-Id']);
               }
             } else {
               mailboxSave = mailboxs[0];
@@ -183,34 +211,18 @@ export class MailWebhookController {
                 if (!this.ms.webhook[mailboxSave.mail]) {
                   this.ms.webhook[mailboxSave.mail] = {};
                 }
-                if (!this.ms.webhook[mailboxSave.mail].bcc) {
-                  this.ms.webhook[mailboxSave.mail].bcc = '';
+                if (!this.ms.webhook[mailboxSave.mail].col) {
+                  this.ms.webhook[mailboxSave.mail].col = {};
                 }
+                this.ms.webhook[mailboxSave.mail].col.bcc = '';
                 if (mailboxSave.bcc) {
-                  this.ms.webhook[mailboxSave.mail].bcc += mailboxSave.bcc + ', ';
+                  this.ms.webhook[mailboxSave.mail].col.bcc += mailboxSave.bcc + ', ';
                 }
-                this.ms.webhook[mailboxSave.mail].bcc += addressBcc.join(', ');
-                const bccUniq = [...new Set(this.ms.webhook[mailboxSave.mail].bcc)];
-                this.ms.webhook[mailboxSave.mail].bcc = bccUniq;
-                if (this.ms.webhook[mailboxSave.mail].timeout) {
-                  this.sr.deleteTimeout(mailboxSave.mail);
-                }
-                this.ms.webhook[mailboxSave.mail].timeout = true;
-                this.sr.addTimeout(
-                  mailboxSave.mail,
-                  setTimeout(async () => {
-                    try {
-                      await this.mailboxRepo.update({
-                        mail: Equal(req.body['Message-Id'])
-                      }, {
-                        bcc: this.ms.webhook[mailboxSave.mail].bcc
-                      });
-                      delete this.ms.webhook[mailboxSave.mail];
-                    } catch (err) {
-                      this.gs.log('[MAIL_WEBHOOK_TIMEOUT-ERROR] 📧', err, 'error');
-                    }
-                  }, CONSTANTS.timeoutMailWebhookTime)
-                );
+                this.ms.webhook[mailboxSave.mail].col.bcc += addressBcc.join(', ');
+                const bcc = this.ms.webhook[mailboxSave.mail].col.bcc.split(',').map(v => v.trim());
+                const bccUniq = [...new Set(bcc)];
+                this.ms.webhook[mailboxSave.mail].col.bcc = bccUniq.join(', ');
+                await this.updateLater(mailboxSave.mail);
               }
               if (req.files?.length > 0) {
                 for (const file of req.files as any) {

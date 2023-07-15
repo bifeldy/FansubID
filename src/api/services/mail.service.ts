@@ -18,10 +18,13 @@ export class MailService {
   });
 
   webhook = {
-    // mail_id: {
-    //   bcc: '',
-    //   timeout: true
-    // }
+    mail_id: {
+      col: {
+        bcc: '',
+        attachments: [],
+      },
+      timeout: true
+    }
   };
 
   constructor(
