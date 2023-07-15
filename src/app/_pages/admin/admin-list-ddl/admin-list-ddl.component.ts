@@ -76,12 +76,7 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
             Tanggal: r.created_at,
             Pemilik: (r.user_?.username || r.parent_attachment_?.user_?.username || 'SYSTEM'),
             Aksi: (r.pending || r.discord || r.google_drive) ? [] : [
-              {
-                type: 'button',
-                icon: 'cloud_upload',
-                name: 'ReUpload',
-                row: r
-              }
+              { type: 'button', icon: 'cloud_upload', name: 'ReUpload', row: r }
             ]
           });
         }
@@ -95,16 +90,24 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
     });
   }
 
+  action(data): void {
+    this.gs.log('[LAMPIRAN_LIST_CLICK_AKSI]', data);
+    if (data.name === 'ReUpload') {
+      this.reUpload(data.row);
+    }
+    // TODO :: Other Action
+  }
+
   async reUpload(data): Promise<void> {
     this.gs.log('[LAMPIRAN_PENDING_LIST_CLICK_REUPLOAD]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
       'Upload Ulang ?',
       `
-        Id: ${data.row.id} <br />
-        Filename: ${data.row.name}.${data.row.ext} <br />
-        Size: ${data.row.size} Bytes <br />
-        Mime: ${data.row.mime} <br />
-        Pemilik: ${data.row.user_.username}
+        Id: ${data.id} <br />
+        Filename: ${data.name}.${data.ext} <br />
+        Size: ${data.size} Bytes <br />
+        Mime: ${data.mime} <br />
+        Pemilik: ${data.user_.username}
       `
     )).afterClosed().subscribe({
       next: re => {
@@ -112,7 +115,7 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
         if (re === true) {
           this.bs.busy();
           this.subsAttachmentReUpload = this.dls.reUpload({
-            id: data.row.id
+            id: data.id
           }).subscribe({
             next: res => {
               this.gs.log('[LAMPIRAN_PENDING_LIST_CLICK_REUPLOAD_SUCCESS]', res);

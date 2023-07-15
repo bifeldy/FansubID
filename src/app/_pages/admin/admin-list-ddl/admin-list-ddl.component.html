@@ -15,7 +15,7 @@
         </div>
         <div class="col-12 p-3">
           <app-material-table [tableDataColumn]="attachmentData.column" [tableDataRow]="attachmentData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
-            (buttonClicked)="reUpload($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
+            (buttonClicked)="action($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
         </div>
       </div>
     </div>

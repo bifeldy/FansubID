@@ -90,12 +90,9 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
             Image: r.image_url,
             Deskripsi: r.description,
             Berkas: (r as any).total_berkas,
-            Aksi: ( (r as any).total_berkas > 0 ) ? [] : [{
-              type: 'button',
-              icon: 'delete_forever',
-              name: 'Hapus',
-              row: r
-            }]
+            Aksi: ( (r as any).total_berkas > 0 ) ? [] : [
+              { type: 'button', icon: 'delete_forever', name: 'Hapus', row: r }
+            ]
           });
         }
         this.projectData.row = projectDataRow;
@@ -145,17 +142,25 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     });
   }
 
+  action(data): void {
+    this.gs.log('[PROJECT_LIST_CLICK_AKSI]', data);
+    if (data.name === 'Hapus') {
+      this.deleteProject(data.row);
+    }
+    // TODO :: Other Action
+  }
+
   async deleteProject(data): Promise<void> {
     this.gs.log('[PROJECT_LIST_CLICK_DELETE]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `Hapus Proyek -- '${data.row.id}' :: '${data.row.nama}'`,
+      `Hapus Proyek -- '${data.id}' :: '${data.nama}'`,
       'Menghapus Dapat Membuat Error / Menghapus Berkas Yang Menunjuk Ke Tipe Ini !'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsProjectDelete = this.project.deleteProject(data.row.id).subscribe({
+          this.subsProjectDelete = this.project.deleteProject(data.id).subscribe({
             next: res => {
               this.gs.log('[PROJECT_LIST_CLICK_DELETE_SUCCESS]', res);
               this.bs.idle();

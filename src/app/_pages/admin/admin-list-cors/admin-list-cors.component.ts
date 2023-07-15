@@ -73,12 +73,9 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
             'Api Key': r.api_key,
             foto: (r.user_?.image_url || `${environment.baseUrl}/assets/img/favicon.png`),
             Pemilik: (r.user_?.username || 'SYSTEM'),
-            Aksi: [{
-              type: 'button',
-              icon: 'layers_clear',
-              name: 'Revoke',
-              row: r
-            }]
+            Aksi: [
+              { type: 'button', icon: 'layers_clear', name: 'Revoke', row: r }
+            ]
           });
         }
         this.corsData.row = corsDataRow;
@@ -91,17 +88,25 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
     });
   }
 
+  action(data): void {
+    this.gs.log('[CORS_LIST_CLICK_AKSI]', data);
+    if (data.name === 'Revoke') {
+      this.revokeCors(data.row);
+    }
+    // TODO :: Other Action
+  }
+
   async revokeCors(data): Promise<void> {
     this.gs.log('[CORS_LIST_CLICK_REVOKE]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `Revoke Kunci -- '${data.row.id}' :: '${data.row.ip_domain}'`,
+      `Revoke Kunci -- '${data.id}' :: '${data.ip_domain}'`,
       'Apakah Yakin Untuk Menonaktifkan Kunci Ini ?'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsCorsDelete = this.adm.revokeCors(data.row.id).subscribe({
+          this.subsCorsDelete = this.adm.revokeCors(data.id).subscribe({
             next: res => {
               this.gs.log('[CORS_LIST_CLICK_REVOKE_SUCCESS]', res);
               this.bs.idle();

@@ -105,12 +105,9 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
             Judul: r.title,
             Konten: r.content,
             Pemilik: r.user_.username,
-            Aksi: [{
-              type: 'button',
-              icon: 'close',
-              name: 'Hapus',
-              row: r
-            }]
+            Aksi: [
+              { type: 'button', icon: 'close', name: 'Hapus', row: r }
+            ]
           });
         }
         this.notifData.row = notifDataRow;
@@ -162,17 +159,25 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
     });
   }
 
+  action(data): void {
+    this.gs.log('[NOTIFICATION_LIST_CLICK_AKSI]', data);
+    if (data.name === 'Hapus') {
+      this.deleteNotif(data.row);
+    }
+    // TODO :: Other Action
+  }
+
   async deleteNotif(data): Promise<void> {
     this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `Hapus Notif -- '${data.row.id}' :: '${data.row.title}'`,
+      `Hapus Notif -- '${data.id}' :: '${data.title}'`,
       'Yakin Akan Menghapus Notifikasi Ini ?'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsNotifDelete = this.adm.deleteNotif(data.row.id).subscribe({
+          this.subsNotifDelete = this.adm.deleteNotif(data.id).subscribe({
             next: res => {
               this.gs.log('[NOTIFICATION_LIST_CLICK_DELETE_SUCCESS]', res);
               this.bs.idle();

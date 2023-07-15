@@ -119,7 +119,7 @@
         </div>
         <div class="col-12 p-3">
           <app-material-table [tableDataColumn]="infoData.column" [tableDataRow]="infoData.row" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)"
-            (buttonClicked)="deleteInfo($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (rowClicked)="editInfo($event)"></app-material-table>
+            (buttonClicked)="action($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)" (rowClicked)="editInfo($event)"></app-material-table>
         </div>
       </div>
     </div>

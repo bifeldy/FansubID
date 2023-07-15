@@ -104,7 +104,7 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
   }
 
   action(data): void {
-    this.gs.log('[USER_LIST_CLICK_AKSI]', data);
+    this.gs.log('[BANNED_LIST_CLICK_AKSI]', data);
     if (data.name === 'UnBAN') {
       this.unBan(data.row);
     } else if (data.name === 'MAIL') {
