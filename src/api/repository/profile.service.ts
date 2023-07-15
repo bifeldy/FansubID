@@ -29,12 +29,12 @@ export class ProfileService {
     return this.profileRepo.metadata;
   }
 
-  find(options: FindManyOptions<Profile>) {
+  find(options: FindManyOptions<Profile>): Promise<Profile[]> {
     this.gs.log('[PROFILE_SERVICE-FIND_ALL] 👬', options);
     return this.profileRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Profile>) {
+  findAndCount(options: FindManyOptions<Profile>): Promise<[Profile[], number]> {
     this.gs.log('[PROFILE_SERVICE-FIND_AND_COUNT] 👬', options);
     return this.profileRepo.findAndCount(options);
   }

@@ -29,17 +29,17 @@ export class SocialMediaService {
     return this.socialMediaRepo.metadata;
   }
 
-  find(options: FindManyOptions<SocialMedia>) {
+  find(options: FindManyOptions<SocialMedia>): Promise<SocialMedia[]> {
     this.gs.log('[SOCIAL_MEDIA_SERVICE-FIND_ALL] 🙇‍♂️', options);
     return this.socialMediaRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<SocialMedia>) {
+  findAndCount(options: FindManyOptions<SocialMedia>): Promise<[SocialMedia[], number]> {
     this.gs.log('[SOCIAL_MEDIA_SERVICE-FIND_AND_COUNT] 🙇‍♂️', options);
     return this.socialMediaRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<SocialMedia>) {
+  findOneOrFail(options: FindOneOptions<SocialMedia>): Promise<SocialMedia> {
     this.gs.log('[SOCIAL_MEDIA_SERVICE-GET_BY] 🙇‍♂️', options);
     return this.socialMediaRepo.findOneOrFail(options);
   }

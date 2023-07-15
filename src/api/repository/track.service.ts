@@ -29,17 +29,17 @@ export class TrackService {
     return this.trackRepo.metadata;
   }
 
-  find(options: FindManyOptions<Track>) {
+  find(options: FindManyOptions<Track>): Promise<Track[]> {
     this.gs.log('[TRACK_SERVICE-FIND_ALL] 🛤', options);
     return this.trackRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Track>) {
+  findAndCount(options: FindManyOptions<Track>): Promise<[Track[], number]> {
     this.gs.log('[TRACK_SERVICE-FIND_AND_COUNT] 🛤', options);
     return this.trackRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Track>) {
+  findOneOrFail(options: FindOneOptions<Track>): Promise<Track> {
     this.gs.log('[TRACK_SERVICE-GET_BY] 🛤', options);
     return this.trackRepo.findOneOrFail(options);
   }

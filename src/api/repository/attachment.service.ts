@@ -29,12 +29,12 @@ export class AttachmentService {
     return this.attachmentRepo.metadata;
   }
 
-  find(options: FindManyOptions<Attachment>) {
+  find(options: FindManyOptions<Attachment>): Promise<Attachment[]> {
     this.gs.log('[ATTACHMENT_SERVICE-FIND_ALL] 💾', options);
     return this.attachmentRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Attachment>) {
+  findAndCount(options: FindManyOptions<Attachment>): Promise<[Attachment[], number]> {
     this.gs.log('[ATTACHMENT_SERVICE-FIND_AND_COUNT] 💾', options);
     return this.attachmentRepo.findAndCount(options);
   }

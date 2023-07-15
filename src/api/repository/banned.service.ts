@@ -29,12 +29,12 @@ export class BannedService {
     return this.bannedRepo.metadata;
   }
 
-  find(options: FindManyOptions<Banned>) {
+  find(options: FindManyOptions<Banned>): Promise<Banned[]> {
     this.gs.log('[BANNED_SERVICE-FIND_ALL] 🔓', options);
     return this.bannedRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Banned>) {
+  findAndCount(options: FindManyOptions<Banned>): Promise<[Banned[], number]> {
     this.gs.log('[BANNED_SERVICE-FIND_AND_COUNT] 🔓', options);
     return this.bannedRepo.findAndCount(options);
   }

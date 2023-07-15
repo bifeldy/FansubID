@@ -29,12 +29,12 @@ export class NotificationService {
     return this.notificationRepo.metadata;
   }
 
-  find(options: FindManyOptions<Notification>) {
+  find(options: FindManyOptions<Notification>): Promise<Notification[]> {
     this.gs.log('[NOTIFICATION_SERVICE-FIND_ALL] 🔔', options);
     return this.notificationRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Notification>) {
+  findAndCount(options: FindManyOptions<Notification>): Promise<[Notification[], number]> {
     this.gs.log('[NOTIFICATION_SERVICE-FIND_AND_COUNT] 🔔', options);
     return this.notificationRepo.findAndCount(options);
   }

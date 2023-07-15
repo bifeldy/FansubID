@@ -29,12 +29,12 @@ export class InformationService {
     return this.informationRepo.metadata;
   }
 
-  find(options: FindManyOptions<Information>) {
+  find(options: FindManyOptions<Information>): Promise<Information[]> {
     this.gs.log('[INFORMATION_SERVICE-FIND_ALL] 🔔', options);
     return this.informationRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Information>) {
+  findAndCount(options: FindManyOptions<Information>): Promise<[Information[], number]> {
     this.gs.log('[INFORMATION_SERVICE-FIND_AND_COUNT] 🔔', options);
     return this.informationRepo.findAndCount(options);
   }

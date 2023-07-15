@@ -29,17 +29,17 @@ export class LikedislikeService {
     return this.likeDislikeRepo.metadata;
   }
 
-  find(options: FindManyOptions<LikeDislike>) {
+  find(options: FindManyOptions<LikeDislike>): Promise<LikeDislike[]> {
     this.gs.log('[LIKE_DISLIKE_SERVICE-FIND_ALL] 💖', options);
     return this.likeDislikeRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<LikeDislike>) {
+  findAndCount(options: FindManyOptions<LikeDislike>): Promise<[LikeDislike[], number]> {
     this.gs.log('[LIKE_DISLIKE_SERVICE-FIND_AND_COUNT] 💖', options);
     return this.likeDislikeRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<LikeDislike>) {
+  findOneOrFail(options: FindOneOptions<LikeDislike>): Promise<LikeDislike> {
     this.gs.log('[LIKE_DISLIKE_SERVICE-GET_BY] 💖', options);
     return this.likeDislikeRepo.findOneOrFail(options);
   }

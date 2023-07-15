@@ -29,12 +29,12 @@ export class TempAttachmentService {
     return this.tempAttachmentRepo.metadata;
   }
 
-  find(options: FindManyOptions<TempAttachment>) {
+  find(options: FindManyOptions<TempAttachment>): Promise<TempAttachment[]> {
     this.gs.log('[TEMP_ATTACHMENT_SERVICE-FIND_ALL] 💾', options);
     return this.tempAttachmentRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<TempAttachment>) {
+  findAndCount(options: FindManyOptions<TempAttachment>): Promise<[TempAttachment[], number]> {
     this.gs.log('[TEMP_ATTACHMENT_SERVICE-FIND_AND_COUNT] 💾', options);
     return this.tempAttachmentRepo.findAndCount(options);
   }

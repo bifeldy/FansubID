@@ -29,12 +29,12 @@ export class DdlFileService {
     return this.ddlFileRepo.metadata;
   }
 
-  find(options: FindManyOptions<DdlFile>) {
+  find(options: FindManyOptions<DdlFile>): Promise<DdlFile[]> {
     this.gs.log('[DDL_FILE_SERVICE-FIND_ALL] 💾', options);
     return this.ddlFileRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<DdlFile>) {
+  findAndCount(options: FindManyOptions<DdlFile>): Promise<[DdlFile[], number]> {
     this.gs.log('[DDL_FILE_SERVICE-FIND_AND_COUNT] 💾', options);
     return this.ddlFileRepo.findAndCount(options);
   }

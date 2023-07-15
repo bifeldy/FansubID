@@ -29,17 +29,17 @@ export class FansubMemberService {
     return this.fansubMemberRepo.metadata;
   }
 
-  find(options: FindManyOptions<FansubMember>) {
+  find(options: FindManyOptions<FansubMember>): Promise<FansubMember[]> {
     this.gs.log('[FANSUB_MEMBER_SERVICE-FIND_ALL] 🕵️‍♀️', options);
     return this.fansubMemberRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<FansubMember>) {
+  findAndCount(options: FindManyOptions<FansubMember>): Promise<[FansubMember[], number]> {
     this.gs.log('[FANSUB_MEMBER_SERVICE-FIND_AND_COUNT] 🕵️‍♀️', options);
     return this.fansubMemberRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<FansubMember>) {
+  findOneOrFail(options: FindOneOptions<FansubMember>): Promise<FansubMember> {
     this.gs.log('[FANSUB_MEMBER_SERVICE-GET_BY] 🕵️‍♀️', options);
     return this.fansubMemberRepo.findOneOrFail(options);
   }

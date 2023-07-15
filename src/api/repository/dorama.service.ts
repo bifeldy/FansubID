@@ -29,17 +29,17 @@ export class DoramaService {
     return this.doramaRepo.metadata;
   }
 
-  find(options: FindManyOptions<Dorama>) {
+  find(options: FindManyOptions<Dorama>): Promise<Dorama[]> {
     this.gs.log('[DORAMA_SERVICE-FIND_ALL] 🎬', options);
     return this.doramaRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Dorama>) {
+  findAndCount(options: FindManyOptions<Dorama>): Promise<[Dorama[], number]> {
     this.gs.log('[DORAMA_SERVICE-FIND_AND_COUNT] 🎬', options);
     return this.doramaRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Dorama>) {
+  findOneOrFail(options: FindOneOptions<Dorama>): Promise<Dorama> {
     this.gs.log('[DORAMA_SERVICE-GET_BY] 🎬', options);
     return this.doramaRepo.findOneOrFail(options);
   }

@@ -29,12 +29,12 @@ export class ProjectTypeService {
     return this.projectTypeRepo.metadata;
   }
 
-  find(options: FindManyOptions<ProjectType>) {
+  find(options: FindManyOptions<ProjectType>): Promise<ProjectType[]> {
     this.gs.log('[PROJECT_TYPE_SERVICE-FIND_ALL] 💉', options);
     return this.projectTypeRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<ProjectType>) {
+  findAndCount(options: FindManyOptions<ProjectType>): Promise<[ProjectType[], number]> {
     this.gs.log('[PROJECT_TYPE_SERVICE-FIND_AND_COUNT] 💉', options);
     return this.projectTypeRepo.findAndCount(options);
   }

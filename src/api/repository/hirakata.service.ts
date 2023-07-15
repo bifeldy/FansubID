@@ -29,17 +29,17 @@ export class HirakataService {
     return this.hirakataRepo.metadata;
   }
 
-  find(options: FindManyOptions<Hirakata>) {
+  find(options: FindManyOptions<Hirakata>): Promise<Hirakata[]> {
     this.gs.log('[HIRAKATA_SERVICE-FIND_ALL] 🗾', options);
     return this.hirakataRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Hirakata>) {
+  findAndCount(options: FindManyOptions<Hirakata>): Promise<[Hirakata[], number]> {
     this.gs.log('[HIRAKATA_SERVICE-FIND_AND_COUNT] 🗾', options);
     return this.hirakataRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Hirakata>) {
+  findOneOrFail(options: FindOneOptions<Hirakata>): Promise<Hirakata> {
     this.gs.log('[HIRAKATA_SERVICE-GET_BY] 🗾', options);
     return this.hirakataRepo.findOneOrFail(options);
   }

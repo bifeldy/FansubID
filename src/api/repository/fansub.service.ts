@@ -29,17 +29,17 @@ export class FansubService {
     return this.fansubRepo.metadata;
   }
 
-  find(options: FindManyOptions<Fansub>) {
+  find(options: FindManyOptions<Fansub>): Promise<Fansub[]> {
     this.gs.log('[FANSUB_SERVICE-FIND_ALL] 🍿', options);
     return this.fansubRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Fansub>) {
+  findAndCount(options: FindManyOptions<Fansub>): Promise<[Fansub[], number]> {
     this.gs.log('[FANSUB_SERVICE-FIND_AND_COUNT] 🍿', options);
     return this.fansubRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Fansub>) {
+  findOneOrFail(options: FindOneOptions<Fansub>): Promise<Fansub> {
     this.gs.log('[FANSUB_SERVICE-GET_BY] 🍿', options);
     return this.fansubRepo.findOneOrFail(options);
   }

@@ -29,17 +29,17 @@ export class KanjivgService {
     return this.kanjiVgRepo.metadata;
   }
 
-  find(options: FindManyOptions<Kanjivg>) {
+  find(options: FindManyOptions<Kanjivg>): Promise<Kanjivg[]> {
     this.gs.log('[KANJIVG_SERVICE-FIND_ALL] 🗾', options);
     return this.kanjiVgRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Kanjivg>) {
+  findAndCount(options: FindManyOptions<Kanjivg>): Promise<[Kanjivg[], number]> {
     this.gs.log('[KANJIVG_SERVICE-FIND_AND_COUNT] 🗾', options);
     return this.kanjiVgRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Kanjivg>) {
+  findOneOrFail(options: FindOneOptions<Kanjivg>): Promise<Kanjivg> {
     this.gs.log('[KANJIVG_SERVICE-GET_BY] 🗾', options);
     return this.kanjiVgRepo.findOneOrFail(options);
   }

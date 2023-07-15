@@ -29,17 +29,17 @@ export class AnimeService {
     return this.animeRepo.metadata;
   }
 
-  find(options: FindManyOptions<Anime>) {
+  find(options: FindManyOptions<Anime>): Promise<Anime[]> {
     this.gs.log('[ANIME_SERVICE-FIND_ALL] 🐱‍👤', options);
     return this.animeRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Anime>) {
+  findAndCount(options: FindManyOptions<Anime>): Promise<[Anime[], number]> {
     this.gs.log('[ANIME_SERVICE-FIND_AND_COUNT] 🐱‍👤', options);
     return this.animeRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Anime>) {
+  findOneOrFail(options: FindOneOptions<Anime>): Promise<Anime> {
     this.gs.log('[ANIME_SERVICE-GET_BY] 🐱‍👤', options);
     return this.animeRepo.findOneOrFail(options);
   }

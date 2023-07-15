@@ -29,17 +29,17 @@ export class TatoebaService {
     return this.tatoebaRepo.metadata;
   }
 
-  find(options: FindManyOptions<Tatoeba>) {
+  find(options: FindManyOptions<Tatoeba>): Promise<Tatoeba[]> {
     this.gs.log('[TATOEBA_SERVICE-FIND_ALL] 🗾', options);
     return this.tatoebaRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Tatoeba>) {
+  findAndCount(options: FindManyOptions<Tatoeba>): Promise<[Tatoeba[], number]> {
     this.gs.log('[TATOEBA_SERVICE-FIND_AND_COUNT] 🗾', options);
     return this.tatoebaRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Tatoeba>) {
+  findOneOrFail(options: FindOneOptions<Tatoeba>): Promise<Tatoeba> {
     this.gs.log('[TATOEBA_SERVICE-GET_BY] 🗾', options);
     return this.tatoebaRepo.findOneOrFail(options);
   }

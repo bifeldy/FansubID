@@ -34,12 +34,12 @@ export class ApiKeyService {
     return this.apiKeyRepo.metadata;
   }
 
-  find(options: FindManyOptions<ApiKey>) {
+  find(options: FindManyOptions<ApiKey>): Promise<ApiKey[]> {
     this.gs.log('[API_KEY_SERVICE-FIND_ALL] 🏓', options);
     return this.apiKeyRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<ApiKey>) {
+  findAndCount(options: FindManyOptions<ApiKey>): Promise<[ApiKey[], number]> {
     this.gs.log('[API_KEY_SERVICE-FIND_AND_COUNT] 🏓', options);
     return this.apiKeyRepo.findAndCount(options);
   }

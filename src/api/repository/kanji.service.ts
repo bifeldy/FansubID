@@ -29,17 +29,17 @@ export class KanjiService {
     return this.kanjiRepo.metadata;
   }
 
-  find(options: FindManyOptions<Kanji>) {
+  find(options: FindManyOptions<Kanji>): Promise<Kanji[]> {
     this.gs.log('[KANJI_SERVICE-FIND_ALL] 🗾', options);
     return this.kanjiRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Kanji>) {
+  findAndCount(options: FindManyOptions<Kanji>): Promise<[Kanji[], number]> {
     this.gs.log('[KANJI_SERVICE-FIND_AND_COUNT] 🗾', options);
     return this.kanjiRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Kanji>) {
+  findOneOrFail(options: FindOneOptions<Kanji>): Promise<Kanji> {
     this.gs.log('[KANJI_SERVICE-GET_BY] 🗾', options);
     return this.kanjiRepo.findOneOrFail(options);
   }

@@ -29,17 +29,17 @@ export class EdictService {
     return this.edictRepo.metadata;
   }
 
-  find(options: FindManyOptions<Edict>) {
+  find(options: FindManyOptions<Edict>): Promise<Edict[]> {
     this.gs.log('[EDICT_SERVICE-FIND_ALL] 🗾', options);
     return this.edictRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Edict>) {
+  findAndCount(options: FindManyOptions<Edict>): Promise<[Edict[], number]> {
     this.gs.log('[EDICT_SERVICE-FIND_AND_COUNT] 🗾', options);
     return this.edictRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Edict>) {
+  findOneOrFail(options: FindOneOptions<Edict>): Promise<Edict> {
     this.gs.log('[EDICT_SERVICE-GET_BY] 🗾', options);
     return this.edictRepo.findOneOrFail(options);
   }

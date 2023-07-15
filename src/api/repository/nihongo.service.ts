@@ -29,17 +29,17 @@ export class NihongoService {
     return this.nihongoRepo.metadata;
   }
 
-  find(options: FindManyOptions<Nihongo>) {
+  find(options: FindManyOptions<Nihongo>): Promise<Nihongo[]> {
     this.gs.log('[NIHONGO_SERVICE-FIND_ALL] 🗾', options);
     return this.nihongoRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Nihongo>) {
+  findAndCount(options: FindManyOptions<Nihongo>): Promise<[Nihongo[], number]> {
     this.gs.log('[NIHONGO_SERVICE-FIND_AND_COUNT] 🗾', options);
     return this.nihongoRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Nihongo>) {
+  findOneOrFail(options: FindOneOptions<Nihongo>): Promise<Nihongo> {
     this.gs.log('[NIHONGO_SERVICE-GET_BY] 🗾', options);
     return this.nihongoRepo.findOneOrFail(options);
   }

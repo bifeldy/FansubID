@@ -29,12 +29,12 @@ export class KartuTandaPendudukService {
     return this.kartuTandaPendudukRepo.metadata;
   }
 
-  find(options: FindManyOptions<KartuTandaPenduduk>) {
+  find(options: FindManyOptions<KartuTandaPenduduk>): Promise<KartuTandaPenduduk[]> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-FIND_ALL] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<KartuTandaPenduduk>) {
+  findAndCount(options: FindManyOptions<KartuTandaPenduduk>): Promise<[KartuTandaPenduduk[], number]> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-FIND_AND_COUNT] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.findAndCount(options);
   }

@@ -29,12 +29,12 @@ export class UserService {
     return this.userRepo.metadata;
   }
 
-  find(options: FindManyOptions<User>) {
+  find(options: FindManyOptions<User>): Promise<User[]> {
     this.gs.log('[USER_SERVICE-FIND_ALL] 🤖', options);
     return this.userRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<User>) {
+  findAndCount(options: FindManyOptions<User>): Promise<[User[], number]> {
     this.gs.log('[USER_SERVICE-FIND_AND_COUNT] 🤖', options);
     return this.userRepo.findAndCount(options);
   }

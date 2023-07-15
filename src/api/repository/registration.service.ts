@@ -29,17 +29,17 @@ export class RegistrationService {
     return this.registrationRepo.metadata;
   }
 
-  find(options: FindManyOptions<Registration>) {
+  find(options: FindManyOptions<Registration>): Promise<Registration[]> {
     this.gs.log('[REGISTRATION_SERVICE-FIND_ALL] 🔏', options);
     return this.registrationRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Registration>) {
+  findAndCount(options: FindManyOptions<Registration>): Promise<[Registration[], number]> {
     this.gs.log('[REGISTRATION_SERVICE-FIND_AND_COUNT] 🔏', options);
     return this.registrationRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Registration>) {
+  findOneOrFail(options: FindOneOptions<Registration>): Promise<Registration> {
     this.gs.log('[REGISTRATION_SERVICE-GET_BY] 🔏', options);
     return this.registrationRepo.findOneOrFail(options);
   }

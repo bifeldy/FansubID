@@ -29,12 +29,12 @@ export class BerkasService {
     return this.berkasRepo.metadata;
   }
 
-  find(options: FindManyOptions<Berkas>) {
+  find(options: FindManyOptions<Berkas>): Promise<Berkas[]> {
     this.gs.log('[BERKAS_SERVICE-FIND_ALL] 📂', options);
     return this.berkasRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Berkas>) {
+  findAndCount(options: FindManyOptions<Berkas>): Promise<[Berkas[], number]> {
     this.gs.log('[BERKAS_SERVICE-FIND_AND_COUNT] 📂', options);
     return this.berkasRepo.findAndCount(options);
   }
