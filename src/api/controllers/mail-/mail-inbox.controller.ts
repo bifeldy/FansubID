@@ -67,6 +67,8 @@ export class MailInboxController {
         if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
           if (m.bcc?.includes(`${user.username}@${environment.mailTrap.domain}`)) {
             m.bcc = `${user.username}@${environment.mailTrap.domain}`;
+          } else {
+            m.bcc = null;
           }
         }
         delete m.html;

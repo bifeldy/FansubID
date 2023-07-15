@@ -265,6 +265,8 @@ export class MailController {
       if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
         if (mailbox.bcc?.includes(`${user.username}@${environment.mailTrap.domain}`)) {
           mailbox.bcc = `${user.username}@${environment.mailTrap.domain}`;
+        } else {
+          mailbox.bcc = null;
         }
       }
       if ('attachment_' in mailbox && mailbox.attachment_) {
