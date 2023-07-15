@@ -62,7 +62,11 @@ export class MailController {
       for (const m of mailboxs) {
         delete m.html;
         delete m.text;
-        (m as any).attachment_count = m.attachment_.length;
+        if ('attachment_' in m && m.attachment_) {
+          (m as any).attachment_count = m.attachment_.length;
+        } else {
+          (m as any).attachment_count = 0;
+        }
         delete m.attachment_;
       }
       return {
@@ -205,6 +209,12 @@ export class MailController {
           mailbox.mail = mailSend.message_ids[0];
           mailbox.date = new Date();
           const mailboxSave = await this.mailboxRepo.save(mailbox);
+          if ('attachment_' in mailboxSave && mailboxSave.attachment_) {
+            for (const a of mailboxSave.attachment_) {
+              delete a.created_at;
+              delete a.updated_at;
+            }
+          }
           return {
             info: '🙂 201 - Mail API :: Email Terkirim! 🥰',
             result: mailboxSave
@@ -252,15 +262,15 @@ export class MailController {
           }
         }, HttpStatus.FORBIDDEN);
       }
+      if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+        if (mailbox.bcc?.includes(`${user.username}@${environment.mailTrap.domain}`)) {
+          mailbox.bcc = `${user.username}@${environment.mailTrap.domain}`;
+        }
+      }
       if ('attachment_' in mailbox && mailbox.attachment_) {
         for (const a of mailbox.attachment_) {
           delete a.created_at;
           delete a.updated_at;
-        }
-      }
-      if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
-        if (mailbox.bcc?.includes(`${user.username}@${environment.mailTrap.domain}`)) {
-          mailbox.bcc = `${user.username}@${environment.mailTrap.domain}`;
         }
       }
       return {

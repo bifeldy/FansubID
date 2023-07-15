@@ -57,7 +57,11 @@ export class MailOutboxController {
       for (const m of mailboxs) {
         delete m.html;
         delete m.text;
-        (m as any).attachment_count = m.attachment_.length;
+        if ('attachment_' in m && m.attachment_) {
+          (m as any).attachment_count = m.attachment_.length;
+        } else {
+          (m as any).attachment_count = 0;
+        }
         delete m.attachment_;
       }
       return {
