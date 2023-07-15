@@ -17,6 +17,13 @@ export class MailService {
     token: environment.mailTrap.clientOptions.key
   });
 
+  webhook = {
+    // mail_id: {
+    //   bcc: '',
+    //   timeout: true
+    // }
+  };
+
   constructor(
     private gs: GlobalService
   ) {

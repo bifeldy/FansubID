@@ -29,12 +29,12 @@ export class MailboxService {
     return this.mailboxRepo.metadata;
   }
 
-  find(options: FindManyOptions<Mailbox>) {
+  find(options: FindManyOptions<Mailbox>): Promise<Mailbox[]> {
     this.gs.log('[MAILBOX_SERVICE-FIND_ALL] 💾', options);
     return this.mailboxRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Mailbox>) {
+  findAndCount(options: FindManyOptions<Mailbox>): Promise<[Mailbox[], number]> {
     this.gs.log('[MAILBOX_SERVICE-FIND_AND_COUNT] 💾', options);
     return this.mailboxRepo.findAndCount(options);
   }
