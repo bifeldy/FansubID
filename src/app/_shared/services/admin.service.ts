@@ -23,10 +23,10 @@ export class AdminService {
     },
     {
       url: 'ddl-list',
-      name: 'Berkas DDL',
+      name: 'DDL Lampiran',
       image_url: null,
       icon: 'insert_drive_file',
-      deskripsi: 'Kelola Berkas DDL'
+      deskripsi: 'Kelola DDL Lampiran'
     },
     {
       url: 'dns',
