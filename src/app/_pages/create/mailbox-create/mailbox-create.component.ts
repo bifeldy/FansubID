@@ -72,7 +72,7 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    const p = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || null;
+    const p = this.activatedRoute.snapshot.queryParamMap.get('to') || null;
     const t = [];
     if (p) {
       t.push(p);
@@ -111,7 +111,7 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   }
 
   addTo(event: MatChipInputEvent): void {
-    const input = event.input;
+    const input = event.chipInput.inputElement;
     const value = event.value;
     if ((value || '').trim()) {
       this.fg.value.to.push(value.trim());
@@ -149,7 +149,7 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   }
 
   addBcc(event: MatChipInputEvent): void {
-    const input = event.input;
+    const input = event.chipInput.inputElement;
     const value = event.value;
     if ((value || '').trim()) {
       this.fg.value.bcc.push(value.trim());

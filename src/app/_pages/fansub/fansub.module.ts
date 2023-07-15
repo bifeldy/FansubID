@@ -45,13 +45,13 @@ const routes: Routes = [
       {
         path: 'edit',
         component: FansubEditComponent,
-        canActivate: [RolesGuard, VerifiedGuard],
+        canActivate: [VerifiedGuard, RolesGuard],
         data: {
           title: 'Fansub - Ubah Data',
           description: 'Halaman Pembaharuan Data Fansub',
           keywords: 'Ubah Fansub',
-          [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-          [CONSTANTS.decoratorVerifiedOnly]: true
+          [CONSTANTS.decoratorVerifiedOnly]: true,
+          [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
         }
       }
     ]

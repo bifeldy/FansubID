@@ -8,6 +8,9 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 import { CONSTANTS } from '../../../constants';
 
+import { RoleModel } from '../../../models/req-res.model';
+
+import { RolesGuard } from '../../_shared/guards/roles.guard';
 import { VerifiedGuard } from '../../_shared/guards/verified.guard';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
@@ -60,10 +63,13 @@ const routes: Routes = [
   {
     path: 'news',
     component: NewsCreateComponent,
+    canActivate: [VerifiedGuard, RolesGuard],
     data: {
       title: 'Berita - Buat Baru',
       description: 'Halaman Unggah Berita Baru',
-      keywords: 'Tambah Berita Baru'
+      keywords: 'Tambah Berita Baru',
+      [CONSTANTS.decoratorVerifiedOnly]: true,
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   }
 ];

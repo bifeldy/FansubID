@@ -7,8 +7,6 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 
-import { RolesGuard } from '../../_shared/guards/roles.guard';
-
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
@@ -54,7 +52,6 @@ const routes: Routes = [
   {
     path: 'ddl-list',
     component: AdminListDdlComponent,
-    canActivate: [RolesGuard],
     data: {
       title: 'Admin - List All Berkas DDL',
       description: 'Kelola Berkas DDL',

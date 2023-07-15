@@ -17,11 +17,12 @@ const routes: Routes = [
   {
     path: 'admin-mod',
     loadChildren: () => import('./_pages/admin/admin.module').then(m => m.AdminModule),
-    canActivate: [RolesGuard],
+    canActivate: [VerifiedGuard, RolesGuard],
     data: {
       title: 'Admin & Moderator Panel Management',
       description: 'Halaman Khusus Untuk Administrasi & Moderasi',
       keywords: 'Admin Moderator Fansub Database',
+      [CONSTANTS.decoratorVerifiedOnly]: true,
       [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
   },
@@ -109,8 +110,8 @@ const routes: Routes = [
       title: 'Surat Elektronik',
       description: 'E-Mail & DM\'s',
       keywords: 'Surel Email DM',
-      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER],
-      [CONSTANTS.decoratorVerifiedOnly]: true
+      [CONSTANTS.decoratorVerifiedOnly]: true,
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {

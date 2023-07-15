@@ -11,6 +11,7 @@ import { CONSTANTS } from '../../../constants';
 import { RoleModel } from '../../../models/req-res.model';
 
 import { RolesGuard } from '../../_shared/guards/roles.guard';
+import { VerifiedGuard } from '../../_shared/guards/verified.guard';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 
@@ -44,11 +45,12 @@ const routes: Routes = [
       {
         path: 'edit',
         component: NewsEditComponent,
-        canActivate: [RolesGuard],
+        canActivate: [VerifiedGuard, RolesGuard],
         data: {
           title: 'Berita - Ubah Data',
           description: 'Halaman Pembaharuan Data Berita',
           keywords: 'Ubah Berita',
+          [CONSTANTS.decoratorVerifiedOnly]: true,
           [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR]
         }
       }

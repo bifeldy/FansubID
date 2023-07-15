@@ -1,0 +1,45 @@
+<div class="container-fluid p-0">
+  <div class="wrapper">
+    <ul class="bg-bubbles align-items-center p-0">
+      <span class="wrapper-1"></span>
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+      <div class="row align-items-center h-100">
+        <div class="col-12 mx-auto">
+          <div class="container text-dark">
+            <h2 class="mb-1" style="line-height: normal;">
+              RSS & Feed Fansub
+            </h2>
+            <p class="mb-0">
+              Informasi Terkini Dari Fansub ...
+            </p>
+          </div>
+        </div>
+      </div>
+    </ul>
+  </div>
+</div>
+
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-lg-8 col-xl-9">
+      <div class="row">
+        <app-material-tab (tableRowClicked)="openRssFeed($event)" [tabData]="tabData"></app-material-tab>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xl-3">
+      <div class="row sticky-top">
+        <div class="col-12">
+          <app-banner-discord></app-banner-discord>
+          <app-stats-server></app-stats-server>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
