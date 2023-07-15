@@ -215,7 +215,7 @@ export class LikedislikeController {
         relations: ['news_', 'berkas_', 'fansub_', 'user_', 'report_by_']
       });
       let result = null;
-      if (likedislike.length <= 0) {
+      if (likedislike.length === 0) {
         const ldl = this.likedislikeRepo.new();
         ldl[`${req.params['type']}_`] = selected;
         ldl.type = req.body.likedislike;
@@ -385,7 +385,7 @@ export class LikedislikeController {
           ],
           relations: ['news_', 'berkas_', 'fansub_', 'user_', 'report_by_']
         });
-        if (myReport.length <= 0) {
+        if (myReport.length === 0) {
           return {
             info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
             result: {
@@ -428,8 +428,9 @@ export class LikedislikeController {
               myReport: myReport[0]
             }
           };
+        } else {
+          throw new Error('Data Duplikat');
         }
-        throw new Error('Data Duplikat');
       }
       return {
         info: `😅 200 - Like Dislike API :: Statistik Report 🤣`,
