@@ -1,14 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { CONSTANTS } from '../../../../constants';
+
+import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { MailService } from '../../../_shared/services/mail.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 
 @Component({
   selector: 'app-mailbox-create',
@@ -24,11 +29,13 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   subsMail = null;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
     private bs: BusyService,
     private pi: PageInfoService,
     private gs: GlobalService,
+    private as: AuthService,
     private ms: MailService
   ) {
     this.gs.bannerImg = null;
@@ -36,8 +43,17 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get ENV(): any {
+    return environment;
+  }
+
   get GS(): GlobalService {
     return this.gs;
+  }
+
+  get canSendAsNoReply(): boolean {
+    const role: RoleModel = this.as.currentUserSubject?.value?.role;
+    return role === RoleModel.ADMIN || role === RoleModel.MODERATOR;
   }
 
   ngOnInit(): void {
@@ -56,12 +72,18 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
+    const p = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || null;
+    const t = [];
+    if (p) {
+      t.push(p);
+    }
     this.fg = this.fb.group({
-      to: [[], Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEmailMulti)])],
+      to: [t, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEmailMulti)])],
       cc: [[], Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
       bcc: [[], Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
       subject: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      message: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])]
+      message: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      no_reply: [false, Validators.compose([Validators.required])]
     });
   }
 
@@ -108,7 +130,7 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   }
 
   addCc(event: MatChipInputEvent): void {
-    const input = event.input;
+    const input = event.chipInput.inputElement;
     const value = event.value;
     if ((value || '').trim()) {
       this.fg.value.cc.push(value.trim());

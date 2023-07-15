@@ -64,6 +64,11 @@ export class MailInboxController {
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const m of mailboxs) {
+        if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+          if (m.bcc?.includes(`${user.username}@${environment.mailTrap.domain}`)) {
+            m.bcc = `${user.username}@${environment.mailTrap.domain}`;
+          }
+        }
         delete m.html;
         delete m.text;
         (m as any).attachment_count = m.attachment_.length;

@@ -70,6 +70,11 @@
                       </mat-error>
                     </mat-hint>
                   </mat-form-field>
+                  <div class="col-12 p-3" *ngIf="canSendAsNoReply">
+                    <mat-slide-toggle formControlName="no_reply" matTooltip="Kirim sebagai noreply@{{ ENV.domain }}">
+                      Kirim sebagai noreply@{{ ENV.domain }}
+                    </mat-slide-toggle>
+                  </div>
                 </div>
               </div>
               <div class="col-12 col-md-7 col-xl-8 pt-3">

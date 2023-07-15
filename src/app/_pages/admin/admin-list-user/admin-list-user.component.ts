@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -98,16 +100,19 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
                 Email: r._email,
                 'Nama Lengkap': r.kartu_tanda_penduduk_.nama,
                 banned: (Object.keys(result.results[r.username]).length > 0),
-                Aksi: (
-                  (Object.keys(result.results[r.username]).length > 0) ||
-                  (r.username === this.as.currentUserSubject?.value?.username) ||
-                  this.gs.includesOneOf(r.role, excludedRole)
-                ) ? [] : [
-                  { type: 'button', icon: 'lock', name: 'BAN', row: r },
-                  { type: 'button', icon: 'handyman', name: RoleModel.ADMIN, row: r },
-                  { type: 'button', icon: 'security', name: RoleModel.MODERATOR, row: r },
-                  { type: 'button', icon: 'rate_review', name: RoleModel.FANSUBBER, row: r },
-                  { type: 'button', icon: 'person', name: RoleModel.USER, row: r }
+                Aksi: [
+                  { type: 'button', icon: 'mail_outline', name: 'MAIL', row: r },
+                  ...((
+                    (Object.keys(result.results[r.username]).length > 0) ||
+                    (r.username === this.as.currentUserSubject?.value?.username) ||
+                    this.gs.includesOneOf(r.role, excludedRole)
+                  ) ? [] : [
+                    { type: 'button', icon: 'lock', name: 'BAN', row: r },
+                    { type: 'button', icon: 'handyman', name: RoleModel.ADMIN, row: r },
+                    { type: 'button', icon: 'security', name: RoleModel.MODERATOR, row: r },
+                    { type: 'button', icon: 'rate_review', name: RoleModel.FANSUBBER, row: r },
+                    { type: 'button', icon: 'person', name: RoleModel.USER, row: r }
+                  ])
                 ]
               });
             }
@@ -132,6 +137,12 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     this.gs.log('[USER_LIST_CLICK_AKSI]', data);
     if (data.name === 'BAN') {
       this.ban(data.row);
+    } else if (data.name === 'MAIL') {
+      this.router.navigate(['/create/mailbox'], {
+        queryParams: {
+          to: `${data.row.username}@${environment.domain}`
+        }
+      });
     } else {
       this.proDemote(data.row, data.name);
     }

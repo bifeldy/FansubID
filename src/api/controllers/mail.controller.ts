@@ -162,8 +162,37 @@ export class MailController {
             return { email: bcc };
           });
         }
+        if ('no_reply' in req.body) {
+          if (req.body.no_reply === true && (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR)) {
+            const sndr = mailBody.from.email;
+            if (!mailbox.bcc) {
+              mailbox.bcc = '';
+            }
+            if (!mailbox.bcc.includes(sndr)) {
+              if (mailbox.bcc !== '') {
+                mailbox.bcc += ', ';
+              }
+              mailbox.bcc += sndr;
+            }
+            if (!mailBody.bcc) {
+              mailBody.bcc = [];
+            }
+            if (!mailBody.bcc.find(e => e.email === sndr)) {
+              mailBody.bcc.push({ email: sndr });
+            }
+            mailbox.from = `${environment.mailTrap.fullName} <${environment.mailTrap.clientOptions.username}@${environment.mailTrap.domain}>`;
+            mailBody.from = {
+              name: environment.mailTrap.fullName,
+              email: `${environment.mailTrap.clientOptions.username}@${environment.mailTrap.domain}`
+            };
+            const sbjct = `${environment.siteName} | Informasi`;
+            mailbox.subject = sbjct;
+            (mailBody as any).subject = sbjct;
+            (mailBody as any).category = 'Informasi';
+          }
+        }
         const recipient = `${mailbox.to} ${mailbox.cc} ${mailbox.bcc}`;
-        if (recipient.includes(`${user.username}@${environment.mailTrap.domain}`)) {
+        if (recipient.includes(mailBody.from.email)) {
           throw new HttpException({
             info: `🙄 400 - Mail API :: Gagal Mengirim Email 😪`,
             result: {
@@ -227,6 +256,11 @@ export class MailController {
         for (const a of mailbox.attachment_) {
           delete a.created_at;
           delete a.updated_at;
+        }
+      }
+      if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+        if (mailbox.bcc?.includes(`${user.username}@${environment.mailTrap.domain}`)) {
+          mailbox.bcc = `${user.username}@${environment.mailTrap.domain}`;
         }
       }
       return {

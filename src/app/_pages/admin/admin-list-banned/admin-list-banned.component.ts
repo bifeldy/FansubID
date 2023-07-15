@@ -85,12 +85,12 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
             Korban: r.user_.username,
             Pelaku: (r.banned_by_?.username || 'AUTO_BANNED'),
             Alasan: r.reason,
-            Aksi: this.gs.includesOneOf(r.user_.role, excludedRole) ? [] : [{
-              type: 'button',
-              icon: 'lock_open',
-              name: 'UnBAN',
-              row: r
-            }]
+            Aksi: [
+              { type: 'button', icon: 'mail_outline', name: 'MAIL', row: r },
+              ...(this.gs.includesOneOf(r.user_.role, excludedRole) ? [] : [
+                { type: 'button', icon: 'lock_open', name: 'UnBAN', row: r }
+              ])
+            ]
           });
         }
         this.bannedData.row = bannedDataRow;
@@ -103,17 +103,31 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     });
   }
 
+  action(data): void {
+    this.gs.log('[USER_LIST_CLICK_AKSI]', data);
+    if (data.name === 'UnBAN') {
+      this.unBan(data.row);
+    } else if (data.name === 'MAIL') {
+      this.router.navigate(['/create/mailbox'], {
+        queryParams: {
+          to: `${data.row.user_.username}@${environment.domain}`
+        }
+      });
+    }
+    // TODO :: Other Action
+  }
+
   async unBan(data): Promise<void> {
     this.gs.log('[BANNED_LIST_CLICK_UNBAN]', data);
     this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      `UnBAN Akun -- '${data.row.user_.username}'`,
+      `UnBAN Akun -- '${data.user_.username}'`,
       'Apakah Yakin Dan Akun Telah Direview Sebelum UnBAN ?'
     )).afterClosed().subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
           this.bs.busy();
-          this.subsBannedDelete = this.adm.unBan(data.row.id).subscribe({
+          this.subsBannedDelete = this.adm.unBan(data.id).subscribe({
             next: res => {
               this.gs.log('[BANNED_LIST_CLICK_UNBAN_SUCCESS]', res);
               this.bs.idle();
