@@ -162,7 +162,7 @@ export class MailWebhookController {
                 if (!this.ms.webhook[req.body['Message-Id']].col) {
                   this.ms.webhook[req.body['Message-Id']].col = {};
                 }
-                this.ms.webhook[req.body['Message-Id']].col.attachments = [];
+                this.ms.webhook[req.body['Message-Id']].col.attachment_ = [];
                 for (const file of req.files as any) {
                   const fileExt = file.originalname.split('.').pop().toLowerCase();
                   const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
@@ -175,7 +175,7 @@ export class MailWebhookController {
                     attachment.size = file.size;
                     attachment.mime = file.mimetype;
                     const resAttachmentSave = await this.attachmentRepo.save(attachment);
-                    this.ms.webhook[req.body['Message-Id']].col.attachments.push(resAttachmentSave);
+                    this.ms.webhook[req.body['Message-Id']].col.attachment_.push(resAttachmentSave);
                     // Upload Attachment -- Jpg, Png, etc
                     if (environment.production) {
                       this.gdrive.gDrive(true).then(async (gdrive) => {

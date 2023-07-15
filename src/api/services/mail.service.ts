@@ -21,7 +21,7 @@ export class MailService {
     // mail_id: {
     //   col: {
     //     bcc: '',
-    //     attachments: [],
+    //     attachment_: [],
     //   },
     //   timeout: true
     // }
