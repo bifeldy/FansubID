@@ -250,8 +250,9 @@ export class DiscordService {
         const gh: any = await res_raw.json();
         this.cfg.github = gh[0];
         this.bot.guilds.cache.get(environment.discord.guild_id)?.members.cache.get(this.bot.user.id)?.setNickname(`${environment.siteName} - ${this.cfg.github?.sha?.slice(0, 7)}`);
+      } else {
+        throw new Error('Github API Error');
       }
-      throw new Error('Github API Error');
     } catch (error) {
       this.gs.log('[DISCORD_SERVICE-CHANGE_BOT_NICKNAME] 🎉', error, 'error');
     }
