@@ -6,7 +6,7 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import { AnyFilesInterceptor, } from '@nestjs/platform-express';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Request, Response } from 'express';
-import { ILike, In } from 'typeorm';
+import { Equal, In } from 'typeorm';
 
 import { CONSTANTS } from '../../../constants';
 
@@ -66,7 +66,7 @@ export class MailWebhookController {
         }
         let addressCc: string[] = [];
         if (req.body.Cc) {
-          addressCc = req.body.To.split(',').map(v => {
+          addressCc = req.body.Cc.split(',').map(v => {
             let email = v.trim();
             if (email.includes('<') && email.includes('>')) {
               email = email.split('<')[1].split('>')[0];
@@ -76,7 +76,7 @@ export class MailWebhookController {
         }
         let addressBcc: string[] = [];
         if (req.body.Bcc) {
-          addressBcc = req.body.To.split(',').map(v => {
+          addressBcc = req.body.Bcc.split(',').map(v => {
             let email = v.trim();
             if (email.includes('<') && email.includes('>')) {
               email = email.split('<')[1].split('>')[0];
@@ -108,7 +108,7 @@ export class MailWebhookController {
           try {
             const mailboxs = await this.mailboxRepo.find({
               where: [
-                { mail: ILike(`%${req.body['Message-Id']}%`) }
+                { mail: Equal(req.body['Message-Id']) }
               ]
             });
             if (mailboxs.length === 0) {
@@ -171,9 +171,12 @@ export class MailWebhookController {
                     }
                   }
                 }
-                mailboxSave.attachment_ = attachments;
+                await this.mailboxRepo.update({
+                  mail: Equal(req.body['Message-Id'])
+                }, {
+                  attachment_: attachments
+                });
               }
-              mailboxSave = await this.mailboxRepo.save(mailboxSave);
             } else {
               mailboxSave = mailboxs[0];
               if (addressBcc.length > 0) {
@@ -187,6 +190,8 @@ export class MailWebhookController {
                   this.ms.webhook[mailboxSave.mail].bcc += mailboxSave.bcc + ', ';
                 }
                 this.ms.webhook[mailboxSave.mail].bcc += addressBcc.join(', ');
+                const bccUniq = [...new Set(this.ms.webhook[mailboxSave.mail].bcc)];
+                this.ms.webhook[mailboxSave.mail].bcc = bccUniq;
                 if (this.ms.webhook[mailboxSave.mail].timeout) {
                   this.sr.deleteTimeout(mailboxSave.mail);
                 }
@@ -196,7 +201,7 @@ export class MailWebhookController {
                   setTimeout(async () => {
                     try {
                       await this.mailboxRepo.update({
-                        mail: ILike(`%${req.body['Message-Id']}%`)
+                        mail: Equal(req.body['Message-Id'])
                       }, {
                         bcc: this.ms.webhook[mailboxSave.mail].bcc
                       });
