@@ -95,14 +95,7 @@ export class MailWebhookController {
         }
         const mailboxs = await this.mailboxRepo.find({
           where: [
-            { mail: ILike(`%${req.body['Message-Id']}%`) },
-            {
-              from: ILike(req.body.From),
-              subject: ILike(req.body.Subject),
-              html: ILike(req.body['body-html']),
-              text: ILike(req.body['body-plain']),
-              date: new Date(req.body.Date)
-            }
+            { mail: ILike(`%${req.body['Message-Id']}%`) }
           ]
         });
         let mailbox = null;
@@ -117,7 +110,13 @@ export class MailWebhookController {
         mailbox.from = req.body.From;
         mailbox.to = req.body.To;
         mailbox.cc = req.body.Cc;
-        mailbox.bcc = req.body.Bcc;
+        if ('Bcc' in req.body && req.body.Bcc) {
+          let bcc = '';
+          if (mailbox.bcc) {
+            bcc = mailbox.Bcc + ', ';
+          }
+          mailbox.Bcc = bcc + req.body.Bcc;
+        }
         mailbox.subject = req.body.Subject;
         mailbox.html = req.body['body-html'];
         mailbox.text = req.body['body-plain'];
