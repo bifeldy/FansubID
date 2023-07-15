@@ -38,7 +38,7 @@ export class MailWebhookController {
     //
   }
 
-  async updateLater(mailId: string): Promise<void> {
+  updateLater(mailId: string): void {
     if (this.ms.webhook[mailId].timeout) {
       this.sr.deleteTimeout(mailId);
     }
@@ -203,7 +203,7 @@ export class MailWebhookController {
                     }
                   }
                 }
-                await this.updateLater(req.body['Message-Id']);
+                this.updateLater(req.body['Message-Id']);
               }
             } else {
               mailboxSave = mailboxs[0];
@@ -222,7 +222,7 @@ export class MailWebhookController {
                 const bcc = this.ms.webhook[mailboxSave.mail].col.bcc.split(',').map(v => v.trim());
                 const bccUniq = [...new Set(bcc)];
                 this.ms.webhook[mailboxSave.mail].col.bcc = bccUniq.join(', ');
-                await this.updateLater(mailboxSave.mail);
+                this.updateLater(mailboxSave.mail);
               }
               if (req.files?.length > 0) {
                 for (const file of req.files as any) {
