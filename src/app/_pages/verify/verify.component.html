@@ -13,177 +13,43 @@
               <div class="text-center p-3">
                 <img class="mb-4" src="{{ ENV.baseUrl }}/assets/img/logo/verify.png" style="max-width: 128px;" />
                 <h1 class="h3 mb-3 font-weight-normal">Yuhu~, Ayo Verifikasi! >_<"</h1>
-                <p class="text-warning">{{ verifyInfo }}</p>
+                <p class="text-success">Verifikasi akunmu dan dapatkan fitur menarik lainnya~</p>
               </div>
-              <mat-vertical-stepper linear #stepper style="background-color: transparent; filter: blur(5px); pointer-events: none;">
-
-                <mat-step [stepControl]="fg1" [editable]="false">
-                  <ng-template matStepLabel>Cari Tanda Pengenal</ng-template>
-                  <form [formGroup]="fg1" class="m-2" *ngIf="fg1">
-                    <div class="form-group row py-2">
-                      <label for="nik" class="col-md-4 col-form-label text-md-end">NIK KTP</label>
-                      <div class="col-md-8">
-                        <input type="text" id="nik" class="form-control {{
-                            !fg1.get('nik').valid && fg1.get('nik').touched ? 'is-invalid' : ''
-                          }}" placeholder="Nomor Induk Kependudukan" required formControlName="nik" autocomplete="nik" />
-                        <span class="invalid-feedback" role="alert">
-                          <strong *ngIf="fg1.get('nik').hasError('required')">
-                            Nomor NIK Tidak Boleh Kosong! <br />
-                          </strong>
-                          <strong *ngIf="fg1.get('nik').hasError('pattern')">
-                            Nomor NIK Hanya Boleh Angka <br />
-                          </strong>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="form-group row py-2">
-                      <label for="nama" class="col-md-4 col-form-label text-md-end">Nama Depan</label>
-                      <div class="col-md-8">
-                        <input type="text" id="nama" class="form-control {{
-                            !fg1.get('nama').valid && fg1.get('nama').touched ? 'is-invalid' : ''
-                          }}" placeholder="Nama Depan" required formControlName="nama" autocomplete="nama" />
-                        <span class="invalid-feedback" role="alert">
-                          <strong *ngIf="fg1.get('nama').hasError('required')">
-                            Nama Depan Tidak Boleh Kosong! <br />
-                          </strong>
-                          <strong *ngIf="fg1.get('nama').hasError('pattern')">
-                            Nama Depan Hanya Boleh Huruf <br />
-                          </strong>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="form-group row mb-0 py-2">
-                      <div class="col offset-md-4">
-                        <re-captcha #captchaRef formControlName="g-recaptcha-response" [siteKey]="G_CAPTCHA_SITE_KEY"
-                          (resolved)="captcha($event, captchaRef)"></re-captcha>
-                      </div>
-                    </div>
-                    <div class="form-group row mb-0 py-2">
-                      <div class="col-md-8 offset-md-4">
-                        <div class="row">
-                          <div class="col-12">
-                            <button mat-flat-button color="primary" class="w-100" type="button"
-                              [disabled]="submitted || fg1.invalid" (click)="findNik()">
-                              Cari KTP <mat-icon class="ms-1">search</mat-icon>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </mat-step>
-
-                <mat-step [stepControl]="fg2" [editable]="false">
-                  <ng-template matStepLabel>Periksa Data Identitas</ng-template>
-                  <form [formGroup]="fg2" class="m-2" *ngIf="fg2">
-                    <!-- <div class="form-group row py-2">
-                      <label for="nik" class="col-md-4 col-form-label text-md-end">NIK</label>
-                      <div class="col-md-8">
-                        <input type="text" id="nik" class="form-control {{
-                            !fg2.get('nik').valid && fg2.get('nik').touched ? 'is-invalid' : ''
-                          }}" placeholder="Nomor Induk Kependudukan" required formControlName="nik" autocomplete="nik" />
-                        <span class="invalid-feedback" role="alert">
-                          <strong *ngIf="fg2.get('nik').hasError('required')">
-                            NIK Tidak Boleh Kosong! <br />
-                          </strong>
-                          <strong *ngIf="fg2.get('nik').hasError('pattern')">
-                            NIK Hanya Boleh Angka <br />
-                          </strong>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="form-group row py-2">
-                      <label for="nama" class="col-md-4 col-form-label text-md-end">Nama Lengkap</label>
-                      <div class="col-md-8">
-                        <input type="text" id="nama" class="form-control {{
-                            !fg2.get('nama').valid && fg2.get('nama').touched ? 'is-invalid' : ''
-                          }}" placeholder="Nama Depan" required formControlName="nama" autocomplete="nama" />
-                        <span class="invalid-feedback" role="alert">
-                          <strong *ngIf="fg2.get('nama').hasError('required')">
-                            Nama Depan Tidak Boleh Kosong! <br />
-                          </strong>
-                          <strong *ngIf="fg2.get('nama').hasError('pattern')">
-                            Nama Depan Hanya Boleh Huruf <br />
-                          </strong>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="form-group row py-2">
-                      <label for="tempat_lahir" class="col-md-4 col-form-label text-md-end">Tempat Lahir</label>
-                      <div class="col-md-8">
-                        <input type="text" id="tempat_lahir" class="form-control {{
-                            !fg2.get('tempat_lahir').valid && fg2.get('tempat_lahir').touched ? 'is-invalid' : ''
-                          }}" placeholder="Tempat Lahir" required formControlName="tempat_lahir" autocomplete="tempat_lahir" />
-                        <span class="invalid-feedback" role="alert">
-                          <strong *ngIf="fg2.get('tempat_lahir').hasError('required')">
-                            Tempat Lahir Tidak Boleh Kosong! <br />
-                          </strong>
-                          <strong *ngIf="fg2.get('tempat_lahir').hasError('pattern')">
-                            Tempat Lahir Hanya Boleh Huruf <br />
-                          </strong>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="form-group row py-2">
-                      <label for="jenis_kelamin" class="col-md-4 col-form-label text-md-end">Jenis Kelamin</label>
-                      <div class="col-md-8">
-                        <input type="text" id="jenis_kelamin" class="form-control {{
-                            !fg2.get('jenis_kelamin').valid && fg2.get('jenis_kelamin').touched ? 'is-invalid' : ''
-                          }}" placeholder="Jenis Kelamin" required formControlName="jenis_kelamin" autocomplete="jenis_kelamin" />
-                        <span class="invalid-feedback" role="alert">
-                          <strong *ngIf="fg2.get('jenis_kelamin').hasError('required')">
-                            Tempat Lahir Tidak Boleh Kosong! <br />
-                          </strong>
-                          <strong *ngIf="fg2.get('jenis_kelamin').hasError('pattern')">
-                            Tempat Lahir Hanya Boleh L / P <br />
-                          </strong>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="form-group row py-2">
-                      <label for="kelurahan_desa" class="col-md-4 col-form-label text-md-end">Kelurahan / Desa</label>
-                      <div class="col-md-8">
-                        <input type="text" id="kelurahan_desa" class="form-control {{
-                            !fg2.get('kelurahan_desa').valid && fg2.get('kelurahan_desa').touched ? 'is-invalid' : ''
-                          }}" placeholder="Kelurahan / Desa" required formControlName="kelurahan_desa" autocomplete="kelurahan_desa" />
-                        <span class="invalid-feedback" role="alert">
-                          <strong *ngIf="fg2.get('kelurahan_desa').hasError('required')">
-                            Kelurahan Tidak Boleh Kosong! <br />
-                          </strong>
-                          <strong *ngIf="fg2.get('kelurahan_desa').hasError('pattern')">
-                            Kelurahan Hanya Boleh Huruf <br />
-                          </strong>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="form-group row py-2">
-                      <label for="kecamatan" class="col-md-4 col-form-label text-md-end">Kecamatan / Kota</label>
-                      <div class="col-md-8">
-                        <input type="text" id="kecamatan / Kota" class="form-control {{
-                            !fg2.get('kecamatan').valid && fg2.get('kecamatan').touched ? 'is-invalid' : ''
-                          }}" placeholder="Kelurahan" required formControlName="kecamatan" autocomplete="kecamatan" />
-                        <span class="invalid-feedback" role="alert">
-                          <strong *ngIf="fg2.get('kecamatan').hasError('required')">
-                            Kecamatan Tidak Boleh Kosong! <br />
-                          </strong>
-                          <strong *ngIf="fg2.get('kecamatan').hasError('pattern')">
-                            Kecamatan Hanya Boleh Huruf <br />
-                          </strong>
-                        </span>
-                      </div>
-                    </div> -->
-                    <div class="form-group row mb-0 py-2">
-                      <div class="col-12">
-                        <button mat-flat-button color="primary" class="w-100" type="button"
-                          [disabled]="submitted" (click)="submitKTP(stepper)">
-                          Data Saya Diatas Sudah Benar <mat-icon class="ms-1">check_circle_outline</mat-icon>
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </mat-step>
-
-              </mat-vertical-stepper>
+              <div class="text-center p-3">
+                <p>
+                  === <i>Connect With</i> Discord (?) === <br>
+                  Cukup dengan menghubungkan akun kamu. <br>
+                  Lalu kirimkan kode yang muncul disini ke
+                  <a href="{{ ENV.discord.join_url }}" target="_blank" class="text-decoration-none text-warning">
+                    <i>Channel</i> Khusus BOT
+                  </a>. <br>
+                  Status akunmu akan berubah menjadi terverifikasi. <br>
+                  Akun terverifikasi selama akses ke Discord di sync otomatis. <br>
+                  Dimohon untuk tidak <i>Revoke</i> akses. <br>
+                  <br>
+                  === <i>Connect With</i> Google (?) === <br>
+                  Cukup dengan menghubungkan akun kamu. <br>
+                  Lalu buka tautan yang dikirimkan ke surelmu. <br>
+                  Status akunmu akan berubah menjadi terverifikasi. <br>
+                  Akun terverifikasi selama akses ke Google di sync otomatis. <br>
+                  Dimohon untuk tidak <i>Revoke</i> akses. <br>
+                  <br>
+                  .: Alasan pake ginian, biar gak ada BOT :. <br>
+                  ~ Sewaktu-waktu dapat hilang, harus verifikasi ulang ~ <br>
+                  <br>
+                  Terima kasih.
+                </p>
+              </div>
+              <div class="text-center p-3">
+                <a class="m-1" mat-raised-button color="primary" href="{{ ENV.baseUrl }}/api/discord-verifikasi" target="_self">
+                  <mat-icon class="me-1">link</mat-icon>
+                  Discord
+                </a>
+                <a class="m-1" mat-raised-button color="primary" href="{{ ENV.baseUrl }}/api/google-verifikasi" target="_self">
+                  <mat-icon class="me-1">link</mat-icon>
+                  Google
+                </a>
+              </div>
             </div>
           </div>
         </div>

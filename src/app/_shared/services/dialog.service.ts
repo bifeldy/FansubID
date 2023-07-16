@@ -130,22 +130,6 @@ export class DialogService {
     return this.openInfoDialog(defaultData);
   }
 
-  async openVerifikasiSosmed(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
-    const defaultData = {
-      id: 'VERIFIKASI-SOSMED',
-      data: {
-        title: 'Metode Verifikasi Baru (｡>﹏<｡)',
-        htmlMessage: 'Gagal Memuat Metode Verifikasi',
-        confirmText: 'Via Discord',
-        cancelText: 'Batal'
-      },
-      disableClose: false,
-      maxWidth: this.maxWidth
-    };
-    await this.fetchInformation(defaultData);
-    return this.openInfoDialog(defaultData);
-  }
-
   async openCorsExtension(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
     const defaultData = {
       id: 'CORS-EXTENSION',

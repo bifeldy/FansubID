@@ -61,18 +61,6 @@ export class UserService {
     return this.api.getData(`/user/${username}/feed-visit?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }
 
-  cekNik(userData): Observable<JsonResponse> {
-    return this.api.postData('/verify-nik', userData);
-  }
-
-  verifyKTP(userData): Observable<JsonResponse> {
-    return this.api.postData('/verify-ktp', userData).pipe(
-      tap(respVerifyKTP => {
-        this.as.token = respVerifyKTP.result.token;
-      })
-    );
-  }
-
   sosmedLogin(data): Observable<JsonResponse> {
     return this.api.postData('/verify-sosmed', data);
   }

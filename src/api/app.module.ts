@@ -76,8 +76,6 @@ import { TaskCronJobController } from './controllers/task-cron-job.controller';
 import { TorrentController } from './controllers/torrent.controller';
 import { UserController } from './controllers/user.controller';
 import { VerifyController } from './controllers/verify.controller';
-import { VerifyKtpController } from './controllers/verify-/verify-ktp.controller';
-import { VerifyNikController } from './controllers/verify-/verify-nik.controller';
 import { VerifySosmedController } from './controllers/verify-/verify-sosmed.controller';
 
 import { UrlXmlMiddleware } from './middlewares/url-xml.middleware';
@@ -219,8 +217,6 @@ import { UserService } from './repository/user.service';
     TorrentController,
     UserController,
     VerifyController,
-    VerifyKtpController,
-    VerifyNikController,
     VerifySosmedController
   ],
   providers: [

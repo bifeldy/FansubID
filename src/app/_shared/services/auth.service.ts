@@ -100,7 +100,7 @@ export class AuthService {
     this.token = null;
   }
 
-  logout(): void {
+  logout(url = '/', extras = null): void {
     this.gs.log('[AUTH_LOGOUT]', this.token);
     this.bs.busy();
     this.api.deleteData(`/logout`).subscribe({
@@ -109,7 +109,7 @@ export class AuthService {
         this.bs.idle();
         this.removeUser();
         this.ls.clear();
-        this.router.navigateByUrl('/');
+        this.router.navigate([url], extras);
       },
       error: err => {
         this.gs.log('[LOGOUT_ERROR]', err, 'error');
