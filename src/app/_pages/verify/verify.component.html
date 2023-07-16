@@ -15,7 +15,7 @@
                 <h1 class="h3 mb-3 font-weight-normal">Yuhu~, Ayo Verifikasi! >_<"</h1>
                 <p class="text-warning">{{ verifyInfo }}</p>
               </div>
-              <mat-vertical-stepper linear #stepper style="background-color: transparent;">
+              <mat-vertical-stepper linear #stepper style="background-color: transparent; filter: blur(5px); pointer-events: none;">
 
                 <mat-step [stepControl]="fg1" [editable]="false">
                   <ng-template matStepLabel>Cari Tanda Pengenal</ng-template>
