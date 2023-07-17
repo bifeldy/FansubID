@@ -14,6 +14,8 @@ export class BusyService {
 
   busyRequestCount = 0;
 
+  timeout = null;
+
   constructor(
     private spinnerService: NgxSpinnerService,
     private gs: GlobalService
@@ -34,6 +36,13 @@ export class BusyService {
       }
       this.busyRequestCount++;
       this.gs.log('[BUSY_STATE_COUNTER_BUSY]', this.busyRequestCount);
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = setTimeout(() => {
+        this.clear();
+        this.timeout = null;
+      }, 60 * 1000);
     }
   }
 
