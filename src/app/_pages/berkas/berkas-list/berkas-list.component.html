@@ -5,9 +5,14 @@
 <div class="container" *ngIf="berkasData">
 
   <!-- Detail -->
-  <div class="row my-4" *ngIf="!AS.currentUserSubject?.value?.verified">
+  <div class="row my-4">
     <div class="col-12">
-      <div class="text-danger text-end">* Berkas <i>Private</i> Tidak Di Tampilkan</div>
+      <div class="text-danger text-end" *ngIf="!AS.currentUserSubject?.value?.verified">
+        * Berkas <i>Private</i> Tidak Di Tampilkan
+      </div>
+      <div class="text-success text-end">
+        * Berkas Annggota Fansubber Warna - Warni
+      </div>
     </div>
   </div>
   <div class="row">
