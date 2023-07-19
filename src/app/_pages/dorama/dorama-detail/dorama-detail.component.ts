@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { RoleModel } from '../../../../models/req-res.model';
 import { WARNA } from '../../../../models/warna';
 
 import { DoramaService } from '../../../_shared/services/dorama.service';
@@ -191,6 +192,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
           this.berkasDorama.push({
             id: r.id,
             private: r.private,
+            trusted: r.user_.role ===  RoleModel.ADMIN || r.user_.role ===  RoleModel.MODERATOR || r.user_.role ===  RoleModel.FANSUBBER,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Proyek: r.project_type_.name,

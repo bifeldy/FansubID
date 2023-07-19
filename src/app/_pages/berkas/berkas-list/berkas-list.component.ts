@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { RoleModel } from '../../../../models/req-res.model';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -80,6 +82,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
           this.berkasData.push({
             id: r.id,
             private: r.private,
+            trusted: r.user_.role ===  RoleModel.ADMIN || r.user_.role ===  RoleModel.MODERATOR || r.user_.role ===  RoleModel.FANSUBBER,
             foto: r.user_.image_url,
             Proyek: r.project_type_.name,
             // Image: r.image_url,

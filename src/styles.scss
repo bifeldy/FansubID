@@ -83,7 +83,11 @@ $dark-theme: mat.define-dark-theme((
 .bifeldy-dark-theme .gradient-border,
 .bifeldy-dark-theme .mat-card,
 .bifeldy-dark-theme .card {
-  background: rgb(80, 80, 80, 0.875) !important;
+  background: rgba(80, 80, 80, 0.875) !important;
+}
+
+.bifeldy-dark-theme .mat-table {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 .bifeldy-dark-theme .mat-row:not(.expanded-row, .detail-row) {
@@ -237,10 +241,10 @@ swiper
   // background-origin: content-box;
 }
 
-.swiper-button-prev:hover,
-.carousel-control-prev-icon:hover {
-  // background-image: url("/assets/icon/chevron-left-pink.svg") !important;
-}
+// .swiper-button-prev:hover,
+// .carousel-control-prev-icon:hover {
+//   background-image: url("/assets/icon/chevron-left-pink.svg") !important;
+// }
 
 .swiper-button-next,
 .swiper-button-prev {
@@ -264,10 +268,10 @@ swiper
   // background-origin: content-box;
 }
 
-.swiper-button-next:hover,
-.carousel-control-next-icon:hover {
-  // background-image: url("/assets/icon/chevron-right-pink.svg") !important;
-}
+// .swiper-button-next:hover,
+// .carousel-control-next-icon:hover {
+//   background-image: url("/assets/icon/chevron-right-pink.svg") !important;
+// }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
@@ -430,7 +434,7 @@ re-captcha > div {
 }
 
 .gradient-border {
-  background: rgb(255, 255, 255, 0.875) !important;
+  background: rgba(255, 255, 255, 0.875) !important;
   position: relative;
 }
 

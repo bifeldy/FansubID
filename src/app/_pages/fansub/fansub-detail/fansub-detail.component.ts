@@ -229,6 +229,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           this.berkasFansub.push({
             id: r.id,
             private: r.private,
+            trusted: r.user_.role ===  RoleModel.ADMIN || r.user_.role ===  RoleModel.MODERATOR || r.user_.role ===  RoleModel.FANSUBBER,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Proyek: r.project_type_.name,
