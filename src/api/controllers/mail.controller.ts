@@ -206,7 +206,11 @@ export class MailController {
         }
         const mailSend = await this.ms.mailTrapSend(mailBody);
         if (mailSend) {
-          mailbox.mail = mailSend.message_ids[0];
+          let mailId = mailSend.message_ids[0];
+          if (!mailId.includes(`@${environment.domain}`) && !mailId.startsWith('<') && !mailId.endsWith('>')) {
+            mailId = `<${mailId}@${environment.domain}>`;
+          }
+          mailbox.mail = mailId;
           mailbox.date = new Date();
           const mailboxSave = await this.mailboxRepo.save(mailbox);
           if ('attachment_' in mailboxSave && mailboxSave.attachment_) {
