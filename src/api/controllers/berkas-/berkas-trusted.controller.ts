@@ -23,7 +23,7 @@ export class BerkasTrustedController {
   @FilterApiKeyAccess()
   async berkasTrusted(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try{
-      const berkasId = req.query['id'] ? (req.query['id'] as string).split(',').map(Number) : req.body.id;
+      const berkasId = req.query['id'] ? (req.query['id'] as string).split(',').map(b => b.trim()) : req.body.id;
       if (Array.isArray(berkasId) && berkasId.length > 0) {
         const results: any = {};
         for (const i of berkasId) {

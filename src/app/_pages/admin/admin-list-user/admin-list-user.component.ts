@@ -140,7 +140,8 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     } else if (data.name === 'MAIL') {
       this.router.navigate(['/create/mailbox'], {
         queryParams: {
-          to: `${data.row.username}@${environment.domain}`
+          to: `${data.row.username}@${environment.domain}`,
+          cc: data.row._email
         }
       });
     } else {

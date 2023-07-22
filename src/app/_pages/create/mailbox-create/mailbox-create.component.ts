@@ -72,15 +72,13 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    const p = this.activatedRoute.snapshot.queryParamMap.get('to') || null;
-    const t = [];
-    if (p) {
-      t.push(p);
-    }
+    const to = this.activatedRoute.snapshot.queryParamMap.get('to')?.split(',').map(e => e.trim()) || [];
+    const cc = this.activatedRoute.snapshot.queryParamMap.get('cc')?.split(',').map(e => e.trim()) || [];
+    const bcc = this.activatedRoute.snapshot.queryParamMap.get('bcc')?.split(',').map(e => e.trim()) || [];
     this.fg = this.fb.group({
-      to: [t, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEmailMulti)])],
-      cc: [[], Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
-      bcc: [[], Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
+      to: [to, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEmailMulti)])],
+      cc: [cc, Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
+      bcc: [bcc, Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
       subject: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       message: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       no_reply: [false, Validators.compose([Validators.required])]

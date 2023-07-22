@@ -86,7 +86,6 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
             Pelaku: (r.banned_by_?.username || 'AUTO_BANNED'),
             Alasan: r.reason,
             Aksi: [
-              { type: 'button', icon: 'mail_outline', name: 'MAIL', row: r },
               ...(this.gs.includesOneOf(r.user_.role, excludedRole) ? [] : [
                 { type: 'button', icon: 'lock_open', name: 'UnBAN', row: r }
               ])
@@ -107,12 +106,6 @@ export class AdminListBannedComponent implements OnInit, OnDestroy {
     this.gs.log('[BANNED_LIST_CLICK_AKSI]', data);
     if (data.name === 'UnBAN') {
       this.unBan(data.row);
-    } else if (data.name === 'MAIL') {
-      this.router.navigate(['/create/mailbox'], {
-        queryParams: {
-          to: `${data.row.user_.username}@${environment.domain}`
-        }
-      });
     }
     // TODO :: Other Action
   }
