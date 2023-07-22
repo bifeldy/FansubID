@@ -165,4 +165,13 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
     }
   }
 
+  noReplyMode($event): void {
+    if ($event.checked) {
+      this.fg.controls['subject'].patchValue(`${environment.siteName} | Informasi`);
+      this.fg.controls['subject'].disable();
+    } else {
+      this.fg.controls['subject'].enable();
+    }
+  }
+
 }
