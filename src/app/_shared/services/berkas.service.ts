@@ -37,4 +37,8 @@ export class BerkasService {
     return this.api.putData(`/berkas/${berkasId}`, berkasData);
   }
 
+  checkTrusted(berkasId = []): Observable<JsonResponse<BerkasModel>> {
+    return this.api.patchData(`/berkas-trusted`, { id: berkasId });
+  }
+
 }

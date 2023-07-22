@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { RoleModel } from '../../../../models/req-res.model';
-
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -16,6 +14,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 })
 export class BerkasListComponent implements OnInit, OnDestroy {
 
+  allBerkasId = [];
   berkasData = [];
 
   tabData: any = [
@@ -39,6 +38,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
   order = '';
 
   subsBerkas = null;
+  subsTrusted = null;
 
   constructor(
     private router: Router,
@@ -59,6 +59,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsBerkas?.unsubscribe();
+    this.subsTrusted?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -79,10 +80,10 @@ export class BerkasListComponent implements OnInit, OnDestroy {
         this.count = res.count;
         this.berkasData = [];
         for (const r of res.results) {
+          this.allBerkasId.push(r.id);
           this.berkasData.push({
             id: r.id,
             private: r.private,
-            trusted: r.user_.role ===  RoleModel.ADMIN || r.user_.role ===  RoleModel.MODERATOR || r.user_.role ===  RoleModel.FANSUBBER,
             foto: r.user_.image_url,
             Proyek: r.project_type_.name,
             // Image: r.image_url,
@@ -93,11 +94,29 @@ export class BerkasListComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[0].data.row = this.berkasData;
+        this.checkTrusted();
         this.fs.initializeFab('add', null, 'Tambah Berkas Baru', `/create/berkas`, false);
         this.bs.idle();
       },
       error: err => {
         this.gs.log('[BERKAS_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  checkTrusted():void {
+    this.bs.busy();
+    this.subsTrusted = this.berkas.checkTrusted(this.allBerkasId).subscribe({
+      next: res => {
+        this.gs.log('[BERKAS_TRUSTED_SUCCESS]', res);
+        for (const b of this.berkasData) {
+          b.trusted = res.results[b.id];
+        }
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[BERKAS_TRUSTED_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

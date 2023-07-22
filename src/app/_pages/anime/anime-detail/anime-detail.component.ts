@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { RoleModel } from '../../../../models/req-res.model';
 import { WARNA } from '../../../../models/warna';
 
 import { AnimeService } from '../../../_shared/services/anime.service';
+import { BerkasService } from '../../../_shared/services/berkas.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -33,6 +33,8 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
 
   fansubAnime = [];
   berkasAnime = [];
+
+  allBerkasAnimeId = [];
 
   fansubPageFinished = false;
 
@@ -64,6 +66,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   subsBerkas = null;
   subsFansub = null;
   subsParam = null;
+  subsTrusted = null;
 
   constructor(
     private router: Router,
@@ -73,7 +76,8 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private anime: AnimeService,
     private fs: FabService,
-    private wb: WinboxService
+    private wb: WinboxService,
+    private berkas: BerkasService
   ) {
     this.gs.bannerImg = null;
     this.gs.bgRepeat = true;
@@ -93,6 +97,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     this.subsBerkas?.unsubscribe();
     this.subsFansub?.unsubscribe();
     this.subsParam?.unsubscribe();
+    this.subsTrusted?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -183,14 +188,14 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.subsBerkas = this.anime.getBerkasAnime([this.animeId], this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
-        this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
+        this.gs.log('[ANIME_BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
         this.berkasAnime = [];
         for (const r of res.results[this.animeId]) {
+          this.allBerkasAnimeId.push(r.id);
           this.berkasAnime.push({
             id: r.id,
             private: r.private,
-            trusted: r.user_.role ===  RoleModel.ADMIN || r.user_.role ===  RoleModel.MODERATOR || r.user_.role ===  RoleModel.FANSUBBER,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Proyek: r.project_type_.name,
@@ -200,10 +205,28 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[1].data.row = this.berkasAnime;
+        this.checkTrusted();
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[BERKAS_ANIME_ERROR]', err, 'error');
+        this.gs.log('[ANIME_BERKAS_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  checkTrusted():void {
+    this.bs.busy();
+    this.subsTrusted = this.berkas.checkTrusted(this.allBerkasAnimeId).subscribe({
+      next: res => {
+        this.gs.log('[ANIME_BERKAS_TRUSTED_SUCCESS]', res);
+        for (const b of this.berkasAnime) {
+          b.trusted = res.results[b.id];
+        }
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[ANIME_BERKAS_TRUSTED_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

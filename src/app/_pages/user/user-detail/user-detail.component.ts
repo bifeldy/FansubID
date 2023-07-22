@@ -11,6 +11,7 @@ import { FabService } from '../../../_shared/services/fab.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
+import { BerkasService } from '../../../_shared/services/berkas.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -25,7 +26,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   userBanned = null;
 
   groupFansub = [];
-  berkasData = [];
+  berkasUser = [];
+
+  allBerkasUserId = [];
 
   panelData = [];
 
@@ -54,6 +57,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   subsBanned = null;
   subsParam = null;
   subsGroupGet = null;
+  subsTrusted = null;
 
   constructor(
     private router: Router,
@@ -63,7 +67,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private fs: FabService,
     private pi: PageInfoService,
     private us: UserService,
-    private ss: StatsServerService
+    private ss: StatsServerService,
+    private berkas: BerkasService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -80,6 +85,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.subsBanned?.unsubscribe();
     this.subsParam?.unsubscribe();
     this.subsGroupGet?.unsubscribe();
+    this.subsTrusted?.unsubscribe();
   }
 
   get ADMIN(): string {
@@ -167,10 +173,12 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[USER_BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
-        this.berkasData = [];
+        this.berkasUser = [];
         for (const r of res.results) {
-          this.berkasData.push({
+          this.allBerkasUserId.push(r.id);
+          this.berkasUser.push({
             id: r.id,
+            private: r.private,
             foto: r.user_.image_url,
             Proyek: r.project_type_.name,
             // Image: r.image_url,
@@ -180,11 +188,29 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             'Nama Berkas': r.name
           });
         }
-        this.tabData[0].data.row = this.berkasData;
+        this.tabData[0].data.row = this.berkasUser;
+        this.checkTrusted();
         this.bs.idle();
       },
       error: err => {
         this.gs.log('[USER_BERKAS_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  checkTrusted():void {
+    this.bs.busy();
+    this.subsTrusted = this.berkas.checkTrusted(this.allBerkasUserId).subscribe({
+      next: res => {
+        this.gs.log('[USER_BERKAS_TRUSTED_SUCCESS]', res);
+        for (const b of this.berkasUser) {
+          b.trusted = res.results[b.id];
+        }
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[USER_BERKAS_TRUSTED_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

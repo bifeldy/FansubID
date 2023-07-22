@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { RoleModel } from '../../../../models/req-res.model';
 import { WARNA } from '../../../../models/warna';
 
 import { DoramaService } from '../../../_shared/services/dorama.service';
@@ -9,6 +8,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { BerkasService } from '../../../_shared/services/berkas.service';
 
 @Component({
   selector: 'app-dorama-detail',
@@ -30,6 +30,8 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
 
   fansubDorama = [];
   berkasDorama = [];
+
+  allBerkasDoramaId = [];
 
   fansubPageFinished = false;
 
@@ -61,6 +63,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   subsBerkas = null;
   subsFansub = null;
   subsParam = null;
+  subsTrusted = null;
 
   constructor(
     private router: Router,
@@ -69,7 +72,8 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private pi: PageInfoService,
     private dorama: DoramaService,
-    private fs: FabService
+    private fs: FabService,
+    private berkas: BerkasService
   ) {
     this.gs.bannerImg = null;
     this.gs.bgRepeat = true;
@@ -81,6 +85,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
     this.subsBerkas?.unsubscribe();
     this.subsFansub?.unsubscribe();
     this.subsParam?.unsubscribe();
+    this.subsTrusted?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -185,14 +190,14 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.subsBerkas = this.dorama.getBerkasDorama([this.doramaId], this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
-        this.gs.log('[BERKAS_DORAMA_SUCCESS]', res);
+        this.gs.log('[DORAMA_BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
         this.berkasDorama = [];
         for (const r of res.results[this.doramaId]) {
+          this.allBerkasDoramaId.push(r.id);
           this.berkasDorama.push({
             id: r.id,
             private: r.private,
-            trusted: r.user_.role ===  RoleModel.ADMIN || r.user_.role ===  RoleModel.MODERATOR || r.user_.role ===  RoleModel.FANSUBBER,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Proyek: r.project_type_.name,
@@ -202,10 +207,28 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[1].data.row = this.berkasDorama;
+        this.checkTrusted();
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[BERKAS_DORAMA_ERROR]', err, 'error');
+        this.gs.log('[DORAMA_BERKAS_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  checkTrusted():void {
+    this.bs.busy();
+    this.subsTrusted = this.berkas.checkTrusted(this.allBerkasDoramaId).subscribe({
+      next: res => {
+        this.gs.log('[DORAMA_BERKAS_TRUSTED_SUCCESS]', res);
+        for (const b of this.berkasDorama) {
+          b.trusted = res.results[b.id];
+        }
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[DORAMA_BERKAS_TRUSTED_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

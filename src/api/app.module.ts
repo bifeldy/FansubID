@@ -31,6 +31,7 @@ import { ApiKeyController } from './controllers/api-key.controller';
 import { AttachmentController } from './controllers/attachment.controller';
 import { BannedController } from './controllers/banned.controller';
 import { BerkasController } from './controllers/berkas.controller';
+import { BerkasTrustedController } from './controllers/berkas-/berkas-trusted.controller';
 import { CommentController } from './controllers/comment.controller';
 import { CrawlController } from './controllers/crawl.controller';
 import { DdlPartController, DdlSeekController } from './controllers/ddl-file.controller';
@@ -171,6 +172,7 @@ import { UserService } from './repository/user.service';
     AttachmentController,
     BannedController,
     BerkasController,
+    BerkasTrustedController,
     CommentController,
     CrawlController,
     DdlPartController,
