@@ -189,7 +189,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[0].data.row = this.berkasUser;
-        this.checkTrusted();
+        if (this.allBerkasUserId.length > 0) {
+          this.checkTrusted();
+        }
         this.bs.idle();
       },
       error: err => {

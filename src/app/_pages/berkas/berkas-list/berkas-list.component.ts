@@ -94,7 +94,9 @@ export class BerkasListComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[0].data.row = this.berkasData;
-        this.checkTrusted();
+        if (this.allBerkasId.length > 0) {
+          this.checkTrusted();
+        }
         this.fs.initializeFab('add', null, 'Tambah Berkas Baru', `/create/berkas`, false);
         this.bs.idle();
       },

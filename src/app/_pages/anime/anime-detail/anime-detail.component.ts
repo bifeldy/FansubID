@@ -205,7 +205,9 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[1].data.row = this.berkasAnime;
-        this.checkTrusted();
+        if (this.allBerkasAnimeId.length > 0) {
+          this.checkTrusted();
+        }
         this.bs.idle();
       },
       error: err => {

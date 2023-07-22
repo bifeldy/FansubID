@@ -207,7 +207,9 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[1].data.row = this.berkasDorama;
-        this.checkTrusted();
+        if (this.allBerkasDoramaId.length > 0) {
+          this.checkTrusted();
+        }
         this.bs.idle();
       },
       error: err => {
