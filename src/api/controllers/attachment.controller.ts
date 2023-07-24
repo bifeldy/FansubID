@@ -335,7 +335,6 @@ export class AttachmentController {
                   {
                     name: Equal(resAttachmentSave.name),
                     ext: Equal(resAttachmentSave.ext),
-                    size: Equal(resAttachmentSave.size),
                     google_drive: IsNull()
                   }
                 ]

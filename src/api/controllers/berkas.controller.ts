@@ -291,8 +291,7 @@ export class BerkasController {
                         where: [
                           {
                             name: Equal(fileName),
-                            ext: Equal(fileExt),
-                            size: Equal(ef.size)
+                            ext: Equal(fileExt)
                           }
                         ]
                       });
@@ -347,7 +346,6 @@ export class BerkasController {
                               {
                                 name: Equal(resMkvAttachmentSave.name),
                                 ext: Equal(resMkvAttachmentSave.ext),
-                                size: Equal(resMkvAttachmentSave.size),
                                 google_drive: IsNull()
                               }
                             ]

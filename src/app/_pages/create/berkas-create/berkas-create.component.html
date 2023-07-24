@@ -52,7 +52,7 @@
                       Permanent Storage
                     </mat-slide-toggle>
                   </div>
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="px-3 pt-3 col-12" [color]="'accent'">
                     <mat-label>Jenis Proyek</mat-label>
                     <mat-select formControlName="projectType_id" placeholder="Anime / Drama" required>
                       <mat-option *ngFor="let p of projectList" [value]="p.id">{{ p.name }}</mat-option>
@@ -110,7 +110,7 @@
                   <div formArrayName="fansub_list">
                     <div *ngFor="let fs of getFansubControl.controls; let i = index">
                       <div class="row" [formGroupName]="i">
-                        <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
+                        <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
                           <mat-label>Fansub Terkait</mat-label>
                           <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" required />
                           <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i === 0">short_text</mat-icon>
@@ -172,7 +172,7 @@
                 <ng-template #ddlVerified>
                   <div class="row">
                     <div class="col-12 px-3">
-                      <small class="text-success">* <i>Resume-able Upload (Tidak wajib, jika sudah ada URL eksternal, misal alamat webmu gdrive mediafire mega dan lain sebagainya)</i></small>
+                      <small class="text-success">* <i>Resume-able Upload</i> (Tidak wajib, jika sudah ada URL eksternal, misal alamat webmu gdrive mediafire mega dan lain sebagainya)</small>
                     </div>
                     <mat-form-field appearance="outline" class="px-3 pt-3 col" [color]="'accent'">
                       <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
@@ -215,10 +215,13 @@
                     <mat-divider></mat-divider>
                   </div>
                 </div>
-                <div formArrayName="download_url">
-                  <div *ngFor="let dl of getDownloadUrlControl.controls; let i = index">
+                <ng-container formArrayName="download_url">
+                  <ng-container *ngFor="let dl of getDownloadUrlControl.controls; let i = index">
                     <div class="row" [formGroupName]="i" matTooltip="Silahkan Isi Alamat Website Kamu Jika Ingin Mendapatkan Traffic Pengunjung">
-                      <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'">
+                      <div class="col-12 px-3" *ngIf="AS.currentUserSubject?.value?.verified && i === 0">
+                        <small class="text-success">* Gunakan tombol (X) untuk menghapus URL Eksternal jika ingin hanya menggunakan lampiran <i>upload</i> DDL saja</small>
+                      </div>
+                      <mat-form-field appearance="outline" class="px-3 pt-3 col-12 col-md-5" [color]="'accent'">
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="name" placeholder="Google Drive" required />
                         <mat-icon matSuffix *ngIf="dl.get('name').value || (i === 0 && !AS.currentUserSubject?.value?.verified)">web</mat-icon>
@@ -230,7 +233,7 @@
                           <div *ngIf="dl.get('name').hasError('pattern')">Web Hanya Boleh Huruf Standar Papan Ketik</div>
                         </mat-error>
                       </mat-form-field>
-                      <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
+                      <mat-form-field appearance="outline" class="px-3 pt-3 col-12 col-md-7" [color]="'accent'">
                         <mat-label>Tautan Link</mat-label>
                         <input matInput formControlName="url" placeholder="https://webshit.saya.com/01/02/halaman-post-download.html" required />
                         <mat-icon matSuffix *ngIf="dl.get('url').value || (i === 0 && !AS.currentUserSubject?.value?.verified)">link</mat-icon>
@@ -243,8 +246,8 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-                  </div>
-                </div>
+                  </ng-container>
+                </ng-container>
                 <div class="row mb-4">
                   <div class="col"></div>
                   <div class="col"></div>
