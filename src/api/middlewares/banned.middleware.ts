@@ -41,7 +41,7 @@ export class BannedMiddleware implements NestMiddleware {
               maxAge: 0,
               domain: environment.domain
             });
-            return res.redirect(301, environment.baseUrl);
+            return res.redirect(301, `${environment.baseUrl}/?ngsw-bypass=true`);
           }
         }
       }
