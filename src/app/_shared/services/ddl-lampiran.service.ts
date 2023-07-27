@@ -21,8 +21,8 @@ export class DdlLampiranService {
     }
   }
 
-  getAttachmentNotUploaded(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<AttachmentModel>> {
-    return this.api.getData(`/attachment?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}&ngsw-bypass=true`);
+  getAttachmentNotUploaded(q = '', page = 1, row = 10, sort = '', order = '', failedOnly: boolean): Observable<JsonResponse<AttachmentModel>> {
+    return this.api.getData(`/attachment?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}&ngsw-bypass=true${failedOnly ? '&failed=true' : ''}`);
   }
 
   reUpload(attachmentData): Observable<JsonResponse<AttachmentModel>> {

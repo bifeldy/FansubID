@@ -7,6 +7,13 @@
   <!-- Detail -->
   <div class="row pb-3 px-0">
     <div class="col-12">
+      <div class="row my-4">
+        <div class="col-12 text-end text-success">
+          <mat-slide-toggle [(ngModel)]="failed" (change)="getAttachment()" labelPosition="before">
+            Tampilkan Yang Tidak Selesai Saja
+          </mat-slide-toggle>
+        </div>
+      </div>
       <div class="row">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">

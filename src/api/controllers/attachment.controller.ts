@@ -52,10 +52,15 @@ export class AttachmentController {
     try {
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
+      const sqlWhere: any = {
+        name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+      };
+      if (req.query['failed'] === 'true') {
+        sqlWhere.discord = IsNull();
+        sqlWhere.google_drive = IsNull();
+      }
       const [attachments, count] = await this.attachmentRepo.findAndCount({
-        where: [
-          { name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) }
-        ],
+        where: [sqlWhere],
         order: {
           ...((req.query['sort'] && req.query['order']) ? {
             [req.query['sort'] as string]: (req.query['order'] as string).toUpperCase()

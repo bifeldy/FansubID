@@ -31,6 +31,8 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
     row: []
   };
 
+  failed = true;
+
   constructor(
     private dls: DdlLampiranService,
     private bs: BusyService,
@@ -44,7 +46,7 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.getAttachmentNotUploaded();
+      this.getAttachment();
     }
   }
 
@@ -54,13 +56,13 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
     this.subsDialog?.unsubscribe();
   }
 
-  getAttachmentNotUploaded(): void {
+  getAttachment(): void {
     this.bs.busy();
     if (this.subsAttachmentGet) {
       this.subsAttachmentGet.unsubscribe();
       this.bs.idle();
     }
-    this.subsAttachmentGet = this.dls.getAttachmentNotUploaded(this.q, this.page, this.row, this.sort, this.order).subscribe({
+    this.subsAttachmentGet = this.dls.getAttachmentNotUploaded(this.q, this.page, this.row, this.sort, this.order, this.failed).subscribe({
       next: res => {
         this.gs.log('[LAMPIRAN_PENDING_LIST_SUCCESS]', res);
         this.count = res.count;
@@ -120,16 +122,16 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
             next: res => {
               this.gs.log('[LAMPIRAN_PENDING_LIST_CLICK_REUPLOAD_SUCCESS]', res);
               this.bs.idle();
-              this.getAttachmentNotUploaded();
+              this.getAttachment();
             },
             error: err => {
               this.gs.log('[LAMPIRAN_PENDING_LIST_CLICK_REUPLOAD_ERROR]', err, 'error');
               this.bs.idle();
-              this.getAttachmentNotUploaded();
+              this.getAttachment();
             }
           });
         } else if (re === false) {
-          this.getAttachmentNotUploaded();
+          this.getAttachment();
         }
         this.subsDialog.unsubscribe();
       }
@@ -140,13 +142,13 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
     this.gs.log('[LAMPIRAN_PENDING_LIST_CLICK_PAGINATOR]', data);
     this.page = data.pageIndex + 1;
     this.row = data.pageSize;
-    this.getAttachmentNotUploaded();
+    this.getAttachment();
   }
 
   onServerSideFilter(data: any): void {
     this.gs.log('[LAMPIRAN_PENDING_LIST_ENTER_FILTER]', data);
     this.q = data;
-    this.getAttachmentNotUploaded();
+    this.getAttachment();
   }
 
   onServerSideOrder(data: any): void {
@@ -154,7 +156,7 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
     this.q = data.q;
     this.sort = data.active;
     this.order = data.direction;
-    this.getAttachmentNotUploaded();
+    this.getAttachment();
   }
 
 }
