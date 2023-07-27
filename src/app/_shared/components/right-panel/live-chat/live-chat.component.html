@@ -19,7 +19,7 @@
             <div class="col-6 p-0" *ngFor="let u of roomCurrentOrGlobal.member_list | keyvalue">
               <div class="card d-flex py-1 align-items-center p-1 text-success" routerLink="/user/{{ u.value['username'] }}" *ngIf="u.value">
                 <div class="flex-shrink-0">
-                  <img height="24" width="24" src="{{ u.value['image_url'] }}" class="ms-1 mt-1" />
+                  <img height="24" width="24" src="{{ u.value['image_url'] }}" class="ms-1 mt-1" style="object-fit: cover;" />
                 </div>
                 <div class="flex-grow-1 mx-1 text-truncate">
                   <h4 matLine class="m-0">

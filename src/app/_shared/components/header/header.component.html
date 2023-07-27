@@ -11,7 +11,7 @@
 
   <span class="spacer"></span>
 
-  <button mat-stroked-button matTooltip="Points" *ngIf="ROUTER.url.includes('/nihongo')">
+  <button mat-stroked-button matTooltip="Points" *ngIf="ROUTER.url.includes('/nihongo') && GS.isDesktop">
     <mat-icon class="me-1">sports_score</mat-icon>
     {{ myPoints }}
   </button>
