@@ -97,7 +97,7 @@ export class FansubService {
   }
 
   getSubDomain(fansubSlug: string): Observable<JsonResponse<any>> {
-    return this.api.getData(`/fansub-dns/${fansubSlug}?ngsw-bypass=true`);
+    return this.api.getData(`/fansub-dns/${fansubSlug}`);
   }
 
   updateSubDomain(fansubSlug: string, dnsData): Observable<JsonResponse<any>> {

@@ -51,6 +51,7 @@ export class BerkasTrustedController {
             WHERE
               b.id IN (${bid})
               AND fm.user_id IS NOT NULL
+              AND fm.approved = true
           `);
           for (const b of berkas) {
             results[b.bid] = true;
