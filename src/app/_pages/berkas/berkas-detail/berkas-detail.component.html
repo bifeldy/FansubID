@@ -161,17 +161,20 @@
                   </a>
                 </div>
                 <div class="px-3">
-                  <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isHaveDDL && !vjsInit && !vjsReady">
-                    <mat-icon class="me-1">play_arrow</mat-icon>
-                    Mulai Streaming Video
-                  </button>
                   <mat-form-field appearance="outline" class="pt-3 col-12" [color]="'accent'" *ngIf="subtitles.length > 0">
                     <mat-label>Pilih Subtitle / Takarir (.ASS Saja)</mat-label>
                     <mat-select placeholder="Pilih Salah Satu" [(value)]="selectedSubsUrl">
                       <mat-option [value]="s.url" *ngFor="let s of subtitles">{{ s.name }}</mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <mat-progress-bar color="accent" mode="buffer" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
+                  <mat-progress-bar color="accent" mode="buffer" class="mb-3" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
+                  <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isHaveDDL && !vjsReady" [disabled]="vjsInit">
+                    <mat-icon class="me-1">play_arrow</mat-icon>
+                    <span *ngIf="!vjsInit">Mulai Streaming Video</span>
+                    <span *ngIf="vjsInit">
+                      Loading ...
+                    </span>
+                  </button>
                   <app-vjs-player *ngIf="isHaveDDL && vjsInit && vjsReady"
                     [videoUrl]="ddlVideo"
                     [videoThumb]="videoThumb"

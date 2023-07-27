@@ -10,6 +10,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { NewsService } from '../../../_shared/services/news.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-news-create',
@@ -31,6 +32,7 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
 
   subsNews = null;
   subsImgbb = null;
+  subsDialog = null;
 
   constructor(
     private fb: FormBuilder,
@@ -39,7 +41,8 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private imgbb: ImgbbService,
     private news: NewsService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private ds: DialogService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -64,6 +67,7 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsImgbb?.unsubscribe();
     this.subsNews?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   initForm(): void {
@@ -172,6 +176,20 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
     if (index >= 0) {
       this.fg.value.tags.splice(index, 1);
     }
+  }
+
+  async exit(): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      'Batal & Keluar',
+      'Apakah Yakin Meninggalkan Halaman Ini ?'
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.router.navigateByUrl('/news');
+        }
+      }
+    });
   }
 
 }

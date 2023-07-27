@@ -21,6 +21,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { ToastService } from '../../../_shared/services/toast.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-berkas-create',
@@ -74,6 +75,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   subsImgbb = null;
   subsBerkasCreate = null;
   subsUpload = null;
+  subsDialog = null;
 
   berkasType = '';
 
@@ -91,7 +93,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private gs: GlobalService,
     private as: AuthService,
-    private uploadService: UploadxService
+    private uploadService: UploadxService,
+    private ds: DialogService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -191,6 +194,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.subsBerkasCreate?.unsubscribe();
     this.uploadService.disconnect();
     this.subsUpload?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   toggleDetailMode(): void {
@@ -586,6 +590,20 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.router.navigate(['/verify'], {
       queryParams: {
         returnUrl: this.router.url.split('?')[0]
+      }
+    });
+  }
+
+  async exit(): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      'Batal & Keluar',
+      'Apakah Yakin Meninggalkan Halaman Ini ?'
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.router.navigateByUrl('/berkas');
+        }
       }
     });
   }

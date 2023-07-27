@@ -14,6 +14,7 @@ import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { MailService } from '../../../_shared/services/mail.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-mailbox-create',
@@ -27,6 +28,7 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   submitted = false;
 
   subsMail = null;
+  subsDialog = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -36,7 +38,8 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
     private pi: PageInfoService,
     private gs: GlobalService,
     private as: AuthService,
-    private ms: MailService
+    private ms: MailService,
+    private ds: DialogService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -69,6 +72,7 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsMail?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   initForm(): void {
@@ -172,6 +176,20 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
     } else {
       this.fg.controls['subject'].enable();
     }
+  }
+
+  async exit(): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      'Batal & Keluar',
+      'Apakah Yakin Meninggalkan Halaman Ini ?'
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.router.navigateByUrl('/mailbox');
+        }
+      }
+    });
   }
 
 }

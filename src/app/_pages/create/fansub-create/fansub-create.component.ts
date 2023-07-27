@@ -13,6 +13,7 @@ import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { ToastService } from '../../../_shared/services/toast.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-fansub-create',
@@ -45,6 +46,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
   subsImgbb = null;
   subsFansub = null;
   subsCekFansubSlug = null;
+  subsDialog = null;
 
   slugInfo = '';
 
@@ -56,7 +58,8 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private fansub: FansubService,
     private toast: ToastService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private ds: DialogService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -70,6 +73,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsImgbb?.unsubscribe();
     this.subsFansub?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -282,6 +286,20 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
         this.gs.log('[FANSUB_CREATE_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
+      }
+    });
+  }
+
+  async exit(): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      'Batal & Keluar',
+      'Apakah Yakin Meninggalkan Halaman Ini ?'
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.router.navigateByUrl('/fansub');
+        }
       }
     });
   }
