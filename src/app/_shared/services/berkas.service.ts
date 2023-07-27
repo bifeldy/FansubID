@@ -21,8 +21,8 @@ export class BerkasService {
     }
   }
 
-  getAllBerkas(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<BerkasModel>> {
-    return this.api.getData(`/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
+  getAllBerkas(q = '', page = 1, row = 10, sort = '', order = '', r18: boolean): Observable<JsonResponse<BerkasModel>> {
+    return this.api.getData(`/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}${r18 ? '&r18=true' : ''}`);
   }
 
   getBerkas(berkasId: string): Observable<JsonResponse<BerkasModel>> {

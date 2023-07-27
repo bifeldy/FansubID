@@ -201,7 +201,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       fansub_list: this.fb.array([]),
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       download_url: this.fb.array([]),
-      private: [data.private, Validators.compose([Validators.required])]
+      private: [data.private, Validators.compose([Validators.required])],
+      r18: [data.r18, Validators.compose([Validators.required])]
     });
     this.image_url = data.image_url;
     this.image_url_original = this.image_url;

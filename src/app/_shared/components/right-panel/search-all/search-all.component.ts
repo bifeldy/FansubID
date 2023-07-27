@@ -244,7 +244,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     if (this.subsBerkas) {
       this.subsBerkas.unsubscribe();
     }
-    this.subsBerkas = this.berkas.getAllBerkas(this.searchResult.q, 1, 5).subscribe({
+    this.subsBerkas = this.berkas.getAllBerkas(this.searchResult.q, 1, 5, '', '', true).subscribe({
       next: res => {
         this.gs.log('[BERKAS_SEARCH_SUCCESS]', res);
         this.searchResult.berkasResults = res.results;

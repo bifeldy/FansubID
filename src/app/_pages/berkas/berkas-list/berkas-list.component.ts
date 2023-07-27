@@ -40,6 +40,8 @@ export class BerkasListComponent implements OnInit, OnDestroy {
   subsBerkas = null;
   subsTrusted = null;
 
+  r18 = false;
+
   constructor(
     private router: Router,
     private gs: GlobalService,
@@ -74,7 +76,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
       this.subsBerkas.unsubscribe();
       this.bs.idle();
     }
-    this.subsBerkas = this.berkas.getAllBerkas(this.q, this.page, this.row, this.sort, this.order).subscribe({
+    this.subsBerkas = this.berkas.getAllBerkas(this.q, this.page, this.row, this.sort, this.order, this.r18).subscribe({
       next: res => {
         this.gs.log('[BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;

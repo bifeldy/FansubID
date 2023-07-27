@@ -25,6 +25,9 @@ export class Berkas implements BerkasModel {
   @Column({ type: 'boolean', default: false })
   private: boolean;
 
+  @Column({ type: 'boolean', default: false })
+  r18: boolean;
+
   @Column({ type: 'text' })
   download_url: string;
 

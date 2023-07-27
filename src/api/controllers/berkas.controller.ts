@@ -63,7 +63,7 @@ export class BerkasController {
       const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
-      const sqlWhere = [
+      const sqlWhere: any = [
         {
           ...((user?.verified) ? {
             // Verified User Can See Private Berkas From Public Profile
@@ -71,6 +71,7 @@ export class BerkasController {
             private: false
           }),
           name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+          r18: false,
           user_: {
             private: false
           }
@@ -79,6 +80,7 @@ export class BerkasController {
       const userFilesCriteria: any = {};
       if (user) {
         userFilesCriteria.name = ILike(`%${req.query['q'] ? req.query['q'] : ''}%`);
+        userFilesCriteria.r18 = false;
         if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER || this.gs.isFreeTime()) {
           // Admin, Moderator, & Fansubber Can See Private Berkas From All Private Profile
         } else {
@@ -88,6 +90,11 @@ export class BerkasController {
           };
         }
         sqlWhere.push(userFilesCriteria);
+      }
+      if (req.query['r18'] === 'true') {
+        for (const sw of sqlWhere) {
+          delete sw.r18;
+        }
       }
       const [files, count] = await this.berkasRepo.findAndCount({
         where: sqlWhere,
@@ -200,6 +207,9 @@ export class BerkasController {
         }
         if ('private' in req.body) {
           berkas.private = (req.body.private === true);
+        }
+        if ('r18' in req.body) {
+          berkas.r18 = (req.body.r18 === true);
         }
         if ('image' in req.body) {
           berkas.image_url = req.body.image;
@@ -682,6 +692,9 @@ export class BerkasController {
           }
           if ('private' in req.body) {
             file.private = (req.body.private === true);
+          }
+          if ('r18' in req.body) {
+            file.r18 = (req.body.r18 === true);
           }
           if ('anime_id' in req.body) {
             const anime = await this.animeRepo.findOneOrFail({

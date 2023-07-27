@@ -234,6 +234,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([this.createDownloadLink()]),
       private: [false, Validators.compose([Validators.required])],
+      r18: [false, Validators.compose([Validators.required])],
       permanent_storage: [false, Validators.compose([Validators.required])]
     });
     this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(

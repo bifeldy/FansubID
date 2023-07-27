@@ -43,8 +43,13 @@
                     </button>
                   </div>
                   <div class="col-12 p-3" *ngIf="AS.currentUserSubject?.value?.verified">
-                    <mat-slide-toggle formControlName="private" matTooltip="Hanya diakses melalui profil dan/atau url">
-                      Jadikan Private, Akses Hanya Dengan URL
+                    <mat-slide-toggle formControlName="private" matTooltip="Hanya Dapat Di Akses Melalui URL">
+                      <i>Private</i> Akses Hanya Dengan URL
+                    </mat-slide-toggle>
+                  </div>
+                  <div class="col-12 p-3">
+                    <mat-slide-toggle formControlName="r18" matTooltip="Konten Eksplisit">
+                      R-18+ Konten Eksplisit
                     </mat-slide-toggle>
                   </div>
                   <div class="col-12 p-3" *ngIf="permanentStorage && isAttachmentUploaded">
