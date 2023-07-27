@@ -10,6 +10,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 import { DialogService } from '../../services/dialog.service';
 
 import { Menu } from '../../../../models/menu';
+import { RoleModel } from '../../../../models/req-res.model';
 
 @Component({
   selector: 'app-left-menu',
@@ -60,6 +61,17 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   get otherMenus(): Menu[] {
     return this.lms.otherMenus;
+  }
+
+  get TRUSTED(): boolean {
+    if (this.as.currentUserSubject?.value) {
+      return (
+        this.as.currentUserSubject.value.role === RoleModel.ADMIN || 
+        this.as.currentUserSubject.value.role === RoleModel.MODERATOR || 
+        this.as.currentUserSubject.value.role === RoleModel.FANSUBBER
+      );
+    }
+    return false;
   }
 
   ngOnDestroy(): void {
