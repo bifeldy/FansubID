@@ -7,96 +7,104 @@
 </mat-form-field>
 
 <!-- Table -->
-<table mat-table matSort [dataSource]="dataSource" class="bg-transparent">
-  <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
-    <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
-      tdc.toUpperCase() !== 'NAMA BERKAS' && tdc.toUpperCase() !== 'NAMA LAMPIRAN' && tdc.toUpperCase() !== 'TANGGAL'  && tdc.toUpperCase() !== 'NAMA FANSUB' && tdc.toUpperCase() !== 'JUDUL DORAMA' &&
-      tdc.toUpperCase() !== 'TOPIK' && tdc.toUpperCase() !== 'JUDUL ANIME' && tdc.toUpperCase() !== 'ANIME'  && tdc.toUpperCase() !== 'DORAMA' && tdc.toUpperCase() !== 'EXT' &&
-      tdc.toUpperCase() !== 'JENIS' && tdc.toUpperCase() !== 'DEADLINE' && tdc.toUpperCase() !== 'JUDUL' && tdc.toUpperCase() !== 'KONTEN' && tdc.toUpperCase() !== 'SIZE' &&
-      tdc.toUpperCase() !== 'ID' && tdc.toUpperCase() !== 'ALASAN' && tdc.toUpperCase() !== 'NAMA API' && tdc.toUpperCase() !== 'IP DOMAIN' && tdc.toUpperCase() !== 'MIME' &&
-      tdc.toUpperCase() !== 'API KEY' && tdc.toUpperCase() !== 'USERNAME' && tdc.toUpperCase() !== 'EMAIL' && tdc.toUpperCase() !== 'ROLE' && tdc.toUpperCase() !== 'KETERANGAN'
-    ">
-      <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
-    </th>
-    <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;" [style.background-color]="
-      row.pending || row.private || row.banned ? (GS.isDarkMode ? 'rgba(47, 79, 79, 0.25)' : 'rgba(47, 79, 79, 0.0625)') : ''
-    " [style.max-width]="
-      GS.isDesktop && (
-        tdc.toUpperCase() === 'NAMA BERKAS' ||  tdc.toUpperCase() === 'JUDUL ANIME' || tdc.toUpperCase() === 'JUDUL DORAMA' || tdc.toUpperCase() === 'NAMA FANSUB' ||
-        tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
-        tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() === 'PENERIMA' ||
-        tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN'
-      ) ? '35vw' : ''
-    ">
-      <div *ngIf="checkIsArray(row[tdc]) === false" class="{{
-        tdc.toUpperCase() === 'ANGGOTA' || tdc.toUpperCase() === 'PELAKU' || tdc.toUpperCase() === 'KORBAN' || tdc.toUpperCase() === 'FANSUB' ||
-        tdc.toUpperCase() === 'TANGGAL' || tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'
-      ? 'fixed-single' : '' }}">
-        <h3 [style.color]="
-          (tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS' || tdc.toUpperCase() === 'STATUS' || tdc.toUpperCase() === 'KORBAN' || tdc.toUpperCase() === 'FANSUB') ? (GS.isDarkMode ? '#ffc107' : '#0d6efd') :
-            (tdc.toUpperCase() === 'TANGGAL' || tdc.toUpperCase() === 'PELAKU' || tdc.toUpperCase() === 'JUDUL' || tdc.toUpperCase() === 'ANGGOTA') ? '#28a745' :
-              (tdc.toUpperCase() === 'JENIS' || tdc.toUpperCase() === 'PROYEK') ? '#7289da' : (GS.isDarkMode ? '#acacac' : '#000000')
-        " class="m-0 {{
-          GS.isDesktop && (
-            tdc.toUpperCase() === 'NAMA BERKAS' ||  tdc.toUpperCase() === 'JUDUL ANIME' || tdc.toUpperCase() === 'JUDUL DORAMA' || tdc.toUpperCase() === 'NAMA FANSUB' ||
-            tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
-            tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() === 'PENERIMA' ||
-            tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN'
-          ) ? 'text-truncate' : ''
-        }}">
-          <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'" />
-          <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'KORBAN'" />
-          <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'PELAKU'" />
-          <img matListAvatar [src]="row.foto_fansub" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'FANSUB'" />
-          <img matListAvatar [src]="row.foto_anggota" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'ANGGOTA'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'LOGO'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'IMAGE'" />
-          <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'POSTER'" />
-          <span *ngIf="tdc.toUpperCase() === 'TANGGAL'" matTooltip="{{ row[tdc] | date:'d MMMM y, hh:mm:ss a z' }}">{{ row[tdc] | dateAgo }}</span>
-          <span *ngIf="tdc.toUpperCase() === 'DEADLINE'">{{ row[tdc] | date:'d/M/yy, HH:mm:ss' }}</span>
-          <span *ngIf="tdc.toUpperCase() === 'ANIME'">{{ row[tdc] || 0 }} Anime</span>
-          <span *ngIf="tdc.toUpperCase() === 'DORAMA'">{{ row[tdc] || 0 }} Dorama</span>
-          <span *ngIf="tdc.toUpperCase() === 'KUNJUNGAN'">{{ row[tdc] }}x Dilihat</span>
-          <span *ngIf="
-            tdc.toUpperCase() !== 'POSTER' && tdc.toUpperCase() !== 'LOGO' && tdc.toUpperCase() !== 'IMAGE' &&
-            tdc.toUpperCase() !== 'TANGGAL' && tdc.toUpperCase() !== 'DEADLINE' && tdc.toUpperCase() !== 'ANIME' &&
-            tdc.toUpperCase() !== 'DORAMA' && tdc.toUpperCase() !== 'KUNJUNGAN'
-          " [style.overflow-wrap]="(
-            tdc.toUpperCase() === 'NAMA BERKAS' ||  tdc.toUpperCase() === 'JUDUL ANIME' || tdc.toUpperCase() === 'JUDUL DORAMA' || tdc.toUpperCase() === 'NAMA FANSUB' ||
-            tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
-            tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() === 'PENERIMA' ||
-            tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN'
-          ) ? 'anywhere' : ''" matTooltip="{{ row[tdc] }}">
-            {{ row[tdc] }}
-          </span>
-        </h3>
-      </div>
-      <div *ngIf="checkIsArray(row[tdc]) === true && row[tdc].length > 0 && row[tdc][0].type === 'chip'" class="p-1">
-        <app-material-chip (chipClicked)="onChipClicked($event)" [chipData]="row[tdc]"></app-material-chip>
-      </div>
-      <div *ngIf="checkIsArray(row[tdc]) === true && row[tdc].length > 0 && row[tdc][0].type === 'button'">
-        <button mat-icon-button *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}" (click)="$event.stopPropagation(); onButtonClicked(rt)">
-          <mat-icon *ngIf="rt.icon">{{ rt.icon }}</mat-icon>
-          <img src="{{ rt.image }}" width="24px" *ngIf="rt.image" />
-        </button>
-      </div>
-    </td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>
-  <tr mat-row matRipple [matRippleDisabled]="GS.isDesktop" class="{{ row.trusted ? 'gradient-border' + (GS.isDesktop ? '' : ' rgb-border') : '' }}"
-    *matRowDef="let row; columns: tableDataColumn;" (click)="onRowClicked(row)"></tr>
-  <tr class="mat-row" *matNoDataRow matRipple [matRippleDisabled]="GS.isDesktop">
-    <td class="mat-cell text-center align-items-center p-0" [attr.colspan]="tableDataColumn.length"
-      style="background-image: url('/assets/img/404/no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
-      <div class="row align-items-center h-100">
-        <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
-          <h3 class="m-0">
-            Tidak Ada Data <br *ngIf="!GS.isDesktop" /> ¯\_(ツ)_/¯
+<div style="overflow-x: auto;">
+  <table mat-table matSort [dataSource]="dataSource" class="bg-transparent">
+    <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
+      <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
+        tdc.toUpperCase() !== 'NAMA BERKAS' && tdc.toUpperCase() !== 'NAMA LAMPIRAN' && tdc.toUpperCase() !== 'TANGGAL'  && tdc.toUpperCase() !== 'NAMA FANSUB' && tdc.toUpperCase() !== 'JUDUL DORAMA' &&
+        tdc.toUpperCase() !== 'TOPIK' && tdc.toUpperCase() !== 'JUDUL ANIME' && tdc.toUpperCase() !== 'ANIME'  && tdc.toUpperCase() !== 'DORAMA' && tdc.toUpperCase() !== 'EXT' &&
+        tdc.toUpperCase() !== 'JENIS' && tdc.toUpperCase() !== 'DEADLINE' && tdc.toUpperCase() !== 'JUDUL' && tdc.toUpperCase() !== 'KONTEN' && tdc.toUpperCase() !== 'SIZE' &&
+        tdc.toUpperCase() !== 'ID' && tdc.toUpperCase() !== 'ALASAN' && tdc.toUpperCase() !== 'NAMA API' && tdc.toUpperCase() !== 'IP DOMAIN' && tdc.toUpperCase() !== 'MIME' &&
+        tdc.toUpperCase() !== 'API KEY' && tdc.toUpperCase() !== 'USERNAME' && tdc.toUpperCase() !== 'EMAIL' && tdc.toUpperCase() !== 'ROLE' && tdc.toUpperCase() !== 'KETERANGAN'
+      ">
+        <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
+      </th>
+      <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;" [style.background-color]="
+        row.pending || row.private || row.banned ? (GS.isDarkMode ? 'rgba(47, 79, 79, 0.25)' : 'rgba(47, 79, 79, 0.0625)') : ''
+      " [style.max-width]="
+        GS.isDesktop && (
+          tdc.toUpperCase() === 'NAMA BERKAS' || tdc.toUpperCase() === 'PENGIRIM' || tdc.toUpperCase() === 'PENERIMA' || tdc.toUpperCase() ===  'NAMA LENGKAP' ||
+          tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
+          tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() ===  'EMAIL' ||
+          tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN'
+        ) ? '35vw' : ''
+      ">
+        <div *ngIf="checkIsArray(row[tdc]) === false" class="{{
+          tdc.toUpperCase() === 'ANGGOTA' || tdc.toUpperCase() === 'PELAKU' || tdc.toUpperCase() === 'KORBAN' || tdc.toUpperCase() === 'FANSUB' ||
+          tdc.toUpperCase() === 'TANGGAL' || tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'
+        ? 'fixed-single' : '' }}">
+          <h3 [style.color]="
+            (tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS' || tdc.toUpperCase() === 'STATUS' || tdc.toUpperCase() === 'KORBAN' || tdc.toUpperCase() === 'FANSUB') ? (GS.isDarkMode ? '#ffc107' : '#0d6efd') :
+              (tdc.toUpperCase() === 'TANGGAL' || tdc.toUpperCase() === 'PELAKU' || tdc.toUpperCase() === 'JUDUL' || tdc.toUpperCase() === 'ANGGOTA') ? '#28a745' :
+                (tdc.toUpperCase() === 'JENIS' || tdc.toUpperCase() === 'PROYEK') ? '#7289da' : (GS.isDarkMode ? '#acacac' : '#000000')
+          " class="m-0 {{
+            GS.isDesktop && (
+              tdc.toUpperCase() === 'NAMA BERKAS' || tdc.toUpperCase() === 'PENGIRIM' || tdc.toUpperCase() === 'PENERIMA' || tdc.toUpperCase() ===  'NAMA LENGKAP' ||
+              tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
+              tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() ===  'EMAIL' ||
+              tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN'
+            ) ? 'text-truncate' : ''
+          }}">
+            <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'" />
+            <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'KORBAN'" />
+            <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'PELAKU'" />
+            <img matListAvatar [src]="row.foto_fansub" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'FANSUB'" />
+            <img matListAvatar [src]="row.foto_anggota" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'ANGGOTA'" />
+            <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'LOGO'" />
+            <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'IMAGE'" />
+            <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'POSTER'" />
+            <span *ngIf="tdc.toUpperCase() === 'TANGGAL'" matTooltip="{{ row[tdc] | date:'d MMMM y, hh:mm:ss a z' }}">{{ row[tdc] | dateAgo }}</span>
+            <span *ngIf="tdc.toUpperCase() === 'DEADLINE'">{{ row[tdc] | date:'d/M/yy, HH:mm:ss' }}</span>
+            <span *ngIf="tdc.toUpperCase() === 'ANIME'">{{ row[tdc] || 0 }} Anime</span>
+            <span *ngIf="tdc.toUpperCase() === 'DORAMA'">{{ row[tdc] || 0 }} Dorama</span>
+            <span *ngIf="tdc.toUpperCase() === 'KUNJUNGAN'">{{ row[tdc] }}x Dilihat</span>
+            <span *ngIf="
+              tdc.toUpperCase() !== 'POSTER' && tdc.toUpperCase() !== 'LOGO' && tdc.toUpperCase() !== 'IMAGE' &&
+              tdc.toUpperCase() !== 'TANGGAL' && tdc.toUpperCase() !== 'DEADLINE' && tdc.toUpperCase() !== 'ANIME' &&
+              tdc.toUpperCase() !== 'DORAMA' && tdc.toUpperCase() !== 'KUNJUNGAN'
+            " [style.overflow-wrap]="(
+              tdc.toUpperCase() === 'NAMA BERKAS' || tdc.toUpperCase() === 'JUDUL ANIME' || tdc.toUpperCase() === 'JUDUL DORAMA' || tdc.toUpperCase() === 'NAMA FANSUB' ||
+              tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
+              tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() === 'PENERIMA' ||
+              tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN'|| tdc.toUpperCase() ===  'NAMA LENGKAP' ||
+              tdc.toUpperCase() ===  'EMAIL'
+            ) ? 'anywhere' : ''" [matTooltip]="(
+              tdc.toUpperCase() === 'NAMA BERKAS' || tdc.toUpperCase() === 'PENGIRIM' || tdc.toUpperCase() === 'PENERIMA' || tdc.toUpperCase() ===  'NAMA LENGKAP' ||
+              tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
+              tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() ===  'EMAIL' ||
+              tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN'
+            ) ? row[tdc] : ''">
+              {{ row[tdc] }}
+            </span>
           </h3>
-          <h3 class="m-0">{{ input.value ? '"' + input.value + '"' : ''  }}</h3>
         </div>
-      </div>
-    </td>
-  </tr>
-</table>
+        <div *ngIf="checkIsArray(row[tdc]) === true && row[tdc].length > 0 && row[tdc][0].type === 'chip'" class="p-1">
+          <app-material-chip (chipClicked)="onChipClicked($event)" [chipData]="row[tdc]"></app-material-chip>
+        </div>
+        <div *ngIf="checkIsArray(row[tdc]) === true && row[tdc].length > 0 && row[tdc][0].type === 'button'">
+          <button mat-icon-button *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}" (click)="$event.stopPropagation(); onButtonClicked(rt)">
+            <mat-icon *ngIf="rt.icon">{{ rt.icon }}</mat-icon>
+            <img src="{{ rt.image }}" width="24px" *ngIf="rt.image" />
+          </button>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>
+    <tr mat-row matRipple [matRippleDisabled]="GS.isDesktop" class="{{ row.trusted ? 'gradient-border' + (GS.isDesktop ? '' : ' rgb-border') : '' }}"
+      *matRowDef="let row; columns: tableDataColumn;" (click)="onRowClicked(row)"></tr>
+    <tr class="mat-row" *matNoDataRow matRipple [matRippleDisabled]="GS.isDesktop">
+      <td class="mat-cell text-center align-items-center p-0" [attr.colspan]="tableDataColumn.length"
+        style="background-image: url('/assets/img/404/no-data.png'); background-size: contain; background-position: center; background-repeat: no-repeat; height: 256px;">
+        <div class="row align-items-center h-100">
+          <div class="col-8 mx-auto text-light text-center rounded py-3" style="background-color: rgba(128, 128, 128, 0.875);">
+            <h3 class="m-0">
+              Tidak Ada Data <br *ngIf="!GS.isDesktop" /> ¯\_(ツ)_/¯
+            </h3>
+            <h3 class="m-0">{{ input.value ? '"' + input.value + '"' : ''  }}</h3>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
 <mat-paginator class="bg-transparent" [color]="'accent'" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="onPaginatorClicked($event)" [length]="count"></mat-paginator>

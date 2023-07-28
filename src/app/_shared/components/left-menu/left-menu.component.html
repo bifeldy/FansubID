@@ -11,12 +11,16 @@
       <a mat-list-item routerLink="/user" routerLinkActive="side-menu-link-active" (click)="forceCloseSideNav()" class="{{ TRUSTED ? 'gradient-border' : '' }}">
         <img class="jim" src="{{ AS.currentUserSubject?.value?.image_url }}" />
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.2em; padding-right: 0.2em;" class="text-truncate">
-          {{ AS.currentUserSubject?.value?.kartu_tanda_penduduk_.nama }} <br /> {{ AS.currentUserSubject?.value?._email }}
+          {{ AS.currentUserSubject?.value?.kartu_tanda_penduduk_.nama }}
+          <br />
+          {{ AS.currentUserSubject?.value?._email }}
         </span>
       </a>
       <a mat-list-item (click)="logout()">
         <mat-icon style="padding-left: 0.2em;">power_settings_new</mat-icon>
-        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">Keluar</span>
+        <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">
+          Keluar {{ AS.logoutTimerText }}
+        </span>
       </a>
     </ng-template>
     <ng-template #belumLogin>
