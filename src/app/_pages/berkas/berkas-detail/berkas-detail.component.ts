@@ -97,6 +97,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
               this.berkasData.image_url,
               this.berkasData.user_.username
             );
+            this.pi.updatePageHeader(this.berkasData.project_type_.name);
             this.bs.idle();
             if (this.gs.isBrowser) {
               this.fs.initializeFab('edit', null, 'Ubah Data Berkas', `/berkas/${this.berkasId}/edit`, false);

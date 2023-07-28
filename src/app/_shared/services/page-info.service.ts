@@ -19,6 +19,8 @@ export class PageInfoService {
   image = '';
   author = '';
 
+  header = '';
+
   constructor(
     private t: Title,
     private m: Meta,
@@ -30,7 +32,10 @@ export class PageInfoService {
     }
   }
 
-  get getTitle(): string {
+  get getHeaderTitle(): string {
+    if (this.header !== this.title) {
+      return this.header;
+    }
     return this.title;
   }
 
@@ -44,6 +49,7 @@ export class PageInfoService {
 
   updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = `${environment.baseUrl}/assets/img/favicon.png`, newAuthor = '「💤 Fansub ✨ ID 🌞」'): void {
     this.title = newTitle;
+    this.updatePageHeader();
     this.description = this.gs.htmlToText(newDescription);
     this.keywords = newKeywords;
     this.image = newImage.startsWith('/') ? environment.baseUrl + newImage : newImage;
@@ -71,6 +77,10 @@ export class PageInfoService {
     } else {
       this.m.updateTag({ name: 'theme-color', content: '#3f51b5' });
     }
+  }
+
+  updatePageHeader(newHeader: string = null) {
+    this.header = newHeader || this.title;
   }
 
 }

@@ -6,16 +6,16 @@
         'linear-gradient(to bottom, ' + (GS.isDarkMode ? '#673ab7' : '#3f51b5') + ' 0%, #ee0dfd 100%)'">
       <ul class="bg-bubbles align-items-center p-0">
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-        <div class="row align-items-center h-100">
-          <div class="col-12 mx-auto">
-            <div class="container text-light">
-              <h2 class="mb-0" style="line-height: normal;">
-                {{ berkasData.project_type_.name }}
-              </h2>
-              <p class="mb-3">{{ berkasData.view_count }}x Dilihat :: {{ berkasData.like_count }} Orang Suka</p>
-              <p class="mb-0">{{ berkasData.created_at | date:'d MMMM y, hh:mm:ss a z' }}</p>
-            </div>
-          </div>
+        <div class="container align-items-center h-100 p-3" style="overflow-y: auto;">
+          <h2 _ngcontent-serverapp-c311="" class="mb-0" style="line-height: normal;">
+            {{ berkasData.name }}
+          </h2>
+          <p class="mt-3 mb-0">
+            {{ berkasData.view_count }}x Dilihat :: {{ berkasData.like_count }} Orang Suka
+          </p>
+          <p class="mb-0">
+            {{ berkasData.created_at | date:'d MMMM y, hh:mm:ss a z' }}
+          </p>
         </div>
       </ul>
     </div>
@@ -155,8 +155,10 @@
                 <div class="py-2 px-3">
                   Dapat digunakan sebagai referensi untuk pratinjau namun kemungkinan jenis huruf tulisan gagal dimuat sehingga nantinya akan muncul huruf dengan gambar 🔳 misalnya kanji.
                   Lalu juga memungkinkan terjadinya gerakan patah - patah jika browser tidak kuat untuk render .ASS subtitle dengan efek yang terlalu banyak.
-                  Player ini tidak dapat memutar video dengan kualitas warna diatas 8 bit (butuh <i>decoder</i> tambahan dan sayangnya tidak support <i>web browser</i>).
-                  Takarir / <i>subtitle</i> yang dapat ditampilkan jenis .ASS saja, itupun jika tersedia di dalam video internalnya.
+                  <span class="text-success">
+                    Player ini tidak dapat memutar video dengan kualitas warna diatas 8 bit (butuh <i>decoder</i> tambahan dan sayangnya tidak support <i>web browser</i>).
+                    Takarir / <i>subtitle</i> yang dapat ditampilkan jenis .ASS saja, itupun jika tersedia di dalam video internalnya.
+                  </span>
                   <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1422891" class="text-warning text-decoration-none">
                     * Browser Firefox sudah pasti tidak bisa memutar video
                   </a>
@@ -168,8 +170,8 @@
                       <mat-option [value]="s.url" *ngFor="let s of subtitles">{{ s.name }}</mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <mat-progress-bar color="accent" mode="buffer" class="mb-3" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
-                  <button class="w-100" mat-stroked-button color="accent" (click)="watchDdl()" *ngIf="isHaveDDL && !vjsReady" [disabled]="vjsInit">
+                  <mat-progress-bar color="warn" mode="buffer" class="mb-3" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
+                  <button class="w-100" mat-stroked-button color="warn" (click)="watchDdl()" *ngIf="isHaveDDL && !vjsReady" [disabled]="vjsInit">
                     <mat-icon class="me-1">play_arrow</mat-icon>
                     <span *ngIf="!vjsInit">Mulai Streaming Video</span>
                     <span *ngIf="vjsInit">
