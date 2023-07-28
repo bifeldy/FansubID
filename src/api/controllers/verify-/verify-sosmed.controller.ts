@@ -235,7 +235,8 @@ export class VerifySosmedController {
           },
           false,
           CONSTANTS.timeJwtEncryption
-        )
+        ),
+        SosMedModel.GOOGLE
       );
       return {
         info: `😅 201 - Google API :: Masuk & Verify 🤣`,
@@ -274,9 +275,10 @@ export class VerifySosmedController {
           }
         };
       } else if ('app' in req.body && 'code' in req.body) {
-        if (req.body.app === SosMedModel.DISCORD) {
+        const sosmed = SosMedModel[req.body.app.toUpperCase()];
+        if (sosmed === SosMedModel.DISCORD) {
           return this.discordApp(req, user);
-        } else if (req.body.app === SosMedModel.GOOGLE) {
+        } else if (sosmed === SosMedModel.GOOGLE) {
           return this.googleApp(req, user);
         }
         // TODO :: Other Social Media Platform
@@ -297,10 +299,11 @@ export class VerifySosmedController {
   @HttpCode(301)
   @Redirect()
   @FilterApiKeyAccess()
-  async verifyAccount(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async verifySosmedAccount(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const token = req.query['token'] || '';
-    if (token) {
-      const userVerified = await this.as.verifySosmedAccount(token as string, SosMedModel.GOOGLE);
+    const sosmed = SosMedModel[((req.query['app'] as string) || '').toUpperCase()];
+    if (token && sosmed) {
+      const userVerified = await this.as.verifySosmedAccount(token as string, sosmed);
       if (userVerified) {
         res.cookie(environment.tokenName, userVerified.session_token, {
           httpOnly: true,
@@ -331,7 +334,7 @@ export class VerifySosmedController {
       }
     }
     return {
-      url: '/verify',
+      url: `${environment.baseUrl}/verify?ngsw-bypass=true`,
       statusCode: 301
     };
   }

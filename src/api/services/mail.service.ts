@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { RegistrationModel, UserModel } from '../../models/req-res.model';
+import { RegistrationModel, SosMedModel, UserModel } from '../../models/req-res.model';
 
 import { GlobalService } from './global.service';
 
@@ -101,7 +101,7 @@ export class MailService {
     return await this.mailTrapSend(content);
   }
 
-  async sendVerifikasiMail(user: any, token: string): Promise<any> {
+  async sendVerifikasiMail(user: any, token: string, app: SosMedModel): Promise<any> {
     const content: Mail = {
       from: {
         name: environment.mailTrap.fullName,
@@ -128,8 +128,8 @@ export class MailService {
           Untuk verifikasi akun, silahkan klik link berikut ini.
         </p>
         <p>
-          <a href="${environment.baseUrl}/api/verify-sosmed?token=${token}">
-            ${environment.baseUrl}/api/verify-sosmed?token=${token}
+          <a href="${environment.baseUrl}/api/verify-sosmed?app=${app.toLowerCase()}&token=${token}">
+            ${environment.baseUrl}/api/verify-sosmed?app=${app.toLowerCase()}&token=${token}
           </a>
         </p>
         <p>Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.</p>

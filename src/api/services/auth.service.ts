@@ -129,7 +129,10 @@ export class AuthService {
       });
       const user = await this.userRepo.findOneOrFail({
         where: [
-          { id: Equal(sosmed.user_.id) }
+          {
+            id: Equal(sosmed.user_.id),
+            verified: false
+          }
         ],
         relations: ['kartu_tanda_penduduk_', 'profile_']
       });

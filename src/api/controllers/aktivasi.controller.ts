@@ -65,7 +65,7 @@ export class AktivasiController {
       }
     }
     return {
-      url: userActivated ? '/login' : '/register',
+      url: `${environment.baseUrl}/${(userActivated ? 'login' : 'register')}?ngsw-bypass=true`,
       statusCode: 301
     };
   }

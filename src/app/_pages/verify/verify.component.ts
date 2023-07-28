@@ -1,13 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { environment } from '../../../environments/app/environment';
+
+import { SosMedModel } from '../../../models/req-res.model';
+
 import { AuthService } from '../../_shared/services/auth.service';
 import { GlobalService } from '../../_shared/services/global.service';
 import { UserService } from '../../_shared/services/user.service';
 import { BusyService } from '../../_shared/services/busy.service';
 import { DialogService } from '../../_shared/services/dialog.service';
 
-import { environment } from '../../../environments/app/environment';
 
 @Component({
   selector: 'app-verify',
@@ -57,15 +60,16 @@ export class VerifyComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(this.returnUrl);
       }
       if (app && code) {
-        this.sosmedVerify(app, code);
+        const sosmed = SosMedModel[app.toUpperCase()];
+        this.sosmedVerify(sosmed, code);
       }
     }
   }
 
-  sosmedVerify(sosmedApp: string, oAuthCode: string): void {
+  sosmedVerify(sosmedApp: SosMedModel, oAuthCode: string): void {
     this.bs.busy();
     this.subsSosmed = this.us.sosmedLogin({
-      app: sosmedApp.toUpperCase(),
+      app: sosmedApp,
       code: oAuthCode
     }).subscribe({
       next: res => {
