@@ -258,17 +258,17 @@ export class BerkasController {
             ],
             relations: ['user_']
           });
-          const attachment = this.attachmentRepo.new();
-          attachment.name = tempAttachment.name;
-          attachment.size = tempAttachment.size;
-          attachment.ext = tempAttachment.ext;
-          attachment.mime = tempAttachment.mime;
-          attachment.user_ = user;
-          const resAttachmentSave = await this.attachmentRepo.save(attachment);
           await this.tempAttachmentRepo.remove(tempAttachment);
           const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-          const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
+          const fIdx = files.findIndex(f => f.name === tempAttachment.name || f.name === `${tempAttachment.name}.${tempAttachment.ext}`);
           if (fIdx >= 0) {
+            const attachment = this.attachmentRepo.new();
+            attachment.name = tempAttachment.name;
+            attachment.size = tempAttachment.size;
+            attachment.ext = tempAttachment.ext;
+            attachment.mime = tempAttachment.mime;
+            attachment.user_ = user;
+            const resAttachmentSave = await this.attachmentRepo.save(attachment);
             berkas.attachment_ = resAttachmentSave;
             let videoExtractCompleted = false;
             let videoUploadCompleted = false;
@@ -441,7 +441,6 @@ export class BerkasController {
               await this.attachmentRepo.save(resAttachmentSave);
             }
           } else {
-            await this.attachmentRepo.remove(resAttachmentSave);
             throw new HttpException({
               info: `🙄 404 - Berkas API :: Gagal Mencari Lampiran 😪`,
               result: {
