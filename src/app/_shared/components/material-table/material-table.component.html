@@ -7,7 +7,7 @@
 </mat-form-field>
 
 <!-- Table -->
-<div class="p-1" style="overflow-x: auto;">
+<div class="px-3" style="overflow-x: auto;">
   <table mat-table matSort [dataSource]="dataSource" class="bg-transparent">
     <ng-container matColumnDef="{{ tdc }}" *ngFor="let tdc of tableDataColumn">
       <th mat-header-cell *matHeaderCellDef class="px-3" mat-sort-header [disabled]="
