@@ -491,13 +491,13 @@ export class BerkasController {
               })
               .setDescription(this.gs.htmlToText(resFileSave.description))
               .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
-              .addField('Fansub', fansubEmbedData.join(', '), false)
               .addFields(
                 { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
                 { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
               )
+              .addField('Fansub', fansubEmbedData.join(', '), false)
               .addFields(
-                { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true },
+                { name: 'Terbatas', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true },
                 { name: 'R-18+', value: (resFileSave.r18 ? 'Ya' : 'Tidak'), inline: true }
               )
               .setImage(resFileSave.image_url.startsWith('/') ? environment.baseUrl + resFileSave.image_url : resFileSave.image_url)
@@ -778,13 +778,13 @@ export class BerkasController {
                 })
                 .setDescription(this.gs.htmlToText(resFileSave.description))
                 .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
-                .addField('Fansub', fansubEmbedData.join(', '), false)
                 .addFields(
                   { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
                   { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
                 )
+                .addField('Fansub', fansubEmbedData.join(', '), false)
                 .addFields(
-                  { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true },
+                  { name: 'Terbatas', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true },
                   { name: 'R-18+', value: (resFileSave.r18 ? 'Ya' : 'Tidak'), inline: true }
                 )
                 .setImage(resFileSave.image_url.startsWith('/') ? environment.baseUrl + resFileSave.image_url : resFileSave.image_url)
