@@ -494,8 +494,11 @@ export class BerkasController {
               .addField('Fansub', fansubEmbedData.join(', '), false)
               .addFields(
                 { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
-                { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
-                { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
+                { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
+              )
+              .addFields(
+                { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true },
+                { name: 'R-18+', value: (resFileSave.r18 ? 'Ya' : 'Tidak'), inline: true }
               )
               .setImage(resFileSave.image_url.startsWith('/') ? environment.baseUrl + resFileSave.image_url : resFileSave.image_url)
               .setTimestamp(resFileSave.updated_at)
@@ -637,7 +640,7 @@ export class BerkasController {
     try {
       if (
         'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body ||
-        'anime_id' in req.body || 'dorama_id' in req.body || 'projectType_id' in req.body ||
+        'anime_id' in req.body || 'dorama_id' in req.body || 'projectType_id' in req.body || 'r18' in req.body ||
         ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) ||
         ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
       ) {
@@ -778,8 +781,11 @@ export class BerkasController {
                 .addField('Fansub', fansubEmbedData.join(', '), false)
                 .addFields(
                   { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
-                  { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true },
-                  { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true }
+                  { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
+                )
+                .addFields(
+                  { name: 'Tersembunyi', value: (resFileSave.private ? 'Ya' : 'Tidak'), inline: true },
+                  { name: 'R-18+', value: (resFileSave.r18 ? 'Ya' : 'Tidak'), inline: true }
                 )
                 .setImage(resFileSave.image_url.startsWith('/') ? environment.baseUrl + resFileSave.image_url : resFileSave.image_url)
                 .setTimestamp(resFileSave.updated_at)

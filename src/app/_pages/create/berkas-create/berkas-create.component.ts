@@ -526,6 +526,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
       name: this.fg.value.name,
       description: this.fg.value.description,
       private: this.fg.value.private,
+      r18: this.fg.value.r18,
       permanent_storage: this.fg.value.permanent_storage,
       projectType_id: this.fg.value.projectType_id,
       anime_id: this.fg.value.anime_id,
