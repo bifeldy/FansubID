@@ -9,17 +9,17 @@
   </div>
   <div class="col-12">
     <div class="row p-0">
-      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="SHOWALLSTATSVERIFIEDONLY && doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0">
+      <div class="col-12 col-lg-6 py-1 bg-bifeldy" *ngIf="SHOWALLSTATSVERIFIEDONLY && doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0">
         <canvas baseChart [data]="doughnutChartKetertarikanData" [labels]="doughnutChartKetertarikanLabels" [chartType]="doughnutChartType"
           [options]="doughnutChartKetertarikanOptions" [plugins]="chartPlugins" [legend]="true">
         </canvas>
       </div>
-      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="SHOWALLSTATSVERIFIEDONLY && barChartUniqueData.length > 0 && barChartUniqueLabels.length > 0">
+      <div class="col-12 col-lg-6 py-1 bg-bifeldy" *ngIf="SHOWALLSTATSVERIFIEDONLY && barChartUniqueData.length > 0 && barChartUniqueLabels.length > 0">
         <canvas baseChart [data]="barChartUniqueData" [labels]="barChartUniqueLabels" [chartType]="barChartType"
           [options]="barChartUniqueOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>
       </div>
-      <div class="col-12 col-md-6 py-1 bg-bifeldy" *ngIf="lineChartVisitorData.length > 0 && lineChartVisitorLabels.length > 0">
+      <div class="col-12 col-lg-6 py-1 bg-bifeldy" *ngIf="lineChartVisitorData.length > 0 && lineChartVisitorLabels.length > 0">
         <canvas baseChart [data]="lineChartVisitorData" [labels]="lineChartVisitorLabels" [chartType]="lineChartType"
           [options]="lineChartVisitorOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>
@@ -34,19 +34,29 @@
             </button>
             <button mat-flat-button color="accent" class="mx-1 shiny" (click)="likeOrDislike(LIKE)" *ngIf="AS.currentUserSubject?.value && myReport?.type === LIKE">
               <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
-              Suka ({{ summary.like }})
+              <span class="d-lg-none d-xl-inline">
+                Suka
+              </span>
+              ({{ summary.like }})
             </button>
             <button mat-stroked-button color="accent" class="mx-1 shiny" (click)="likeOrDislike(LIKE)" *ngIf="AS.currentUserSubject?.value && myReport?.type !== LIKE">
               <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
-              Suka ({{ summary.like }})
+              <span class="d-lg-none d-xl-inline">
+                Suka
+              </span>
+              ({{ summary.like }})
             </button>
             <button mat-stroked-button color="accent" class="mx-1" (click)="likeOrDislike(DISLIKE)" *ngIf="AS.currentUserSubject?.value && myReport?.type !== DISLIKE">
               <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
-              Tidak Suka
+              <span class="d-lg-none d-xl-inline">
+                Tidak Suka
+              </span>
             </button>
             <button mat-flat-button color="accent" class="mx-1" (click)="likeOrDislike(DISLIKE)" *ngIf="AS.currentUserSubject?.value && myReport?.type === DISLIKE">
               <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
-              Tidak Suka
+              <span class="d-lg-none d-xl-inline">
+                Tidak Suka
+              </span>
             </button>
           </div>
         </div>

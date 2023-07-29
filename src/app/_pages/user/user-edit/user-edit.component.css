@@ -25,7 +25,7 @@
   z-index: 1;
 }
 
-@media (min-width: 768px) {
+@media only screen and (min-width: 769px) {
   .profile-height-large {
     height: 100px;
   }

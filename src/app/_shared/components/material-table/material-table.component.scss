@@ -26,7 +26,7 @@ td.mat-column-star {
     color: #7289da;
     text-decoration: none;
     &:hover {
-    text-decoration: underline;
+      text-decoration: underline;
     }
   }
 }
@@ -40,7 +40,7 @@ td.mat-column-star {
   color: #7289da;
 }
 
-@media screen and (min-width: 992px) {
+@media only screen and (min-width: 993px) {
   .fixed-single {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -49,7 +49,7 @@ td.mat-column-star {
   }
 }
 
-@media screen and (max-width: 992px) {
+@media only screen and (max-width: 992px) {
   .mat-elevation-z8 {
     background: transparent;
     box-shadow: none;

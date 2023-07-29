@@ -96,7 +96,7 @@ $dark-theme: mat.define-dark-theme((
   }
 }
 
-@media screen and (max-width: 992px) {
+@media only screen and (max-width: 992px) {
   .bifeldy-dark-theme .mat-table {
     .mat-row {
       background-color: rgba(66, 66, 66, 0.875) !important;
