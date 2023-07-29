@@ -148,14 +148,16 @@ export class GlobalService {
     }
     if (this.isBrowser) {
       const browserWindow = event?.target?.window || window;
-      this.isDesktop = true;
       this.leftMenuImage = '/assets/img/background/left-menu.png';
       this.rightMenuImage = '/assets/img/background/right-panel.png';
       if (browserWindow.innerWidth >= 1200) {
+        this.isDesktop = true;
         this.gridListBreakpoint = 4;
       } else if (browserWindow.innerWidth >= 992) {
+        this.isDesktop = true;
         this.gridListBreakpoint = 3;
       } else if (browserWindow.innerWidth >= 767) {
+        this.isDesktop = false;
         this.gridListBreakpoint = 2;
       } else {
         this.isDesktop = false;

@@ -200,11 +200,10 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.lineChartVisitorLabels = [];
       for (const v of response.visitor) {
         this.lineChartVisitorData.push(v.visitor_count || 0);
-        this.lineChartVisitorLabels.push(
-          new Date(
-            new Date(v.visitor_date).getTime() - (new Date(v.visitor_date).getTimezoneOffset() * 60 * 1000)
-          ).toISOString().split('T')[0]
+        const date = new Date(
+          new Date(v.visitor_date).getTime() - (new Date(v.visitor_date).getTimezoneOffset() * 60 * 1000)
         );
+        this.lineChartVisitorLabels.push(`${date.getMonth()}-${date.getDate()}`);
       }
     });
     this.getReport();

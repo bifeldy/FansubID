@@ -52,14 +52,7 @@ export class AuthService {
           const expires = new Date(this.cs.jwtView(this.token).exp * 1000);
           const minBefore = 5 * 60 * 1000;
           const notifTime = expires.getTime() - minBefore;
-          if (this.timeoutNotif) {
-            clearTimeout(this.timeoutNotif);
-            this.timeoutNotif = null;
-          }
-          if (this.timeoutToast) {
-            this.toast.remove(this.timeoutToast.toastId);
-            this.timeoutToast = null;
-          }
+          this.cleanUpTimeoutInterval();
           this.timeoutNotif = setTimeout(() => {
             this.timeoutToast = this.toast.warning(
               `Sesi Akun Akan Habis!`,
@@ -74,11 +67,6 @@ export class AuthService {
               true
             );
           }, notifTime - Date.now());
-          if (this.intervalLogout) {
-            clearInterval(this.intervalLogout);
-            this.intervalLogout = null;
-            this.logoutTimerText = '';
-          }
           this.intervalLogout = setInterval(() => {
             const distance = expires.getTime() - new Date().getTime();
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -119,19 +107,7 @@ export class AuthService {
   removeUser(): void {
     this.currentUserSubject?.next(null);
     this.token = null;
-    if (this.timeoutNotif) {
-      clearTimeout(this.timeoutNotif);
-      this.timeoutNotif = null;
-    }
-    if (this.timeoutToast) {
-      this.toast.remove(this.timeoutToast.toastId);
-      this.timeoutToast = null;
-    }
-    if (this.intervalLogout) {
-      clearInterval(this.intervalLogout);
-      this.intervalLogout = null;
-      this.logoutTimerText = '';
-    }
+    this.cleanUpTimeoutInterval();
   }
 
   logout(url = '/', extras = null): void {
@@ -147,9 +123,26 @@ export class AuthService {
       },
       error: err => {
         this.gs.log('[LOGOUT_ERROR]', err, 'error');
+        this.cleanUpTimeoutInterval();
         this.bs.idle();
       }
     });
+  }
+
+  cleanUpTimeoutInterval(): void {
+    if (this.timeoutNotif) {
+      clearTimeout(this.timeoutNotif);
+      this.timeoutNotif = null;
+    }
+    if (this.timeoutToast) {
+      this.toast.remove(this.timeoutToast.toastId);
+      this.timeoutToast = null;
+    }
+    if (this.intervalLogout) {
+      clearInterval(this.intervalLogout);
+      this.intervalLogout = null;
+      this.logoutTimerText = '';
+    }
   }
 
 }
