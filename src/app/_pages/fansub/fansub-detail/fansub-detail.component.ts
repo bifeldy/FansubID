@@ -16,6 +16,7 @@ import { WinboxService } from '../../../_shared/services/winbox.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { ToastService } from '../../../_shared/services/toast.service';
+import { BerkasService } from '../../../_shared/services/berkas.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -44,6 +45,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   animeFansub = [];
   doramaFansub = [];
   berkasFansub = [];
+
+  allBerkasFansubId = [];
 
   animePageFinished = false;
   doramaPageFinished = false;
@@ -92,6 +95,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   subsFansubMemberLeave = null;
   subsDialog = null;
   subsClaimSubDomain = null;
+  subsTrusted = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -105,7 +109,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     private fansub: FansubService,
     private ss: StatsServerService,
     private toast: ToastService,
-    private wb: WinboxService
+    private wb: WinboxService,
+    private berkas: BerkasService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -134,6 +139,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.subsFansubMemberLeave?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsClaimSubDomain?.unsubscribe();
+    this.subsTrusted?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -226,10 +232,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.count = res.count;
         this.berkasFansub = [];
         for (const r of res.results[this.fansubData.id]) {
+          this.allBerkasFansubId.push(r.id);
           this.berkasFansub.push({
             id: r.id,
             private: r.private,
-            trusted: r.user_.role ===  RoleModel.ADMIN || r.user_.role ===  RoleModel.MODERATOR || r.user_.role ===  RoleModel.FANSUBBER,
             foto: r.user_.image_url,
             Pemilik: r.user_.username,
             Proyek: r.project_type_.name,
@@ -239,10 +245,30 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           });
         }
         this.tabData[2].data.row = this.berkasFansub;
+        if (this.allBerkasFansubId.length > 0) {
+          this.checkTrusted();
+        }
         this.bs.idle();
       },
       error: err => {
         this.gs.log('[BERKAS_FANSUB_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  checkTrusted():void {
+    this.bs.busy();
+    this.subsTrusted = this.berkas.checkTrusted(this.allBerkasFansubId).subscribe({
+      next: res => {
+        this.gs.log('[ANIME_BERKAS_TRUSTED_SUCCESS]', res);
+        for (const b of this.berkasFansub) {
+          b.trusted = res.results[b.id];
+        }
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[ANIME_BERKAS_TRUSTED_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
