@@ -1,0 +1,6 @@
+[submodule "src/email_worker_parser"]
+	path = src/email_worker_parser
+	url = https://github.com/bifeldy/email_worker_parser.git
+[submodule "src/crawler_worker"]
+	path = src/crawler_worker
+	url = https://github.com/bifeldy/crawler_worker.git
