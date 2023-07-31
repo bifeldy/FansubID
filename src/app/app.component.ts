@@ -270,8 +270,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   onWindowLeftClick(ev): boolean {
     this.gs.log('[MOUSE_LEFT_CLICK]', ev);
     const e = ev || window.event;
-    const el = e.target || e.srcElement;
-    if (el.tagName === 'A' || el.tagName === 'a') {
+    let el = e.target || e.srcElement;
+    let maxLoop = 5;
+    let linkTag = ['A', 'a'];
+    while(![...linkTag].includes(el.tagName) && maxLoop > 0) {
+      el = el.parentElement || el.parentNode;
+      maxLoop--;
+    }
+    if (linkTag.includes(el.tagName)) {
       const externalUri: string = el.getAttribute('href');
       if (externalUri) {
         if (
