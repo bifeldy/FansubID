@@ -1,0 +1,3 @@
+[submodule "src/crawler_worker"]
+	path = src/crawler_worker
+	url = https://github.com/bifeldy/crawler_worker.git
