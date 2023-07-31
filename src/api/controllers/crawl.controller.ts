@@ -27,7 +27,7 @@ export class CrawlController {
   ];
 
   requestHeadersToRemove = [
-    'host', 'user-agent', 'accept', 'accept-encoding', 'content-length',
+    'host', 'user-agent', 'accept', 'accept-encoding', 'content-length', 'x-real-ip', 'cf-connecting-ip',
     'forwarded', 'x-forwarded-proto', 'x-forwarded-for', 'x-cloud-trace-context'
   ];
 
