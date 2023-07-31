@@ -10,6 +10,8 @@ import { Controller, Get, HttpCode, HttpStatus, Req, Res } from '@nestjs/common'
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+import { environment } from '../../environments/api/environment';
+
 import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 
 import { GlobalService } from '../services/global.service';
@@ -67,13 +69,18 @@ export class CrawlController {
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
           url = 'http://' + url;
         }
+        if (url.startsWith('http://')) {
+          url = 'https://' + url.slice(7, url.length);
+        }
+        const uri = new URL(`https://crawl.${environment.domain}`);
+        uri.searchParams.append('url', url);
         page = await this.browser.newPage();
         const requestHeaders = { ...req.headers };
         for (const header of [...this.requestHeadersToRemove, ...this.prohibitedHeaders]) {
           delete requestHeaders[header];
         }
         await page.setExtraHTTPHeaders(requestHeaders as any);
-        let response = await page.goto(url, {
+        let response = await page.goto(uri.toString(), {
           timeout: 30000,
           waitUntil: 'domcontentloaded'
         });
@@ -115,7 +122,7 @@ export class CrawlController {
         await page.close();
       }
       const body = {
-        info: '🙄 400 - Crawl API :: URL Tidak Valid 😪',
+        info: '🙄 400 - Crawl API :: UR[I/L] Tidak Valid 😪',
         result: {
           message: 'Data Tidak Lengkap!'
         }
