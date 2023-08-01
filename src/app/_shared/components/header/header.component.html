@@ -1,7 +1,7 @@
 <!-- Top Toolbar -->
 <mat-toolbar color="primary" style="height: 56px; padding: 0 12px;">
 
-  <button mat-icon-button (click)="toggleSideNav()" matTooltip="Menu" class="shiny">
+  <button type="button" mat-icon-button (click)="toggleSideNav()" matTooltip="Menu" class="shiny">
     <mat-icon>menu</mat-icon>
   </button>
   <span matLine class="text-truncate" style="margin-left: 1rem; margin-right: 1rem;">
@@ -11,34 +11,34 @@
 
   <span class="spacer"></span>
 
-  <button mat-stroked-button matTooltip="Points" *ngIf="ROUTER.url.includes('/nihongo') && GS.isDesktop">
+  <button type="button" mat-stroked-button matTooltip="Points" *ngIf="ROUTER.url.includes('/nihongo') && GS.isDesktop">
     <mat-icon class="me-1">sports_score</mat-icon>
     {{ myPoints }}
   </button>
 
-  <button class="animate__animated animate__tada animate__infinite animate__slower" mat-icon-button (click)="toggleWeather()" matTooltip="Weather Effect" *ngIf="GS.weatherEffect">
+  <button type="button" class="animate__animated animate__tada animate__infinite animate__slower" mat-icon-button (click)="toggleWeather()" matTooltip="Weather Effect" *ngIf="GS.weatherEffect">
     <mat-icon>filter_vintage</mat-icon>
   </button>
 
-  <button class="animate__animated animate__flash animate__infinite animate__slower" mat-icon-button (click)="toggleDarkTheme()" matTooltip="Ganti Warna">
+  <button type="button" class="animate__animated animate__flash animate__infinite animate__slower" mat-icon-button (click)="toggleDarkTheme()" matTooltip="Ganti Warna">
     <mat-icon>nights_stay</mat-icon>
   </button>
 
-  <button mat-icon-button (click)="openLiveChat()" matTooltip="Obrolan">
+  <button type="button" mat-icon-button (click)="openLiveChat()" matTooltip="Obrolan">
     <mat-icon [matBadge]="SS.messageChatUnreadCount" matBadgePosition="before" [matBadgeColor]="'warn'">
       forum
     </mat-icon>
   </button>
 
-  <button mat-icon-button (click)="openAdminNavigation()" *ngIf="ROUTER.url.includes('/admin-mod/')">
+  <button type="button" mat-icon-button (click)="openAdminNavigation()" *ngIf="ROUTER.url.includes('/admin-mod/')">
     <mat-icon>apps</mat-icon>
   </button>
 
-  <button class="animate__animated animate__heartBeat animate__infinite animate__slower" mat-icon-button (click)="openSearch()" matTooltip="Pencarian">
+  <button type="button" class="animate__animated animate__heartBeat animate__infinite animate__slower" mat-icon-button (click)="openSearch()" matTooltip="Pencarian">
     <mat-icon>search</mat-icon>
   </button>
 
-  <button mat-icon-button (click)="reloadPage()" *ngIf="!SS.mySocket?.id" matTooltip="Refresh">
+  <button type="button" mat-icon-button (click)="reloadPage()" *ngIf="!SS.mySocket?.id" matTooltip="Refresh">
     <mat-icon>replay</mat-icon>
   </button>
 

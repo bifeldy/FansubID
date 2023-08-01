@@ -22,7 +22,7 @@
               </mat-error>
             </div>
             <div class="col-12 mb-4" *ngIf="imagePhoto && !fg.value.image_photo">
-              <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitPhotoImage()">
+              <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitPhotoImage()">
                 <mat-icon class="me-1">add_photo_alternate</mat-icon>
                 Unggah
               </button>
@@ -67,7 +67,7 @@
               </small>
             </mat-error>
             <div class="col-12 p-3" *ngIf="imageCover && !fg.value.image_cover">
-              <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitCoverImage()">
+              <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitCoverImage()">
                 <mat-icon class="me-1">add_photo_alternate</mat-icon>
                 Unggah
               </button>
@@ -77,7 +77,7 @@
               <mat-label>Konfirmasi Kata Sandi</mat-label>
               <input matInput [type]="passwordHide ? 'password' : 'text'" formControlName="old_password" required
                 placeholder="Password Sekarang" autocomplete="current-password" />
-              <button mat-icon-button matSuffix (click)="togglePassword()" type="button">
+              <button type="button" mat-icon-button matSuffix (click)="togglePassword()">
                 <mat-icon>{{ passwordHide ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
               <mat-error>
@@ -90,7 +90,7 @@
               <mat-label>Ubah Kata Sandi</mat-label>
               <input matInput [type]="passwordHide ? 'password' : 'text'" formControlName="new_password"
                 placeholder="Isi Jika Ingin Ubah Password Baru" autocomplete="new-password" />
-              <button mat-icon-button matSuffix (click)="togglePassword()" type="button">
+              <button type="button" mat-icon-button matSuffix (click)="togglePassword()">
                 <mat-icon>{{ passwordHide ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
               <mat-error>
@@ -110,7 +110,7 @@
                   </a>
                 </div>
                 <div class="col-12 col-md-3">
-                  <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty">
+                  <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty">
                     Simpan
                     <mat-icon class="ms-1">save</mat-icon>
                   </button>

@@ -28,7 +28,7 @@
             <img class="anime-image" [src]="animeData.image_url" />
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="accent" (click)="openSeasonalAnime()"
+            <button type="button" mat-stroked-button class="w-100" color="accent" (click)="openSeasonalAnime()"
               matTooltip="Lihat Semua Anime Pada Musim '{{ SEASON }} {{ YEAR }}'">
               <mat-icon class="me-1">dynamic_feed</mat-icon> {{ animeData.num_episodes || '?' }} Eps &nbsp;
               <mat-icon class="me-1">star_half</mat-icon> {{ animeData.mean || '?' }} <br />
@@ -36,7 +36,7 @@
             </button>
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyAnimeList"
+            <button type="button" mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyAnimeList"
               (click)="openRank()">
               <mat-icon class="me-1">timeline</mat-icon> {{ animeData.rank || '?' }} &nbsp;
               <mat-icon class="me-1">local_fire_department</mat-icon> {{ animeData.popularity || '?' }} <br />

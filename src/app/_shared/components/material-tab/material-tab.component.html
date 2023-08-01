@@ -26,7 +26,7 @@
           </mat-grid-list>
         </mat-selection-list>
         <div class="col-12 text-center p-3" *ngIf="!gridPageFinished">
-          <button mat-button (click)="onGridLoadNextPage()">Load More ...</button>
+          <button type="button" mat-button (click)="onGridLoadNextPage()">Load More ...</button>
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@
           </mat-list-option>
         </mat-selection-list>
         <div class="col-12 text-center p-3" *ngIf="!listPageFinished">
-          <button mat-button (click)="onListLoadNextPage()">Load More ...</button>
+          <button type="button" mat-button (click)="onListLoadNextPage()">Load More ...</button>
         </div>
       </div>
     </div>

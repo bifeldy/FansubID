@@ -62,7 +62,7 @@
             [(ngModel)]="liveChatResult.messageToSend" [disabled]="!canChat" />
           <mat-icon matSuffix>send</mat-icon>
         </mat-form-field>
-        <button class="mt-4 col-12 text-light" mat-flat-button color="accent" (click)="login()" *ngIf="!AS.currentUserSubject?.value">
+        <button type="button" class="mt-4 col-12 text-light" mat-flat-button color="accent" (click)="login()" *ngIf="!AS.currentUserSubject?.value">
           <mat-icon class="me-1">vpn_key</mat-icon>
           Login Untuk Bisa Mengobrol
         </button>

@@ -55,12 +55,12 @@
           <app-no-data *ngIf="edict.length <= 0"></app-no-data>
         </div>
         <div class="col-12 text-center p-3" *ngIf="!pageFinished">
-          <button mat-button (click)="loadNextPage()">Load More ...</button>
+          <button type="button" mat-button (click)="loadNextPage()">Load More ...</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="true" class="ms-auto">Tutup</button>
+  <button type="button" mat-button [mat-dialog-close]="true" class="ms-auto">Tutup</button>
 </div>

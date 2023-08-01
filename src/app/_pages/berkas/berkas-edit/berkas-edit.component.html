@@ -34,7 +34,7 @@
                     </mat-error>
                   </div>
                   <div class="col-12 mb-4" *ngIf="image && !fg.value.image">
-                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+                    <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitImage()">
                       <mat-icon class="me-1">add_photo_alternate</mat-icon>
                       Unggah
                     </button>
@@ -111,7 +111,7 @@
                           <mat-label>Fansub Terkait</mat-label>
                           <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" />
                           <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i === 0">short_text</mat-icon>
-                          <button mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value && i > 0">
+                          <button type="button" mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value && i > 0">
                             <mat-icon>close</mat-icon>
                           </button>
                           <mat-autocomplete #autoCompleteFansub="matAutocomplete">
@@ -138,7 +138,7 @@
                     <div class="row">
                       <div class="col"></div>
                       <div class="col">
-                        <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="addFansub()">
+                        <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="addFansub()">
                           <mat-icon class="me-1">add</mat-icon>
                           Tambah Fansub
                         </button>
@@ -191,7 +191,7 @@
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="name" placeholder="Web Shit" required />
                         <mat-icon matSuffix *ngIf="dl.get('name').value || (i === 0 && !AS.currentUserSubject?.value?.verified)">web</mat-icon>
-                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && (i > 0 || AS.currentUserSubject?.value?.verified)">
+                        <button type="button" mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && (i > 0 || AS.currentUserSubject?.value?.verified)">
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
@@ -203,7 +203,7 @@
                         <mat-label>Tautan Link</mat-label>
                         <input matInput formControlName="url" placeholder="https://drive.google.com/drive/u/2/folders/1KYTJZsmH9dyyHBXnQD4N0SjSBXcs8qD-" required />
                         <mat-icon matSuffix *ngIf="dl.get('url').value || (i === 0 && !AS.currentUserSubject?.value?.verified)">link</mat-icon>
-                        <button mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && (i > 0 || AS.currentUserSubject?.value?.verified)">
+                        <button type="button" mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && (i > 0 || AS.currentUserSubject?.value?.verified)">
                           <mat-icon>close</mat-icon>
                         </button>
                         <mat-error>
@@ -219,7 +219,7 @@
                   <div class="col"></div>
                   <div class="col"></div>
                   <div class="col">
-                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="addDownloadLink()">
+                    <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="addDownloadLink()">
                       <mat-icon class="me-1">add</mat-icon>
                       Tambah URL
                     </button>
@@ -238,7 +238,7 @@
                     </a>
                   </div>
                   <div class="col-12 col-md-3">
-                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty">
+                    <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty">
                       Simpan
                       <mat-icon class="ms-1">save</mat-icon>
                     </button>

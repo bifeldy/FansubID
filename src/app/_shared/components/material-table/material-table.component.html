@@ -82,7 +82,7 @@
           <app-material-chip (chipClicked)="onChipClicked($event)" [chipData]="row[tdc]"></app-material-chip>
         </div>
         <div *ngIf="checkIsArray(row[tdc]) === true && row[tdc].length > 0 && row[tdc][0].type === 'button'">
-          <button mat-icon-button *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}" (click)="$event.stopPropagation(); onButtonClicked(rt)">
+          <button type="button" mat-icon-button *ngFor="let rt of row[tdc]" color="primary" matTooltip="{{ rt.name }}" (click)="$event.stopPropagation(); onButtonClicked(rt)">
             <mat-icon *ngIf="rt.icon">{{ rt.icon }}</mat-icon>
             <img src="{{ rt.image }}" width="24px" *ngIf="rt.image" />
           </button>

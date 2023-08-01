@@ -9,10 +9,10 @@
             <img class="fansub-image" [src]="fansubData.image_url" />
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-button class="w-100" color="warn" matTooltip="Berdiri Sejak">
+            <button type="button" mat-button class="w-100" color="warn" matTooltip="Berdiri Sejak">
               <mat-icon class="me-1">calendar_today</mat-icon> {{ fansubData.born | date:'d MMMM y' }}
             </button>
-            <button mat-button class="w-100" color="accent" matTooltip="Status Fansub">
+            <button type="button" mat-button class="w-100" color="accent" matTooltip="Status Fansub">
               <mat-icon class="me-1">history</mat-icon> {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}
             </button>
           </div>
@@ -35,7 +35,7 @@
             </a>
           </div>
           <div class="col-12 text-center pt-3">
-            <button mat-button class="w-100 text-success" (click)="editFansubData()" style="color: rgb(255, 64, 129) !important;"
+            <button type="button" mat-button class="w-100 text-success" (click)="editFansubData()" style="color: rgb(255, 64, 129) !important;"
               matTooltip="{{ fansubData.user_ ? 'Terakhir Di Ubah Oleh :: ' + fansubData.user_.username : 'Perbaharui Data Fansub' }}">
               <mat-icon class="me-1">edit</mat-icon>
               Perbaharui Informasi
@@ -91,14 +91,14 @@
                 </div>
               </div>
               <div class="col-12 text-center pt-3">
-                <button mat-button class="w-100" color="accent" (click)="togglePendingMembers()">
+                <button type="button" mat-button class="w-100" color="accent" (click)="togglePendingMembers()">
                   <mat-icon class="me-1">manage_accounts</mat-icon> Lihat {{ showPendingMember ? 'Anggota' : 'Permintaan Gabung' }}
                 </button>
               </div>
             </div>
           </div>
           <div class="col-12 text-center pt-3" *ngIf="!fansubData.dns_id">
-            <button mat-button class="w-100 shiny" color="accent" matTooltip="Ambil / Klaim / Dapatkan Sub-Domain Ini" (click)="getSubDomain()">
+            <button type="button" mat-button class="w-100 shiny" color="accent" matTooltip="Ambil / Klaim / Dapatkan Sub-Domain Ini" (click)="getSubDomain()">
               <mat-icon class="me-1">dns</mat-icon> 'https://{{ fansubData.slug }}.{{ ENV.domain }}'
             </button>
           </div>

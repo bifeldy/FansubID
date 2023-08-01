@@ -22,10 +22,10 @@
     </mat-selection-list>
     <div class="row">
       <div class="col-12 text-end">
-        <button mat-button color="accent" (click)="prevBoard()" [disabled]="leaderboardPage <= 1">
+        <button type="button" mat-button color="accent" (click)="prevBoard()" [disabled]="leaderboardPage <= 1">
           <mat-icon>navigate_before</mat-icon>
         </button>
-        <button mat-button color="accent" (click)="nextBoard()" [disabled]="leaderboardPage >= leaderBoardTotalPages">
+        <button type="button" mat-button color="accent" (click)="nextBoard()" [disabled]="leaderboardPage >= leaderBoardTotalPages">
           <mat-icon>navigate_next</mat-icon>
         </button>
       </div>

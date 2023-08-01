@@ -92,19 +92,19 @@
                               </ul>
                             </div>
                             <div class="p-2">
-                              <button mat-stroked-button class="m-1 text-warning" (click)="refreshGraph(row)">
+                              <button type="button" mat-stroked-button class="m-1 text-warning" (click)="refreshGraph(row)">
                                 <mat-icon class="me-1">refresh</mat-icon>
                                 Refresh Graph
                               </button>
-                              <button mat-stroked-button class="m-1 text-warning" (click)="removeTorrent(row)">
+                              <button type="button" mat-stroked-button class="m-1 text-warning" (click)="removeTorrent(row)">
                                 <mat-icon class="me-1">delete_outline</mat-icon>
                                 Remove
                               </button>
-                              <button mat-stroked-button class="m-1 text-warning" (click)="resumeTorrent(row)" *ngIf="row.paused">
+                              <button type="button" mat-stroked-button class="m-1 text-warning" (click)="resumeTorrent(row)" *ngIf="row.paused">
                                 <mat-icon class="me-1">play_arrow</mat-icon>
                                 Resume
                               </button>
-                              <button mat-stroked-button class="m-1 text-warning" (click)="pauseTorrent(row)" *ngIf="!row.paused">
+                              <button type="button" mat-stroked-button class="m-1 text-warning" (click)="pauseTorrent(row)" *ngIf="!row.paused">
                                 <mat-icon class="me-1">pause</mat-icon>
                                 Pause
                               </button>
@@ -170,7 +170,7 @@
   <input type="file" #fileDropRef id="fileDropRef" multiple
   (change)="fileBrowseHandler($event)" [disabled]="isProcessing" style="visibility: hidden;" />
   
-  <button (click)="fileDropRef.click()" mat-fab color="warn" class="me-3 mb-5 fab-button animate__animated animate__bounce animate__infinite animate__slow" matTooltip="Seed Berkas"
+  <button type="button" (click)="fileDropRef.click()" mat-fab color="warn" class="me-3 mb-5 fab-button animate__animated animate__bounce animate__infinite animate__slow" matTooltip="Seed Berkas"
   style="position: fixed; bottom: 0; right: 0;" [disabled]="isProcessing">
   <mat-icon>cloud_upload</mat-icon>
   </button>

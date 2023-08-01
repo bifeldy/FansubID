@@ -53,15 +53,15 @@
           </h1>
         </div>
         <div class="row p-3">
-          <button mat-stroked-button matLine class="col-12 col-md-4 text-truncate" *ngIf="userData.id" matTooltip="Nomor ID Pengguna" color="accent" style="overflow: hidden;">
+          <button type="button" mat-stroked-button matLine class="col-12 col-md-4 text-truncate" *ngIf="userData.id" matTooltip="Nomor ID Pengguna" color="accent" style="overflow: hidden;">
             <mat-icon class="me-1">accessibility_new</mat-icon>
             {{ userData.id }}
           </button>
-          <button mat-stroked-button matLine class="col-12 col-md-8 text-truncate" *ngIf="userData.created_at" matTooltip="Tanggal Bergabung" color="accent" style="overflow: hidden;">
+          <button type="button" mat-stroked-button matLine class="col-12 col-md-8 text-truncate" *ngIf="userData.created_at" matTooltip="Tanggal Bergabung" color="accent" style="overflow: hidden;">
             <mat-icon class="me-1">access_time</mat-icon>
             {{ userData.created_at | date:'d/M/yyyy, hh:mm:ss a z' }}
           </button>
-          <button mat-stroked-button matLine class="col text-truncate" matTooltip="Alamat Surel" color="accent" style="overflow: hidden;">
+          <button type="button" mat-stroked-button matLine class="col text-truncate" matTooltip="Alamat Surel" color="accent" style="overflow: hidden;">
             <mat-icon class="me-1">email</mat-icon>
             {{ userData.username }}@{{ ENV.domain }}
           </button>

@@ -36,7 +36,7 @@
                     </mat-error>
                   </div>
                   <div class="col-12" *ngIf="image && !fg.value.image">
-                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+                    <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitImage()">
                       <mat-icon class="me-1">add_photo_alternate</mat-icon>
                       Unggah
                     </button>
@@ -58,7 +58,7 @@
                     </small>
                   </mat-error>
                   <div class="col-12 p-3" *ngIf="cover && !fg.value.cover">
-                    <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitCover()">
+                    <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitCover()">
                       <mat-icon class="me-1">add_photo_alternate</mat-icon>
                       Unggah
                     </button>
@@ -187,13 +187,13 @@
                 <div class="row gy-3">
                   <div class="col g-0"></div>
                   <div class="col-12 col-md-3">
-                    <button mat-stroked-button class="w-100" (click)="exit()" [disabled]="submitted">
+                    <button type="button" mat-stroked-button class="w-100" (click)="exit()" [disabled]="submitted">
                       <mat-icon class="me-1">undo</mat-icon>
                       Batal
                     </button>
                   </div>
                   <div class="col-12 col-md-3">
-                    <button mat-flat-button color="accent" type="submit" class="w-100" [disabled]="submitted || fg.invalid">
+                    <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid">
                       Simpan
                       <mat-icon class="ms-1">save</mat-icon>
                     </button>

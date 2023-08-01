@@ -21,7 +21,7 @@
             </mat-error>
           </div>
           <div class="col-12" *ngIf="image && !fg.value.image">
-            <button mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
+            <button type="button" mat-raised-button class="w-100" color="primary" type="button" [disabled]="submitted" (click)="submitImage()">
               <mat-icon class="me-1">add_photo_alternate</mat-icon>
               Unggah
             </button>
@@ -71,8 +71,10 @@
   </form>
 </div>
 <div mat-dialog-actions *ngIf="fg">
-  <button mat-button (click)="saveData()" class="ms-auto text-success" [disabled]="submitted || fg.invalid || !fg.dirty">
+  <button type="button" mat-button (click)="saveData()" class="ms-auto text-success" [disabled]="submitted || fg.invalid || !fg.dirty">
     {{ DATA.confirmText }}
   </button>
-  <button mat-button [mat-dialog-close]="null" *ngIf="DATA.cancelText">{{ DATA.cancelText }}</button>
+  <button type="button" mat-button [mat-dialog-close]="null" *ngIf="DATA.cancelText">
+    {{ DATA.cancelText }}
+  </button>
 </div>
