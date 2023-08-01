@@ -177,7 +177,10 @@
                 <ng-template #ddlVerified>
                   <div class="row">
                     <div class="col-12 px-3">
-                      <small class="text-success">* <i>Resume-able Upload</i> (Tidak wajib, jika sudah ada URL eksternal, misal alamat webmu gdrive mediafire mega dan lain sebagainya)</small>
+                      <small class="text-success">
+                        * <i>Resume-able Upload</i> (Tidak wajib, jika sudah ada URL eksternal, misal alamat webmu gdrive mediafire mega dan lain sebagainya).
+                        Mohon ditunggu dan jangan di tinggal, berkas lampiran akan <i>expired</i> apabila tidak disimpan dalam {{ CONSTANTS.timeoutDeleteTempAttachmentTime / 60 / 1000 }} menit setelah berhasil <i>upload</i>.
+                      </small>
                     </div>
                     <mat-form-field appearance="outline" class="px-3 pt-3 col" [color]="'accent'">
                       <mat-label>Upload Lampiran Berkas -- DDL</mat-label>

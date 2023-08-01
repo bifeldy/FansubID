@@ -101,6 +101,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get CONSTANTS(): any {
+    return CONSTANTS;
+  }
+
   get AS(): AuthService {
     return this.as;
   }
