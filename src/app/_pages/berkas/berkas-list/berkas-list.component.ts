@@ -31,7 +31,9 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   count = 0;
   page = 1;
-  row = 10;
+  row = 50;
+
+  tablePageSizeOptions = [50, 75, 100, 125, 150];
 
   q = '';
   sort = '';
@@ -66,6 +68,10 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      if (!this.gs.isDesktop) {
+        this.tablePageSizeOptions = [10, 25, 50, 75, 100];
+      }
+      this.row = this.tablePageSizeOptions[0];
       this.getBerkas();
     }
   }

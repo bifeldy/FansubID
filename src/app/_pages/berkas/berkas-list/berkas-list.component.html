@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="row">
-    <app-material-tab (tableRowClicked)="openBerkas($event)" (paginatorClicked)="onPaginatorClicked($event)"
+    <app-material-tab (tableRowClicked)="openBerkas($event)" (paginatorClicked)="onPaginatorClicked($event)" [tablePageSizeOptions]="tablePageSizeOptions"
       [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-tab>
   </div>
 

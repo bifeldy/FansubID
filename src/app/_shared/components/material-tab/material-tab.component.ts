@@ -72,6 +72,8 @@ export class MaterialTabComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() gridPageFinished = false;
   @Input() listPageFinished = false;
 
+  @Input() tablePageSizeOptions = [10, 25, 50, 75, 100];
+
   @Output() chipClicked = new EventEmitter();
   @Output() buttonClicked = new EventEmitter();
   @Output() gridClicked = new EventEmitter();

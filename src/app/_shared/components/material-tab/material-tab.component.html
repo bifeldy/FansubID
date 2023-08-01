@@ -54,7 +54,7 @@
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3">
-        <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row" [count]="count" [serverSide]="serverSide" (serverSideFilter)="onServerSideFilter($event)"
+        <app-material-table [tableDataColumn]="tab.data.column" [tableDataRow]="tab.data.row" [count]="count" [serverSide]="serverSide" (serverSideFilter)="onServerSideFilter($event)" [tablePageSizeOptions]="tablePageSizeOptions"
           (buttonClicked)="onButtonClicked($event)" (chipClicked)="onChipClicked($event)" (rowClicked)="onTableRowClicked($event)" (paginatorClicked)="onPaginatorClicked($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-table>
       </div>
     </div>

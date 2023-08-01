@@ -20,6 +20,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
 
   @Input() tableDataRow: any = [];
   @Input() tableDataColumn: any = [];
+  @Input() tablePageSizeOptions = [10, 25, 50, 75, 100];
 
   @Output() chipClicked = new EventEmitter();
   @Output() buttonClicked = new EventEmitter();
@@ -30,8 +31,6 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   dataSource: MatTableDataSource<any>;
-
-  pageSizeOptions = [10, 25, 50, 75, 100];
 
   urlPath = null;
   searchQuery = '';
@@ -72,7 +71,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
     if (this.dataSource) {
       this.dataSource.data = this.tableDataRow;
       if (!this.serverSide) {
-        this.paginator._changePageSize(this.pageSizeOptions[0]);
+        this.paginator._changePageSize(this.tablePageSizeOptions[0]);
         this.paginator.firstPage();
       }
     }
