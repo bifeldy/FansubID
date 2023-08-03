@@ -23,4 +23,8 @@ export class NoDataComponent implements OnInit {
     }
   }
 
+  get GS(): GlobalService {
+    return this.gs;
+  }
+
 }
