@@ -277,6 +277,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       while(![...linkTag].includes(el.tagName) && maxLoop > 0) {
         el = el.parentElement || el.parentNode;
         maxLoop--;
+        if (!el) {
+          return true;
+        }
       }
       if (linkTag.includes(el.tagName)) {
         const externalUri: string = el.getAttribute('href');

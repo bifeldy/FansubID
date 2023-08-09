@@ -6,7 +6,7 @@
           <mat-form-field class="pt-3 col-12" [color]="'accent'">
             <mat-label>Ruang Obrolan</mat-label>
             <mat-select [(value)]="liveChatResult.roomId" (valueChange)="changeRoom($event)">
-              <mat-option [value]="ROUTER.url">Halaman Ini</mat-option>
+              <mat-option [value]="ROUTER.url.split('?')[0]">Halaman Ini</mat-option>
               <mat-option [value]="CONSTANTS.socketRoomNameGlobalPublic">Global Publik</mat-option>
               <mat-option [value]="CONSTANTS.socketRoomNameGlobalFansub" *ngIf="isAdminModFansubber">Global Fansubber</mat-option>
             </mat-select>
