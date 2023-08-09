@@ -172,7 +172,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="rssFeedAllowed">
               <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                 <mat-label>URI / URL RSS v2.0 Feed</mat-label>
                 <input matInput formControlName="rss_feed" placeholder="http://my-site.blogspot.com/feeds/posts/default?alt=rss" />

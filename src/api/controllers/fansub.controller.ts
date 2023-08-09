@@ -128,7 +128,7 @@ export class FansubController {
             }
           }
           fansub.urls = JSON.stringify(filteredUrls);
-          if ('rss_feed' in req.body) {
+          if ('rss_feed' in req.body && (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER)) {
             const rssFeed: string = req.body.rss_feed;
             if (rssFeed.match(CONSTANTS.regexUrl)) {
               fansub.rss_feed = rssFeed;
@@ -326,7 +326,7 @@ export class FansubController {
         if ('cover' in req.body) {
           fansub.cover_url = req.body.cover;
         }
-        if ('rss_feed' in req.body) {
+        if ('rss_feed' in req.body && (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER)) {
           const rssFeed: string = req.body.rss_feed;
           if (rssFeed.match(CONSTANTS.regexUrl)) {
             fansub.rss_feed = rssFeed;

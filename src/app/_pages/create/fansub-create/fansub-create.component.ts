@@ -7,6 +7,8 @@ import { debounceTime, distinctUntilChanged, retry, switchMap, tap } from 'rxjs/
 
 import { CONSTANTS } from '../../../../constants';
 
+import { RoleModel } from '../../../../models/req-res.model';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
@@ -14,6 +16,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { ToastService } from '../../../_shared/services/toast.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
+import { AuthService } from '../../../_shared/services/auth.service';
 
 @Component({
   selector: 'app-fansub-create',
@@ -53,6 +56,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private as: AuthService,
     private bs: BusyService,
     private pi: PageInfoService,
     private imgbb: ImgbbService,
@@ -68,6 +72,14 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
 
   get GS(): GlobalService {
     return this.gs;
+  }
+
+  get rssFeedAllowed(): boolean {
+    return (
+      this.as.currentUserSubject?.value?.role === RoleModel.ADMIN ||
+      this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR ||
+      this.as.currentUserSubject?.value?.role === RoleModel.FANSUBBER
+    );
   }
 
   ngOnDestroy(): void {

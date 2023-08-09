@@ -81,6 +81,14 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     return this.gs;
   }
 
+  get rssFeedAllowed(): boolean {
+    return (
+      this.as.currentUserSubject?.value?.role === RoleModel.ADMIN ||
+      this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR ||
+      this.as.currentUserSubject?.value?.role === RoleModel.FANSUBBER
+    );
+  }
+
   ngOnDestroy(): void {
     this.subsActRoute?.unsubscribe();
     this.subsFansubUpdate?.unsubscribe();
