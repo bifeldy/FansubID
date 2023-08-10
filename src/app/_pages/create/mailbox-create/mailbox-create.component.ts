@@ -31,7 +31,6 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
   submitted = false;
 
   subsMail = null;
-  subsDialog = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -75,7 +74,6 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
 
   ngOnDestroy(): void {
     this.subsMail?.unsubscribe();
-    this.subsDialog?.unsubscribe();
   }
 
   async canDeactivate(): Promise<boolean> {
@@ -184,17 +182,6 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
     } else {
       this.fg.controls['subject'].enable();
     }
-  }
-
-  async exit(): Promise<void> {
-    this.subsDialog = (await this.ds.leavePageDialog()).subscribe({
-      next: re => {
-        this.gs.log('[INFO_DIALOG_CLOSED]', re);
-        if (re === true) {
-          this.router.navigateByUrl('/mailbox');
-        }
-      }
-    });
   }
 
 }

@@ -36,7 +36,6 @@ export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeact
 
   subsNews = null;
   subsImgbb = null;
-  subsDialog = null;
 
   constructor(
     private fb: FormBuilder,
@@ -71,7 +70,6 @@ export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeact
   ngOnDestroy(): void {
     this.subsImgbb?.unsubscribe();
     this.subsNews?.unsubscribe();
-    this.subsDialog?.unsubscribe();
   }
 
   async canDeactivate(): Promise<boolean> {
@@ -185,17 +183,6 @@ export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeact
     if (index >= 0) {
       this.fg.value.tags.splice(index, 1);
     }
-  }
-
-  async exit(): Promise<void> {
-    this.subsDialog = (await this.ds.leavePageDialog()).subscribe({
-      next: re => {
-        this.gs.log('[INFO_DIALOG_CLOSED]', re);
-        if (re === true) {
-          this.router.navigateByUrl('/news');
-        }
-      }
-    });
   }
 
 }

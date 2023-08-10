@@ -274,10 +274,10 @@
                 <div class="row gy-3">
                   <div class="col g-0"></div>
                   <div class="col-12 col-md-3">
-                    <button type="button" mat-stroked-button class="w-100" (click)="exit()" [disabled]="submitted">
+                    <a mat-stroked-button routerLink="/berkas" class="w-100" [disabled]="submitted">
                       <mat-icon class="me-1">undo</mat-icon>
                       Batal
-                    </button>
+                    </a>
                   </div>
                   <div class="col-12 col-md-3">
                     <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid || attachmentSelected?.status === 'uploading'">

@@ -77,7 +77,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
   subsImgbb = null;
   subsBerkasCreate = null;
   subsUpload = null;
-  subsDialog = null;
 
   berkasType = '';
 
@@ -200,7 +199,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     this.subsBerkasCreate?.unsubscribe();
     this.uploadService.disconnect();
     this.subsUpload?.unsubscribe();
-    this.subsDialog?.unsubscribe();
   }
 
   async canDeactivate(): Promise<boolean> {
@@ -603,17 +601,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     this.router.navigate(['/verify'], {
       queryParams: {
         returnUrl: this.router.url.split('?')[0]
-      }
-    });
-  }
-
-  async exit(): Promise<void> {
-    this.subsDialog = (await this.ds.leavePageDialog()).subscribe({
-      next: re => {
-        this.gs.log('[INFO_DIALOG_CLOSED]', re);
-        if (re === true) {
-          this.router.navigateByUrl('/berkas');
-        }
       }
     });
   }

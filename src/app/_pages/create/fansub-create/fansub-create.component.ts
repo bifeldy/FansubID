@@ -52,7 +52,6 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
   subsImgbb = null;
   subsFansub = null;
   subsCekFansubSlug = null;
-  subsDialog = null;
 
   slugInfo = '';
 
@@ -88,7 +87,6 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
   ngOnDestroy(): void {
     this.subsImgbb?.unsubscribe();
     this.subsFansub?.unsubscribe();
-    this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -306,17 +304,6 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
         this.gs.log('[FANSUB_CREATE_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
-      }
-    });
-  }
-
-  async exit(): Promise<void> {
-    this.subsDialog = (await this.ds.leavePageDialog()).subscribe({
-      next: re => {
-        this.gs.log('[INFO_DIALOG_CLOSED]', re);
-        if (re === true) {
-          this.router.navigateByUrl('/fansub');
-        }
       }
     });
   }
