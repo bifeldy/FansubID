@@ -8,7 +8,10 @@
   <div class="row my-4">
     <div class="col-12">
       <div class="text-danger text-end" *ngIf="!AS.currentUserSubject?.value?.verified">
-        * Berkas <i>Private</i> Tidak Di Tampilkan
+        * Berkas <i>Private</i> Dari Seluruh Pengguna Tidak Di Tampilkan
+      </div>
+      <div class="text-danger text-end" *ngIf="AS.currentUserSubject?.value && AS.currentUserSubject?.value?.verified && !showTruelyPrivate">
+        * Berkas <i>Private</i> Dari Pengguna <i>Private</i> Tidak Di Tampilkan
       </div>
       <div class="text-success text-end">
         * Berkas Dari Anggota Fansub => Warna - Warni

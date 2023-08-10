@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { RoleModel } from '../../../../models/req-res.model';
+
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
 import { FabService } from '../../../_shared/services/fab.service';
@@ -59,6 +61,14 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   get AS(): AuthService {
     return this.as;
+  }
+
+  get showTruelyPrivate(): boolean {
+    return (
+      this.as.currentUserSubject?.value?.role === RoleModel.ADMIN ||
+      this.as.currentUserSubject?.value?.role === RoleModel.MODERATOR ||
+      this.as.currentUserSubject?.value?.role === RoleModel.FANSUBBER
+    );
   }
 
   ngOnDestroy(): void {
