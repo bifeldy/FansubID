@@ -3,7 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
+import { firstValueFrom } from 'rxjs';
+
 import { CONSTANTS } from '../../../../constants';
+
+import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -17,7 +21,7 @@ import { DialogService } from '../../../_shared/services/dialog.service';
   templateUrl: './news-create.component.html',
   styleUrls: ['./news-create.component.css']
 })
-export class NewsCreateComponent implements OnInit, OnDestroy {
+export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 
   fg: FormGroup;
 
@@ -68,6 +72,11 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
     this.subsImgbb?.unsubscribe();
     this.subsNews?.unsubscribe();
     this.subsDialog?.unsubscribe();
+  }
+
+  async canDeactivate(): Promise<boolean> {
+    const closeDialog = await this.ds.leavePageDialog();
+    return await firstValueFrom(closeDialog);
   }
 
   initForm(): void {
@@ -179,10 +188,7 @@ export class NewsCreateComponent implements OnInit, OnDestroy {
   }
 
   async exit(): Promise<void> {
-    this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      'Batal & Keluar',
-      'Apakah Yakin Meninggalkan Halaman Ini ?'
-    )).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.leavePageDialog()).subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

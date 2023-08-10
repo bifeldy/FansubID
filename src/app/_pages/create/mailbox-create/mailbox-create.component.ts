@@ -3,11 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/app/environment';
 
 import { CONSTANTS } from '../../../../constants';
 
 import { RoleModel } from '../../../../models/req-res.model';
+
+import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -21,7 +24,7 @@ import { DialogService } from '../../../_shared/services/dialog.service';
   templateUrl: './mailbox-create.component.html',
   styleUrls: ['./mailbox-create.component.css']
 })
-export class MailboxCreateComponent implements OnInit, OnDestroy {
+export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 
   fg: FormGroup;
 
@@ -73,6 +76,11 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsMail?.unsubscribe();
     this.subsDialog?.unsubscribe();
+  }
+
+  async canDeactivate(): Promise<boolean> {
+    const closeDialog = await this.ds.leavePageDialog();
+    return await firstValueFrom(closeDialog);
   }
 
   initForm(): void {
@@ -179,10 +187,7 @@ export class MailboxCreateComponent implements OnInit, OnDestroy {
   }
 
   async exit(): Promise<void> {
-    this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      'Batal & Keluar',
-      'Apakah Yakin Meninggalkan Halaman Ini ?'
-    )).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.leavePageDialog()).subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

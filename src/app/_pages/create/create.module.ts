@@ -12,6 +12,7 @@ import { RoleModel } from '../../../models/req-res.model';
 
 import { RolesGuard } from '../../_shared/guards/roles.guard';
 import { VerifiedGuard } from '../../_shared/guards/verified.guard';
+import { LeavePageGuard } from '../../_shared/guards/leave-page.guard';
 
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
@@ -32,6 +33,7 @@ const routes: Routes = [
   {
     path: 'berkas',
     component: BerkasCreateComponent,
+    canDeactivate: [LeavePageGuard],
     data: {
       title: 'Berkas - Buat Baru',
       description: 'Halaman Unggah Berkas Baru',
@@ -42,6 +44,7 @@ const routes: Routes = [
     path: 'fansub',
     component: FansubCreateComponent,
     canActivate: [VerifiedGuard],
+    canDeactivate: [LeavePageGuard],
     data: {
       title: 'Fansub - Buat Baru',
       description: 'Halaman Menambahkan Fansub Baru',
@@ -53,6 +56,7 @@ const routes: Routes = [
     path: 'mailbox',
     component: MailboxCreateComponent,
     canActivate: [VerifiedGuard],
+    canDeactivate: [LeavePageGuard],
     data: {
       title: 'Surel - Buat Baru',
       description: 'Halaman Kirim Surel Baru',
@@ -64,6 +68,7 @@ const routes: Routes = [
     path: 'news',
     component: NewsCreateComponent,
     canActivate: [VerifiedGuard, RolesGuard],
+    canDeactivate: [LeavePageGuard],
     data: {
       title: 'Berita - Buat Baru',
       description: 'Halaman Unggah Berita Baru',

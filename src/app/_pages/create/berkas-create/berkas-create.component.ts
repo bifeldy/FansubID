@@ -2,13 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
 import { Uploader, UploadState, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
 
 import { RoleModel } from '../../../../models/req-res.model';
+
+import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -28,7 +30,7 @@ import { DialogService } from '../../../_shared/services/dialog.service';
   templateUrl: './berkas-create.component.html',
   styleUrls: ['./berkas-create.component.css']
 })
-export class BerkasCreateComponent implements OnInit, OnDestroy {
+export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 
   detailMode: boolean = false;
 
@@ -199,6 +201,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
     this.uploadService.disconnect();
     this.subsUpload?.unsubscribe();
     this.subsDialog?.unsubscribe();
+  }
+
+  async canDeactivate(): Promise<boolean> {
+    const closeDialog = await this.ds.leavePageDialog();
+    return await firstValueFrom(closeDialog);
   }
 
   toggleDetailMode(): void {
@@ -601,10 +608,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy {
   }
 
   async exit(): Promise<void> {
-    this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      'Batal & Keluar',
-      'Apakah Yakin Meninggalkan Halaman Ini ?'
-    )).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.leavePageDialog()).subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {

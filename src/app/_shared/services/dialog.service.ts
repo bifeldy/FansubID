@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { lastValueFrom } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 
 import { JsonResponse, InformationModel } from '../../../models/req-res.model';
 
@@ -69,6 +69,13 @@ export class DialogService {
   }
 
   /** */
+
+  async leavePageDialog(): Promise<Observable<any>> {
+    return (await this.openKonfirmasiDialog(
+      'Batal & Keluar',
+      'Apakah Yakin Meninggalkan Halaman Ini ?'
+    )).afterClosed()
+  }
 
   async openKonfirmasiDialog(title: string, htmlMessage: string, disableClose = true): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
     const defaultData = {

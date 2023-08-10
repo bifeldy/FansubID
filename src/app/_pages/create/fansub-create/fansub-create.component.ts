@@ -3,11 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 
+import { firstValueFrom } from 'rxjs';
 import { debounceTime, distinctUntilChanged, retry, switchMap, tap } from 'rxjs/operators';
 
 import { CONSTANTS } from '../../../../constants';
 
 import { RoleModel } from '../../../../models/req-res.model';
+
+import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -23,7 +26,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
   templateUrl: './fansub-create.component.html',
   styleUrls: ['./fansub-create.component.css']
 })
-export class FansubCreateComponent implements OnInit, OnDestroy {
+export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 
   fg: FormGroup;
 
@@ -97,6 +100,11 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.initForm();
     }
+  }
+
+  async canDeactivate(): Promise<boolean> {
+    const closeDialog = await this.ds.leavePageDialog();
+    return await firstValueFrom(closeDialog);
   }
 
   initForm(): void {
@@ -303,10 +311,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy {
   }
 
   async exit(): Promise<void> {
-    this.subsDialog = (await this.ds.openKonfirmasiDialog(
-      'Batal & Keluar',
-      'Apakah Yakin Meninggalkan Halaman Ini ?'
-    )).afterClosed().subscribe({
+    this.subsDialog = (await this.ds.leavePageDialog()).subscribe({
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
