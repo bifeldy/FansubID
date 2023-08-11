@@ -45,7 +45,7 @@ export class BytesPipe implements PipeTransform {
     return Math.round(value * Math.pow(10, decimal)) / Math.pow(10, decimal);
   }
 
-  transform(input: any, decimal: number = 0, from: ByteUnit = 'B', to?: ByteUnit): any {
+  transform(input: any, decimal: number = 2, from: ByteUnit = 'B', to?: ByteUnit): any {
     if (!(this.isNumberFinite(input) && this.isNumberFinite(decimal) && this.isInteger(decimal) && this.isPositive(decimal))) {
       return input;
     }
