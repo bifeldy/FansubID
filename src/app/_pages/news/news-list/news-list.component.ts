@@ -29,7 +29,9 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
   count = 0;
   page = 1;
-  row = 10;
+  row = 25;
+
+  tablePageSizeOptions = [25, 50, 75, 100, 125];
 
   q = '';
   sort = '';

@@ -8,7 +8,7 @@
   <div class="row pb-3 px-0">
     <div class="col-lg-8 col-xl-9">
       <div class="row">
-        <app-material-tab (tableRowClicked)="openNews($event)" (paginatorClicked)="onPaginatorClicked($event)"
+        <app-material-tab (tableRowClicked)="openNews($event)" (paginatorClicked)="onPaginatorClicked($event)" [tablePageSizeOptions]="tablePageSizeOptions"
           [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"></app-material-tab>
       </div>
     </div>

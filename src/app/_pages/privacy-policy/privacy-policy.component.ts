@@ -17,13 +17,13 @@ export class PrivacyPolicyComponent implements OnInit, OnDestroy {
 
   htmlContent = `
     <div class="text-center p-5">
-      <img src="${environment.baseUrl}/assets/img/logo/privacy-policy.png" style="max-width: 192px;" />
+      <img src="${environment.baseUrl}/assets/img/logo/privacy-policy.png" class="bifeldy-vh-25" />
     </div>
     <div class="text-start pb-5">
-      <h1>Privacy Policy</h1>
-      <h2>
-        Your privacy is critically important to us.
-      </h2>
+      <h2 class="text-primary">Privacy Policy</h2>
+      <h3 class="text-success">
+        Loading ...
+      </h3>
     </div>
   `;
 

@@ -218,7 +218,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
             this.fansubInActive++;
           }
         }
-        this.pieChartStatusLabels = ['Fansub Aktif', 'Fansub Tidak Aktif'];
+        this.pieChartStatusLabels = ['Aktif', 'Tidak Aktif'];
         this.pieChartStatusData = [this.fansubActive, this.fansubInActive];
         this.tabData[0].data.row = this.fansubData;
         this.getAnimeFansub();
@@ -241,7 +241,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
         for (const f of this.fansubData) {
           f.Anime = res.results[f.id];
         }
-        this.doughnutChartGarapanLabels.push('Berkas Anime');
+        this.doughnutChartGarapanLabels.push('Anime');
         this.doughnutChartGarapanData.push(res.count);
         const fansubRank = [...this.fansubData].sort((a, b) => b.Anime - a.Anime).slice(0, 10);
         for (const f of fansubRank) {
@@ -265,7 +265,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
         for (const f of this.fansubData) {
           f.Dorama = res.results[f.id];
         }
-        this.doughnutChartGarapanLabels.push('Berkas Dorama');
+        this.doughnutChartGarapanLabels.push('Dorama');
         this.doughnutChartGarapanData.push(res.count);
         const fansubRank = [...this.fansubData].sort((a, b) => b.Dorama - a.Dorama).slice(0, 10);
         for (const f of fansubRank) {

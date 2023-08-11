@@ -4,7 +4,7 @@
     <div class="col-12 align-items-center">
       <div class="text-center my-3 mx-auto">
         <h4 class="text-start">Updated: {{ lastUpdated | date:'d MMMM y, hh:mm:ss a z' }}</h4>
-        <div [innerHTML]="htmlContent | safeInnerHtml"></div>
+        <div class="text-warning" [innerHTML]="htmlContent | safeInnerHtml"></div>
       </div>
     </div>
   </div>
