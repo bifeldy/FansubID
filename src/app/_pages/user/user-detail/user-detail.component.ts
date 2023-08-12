@@ -169,6 +169,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   getUserBerkas(): void {
     this.bs.busy();
+    if (this.subsBerkas) {
+      this.subsBerkas.unsubscribe();
+      this.bs.idle();
+    }
     this.subsBerkas = this.us.getUserBerkas(this.username, this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[USER_BERKAS_LIST_SUCCESS]', res);
