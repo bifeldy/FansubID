@@ -29,6 +29,7 @@ import { QuizModule } from '../../_shared/components/quiz/quiz.module';
 import { MaterialTableModule } from '../../_shared/components/material-table/material-table.module';
 import { LeaderboardModule } from '../../_shared/components/leaderboard/leaderboard.module';
 import { NoDataModule } from '../../_shared/components/no-data/no-data.module';
+import { BannerDonasiModule } from '../../_shared/components/banner-donasi/banner-donasi.module';
 
 import { CustomDirectivesModule } from '../../_shared/directives/custom-directive.module';
 
@@ -321,6 +322,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     NotificationsModule,
+    BannerDonasiModule,
     BannerDiscordModule,
     BannerNihongoModule,
     MaterialTabModule,

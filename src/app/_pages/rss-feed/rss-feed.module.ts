@@ -11,6 +11,7 @@ import { DiscussionModule } from '../../_shared/components/discussion/discussion
 import { MaterialTabModule } from '../../_shared/components/material-tab/material-tab.module';
 import { NotificationsModule } from '../../_shared/components/notifications/notifications.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
+import { BannerDonasiModule } from '../../_shared/components/banner-donasi/banner-donasi.module';
 
 const routes: Routes = [
   {
@@ -30,6 +31,7 @@ const routes: Routes = [
     SharedMaterialModule,
     MaterialTabModule,
     NotificationsModule,
+    BannerDonasiModule,
     BannerDiscordModule,
     StatsServerModule,
     DiscussionModule

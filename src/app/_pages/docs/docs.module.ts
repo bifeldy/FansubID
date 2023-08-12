@@ -8,6 +8,7 @@ import { NotificationsModule } from '../../_shared/components/notifications/noti
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
+import { BannerDonasiModule } from '../../_shared/components/banner-donasi/banner-donasi.module';
 
 import { CustomPipeModule } from '../../_shared/pipes/custom-pipe.module';
 
@@ -26,6 +27,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    BannerDonasiModule,
     BannerDiscordModule,
     StatsServerModule,
     NotificationsModule,

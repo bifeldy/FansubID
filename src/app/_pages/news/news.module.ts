@@ -23,6 +23,7 @@ import { NotificationsModule } from '../../_shared/components/notifications/noti
 import { StatsServerModule } from '../../_shared/components/stats-server/stats-server.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { DiscussionModule } from '../../_shared/components/discussion/discussion.module';
+import { BannerDonasiModule } from '../../_shared/components/banner-donasi/banner-donasi.module';
 
 import { NewsDetailComponent } from './news-detail/news-detail.component';
 import { NewsEditComponent } from './news-edit/news-edit.component';
@@ -67,6 +68,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    BannerDonasiModule,
     SharedMaterialModule,
     MaterialTabModule,
     FormsModule,

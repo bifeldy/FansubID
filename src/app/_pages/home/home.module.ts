@@ -9,6 +9,7 @@ import { StatsServerModule } from '../../_shared/components/stats-server/stats-s
 import { SharedMaterialModule } from '../../_shared/modules/shared-material.module';
 import { BannerDiscordModule } from '../../_shared/components/banner-discord/banner-discord.module';
 import { BannerNihongoModule } from '../../_shared/components/banner-nihongo/banner-nihongo.module';
+import { BannerDonasiModule } from '../../_shared/components/banner-donasi/banner-donasi.module';
 import { NoDataModule } from '../../_shared/components/no-data/no-data.module';
 
 import { HomeComponent } from './home.component';
@@ -26,6 +27,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    BannerDonasiModule,
     BannerDiscordModule,
     BannerNihongoModule,
     StatsServerModule,
