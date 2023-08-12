@@ -223,6 +223,10 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
 
   checkTrusted():void {
     this.bs.busy();
+    if (this.subsTrusted) {
+      this.subsTrusted.unsubscribe();
+      this.bs.idle();
+    }
     this.subsTrusted = this.berkas.checkTrusted(this.allBerkasAnimeId).subscribe({
       next: res => {
         this.gs.log('[ANIME_BERKAS_TRUSTED_SUCCESS]', res);

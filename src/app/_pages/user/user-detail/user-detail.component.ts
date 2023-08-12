@@ -207,6 +207,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   checkTrusted():void {
     this.bs.busy();
+    if (this.subsTrusted) {
+      this.subsTrusted.unsubscribe();
+      this.bs.idle();
+    }
     this.subsTrusted = this.berkas.checkTrusted(this.allBerkasUserId).subscribe({
       next: res => {
         this.gs.log('[USER_BERKAS_TRUSTED_SUCCESS]', res);

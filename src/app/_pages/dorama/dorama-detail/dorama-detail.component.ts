@@ -225,6 +225,10 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
 
   checkTrusted():void {
     this.bs.busy();
+    if (this.subsTrusted) {
+      this.subsTrusted.unsubscribe();
+      this.bs.idle();
+    }
     this.subsTrusted = this.berkas.checkTrusted(this.allBerkasDoramaId).subscribe({
       next: res => {
         this.gs.log('[DORAMA_BERKAS_TRUSTED_SUCCESS]', res);
