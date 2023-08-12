@@ -548,7 +548,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
         this.gs.log('[BERKAS_CREATE_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
-        this.router.navigateByUrl('/berkas');
+        this.router.navigateByUrl('/berkas', {
+          state: {
+            bypassCanDeactivate: true
+          }
+        });
       },
       error: err => {
         this.gs.log('[BERKAS_CREATE_ERROR]', err, 'error');
@@ -601,6 +605,9 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     this.router.navigate(['/verify'], {
       queryParams: {
         returnUrl: this.router.url.split('?')[0]
+      },
+      state: {
+        bypassCanDeactivate: true
       }
     });
   }

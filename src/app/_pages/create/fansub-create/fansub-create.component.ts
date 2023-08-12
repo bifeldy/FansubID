@@ -298,7 +298,11 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
         this.gs.log('[FANSUB_CREATE_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
-        this.router.navigateByUrl('/fansub');
+        this.router.navigateByUrl('/fansub', {
+          state: {
+            bypassCanDeactivate: true
+          }
+        });
       },
       error: err => {
         this.gs.log('[FANSUB_CREATE_ERROR]', err, 'error');

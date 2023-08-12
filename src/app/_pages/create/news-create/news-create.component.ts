@@ -156,7 +156,11 @@ export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeact
         this.gs.log('[NEWS_CREATE_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
-        this.router.navigateByUrl('/news');
+        this.router.navigateByUrl('/news', {
+          state: {
+            bypassCanDeactivate: true
+          }
+        });
       },
       error: err => {
         this.gs.log('[NEWS_CREATE_ERROR]', err, 'error');

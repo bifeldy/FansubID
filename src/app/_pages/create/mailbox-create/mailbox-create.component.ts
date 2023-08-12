@@ -108,7 +108,11 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
         this.gs.log('[MAIL_SEND_SUCCESS]', res);
         this.submitted = false;
         this.bs.idle();
-        this.router.navigateByUrl('/mailbox');
+        this.router.navigateByUrl('/mailbox', {
+          state: {
+            bypassCanDeactivate: true
+          }
+        });
       },
       error: err => {
         this.gs.log('[MAIL_SEND_ERROR]', err, 'error');
