@@ -70,17 +70,17 @@
               <div class="col-12 text-center" *ngIf="isHaveDDL">
                 <div class="px-3">
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
-                    matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
+                    matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
                     <mat-icon class="me-1">movie</mat-icon>
                     {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
                   </button>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" (click)="cancel_dl(berkasData.attachment_.id)"
-                    matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x" *ngIf="!lampiran.data && lampiran.isDownloading">
+                    matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && lampiran.isDownloading">
                     <mat-icon class="me-1">close</mat-icon>
                     Batal Unduh
                   </button>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
-                    matTooltip="{{ lampiran.name }} :: {{ lampiran.download_count }}x">
+                    matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan">
                     <mat-icon class="me-1">save</mat-icon>
                     {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }}
                   </button>
@@ -99,12 +99,12 @@
                     </div>
                   </div>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
-                    (click)="standardDdlSubsFont(s.id)" matTooltip="{{ s.name }}">
+                    (click)="standardDdlSubsFont(s.id)" matTooltip="{{ s.name }}.{{ s.name }} :: {{ s.download_count }}x Unduhan">
                     <mat-icon class="me-1">notes</mat-icon>
                     {{ s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
                   </button>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let f of berkasData.attachment_.fonts_"
-                    (click)="standardDdlSubsFont(f.id)" matTooltip="{{ f.name }}">
+                    (click)="standardDdlSubsFont(f.id)" matTooltip="{{ f.name }}.{{ f.name }} :: {{ f.download_count }}x Unduhan">
                     <mat-icon class="me-1">font_download</mat-icon>
                     {{ f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
                   </button>

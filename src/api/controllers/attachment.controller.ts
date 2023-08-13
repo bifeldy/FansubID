@@ -331,20 +331,19 @@ export class AttachmentController {
                 const ddlFiles = await this.ddlFileRepo.find({
                   where: [
                     {
-                      msg_parent: Equal(attachment.discord)
+                      msg_parent: Equal(resAttachmentSave.discord)
                     },
                     {
-                      msg_id: Equal(attachment.discord),
+                      msg_id: Equal(resAttachmentSave.discord),
                       msg_parent: IsNull()
                     }
-                  ],
-                  order: {
-                    chunk_idx: 'ASC'
-                  }
+                  ]
                 });
                 const msg_ids = [];
                 for (const df of ddlFiles) {
-                  msg_ids.push(df.msg_id);
+                  if (!msg_ids.includes(df.msg_id)) {
+                    msg_ids.push(df.msg_id);
+                  }
                 }
                 await this.ddlFileRepo.remove(ddlFiles);
                 this.ds.deleteAttachment(msg_ids);
