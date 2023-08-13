@@ -56,7 +56,7 @@ export class DdlFileService {
 
   remove(ddlFile: DdlFile | DdlFile[]): Promise<DdlFile | DdlFile[]> {
     this.gs.log('[DDL_FILE_SERVICE-REMOVE] 💾', ddlFile);
-    return this.ddlFileRepo.softRemove(ddlFile as any);
+    return this.ddlFileRepo.remove(ddlFile as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

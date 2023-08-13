@@ -431,6 +431,7 @@ export interface DdlFileModel {
   mime?: string;
   download_count: number;
   msg_id?: string;
+  msg_parent?: string;
   chunk_idx?: number;
   created_at?: number | Date;
   updated_at?: number | Date;

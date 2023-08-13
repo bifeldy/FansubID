@@ -2,7 +2,7 @@ import { Controller, Get, HttpCode, HttpStatus, Req, Res } from '@nestjs/common'
 import { ApiHeader, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { Request, Response } from 'express';
-import { Equal } from 'typeorm';
+import { Equal, IsNull } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -64,10 +64,10 @@ export class DdlPartController {
           SET download_count = (
             SELECT SUM(ddl_file.download_count)
             FROM ddl_file
-            WHERE ddl_file.msg_id = $1
+            WHERE ddl_file.msg_parent = $1
           )
           WHERE discord = $2
-        `, [ddlFile.msg_id, ddlFile.msg_id]);
+        `, [ddlFile.msg_parent, ddlFile.msg_parent]);
       }).pipe(res);
     } catch (error) {
       const body: any = {
@@ -119,41 +119,53 @@ export class DdlSeekController {
           { id: Equal(req.params['id']) }
         ]
       });
-      const chunkIdx = Math.floor((parseInt(headerRangeStartEnd[0], 10) || 0) / CONSTANTS.fileSizeAttachmentChunkDiscordLimit);
-      const ddlFile = await this.ddlFileRepo.findOneOrFail({
+      const ddlFiles = await this.ddlFileRepo.find({
         where: [
           {
+            msg_parent: Equal(attachment.discord)
+          },
+          {
             msg_id: Equal(attachment.discord),
-            chunk_idx: Equal(chunkIdx)
+            msg_parent: IsNull()
           }
-        ]
+        ],
+        order: {
+          chunk_idx: 'ASC'
+        }
       });
-      const skippedChunkSize = ddlFile.chunk_idx * CONSTANTS.fileSizeAttachmentChunkDiscordLimit;
-      headerRangeFull = 'bytes=';
-      let headerRangeStart = '0';
-      if (headerRangeStartEnd.length > 0 && headerRangeStartEnd[0]) {
-        headerRangeStart = `${parseInt(headerRangeStartEnd[0], 10) - (skippedChunkSize)}`;
+      const target = parseInt(headerRangeStartEnd[0], 10) || 0;
+      let chunkIdx = 0;
+      let chunkSize = 0;
+      let skippedChunkSize = 0;
+      for (const df of ddlFiles) {
+        if (df.chunk_idx !== chunkIdx) {
+          throw new Error('Urutan Data Hilang / Rusak!');
+        }
+        if (target < chunkSize + df.size) {
+          skippedChunkSize = Math.abs(target - chunkSize);
+          break;
+        }
+        chunkSize += df.size;
+        chunkIdx++;
       }
-      headerRangeFull += headerRangeStart;
-      let headerRangeEnd = '';
+      const ddlFile = ddlFiles[chunkIdx];
+      let hdrRngPrxy = `bytes=${skippedChunkSize}-`;
       if (headerRangeStartEnd.length > 1 && headerRangeStartEnd[1]) {
-        headerRangeEnd = `${parseInt(headerRangeStartEnd[1], 10) - (skippedChunkSize)}`;
+        hdrRngPrxy += `${parseInt(headerRangeStartEnd[1], 10) - target + skippedChunkSize}`;
       }
-      headerRangeFull += `-${headerRangeEnd}`;
       const res_raw = await this.api.getData(
         new URL(ddlFile.url),
         {
           // Authorization: `Bot ${environment.discord.loginToken}`,
-          Range: headerRangeFull,
+          Range: hdrRngPrxy,
           ...environment.nodeJsXhrHeader
         },
         res.locals['abort-controller'].signal
       );
       const res_raw_headers = res_raw.headers;
-      const res_raw_header_range_start = `${skippedChunkSize + parseInt(headerRangeStart, 10)}`;
-      const res_raw_headers_content_length_minus_1 = `${parseInt(res_raw_header_range_start, 10) + parseInt(res_raw_headers.get('Content-Length'), 10) - 1}`;
+      const res_raw_headers_content_length_minus_1 = `${target + parseInt(res_raw_headers.get('Content-Length'), 10) - 1}`;
       res_raw_headers.delete('Content-Range');
-      res_raw_headers.set('Content-Range', `bytes ${res_raw_header_range_start}-${res_raw_headers_content_length_minus_1}/${attachment.size}`);
+      res_raw_headers.set('Content-Range', `bytes ${target}-${res_raw_headers_content_length_minus_1}/${attachment.size}`);
       res_raw_headers.delete('Content-Disposition');
       res_raw_headers.set('Content-Disposition', `attachment; filename="${attachment.name}.${attachment.ext}"`);
       res_raw_headers.delete('Content-Type');
@@ -169,10 +181,10 @@ export class DdlSeekController {
           SET download_count = (
             SELECT SUM(download_count)
             FROM ddl_file
-            WHERE msg_id = $1
+            WHERE msg_parent = $1
           )
           WHERE discord = $2
-        `, [ddlFile.msg_id, ddlFile.msg_id]);
+        `, [ddlFile.msg_parent, ddlFile.msg_parent]);
       }).pipe(res);
     } catch (error) {
       const body: any = {

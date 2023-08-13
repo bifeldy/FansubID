@@ -120,13 +120,41 @@ export class DiscordService {
     }
   }
 
+  async deleteAttachment(msg_ids: string[]): Promise<void> {
+    try {
+      const botDdlChannel = this.bot ? (this.bot.channels.cache.get(environment.discord.channelDdlId) as NewsChannel) : null;
+      if (botDdlChannel) {
+        for (const msg_id of msg_ids) {
+          const botMessage = botDdlChannel.messages.cache.get(msg_id);
+          if (botMessage) {
+            await botMessage.delete();
+          }
+        }
+      }
+    } catch (error) {
+      this.gs.log(`[DISCORD_SERVICE-DELETE_ATTACHMMENT_ERROR] 🎉`, error, 'error');
+    }
+  }
+
   async sendAttachment(attachment: AttachmentModel, user: UserModel, chunkIdx = null): Promise<string> {
     let currentChunkIdx: number = 0;
     let chunkParent: string = attachment?.discord;
+    let chunkSize = CONSTANTS.fileSizeAttachmentChunkDiscordLimit;
+    const botGuild = this.bot ? this.bot.guilds.cache.get(environment.discord.guild_id) : null;
+    if (botGuild) {
+      const totalBoosts = botGuild.premiumSubscriptionCount;
+      if (totalBoosts >= 14) {
+        chunkSize = 100 * 1000 * 1000; // Level 3
+      } else if (totalBoosts >= 7) {
+        chunkSize = 50 * 1000 * 1000; // Level 2
+      } else {
+        chunkSize = CONSTANTS.fileSizeAttachmentChunkDiscordLimit;
+      }
+    }
     const crs = createReadStream(
       `${environment.uploadFolder}/${attachment.name}`,
       {
-        highWaterMark: CONSTANTS.fileSizeAttachmentChunkDiscordLimit
+        highWaterMark: chunkSize
       }
     );
     for await (const c of crs) {
@@ -134,7 +162,7 @@ export class DiscordService {
       if (chunkParent) {
         const ddlFileChunkUploadedCount = await this.ddlFileRepo.count({
           where: {
-            msg_id: Equal(chunkParent),
+            msg_parent: Equal(chunkParent),
             chunk_idx: Equal(currentChunkIdx)
           }
         });
@@ -147,7 +175,7 @@ export class DiscordService {
           let uploadTryCount = 1;
           while (uploadTryCount > 0) {
             if (uploadTryCount > CONSTANTS.retryDdlUploadMaxCount) {
-              throw 'Gagal Upload Ke Discord';
+              throw new Error('Gagal Upload Ke Discord!');
             }
             try {
               this.gs.log(`[DISCORD_SERVICE-CHUNK_${currentChunkIdx}_TRY_${uploadTryCount}] 🎉`, c.length);
@@ -156,11 +184,13 @@ export class DiscordService {
                 const msg = await botDdlChannel.send({
                   files: [new MessageAttachment(c, `${attachment.name}_${currentChunkIdx}`)]
                 });
+                const ddlFile = this.ddlFileRepo.new();
+                ddlFile.msg_id = msg.id;
                 if (currentChunkIdx === 0) {
                   chunkParent = msg.id;
+                } else {
+                  ddlFile.msg_parent = chunkParent;
                 }
-                const ddlFile = this.ddlFileRepo.new();
-                ddlFile.msg_id = chunkParent;
                 ddlFile.chunk_idx = currentChunkIdx;
                 ddlFile.user_ = user;
                 ddlFile.id = msg.attachments.first().id;
@@ -249,7 +279,13 @@ export class DiscordService {
       if (res_raw.ok) {
         const gh: any = await res_raw.json();
         this.cfg.github = gh[0];
-        this.bot.guilds.cache.get(environment.discord.guild_id)?.members.cache.get(this.bot.user.id)?.setNickname(`${environment.siteName} - ${this.cfg.github?.sha?.slice(0, 7)}`);
+        const botGuild = this.bot ? this.bot.guilds.cache.get(environment.discord.guild_id) : null;
+        if (botGuild) {
+          const botMember = botGuild.members.cache.get(this.bot.user.id);
+          if (botMember) {
+            botMember.setNickname(`${environment.siteName} - ${this.cfg.github?.sha?.slice(0, 7)}`);
+          }
+        }
       } else {
         throw new Error('Github API Error');
       }

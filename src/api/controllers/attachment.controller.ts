@@ -172,7 +172,13 @@ export class AttachmentController {
       if (attachment.discord) {
         const [ddlFiles, count] = await this.ddlFileRepo.findAndCount({
           where: [
-            { msg_id: Equal(attachment.discord) }
+            {
+              msg_parent: Equal(attachment.discord)
+            },
+            {
+              msg_id: Equal(attachment.discord),
+              msg_parent: IsNull()
+            }
           ],
           order: {
             chunk_idx: 'ASC'
@@ -322,6 +328,26 @@ export class AttachmentController {
                   await this.attachmentRepo.save(resAttachmentSave);
                 });
               } else {
+                const ddlFiles = await this.ddlFileRepo.find({
+                  where: [
+                    {
+                      msg_parent: Equal(attachment.discord)
+                    },
+                    {
+                      msg_id: Equal(attachment.discord),
+                      msg_parent: IsNull()
+                    }
+                  ],
+                  order: {
+                    chunk_idx: 'ASC'
+                  }
+                });
+                const msg_ids = [];
+                for (const df of ddlFiles) {
+                  msg_ids.push(df.msg_id);
+                }
+                await this.ddlFileRepo.remove(ddlFiles);
+                this.ds.deleteAttachment(msg_ids);
                 this.ds.sendAttachment(resAttachmentSave, resAttachmentSave.user_ || user).then(async (chunkParent) => {
                   resAttachmentSave.discord = chunkParent;
                   resAttachmentSave.pending = false;
