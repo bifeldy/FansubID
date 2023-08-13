@@ -296,7 +296,7 @@ export class QuizService {
             return;
           }
         }
-        throw 'Kuis Tidak Tersedia';
+        throw new Error('Kuis Tidak Tersedia!');
     }
   }
 

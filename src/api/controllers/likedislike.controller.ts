@@ -286,7 +286,7 @@ export class LikedislikeController {
         }
         result = auditedLikedislike;
       } else {
-        throw new Error('Data Duplikat');
+        throw new Error('Data Duplikat!');
       }
       if (req.params['type'] === 'user') {
         selectedRepo = this.profileRepo;
@@ -429,7 +429,7 @@ export class LikedislikeController {
             }
           };
         } else {
-          throw new Error('Data Duplikat');
+          throw new Error('Data Duplikat!');
         }
       }
       return {

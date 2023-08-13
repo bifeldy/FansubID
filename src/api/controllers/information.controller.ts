@@ -113,7 +113,7 @@ export class InformationController {
         } else if (informations.length === 1) {
           infoCreateOrUpdate = informations[0];
         } else {
-          throw new Error('Data Duplikat');
+          throw new Error('Data Duplikat!');
         }
         if ('title' in req.body) {
           infoCreateOrUpdate.title = infoTemplate.title;

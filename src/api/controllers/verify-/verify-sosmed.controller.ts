@@ -58,7 +58,7 @@ export class VerifySosmedController {
         relations: ['user_']
       });
       if (count > 0) {
-        throw 'Akun Telah Digunakan!';
+        throw new Error('Akun Telah Digunakan!');
       }
       const sosmeds = await this.sosmedRepo.find({
         where: [
@@ -89,7 +89,7 @@ export class VerifySosmedController {
           refresh_token: refreshToken
         });
       } else {
-        throw 'Akun Telah Digunakan!';
+        throw new Error('Akun Telah Digunakan!');
       }
     } catch (error) {
       throw new HttpException({

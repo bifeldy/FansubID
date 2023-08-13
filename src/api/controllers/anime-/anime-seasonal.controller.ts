@@ -64,12 +64,12 @@ export class AnimeSeasonalController {
             status = res_rawn.status;
             next = res_jsonn.paging?.next;
           } else {
-            throw new Error('Gagal Tarik Data Anime');
+            throw new Error('Gagal Tarik Data Anime!');
           }
         }
       }
       else {
-        throw new Error('Gagal Tarik Data Anime');
+        throw new Error('Gagal Tarik Data Anime!');
       }
       const responseBody = {
         info: `😅 ${status} - Anime API :: Seasonal ${season} ${year} 🤣`,

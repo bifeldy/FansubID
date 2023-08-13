@@ -40,7 +40,7 @@ export class MailService {
         this.gs.log(`[MAILTRAP_SERVICE-SEND_EMAIL_SUCCESS] 💌`, resp.message_ids);
         return resp;
       }
-      throw new Error('MailTrap API Error');
+      throw new Error('MailTrap API Error!');
     } catch (err) {
       this.gs.log('[MAILTRAP_SERVICE-SEND_EMAIL_ERROR] 💌', err, 'error');
       return null;

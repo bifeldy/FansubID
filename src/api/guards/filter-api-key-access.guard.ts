@@ -45,7 +45,7 @@ export class FilterApiKeyAccessGuard implements CanActivate {
             relations: ['user_']
           });
           if (apiKeySystemCount <= 0) {
-            throw 'API-Key Tidak Memiliki Hak Akses!';
+            throw new Error('API-Key Tidak Memiliki Hak Akses!');
           }
         } catch (error) {
           throw new HttpException({

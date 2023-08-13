@@ -287,7 +287,7 @@ export class DiscordService {
           }
         }
       } else {
-        throw new Error('Github API Error');
+        throw new Error('Github API Error!');
       }
     } catch (error) {
       this.gs.log('[DISCORD_SERVICE-CHANGE_BOT_NICKNAME] 🎉', error, 'error');

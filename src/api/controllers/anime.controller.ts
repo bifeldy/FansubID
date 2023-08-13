@@ -74,7 +74,7 @@ export class AnimeController {
         }
         return responseBody;
       }
-      throw new Error('Gagal Tarik Data Anime');
+      throw new Error('Gagal Tarik Data Anime!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
@@ -180,7 +180,7 @@ export class AnimeController {
         }
         return responseBody;
       }
-      throw new Error('Gagal Tarik Data Anime');
+      throw new Error('Gagal Tarik Data Anime!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

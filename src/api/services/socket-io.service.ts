@@ -214,7 +214,7 @@ export class SocketIoService {
       if (payload.key) {
         const check = await this.aks.checkKey(payload.ip, payload.key);
         if (!check.allowed) {
-          throw 'User Not Allowed';
+          throw new Error('User Not Allowed!');
         } else if (check.user) {
           user = check.user;
         }
@@ -223,7 +223,7 @@ export class SocketIoService {
         user = decoded.user;
       }
       if (!user) {
-        throw 'User Not Login';
+        throw new Error('User Not Login!');
       }
       payload.user = await this.userRepo.findOneOrFail({
         where: [

@@ -252,7 +252,7 @@ export class FansubDnsController {
         }
         return responseBody;
       }
-      throw new Error('Gagal Tarik Data DNS Zone');
+      throw new Error('Gagal Tarik Data DNS Zone!');
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
