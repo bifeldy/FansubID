@@ -346,6 +346,13 @@ export class UserController {
       const [files, count] = await this.berkasRepo.findAndCount({
         where: [
           {
+            private: false,
+            name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+            user_: {
+              username: ILike(req.params['username'])
+            }
+          },
+          {
             name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             user_: {
               username: ILike(req.params['username']),

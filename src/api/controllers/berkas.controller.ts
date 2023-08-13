@@ -65,6 +65,14 @@ export class BerkasController {
       const queryRow = parseInt(req.query['row'] as string);
       const sqlWhere: any = [
         {
+          private: false,
+          name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+          r18: false,
+          user_: {
+            private: true
+          }
+        },
+        {
           ...((user?.verified) ? {
             // Verified User Can See Private Berkas From Public Profile
           } : {

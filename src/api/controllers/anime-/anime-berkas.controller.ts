@@ -34,6 +34,16 @@ export class AnimeBerkasController {
       if (Array.isArray(animeId) && animeId.length > 0) {
         const sqlWhere = [
           {
+            private: false,
+            name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+            anime_: {
+              id: In(animeId)
+            },
+            user_: {
+              private: true
+            }
+          },
+          {
             ...((user?.verified) ? {
               // Verified User Can See Private Berkas From Public Profile
             } : {

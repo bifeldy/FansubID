@@ -34,6 +34,16 @@ export class DoramaBerkasController {
       if (Array.isArray(doramaId) && doramaId.length > 0) {
         const sqlWhere = [
           {
+            private: false,
+            name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+            dorama_: {
+              id: In(doramaId)
+            },
+            user_: {
+              private: true
+            }
+          },
+          {
             ...((user?.verified) ? {
               // Verified User Can See Private Berkas From Public Profile
             } : {
