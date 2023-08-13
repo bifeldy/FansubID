@@ -40,15 +40,15 @@ export class FansubBerkasController {
           .leftJoinAndSelect('berkas.fansub_', 'fansub_')
           .where('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` })
           .andWhere('fansub_.id IN (:...id)', { id: fansubId })
-          .andWhere('user_.private = :isPrivate', { isPrivate: true })
-          .andWhere('berkas.private = :isPrivate', { isPrivate: false })
+          .andWhere('user_.private = true')
+          .andWhere('berkas.private = false')
           .orWhere('berkas.name ILIKE :query', { query: `%${req.query['q'] ? req.query['q'] : ''}%` })
           .andWhere('fansub_.id IN (:...id)', { id: fansubId })
-          .andWhere('user_.private = :isPrivate', { isPrivate: false });
+          .andWhere('user_.private = false');
         if (user?.verified) {
           // Verified User Can See Private Berkas From Public Profile
         } else {
-          fileRepoQuery = fileRepoQuery.andWhere('berkas.private = :isPrivate', { isPrivate: false });
+          fileRepoQuery = fileRepoQuery.andWhere('berkas.private = false');
         }
         if (user) {
           fileRepoQuery = fileRepoQuery
