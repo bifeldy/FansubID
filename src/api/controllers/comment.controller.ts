@@ -67,7 +67,8 @@ export class CommentController {
               }
             }
           ],
-          relations: ['parent_komentar_']
+          relations: ['parent_komentar_'],
+          withDeleted: true
         });
       }
       return {
