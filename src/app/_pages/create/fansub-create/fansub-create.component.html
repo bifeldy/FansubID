@@ -72,7 +72,7 @@
                       <div *ngIf="fg.get('name').hasError('pattern')">Nama Fansub Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'" matTooltip="Digunakan Juga Untuk Sub-Domain">
                     <mat-label>Singkatan</mat-label>
                     <input matInput formControlName="slug" placeholder="Jalsub" required />
                     <mat-icon matSuffix>short_text</mat-icon>

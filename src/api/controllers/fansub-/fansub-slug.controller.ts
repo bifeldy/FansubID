@@ -31,7 +31,7 @@ export class FansubSlugController {
           return {
             info: '😅 202 - Fansub API :: Cek Fansub Slug Gagal 🥰',
             result: {
-              message: `'${slug}' Tidak Dapat Digunakan`
+              message: `Singkatan '${slug}' Tidak Dapat Digunakan`
             }
           };
         }
@@ -44,14 +44,14 @@ export class FansubSlugController {
           return {
             info: `😅 202 - Fansub API :: Cek Slug Berhasil 🤣`,
             result: {
-              message: `'${slug}' Dapat Digunakan`
+              message: `Singkatan '${slug}' Dapat Digunakan`
             }
           };
         } else {
           return {
             info: '😅 202 - Fansub API :: Cek Fansub Slug Gagal 🥰',
             result: {
-              message: `'${slug}' Sudah Terpakai`
+              message: `Singkatan '${slug}' Sudah Terpakai`
             }
           };
         }

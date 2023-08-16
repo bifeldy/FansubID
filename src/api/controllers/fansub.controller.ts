@@ -103,7 +103,7 @@ export class FansubController {
           throw new HttpException({
             info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
             result: {
-              message: `'${slug}' Tidak Dapat Digunakan`
+              message: `Singkatan '${slug}' Tidak Dapat Digunakan`
             }
           }, HttpStatus.BAD_REQUEST);
         }
@@ -288,7 +288,7 @@ export class FansubController {
             throw new HttpException({
               info: `🙄 400 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
               result: {
-                message: `'${newSlug}' Tidak Dapat Digunakan`
+                message: `Singkatan '${newSlug}' Tidak Dapat Digunakan`
               }
             }, HttpStatus.BAD_REQUEST);
           }
