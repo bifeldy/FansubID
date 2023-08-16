@@ -1,5 +1,5 @@
 .profile-banner {
-  height: 128px;
+  height: 192px;
   width: 100%;
   background-size: cover;
   background-position: center;
@@ -15,7 +15,7 @@
 
 .profile-banner-2 {
   position: absolute;
-  top: 128px;
+  top: 192px;
   left: 0;
 }
 
@@ -28,5 +28,11 @@
 @media only screen and (min-width: 769px) {
   .profile-height-large {
     height: 100px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .profile-image {
+    padding-top: 3rem;
   }
 }

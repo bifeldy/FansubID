@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { environment } from '../../../../environments/app/environment';
+
 import { CONSTANTS } from '../../../../constants';
 
 import { BusyService } from '../../../_shared/services/busy.service';
@@ -66,6 +68,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get ENV(): any {
+    return environment;
   }
 
   get GS(): GlobalService {
@@ -285,6 +291,17 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.gs.log('[USER_EDIT_ERROR]', err, 'error');
         this.submitted = false;
         this.bs.idle();
+      }
+    });
+  }
+
+  changeUname(): void {
+    const adminList = ['bifeldy'];
+    this.router.navigate(['/create/mailbox'], {
+      queryParams: {
+        subject: '[ReqUName] Pengajuan Ganti Username',
+        to: adminList.map(e => `${e}@${environment.domain}`).join(','),
+        cc: this.as.currentUserSubject?.value?._email
       }
     });
   }

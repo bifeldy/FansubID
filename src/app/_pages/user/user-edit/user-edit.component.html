@@ -1,13 +1,13 @@
 <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
   <div class="container">
-    <div class="profile-info align-items-center">
+    <div class="profile-info align-items-center" style="top: 64px; position: relative;">
       <div class="row py-3 px-2">
 
         <!-- Information -->
         <div class="col-md-4 col-xl-3 px-3">
           <div class="row sticky-top pt-3">
             <div class="col-12">
-              <img class="w-100 border rounded-circle" src="{{ image_photo }}" />
+              <img class="w-100" src="{{ image_photo }}" />
               <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
                 <mat-label>Profile Image</mat-label>
                 <ngx-mat-file-input class="w-100" (change)="uploadPhotoImage($event, photoImage)" #photoImage
@@ -31,6 +31,10 @@
               <mat-slide-toggle formControlName="private" matTooltip="Hanya Tampilkan Informasi Profil">
                 Jadikan Private, Sembunyikan Aktivitas
               </mat-slide-toggle>
+            </div>
+            <div class="col-12 p-3 text-warning">
+              * Jika ingin mengubah <i>username</i> silahkan menghubungi Admin menggunakan surel
+              <span class="text-success" style="cursor: pointer;" (click)="changeUname()">{{ userData.username }}@{{ ENV.domain }}</span>
             </div>
           </div>
         </div>
