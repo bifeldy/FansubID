@@ -85,11 +85,12 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
     const to = this.activatedRoute.snapshot.queryParamMap.get('to')?.split(',').map(e => e.trim()) || [];
     const cc = this.activatedRoute.snapshot.queryParamMap.get('cc')?.split(',').map(e => e.trim()) || [];
     const bcc = this.activatedRoute.snapshot.queryParamMap.get('bcc')?.split(',').map(e => e.trim()) || [];
+    const subject = this.activatedRoute.snapshot.queryParamMap.get('subject') || '';
     this.fg = this.fb.group({
       to: [to, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEmailMulti)])],
       cc: [cc, Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
       bcc: [bcc, Validators.compose([Validators.pattern(CONSTANTS.regexEmailMulti)])],
-      subject: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      subject: [subject, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       message: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       no_reply: [false, Validators.compose([Validators.required])]
     });
