@@ -93,10 +93,13 @@
                       <mat-progress-bar color="accent" [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
                     </div>
                   </div>
-                  <div class="col" *ngIf="isHaveDDL && !isDiscord">
+                  <div class="col-12" *ngIf="isHaveDDL && !isDiscord">
                     <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdlVideo(berkasData.attachment_.id)" style="cursor: pointer;">
                       Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
                     </div>
+                  </div>
+                  <div class="col-12" *ngIf="berkasData.attachment_?.subtitles_?.length > 0 || berkasData.attachment_?.fonts_?.length > 0">
+                    <hr class="my-3 border-bottom-dotted" style="height: 4px; background: url('/assets/img/stripe.png');" />
                   </div>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
                     (click)="standardDdlSubsFont(s.id)" matTooltip="{{ s.name }}.{{ s.name }} :: {{ s.download_count }}x Unduhan">
