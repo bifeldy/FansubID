@@ -17,7 +17,7 @@ export interface PayloadModel {
   [data: string]: any;
 }
 
-export interface CallbackModel {
+export interface VisitorModel {
   unique_ip?: number;
   unique_user?: number;
   verified_user?: number;
@@ -48,6 +48,9 @@ export interface StatsServerModel {
     disk_io?: number,
     net_tx?: number,
     net_rx?: number
+  };
+  billing?: {
+    ongoing?: number
   };
 }
 

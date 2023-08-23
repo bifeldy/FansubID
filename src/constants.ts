@@ -24,6 +24,7 @@ export const CONSTANTS = {
   cronTrackerStatistics: 'CRON_TRACKER_STATISTICS',
   cronSitemap: 'CRON_SITEMAP',
   cronStatsServer: 'CRON_STATS_SERVER',
+  cronVpsBilling: 'CRON_VPS_BILLING',
   decoratorFilterApiKeyAccess: 'filter-api-key-access',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',

@@ -38,6 +38,9 @@ export class StatsServerService {
       disk_io: 0,
       net_tx: 0,
       net_rx: 0
+    },
+    billing: {
+      ongoing: 0
     }
   };
 

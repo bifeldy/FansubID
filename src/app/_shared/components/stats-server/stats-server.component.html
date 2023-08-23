@@ -71,5 +71,11 @@
         {{ SS.statsServer.mainSite.net_tx | bytes:2 }} / {{ SS.statsServer.mainSite.net_rx | bytes:2 }}
       </span>
     </p>
+    <p class="px-2 text-truncate" matTooltip="Diperbarui 10 Menit Sekali">
+      Sisa Saldo ::
+      <span class="text-warning">
+        {{ SS.statsServer.billing.ongoing | currency:'Rp ':'symbol':'1.2-2' }}
+      </span>
+    </p>
   </div>
 </div>

@@ -28,7 +28,7 @@ export class IdCloudHostService {
 
   getStatsUrl(loc: string, vmUuid: string): string {
     return `
-  ${environment.idCloudHost.url}/${loc}/metrics-ws/index
+      ${environment.idCloudHost.wsUrl}/${loc}/metrics-ws/index
         ?subscribe=true
         &apikey=${environment.idCloudHost.apiKey}
         &query=${encodeURIComponent(`
@@ -42,7 +42,8 @@ export class IdCloudHostService {
                 service =~ "libvirt.net_rx_bytes_delta"
               )
             )
-          `.replace(/\s\s+/g, ' ').trim())}
+          `.replace(/\s\s+/g, ' ').trim())
+        }
     `.replace(/\s\s+/g, '').trim();
   }
 

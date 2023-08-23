@@ -5,7 +5,7 @@ import { Equal, ILike, IsNull } from 'typeorm';
 import { CONSTANTS } from '../../constants';
 
 import { RoleModel } from '../../models/req-res.model';
-import { CallbackModel, PayloadModel, PingPongModel, RoomInfoModel, StatsServerModel } from '../../models/socket-io.model';
+import { VisitorModel, PayloadModel, PingPongModel, RoomInfoModel, StatsServerModel } from '../../models/socket-io.model';
 
 import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
@@ -89,7 +89,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   }
 
   @SubscribeMessage('track-get')
-  async trackGet(client: Socket, payload: PayloadModel): Promise<CallbackModel> {
+  async trackGet(client: Socket, payload: PayloadModel): Promise<VisitorModel> {
     try {
       let selected = null;
       const idSlugUsername = payload.idSlugUsername.split('?')[0];
