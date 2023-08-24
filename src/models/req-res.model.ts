@@ -118,6 +118,7 @@ export interface UserModel {
   session_origin?: string;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
   kartu_tanda_penduduk_?: KartuTandaPendudukModel;
   profile_?: ProfileModel;
   _email?: string;
@@ -166,6 +167,7 @@ export interface ProjectTypeModel {
   image_url?: string;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
 }
 
 export interface AnimeModel {
@@ -205,6 +207,7 @@ export interface FansubModel {
   editable?: boolean;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
   user_?: UserModel;
 }
 
@@ -230,6 +233,7 @@ export interface BerkasModel {
   like_count?: number;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
   project_type_?: ProjectTypeModel;
   anime_?: AnimeModel;
   dorama_?: DoramaModel;
@@ -296,6 +300,7 @@ export interface KomentarModel {
   path?: string;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
   parent_komentar_?: KomentarModel;
   user_?: UserModel;
   reply?: KomentarModel[];
@@ -317,6 +322,7 @@ export interface NewsModel {
   like_count?: number;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
   user_?: UserModel;
 }
 
@@ -360,6 +366,7 @@ export interface InformationModel {
   close?: boolean;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
   user_?: UserModel;
 }
 
@@ -372,6 +379,7 @@ export interface NotificationModel {
   deadline?: Date;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
   user_?: UserModel;
 }
 
