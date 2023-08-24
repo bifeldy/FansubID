@@ -58,7 +58,16 @@ export class LostAccountFindController {
             delete noPwdSes.kartu_tanda_penduduk_.created_at;
             delete noPwdSes.kartu_tanda_penduduk_.updated_at;
           }
-          const resetToken = this.cs.credentialEncode({ user: noPwdSes }, null, CONSTANTS.timeResetAccount);
+          const resetToken = this.cs.credentialEncode({
+            user: {
+              username: noPwdSes.username,
+              email: noPwdSes.email,
+              nama: noPwdSes.kartu_tanda_penduduk_.nama,
+              id: noPwdSes.id,
+              created_at: noPwdSes.created_at,
+              updated_at: noPwdSes.updated_at
+            }
+          }, null, CONSTANTS.timeResetAccount);
           this.ms.sendResetAccountMail(selectedUser, resetToken);
           return {
             info: `😅 201 - Lost Account API :: Akun Tersedia 🤣`,
