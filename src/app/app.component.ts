@@ -314,7 +314,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   onWindowBeforeUnloaded(ev): any {
     if (this.as.token) {
       this.gs.log('[BROWSER_EXIT_CLOSE_SAVE_JWT]', this.as.token);
-      this.ls.setItem(this.gs.localStorageKeys.token, this.as.token);
+      this.ls.setItem(this.gs.localStorageKeys.Token, this.as.token);
     }
   }
 

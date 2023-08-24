@@ -21,7 +21,7 @@ export class GlobalService {
     AturanTatib: `${environment.siteName}_AturanTatib`,
     DebugLogs: `${environment.siteName}_DebugLogs`,
     DarkMode: `${environment.siteName}_DarkMode`,
-    token: `${environment.siteName}_Token`,
+    Token: `${environment.siteName}_Token`,
     LiveChatResults: `${environment.siteName}_LiveChatResults`,
     R18: `${environment.siteName}_R18`,
     SearchResults: `${environment.siteName}_SearchResults`,
