@@ -23,6 +23,7 @@ export class GlobalService {
     DarkMode: `${environment.siteName}_DarkMode`,
     token: `${environment.siteName}_Token`,
     LiveChatResults: `${environment.siteName}_LiveChatResults`,
+    R18: `${environment.siteName}_R18`,
     SearchResults: `${environment.siteName}_SearchResults`,
     Torrents : `${environment.siteName}_Torrents`
   };

@@ -8,6 +8,7 @@ import { BerkasService } from '../../../_shared/services/berkas.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
+import { LocalStorageService } from '../../../_shared/services/local-storage.service';
 
 @Component({
   selector: 'app-berkas-list',
@@ -49,6 +50,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private gs: GlobalService,
+    private ls: LocalStorageService,
     private bs: BusyService,
     private berkas: BerkasService,
     private fs: FabService,
@@ -78,12 +80,18 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      this.r18 = this.ls.getItem(this.gs.localStorageKeys.R18) === 'true' || false;
       if (!this.gs.isDesktop) {
         this.tablePageSizeOptions = [10, 25, 50, 75, 100];
       }
       this.row = this.tablePageSizeOptions[0];
       this.getBerkas();
     }
+  }
+
+  r18Changed(): void {
+    this.ls.setItem(this.gs.localStorageKeys.R18, JSON.stringify(this.r18));
+    this.getBerkas();
   }
 
   getBerkas(): void {
