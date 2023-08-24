@@ -25,7 +25,7 @@ export class GlobalService {
     LiveChatResults: `${environment.siteName}_LiveChatResults`,
     R18: `${environment.siteName}_R18`,
     SearchResults: `${environment.siteName}_SearchResults`,
-    Torrents : `${environment.siteName}_Torrents`
+    Torrents: `${environment.siteName}_Torrents`
   };
 
   forceEnableDebugLog = null;
