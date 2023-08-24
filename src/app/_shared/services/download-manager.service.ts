@@ -96,7 +96,7 @@ export class DownloadManagerService {
             const handlers: Observable<any>[] = [];
             for (const sr of sortedResults) {
               let handler = null;
-              if (directDownload) {
+              if (directDownload && sr.url) {
                 handler = this.dls.downloadDdlDirect(sr.url);
               } else {
                 handler = this.dls.downloadDdlProxy(sr.id);

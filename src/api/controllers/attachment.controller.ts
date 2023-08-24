@@ -186,6 +186,7 @@ export class AttachmentController {
           relations: ['user_']
         });
         for (const ddlFile of ddlFiles) {
+          delete ddlFile.url;
           if ('user_' in ddlFile && ddlFile.user_) {
             delete ddlFile.user_.email;
             delete ddlFile.user_.password;
