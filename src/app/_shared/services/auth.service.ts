@@ -37,7 +37,7 @@ export class AuthService {
     private toast: ToastService
   ) {
     if (this.gs.isBrowser) {
-      this.token = this.ls.getItem(this.gs.localStorageKeys.token);
+      this.token = this.ls.getItem(this.gs.localStorageKeys.token) || null;
       this.ls.removeItem(this.gs.localStorageKeys.token);
     }
   }

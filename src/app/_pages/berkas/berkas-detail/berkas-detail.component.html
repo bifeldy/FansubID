@@ -69,7 +69,7 @@
               </div>
               <div class="col-12 text-center" *ngIf="isHaveDDL">
                 <div class="px-3">
-                  <button type="button" class="m-1 w-100" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
+                  <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
                     matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
                     <mat-icon class="me-1">movie</mat-icon>
                     {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
@@ -79,7 +79,7 @@
                     <mat-icon class="me-1">close</mat-icon>
                     Batal Unduh
                   </button>
-                  <button type="button" class="m-1 w-100" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
+                  <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
                     matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan">
                     <mat-icon class="me-1">save</mat-icon>
                     {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }}
@@ -162,7 +162,7 @@
                     Takarir / <i>subtitle</i> yang dapat ditampilkan jenis .ASS saja, itupun jika tersedia di dalam video internalnya.
                   </span>
                   <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1422891" class="text-warning text-decoration-none">
-                    * Browser Firefox sudah pasti tidak bisa memutar video
+                    * Browser Firefox sudah pasti tidak bisa memutar .MKV
                   </a>
                 </div>
                 <div class="px-3">
