@@ -187,6 +187,11 @@ export class AttachmentController {
         });
         for (const ddlFile of ddlFiles) {
           if ('user_' in ddlFile && ddlFile.user_) {
+            delete ddlFile.user_.email;
+            delete ddlFile.user_.password;
+            delete ddlFile.user_.session_token;
+            delete ddlFile.user_.session_origin;
+            delete ddlFile.user_.deleted_at;
             delete ddlFile.user_.created_at;
             delete ddlFile.user_.updated_at;
           }
