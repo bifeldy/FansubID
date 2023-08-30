@@ -11,6 +11,13 @@ import { RightPanelService } from '../../services/right-panel.service';
 import { StatsServerService } from '../../services/stats-server.service';
 import { BusyService } from '../../services/busy.service';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { DialogService } from '../../services/dialog.service';
+
+// Manually Injected
+import { BerkasService } from '../../services/berkas.service';
+import { FansubService } from '../../services/fansub.service';
+import { NewsService } from '../../services/news.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -22,6 +29,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   myPoints = 0;
 
   subsGlobalRoom = null;
+  subsDialog = null;
+  subsDelete = null;
+
+  deleteHandle: any = {};
 
   constructor(
     private snackBar: MatSnackBar,
@@ -32,10 +43,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private gs: GlobalService,
     private ss: StatsServerService,
     private bs: BusyService,
-    private ls: LocalStorageService
+    private ls: LocalStorageService,
+    private ds: DialogService,
+    private berkas: BerkasService,
+    private fansub: FansubService,
+    private news: NewsService,
+    private user: UserService
   ) {
     if (this.gs.isBrowser) {
-      //
+      this.deleteHandle['berkas'] = this.berkas;
+      this.deleteHandle['fansub'] = this.fansub;
+      this.deleteHandle['news'] = this.news;
+      this.deleteHandle['user'] = this.user;
     }
   }
 
@@ -74,6 +93,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsGlobalRoom?.unsubscribe();
+    this.subsDialog?.unsubscribe();
+    this.subsDelete?.unsubscribe();
   }
 
   get discordUrl(): string {
@@ -111,6 +132,43 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.ls.setItem(this.gs.localStorageKeys.DarkMode, JSON.stringify(this.gs.isDarkMode));
     this.pi.updateStatusBarTheme(this.gs.isDarkMode);
     this.snackBar.open(`Menggunakan Mode ${this.gs.isDarkMode ? 'Gelap' : 'Terang'}`, 'Ok');
+  }
+
+  async toggleDelete(): Promise<void> {
+    const currentUrl = this.router.url.split('?')[0];
+    if (
+      currentUrl.startsWith('/berkas/') ||
+      currentUrl.startsWith('/fansub/') ||
+      currentUrl.startsWith('/news/') ||
+      currentUrl.startsWith('/user/')
+    ) {
+      const trackType = currentUrl.split('/')[1];
+      const idSlugUsername = currentUrl.split('/')[2];
+      this.subsDialog = (await this.ds.openKonfirmasiDialog(
+        'Konfirmasi Hapus',
+        `Yakin Akan Menghapus ${trackType[0].toUpperCase()}${trackType.slice(1)} -- '${idSlugUsername}' ?`,
+        true
+      )).afterClosed().subscribe({
+        next: re => {
+          this.gs.log('[INFO_DIALOG_CLOSED]', re);
+          if (re === true) {
+            this.bs.busy();
+            this.subsDelete = this.deleteHandle[trackType].delete(idSlugUsername).subscribe({
+              next: res => {
+                this.gs.log(`[${trackType.toUpperCase()}_CLICK_DELETE_SUCCESS]`, res);
+                this.bs.idle();
+                this.router.navigateByUrl(`/${trackType}`);
+              },
+              error: err => {
+                this.gs.log(`[${trackType.toUpperCase()}_CLICK_DELETE_ERROR]`, err, 'error');
+                this.bs.idle();
+              }
+            });
+          }
+          this.subsDialog.unsubscribe();
+        }
+      });
+    }
   }
 
 }

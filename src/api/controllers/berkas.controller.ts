@@ -839,23 +839,34 @@ export class BerkasController {
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
   @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
+      const user: UserModel = res.locals['user'];
       const berkas =  await this.berkasRepo.findOneOrFail({
         where: [
           { id: Equal(req.params['id']) }
-        ]
+        ],
+        relations: ['user_']
       });
-      const deletedBerkas = await this.berkasRepo.remove(berkas);
-      if ('user_' in deletedBerkas && deletedBerkas.user_) {
-        delete deletedBerkas.user_.created_at;
-        delete deletedBerkas.user_.updated_at;
+      if (user.id === berkas.user_.id || user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
+        const deletedBerkas = await this.berkasRepo.remove(berkas);
+        if ('user_' in deletedBerkas && deletedBerkas.user_) {
+          delete deletedBerkas.user_.created_at;
+          delete deletedBerkas.user_.updated_at;
+        }
+        return {
+          info: `😅 202 - Berkas API :: Berhasil Menghapus Berkas ${req.params['id']} 🤣`,
+          result: deletedBerkas
+        };
+      } else {
+        throw new HttpException({
+          info: '🙄 403 - Berkas API :: Authorisasi Kepemilikan Gagal 😪',
+          result: {
+            message: 'Berkas Milik Orang Lain!'
+          }
+        }, HttpStatus.FORBIDDEN);
       }
-      return {
-        info: `😅 200 - Berkas API :: Berhasil Menghapus Berkas ${req.params['id']} 🤣`,
-        result: deletedBerkas
-      };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

@@ -213,13 +213,14 @@ export class ProjectTypeController {
           info: `😅 202 - Project API :: Berhasil Menghapus Project ${req.params['id']} 🤣`,
           result: deletedProject
         };
+      } else {
+        throw new HttpException({
+          info: `🙄 403 - Project API :: Gagal Menghapus Project ${req.params['id']} 😪`,
+          result: {
+            message: 'Ada Berkas Yang Terkait Dengan Kategori Ini!'
+          }
+        }, HttpStatus.FORBIDDEN);
       }
-      throw new HttpException({
-        info: `🙄 403 - Project API :: Gagal Menghapus Project ${req.params['id']} 😪`,
-        result: {
-          message: 'Ada Berkas Yang Terkait Dengan Kategori Ini!'
-        }
-      }, HttpStatus.FORBIDDEN);
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

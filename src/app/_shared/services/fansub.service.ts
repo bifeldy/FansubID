@@ -20,6 +20,10 @@ export class FansubService {
     }
   }
 
+  delete(fansubSlug: any): Observable<JsonResponse<FansubModel>> {
+    return this.api.deleteData(`/fansub/${fansubSlug}`);
+  }
+
   searchFansub(q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<FansubModel>> {
     return this.api.getData(`/fansub?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}`);
   }

@@ -17,7 +17,7 @@ export class Fansub implements FansubModel {
   @Column({ type: 'text', default: '// No Description' })
   description: string;
 
-  @Column({ type: 'text', unique: true })
+  @Column({ type: 'text', unique: true, nullable: true })
   slug: string;
 
   @Column({ type: 'date' })

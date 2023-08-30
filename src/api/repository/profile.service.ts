@@ -56,7 +56,7 @@ export class ProfileService {
 
   remove(profile: Profile | Profile[]): Promise<Profile | Profile[]> {
     this.gs.log('[PROFILE_SERVICE-REMOVE] 👬', profile);
-    return this.profileRepo.remove(profile as any);
+    return this.profileRepo.softRemove(profile as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {

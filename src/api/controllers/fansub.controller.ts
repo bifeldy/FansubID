@@ -401,15 +401,48 @@ export class FansubController {
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
   @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async deleteBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const fansub =  await this.fansubRepo.findOneOrFail({
+      let user: UserModel = res.locals['user'];
+      const fansub = await this.fansubRepo.findOneOrFail({
         where: [
-          { slug: ILike(req.params['slug']) }
-        ]
+          {
+            slug: ILike(req.params['slug']),
+            editable: true
+          }
+        ],
+        relations: ['user_']
       });
-      const deletedFansub = await this.fansubRepo.remove(fansub);
+      if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR && fansub.user_.id !== user.id) {
+        try {
+          const member = await this.fansubMemberRepo.findOneOrFail({
+            where: [
+              {
+                fansub_ : {
+                  id: fansub.id
+                },
+                user_ : {
+                  id: user.id
+                }
+              }
+            ],
+            relations: ['fansub_', 'user_']
+          });
+          user = member.user_;
+        } catch (e) {
+          throw new HttpException({
+            info: `🙄 403 - Fansub API :: Gagal Mengubah Fansub ${req.params['slug']} 😪`,
+            result: {
+              message: `Harus Menjadi Anggota Untuk Menghapus Data!`
+            }
+          }, HttpStatus.FORBIDDEN);
+        }
+      }
+      fansub.slug = `${fansub.slug}~${new Date().getTime()}`;
+      fansub.editable = false;
+      const updatedFansub = await this.fansubRepo.save(fansub);
+      const deletedFansub = await this.fansubRepo.remove(updatedFansub);
       if ('user_' in deletedFansub && deletedFansub.user_) {
         delete deletedFansub.user_.created_at;
         delete deletedFansub.user_.updated_at;

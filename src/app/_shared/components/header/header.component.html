@@ -16,6 +16,10 @@
     {{ myPoints }}
   </button>
 
+  <button type="button" class="animate__animated animate__rubberBand animate__infinite animate__slower" mat-icon-button (click)="toggleDelete()" matTooltip="Ganti Warna" *ngIf="ROUTER.url.includes('/berkas/') ||ROUTER.url.includes('/fansub/') ||ROUTER.url.includes('/news/') ||ROUTER.url.includes('/user/')">
+    <mat-icon>delete</mat-icon>
+  </button>
+
   <button type="button" class="animate__animated animate__tada animate__infinite animate__slower" mat-icon-button (click)="toggleWeather()" matTooltip="Weather Effect" *ngIf="GS.weatherEffect">
     <mat-icon>filter_vintage</mat-icon>
   </button>

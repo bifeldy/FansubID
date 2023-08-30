@@ -21,6 +21,10 @@ export class BerkasService {
     }
   }
 
+  delete(berkasId: any): Observable<JsonResponse<BerkasModel>> {
+    return this.api.deleteData(`/berkas/${berkasId}`);
+  }
+
   getAllBerkas(q = '', page = 1, row = 10, sort = '', order = '', r18: boolean): Observable<JsonResponse<BerkasModel>> {
     return this.api.getData(`/berkas?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}${r18 ? '&r18=true' : ''}`);
   }

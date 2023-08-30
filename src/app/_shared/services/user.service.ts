@@ -25,6 +25,10 @@ export class UserService {
     }
   }
 
+  delete(username: any): Observable<JsonResponse<UserModel>> {
+    return this.api.deleteData(`/user/${username}`);
+  }
+
   checkBanned(username): Observable<JsonResponse<BannedModel>> {
     return this.api.getData(`/banned?username=${username}`);
   }

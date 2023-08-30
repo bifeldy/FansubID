@@ -290,36 +290,46 @@ export class UserController {
   @ApiExcludeEndpoint()
   @FilterApiKeyAccess()
   @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  async deleteByUsername(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const user =  await this.userRepo.findOneOrFail({
+      const user: UserModel = res.locals['user'];
+      const targetUser =  await this.userRepo.findOneOrFail({
         where: [
           { username: ILike(req.params['username']) }
         ],
         relations: ['profile_']
       });
-      const ktp = await this.ktpRepo.findOneOrFail({
-        where: [
-          { id: Equal(user.id) }
-        ]
-      });
-      const profile = await this.profileRepo.findOneOrFail({
-        where: [
-          { id: Equal(user.profile_.id) }
-        ]
-      });
-      const deletedUser = await this.userRepo.remove(user);
-      const deletedKtp = await this.ktpRepo.remove(ktp);
-      const deletedProfile = await this.profileRepo.remove(profile);
-      return {
-        info: `😅 202 - User API :: Berhasil Menghapus User ${req.params['username']} 🤣`,
-        result: {
-          user: deletedUser,
-          ktp: deletedKtp,
-          profile: deletedProfile
-        }
-      };
+      if (user.id === targetUser.id || user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
+        const ktp = await this.ktpRepo.findOneOrFail({
+          where: [
+            { id: Equal(targetUser.id) }
+          ]
+        });
+        const profile = await this.profileRepo.findOneOrFail({
+          where: [
+            { id: Equal(targetUser.profile_.id) }
+          ]
+        });
+        const deletedUser = await this.userRepo.remove(targetUser);
+        const deletedKtp = await this.ktpRepo.remove(ktp);
+        const deletedProfile = await this.profileRepo.remove(profile);
+        return {
+          info: `😅 202 - User API :: Berhasil Menghapus User ${req.params['username']} 🤣`,
+          result: {
+            user: deletedUser,
+            ktp: deletedKtp,
+            profile: deletedProfile
+          }
+        };
+      } else {
+        throw new HttpException({
+          info: '🙄 403 - User API :: Authorisasi Kepemilikan Gagal 😪',
+          result: {
+            message: 'User Milik Orang Lain!'
+          }
+        }, HttpStatus.FORBIDDEN);
+      }
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

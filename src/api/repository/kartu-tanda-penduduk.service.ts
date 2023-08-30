@@ -56,7 +56,7 @@ export class KartuTandaPendudukService {
 
   remove(kartuTandaPenduduk: KartuTandaPenduduk | KartuTandaPenduduk[]): Promise<KartuTandaPenduduk | KartuTandaPenduduk[]> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-REMOVE] 👨‍👩‍👧‍👦', kartuTandaPenduduk);
-    return this.kartuTandaPendudukRepo.remove(kartuTandaPenduduk as any);
+    return this.kartuTandaPendudukRepo.softRemove(kartuTandaPenduduk as any);
   }
 
   query(query: string, parameters: any = []): Promise<any> {
