@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { Equal, ILike } from 'typeorm';
+import { Equal, ILike, Not } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -52,7 +52,7 @@ export class UserController {
   @ApiTags(CONSTANTS.apiTagUser)
   @ApiQuery({ name: 'q', required: true, type: 'string' })
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-    const searchQuery = req.query['q'] || '';
+    const searchQuery: any = req.query['q'] || '';
     try {
       const adminMod: UserModel = res.locals['user'];
       let maxPage = 0;
@@ -296,7 +296,10 @@ export class UserController {
       const user: UserModel = res.locals['user'];
       const targetUser =  await this.userRepo.findOneOrFail({
         where: [
-          { username: ILike(req.params['username']) }
+          {
+            username: ILike(req.params['username']),
+            role: Not(RoleModel.ADMIN)
+          }
         ],
         relations: ['profile_']
       });
