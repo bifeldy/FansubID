@@ -74,6 +74,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.ss;
   }
 
+  get canDelete(): boolean {
+    return (
+      this.router.url.startsWith('/berkas/') ||
+      this.router.url.startsWith('/fansub/') ||
+      this.router.url.startsWith('/news/') ||
+      this.router.url.startsWith('/user/')
+    );
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       const osTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -135,15 +144,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async toggleDelete(): Promise<void> {
-    const currentUrl = this.router.url.split('?')[0];
+    const urlPath = this.router.url.split('?')[0];
     if (
-      currentUrl.startsWith('/berkas/') ||
-      currentUrl.startsWith('/fansub/') ||
-      currentUrl.startsWith('/news/') ||
-      currentUrl.startsWith('/user/')
+      urlPath.startsWith('/berkas/') ||
+      urlPath.startsWith('/fansub/') ||
+      urlPath.startsWith('/news/') ||
+      urlPath.startsWith('/user/')
     ) {
-      const trackType = currentUrl.split('/')[1];
-      const idSlugUsername = currentUrl.split('/')[2];
+      const trackType = urlPath.split('/')[1];
+      const idSlugUsername = urlPath.split('/')[2];
       this.subsDialog = (await this.ds.openKonfirmasiDialog(
         'Konfirmasi Hapus',
         `Yakin Akan Menghapus ${trackType[0].toUpperCase()}${trackType.slice(1)} -- '${idSlugUsername}' ?`,

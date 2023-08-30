@@ -153,4 +153,20 @@ export class DialogService {
     return this.openInfoDialog(defaultData);
   }
 
+  async openDonation(): Promise<MatDialogRef<MaterialDialogInfoComponent, any>> {
+    const defaultData = {
+      id: 'DONASI',
+      data: {
+        title: 'Donasi Perawatan Server',
+        htmlMessage: 'Gagal Memuat Rincian Donasi',
+        confirmText: 'Tutup',
+        cancelText: null
+      },
+      disableClose: false,
+      maxWidth: this.maxWidth
+    };
+    await this.fetchInformation(defaultData);
+    return this.openInfoDialog(defaultData);
+  }
+
 }

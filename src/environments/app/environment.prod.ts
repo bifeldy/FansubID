@@ -12,9 +12,6 @@ export const environment = {
     join_url: 'https://discord.gg/xGWdExk',
     guild_id: '342220398022098944'
   },
-  saweria: 'https://saweria.co/Bifeldy',
-  trakteer: 'https://teer.id/bifeldy',
-  github: 'https://github.com/sponsors/bifeldy',
   torrent: {
     trackerAnnounce: [
       'wss://tracker.fansub.id',

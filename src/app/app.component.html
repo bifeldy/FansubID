@@ -24,30 +24,30 @@
   <!-- Main Content -->
   <mat-sidenav-content #siteContent [style.background-repeat]="'no-repeat'"
     [style.background-size]="'128px' + (
-      ROUTER.url === '/login' || ROUTER.url.includes('/login?') ||
-      ROUTER.url === '/register' || ROUTER.url.includes('/register?') ||
-      ROUTER.url === '/home' || ROUTER.url.includes('/home?') ||
-      ROUTER.url === '/verify' || ROUTER.url.includes('/verify?') ||
-      ROUTER.url === '/privacy-policy' || ROUTER.url.includes('/privacy-policy?') ||
-      ROUTER.url === '/reset-password' || ROUTER.url.includes('/reset-password?')
+      ROUTER.url.startsWith('/login') ||
+      ROUTER.url.startsWith('/register') ||
+      ROUTER.url.startsWith('/home') ||
+      ROUTER.url.startsWith('/verify') ||
+      ROUTER.url.startsWith('/privacy-policy') ||
+      ROUTER.url.startsWith('/reset-password')
       ? ', cover' : ''
     )"
     [style.background-position]="'bottom right' + (
-      ROUTER.url === '/login' || ROUTER.url.includes('/login?') ||
-      ROUTER.url === '/register' || ROUTER.url.includes('/register?') ||
-      ROUTER.url === '/home' || ROUTER.url.includes('/home?') ||
-      ROUTER.url === '/verify' || ROUTER.url.includes('/verify?') ||
-      ROUTER.url === '/privacy-policy' || ROUTER.url.includes('/privacy-policy?') ||
-      ROUTER.url === '/reset-password' || ROUTER.url.includes('/reset-password?')
+      ROUTER.url.startsWith('/login') ||
+      ROUTER.url.startsWith('/register') ||
+      ROUTER.url.startsWith('/home') ||
+      ROUTER.url.startsWith('/verify') ||
+      ROUTER.url.startsWith('/privacy-policy') ||
+      ROUTER.url.startsWith('/reset-password')
       ? ', center' : ''
     )"
     [style.background-image]="'url(' + GS.bgImgUrl + ')' + (
-      ROUTER.url === '/login' || ROUTER.url.includes('/login?') ||
-      ROUTER.url === '/register' || ROUTER.url.includes('/register?') ||
-      ROUTER.url === '/home' || ROUTER.url.includes('/home?') ||
-      ROUTER.url === '/verify' || ROUTER.url.includes('/verify?') ||
-      ROUTER.url === '/privacy-policy' || ROUTER.url.includes('/privacy-policy?') ||
-      ROUTER.url === '/reset-password' || ROUTER.url.includes('/reset-password?')
+      ROUTER.url.startsWith('/login') ||
+      ROUTER.url.startsWith('/register') ||
+      ROUTER.url.startsWith('/home') ||
+      ROUTER.url.startsWith('/verify') ||
+      ROUTER.url.startsWith('/privacy-policy') ||
+      ROUTER.url.startsWith('/reset-password')
       ? ', url(\'/assets/img/background/paint.svg\')' : ''
     )">
 
