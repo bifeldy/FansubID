@@ -141,7 +141,6 @@ export class AnimeListComponent implements OnInit, OnDestroy {
 
   getFansubAnime(): void {
     this.bs.busy();
-    this.tabData[0].data.row = [];
     const seasonalAnimeListId = [];
     for (const sA of this.seasonalAnime) {
       seasonalAnimeListId.push(sA.id);

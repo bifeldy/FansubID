@@ -78,52 +78,55 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[USER_LIST_SUCCESS]', res);
         this.count = res.count;
+        this.userData.row = [];
         this.bs.busy();
-        this.subsBannedGet = this.adm.getBanned({
-          username: res.results.map(r => r.username)
-        }).subscribe({
-          next: result => {
-            this.gs.log('[BANNED_LIST_SUCCESS]', res);
-            const userDataRow = [];
-            let excludedRole = [];
-            if (this.as.currentUserSubject?.value?.role === RoleModel.ADMIN) {
-              excludedRole = [RoleModel.ADMIN];
-            } else {
-              excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
+        if (res.results.length > 0) {
+          this.subsBannedGet = this.adm.getBanned({
+            username: res.results.map(r => r.username)
+          }).subscribe({
+            next: result => {
+              this.gs.log('[BANNED_LIST_SUCCESS]', res);
+              const userDataRow = [];
+              let excludedRole = [];
+              if (this.as.currentUserSubject?.value?.role === RoleModel.ADMIN) {
+                excludedRole = [RoleModel.ADMIN];
+              } else {
+                excludedRole = [RoleModel.ADMIN, RoleModel.MODERATOR];
+              }
+              for (const r of res.results) {
+                userDataRow.push({
+                  Id: r.id,
+                  Role: r.role,
+                  Image: r.image_url,
+                  Username: r.username,
+                  Email: r._email,
+                  'Nama Lengkap': r.kartu_tanda_penduduk_.nama,
+                  banned: (Object.keys(result.results[r.username]).length > 0),
+                  Aksi: [
+                    { type: 'button', icon: 'mail_outline', name: 'MAIL', row: r },
+                    ...((
+                      (Object.keys(result.results[r.username]).length > 0) ||
+                      (r.username === this.as.currentUserSubject?.value?.username) ||
+                      this.gs.includesOneOf(r.role, excludedRole)
+                    ) ? [] : [
+                      { type: 'button', icon: 'lock', name: 'BAN', row: r },
+                      { type: 'button', icon: 'handyman', name: RoleModel.ADMIN, row: r },
+                      { type: 'button', icon: 'security', name: RoleModel.MODERATOR, row: r },
+                      { type: 'button', icon: 'rate_review', name: RoleModel.FANSUBBER, row: r },
+                      { type: 'button', icon: 'person', name: RoleModel.USER, row: r }
+                    ])
+                  ]
+                });
+              }
+              this.userData.row = userDataRow;
+              this.bs.idle();
+            },
+            error: err => {
+              this.gs.log('[BANNED_LIST_ERROR]', err, 'error');
+              this.bs.idle();
             }
-            for (const r of res.results) {
-              userDataRow.push({
-                Id: r.id,
-                Role: r.role,
-                Image: r.image_url,
-                Username: r.username,
-                Email: r._email,
-                'Nama Lengkap': r.kartu_tanda_penduduk_.nama,
-                banned: (Object.keys(result.results[r.username]).length > 0),
-                Aksi: [
-                  { type: 'button', icon: 'mail_outline', name: 'MAIL', row: r },
-                  ...((
-                    (Object.keys(result.results[r.username]).length > 0) ||
-                    (r.username === this.as.currentUserSubject?.value?.username) ||
-                    this.gs.includesOneOf(r.role, excludedRole)
-                  ) ? [] : [
-                    { type: 'button', icon: 'lock', name: 'BAN', row: r },
-                    { type: 'button', icon: 'handyman', name: RoleModel.ADMIN, row: r },
-                    { type: 'button', icon: 'security', name: RoleModel.MODERATOR, row: r },
-                    { type: 'button', icon: 'rate_review', name: RoleModel.FANSUBBER, row: r },
-                    { type: 'button', icon: 'person', name: RoleModel.USER, row: r }
-                  ])
-                ]
-              });
-            }
-            this.userData.row = userDataRow;
-            this.bs.idle();
-          },
-          error: err => {
-            this.gs.log('[BANNED_LIST_ERROR]', err, 'error');
-            this.bs.idle();
-          }
-        });
+          });
+        }
         this.bs.idle();
       },
       error: err => {

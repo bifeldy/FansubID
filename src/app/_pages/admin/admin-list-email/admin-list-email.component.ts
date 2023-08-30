@@ -98,9 +98,9 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[MAIL_LIST_SUCCESS]', res);
         this.count = res.count;
-        this.mailData.row = [];
+        const mailDataRow = [];
         for (const r of res.results) {
-          this.mailData.row.push({
+          mailDataRow.push({
             id: r.id,
             Tanggal: r.date,
             Pengirim: this.filterAddress(r.from),
@@ -109,6 +109,7 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
             Lampiran: `${r.attachment_count} Berkas`
           });
         }
+        this.mailData.row = mailDataRow;
         this.bs.idle();
       },
       error: err => {

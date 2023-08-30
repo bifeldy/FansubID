@@ -158,7 +158,6 @@ export class DoramaListComponent implements OnInit, OnDestroy {
 
   getFansubDorama(): void {
     this.bs.busy();
-    this.tabData[0].data.row = [];
     const seasonalDoramaListId = [];
     for (const sD of this.seasonalDorama) {
       seasonalDoramaListId.push(sD.mdl_id);
