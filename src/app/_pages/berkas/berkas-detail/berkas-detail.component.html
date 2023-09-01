@@ -82,7 +82,7 @@
                   <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
                     matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan">
                     <mat-icon class="me-1">save</mat-icon>
-                    {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }}
+                    {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
                   </button>
                   <div class="col">
                     <div class="px-3" *ngIf="lampiran.isDownloading && !lampiran.isCompleted">
@@ -147,6 +147,16 @@
       <div class="col-md-7 col-xl-8 p-3 sticky-top">
         <div class="row sticky-top">
           <div class="col">
+            <div class="row py-3" *ngIf="berkasData.description">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+                <h2 class="border-bottom-dotted">
+                  <b class="text-bifeldy">Deskripsi & Informasi</b>
+                </h2>
+              </div>
+              <div class="col-12">
+                <div class="py-2 px-3" style="white-space: pre-line !important;" [innerHTML]="berkasData.description"></div>
+              </div>
+            </div>
             <div class="row py-3" *ngIf="berkasData.attachment_ && isStreamable">
               <div class="col-12 pt-3 sticky-top bg-bifeldy">
                 <h2 class="border-bottom-dotted">
@@ -191,16 +201,6 @@
                     {{ berkasData.attachment_ }}
                   </button>
                 </div>
-              </div>
-            </div>
-            <div class="row py-3" *ngIf="berkasData.description">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy">
-                <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy">Deskripsi & Informasi</b>
-                </h2>
-              </div>
-              <div class="col-12">
-                <div class="py-2 px-3" style="white-space: pre-line !important;" [innerHTML]="berkasData.description"></div>
               </div>
             </div>
             <div class="row py-3" *ngIf="SS.mySocket?.id">
