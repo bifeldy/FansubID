@@ -111,6 +111,21 @@ export class AttachmentController {
     try {
       if (file) {
         const user: UserModel = res.locals['user'];
+        const oldDuplicateTempAttachment = await this.tempAttachmentRepo.find({
+          where: [
+            { name: Equal(file.id) }
+          ]
+        });
+        if (oldDuplicateTempAttachment.length > 0) {
+          for (const ota of oldDuplicateTempAttachment) {
+            try {
+              this.sr.deleteTimeout(`${CONSTANTS.timeoutDeleteTempAttachmentKey}@${ota.id}`);
+            } catch (e) {
+              this.gs.log('[TEMP_ATTACHMENT_DUPLICATED-ERROR] 🚮', e, 'error');
+            }
+          }
+          await this.tempAttachmentRepo.remove(oldDuplicateTempAttachment);
+        }
         const tempAttachment = this.tempAttachmentRepo.new();
         tempAttachment.name = file.id;
         tempAttachment.ext = file.originalName.split('.').pop().toLowerCase();
