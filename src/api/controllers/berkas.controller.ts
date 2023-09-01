@@ -69,7 +69,7 @@ export class BerkasController {
           relations: ['user_']
         });
         await this.tempAttachmentRepo.remove(tempAttachment);
-        if (berkas.attachment_ !== null) {
+        if ('attachment_' in berkas && berkas.attachment_) {
           throw new HttpException({
             info: `🙄 403 - Berkas API :: Tidak Dapat Mengganti Lampiran 😪`,
             result: {
