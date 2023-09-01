@@ -2,9 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { Observable } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
+import { UploadState, Uploader, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
+
+import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
@@ -27,6 +31,14 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   berkasId = '';
 
+  uploads$: Observable<Uploader[]>;
+
+  attachmentSelected: UploadState = null;
+  attachmentErrorText = null;
+  attachmentLimitExceeded = null;
+
+  timerTimeout = null;
+
   fg: FormGroup;
 
   submitted = false;
@@ -36,6 +48,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   uploadToast = null;
 
   gambar = null;
+  ddl = null;
 
   image = null;
   imageErrorText = null;
@@ -65,6 +78,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   subsImgbb = null;
   subsBerkasDetail = null;
   subsBerkasUpdate = null;
+  subsUpload = null;
 
   berkasType = '';
 
@@ -82,11 +96,16 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private imgbb: ImgbbService,
     private gs: GlobalService,
-    private as: AuthService
+    private as: AuthService,
+    private uploadService: UploadxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
     this.gs.bgRepeat = false;
+  }
+
+  get CONSTANTS(): any {
+    return CONSTANTS;
   }
 
   get AS(): AuthService {
@@ -95,6 +114,19 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   get GS(): GlobalService {
     return this.gs;
+  }
+
+  get fileTypeAttachmentAllowed(): string {
+    return CONSTANTS.fileTypeAttachmentAllowed.join(', ');
+  }
+
+  get permanentStorage(): boolean {
+    const role: RoleModel = this.AS.currentUserSubject?.value?.role;
+    return role === RoleModel.ADMIN || role === RoleModel.MODERATOR;
+  }
+
+  get isAttachmentUploaded(): boolean {
+    return this.fg.controls['attachment_id'].value !== null;
   }
 
   ngOnInit(): void {
@@ -123,6 +155,46 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
           } else {
             this.loadProjectList();
             this.initForm(res.result);
+            this.uploads$ = this.uploadService.connect();
+            this.subsUpload = this.uploadService.events.subscribe({
+              next: state => {
+                this.gs.log('[UPLOAD_EVENTS]', state);
+                if (state.status === 'uploading' || state.status === 'complete') {
+                  this.attachmentSelected = state;
+                }
+                if (state.status === 'complete') {
+                  this.gs.log('[UPLOAD_COMPLETED]', state.response);
+                  this.fg.controls['attachment_id'].patchValue(state.response.result.id);
+                  this.fg.controls['attachment_id'].markAsDirty();
+                  this.fg.controls['permanent_storage'].markAsDirty();
+                  this.uploadToast = this.toast.warning(
+                    `Segera Kirim Data Berkas!`,
+                    `Lampiran Akan Dihapus ...`,
+                    {
+                      closeButton: false,
+                      timeOut: CONSTANTS.timeoutDeleteTempAttachmentTime,
+                      disableTimeOut: 'extendedTimeOut',
+                      tapToDismiss: false,
+                      progressAnimation: 'decreasing'
+                    },
+                    true
+                  );
+                  this.timerTimeout = setTimeout(() => {
+                    this.gs.log('[UPLOAD_TIMEOUT]', CONSTANTS.timeoutDeleteTempAttachmentTime);
+                    this.failOrCancelUpload({
+                      info: 'Expired, Silahkan Upload Ulang!'
+                    });
+                  }, CONSTANTS.timeoutDeleteTempAttachmentTime);
+                } else if (state.status === 'error') {
+                  this.gs.log('[UPLOAD_ERROR]', state.response, 'error');
+                  this.failOrCancelUpload(state.response);
+                }
+              },
+              error: err => {
+                this.gs.log('[UPLOAD_ERROR]', err, 'error');
+                this.failOrCancelUpload(err);
+              }
+            });
           }
         },
         error: err => {
@@ -142,6 +214,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     if (this.uploadToast) {
       this.toast.remove(this.uploadToast.toastId);
     }
+    if (this.timerTimeout) {
+      clearTimeout(this.timerTimeout);
+      this.timerTimeout = null;
+    }
     this.subsProject?.unsubscribe();
     this.subsFansub?.unsubscribe();
     this.subsAnimeDetail?.unsubscribe();
@@ -155,6 +231,61 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.subsImgbb?.unsubscribe();
     this.subsBerkasDetail?.unsubscribe();
     this.subsBerkasUpdate?.unsubscribe();
+    this.subsUpload?.unsubscribe();
+  }
+
+  uploadAttachment(event, ddl): void {
+    this.ddl = ddl;
+    const file = event.target.files[0];
+    this.attachmentLimitExceeded = null;
+    this.attachmentErrorText = null;
+    this.gs.log('[ATTACHMENT_SELECTED]', file);
+    this.fg.controls['attachment_id'].patchValue(null);
+    this.uploadService.disconnect();
+    try {
+      if (file.size <= CONSTANTS.fileSizeAttachmentTotalLimit) {
+        this.uploadService.handleFiles(file);
+      } else {
+        this.attachmentLimitExceeded = CONSTANTS.fileSizeAttachmentTotalLimit;
+        this.ddl.clear(event);
+      }
+    } catch (error) {
+      this.ddl.clear(event);
+    }
+  }
+
+  submitAttachment(item: Uploader): void {
+    const uploader = this.uploadService.state().find(x => x.uploadId === item.uploadId);
+    if (uploader) {
+      this.attachmentSelected = uploader;
+      item.status = 'queue';
+    }
+  }
+
+  failOrCancelUpload(err = null): void {
+    this.attachmentSelected = null;
+    this.attachmentErrorText = err?.result?.message || err?.info || err?.error?.message || 'Terjadi Kesalahan, Harap Reload Halaman!';
+    this.uploadService.disconnect();
+    this.fg.controls['attachment_id'].patchValue(null);
+    this.fg.controls['attachment_id'].markAsPristine();
+    this.fg.controls['attachment_id'].markAsUntouched();
+    this.fg.controls['permanent_storage'].markAsPristine();
+    this.fg.controls['permanent_storage'].markAsUntouched();
+    if (this.uploadToast) {
+      this.toast.remove(this.uploadToast.toastId);
+    }
+    this.ddl.clear();
+  }
+
+  verify(): void {
+    this.router.navigate(['/verify'], {
+      queryParams: {
+        returnUrl: this.router.url.split('?')[0]
+      },
+      state: {
+        bypassCanDeactivate: true
+      }
+    });
   }
 
   loadProjectList(): void {
@@ -200,9 +331,11 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       dorama_name: [data.dorama_?.name || null, Validators.compose([])],
       fansub_list: this.fb.array([]),
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      attachment_id: [data.attachment_?.id, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([]),
       private: [data.private, Validators.compose([Validators.required])],
-      r18: [data.r18, Validators.compose([Validators.required])]
+      r18: [data.r18, Validators.compose([Validators.required])],
+      permanent_storage: [false, Validators.compose([Validators.required])]
     });
     this.image_url = data.image_url;
     this.image_url_original = this.image_url;
@@ -447,6 +580,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.imageErrorText = null;
     this.fg.controls['image'].patchValue(null);
     this.fg.controls['image'].markAsPristine();
+    this.fg.controls['image'].markAsUntouched();
     const file = event.target.files[0];
     try {
       const reader = new FileReader();
@@ -489,6 +623,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
         this.gs.log('[IMAGE_ERROR]', err, 'error');
         this.fg.controls['image'].patchValue(null);
         this.fg.controls['image'].markAsPristine();
+        this.fg.controls['image'].markAsUntouched();
         this.submitted = false;
         this.imageErrorText = err.result?.message || err.info;
       }
@@ -506,7 +641,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       body.fansub_id = fansubId;
       delete body.fansub_list;
     }
-    if (this.attachmentFile === null && this.fg.value.download_url.lenth === 0) {
+    if (this.fg.value.attachment_id === null && this.fg.value.download_url.lenth === 0) {
       this.submitted = false;
       this.uploadToast = this.toast.warning(
         `Lampiran DDL / URL Eksternal!`,

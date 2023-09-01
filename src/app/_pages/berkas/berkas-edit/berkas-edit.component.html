@@ -49,6 +49,11 @@
                       R-18+ Konten Eksplisit
                     </mat-slide-toggle>
                   </div>
+                  <div class="col-12 p-3" *ngIf="!attachmentFile && permanentStorage && isAttachmentUploaded">
+                    <mat-slide-toggle formControlName="permanent_storage" matTooltip="Berkas terjamin tidak akan hilang / expired">
+                      Permanent Storage
+                    </mat-slide-toggle>
+                  </div>
                   <mat-form-field appearance="outline" class="px-3 pt-3 col-12" [color]="'accent'">
                     <mat-label>Jenis Proyek</mat-label>
                     <mat-select formControlName="projectType_id" placeholder="Anime / Drama">
@@ -160,22 +165,73 @@
                   </mat-form-field>
                   <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
                 </div>
-                <div class="row" *ngIf="attachmentFile">
+                <div class="row">
                   <div class="col-12 p-3">
                     <mat-divider></mat-divider>
                   </div>
                 </div>
-                <div class="row" *ngIf="attachmentFile">
-                  <mat-list>
-                    <div mat-subheader class="text-warning">Berkas yang terlampir tidak boleh diubah.</div>
-                    <mat-list-item>
-                      <mat-icon mat-list-icon>attach_file</mat-icon>
-                      <div mat-line>{{ attachmentFile.name }}.{{ attachmentFile.ext }}</div>
-                      <div mat-line>{{ attachmentFile.size | bytes }}</div>
-                    </mat-list-item>
-                    <p class="p-3 m-0" *ngIf="attachmentFontSubtitle.length > 0">{{ attachmentFontSubtitle.join(', ').toLowerCase() }}</p>
-                  </mat-list>
-                </div>
+                <div *ngIf="attachmentFile; then ddlExist; else ddlNotExist;"></div>
+                <ng-template #ddlExist>
+                  <div class="row">
+                    <mat-list>
+                      <div mat-subheader class="text-warning">Berkas yang terlampir tidak boleh diubah.</div>
+                      <mat-list-item>
+                        <mat-icon mat-list-icon>attach_file</mat-icon>
+                        <div mat-line>{{ attachmentFile.name }}.{{ attachmentFile.ext }}</div>
+                        <div mat-line>{{ attachmentFile.size | bytes }}</div>
+                      </mat-list-item>
+                      <p class="p-3 m-0" *ngIf="attachmentFontSubtitle.length > 0">{{ attachmentFontSubtitle.join(', ').toLowerCase() }}</p>
+                    </mat-list>
+                  </div>
+                </ng-template>
+                <ng-template #ddlNotExist>
+                  <div *ngIf="AS.currentUserSubject?.value?.verified; then ddlVerified; else ddlNotVerified;"></div>
+                  <ng-template #ddlVerified>
+                    <div class="row">
+                      <div class="col-12 px-3">
+                        <small class="text-success">
+                          * <i>Resume-able Upload</i> (Tidak wajib, jika sudah ada URL eksternal, misal alamat webmu gdrive mediafire mega dan lain sebagainya).
+                          Mohon ditunggu dan jangan di tinggal, berkas lampiran akan <i>expired</i> apabila tidak disimpan dalam {{ CONSTANTS.timeoutDeleteTempAttachmentTime / 60 / 1000 }} menit setelah berhasil <i>upload</i>.
+                          Setelah berhasil membuat berkas, lampiran tidak akan bisa di modifikasi.
+                        </small>
+                      </div>
+                      <mat-form-field appearance="outline" class="px-3 pt-3 col" [color]="'accent'">
+                        <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
+                        <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event, ddl)" #ddl [disabled]="attachmentSelected !== null"
+                          [accept]="fileTypeAttachmentAllowed" uploadx></ngx-mat-file-input>
+                        <mat-icon matSuffix>attach_file</mat-icon>
+                      </mat-form-field>
+                      <mat-error class="px-4 w-100">
+                        <small>
+                          <div *ngIf="attachmentLimitExceeded">Ukuran Upload Melebihi Batas {{ attachmentLimitExceeded | bytes }} !</div>
+                          <div *ngIf="attachmentErrorText">{{ attachmentErrorText }}</div>
+                        </small>
+                      </mat-error>
+                    </div>
+                    <div class="row mb-4" *ngFor="let item of uploads$ | async">
+                      <div class="col">
+                        <div class="px-3">
+                          {{ item.status }} :: {{ item.progress }}% @ {{ item.speed | bytes }}/s
+                          <br />
+                          <mat-progress-bar [mode]="'determinate'" [value]="item.progress"></mat-progress-bar>
+                        </div>
+                      </div>
+                      <div class="col-6 col-lg-4">
+                        <button type="button" mat-raised-button class="w-100" color="primary"
+                          [disabled]="submitted || item.status === 'complete' || item.status === 'uploading'" (click)="submitAttachment(item)">
+                          <mat-icon class="me-1">attachment</mat-icon>
+                          Unggah
+                        </button>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template #ddlNotVerified>
+                    <button type="button" class="w-100" mat-stroked-button color="accent" (click)="verify()">
+                      <mat-icon class="me-1">enhanced_encryption</mat-icon>
+                      Verifikasi Akun Untuk Upload DDL!
+                    </button>
+                  </ng-template>
+                </ng-template>
                 <div class="row">
                   <div class="col-12 p-3">
                     <mat-divider></mat-divider>
