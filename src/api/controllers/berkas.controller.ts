@@ -400,7 +400,7 @@ export class BerkasController {
       if (
         'name' in req.body && 'projectType_id' in req.body &&
         ('anime_id' in req.body || 'dorama_id' in req.body) &&
-        'fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0
+        ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
       ) {
         const user: UserModel = res.locals['user'];
         const berkas = this.berkasRepo.new();
@@ -425,6 +425,14 @@ export class BerkasController {
             }, HttpStatus.BAD_REQUEST);
           }
         } else {
+          if ('attachment_id' in req.body) {
+            throw new HttpException({
+              info: '🙄 403 - Berkas API :: Whoops, Akses Ditolak 😪',
+              result: {
+                message: 'Silahkan Verifikasi Untuk Bisa Upload Lampiran!'
+              }
+            }, HttpStatus.FORBIDDEN);
+          }
           if (filteredUrls.length <= 0) {
             throw new HttpException({
               info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
@@ -671,7 +679,7 @@ export class BerkasController {
     try {
       if (
         'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body ||
-        'anime_id' in req.body || 'dorama_id' in req.body || 'projectType_id' in req.body || 'r18' in req.body ||
+        ('anime_id' in req.body || 'dorama_id' in req.body) || 'projectType_id' in req.body || 'r18' in req.body ||
         ('download_url' in req.body && Array.isArray(req.body.download_url)) || 'attachment_id' in req.body ||
         ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
       ) {
