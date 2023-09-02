@@ -23,7 +23,7 @@ Jangan Update List Di Bawah Ini
 [-] ngx-swiper-wrapper: ^10.0.0
 [-] socket.io-client: ^2.4.0
 [-] swiper: ^6.8.4
-[-] typeorm: 0.2.38
+[-] typeorm: ^0.2.38
 [-] webtorrent: ^1.5.8
 
 (っ.❛ ᴗ ❛.)っ
