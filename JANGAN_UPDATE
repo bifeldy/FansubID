@@ -1,15 +1,20 @@
 (づ￣ ³￣)づ
 
 1. ng update --force ...@...
-x. commit
 2. npm i @angular-material-components/datetime-picker@...
-x. commit
 3. npm i @kolkov/angular-editor
-x. commit
+4. npm i ngx-material-file-input
+
+5. npm install -g @angular/cli@...
+6. ng new fansubid
+7. ng add @angular/material@...
+8. npm i -D @nguniversal/express-engine
+9. ng add @nestjs/ng-universal
 
 (⁠⊃⁠｡⁠•́⁠‿⁠•̀⁠｡⁠)⁠⊃
 
-Revert If Changed & Dont Update This Libraries
+Ambil `package.json` Dari Project Baru
+Jangan Update List Di Bawah Ini
 
 (つ≧▽≦)つ
 
@@ -18,6 +23,7 @@ Revert If Changed & Dont Update This Libraries
 [-] ngx-swiper-wrapper: ^10.0.0
 [-] socket.io-client: ^2.4.0
 [-] swiper: ^6.8.4
+[-] typeorm: 0.2.38
 [-] webtorrent: ^1.5.8
 
 (っ.❛ ᴗ ❛.)っ

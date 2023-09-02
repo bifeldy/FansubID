@@ -1,6 +1,6 @@
 {
   "name": "@nguniversal/express-engine",
-  "version": "13.0.1",
+  "version": "14.2.3",
   "description": "Express Engine for running Server Angular Apps",
   "license": "MIT",
   "keywords": [
@@ -9,26 +9,24 @@
     "universal"
   ],
   "engines": {
-    "node": "^12.20.0 || ^14.15.0 || >=16.10.0"
+    "node": "^14.15.0 || >=16.10.0"
   },
   "peerDependencies": {
-    "@angular/common": "^13.0.1",
-    "@angular/core": "^13.0.1",
-    "@angular/platform-server": "^13.0.1",
+    "@angular/common": "^14.2.0",
+    "@angular/core": "^14.2.0",
+    "@angular/platform-server": "^14.2.0",
     "express": "^4.15.2"
   },
   "dependencies": {
-    "@nguniversal/common": "13.0.1",
+    "@nguniversal/common": "14.2.3",
     "tslib": "^2.3.0"
   },
   "schematics": "./schematics/collection.json",
   "ng-update": {
     "packageGroup": [
-      "@nguniversal/aspnetcore-engine",
       "@nguniversal/builders",
       "@nguniversal/common",
-      "@nguniversal/express-engine",
-      "@nguniversal/hapi-engine"
+      "@nguniversal/express-engine"
     ],
     "packageGroupName": "@nguniversal/express-engine"
   },
@@ -43,15 +41,16 @@
   "fesm2020": "./fesm2020/express-engine.mjs",
   "fesm2015": "./fesm2015/express-engine.mjs",
   "esm2020": "./esm2020/express-engine.mjs",
-  "typings": "./express-engine.d.ts",
+  "typings": "./index.d.ts",
   "module": "./fesm2015/express-engine.mjs",
   "es2020": "./fesm2020/express-engine.mjs",
+  "type": "module",
   "exports": {
     "./package.json": {
       "default": "./package.json"
     },
     ".": {
-      "types": "./express-engine.d.ts",
+      "types": "./index.d.ts",
       "esm2020": "./esm2020/express-engine.mjs",
       "es2020": "./fesm2020/express-engine.mjs",
       "es2015": "./fesm2015/express-engine.mjs",
@@ -59,7 +58,7 @@
       "default": "./fesm2020/express-engine.mjs"
     },
     "./tokens": {
-      "types": "./tokens/tokens.d.ts",
+      "types": "./tokens/index.d.ts",
       "esm2020": "./esm2020/tokens/tokens.mjs",
       "es2020": "./fesm2020/tokens.mjs",
       "es2015": "./fesm2015/tokens.mjs",
