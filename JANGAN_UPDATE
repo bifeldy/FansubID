@@ -6,9 +6,6 @@ x. commit
 x. commit
 3. npm i @kolkov/angular-editor
 x. commit
-4. npm update
-5. npm audit fix --force
-x. commit
 
 (⁠⊃⁠｡⁠•́⁠‿⁠•̀⁠｡⁠)⁠⊃
 
