@@ -49,7 +49,7 @@
     "@angular/service-worker": "^15.2.9",
     "@discordjs/opus": "^0.7.0",
     "@iamtraction/google-translate": "^1.1.2",
-    "@kolkov/angular-editor": "^2.0.0",
+    "@kolkov/angular-editor": "^2.1.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/ng-universal": "^6.0.0",
