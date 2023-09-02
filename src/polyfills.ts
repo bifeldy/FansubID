@@ -54,4 +54,4 @@ import 'zone.js';  // Included with Angular CLI.
  */
 import { Buffer } from 'buffer';
 
-(window as any).Buffer = window.Buffer || Buffer;
+(window as any).Buffer = (window as any).global.Buffer || Buffer;

@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
-import { instanceToPlain } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 
 import { GlobalService } from '../services/global.service';
 
@@ -17,7 +17,7 @@ export class ExcludeFieldInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(data => {
         this.gs.log(`[TRANSFORM_INTERCEPTOR] 💥`, data);
-        return instanceToPlain(data);
+        return classToPlain(data);
       })
     );
   }
