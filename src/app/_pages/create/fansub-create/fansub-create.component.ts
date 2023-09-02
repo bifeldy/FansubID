@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 
@@ -28,7 +28,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 })
 export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -56,7 +56,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
   slugInfo = '';
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private as: AuthService,
     private bs: BusyService,

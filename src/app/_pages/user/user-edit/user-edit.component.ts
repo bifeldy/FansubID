@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { environment } from '../../../../environments/app/environment';
 
@@ -22,7 +22,7 @@ import { ToastService } from '../../../_shared/services/toast.service';
 })
 export class UserEditComponent implements OnInit, OnDestroy {
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -59,7 +59,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private us: UserService,
     private pi: PageInfoService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private imgbb: ImgbbService,
     private gs: GlobalService,
     private as: AuthService,

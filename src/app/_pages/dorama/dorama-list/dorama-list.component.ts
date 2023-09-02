@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -27,7 +27,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
 })
 export class DoramaListComponent implements OnInit, OnDestroy {
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   currentMonth = null;
   currentYear = null;
@@ -80,8 +80,8 @@ export class DoramaListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fg = new FormGroup({
-      currentDate: new FormControl({ value: moment(), disabled: true }, Validators.required),
+    this.fg = new UntypedFormGroup({
+      currentDate: new UntypedFormControl({ value: moment(), disabled: true }, Validators.required),
     });
     this.currentMonth = new Date(this.fg.value.currentDate.format()).getMonth() + 1;
     this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();

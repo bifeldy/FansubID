@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormArray, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Observable, firstValueFrom } from 'rxjs';
@@ -36,7 +36,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
 
   uploads$: Observable<Uploader[]>;
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -82,7 +82,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
 
   constructor(
     private router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private bs: BusyService,
     private pi: PageInfoService,
     private anime: AnimeService,
@@ -331,11 +331,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     });
   }
 
-  get getDownloadUrlControl(): FormArray {
-    return (this.fg.get('download_url') as FormArray);
+  get getDownloadUrlControl(): UntypedFormArray {
+    return (this.fg.get('download_url') as UntypedFormArray);
   }
 
-  createDownloadLink(): FormGroup {
+  createDownloadLink(): UntypedFormGroup {
     return this.fb.group({
       name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       url: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexUrl)])]
@@ -350,11 +350,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     this.getDownloadUrlControl.push(this.createDownloadLink());
   }
 
-  get getFansubControl(): FormArray {
-    return (this.fg.get('fansub_list') as FormArray);
+  get getFansubControl(): UntypedFormArray {
+    return (this.fg.get('fansub_list') as UntypedFormArray);
   }
 
-  createFansub(): FormGroup {
+  createFansub(): UntypedFormGroup {
     const fbGroup = this.fb.group({
       fansub_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
       fansub_name: [null, Validators.compose([Validators.required])],

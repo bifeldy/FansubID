@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -22,7 +22,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
 
   newsId = 0;
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -40,7 +40,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
   subsImgbb = null;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private bs: BusyService,
     private activatedRoute: ActivatedRoute,

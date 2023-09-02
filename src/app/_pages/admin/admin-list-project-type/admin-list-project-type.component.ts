@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -16,7 +16,7 @@ import { DialogService } from '../../../_shared/services/dialog.service';
 })
 export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -39,7 +39,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private bs: BusyService,
     private gs: GlobalService,
     private ds: DialogService,

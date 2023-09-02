@@ -1,5 +1,5 @@
 import { Injectable, isDevMode, Inject, PLATFORM_ID } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
@@ -121,7 +121,7 @@ export class GlobalService {
     }
   }
 
-  getDirtyValues(formGroup: FormGroup): any {
+  getDirtyValues(formGroup: UntypedFormGroup): any {
     const dirtyValues = {};
     for (const control of Object.keys(formGroup.controls)) {
       const currentControl = formGroup.get(control);

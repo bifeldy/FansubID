@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
@@ -28,8 +28,8 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy 
 
   stepperOrientation: Observable<StepperOrientation>;
 
-  fg1: FormGroup;
-  fg2: FormGroup;
+  fg1: UntypedFormGroup;
+  fg2: UntypedFormGroup;
 
   captchaRef = null;
   submitted = false;
@@ -47,7 +47,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     private activatedRoute: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private us: UserService,
     private bs: BusyService,

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { CONSTANTS } from '../../../../../constants';
 
@@ -15,11 +15,11 @@ import { GlobalService } from '../../../../_shared/services/global.service';
 })
 export class MaterialDialogInputComponent implements OnInit {
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: DialogInputDataModel,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {

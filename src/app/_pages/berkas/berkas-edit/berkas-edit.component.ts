@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormArray, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -39,7 +39,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
 
   timerTimeout = null;
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -85,7 +85,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private bs: BusyService,
     private pi: PageInfoService,
     private anime: AnimeService,
@@ -439,8 +439,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  get getDownloadUrlControl(): FormArray {
-    return (this.fg.get('download_url') as FormArray);
+  get getDownloadUrlControl(): UntypedFormArray {
+    return (this.fg.get('download_url') as UntypedFormArray);
   }
 
   createDownloadLink(dataName = null, dataUrl = null): any {
@@ -462,8 +462,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.getDownloadUrlControl.removeAt(i);
   }
 
-  get getFansubControl(): FormArray {
-    return (this.fg.get('fansub_list') as FormArray);
+  get getFansubControl(): UntypedFormArray {
+    return (this.fg.get('fansub_list') as UntypedFormArray);
   }
 
   createFansub(data = null): any {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -23,7 +23,7 @@ import { DialogService } from '../../../_shared/services/dialog.service';
 })
 export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -38,7 +38,7 @@ export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeact
   subsImgbb = null;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private bs: BusyService,
     private pi: PageInfoService,

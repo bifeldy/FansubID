@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { environment } from '../../../environments/app/environment';
@@ -18,7 +18,7 @@ import { CryptoService } from '../../_shared/services/crypto.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
   submitted = false;
 
   returnUrl = '/';
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   subsVerify = null;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private gs: GlobalService,
     private activatedRoute: ActivatedRoute,
     private router: Router,

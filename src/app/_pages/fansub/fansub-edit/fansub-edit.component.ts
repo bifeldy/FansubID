@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -26,7 +26,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
 
   fansubSlug = '';
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -61,7 +61,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   approvedMembers = [];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private bs: BusyService,
     private activatedRoute: ActivatedRoute,

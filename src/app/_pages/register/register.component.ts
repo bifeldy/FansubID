@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { environment } from '../../../environments/app/environment';
@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   emailUsed = null;
   captchaRef = null;
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
   submitted = false;
 
   returnUrl = '/';
@@ -37,7 +37,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   subsResendActivation = null;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private gs: GlobalService,
     private router: Router,
     private bs: BusyService,

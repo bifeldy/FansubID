@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
 
 import { CONSTANTS } from '../../../../constants';
@@ -18,7 +18,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
 
   @ViewChild('kalender', { static: true }) kalender: NgxMatDatetimePicker<any>;
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
 
   submitted = false;
 
@@ -44,7 +44,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
   maxDateTime = new Date(Date.now() + CONSTANTS.timeMaxDaysNotification);
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private bs: BusyService,
     private ds: DialogService,
     private gs: GlobalService,

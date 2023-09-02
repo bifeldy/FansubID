@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { CONSTANTS } from '../../../../../constants';
@@ -18,7 +18,7 @@ import { NihongoService } from '../../../services/nihongo.service';
 })
 export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
 
-  fg: FormGroup;
+  fg: UntypedFormGroup;
   submitted = false;
 
   image = null;
@@ -33,7 +33,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
   subsImgbb = null;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private bs: BusyService,
     private imgbb: ImgbbService,
     private nihongo: NihongoService,
