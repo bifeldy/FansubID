@@ -1,14 +1,26 @@
 (づ￣ ³￣)づ
 
-Dont Update This Libraries
+1. ng update --force ...@...
+x. commit
+2. npm i @angular-material-components/datetime-picker@...
+x. commit
+3. npm i @kolkov/angular-editor
+x. commit
+4. npm update
+5. npm audit fix --force
+x. commit
+
+(⁠⊃⁠｡⁠•́⁠‿⁠•̀⁠｡⁠)⁠⊃
+
+Revert If Changed & Dont Update This Libraries
 
 (つ≧▽≦)つ
 
-[-] chart.js
-[-] ng2-charts
-[-] ngx-swiper-wrapper
-[-] socket.io-client
-[-] swiper
-[-] webtorrent
+[-] chart.js: ^2.9.4
+[-] ng2-charts: ^2.4.3
+[-] ngx-swiper-wrapper: ^10.0.0
+[-] socket.io-client: ^2.4.0
+[-] swiper: ^6.8.4
+[-] webtorrent: ^1.5.8
 
 (っ.❛ ᴗ ❛.)っ
