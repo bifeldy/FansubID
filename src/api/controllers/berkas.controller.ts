@@ -56,6 +56,14 @@ export class BerkasController {
     try {
       const user: UserModel = res.locals['user'];
       if ('attachment_id' in req.body) {
+        if ('attachment_' in berkas && berkas.attachment_) {
+          throw new HttpException({
+            info: `🙄 403 - Berkas API :: Tidak Dapat Mengganti Lampiran 😪`,
+            result: {
+              message: 'Berkas Sudah memiliki Lampiran!'
+            }
+          }, HttpStatus.FORBIDDEN);
+        }
         this.sr.deleteTimeout(`${CONSTANTS.timeoutDeleteTempAttachmentKey}@${req.body.attachment_id}`);
         const tempAttachment = await this.tempAttachmentRepo.findOneOrFail({
           where: [
@@ -69,14 +77,6 @@ export class BerkasController {
           relations: ['user_']
         });
         await this.tempAttachmentRepo.remove(tempAttachment);
-        if ('attachment_' in berkas && berkas.attachment_) {
-          throw new HttpException({
-            info: `🙄 403 - Berkas API :: Tidak Dapat Mengganti Lampiran 😪`,
-            result: {
-              message: 'Berkas Sudah memiliki Lampiran!'
-            }
-          }, HttpStatus.FORBIDDEN);
-        }
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name === tempAttachment.name || f.name === `${tempAttachment.name}.${tempAttachment.ext}`);
         if (fIdx >= 0) {
