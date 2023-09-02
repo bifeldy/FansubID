@@ -30,7 +30,7 @@
           <mat-card class="gradient-border rgb-border">
             <mat-card-header routerLink="/admin-mod/{{ m.url }}" style="cursor: pointer;">
               <div mat-card-avatar>
-                <mat-icon style="font-size: 300%;" *ngIf="m.icon">{{ m.icon }}</mat-icon>
+                <mat-icon [fontIcon]="m.icon" style="font-size: 300%;" *ngIf="m.icon"></mat-icon>
               </div>
               <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
                 <h3 class="mb-0">{{ m.name }}</h3>
@@ -70,7 +70,7 @@
               <mat-grid-list [cols]="GS.gridListBreakpoint" rowHeight="72px">
                 <mat-grid-tile *ngFor="let t of cronJobs">
                   <mat-list-option (click)="toggleCronJob(t)" class="text-{{ t.running ? 'warning' : 'danger' }}">
-                    <mat-icon mat-list-icon class="ps-3">update</mat-icon>
+                    <mat-icon fontIcon="update" mat-list-icon class="ps-3"></mat-icon>
                     <h4 matLine>{{ t.id }}</h4>
                     <p matLine>
                       last: {{ t.last_date | date:'d MMMM y, HH:mm:ss z' }}

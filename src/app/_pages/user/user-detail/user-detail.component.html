@@ -9,14 +9,14 @@
             <img class="profile-image" src="{{ userData.image_url }}" />
           </div>
           <div class="col-12 my-3">
-            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === ADMIN" style="cursor: pointer;">handyman</mat-icon>
-            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === MODERATOR" style="cursor: pointer;">security</mat-icon>
-            <mat-icon class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === FANSUBBER" style="cursor: pointer;">rate_review</mat-icon>
-            <mat-icon class="mx-1" matTooltip="Terverifikasi" *ngIf="userData.verified" style="cursor: pointer;">verified</mat-icon>
-            <mat-icon class="mx-1" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned" style="cursor: pointer;">lock</mat-icon>
-            <mat-icon class="mx-1" matTooltip="{{ accountAge }} Years of Service" *ngIf="accountAge > 0" style="cursor: pointer;">military_tech</mat-icon>
-            <mat-icon class="mx-1" matTooltip="Sharing is Caring" *ngIf="count > 0" style="cursor: pointer;">volunteer_activism</mat-icon>
-            <mat-icon class="mx-1" matTooltip="Akun Private" *ngIf="userData.private" style="cursor: pointer;">sensor_occupied</mat-icon>
+            <mat-icon fontIcon="handyman" class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === ADMIN" style="cursor: pointer;"></mat-icon>
+            <mat-icon fontIcon="security" class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === MODERATOR" style="cursor: pointer;"></mat-icon>
+            <mat-icon fontIcon="rate_review" class="mx-1" matTooltip="{{ userData.role }}" *ngIf="userData.role === FANSUBBER" style="cursor: pointer;"></mat-icon>
+            <mat-icon fontIcon="verified" class="mx-1" matTooltip="Terverifikasi" *ngIf="userData.verified" style="cursor: pointer;"></mat-icon>
+            <mat-icon fontIcon="lock" class="mx-1" matTooltip="Banned :: {{ userBanned.reason }}" *ngIf="userBanned" style="cursor: pointer;"></mat-icon>
+            <mat-icon fontIcon="military_tech" class="mx-1" matTooltip="{{ accountAge }} Years of Service" *ngIf="accountAge > 0" style="cursor: pointer;"></mat-icon>
+            <mat-icon fontIcon="volunteer_activism" class="mx-1" matTooltip="Sharing is Caring" *ngIf="count > 0" style="cursor: pointer;"></mat-icon>
+            <mat-icon fontIcon="sensor_occupied" class="mx-1" matTooltip="Akun Private" *ngIf="userData.private" style="cursor: pointer;"></mat-icon>
           </div>
           <div class="col-12" *ngIf="groupFansub.length > 0">
             <div class="row py-3">
@@ -54,15 +54,15 @@
         </div>
         <div class="row p-3">
           <button type="button" mat-stroked-button matLine class="col-12 col-md-4 text-truncate" *ngIf="userData.id" matTooltip="Nomor ID Pengguna" color="accent" style="overflow: hidden;">
-            <mat-icon class="me-1">accessibility_new</mat-icon>
+            <mat-icon fontIcon="accessibility_new" class="me-1"></mat-icon>
             {{ userData.id }}
           </button>
           <button type="button" mat-stroked-button matLine class="col-12 col-md-8 text-truncate" *ngIf="userData.created_at" matTooltip="Tanggal Bergabung" color="accent" style="overflow: hidden;">
-            <mat-icon class="me-1">access_time</mat-icon>
+            <mat-icon fontIcon="access_time" class="me-1"></mat-icon>
             {{ userData.created_at | date:'d/M/yyyy, hh:mm:ss a z' }}
           </button>
           <button type="button" mat-stroked-button matLine class="col text-truncate" matTooltip="Alamat Surel" color="accent" style="overflow: hidden;">
-            <mat-icon class="me-1">email</mat-icon>
+            <mat-icon fontIcon="email" class="me-1"></mat-icon>
             {{ userData.username }}@{{ ENV.domain }}
           </button>
         </div>

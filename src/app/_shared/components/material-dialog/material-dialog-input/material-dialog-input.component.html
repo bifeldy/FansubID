@@ -4,7 +4,7 @@
     <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'" *ngFor="let item of DATA.input | keyvalue">
       <mat-label>{{ item.value['inputLabel'] }}</mat-label>
       <input matInput [formControlName]="$any(item).key" placeholder="{{ item.value['inputPlaceholder'] }}" [required]="item.value['inputRequired']" />
-      <mat-icon matSuffix>wysiwyg</mat-icon>
+      <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
       <mat-error>
         <div *ngIf="fg.get($any(item).key).hasError('required')">{{ item.value['inputLabel'] }} Tidak Boleh Kosong</div>
         <div *ngIf="fg.get($any(item).key).hasError('pattern')">{{ item.value['inputLabel'] }} Hanya Boleh Huruf Standar Papan Ketik</div>

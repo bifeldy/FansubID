@@ -3,14 +3,14 @@
   <mat-tab *ngFor="let tab of tabData">
     <div *ngIf="tab.type === 'html'">
       <ng-template mat-tab-label>
-        <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
+        <mat-icon [fontIcon]="tab.icon" class="me-3"></mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3" [innerHTML]="tab.data | safeInnerHtml"></div>
     </div>
     <div *ngIf="tab.type === 'grid'">
       <ng-template mat-tab-label>
-        <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
+        <mat-icon [fontIcon]="tab.icon" class="me-3"></mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3" *ngIf="tab.data.length > 0; else noData">
@@ -32,7 +32,7 @@
     </div>
     <div *ngIf="tab.type === 'list'">
       <ng-template mat-tab-label>
-        <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
+        <mat-icon [fontIcon]="tab.icon" class="me-3"></mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3" *ngIf="tab.data.length > 0; else noData">
@@ -50,7 +50,7 @@
     </div>
     <div *ngIf="tab.type === 'table'">
       <ng-template mat-tab-label>
-        <mat-icon class="me-3">{{ tab.icon }}</mat-icon>
+        <mat-icon [fontIcon]="tab.icon" class="me-3"></mat-icon>
         <h3 class="m-0">{{ tab.name }}</h3>
       </ng-template>
       <div class="p-3">
@@ -61,7 +61,7 @@
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon class="me-3">comment</mat-icon>
+      <mat-icon fontIcon="comment" class="me-3"></mat-icon>
       <h3 class="m-0">Komentar</h3>
     </ng-template>
     <ng-template matTabContent>

@@ -29,31 +29,31 @@
           <div class="col-12 mx-auto text-center">
             <h2>Penilaian Saya</h2>
             <button type="button" mat-stroked-button color="accent" class="mx-1" (click)="login()" *ngIf="!AS.currentUserSubject?.value">
-              <mat-icon class="me-1">vpn_key</mat-icon>
+              <mat-icon fontIcon="vpn_key" class="me-1"></mat-icon>
               Klik Untuk Login
             </button>
             <button type="button" mat-flat-button color="accent" class="mx-1 shiny" (click)="likeOrDislike(LIKE)" *ngIf="AS.currentUserSubject?.value && myReport?.type === LIKE">
-              <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
+              <mat-icon fontIcon="thumb_up_off_alt" class="me-1"></mat-icon>
               <span class="d-lg-none d-xl-inline">
                 Suka
               </span>
               ({{ summary.like }})
             </button>
             <button type="button" mat-stroked-button color="accent" class="mx-1 shiny" (click)="likeOrDislike(LIKE)" *ngIf="AS.currentUserSubject?.value && myReport?.type !== LIKE">
-              <mat-icon class="me-1">thumb_up_off_alt</mat-icon>
+              <mat-icon fontIcon="thumb_up_off_alt" class="me-1"></mat-icon>
               <span class="d-lg-none d-xl-inline">
                 Suka
               </span>
               ({{ summary.like }})
             </button>
             <button type="button" mat-stroked-button color="accent" class="mx-1" (click)="likeOrDislike(DISLIKE)" *ngIf="AS.currentUserSubject?.value && myReport?.type !== DISLIKE">
-              <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
+              <mat-icon fontIcon="thumb_down_off_alt" class="me-1"></mat-icon>
               <span class="d-lg-none d-xl-inline">
                 Tidak Suka
               </span>
             </button>
             <button type="button" mat-flat-button color="accent" class="mx-1" (click)="likeOrDislike(DISLIKE)" *ngIf="AS.currentUserSubject?.value && myReport?.type === DISLIKE">
-              <mat-icon class="me-1">thumb_down_off_alt</mat-icon>
+              <mat-icon fontIcon="thumb_down_off_alt" class="me-1"></mat-icon>
               <span class="d-lg-none d-xl-inline">
                 Tidak Suka
               </span>

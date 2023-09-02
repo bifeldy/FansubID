@@ -19,7 +19,7 @@
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Kode ID</mat-label>
                 <input matInput formControlName="id" placeholder="ID_DIALOG" required />
-                <mat-icon matSuffix>short_text</mat-icon>
+                <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                 <mat-hint align="end">ID Untuk Request API</mat-hint>
                 <mat-error>
                   <div *ngIf="fg.get('id').hasError('required')">Kode Tidak Boleh Kosong</div>
@@ -29,7 +29,7 @@
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-8" [color]="'accent'">
                 <mat-label>Judul Dialog</mat-label>
                 <input matInput formControlName="title" placeholder="Judul Dialog" required />
-                <mat-icon matSuffix>short_text</mat-icon>
+                <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                 <mat-error>
                   <div *ngIf="fg.get('title').hasError('required')">Judul Tidak Boleh Kosong</div>
                   <div *ngIf="fg.get('title').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</div>
@@ -42,7 +42,7 @@
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Tombol OK</mat-label>
                     <input matInput formControlName="confirm" placeholder="OK!" required />
-                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('confirm').hasError('required')">Tombol OK Tidak Boleh Kosong</div>
                       <div *ngIf="fg.get('confirm').hasError('pattern')">Tombol OK Hanya Boleh Huruf Standar Papan Ketik</div>
@@ -51,7 +51,7 @@
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Tombol Cancel</mat-label>
                     <input matInput formControlName="cancel" placeholder="Batal!" />
-                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('cancel').hasError('required')">Judul Tidak Boleh Kosong</div>
                       <div *ngIf="fg.get('cancel').hasError('pattern')">Judul Hanya Boleh Huruf Standar Papan Ketik</div>
@@ -96,7 +96,7 @@
                   <div class="col-12 col-md-3">
                     <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid">
                       Simpan
-                      <mat-icon class="ms-1">save</mat-icon>
+                      <mat-icon class="ms-1" fontIcon="save"></mat-icon>
                     </button>
                   </div>
                 </div>

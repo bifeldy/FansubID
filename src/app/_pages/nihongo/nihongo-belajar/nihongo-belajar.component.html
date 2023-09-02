@@ -19,7 +19,7 @@
             <mat-form-field class="ms-auto pt-3 col-6 col-lg-4" [color]="'accent'" *ngIf="modeTampilan !== 'hiragana' && modeTampilan !== 'katakana' && modeTampilan !== 'angka'">
               <mat-label>Cari ...</mat-label>
               <input matInput maxlength="200" placeholder="Ex. 自転車、ママチャリ" (keyup.enter)="applyFilter($event)" [(ngModel)]="q" />
-              <mat-icon matSuffix>search</mat-icon>
+              <mat-icon fontIcon="search" matSuffix></mat-icon>
             </mat-form-field>
           </h3>
         </div>
@@ -161,5 +161,5 @@
 <button type="button" (click)="addDataset()" mat-fab color="warn" class="me-3 mb-5 fab-button animate__animated animate__bounce animate__infinite animate__slow" matTooltip="Tambah Dataset"
   *ngIf="modeTampilan !== 'hiragana' && modeTampilan !== 'katakana' && modeTampilan !== 'angka'"
   style="position: fixed; bottom: 0; right: 0; z-index: 999999;">
-  <mat-icon>add</mat-icon>
+  <mat-icon fontIcon="add"></mat-icon>
 </button>

@@ -19,7 +19,7 @@
         <div class="col-12" *ngIf="feedKomentarData.length > 0; else noData;">
           <mat-selection-list [multiple]="false">
             <mat-list-option *ngFor="let fk of feedKomentarData | slice:0:5" class="h-100">
-              <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
+              <mat-icon fontIcon="add_comment" mat-list-icon class="ps-3"></mat-icon>
               <a class="text-truncate text-decoration-none" (click)="openComment(fk)">
                 <span class="bg-bifeldy px-2 me-1 text-danger" style="position: absolute; right: 0;">{{ fk.created_at | dateAgo }}</span>
                 <span class="text-warning">{{ fk.comment }}</span>
@@ -40,7 +40,7 @@
         <div class="col-12" *ngIf="feedLikeDislikeData.length > 0; else noData;">
           <mat-selection-list [multiple]="false">
             <mat-list-option *ngFor="let fldl of feedLikeDislikeData | slice:0:5" class="h-100">
-              <mat-icon mat-list-icon class="ps-3">volunteer_activism</mat-icon>
+              <mat-icon fontIcon="volunteer_activism" mat-list-icon class="ps-3"></mat-icon>
               <a class="text-truncate text-decoration-none" [routerLink]="
                 fldl.berkas_ ? '/berkas/' + fldl.berkas_?.id : (
                   fldl.fansub_ ? '/fansub/' + fldl.fansub_?.slug : (
@@ -71,7 +71,7 @@
         <div class="col-12" *ngIf="feedVisitData.length > 0; else noData;">
           <mat-selection-list [multiple]="false">
             <mat-list-option *ngFor="let fv of feedVisitData | slice:0:5" class="h-100">
-              <mat-icon mat-list-icon class="ps-3">directions_run</mat-icon>
+              <mat-icon fontIcon="directions_run" mat-list-icon class="ps-3"></mat-icon>
               <a class="text-truncate text-decoration-none" [routerLink]="
                 fv.berkas_ ? '/berkas/' + fv.berkas_?.id : (
                   fv.fansub_ ? '/fansub/' + fv.fansub_?.slug : (
@@ -101,7 +101,8 @@
             </div>
             <div class="col-12 mb-2">
               <a mat-button class="w-100" color="accent" matTooltip="Buka Kotak Pesan" routerLink="/mailbox">
-                <mat-icon class="me-1">email</mat-icon> '{{ AS.currentUserSubject?.value?.username }}@{{ ENV.domain }}'
+                <mat-icon fontIcon="email" class="me-1"></mat-icon>
+                '{{ AS.currentUserSubject?.value?.username }}@{{ ENV.domain }}'
               </a>
             </div>
           </div>
@@ -116,7 +117,8 @@
             </div>
             <div class="col-12 mb-2">
               <a mat-button class="w-100" color="accent" (click)="generateNewApiKey()">
-                <mat-icon class="me-1">webhook</mat-icon> Buat API Key Baru
+                <mat-icon fontIcon="webhook" class="me-1"></mat-icon>
+                Buat API Key Baru
               </a>
               <div class="my-2 gradient-border" *ngFor="let ak of apiKey" (click)="copyApiKey(ak); editApiKey(ak)">
                 <p class="ps-2 pe-2 pt-2 text-truncate my-0">
@@ -138,7 +140,8 @@
                   </span>
                 </p>
                 <a mat-button class="w-100" color="accent" (click)="$event.stopPropagation(); revokeApiKey(ak)">
-                  <mat-icon class="me-1">delete_sweep</mat-icon> Hapus Akses
+                  <mat-icon fontIcon="delete_sweep" class="me-1"></mat-icon>
+                  Hapus Akses
                 </a>
               </div>
             </div>

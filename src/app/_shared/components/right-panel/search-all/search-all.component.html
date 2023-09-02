@@ -3,7 +3,7 @@
     <mat-form-field class="ms-auto pt-3 col-12" [color]="'accent'">
       <mat-label>Cari Apapun Di Sini ...</mat-label>
       <input matInput maxlength="200" placeholder="Ex. ばーかー！" (keyup.enter)="applyFilter($event)" [(ngModel)]="searchResult.q" />
-      <mat-icon matSuffix>search</mat-icon>
+      <mat-icon fontIcon="search" matSuffix></mat-icon>
     </mat-form-field>
   </div>
   <div class="col-12">

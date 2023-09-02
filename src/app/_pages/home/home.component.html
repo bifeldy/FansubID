@@ -19,7 +19,7 @@
         <div class="row pb-3">
           <div class="col-12 col-lg-8 mx-auto">
             <a class="m-1" mat-stroked-button color="warn" routerLink="{{ menu.link }}" *ngFor="let menu of contentMenus">
-              <mat-icon class="me-1">{{ menu.icon }}</mat-icon>
+              <mat-icon [fontIcon]="menu.icon" class="me-1"></mat-icon>
               {{ menu.name }}
             </a>
           </div>
@@ -116,7 +116,7 @@
         <div class="col-12">
           <mat-selection-list [multiple]="false">
             <mat-list-option *ngFor="let r of rssFeedData | slice:0:10" class="h-100">
-              <mat-icon mat-list-icon class="ps-3">rss_feed</mat-icon>
+              <mat-icon fontIcon="rss_feed" mat-list-icon class="ps-3"></mat-icon>
               <a class="text-truncate text-decoration-none" (click)="openRssFeed(r.item?.link)">
                 <span class="bg-bifeldy px-2 me-1 text-danger" style="position: absolute; right: 0;" matTooltip="{{ (r.item?.created || r.item?.published) | date:'d MMMM y, hh:mm:ss a z' }}">
                   {{ (r.item?.created || r.item?.published) | dateAgo }}
@@ -140,7 +140,7 @@
         <div class="col-12">
           <mat-selection-list [multiple]="false">
             <mat-list-option *ngFor="let k of komentarData" class="h-100">
-              <mat-icon mat-list-icon class="ps-3">add_comment</mat-icon>
+              <mat-icon fontIcon="add_comment" mat-list-icon class="ps-3"></mat-icon>
               <a class="text-truncate text-decoration-none" (click)="openComment(k)">
                 <span class="bg-bifeldy px-2 me-1 text-danger" style="position: absolute; right: 0;" matTooltip="{{ k.created_at | date:'d MMMM y, hh:mm:ss a z' }}">
                   {{ k.created_at | dateAgo }}

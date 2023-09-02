@@ -24,7 +24,7 @@
                       <mat-label>Gambar Untuk Embed SEO</mat-label>
                       <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
-                      <mat-icon matSuffix>image</mat-icon>
+                      <mat-icon fontIcon="image" matSuffix></mat-icon>
                     </mat-form-field>
                     <mat-error class="px-3 w-100">
                       <small>
@@ -35,7 +35,7 @@
                   </div>
                   <div class="col-12 mb-4" *ngIf="image && !fg.value.image">
                     <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitImage()">
-                      <mat-icon class="me-1">add_photo_alternate</mat-icon>
+                      <mat-icon fontIcon="add_photo_alternate" class="me-1"></mat-icon>
                       Unggah
                     </button>
                   </div>
@@ -67,7 +67,7 @@
                   <mat-form-field appearance="outline" class="p-3 w-100" *ngIf="berkasType.toLowerCase().includes('anime')" [color]="'accent'">
                     <mat-label>Anime Terkait</mat-label>
                     <input matInput formControlName="anime_id" placeholder="Full Metal Alchemist" [matAutocomplete]="autoCompleteAnime" (keyup)="resetSelectedAnime()" />
-                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                     <mat-autocomplete #autoCompleteAnime="matAutocomplete">
                       <mat-option *ngIf="isLoading" class="is-loading">
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -88,7 +88,7 @@
                   <mat-form-field appearance="outline" class="p-3 w-100" *ngIf="berkasType.toLowerCase().includes('dorama')" [color]="'accent'">
                     <mat-label>Dorama Terkait</mat-label>
                     <input matInput formControlName="dorama_id" placeholder="Flying Colors" [matAutocomplete]="autoCompleteDorama" (keyup)="resetSelectedDorama()" />
-                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                     <mat-autocomplete #autoCompleteDorama="matAutocomplete">
                       <mat-option *ngIf="isLoading" class="is-loading">
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -115,9 +115,9 @@
                         <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
                           <mat-label>Fansub Terkait</mat-label>
                           <input matInput formControlName="fansub_id" placeholder="NamaFansub" [matAutocomplete]="autoCompleteFansub" (keyup)="resetSelectedFansub(i)" />
-                          <mat-icon matSuffix *ngIf="fs.get('fansub_id').value || i === 0">short_text</mat-icon>
+                          <mat-icon fontIcon="short_text" matSuffix *ngIf="fs.get('fansub_id').value || i === 0"></mat-icon>
                           <button type="button" mat-button matSuffix mat-icon-button (click)="removeFansub(i)" *ngIf="!fs.get('fansub_id').value && i > 0">
-                            <mat-icon>close</mat-icon>
+                            <mat-icon fontIcon="close"></mat-icon>
                           </button>
                           <mat-autocomplete #autoCompleteFansub="matAutocomplete">
                             <mat-option *ngIf="isLoading" class="is-loading">
@@ -144,7 +144,7 @@
                       <div class="col"></div>
                       <div class="col">
                         <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="addFansub()">
-                          <mat-icon class="me-1">add</mat-icon>
+                          <mat-icon fontIcon="add" class="me-1"></mat-icon>
                           Tambah Fansub
                         </button>
                       </div>
@@ -157,7 +157,7 @@
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Nama Berkas</mat-label>
                     <input matInput formControlName="name" placeholder="[Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32].mkv" />
-                    <mat-icon matSuffix>wysiwyg</mat-icon>
+                    <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('name').hasError('required')">Nama Berkas Tidak Boleh Kosong</div>
                       <div *ngIf="fg.get('name').hasError('pattern')">Nama Berkas Hanya Boleh Huruf Standar Papan Ketik</div>
@@ -176,7 +176,7 @@
                     <mat-list>
                       <div mat-subheader class="text-warning">Berkas yang terlampir tidak boleh diubah.</div>
                       <mat-list-item>
-                        <mat-icon mat-list-icon>attach_file</mat-icon>
+                        <mat-icon fontIcon="attach_file" mat-list-icon></mat-icon>
                         <div mat-line>{{ attachmentFile.name }}.{{ attachmentFile.ext }}</div>
                         <div mat-line>{{ attachmentFile.size | bytes }}</div>
                       </mat-list-item>
@@ -199,7 +199,7 @@
                         <mat-label>Upload Lampiran Berkas -- DDL</mat-label>
                         <ngx-mat-file-input class="w-100" (change)="uploadAttachment($event, ddl)" #ddl [disabled]="attachmentSelected !== null"
                           [accept]="fileTypeAttachmentAllowed" uploadx></ngx-mat-file-input>
-                        <mat-icon matSuffix>attach_file</mat-icon>
+                        <mat-icon fontIcon="attach_file" matSuffix></mat-icon>
                       </mat-form-field>
                       <mat-error class="px-4 w-100">
                         <small>
@@ -219,7 +219,7 @@
                       <div class="col-6 col-lg-4">
                         <button type="button" mat-raised-button class="w-100" color="primary"
                           [disabled]="submitted || item.status === 'complete' || item.status === 'uploading'" (click)="submitAttachment(item)">
-                          <mat-icon class="me-1">attachment</mat-icon>
+                          <mat-icon fontIcon="attachment" class="me-1"></mat-icon>
                           Unggah
                         </button>
                       </div>
@@ -227,7 +227,7 @@
                   </ng-template>
                   <ng-template #ddlNotVerified>
                     <button type="button" class="w-100" mat-stroked-button color="accent" (click)="verify()">
-                      <mat-icon class="me-1">enhanced_encryption</mat-icon>
+                      <mat-icon fontIcon="enhanced_encryption" class="me-1"></mat-icon>
                       Verifikasi Akun Untuk Upload DDL!
                     </button>
                   </ng-template>
@@ -246,9 +246,9 @@
                       <mat-form-field appearance="outline" class="px-3 pt-3 col-12 col-md-5" [color]="'accent'">
                         <mat-label>Nama Website</mat-label>
                         <input matInput formControlName="name" placeholder="Web Shit" required />
-                        <mat-icon matSuffix *ngIf="dl.get('name').value || (i === 0 && !AS.currentUserSubject?.value?.verified)">web</mat-icon>
+                        <mat-icon fontIcon="web" matSuffix *ngIf="dl.get('name').value || (i === 0 && !AS.currentUserSubject?.value?.verified)"></mat-icon>
                         <button type="button" mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('name').value && (i > 0 || AS.currentUserSubject?.value?.verified)">
-                          <mat-icon>close</mat-icon>
+                          <mat-icon fontIcon="close"></mat-icon>
                         </button>
                         <mat-error>
                           <div *ngIf="dl.get('name').hasError('required')">Web Tidak Boleh Kosong</div>
@@ -258,9 +258,9 @@
                       <mat-form-field appearance="outline" class="px-3 pt-3 col-12 col-md-7" [color]="'accent'">
                         <mat-label>Tautan Link</mat-label>
                         <input matInput formControlName="url" placeholder="https://drive.google.com/drive/u/2/folders/1KYTJZsmH9dyyHBXnQD4N0SjSBXcs8qD-" required />
-                        <mat-icon matSuffix *ngIf="dl.get('url').value || (i === 0 && !AS.currentUserSubject?.value?.verified)">link</mat-icon>
+                        <mat-icon fontIcon="link" matSuffix *ngIf="dl.get('url').value || (i === 0 && !AS.currentUserSubject?.value?.verified)"></mat-icon>
                         <button type="button" mat-button matSuffix mat-icon-button (click)="removeDownloadLink(i)" *ngIf="!dl.get('url').value && (i > 0 || AS.currentUserSubject?.value?.verified)">
-                          <mat-icon>close</mat-icon>
+                          <mat-icon fontIcon="close"></mat-icon>
                         </button>
                         <mat-error>
                           <div *ngIf="dl.get('url').hasError('required')">Tautan Tidak Boleh Kosong</div>
@@ -276,7 +276,7 @@
                   <div class="col"></div>
                   <div class="col">
                     <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="addDownloadLink()">
-                      <mat-icon class="me-1">add</mat-icon>
+                      <mat-icon fontIcon="add" class="me-1"></mat-icon>
                       Tambah URL
                     </button>
                   </div>
@@ -289,14 +289,14 @@
                   <div class="col g-0"></div>
                   <div class="col-12 col-md-3">
                     <a mat-stroked-button routerLink="../" class="w-100" [disabled]="submitted">
-                      <mat-icon class="me-1">undo</mat-icon>
+                      <mat-icon fontIcon="undo" class="me-1"></mat-icon>
                       Batal
                     </a>
                   </div>
                   <div class="col-12 col-md-3">
                     <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid || !fg.dirty">
                       Simpan
-                      <mat-icon class="ms-1">save</mat-icon>
+                      <mat-icon fontIcon="save" class="ms-1"></mat-icon>
                     </button>
                   </div>
                 </div>

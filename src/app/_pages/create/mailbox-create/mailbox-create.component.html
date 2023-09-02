@@ -23,12 +23,12 @@
                     <mat-chip-list #to>
                       <mat-chip *ngFor="let t of fg.value.to" (removed)="removeTo(t)" color="accent" selected [removable]="true">
                         {{ t }}
-                        <mat-icon matChipRemove>cancel</mat-icon>
+                        <mat-icon fontIcon="cancel" matChipRemove></mat-icon>
                       </mat-chip>
                     </mat-chip-list>
                     <input placeholder="user@domain.tld" [matChipInputSeparatorKeyCodes]="GS.separatorKeysCodes"
                       [matChipInputFor]="to" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addTo($event)" required />
-                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                     <mat-hint align="end">
                       <mat-error>
                         <div *ngIf="fg.get('to').hasError('required')">Alamat Surel Tidak Boleh Kosong</div>
@@ -41,12 +41,12 @@
                     <mat-chip-list #cc>
                       <mat-chip *ngFor="let c of fg.value.cc" (removed)="removeCc(c)" color="accent" selected [removable]="true">
                         {{ c }}
-                        <mat-icon matChipRemove>cancel</mat-icon>
+                        <mat-icon fontIcon="cancel" matChipRemove></mat-icon>
                       </mat-chip>
                     </mat-chip-list>
                     <input placeholder="user@domain.tld" [matChipInputSeparatorKeyCodes]="GS.separatorKeysCodes"
                       [matChipInputFor]="cc" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addCc($event)" />
-                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                     <mat-hint align="end">
                       <mat-error>
                         <div *ngIf="fg.get('cc').hasError('pattern')">Alamat Surel Tidak Valid</div>
@@ -58,12 +58,12 @@
                     <mat-chip-list #bcc>
                       <mat-chip *ngFor="let b of fg.value.bcc" (removed)="removeBcc(b)" color="accent" selected [removable]="true">
                         {{ b }}
-                        <mat-icon matChipRemove>cancel</mat-icon>
+                        <mat-icon fontIcon="cancel" matChipRemove></mat-icon>
                       </mat-chip>
                     </mat-chip-list>
                     <input placeholder="user@domain.tld" [matChipInputSeparatorKeyCodes]="GS.separatorKeysCodes"
                       [matChipInputFor]="bcc" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addBcc($event)" />
-                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                     <mat-hint align="end">
                       <mat-error>
                         <div *ngIf="fg.get('bcc').hasError('pattern')">Alamat Surel Tidak Valid</div>
@@ -82,7 +82,7 @@
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Judul</mat-label>
                     <input matInput formControlName="subject" placeholder="Judul Pesan Blablabla ..." required />
-                    <mat-icon matSuffix>wysiwyg</mat-icon>
+                    <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('subject').hasError('required')">Judul Pesan Tidak Boleh Kosong</div>
                       <div *ngIf="fg.get('subject').hasError('pattern')">Judul Pesan Hanya Boleh Huruf Standar Papan Ketik</div>
@@ -98,14 +98,14 @@
                   <div class="col g-0"></div>
                   <div class="col-12 col-md-3">
                     <a mat-stroked-button routerLink="/mailbox" class="w-100" [disabled]="submitted">
-                      <mat-icon class="me-1">undo</mat-icon>
+                      <mat-icon fontIcon="undo" class="me-1"></mat-icon>
                       Batal
                     </a>
                   </div>
                   <div class="col-12 col-md-3">
                     <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid">
                       Simpan
-                      <mat-icon class="ms-1">save</mat-icon>
+                      <mat-icon fontIcon="save" class="ms-1"></mat-icon>
                     </button>
                   </div>
                 </div>

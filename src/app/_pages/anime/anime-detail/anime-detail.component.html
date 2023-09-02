@@ -30,17 +30,23 @@
           <div class="col-12 text-center pt-3">
             <button type="button" mat-stroked-button class="w-100" color="accent" (click)="openSeasonalAnime()"
               matTooltip="Lihat Semua Anime Pada Musim '{{ SEASON }} {{ YEAR }}'">
-              <mat-icon class="me-1">dynamic_feed</mat-icon> {{ animeData.num_episodes || '?' }} Eps &nbsp;
-              <mat-icon class="me-1">star_half</mat-icon> {{ animeData.mean || '?' }} <br />
-              <mat-icon class="me-1">date_range</mat-icon> {{ animeData.start_date || '?' }} ー {{ animeData.end_date || '?' }}
+              <mat-icon fontIcon="dynamic_feed" class="me-1"></mat-icon>
+              {{ animeData.num_episodes || '?' }} Eps &nbsp;
+              <mat-icon fontIcon="star_half" class="me-1"></mat-icon>
+              {{ animeData.mean || '?' }} <br />
+              <mat-icon fontIcon="date_range" class="me-1"></mat-icon>
+              {{ animeData.start_date || '?' }} ー {{ animeData.end_date || '?' }}
             </button>
           </div>
           <div class="col-12 text-center pt-3">
             <button type="button" mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyAnimeList"
               (click)="openRank()">
-              <mat-icon class="me-1">timeline</mat-icon> {{ animeData.rank || '?' }} &nbsp;
-              <mat-icon class="me-1">local_fire_department</mat-icon> {{ animeData.popularity || '?' }} <br />
-              <mat-icon class="me-1">label</mat-icon> {{ animeData.status?.split('_').join(' ').toUpperCase() || '?' }} - {{ animeData.media_type?.toUpperCase() }}
+              <mat-icon fontIcon="timeline" class="me-1"></mat-icon>
+              {{ animeData.rank || '?' }} &nbsp;
+              <mat-icon fontIcon="local_fire_department" class="me-1"></mat-icon>
+              {{ animeData.popularity || '?' }} <br />
+              <mat-icon fontIcon="label" class="me-1"></mat-icon>
+              {{ animeData.status?.split('_').join(' ').toUpperCase() || '?' }} - {{ animeData.media_type?.toUpperCase() }}
             </button>
           </div>
         </div>

@@ -71,17 +71,17 @@
                 <div class="px-3">
                   <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
                     matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
-                    <mat-icon class="me-1">movie</mat-icon>
+                    <mat-icon fontIcon="movie" class="me-1"></mat-icon>
                     {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
                   </button>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" (click)="cancel_dl(berkasData.attachment_.id)"
                     matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && lampiran.isDownloading">
-                    <mat-icon class="me-1">close</mat-icon>
+                    <mat-icon fontIcon="close" class="me-1"></mat-icon>
                     Batal Unduh
                   </button>
                   <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
                     matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan">
-                    <mat-icon class="me-1">save</mat-icon>
+                    <mat-icon fontIcon="save" class="me-1"></mat-icon>
                     {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
                   </button>
                   <div class="col">
@@ -103,12 +103,12 @@
                   </div>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
                     (click)="standardDdlSubsFont(s.id)" matTooltip="{{ s.name }}.{{ s.name }} :: {{ s.download_count }}x Unduhan">
-                    <mat-icon class="me-1">notes</mat-icon>
+                    <mat-icon fontIcon="notes" class="me-1"></mat-icon>
                     {{ s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
                   </button>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let f of berkasData.attachment_.fonts_"
                     (click)="standardDdlSubsFont(f.id)" matTooltip="{{ f.name }}.{{ f.name }} :: {{ f.download_count }}x Unduhan">
-                    <mat-icon class="me-1">font_download</mat-icon>
+                    <mat-icon fontIcon="font_download" class="me-1"></mat-icon>
                     {{ f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
                   </button>
                 </div>
@@ -116,7 +116,7 @@
               <div class="col-12 text-center" *ngIf="!isHaveDDL">
                 <div class="px-3">
                   <button type="button" class="m-1" mat-stroked-button color="accent" (click)="verify()" matTooltip="Direct Download Link Berkas">
-                    <mat-icon class="me-1">enhanced_encryption</mat-icon>
+                    <mat-icon fontIcon="enhanced_encryption" class="me-1"></mat-icon>
                     {{ berkasData.attachment_ }}
                   </button>
                 </div>
@@ -130,13 +130,13 @@
               </div>
               <div class="col-12 text-center" *ngIf="AS.currentUserSubject?.value">
                 <a href="{{ i.url }}" class="m-1" target="_blank" mat-stroked-button color="accent" *ngFor="let i of berkasData.download_url">
-                  <mat-icon class="me-1">cloud_download</mat-icon>
+                  <mat-icon fontIcon="cloud_download" class="me-1"></mat-icon>
                   {{ i.name }}
                 </a>
               </div>
               <div class="col-12 text-center" *ngIf="!AS.currentUserSubject?.value">
                 <button type="button" class="m-1" mat-stroked-button color="accent" (click)="login()">
-                  <mat-icon class="me-1">vpn_key</mat-icon>
+                  <mat-icon fontIcon="vpn_key" class="me-1"></mat-icon>
                   Klik Untuk Login
                 </button>
               </div>
@@ -184,7 +184,7 @@
                   </mat-form-field>
                   <mat-progress-bar color="warn" mode="buffer" class="mb-3" *ngIf="isHaveDDL && vjsInit && !vjsReady"></mat-progress-bar>
                   <button type="button" class="w-100" mat-stroked-button color="warn" (click)="watchDdl()" *ngIf="isHaveDDL && !vjsReady" [disabled]="vjsInit">
-                    <mat-icon class="me-1">play_arrow</mat-icon>
+                    <mat-icon fontIcon="play_arrow" class="me-1"></mat-icon>
                     <span *ngIf="!vjsInit">Mulai Streaming Video</span>
                     <span *ngIf="vjsInit">
                       Loading ...
@@ -197,7 +197,7 @@
                     [subtitleFonts]="ddlFonts">
                   </app-vjs-player>
                   <button type="button" class="w-100" mat-stroked-button color="accent" (click)="verify()" *ngIf="!isHaveDDL">
-                    <mat-icon class="me-1">enhanced_encryption</mat-icon>
+                    <mat-icon fontIcon="enhanced_encryption" class="me-1"></mat-icon>
                     {{ berkasData.attachment_ }}
                   </button>
                 </div>

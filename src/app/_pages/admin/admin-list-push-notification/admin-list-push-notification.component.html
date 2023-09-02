@@ -19,7 +19,7 @@
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
                 <mat-label>Judul</mat-label>
                 <input matInput formControlName="title" placeholder="Perhatian!" required />
-                <mat-icon matSuffix>short_text</mat-icon>
+                <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                 <mat-hint align="end">Teks Tebal Di Kiri</mat-hint>
                 <mat-error>
                   <div *ngIf="fg.get('title').hasError('required')">Judul Tidak Boleh Kosong</div>
@@ -29,7 +29,7 @@
               <mat-form-field appearance="outline" class="p-3 col-12 col-md-8" [color]="'accent'">
                 <mat-label>Konten / Isi</mat-label>
                 <input matInput formControlName="content" placeholder="Akan Diadakan Maintenance Pada ..." required />
-                <mat-icon matSuffix>wysiwyg</mat-icon>
+                <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
                 <mat-error>
                   <div *ngIf="fg.get('content').hasError('required')">Isi Tidak Boleh Kosong</div>
                   <div *ngIf="fg.get('content').hasError('pattern')">Isi Hanya Boleh Huruf Standar Papan Ketik</div>
@@ -86,7 +86,7 @@
                   <div class="col-12 col-md-3">
                     <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid">
                       Simpan
-                      <mat-icon class="ms-1">save</mat-icon>
+                      <mat-icon fontIcon="save" class="ms-1"></mat-icon>
                     </button>
                   </div>
                 </div>

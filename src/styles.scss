@@ -137,6 +137,11 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.mat-icon {
+  width: auto !important;
+  height: auto !important;
+}
+
 .app-loading {
   position: absolute;
   display: flex;

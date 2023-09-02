@@ -24,7 +24,7 @@
                       <mat-label>Gambar</mat-label>
                       <ngx-mat-file-input class="w-100" (change)="uploadImage($event, gambar)" #gambar [disabled]="fg.value.image"
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
-                      <mat-icon matSuffix>image</mat-icon>
+                      <mat-icon fontIcon="image" matSuffix></mat-icon>
                     </mat-form-field>
                     <mat-error class="px-3 w-100">
                       <small>
@@ -35,7 +35,7 @@
                   </div>
                   <div class="col-12" *ngIf="image && !fg.value.image">
                     <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitImage()">
-                      <mat-icon class="me-1">add_photo_alternate</mat-icon>
+                      <mat-icon fontIcon="add_photo_alternate" class="me-1"></mat-icon>
                       Unggah
                     </button>
                   </div>
@@ -46,7 +46,7 @@
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Nama</mat-label>
                     <input matInput formControlName="name" placeholder="**_BD" required />
-                    <mat-icon matSuffix>short_text</mat-icon>
+                    <mat-icon fontIcon="short_text" matSuffix></mat-icon>
                     <mat-hint align="end">Untuk Jenis Berkas</mat-hint>
                     <mat-error>
                       <div *ngIf="fg.get('name').hasError('required')">Nama Tidak Boleh Kosong</div>
@@ -56,7 +56,7 @@
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
                     <mat-label>Deskripsi</mat-label>
                     <input matInput formControlName="description" placeholder="Edisi Terbatas" required />
-                    <mat-icon matSuffix>wysiwyg</mat-icon>
+                    <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('description').hasError('required')">Deskripsi Tidak Boleh Kosong</div>
                       <div *ngIf="fg.get('description').hasError('pattern')">Deskripsi Hanya Boleh Huruf Standar Papan Ketik</div>
@@ -72,7 +72,7 @@
                       <div class="col-12 col-md-3">
                         <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid">
                           Simpan
-                          <mat-icon class="ms-1">save</mat-icon>
+                          <mat-icon fontIcon="save" class="ms-1"></mat-icon>
                         </button>
                       </div>
                     </div>

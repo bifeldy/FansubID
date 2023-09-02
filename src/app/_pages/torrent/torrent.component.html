@@ -21,7 +21,7 @@
             <mat-form-field hintLabel="Isi Lalu Tekan 'Enter' Untuk Mencari Torrent ..." class="col-12 col-md-6 col-lg-4 px-3 mb-3" [color]="'accent'">
               <mat-label>Unduh Dari Info Hash / Magnet URI</mat-label>
               <input matInput #input placeholder="Ex. magnet:123qwe...!@#" (keyup.enter)="downloadFiles($event)" [(ngModel)]="magnetHash" [disabled]="isProcessing" />
-              <mat-icon matSuffix>cloud_download</mat-icon>
+              <mat-icon fontIcon="cloud_download" matSuffix></mat-icon>
               <mat-progress-bar color="warn" mode="indeterminate" *ngIf="isProcessing"></mat-progress-bar>
             </mat-form-field>
 
@@ -93,19 +93,19 @@
                             </div>
                             <div class="p-2">
                               <button type="button" mat-stroked-button class="m-1 text-warning" (click)="refreshGraph(row)">
-                                <mat-icon class="me-1">refresh</mat-icon>
+                                <mat-icon fontIcon="refresh" class="me-1"></mat-icon>
                                 Refresh Graph
                               </button>
                               <button type="button" mat-stroked-button class="m-1 text-warning" (click)="removeTorrent(row)">
-                                <mat-icon class="me-1">delete_outline</mat-icon>
+                                <mat-icon fontIcon="delete_outline" class="me-1"></mat-icon>
                                 Remove
                               </button>
                               <button type="button" mat-stroked-button class="m-1 text-warning" (click)="resumeTorrent(row)" *ngIf="row.paused">
-                                <mat-icon class="me-1">play_arrow</mat-icon>
+                                <mat-icon fontIcon="play_arrow" class="me-1"></mat-icon>
                                 Resume
                               </button>
                               <button type="button" mat-stroked-button class="m-1 text-warning" (click)="pauseTorrent(row)" *ngIf="!row.paused">
-                                <mat-icon class="me-1">pause</mat-icon>
+                                <mat-icon fontIcon="pause" class="me-1"></mat-icon>
                                 Pause
                               </button>
                             </div>
@@ -113,7 +113,7 @@
                               <div mat-subheader class="p-0">Rincian Isi Berkas ✨</div>
                               <mat-selection-list [multiple]="false">
                                 <mat-list-option *ngFor="let f of row.files" class="h-100">
-                                  <mat-icon mat-list-icon class="ps-3">file_present</mat-icon>
+                                  <mat-icon fontIcon="file_present" mat-list-icon class="ps-3"></mat-icon>
                                   <div (click)="saveFile(f)" style="cursor: pointer;">
                                     <span class="text-{{ f.downloaded / f.length >= 1 ? 'primary' : 'bifeldy' }}">
                                       {{ f.name }}
@@ -172,7 +172,7 @@
   
   <button type="button" (click)="fileDropRef.click()" mat-fab color="warn" class="me-3 mb-5 fab-button animate__animated animate__bounce animate__infinite animate__slow" matTooltip="Seed Berkas"
   style="position: fixed; bottom: 0; right: 0;" [disabled]="isProcessing">
-  <mat-icon>cloud_upload</mat-icon>
+  <mat-icon fontIcon="cloud_upload"></mat-icon>
   </button>
 
 </div>

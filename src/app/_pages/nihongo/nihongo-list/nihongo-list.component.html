@@ -30,7 +30,7 @@
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
                   <div mat-card-avatar style="background-size: cover; background-color: whitesmoke; border-radius: 0;"
                     [style.background-image]="'url(' + (t.image_url || '') + ')'">
-                    <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
+                    <mat-icon [fontIcon]="t.icon" style="font-size: 300%; color: black" *ngIf="t.icon"></mat-icon>
                   </div>
                   <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
                     <h3 class="mb-0">{{ t.name }}</h3>
@@ -55,7 +55,7 @@
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
                   <div mat-card-avatar style="background-size: cover; background-color: whitesmoke; border-radius: 0;"
                     [style.background-image]="'url(' + (t.image_url || '') + ')'">
-                    <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
+                    <mat-icon [fontIcon]="t.icon" style="font-size: 300%; color: black" *ngIf="t.icon"></mat-icon>
                   </div>
                   <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
                     <h3 class="mb-0">{{ t.name }}</h3>
@@ -82,7 +82,7 @@
                 <mat-card-header class="me-0" routerLink="/nihongo/{{ t.url }}" style="cursor: pointer;">
                   <div mat-card-avatar style="background-size: cover; background-color: whitesmoke; border-radius: 0;"
                     [style.background-image]="'url(' + (t.image_url || '') + ')'">
-                    <mat-icon style="font-size: 300%; color: black" *ngIf="t.icon">{{ t.icon }}</mat-icon>
+                    <mat-icon [fontIcon]="t.icon" style="font-size: 300%; color: black" *ngIf="t.icon"></mat-icon>
                   </div>
                   <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
                     <h3 class="mb-0">{{ t.name }}</h3>

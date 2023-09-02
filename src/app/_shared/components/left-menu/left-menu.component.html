@@ -17,7 +17,7 @@
         </span>
       </a>
       <a mat-list-item (click)="logout()">
-        <mat-icon style="padding-left: 0.2em;">power_settings_new</mat-icon>
+        <mat-icon fontIcon="power_settings_new" style="padding-left: 0.2em;"></mat-icon>
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">
           Keluar {{ AS.logoutTimerText }}
         </span>
@@ -25,11 +25,11 @@
     </ng-template>
     <ng-template #belumLogin>
       <a mat-list-item routerLink="/login" (click)="forceCloseSideNav()" routerLinkActive="side-menu-link-active">
-        <mat-icon style="padding-left: 0.2em;">login</mat-icon>
+        <mat-icon fontIcon="login" style="padding-left: 0.2em;"></mat-icon>
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">Masuk</span>
       </a>
       <a mat-list-item routerLink="/register" (click)="forceCloseSideNav()" routerLinkActive="side-menu-link-active">
-        <mat-icon style="padding-left: 0.2em;">group_add</mat-icon>
+        <mat-icon fontIcon="group_add" style="padding-left: 0.2em;"></mat-icon>
         <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">Daftar</span>
       </a>
     </ng-template>
@@ -39,7 +39,7 @@
 
   <mat-nav-list>
     <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of mainMenus" routerLinkActive="side-menu-link-active" (click)="forceCloseSideNav()">
-      <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before">{{ menu.icon }}</mat-icon>
+      <mat-icon [fontIcon]="menu.icon" style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before"></mat-icon>
       <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu.name }}</span>
     </a>
   </mat-nav-list>
@@ -48,7 +48,7 @@
 
   <mat-nav-list>
     <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of contentMenus" routerLinkActive="side-menu-link-active" (click)="forceCloseSideNav()">
-      <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before">{{ menu.icon }}</mat-icon>
+      <mat-icon [fontIcon]="menu.icon" style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before"></mat-icon>
       <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu.name }}</span>
     </a>
   </mat-nav-list>
@@ -57,7 +57,7 @@
 
   <mat-nav-list>
     <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of additionalMenus" routerLinkActive="side-menu-link-active" (click)="forceCloseSideNav()">
-      <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before">{{ menu.icon }}</mat-icon>
+      <mat-icon [fontIcon]="menu.icon" style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before"></mat-icon>
       <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu.name }}</span>
     </a>
   </mat-nav-list>
@@ -66,11 +66,11 @@
 
   <mat-nav-list>
     <a mat-list-item routerLinkActive="side-menu-link-active" (click)="openWebTorrent()">
-      <mat-icon style="padding-left: 0.2em;">sailing</mat-icon>
+      <mat-icon fontIcon="sailing" style="padding-left: 0.2em;"></mat-icon>
       <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">Web Torrent</span>
     </a>
     <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of miscMenus" routerLinkActive="side-menu-link-active" (click)="forceCloseSideNav()">
-      <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before">{{ menu.icon }}</mat-icon>
+      <mat-icon [fontIcon]="menu.icon" style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before"></mat-icon>
       <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu.name }}</span>
     </a>
   </mat-nav-list>
@@ -79,11 +79,11 @@
 
   <mat-nav-list>
     <a mat-list-item routerLink="{{ menu.link }}" *ngFor="let menu of otherMenus" routerLinkActive="side-menu-link-active" (click)="forceCloseSideNav()">
-      <mat-icon style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before">{{ menu.icon }}</mat-icon>
+      <mat-icon [fontIcon]="menu.icon" style="padding-left: 0.2em;" [matBadge]="menu.badge" matBadgeColor="warn" matBadgePosition="before"></mat-icon>
       <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">{{ menu.name }}</span>
     </a>
     <a mat-list-item routerLinkActive="side-menu-link-active" (click)="openDocumentation()">
-      <mat-icon style="padding-left: 0.2em;">settings_ethernet</mat-icon>
+      <mat-icon fontIcon="settings_ethernet" style="padding-left: 0.2em;"></mat-icon>
       <span [@animateText]="linkText ? 'show' : 'hide'" style="padding-left: 1.75em; padding-right: 0.2em;">
         Dev. Mode
         <span style="right: 1em !important; position: absolute;">
