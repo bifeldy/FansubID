@@ -199,7 +199,7 @@
                   <div class="row mb-4" *ngFor="let item of uploads$ | async">
                     <div class="col">
                       <div class="px-3">
-                        {{ item.status }} :: {{ item.progress }}% @ {{ item.speed | bytes }}/s
+                        {{ item.status }} :: {{ item.progress }}% @ {{ item.speed | bytes }}/s # {{ item.remaining }} detik
                         <br />
                         <mat-progress-bar [mode]="'determinate'" [value]="item.progress"></mat-progress-bar>
                       </div>
