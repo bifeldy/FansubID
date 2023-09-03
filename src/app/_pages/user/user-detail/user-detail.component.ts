@@ -7,7 +7,6 @@ import { environment } from '../../../../environments/app/environment';
 import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { FabService } from '../../../_shared/services/fab.service';
 import { UserService } from '../../../_shared/services/user.service';
@@ -66,7 +65,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
-    private as: AuthService,
     private bs: BusyService,
     private fs: FabService,
     private pi: PageInfoService,
@@ -272,14 +270,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   createMailbox(): void {
-    const qp: any = {
-      to: `${this.userData.username}@${environment.domain}`
-    };
-    if (this.as.currentUserSubject?.value) {
-      qp.bcc = this.as.currentUserSubject.value._email;
-    }
     this.router.navigate(['/create/mailbox'], {
-      queryParams: qp
+      queryParams: {
+        to: `${this.userData.username}@${environment.domain}`
+      }
     });
   }
 

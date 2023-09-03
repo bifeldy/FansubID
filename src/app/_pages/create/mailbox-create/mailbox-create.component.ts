@@ -82,9 +82,14 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
   }
 
   initForm(): void {
-    const to = this.activatedRoute.snapshot.queryParamMap.get('to')?.split(',').map(e => e.trim()) || [];
-    const cc = this.activatedRoute.snapshot.queryParamMap.get('cc')?.split(',').map(e => e.trim()) || [];
-    const bcc = this.activatedRoute.snapshot.queryParamMap.get('bcc')?.split(',').map(e => e.trim()) || [];
+    const to = this.activatedRoute.snapshot.queryParamMap.get('to')?.split(',').map(e => e.toLowerCase().trim()) || [];
+    const cc = this.activatedRoute.snapshot.queryParamMap.get('cc')?.split(',').map(e => e.toLowerCase().trim()) || [];
+    const bcc = this.activatedRoute.snapshot.queryParamMap.get('bcc')?.split(',').map(e => e.toLowerCase().trim()) || [];
+    if (this.as.currentUserSubject?.value) {
+      if (!bcc.includes(`${this.as.currentUserSubject.value._email.toLowerCase().trim()}`)) {
+        bcc.push(`${this.as.currentUserSubject.value._email.toLowerCase().trim()}`);
+      }
+    }
     const subject = this.activatedRoute.snapshot.queryParamMap.get('subject') || '';
     this.fg = this.fb.group({
       to: [to, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEmailMulti)])],
@@ -126,8 +131,8 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
   addTo(event: MatChipInputEvent): void {
     const input = event.chipInput.inputElement;
     const value = event.value;
-    if ((value || '').trim()) {
-      this.fg.value.to.push(value.trim());
+    if ((value || '').toLowerCase().trim()) {
+      this.fg.value.to.push(value.toLowerCase().trim());
     }
     if (input) {
       input.value = '';
@@ -145,8 +150,8 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
   addCc(event: MatChipInputEvent): void {
     const input = event.chipInput.inputElement;
     const value = event.value;
-    if ((value || '').trim()) {
-      this.fg.value.cc.push(value.trim());
+    if ((value || '').toLowerCase().trim()) {
+      this.fg.value.cc.push(value.toLowerCase().trim());
     }
     if (input) {
       input.value = '';
@@ -164,8 +169,8 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
   addBcc(event: MatChipInputEvent): void {
     const input = event.chipInput.inputElement;
     const value = event.value;
-    if ((value || '').trim()) {
-      this.fg.value.bcc.push(value.trim());
+    if ((value || '').toLowerCase().trim()) {
+      this.fg.value.bcc.push(value.toLowerCase().trim());
     }
     if (input) {
       input.value = '';
