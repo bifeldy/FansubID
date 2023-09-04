@@ -352,6 +352,14 @@ swiper
   justify-content: flex-start !important;
 }
 
+.mat-expansion-panel-header-title {
+  flex-grow: 2 !important;
+}
+
+.mat-expansion-panel-header-description {
+  flex-grow: 1 !important;
+}
+
 .border-bottom-dotted {
   border-top: 0;
   border-left: 0;
