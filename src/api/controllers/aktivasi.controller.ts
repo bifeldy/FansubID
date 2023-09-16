@@ -6,7 +6,7 @@ import { environment } from '../../environments/api/environment';
 
 import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 
-import { RegistrationModel } from '../../models/req-res.model';
+import { RegistrationModel, UserModel } from '../../models/req-res.model';
 
 import { AuthService } from '../services/auth.service';
 import { CryptoService } from '../services/crypto.service';
@@ -32,7 +32,7 @@ export class AktivasiController {
   @FilterApiKeyAccess()
   async activateAccount(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const token = req.query['token'] || '';
-    let userActivated = null;
+    let userActivated: UserModel = null;
     if (token) {
       userActivated = await this.as.activateAccount(token as string);
       if (userActivated) {
@@ -65,7 +65,7 @@ export class AktivasiController {
       }
     }
     return {
-      url: `${environment.baseUrl}/${(userActivated ? 'login' : 'register')}?ngsw-bypass=true`,
+      url: `${environment.baseUrl}/${(userActivated ? `user/${userActivated.username}/edit` : 'register')}?ngsw-bypass=true`,
       statusCode: 301
     };
   }

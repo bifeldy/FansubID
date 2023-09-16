@@ -300,8 +300,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['/create/mailbox'], {
       queryParams: {
         subject: '[ReqUName] Pengajuan Ganti Username',
-        to: adminList.map(e => `${e}@${environment.domain}`).join(','),
-        cc: this.as.currentUserSubject?.value?._email
+        to: adminList.map(e => `${e}@${environment.domain}`).join(',')
       }
     });
   }
