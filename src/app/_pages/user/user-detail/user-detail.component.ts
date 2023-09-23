@@ -104,7 +104,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   get accountAge(): number {
     return Math.abs(new Date(
-      new Date().getTime() - new Date(this.userData.created_at).getTime()
+      Date.now() - new Date(this.userData.created_at).getTime()
     ).getUTCFullYear() - 1970);
   }
 

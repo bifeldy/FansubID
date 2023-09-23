@@ -65,7 +65,7 @@ export class ImageController {
   )
   async imgBb(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const dateTime = new Date().getTime().toString();
+      const dateTime = Date.now().toString();
       const imgB64 = this.cs.convertToBase64(req.file.buffer);
       const url = new URL(environment.externalApiImage);
       const form = new FormData();

@@ -63,7 +63,7 @@ export class MkvExtractService {
   async mkvExtract(fileName: string, filePath: string): Promise<any[]> {
     return new Promise((resolve, reject) => {
 
-      const startTime = new Date().getTime();
+      const startTime = Date.now();
       this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`);
     
       const fileStream = createReadStream(filePath);
@@ -184,7 +184,7 @@ export class MkvExtractService {
             size: subtitleFileSize[idx]
           });
         };
-        const endTime = new Date().getTime();
+        const endTime = Date.now();
         this.gs.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`);
         if (files.length === 0) {
           reject(Error('No data found'));

@@ -59,7 +59,7 @@ export class WinboxService {
       !this.gs.includesOneOf(uriUrl, ['ftp://', 'mailto:'])) ||
       force
     ) {
-      const currentDateTime = new Date().getTime();
+      const currentDateTime = Date.now();
       this.openedWindow[currentDateTime] = new WinBox(uriUrl, {
         id: currentDateTime,
         title: uriUrl,

@@ -33,7 +33,7 @@ function reqResEvent(req: Request, res: Response, next: NextFunction) {
   });
   res.on('close', () => {
     const clientOriginIpCc = aks.getOriginIpCc(req, true);
-    const timeEnd = new Date().getTime() - timeStart.getTime();
+    const timeEnd = Date.now() - timeStart.getTime();
     const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
     sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
   });

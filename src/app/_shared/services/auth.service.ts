@@ -50,8 +50,8 @@ export class AuthService {
         this.token = respVerify.token;
         if (this.token) {
           const expires = new Date(this.cs.jwtView(this.token).exp * 1000);
-          const minBefore = 5 * 60 * 1000;
-          const notifTime = expires.getTime() - minBefore;
+          const expireTime = expires.getTime();
+          const notifTime = expireTime - 5 * 60 * 1000;
           this.cleanUpTimeoutInterval();
           this.timeoutNotif = setTimeout(() => {
             this.timeoutToast = this.toast.warning(
@@ -59,7 +59,7 @@ export class AuthService {
               `Silahkan Logout & Login Ulang ...`,
               {
                 closeButton: false,
-                timeOut: minBefore,
+                timeOut: expireTime - Date.now(),
                 disableTimeOut: 'extendedTimeOut',
                 tapToDismiss: false,
                 progressAnimation: 'decreasing'
@@ -68,7 +68,7 @@ export class AuthService {
             );
           }, notifTime - Date.now());
           this.intervalLogout = setInterval(() => {
-            const distance = expires.getTime() - new Date().getTime();
+            const distance = expireTime - Date.now();
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));

@@ -439,7 +439,7 @@ export class FansubController {
           }, HttpStatus.FORBIDDEN);
         }
       }
-      fansub.slug = `${fansub.slug}~${new Date().getTime()}`;
+      fansub.slug = `${fansub.slug}~${Date.now()}`;
       fansub.editable = false;
       const updatedFansub = await this.fansubRepo.save(fansub);
       const deletedFansub = await this.fansubRepo.remove(updatedFansub);

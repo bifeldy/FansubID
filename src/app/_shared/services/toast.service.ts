@@ -26,7 +26,7 @@ export class ToastService {
 
   success(message?: string, title?: string, override?: Partial<IndividualConfig>, force = false): ActiveToast<any> {
     if (force) {
-      this.notif.addNotif(null, new Date().getTime(), 'success', title, message);
+      this.notif.addNotif(null, Date.now(), 'success', title, message);
     }
     if (this.gs.isDesktop || force) {
       return this.toast.success(message, title, override);
@@ -36,7 +36,7 @@ export class ToastService {
 
   warning(message?: string, title?: string, override?: Partial<IndividualConfig>, force = false): ActiveToast<any> {
     if (force) {
-      this.notif.addNotif(null, new Date().getTime(), 'warning', title, message);
+      this.notif.addNotif(null, Date.now(), 'warning', title, message);
     }
     if (this.gs.isDesktop || force) {
       return this.toast.warning(message, title, override);
@@ -46,7 +46,7 @@ export class ToastService {
 
   info(message?: string, title?: string, override?: Partial<IndividualConfig>, force = false): ActiveToast<any> {
     if (force) {
-      this.notif.addNotif(null, new Date().getTime(), 'info', title, message);
+      this.notif.addNotif(null, Date.now(), 'info', title, message);
     }
     if (this.gs.isDesktop || force) {
       return this.toast.info(message, title, override);
@@ -56,7 +56,7 @@ export class ToastService {
 
   error(message?: string, title?: string, override?: Partial<IndividualConfig>, force = false): ActiveToast<any> {
     if (force) {
-      this.notif.addNotif(null, new Date().getTime(), 'danger', title, message);
+      this.notif.addNotif(null, Date.now(), 'danger', title, message);
     }
     if (this.gs.isDesktop || force) {
       return this.toast.error(message, title, override);

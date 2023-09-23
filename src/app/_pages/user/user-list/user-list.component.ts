@@ -170,7 +170,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         input: {
           name: {
             inputLabel: 'Nama / Deskripsi',
-            inputPlaceholder: `${this.as.currentUserSubject?.value?.username}_${new Date().getTime()}`,
+            inputPlaceholder: `${this.as.currentUserSubject?.value?.username}_${Date.now()}`,
             inputValue: null,
             inputRequired: true
           },

@@ -257,7 +257,7 @@ export class DiscordService {
       if (msg.content === '~about') {
         await msg.reply({ content: `<@${msg.author.id}> https://github.com/${environment.author}/${environment.siteName}` });
       } else if (msg.content === '~ping') {
-        const latency = new Date().getTime() - new Date(msg.createdTimestamp).getTime();
+        const latency = Date.now() - new Date(msg.createdTimestamp).getTime();
         await msg.reply({ content: `<@${msg.author.id}> Pong ${latency} ms late!` });
       } else if (msg.content.startsWith('~verify ')) {
         await this.verifyAccount(msg);

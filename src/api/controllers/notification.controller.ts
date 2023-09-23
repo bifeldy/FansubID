@@ -89,7 +89,7 @@ export class NotificationController {
       ) {
         const user: UserModel = res.locals['user'];
         let notifTemplate: NotificationModel = {
-          id: new Date().getTime(),
+          id: Date.now(),
           type: req.body.type,
           title: req.body.title,
           content: req.body.content,
