@@ -10,7 +10,7 @@ import { environment } from '../../../environments/api/environment';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
-import { JsonCache } from '../../../models/req-res.model';
+import { ResponseCache } from '../../../models/req-res.model';
 
 import { GlobalService } from '../../services/global.service';
 
@@ -44,7 +44,7 @@ export class FansubRssFeedActiveController {
         pages: 1,
         results: []
       };
-      const cacheData: JsonCache = await this.cm.get(`/api/${reqUrl}`);
+      const cacheData: ResponseCache = await this.cm.get(`/api/${reqUrl}`);
       if (cacheData) {
         return cacheData.body;
       }

@@ -1,4 +1,4 @@
-export interface JsonCache {
+export interface ResponseCache {
   status?: number;
   body?: any;
 }

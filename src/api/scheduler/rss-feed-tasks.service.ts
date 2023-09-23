@@ -82,7 +82,7 @@ export class RssFeedTasksService {
 
   saveFeedToFileAndCache(reqUrl: string, resBody: any) {
     this.cm.del(`/api/${reqUrl}`);
-    this.cm.set(`/api/${reqUrl}`, { status: 200, body: resBody }, { ttl: environment.externalApiCacheTime });
+    this.cm.set(`/api/${reqUrl}`, { status: 200, body: resBody }, { ttl: CONSTANTS.externalApiCacheTime });
     writeFile(`${environment.jsonCacheFolder}/${reqUrl}.new.json`, JSON.stringify(resBody, null, 2), 'utf8', (e1) => {
       if (e1) {
         this.gs.log('[NODE_FS_WRITE_FILE-ERROR] 📝', e1, 'error');

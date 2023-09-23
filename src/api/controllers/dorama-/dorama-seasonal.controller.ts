@@ -46,7 +46,7 @@ export class DoramaSeasonalController {
           results: res_json
         };
         if (res_json.length > 0) {
-          this.cm.set(req.originalUrl, { status: res_raw.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
+          this.cm.set(req.originalUrl, { status: res_raw.status, body: responseBody }, { ttl: CONSTANTS.externalApiCacheTime });
         }
         return responseBody;
       }

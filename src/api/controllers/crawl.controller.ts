@@ -3,9 +3,12 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { Browser, Page } from 'puppeteer';
 
-import { Controller, Get, HttpCode, HttpStatus, Req, Res } from '@nestjs/common';
+import { CACHE_MANAGER, Controller, Get, HttpCode, HttpStatus, Inject, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { Cache } from 'cache-manager';
+
+import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
@@ -41,6 +44,7 @@ export class CrawlController {
   browser: Browser = null;
 
   constructor(
+    @Inject(CACHE_MANAGER) private cm: Cache,
     private gs: GlobalService
   ) {
     puppeteer.use(StealthPlugin());
@@ -110,6 +114,7 @@ export class CrawlController {
           }
         }
         await page.close();
+        this.cm.set(req.originalUrl, { status: response.status(), body: responseData }, { ttl: CONSTANTS.externalApiCacheTime });
         res.send(responseData);
       } else {
         throw new Error('Data Tidak Lengkap!');

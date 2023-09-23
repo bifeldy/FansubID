@@ -30,6 +30,7 @@ export const CONSTANTS = {
   decoratorVerifiedOnly: 'verified-only',
   extSubs: ['ass', 'srt'],
   extFonts: ['ttf', 'otf', 'woff', 'woff2'],
+  externalApiCacheTime: 15 * 60 * 1, // 15 Minutes [v4 seconds, v5 miliseconds]
   fileTypeAttachmentAllowed: [
     'video/x-msvideo',
     'video/x-matroska',

@@ -77,9 +77,9 @@
                       [style.background-image]="'url(' + (c.fansub_?.image_url || ENV.baseUrl + '/assets/img/favicon.png') + ')'">
                     </div>
                     <mat-card-title class="text-warning mb-1" style="cursor: pointer;">
-                      <h3 class="mb-0">{{ c.name }}</h3>
+                      <h3 class="mb-0">{{ c.fansub_?.name }}</h3>
                     </mat-card-title>
-                    <mat-card-subtitle class="mb-0">{{ c.type }} :: {{ c.fansub_?.active ? '' : 'Tidak' }} Aktif</mat-card-subtitle>
+                    <mat-card-subtitle class="mb-0">{{ c.name }}</mat-card-subtitle>
                   </mat-card-header>
                 </mat-card>
               </div>

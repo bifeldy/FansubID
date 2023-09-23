@@ -25,8 +25,10 @@ export class NotificationsService {
           type: 'info',
           title: 'Pemberitahuan!',
           content: `
-            Jika ingin request fitur baru ataupun melaporkan <i>Bug</i> dapat menulis pesan di kanal Discord
+            Jika ingin request fitur baru ataupun melaporkan <i>Bug</i> dapat menulis pesan di kanal
             '<a href="https://discord.gg/xGWdExk" target="_blank" class="text-decoration-none">#dev-prog</a>'.
+            Termasuk juga melihat dan mencari semua log aktivitas secara transparan ada di kanal
+            '<a href="https://discord.gg/xGWdExk" target="_blank" class="text-decoration-none">#aktivitas</a>'.
             Terima kasih. ^_^
           `,
           dismissible: true

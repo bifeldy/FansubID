@@ -76,7 +76,7 @@ export class AnimeSeasonalController {
         results: data
       };
       if (data.length > 0) {
-        this.cm.set(req.originalUrl, { status, body: responseBody }, { ttl: environment.externalApiCacheTime });
+        this.cm.set(req.originalUrl, { status, body: responseBody }, { ttl: CONSTANTS.externalApiCacheTime });
       }
       return responseBody;
     } catch (error) {

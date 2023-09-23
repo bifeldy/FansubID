@@ -248,7 +248,7 @@ export class FansubDnsController {
           results: records
         };
         if (records.length > 0) {
-          this.cm.set(req.originalUrl, { status: dnss.status, body: responseBody }, { ttl: environment.externalApiCacheTime });
+          this.cm.set(req.originalUrl, { status: dnss.status, body: responseBody }, { ttl: CONSTANTS.externalApiCacheTime });
         }
         return responseBody;
       }

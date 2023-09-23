@@ -1,8 +1,11 @@
+// NodeJS Library
+import { Buffer } from 'node:buffer';
+
 import { CACHE_MANAGER, Inject, Injectable, NestMiddleware, Next, Req, Res } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { Cache } from 'cache-manager';
 
-import { JsonCache } from '../../models/req-res.model';
+import { ResponseCache } from '../../models/req-res.model';
 
 import { GlobalService } from '../services/global.service';
 
@@ -17,11 +20,11 @@ export class CacheMiddleware implements NestMiddleware {
   }
 
   async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
-    const cacheData: JsonCache = await this.cm.get(req.originalUrl);
+    const cacheData: ResponseCache = await this.cm.get(req.originalUrl);
     if (cacheData) {
       this.gs.log(`[CACHE_MIDDLEWARE-${req.originalUrl}] ✨`, cacheData);
       let body = cacheData.body;
-      if (res.locals['xml']) {
+      if (res.locals['xml'] && !Buffer.isBuffer(body)) {
         res.set('Content-Type', 'application/xml');
         body = this.gs.OBJ2XML(cacheData.body);
       }
