@@ -116,7 +116,7 @@ import { SocketIoService } from './services/socket-io.service';
 import { RssFeedTasksService } from './scheduler/rss-feed-tasks.service';
 import { SitemapService } from './scheduler/sitemap-tasks.service';
 import { TrackerStatisticsService } from './scheduler/tracker-statistics-tasks.service';
-import { VpsBillingService } from './scheduler/vps-billing.service';
+import { VpsBillingService } from './scheduler/vps-billing-task.service';
 
 import { AnimeService } from './repository/anime.service';
 import { ApiKeyService } from './repository/api-key.service';

@@ -5,7 +5,7 @@ import { parse } from 'rss-to-json';
 import { writeFile, rename, unlink } from 'node:fs';
 
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { IsNull, Not } from 'typeorm';
 import { Cache } from 'cache-manager';
 
@@ -24,6 +24,7 @@ export class RssFeedTasksService {
 
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache,
+    private sr: SchedulerRegistry,
     private fansubRepo: FansubService,
     private gs: GlobalService
   ) {
@@ -110,6 +111,8 @@ export class RssFeedTasksService {
     }
   )
   async fansubRssFeedAll(): Promise<void> {
+    const job = this.sr.getCronJob(CONSTANTS.cronFansubRssFeed);
+    job.stop();
     const startTime = new Date();
     this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-START] 🐾', `${startTime}`);
     try {
@@ -155,6 +158,7 @@ export class RssFeedTasksService {
     const endTime = new Date();
     const elapsedTime = endTime.getTime() - startTime.getTime();
     this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+    job.start();
   }
 
 }

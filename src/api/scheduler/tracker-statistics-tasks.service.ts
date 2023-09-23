@@ -2,7 +2,7 @@
 import { URL } from 'node:url';
 
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 
 import { CONSTANTS } from '../../constants';
 
@@ -29,6 +29,7 @@ export class TrackerStatisticsService {
   };
 
   constructor(
+    private sr: SchedulerRegistry,
     private gs: GlobalService,
     private sis: SocketIoService,
     private api: ApiService,
@@ -59,6 +60,8 @@ export class TrackerStatisticsService {
     }
   )
   async statistics(): Promise<void> {
+    const job = this.sr.getCronJob(CONSTANTS.cronTrackerStatistics);
+    job.stop();
     const startTime = new Date();
     this.gs.log('[CRON_TASK_TRACKER_STATISTICS-START] 🐾', `${startTime}`);
     try {
@@ -74,6 +77,7 @@ export class TrackerStatisticsService {
     const endTime = new Date();
     const elapsedTime = endTime.getTime() - startTime.getTime();
     this.gs.log('[CRON_TASK_TRACKER_STATISTICS-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+    job.start();
   }
 
 }

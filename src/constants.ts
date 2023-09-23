@@ -24,12 +24,14 @@ export const CONSTANTS = {
   cronTrackerStatistics: 'CRON_TRACKER_STATISTICS',
   cronSitemap: 'CRON_SITEMAP',
   cronStatsServer: 'CRON_STATS_SERVER',
+  cronUpload: 'CRON_UPLOAD',
   cronVpsBilling: 'CRON_VPS_BILLING',
   decoratorFilterApiKeyAccess: 'filter-api-key-access',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
-  extSubs: ['ass', 'srt'],
+  extAttachment: ['avi', 'mkv', 'mp4', 'zip'],
   extFonts: ['ttf', 'otf', 'woff', 'woff2'],
+  extSubs: ['ass', 'srt'],
   externalApiCacheTime: 15 * 60 * 1, // 15 Minutes [v4 seconds, v5 miliseconds]
   fileTypeAttachmentAllowed: [
     'video/x-msvideo',

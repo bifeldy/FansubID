@@ -5,7 +5,7 @@ import { xml2json, json2xml } from 'xml-js';
 import { existsSync, readFileSync, writeFileSync, unlinkSync } from 'node:fs';
 
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 
 import { CONSTANTS } from '../../constants';
 
@@ -30,6 +30,7 @@ export class SitemapService {
   };
 
   constructor(
+    private sr: SchedulerRegistry,
     private gs: GlobalService,
     private newsRepo: NewsService,
     private fansubRepo: FansubService,
@@ -97,6 +98,8 @@ export class SitemapService {
     }
   )
   async generateSitemap(): Promise<void> {
+    const job = this.sr.getCronJob(CONSTANTS.cronSitemap);
+    job.stop();
     const startTime = new Date();
     this.gs.log('[CRON_TASK_SITEMAP-START] 🐾', `${startTime}`);
     try {
@@ -128,6 +131,7 @@ export class SitemapService {
     const endTime = new Date();
     const elapsedTime = endTime.getTime() - startTime.getTime();
     this.gs.log('[CRON_TASK_SITEMAP-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+    job.start();
   }
 
 }

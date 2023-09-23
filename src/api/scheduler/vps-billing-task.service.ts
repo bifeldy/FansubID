@@ -2,7 +2,7 @@
 import { URL } from 'node:url';
 
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 
 import { CONSTANTS } from '../../constants';
 
@@ -17,7 +17,7 @@ export class VpsBillingService {
 
   header = { ...environment.nodeJsXhrHeader, apikey: environment.idCloudHost.apiKey };
 
-  constructor(
+  constructor(private sr: SchedulerRegistry,
     private cfg: ConfigService,
     private gs: GlobalService,
     private api: ApiService
@@ -32,8 +32,10 @@ export class VpsBillingService {
     }
   )
   async updateBilling(): Promise<void> {
+    const job = this.sr.getCronJob(CONSTANTS.cronVpsBilling);
+    job.stop();
     const startTime = new Date();
-    this.gs.log('[CRON_VPS_BILLING-START] 🐾', `${startTime}`);
+    this.gs.log('[CRON_TASK_VPS_BILLING-START] 🐾', `${startTime}`);
     try {
       const url = new URL(`${environment.idCloudHost.apiUrl}/payment/billing_account/list`)
       const res_raw = await this.api.getData(url, this.header);
@@ -41,11 +43,12 @@ export class VpsBillingService {
       const json = res_json[0];
       this.cfg.statsServer.billing.ongoing = json.precalc_ongoing || json.running_totals?.ongoing;
     } catch (error) {
-      this.gs.log('[CRON_VPS_BILLING-ERROR] 🐾', error, 'error');
+      this.gs.log('[CRON_TASK_VPS_BILLING-ERROR] 🐾', error, 'error');
     }
     const endTime = new Date();
     const elapsedTime = endTime.getTime() - startTime.getTime();
-    this.gs.log('[CRON_VPS_BILLING-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+    this.gs.log('[CRON_TASK_VPS_BILLING-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+    job.start();
   }
 
 }
