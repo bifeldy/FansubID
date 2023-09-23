@@ -8,6 +8,7 @@ import { StatsServerService } from '../../../_shared/services/stats-server.servi
 import { AuthService } from '../../../_shared/services/auth.service';
 import { TaskCronJobService } from '../../../_shared/services/task-cron-job.service';
 import { BusyService } from '../../../_shared/services/busy.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-admin-menu',
@@ -20,6 +21,7 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
 
   subsCronJobsGet = null;
   subsCronJobsPut = null;
+  subsDialog = null;
 
   constructor(
     private bs: BusyService,
@@ -27,7 +29,8 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
     private as: AuthService,
     private adm: AdminService,
     private ss: StatsServerService,
-    private tcj: TaskCronJobService
+    private tcj: TaskCronJobService,
+    private ds: DialogService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -59,6 +62,7 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsCronJobsGet?.unsubscribe();
     this.subsCronJobsPut?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   toggleSetting(key: string, checked: boolean): void {
@@ -80,18 +84,32 @@ export class AdminMenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleCronJob(t: TaskCronJobModel): void {
-    this.bs.busy();
-    this.subsCronJobsPut = this.tcj.toggleOnOffTaskCronJob(t.id).subscribe({
-      next: res => {
-        this.gs.log('[TASK_CRON_JOB_TOGGLE_SUCCESS]', res);
-        this.bs.idle();
-        this.getAllTaskCronJobs();
-      },
-      error: err => {
-        this.gs.log('[TASK_CRON_JOB_TOGGLE_ERROR]', err, 'error');
-        this.bs.idle();
-        this.getAllTaskCronJobs();
+  async toggleCronJob(t: TaskCronJobModel): Promise<void> {
+    const statusRun = t.running ? 'Matikan' : 'Nyalakan';
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `${statusRun} ${t.id}`,
+      `Apakah Yakin Ingin Memaksa ${statusRun} Jadwal Ini ?`
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.bs.busy();
+          this.subsCronJobsPut = this.tcj.toggleOnOffTaskCronJob(t.id).subscribe({
+            next: res => {
+              this.gs.log('[TASK_CRON_JOB_TOGGLE_SUCCESS]', res);
+              this.bs.idle();
+              this.getAllTaskCronJobs();
+            },
+            error: err => {
+              this.gs.log('[TASK_CRON_JOB_TOGGLE_ERROR]', err, 'error');
+              this.bs.idle();
+              this.getAllTaskCronJobs();
+            }
+          });
+        } else if (re === false) {
+          this.getAllTaskCronJobs();
+        }
+        this.subsDialog.unsubscribe();
       }
     });
   }
