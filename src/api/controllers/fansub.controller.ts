@@ -336,7 +336,7 @@ export class FansubController {
           const filteredTagsUnique = [...new Set<string>(req.body.tags)];
           fansub.tags = JSON.stringify(filteredTagsUnique);
         }
-        if ('urls' in req.body) {
+        if ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0) {
           const filteredUrls = [];
           for (const u of req.body.urls) {
             if ('url' in u && 'name' in u && u.url && u.name) {

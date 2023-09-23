@@ -116,7 +116,7 @@ export class MailController {
   async sendNewMail(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
-        'to' in req.body && Array.isArray(req.body.to) && req.body.to.length > 0 &&
+        ('to' in req.body && Array.isArray(req.body.to) && req.body.to.length > 0) &&
         'subject' in req.body &&
         'message' in req.body
       ) {

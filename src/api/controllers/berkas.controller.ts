@@ -503,9 +503,10 @@ export class BerkasController {
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
-        'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body ||
+        'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body || 'attachment_id' in req.body ||
         ('anime_id' in req.body || 'dorama_id' in req.body) || 'projectType_id' in req.body || 'r18' in req.body ||
-        'download_url' in req.body || 'attachment_id' in req.body || 'fansub_id' in req.body
+        ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) ||
+        ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
       ) {
         const user: UserModel = res.locals['user'];
         const file = await this.berkasRepo.findOneOrFail({
