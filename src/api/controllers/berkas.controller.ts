@@ -1,11 +1,11 @@
 // NodeJS Library
-import { existsSync, writeFileSync, createReadStream, readdirSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Request, Response } from 'express';
-import { Equal, ILike, In, IsNull } from 'typeorm';
+import { Equal, ILike, In } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -26,9 +26,7 @@ import { ProjectTypeService } from '../repository/project-type.service';
 import { TempAttachmentService } from '../repository/temp-attachment.service';
 
 import { DiscordService } from '../services/discord.service';
-import { GdriveService } from '../services/gdrive.service';
 import { GlobalService } from '../services/global.service';
-import { MkvExtractService } from '../services/mkv-extract.service';
 import { SocketIoService } from '../services/socket-io.service';
 
 @Controller('/berkas')
@@ -42,9 +40,7 @@ export class BerkasController {
     private doramaRepo: DoramaService,
     private ds: DiscordService,
     private fansubRepo: FansubService,
-    private gdrive: GdriveService,
     private gs: GlobalService,
-    private mkv: MkvExtractService,
     private projectTypeRepo: ProjectTypeService,
     private sis: SocketIoService,
     private tempAttachmentRepo: TempAttachmentService
@@ -86,178 +82,7 @@ export class BerkasController {
           attachment.ext = tempAttachment.ext;
           attachment.mime = tempAttachment.mime;
           attachment.user_ = user;
-          const resAttachmentSave = await this.attachmentRepo.save(attachment);
-          berkas.attachment_ = resAttachmentSave;
-          let videoExtractCompleted = false;
-          let videoUploadCompleted = false;
-          if (resAttachmentSave.ext === 'mkv') {
-            this.mkv.mkvExtract(resAttachmentSave.name, `${environment.uploadFolder}/${files[fIdx].name}`, async (e1, extractedFiles) => {
-              if (e1) {
-                this.gs.log('[MKV_EXTRACT-ERROR] 📂', e1, 'error');
-              } else {
-                for (const ef of extractedFiles) {
-                  const fileNameExt = ef.name.split('.');
-                  const fileExt = fileNameExt.pop().toLowerCase();
-                  const fileName = fileNameExt.join('.').toLowerCase();
-                  try {
-                    const mkvAttachment = this.attachmentRepo.new();
-                    mkvAttachment.name = fileName;
-                    mkvAttachment.ext = fileExt;
-                    mkvAttachment.size = ef.size;
-                    mkvAttachment.pending = environment.production;
-                    mkvAttachment.user_ = user;
-                    mkvAttachment.parent_attachment_ = resAttachmentSave;
-                    if (CONSTANTS.extSubs.includes(fileExt)) {
-                      mkvAttachment.mime = 'text/plain';
-                    } else if (CONSTANTS.extFonts.includes(fileExt)) {
-                      mkvAttachment.mime = `font/${fileExt}`;
-                    } else {
-                      mkvAttachment.mime = 'application/octet-stream';
-                    }
-                    let mkvAttachmentDuplicate = null;
-                    const otherAttachment1 = await this.attachmentRepo.find({
-                      where: [
-                        {
-                          name: Equal(fileName),
-                          ext: Equal(fileExt)
-                        }
-                      ]
-                    });
-                    if (otherAttachment1.length > 0) {
-                      for (const oa of otherAttachment1) {
-                        mkvAttachmentDuplicate = oa;
-                        if (oa.google_drive) {
-                          break;
-                        }
-                      }
-                    }
-                    const fileExist = existsSync(`${environment.uploadFolder}/${fileName}.${fileExt}`);
-                    if (mkvAttachmentDuplicate) {
-                      mkvAttachment.name = mkvAttachmentDuplicate.name;
-                      mkvAttachment.ext = mkvAttachmentDuplicate.ext;
-                      mkvAttachment.size = mkvAttachmentDuplicate.size;
-                      mkvAttachment.mime = mkvAttachmentDuplicate.mime;
-                      mkvAttachment.pending = false;
-                      if (mkvAttachmentDuplicate.google_drive) {
-                        mkvAttachment.google_drive = mkvAttachmentDuplicate.google_drive;
-                        this.gs.deleteAttachment(`${fileName}.${fileExt}`);
-                      } else {
-                        // Local File Missing
-                        if (!fileExist) {
-                          writeFileSync(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data);
-                        }
-                      }
-                    } else {
-                      // First Time Upload
-                      if (!fileExist) {
-                        writeFileSync(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data);
-                      }
-                    }
-                    const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
-                    // Upload Video Attachment -- Subtitles, Fonts, etc
-                    if (resMkvAttachmentSave.pending) {
-                      this.gdrive.gDrive(true).then(async (gdrive) => {
-                        const dfile = await gdrive.files.create({
-                          requestBody: {
-                            name: `${resMkvAttachmentSave.name}.${resMkvAttachmentSave.ext}`,
-                            parents: [environment.gCloudPlatform.gDrive.folder_id],
-                            mimeType: resMkvAttachmentSave.mime
-                          },
-                          media: {
-                            mimeType: resMkvAttachmentSave.mime,
-                            body: createReadStream(`${environment.uploadFolder}/${fileName}.${fileExt}`)
-                          },
-                          fields: 'id'
-                        }, { signal: null });
-                        const otherAttachment2 = await this.attachmentRepo.find({
-                          where: [
-                            {
-                              name: Equal(resMkvAttachmentSave.name),
-                              ext: Equal(resMkvAttachmentSave.ext),
-                              google_drive: IsNull()
-                            }
-                          ]
-                        });
-                        for (const oa of otherAttachment2) {
-                          oa.google_drive = dfile.data.id;
-                          oa.pending = false;
-                        }
-                        await this.attachmentRepo.save(otherAttachment2);
-                        this.gs.deleteAttachment(`${fileName}.${fileExt}`);
-                      }).catch(async (e3) => {
-                        this.gs.log('[GDRIVE-ERROR] 💽', e3, 'error');
-                        resMkvAttachmentSave.pending = false;
-                        await this.attachmentRepo.save(resMkvAttachmentSave);
-                      });
-                    }
-                  } catch (e2) {
-                    this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e2, 'error');
-                  }
-                }
-              }
-              videoExtractCompleted = true;
-              if (videoUploadCompleted) {
-                this.gs.deleteAttachment(files[fIdx].name);
-              }
-            });
-          } else {
-            videoExtractCompleted = true;
-          }
-          // Upload Video -- Mp4, Mkv, etc
-          if (environment.production) {
-            let permanent_storage = false;
-            if ('permanent_storage' in req.body) {
-              if (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
-                permanent_storage = (req.body.permanent_storage === true);
-              } else {
-                permanent_storage = false;
-              }
-            }
-            if (permanent_storage) {
-              this.gdrive.gDrive(true).then(async (gdrive) => {
-                const dfile = await gdrive.files.create({
-                  requestBody: {
-                    name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-                    parents: [environment.gCloudPlatform.gDrive.folder_id],
-                    mimeType: resAttachmentSave.mime
-                  },
-                  media: {
-                    mimeType: resAttachmentSave.mime,
-                    body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
-                  },
-                  fields: 'id'
-                }, { signal: null });
-                resAttachmentSave.google_drive = dfile.data.id;
-                resAttachmentSave.pending = false;
-                await this.attachmentRepo.save(resAttachmentSave);
-                videoUploadCompleted = true;
-                if (videoExtractCompleted) {
-                  this.gs.deleteAttachment(files[fIdx].name);
-                }
-              }).catch(async (e) => {
-                this.gs.log('[GDRIVE-ERROR] 💽', e, 'error');
-                resAttachmentSave.pending = false;
-                await this.attachmentRepo.save(resAttachmentSave);
-              });
-            } else {
-              this.ds.sendAttachment(resAttachmentSave, user).then(async (chunkParent) => {
-                resAttachmentSave.discord = chunkParent;
-                resAttachmentSave.pending = false;
-                await this.attachmentRepo.save(resAttachmentSave);
-                videoUploadCompleted = true;
-                if (videoExtractCompleted) {
-                  this.gs.deleteAttachment(files[fIdx].name);
-                }
-              }).catch(async (e) => {
-                this.gs.log('[DISCORD-ERROR] 💽', e, 'error');
-                resAttachmentSave.pending = false;
-                await this.attachmentRepo.save(resAttachmentSave);
-              });
-            }
-          } else {
-            resAttachmentSave.pending = false;
-            await this.attachmentRepo.save(resAttachmentSave);
-          }
+          berkas.attachment_ = await this.attachmentRepo.save(attachment);
         } else {
           throw new HttpException({
             info: `🙄 406 - Berkas API :: Gagal Mencari Lampiran 😪`,
@@ -680,8 +505,7 @@ export class BerkasController {
       if (
         'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body ||
         ('anime_id' in req.body || 'dorama_id' in req.body) || 'projectType_id' in req.body || 'r18' in req.body ||
-        ('download_url' in req.body && Array.isArray(req.body.download_url)) || 'attachment_id' in req.body ||
-        ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
+        'download_url' in req.body || 'attachment_id' in req.body || 'fansub_id' in req.body
       ) {
         const user: UserModel = res.locals['user'];
         const file = await this.berkasRepo.findOneOrFail({
@@ -691,8 +515,9 @@ export class BerkasController {
           relations: ['user_', 'attachment_', 'anime_', 'dorama_', 'project_type_', 'fansub_']
         });
         if (user.id === file.user_.id) {
-          if ('download_url' in req.body) {
-            const filteredUrls = [];
+          let filteredUrls: any[] = JSON.parse(file.download_url);
+          if ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) {
+            filteredUrls = [];
             for (const u of req.body.download_url) {
               if ('url' in u && 'name' in u && u.url && u.name) {
                 filteredUrls.push({
@@ -701,26 +526,26 @@ export class BerkasController {
                 });
               }
             }
-            if (user.verified) {
-              if (filteredUrls.length <= 0 && !req.body.attachment_id && !file.attachment_?.id) {
-                throw new HttpException({
-                  info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
-                  result: {
-                    message: 'Wajib Mengisi Min 1 URL Eksternal / Upload 1 DDL Stream!'
-                  }
-                }, HttpStatus.BAD_REQUEST);
-              }
-            } else {
-              if (filteredUrls.length <= 0) {
-                throw new HttpException({
-                  info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
-                  result: {
-                    message: 'Wajib Mengisi Min 1 URL Eksternal!'
-                  }
-                }, HttpStatus.BAD_REQUEST);
-              }
-            }
             file.download_url = JSON.stringify(filteredUrls);
+          }
+          if (user.verified) {
+            if (filteredUrls.length <= 0 && !req.body.attachment_id && !file.attachment_?.id) {
+              throw new HttpException({
+                info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+                result: {
+                  message: 'Wajib Mengisi Min 1 URL Eksternal / Upload 1 DDL Stream!'
+                }
+              }, HttpStatus.BAD_REQUEST);
+            }
+          } else {
+            if (filteredUrls.length <= 0) {
+              throw new HttpException({
+                info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+                result: {
+                  message: 'Wajib Mengisi Min 1 URL Eksternal!'
+                }
+              }, HttpStatus.BAD_REQUEST);
+            }
           }
           if ('name' in req.body) {
             file.name = req.body.name;
@@ -755,7 +580,7 @@ export class BerkasController {
             file.anime_ = null;
             file.dorama_ = dorama;
           }
-          if ('fansub_id' in req.body) {
+          if ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0) {
             const fansub = await this.fansubRepo.find({
               where: [
                 { id: In(req.body.fansub_id) }

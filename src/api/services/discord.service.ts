@@ -136,7 +136,7 @@ export class DiscordService {
     }
   }
 
-  async sendAttachment(attachment: AttachmentModel, user: UserModel, chunkIdx = null): Promise<string> {
+  async sendAttachment(attachment: AttachmentModel, user: UserModel = null, chunkIdx = null): Promise<string> {
     let currentChunkIdx: number = 0;
     let chunkParent: string = attachment?.discord;
     let chunkSize = CONSTANTS.fileSizeAttachmentChunkDiscordLimit;
@@ -192,7 +192,7 @@ export class DiscordService {
                   ddlFile.msg_parent = chunkParent;
                 }
                 ddlFile.chunk_idx = currentChunkIdx;
-                ddlFile.user_ = user;
+                ddlFile.user_ = attachment.user_ || user;
                 ddlFile.id = msg.attachments.first().id;
                 ddlFile.name = msg.attachments.first().name;
                 ddlFile.url = msg.attachments.first().url;

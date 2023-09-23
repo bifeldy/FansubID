@@ -8,8 +8,6 @@ import { Uploader, UploadState, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
 
-import { RoleModel } from '../../../../models/req-res.model';
-
 import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
@@ -116,15 +114,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
 
   get fileTypeAttachmentAllowed(): string {
     return CONSTANTS.fileTypeAttachmentAllowed.join(', ');
-  }
-
-  get permanentStorage(): boolean {
-    const role: RoleModel = this.AS.currentUserSubject?.value?.role;
-    return role === RoleModel.ADMIN || role === RoleModel.MODERATOR;
-  }
-
-  get isAttachmentUploaded(): boolean {
-    return this.fg.controls['attachment_id'].value !== null;
   }
 
   ngOnInit(): void {
@@ -243,8 +232,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
       attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([this.createDownloadLink()]),
       private: [false, Validators.compose([Validators.required])],
-      r18: [false, Validators.compose([Validators.required])],
-      permanent_storage: [false, Validators.compose([Validators.required])]
+      r18: [false, Validators.compose([Validators.required])]
     });
     this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
       debounceTime(500),
@@ -536,7 +524,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
       description: this.fg.value.description,
       private: this.fg.value.private,
       r18: this.fg.value.r18,
-      permanent_storage: this.fg.value.permanent_storage,
       projectType_id: this.fg.value.projectType_id,
       anime_id: this.fg.value.anime_id,
       dorama_id: this.fg.value.dorama_id,

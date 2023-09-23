@@ -8,8 +8,6 @@ import { UploadState, Uploader, UploadxService } from 'ngx-uploadx';
 
 import { CONSTANTS } from '../../../../constants';
 
-import { RoleModel } from '../../../../models/req-res.model';
-
 import { GlobalService } from '../../../_shared/services/global.service';
 import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
@@ -120,15 +118,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     return CONSTANTS.fileTypeAttachmentAllowed.join(', ');
   }
 
-  get permanentStorage(): boolean {
-    const role: RoleModel = this.AS.currentUserSubject?.value?.role;
-    return role === RoleModel.ADMIN || role === RoleModel.MODERATOR;
-  }
-
-  get isAttachmentUploaded(): boolean {
-    return this.fg.controls['attachment_id'].value !== null;
-  }
-
   ngOnInit(): void {
     this.pi.updatePageMetaData(
       `Berkas - Ubah Berkas`,
@@ -166,7 +155,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
                   this.gs.log('[UPLOAD_COMPLETED]', state.response);
                   this.fg.controls['attachment_id'].patchValue(state.response.result.id);
                   this.fg.controls['attachment_id'].markAsDirty();
-                  this.fg.controls['permanent_storage'].markAsDirty();
                   this.uploadToast = this.toast.warning(
                     `Segera Kirim Data Berkas!`,
                     `Lampiran Akan Dihapus ...`,
@@ -269,8 +257,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.fg.controls['attachment_id'].patchValue(null);
     this.fg.controls['attachment_id'].markAsPristine();
     this.fg.controls['attachment_id'].markAsUntouched();
-    this.fg.controls['permanent_storage'].markAsPristine();
-    this.fg.controls['permanent_storage'].markAsUntouched();
     if (this.uploadToast) {
       this.toast.remove(this.uploadToast.toastId);
     }
@@ -334,8 +320,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       attachment_id: [data.attachment_?.id, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([]),
       private: [data.private, Validators.compose([Validators.required])],
-      r18: [data.r18, Validators.compose([Validators.required])],
-      permanent_storage: [false, Validators.compose([Validators.required])]
+      r18: [data.r18, Validators.compose([Validators.required])]
     });
     this.image_url = data.image_url;
     this.image_url_original = this.image_url;

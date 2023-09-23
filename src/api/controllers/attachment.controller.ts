@@ -1,5 +1,5 @@
 // NodeJS Library
-import { createReadStream, readdirSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Patch, Post, Req, Res } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -25,7 +25,6 @@ import { DdlFileService } from '../repository/ddl-file';
 
 import { GdriveService } from '../services/gdrive.service';
 import { GlobalService } from '../services/global.service';
-import { DiscordService } from '../services/discord.service';
 
 @Controller('/attachment')
 export class AttachmentController {
@@ -36,7 +35,6 @@ export class AttachmentController {
     private gdrive: GdriveService,
     private gs: GlobalService,
     private ddlFileRepo: DdlFileService,
-    private ds: DiscordService,
     private tempAttachmentRepo: TempAttachmentService
   ) {
     //
@@ -296,7 +294,6 @@ export class AttachmentController {
   async reUploadAttachment(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('id' in req.body) {
-        const user: UserModel = res.locals['user'];
         const attachment = await this.attachmentRepo.findOneOrFail({
           where: [
             {
@@ -308,136 +305,16 @@ export class AttachmentController {
           ],
           relations: ['user_']
         });
-        const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-        const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
-        if (fIdx >= 0) {
-          const responseBody = {
-            info: `😅 201 - Attachment API :: ReUpload ${req.body.id} 🤣`,
-            results: attachment
-          };
-          if (environment.production) {
-            attachment.pending = true;
-            const resAttachmentSave = await this.attachmentRepo.save(attachment);
-            responseBody.results = resAttachmentSave;
-            if (CONSTANTS.fileTypeAttachmentAllowed.includes(resAttachmentSave.mime)) {
-              // Upload Video -- Mp4, Mkv, etc
-              let permanent_storage = false;
-              if ('permanent_storage' in req.body) {
-                permanent_storage = (req.body.permanent_storage === true);
-              }
-              if (permanent_storage) {
-                this.gdrive.gDrive(true).then(async (gdrive) => {
-                  const dfile = await gdrive.files.create({
-                    requestBody: {
-                      name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-                      parents: [environment.gCloudPlatform.gDrive.folder_id],
-                      mimeType: resAttachmentSave.mime
-                    },
-                    media: {
-                      mimeType: resAttachmentSave.mime,
-                      body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
-                    },
-                    fields: 'id'
-                  }, { signal: null });
-                  resAttachmentSave.google_drive = dfile.data.id;
-                  resAttachmentSave.pending = false;
-                  await this.attachmentRepo.save(resAttachmentSave);
-                  this.gs.deleteAttachment(files[fIdx].name);
-                }).catch(async (e) => {
-                  this.gs.log('[GDRIVE-ERROR] 💽', e, 'error');
-                  resAttachmentSave.pending = false;
-                  await this.attachmentRepo.save(resAttachmentSave);
-                });
-              } else {
-                const ddlFiles = await this.ddlFileRepo.find({
-                  where: [
-                    {
-                      msg_parent: Equal(resAttachmentSave.discord)
-                    },
-                    {
-                      msg_id: Equal(resAttachmentSave.discord),
-                      msg_parent: IsNull()
-                    }
-                  ]
-                });
-                const msg_ids = [];
-                for (const df of ddlFiles) {
-                  if (!msg_ids.includes(df.msg_id)) {
-                    msg_ids.push(df.msg_id);
-                  }
-                }
-                await this.ddlFileRepo.remove(ddlFiles);
-                this.ds.deleteAttachment(msg_ids);
-                this.ds.sendAttachment(resAttachmentSave, resAttachmentSave.user_ || user).then(async (chunkParent) => {
-                  resAttachmentSave.discord = chunkParent;
-                  resAttachmentSave.pending = false;
-                  await this.attachmentRepo.save(resAttachmentSave);
-                  this.gs.deleteAttachment(files[fIdx].name);
-                }).catch(async (e) => {
-                  this.gs.log('[DISCORD-ERROR] 💽', e, 'error');
-                  resAttachmentSave.pending = false;
-                  await this.attachmentRepo.save(resAttachmentSave);
-                });
-              }
-            } else {
-              // Upload Video Attachment -- Subtitles, Fonts, etc
-              let otherAttachment = await this.attachmentRepo.find({
-                where: [
-                  {
-                    name: Equal(resAttachmentSave.name),
-                    ext: Equal(resAttachmentSave.ext),
-                    google_drive: IsNull()
-                  }
-                ]
-              });
-              if (otherAttachment.length > 0) {
-                for (const oa of otherAttachment) {
-                  oa.pending = true;
-                }
-                otherAttachment = await this.attachmentRepo.save(otherAttachment);
-              }
-              this.gdrive.gDrive(true).then(async (gdrive) => {
-                const dfile = await gdrive.files.create({
-                  requestBody: {
-                    name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
-                    parents: [environment.gCloudPlatform.gDrive.folder_id],
-                    mimeType: resAttachmentSave.mime
-                  },
-                  media: {
-                    mimeType: resAttachmentSave.mime,
-                    body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
-                  },
-                  fields: 'id'
-                }, { signal: null });
-                if (otherAttachment.length > 0) {
-                  for (const oa of otherAttachment) {
-                    oa.google_drive = dfile.data.id;
-                    oa.pending = false;
-                  }
-                  await this.attachmentRepo.save(otherAttachment);
-                }
-                this.gs.deleteAttachment(files[fIdx].name);
-              }).catch(async (e5) => {
-                this.gs.log('[GDRIVE-ERROR] 💽', e5, 'error');
-                resAttachmentSave.pending = false;
-                await this.attachmentRepo.save(resAttachmentSave);
-                if (otherAttachment.length > 0) {
-                  for (const oa of otherAttachment) {
-                    oa.pending = false;
-                  }
-                  await this.attachmentRepo.save(otherAttachment);
-                }
-              });
-            }
-          }
-          return responseBody;
+        attachment.pending = true;
+        const resAttachmentSave = await this.attachmentRepo.save(attachment);
+        if ('user_' in resAttachmentSave && resAttachmentSave.user_) {
+          delete resAttachmentSave.user_.created_at;
+          delete resAttachmentSave.user_.updated_at;
         }
-        throw new HttpException({
-          info: `🙄 404 - Berkas API :: Gagal Mencari Lampiran ${req.body.id} 😪`,
-          result: {
-            message: 'Lampiran Tidak Ditemukan!'
-          }
-        }, HttpStatus.NOT_FOUND);
+        return {
+          info: `😅 201 - Attachment API :: ReUpload ${req.body.id} 🤣`,
+          result: resAttachmentSave
+        };
       }
     } catch (error) {
       if (error instanceof HttpException) throw error;
