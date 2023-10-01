@@ -137,16 +137,21 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-12 mb-4">
+                  <div class="col-12">
                     <div class="row">
-                      <div class="col"></div>
-                      <div class="col">
+                      <div class="col px-3"></div>
+                      <div class="col px-3">
                         <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="addFansub()">
                           <mat-icon fontIcon="add" class="me-1"></mat-icon>
                           Tambah Fansub
                         </button>
                       </div>
                     </div>
+                  </div>
+                  <div class="col-12 p-3">
+                    <a class="text-warning text-decoration-none" routerLink="/create/fansub">
+                      * Jika pencarian tidak ditemukan, silahkan membuat halaman Fansub baru terlebih dahulu
+                    </a>
                   </div>
                 </div>
               </div>
@@ -193,13 +198,13 @@
                   </div>
                   <div class="row mb-4" *ngFor="let item of uploads$ | async">
                     <div class="col">
-                      <div class="px-3">
+                      <div class="ps-3">
                         {{ item.status }} :: {{ item.progress }}% @ {{ item.speed | bytes }}/s # {{ item.remaining }} detik
                         <br />
                         <mat-progress-bar [mode]="'determinate'" [value]="item.progress"></mat-progress-bar>
                       </div>
                     </div>
-                    <div class="col-6 col-lg-4">
+                    <div class="col-6 col-lg-4 px-3">
                       <button type="button" mat-raised-button class="w-100" color="primary"
                         [disabled]="submitted || item.status === 'complete' || item.status === 'uploading'" (click)="submitAttachment(item)">
                         <mat-icon fontIcon="attachment" class="me-1"></mat-icon>
@@ -253,10 +258,10 @@
                   </ng-container>
                 </ng-container>
                 <div class="row mb-4">
-                  <div class="col"></div>
-                  <div class="col"></div>
-                  <div class="col"></div>
-                  <div class="col">
+                  <div class="col px-3"></div>
+                  <div class="col px-3"></div>
+                  <div class="col px-3"></div>
+                  <div class="col px-3">
                     <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="addDownloadLink()">
                       <mat-icon fontIcon="add" class="me-1"></mat-icon>
                       Tambah URL Eksternal
