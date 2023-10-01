@@ -111,14 +111,20 @@ export class SitemapService {
       const objString = xml2json(contentString, this.xmlOpt);
       const existingSitemapList = JSON.parse(objString);
       for (const u of untrackedUrlsList) {
-        existingSitemapList.urlset.url.push({
+        const sm = {
           loc: {
             _text: u.url
           },
           lastmod: {
             _text: new Date(u.lastmod).toISOString()
           }
-        });
+        };
+        const idx = existingSitemapList.urlset.url.findIndex(url => url.loc._text == u.url); 
+        if (idx < 0) {
+          existingSitemapList.urlset.url.push(sm);
+        } else {
+          existingSitemapList.urlset.url[idx] = sm;
+        }
       }
       const xmlString = json2xml(existingSitemapList, this.xmlOpt);
       if (existsSync(`${environment.viewFolder}/sitemap.xml`)) {
