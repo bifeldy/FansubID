@@ -93,7 +93,7 @@
                       <mat-progress-bar color="accent" [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
                     </div>
                   </div>
-                  <div class="col-12" *ngIf="isHaveDDL && !isDiscord">
+                  <div class="col-12 m-1" *ngIf="isHaveDDL && !isDiscord">
                     <div class="px-3 text-danger" *ngIf="lampiran.isDownloading" (click)="standardDdlVideo(berkasData.attachment_.id)" style="cursor: pointer;">
                       Unduhan Macet? <i><u>Coba Gunakan Unduhan Biasa~</u></i>
                     </div>
