@@ -160,11 +160,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
             next: success => {
               this.gs.log('[RESEND_ACTIVATION_SUCCESS]', success);
               this.bs.idle();
+              this.registerInfo = res.info;
               this.activationDialog(success);
             },
             error: error => {
               this.gs.log('[RESEND_ACTIVATION_ERROR]', error, 'error');
               this.bs.idle();
+              this.registerInfo = error.result?.message || error.info;
             }
           });
         }
