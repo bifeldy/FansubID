@@ -78,7 +78,7 @@ export class UploadService {
         const resSaveMkvAttachment = await this.attachmentRepo.save(mkvAttachment);
         await this.attachmentRepo.remove(resSaveMkvAttachment as any);
       } catch (e) {
-        this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e, 'error');
+        this.gs.log('[FILE_SUBTITLE_FONT-UPLOAD_ERROR] 🎼', e, 'error');
       }
     }
   }
@@ -154,7 +154,7 @@ export class UploadService {
                 await this.uploadSubtitleAndFont(resMkvAttachmentSave);
               }
             } catch (e2) {
-              this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e2, 'error');
+              this.gs.log('[FILE_SUBTITLE_FONT-EXTRACT_ERROR] 🎼', e2, 'error');
             }
           }
         } catch (e1) {
@@ -197,7 +197,7 @@ export class UploadService {
           await this.berkasRepo.remove(berkas);
         }
       } catch (e) {
-        this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e, 'error');
+        this.gs.log('[FILE_VIDEO_ZIP-UPLOAD_ERROR] 🎼', e, 'error');
       }
     }
   }
