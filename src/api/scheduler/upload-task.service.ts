@@ -34,7 +34,56 @@ export class UploadService {
     //
   }
 
-  async extractVideo(attachment: AttachmentModel) {
+  async uploadSubtitleAndFont(mkvAttachment: AttachmentModel) {
+    const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
+    const fIdx = files.findIndex(f => f.name === mkvAttachment.name || f.name === `${mkvAttachment.name}.${mkvAttachment.ext}`);
+    if (fIdx >= 0) {
+      try {
+        const gdrive = await this.gdrive.gDrive(true);
+        const dfile = await gdrive.files.create({
+          requestBody: {
+            name: `${mkvAttachment.name}.${mkvAttachment.ext}`,
+            parents: [environment.gCloudPlatform.gDrive.folder_id],
+            mimeType: mkvAttachment.mime
+          },
+          media: {
+            mimeType: mkvAttachment.mime,
+            body: createReadStream(`${environment.uploadFolder}/${mkvAttachment.name}.${mkvAttachment.ext}`)
+          },
+          fields: 'id'
+        }, { signal: null });
+        const otherAttachment2 = await this.attachmentRepo.find({
+          where: [
+            {
+              name: Equal(mkvAttachment.name),
+              ext: Equal(mkvAttachment.ext),
+              google_drive: IsNull()
+            }
+          ]
+        });
+        for (const oa of otherAttachment2) {
+          oa.google_drive = dfile.data.id;
+          oa.pending = false;
+        }
+        await this.attachmentRepo.save(otherAttachment2);
+        this.gs.deleteAttachment(`${mkvAttachment.name}.${mkvAttachment.ext}`);
+      } catch (e3) {
+        this.gs.log('[GDRIVE-ERROR] 💽', e3, 'error');
+        mkvAttachment.pending = false;
+        await this.attachmentRepo.save(mkvAttachment);
+      }
+    } else {
+      try {
+        mkvAttachment.pending = false;
+        const resSaveMkvAttachment = await this.attachmentRepo.save(mkvAttachment);
+        await this.attachmentRepo.remove(resSaveMkvAttachment as any);
+      } catch (e) {
+        this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e, 'error');
+      }
+    }
+  }
+
+  async extractAndUploadVideoAndZip(attachment: AttachmentModel) {
     const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
     const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
     if (fIdx >= 0) {
@@ -102,40 +151,7 @@ export class UploadService {
               const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
               // Upload Video Attachment -- Subtitles, Fonts, etc
               if (resMkvAttachmentSave.pending) {
-                try {
-                  const gdrive = await this.gdrive.gDrive(true);
-                  const dfile = await gdrive.files.create({
-                    requestBody: {
-                      name: `${resMkvAttachmentSave.name}.${resMkvAttachmentSave.ext}`,
-                      parents: [environment.gCloudPlatform.gDrive.folder_id],
-                      mimeType: resMkvAttachmentSave.mime
-                    },
-                    media: {
-                      mimeType: resMkvAttachmentSave.mime,
-                      body: createReadStream(`${environment.uploadFolder}/${fileName}.${fileExt}`)
-                    },
-                    fields: 'id'
-                  }, { signal: null });
-                  const otherAttachment2 = await this.attachmentRepo.find({
-                    where: [
-                      {
-                        name: Equal(resMkvAttachmentSave.name),
-                        ext: Equal(resMkvAttachmentSave.ext),
-                        google_drive: IsNull()
-                      }
-                    ]
-                  });
-                  for (const oa of otherAttachment2) {
-                    oa.google_drive = dfile.data.id;
-                    oa.pending = false;
-                  }
-                  await this.attachmentRepo.save(otherAttachment2);
-                  this.gs.deleteAttachment(`${fileName}.${fileExt}`);
-                } catch (e3) {
-                  this.gs.log('[GDRIVE-ERROR] 💽', e3, 'error');
-                  resMkvAttachmentSave.pending = false;
-                  await this.attachmentRepo.save(resMkvAttachmentSave);
-                }
+                await this.uploadSubtitleAndFont(resMkvAttachmentSave);
               }
             } catch (e2) {
               this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e2, 'error');
@@ -201,18 +217,28 @@ export class UploadService {
       const attachments = await this.attachmentRepo.find({
         where: [
           {
-            ext: In(CONSTANTS.extAttachment),
+            ext: In([...CONSTANTS.extAttachment, ...CONSTANTS.extFonts, ...CONSTANTS.extSubs]),
             pending: true
           }
         ],
         relations: ['user_']
       });
       for (const a of attachments) {
+        const isVideo = CONSTANTS.extAttachment.includes(a.ext);
+        const isFontSubs = [...CONSTANTS.extFonts, ...CONSTANTS.extSubs].includes(a.ext);
         if (a.google_drive || a.discord) {
           a.pending = false;
           await this.attachmentRepo.save(a);
+        } else if (isVideo) {
+          await this.extractAndUploadVideoAndZip(a);
+        } else if (isFontSubs) {
+          await this.uploadSubtitleAndFont(a);
         } else {
-          await this.extractVideo(a);
+          try {
+            await this.attachmentRepo.remove(a);
+          } catch (e) {
+            this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e, 'error');
+          }
         }
       }
     } catch (error) {

@@ -14,6 +14,9 @@ export class Attachment implements AttachmentModel {
   @Column({ type: 'text' })
   name: string;
 
+  @Column({ type: 'text', nullable: true })
+  orig: string;
+
   @Column({ type: 'text' })
   ext: string;
 

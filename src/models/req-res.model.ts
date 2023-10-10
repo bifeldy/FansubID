@@ -138,6 +138,7 @@ export interface ApiKeyModel {
 export interface AttachmentModel {
   id?: string;
   name?: string;
+  orig?: string;
   ext?: string;
   size?: number;
   mime?: string;

@@ -126,6 +126,7 @@ export class AttachmentController {
         }
         const tempAttachment = this.tempAttachmentRepo.new();
         tempAttachment.name = file.id;
+        tempAttachment.orig = file.originalName;
         tempAttachment.ext = file.originalName.split('.').pop().toLowerCase();
         tempAttachment.size = file.size;
         tempAttachment.mime = file.metadata.mimeType;
@@ -255,7 +256,7 @@ export class AttachmentController {
           res.setHeader('content-type', attachment.mime);
           return res.download(
             `${environment.uploadFolder}/${files[fIdx].name}`,
-            `${attachment.name}.${attachment.ext}`,
+            `${attachment.orig || attachment.name + '.' + attachment.ext}`,
             async (e) => {
               if (e) {
                 this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');

@@ -70,19 +70,19 @@
               <div class="col-12 text-center" *ngIf="isHaveDDL">
                 <div class="px-3">
                   <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
-                    matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
+                    matTooltip="{{ lampiran.orig || lampiran.name + '.' + lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
                     <mat-icon fontIcon="movie" class="me-1"></mat-icon>
-                    {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
+                    {{ lampiran.orig || lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
                   </button>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" (click)="cancel_dl(berkasData.attachment_.id)"
-                    matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && lampiran.isDownloading">
+                    matTooltip="{{ lampiran.orig || lampiran.name + '.' + lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && lampiran.isDownloading">
                     <mat-icon fontIcon="close" class="me-1"></mat-icon>
                     Batal Unduh
                   </button>
                   <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
-                    matTooltip="{{ lampiran.name }}.{{ lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan">
+                    matTooltip="{{ lampiran.orig || lampiran.name + '.' + lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan">
                     <mat-icon fontIcon="save" class="me-1"></mat-icon>
-                    {{ lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
+                    {{ lampiran.orig || lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
                   </button>
                   <div class="col">
                     <div class="px-3" *ngIf="lampiran.isDownloading && !lampiran.isCompleted">
@@ -102,14 +102,14 @@
                     <hr class="my-3 border-bottom-dotted" style="height: 4px; background: url('/assets/img/stripe.png');" />
                   </div>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let s of berkasData.attachment_.subtitles_"
-                    (click)="standardDdlSubsFont(s.id)" matTooltip="{{ s.name }}.{{ s.name }} :: {{ s.download_count }}x Unduhan">
+                    (click)="standardDdlSubsFont(s.id)" matTooltip="{{ s.orig || s.name + '.' + s.ext }} :: {{ s.download_count }}x Unduhan">
                     <mat-icon fontIcon="notes" class="me-1"></mat-icon>
-                    {{ s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
+                    {{ s.orig || s.name | slice:0:5 }}.....{{ s.ext }} ({{ s.size | bytes }})
                   </button>
                   <button type="button" class="m-1 w-100" mat-stroked-button color="accent" *ngFor="let f of berkasData.attachment_.fonts_"
-                    (click)="standardDdlSubsFont(f.id)" matTooltip="{{ f.name }}.{{ f.name }} :: {{ f.download_count }}x Unduhan">
+                    (click)="standardDdlSubsFont(f.id)" matTooltip="{{ f.orig || f.name + '.' + f.ext }} :: {{ f.download_count }}x Unduhan">
                     <mat-icon fontIcon="font_download" class="me-1"></mat-icon>
-                    {{ f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
+                    {{ f.orig || f.name | slice:0:5 }}.....{{ f.ext }} ({{ f.size | bytes }})
                   </button>
                 </div>
               </div>

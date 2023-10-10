@@ -14,6 +14,9 @@ export class TempAttachment implements TempAttachmentModel {
   name: string;
 
   @Column({ type: 'text' })
+  orig: string;
+
+  @Column({ type: 'text' })
   ext: string;
   
   @Column({ type: 'int' })

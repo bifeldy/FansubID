@@ -78,6 +78,7 @@ export class BerkasController {
         if (fIdx >= 0) {
           const attachment = this.attachmentRepo.new();
           attachment.name = tempAttachment.name;
+          attachment.orig = tempAttachment.orig;
           attachment.size = tempAttachment.size;
           attachment.ext = tempAttachment.ext;
           attachment.mime = tempAttachment.mime;
