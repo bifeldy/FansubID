@@ -52,6 +52,7 @@ export const environment = {
     username: 'postgres',
     password: SECRETS().DB_PASSWORD,                                                                              // 'postgres',
     synchronize: true,
+    keepConnectionAlive: true,
     logging: !SECRETS().IS_PRODUCTION,                                                                            // true,
     entities: [
       Anime,
