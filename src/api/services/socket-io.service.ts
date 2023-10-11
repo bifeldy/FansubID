@@ -55,8 +55,8 @@ export class SocketIoService {
   }
 
   getAllClientsSocket(): Map<string, Socket> {
-    const allClients = this.io.sockets.sockets;
-    this.gs.log('[SOCKET_IO_SERVICE-GET_ALL_CLIENT_SOCKET] 📢', allClients.size);
+    const allClients = this.io.sockets?.sockets;
+    this.gs.log('[SOCKET_IO_SERVICE-GET_ALL_CLIENT_SOCKET] 📢', allClients?.size);
     return allClients;
   }
 
