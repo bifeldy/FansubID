@@ -105,7 +105,7 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
         if (cluster.isMaster) {
           nestCtx.get(ClusterMasterSlaveService).masterMessages();
           const gs = nestCtx.get(GlobalService);
-          const numCPUs = os.cpus().length;
+          const numCPUs = Math.min(os.cpus().length, Number.parseInt(process.env['CPUS']) || 1);
           gs.log(`[APP_MASTER_PID] 💻`, process.pid);
           for (let i = 0; i < numCPUs; i++) {
             const worker = cluster.fork({ FSID: `${i}` });
