@@ -1,5 +1,10 @@
+// 3rd Party Library
+import ClusterMessages from 'cluster-messages';
+
+// NodeJS Library
+import cluster from 'node:cluster';
+
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Put, Req, Res } from '@nestjs/common';
-import { SchedulerRegistry } from '@nestjs/schedule';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
@@ -9,12 +14,18 @@ import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorato
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
+import { GlobalService } from '../services/global.service';
+import { TaskCronJobService } from '../services/task-cron-job.service';
+
 @ApiExcludeController()
 @Controller('/task-cron-job')
 export class TaskCronJobController {
 
+  messages: ClusterMessages = new ClusterMessages();
+
   constructor(
-    private sr: SchedulerRegistry
+    private gs: GlobalService,
+    private tcjs: TaskCronJobService
   ) {
     //
   }
@@ -23,22 +34,40 @@ export class TaskCronJobController {
   @HttpCode(200)
   @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-    const cronJobs = this.sr.getCronJobs();
-    const jobs = [];
-    for (const [key, value] of cronJobs) {
-      jobs.push({
-        id: key,
-        last_date: value.lastDate(),
-        next_date: value.nextDate().toJSDate(),
-        running: value.running
-      });
+    try {
+      let jobs = [];
+      if (cluster.isMaster) {
+        jobs = this.tcjs.getAll();
+      } else {
+        try {
+          jobs = await new Promise((resolve, reject) => {
+            this.messages.send('CRON_GET', null, response => {
+              if (response.error) {
+                reject(response.error);
+              } else {
+                resolve(response.data);
+              }
+            });
+          });
+        } catch (err) {
+          this.gs.log(`[MASTER_CRON_GET-ERROR]`, err, 'error');
+        }
+      }
+      return {
+        info: `😅 200 - Task API :: List All 🤣`,
+        count: jobs.length,
+        pages: 1,
+        results: jobs
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: `🙄 400 - CRON API :: Gagal Mendapatkan All Task Scheduler 😪`,
+        result: {
+          message: 'Data Tidak Lengkap!'
+        }
+      }, HttpStatus.BAD_REQUEST);
     }
-    return {
-      info: `😅 200 - Task API :: List All 🤣`,
-      count: jobs.length,
-      pages: 1,
-      results: jobs
-    };
   }
 
   @Put('/:id')
@@ -48,24 +77,28 @@ export class TaskCronJobController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const cronJob = this.sr.getCronJob(req.params['id']);
-      if (cronJob) {
-        if (cronJob.running) {
-          cronJob.stop();
-        } else {
-          cronJob.start();
+      let cronJob = null;
+      if (cluster.isMaster) {
+        cronJob = this.tcjs.getByIdKey(req.params['id']);
+      } else {
+        try {
+          cronJob = await new Promise((resolve, reject) => {
+            this.messages.send('CRON_PUT', req.params['id'], response => {
+              if (response.error) {
+                reject(response.error);
+              } else {
+                resolve(response.data);
+              }
+            });
+          });
+        } catch (err) {
+          this.gs.log(`[MASTER_CRON_PUT-ERROR]`, err, 'error');
         }
-        return {
-          info: `😅 201 - Task API :: Reload ${req.params['id']} 🤣`,
-          result: {
-            id: req.params['id'],
-            last_date: cronJob.lastDate(),
-            next_date: cronJob.nextDate(),
-            running: cronJob.running
-          }
-        };
       }
-      throw new Error('Data Tidak Lengkap!');
+      return {
+        info: `😅 201 - Task API :: Reload ${req.params['id']} 🤣`,
+        result: cronJob
+      };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({

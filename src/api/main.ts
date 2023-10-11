@@ -25,6 +25,7 @@ import { CONSTANTS } from '../constants';
 import { ApiKeyService } from './repository/api-key.service';
 import { GlobalService } from './services/global.service';
 import { SocketIoService } from './services/socket-io.service';
+import { ClusterMasterSlaveService } from './services/cluster-master-slave.service';
 
 export async function ctx(): Promise<INestApplicationContext> {
   return await NestFactory.createApplicationContext(AppModule);
@@ -102,6 +103,7 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
         const nestApp = await app();
         const workers = [];
         if (cluster.isMaster) {
+          nestCtx.get(ClusterMasterSlaveService).masterMessages();
           const gs = nestCtx.get(GlobalService);
           const numCPUs = os.cpus().length;
           gs.log(`[APP_MASTER_PID] 💻`, process.pid);

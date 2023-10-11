@@ -102,6 +102,7 @@ import { SocketIoGateway } from './gateways/socket-io.gateway';
 import { ApiService } from './services/api.service';
 import { AuthService } from './services/auth.service';
 import { CloudflareService } from './services/cloudflare.service';
+import { ClusterMasterSlaveService } from './services/cluster-master-slave.service';
 import { ConfigService } from './services/config.service';
 import { CryptoService } from './services/crypto.service';
 import { DiscordService } from './services/discord.service';
@@ -112,6 +113,7 @@ import { MailService } from './services/mail.service';
 import { MkvExtractService } from './services/mkv-extract.service';
 import { QuizService } from './services/quiz.service';
 import { SocketIoService } from './services/socket-io.service';
+import { TaskCronJobService } from './services/task-cron-job.service';
 
 import { RssFeedTasksService } from './scheduler/rss-feed-tasks.service';
 import { SitemapService } from './scheduler/sitemap-tasks.service';
@@ -254,6 +256,7 @@ import { UserService } from './repository/user.service';
     ApiService,
     AuthService,
     CloudflareService,
+    ClusterMasterSlaveService,
     ConfigService,
     CryptoService,
     DiscordService,
@@ -264,6 +267,7 @@ import { UserService } from './repository/user.service';
     MailService,
     QuizService,
     SocketIoService,
+    TaskCronJobService,
     // Service Task Schedulers
     RssFeedTasksService,
     SitemapService,
