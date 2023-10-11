@@ -64,8 +64,8 @@ export class MkvExtractService {
     return new Promise((resolve, reject) => {
 
       const startTime = Date.now();
-      this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`);
-    
+      this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`, null, 'error');
+
       const fileStream = createReadStream(filePath);
       const decoder = new Decoder();
       const tracks = [];
@@ -78,14 +78,15 @@ export class MkvExtractService {
       let trackTypeTemp = 0;
       let trackDataTemp = '';
       let trackIndex = 0;
-  
+
       decoder.on('error', error => {
+        this.gs.log(`[MKVEXTRACT_ERROR] 🌋 ${fileName} 🧬`, error, 'error');
         fileStream.destroy();
         reject(error);
       });
-  
+
       decoder.on('data', chunk => {
-        this.gs.log(`[MKVEXTRACT_CHUNK] ⌛ ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`);
+        this.gs.log(`[MKVEXTRACT_CHUNK] ⌛ ${fileName} -- ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`, null, 'error');
         switch (chunk[0]) {
           case 'end':
             // if (chunk[1].name === 'Info') {
@@ -148,7 +149,7 @@ export class MkvExtractService {
           currentFile++;
         }
       });
-  
+
       fileStream.on('end', () => {
         for (const [idx, val] of trackData.entries()) {
           const heading = val[0];
@@ -185,14 +186,10 @@ export class MkvExtractService {
           });
         };
         const endTime = Date.now();
-        this.gs.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`);
-        if (files.length === 0) {
-          reject(Error('No data found'));
-        } else {
-          resolve(files);
-        }
+        this.gs.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`, files, 'error');
+        resolve(files);
       });
-  
+
       fileStream.pipe(decoder as any);
 
     });

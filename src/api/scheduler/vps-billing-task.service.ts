@@ -51,6 +51,8 @@ export class VpsBillingService {
       const elapsedTime = endTime.getTime() - startTime.getTime();
       this.gs.log('[CRON_TASK_VPS_BILLING-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
       job.start();
+    } else {
+      this.sr.getCronJob(CONSTANTS.cronVpsBilling).stop();
     }
   }
 

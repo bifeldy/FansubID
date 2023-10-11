@@ -115,9 +115,9 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
           cluster.on('exit', (worker, code, signal) => {
             let msg = `[WORKER_${worker.id}]`;
             if (signal) {
-              gs.log(`${msg} Killed`, signal);
+              gs.log(`${msg} Killed`, signal, 'error');
             } else {
-              gs.log(`${msg} Exited`, code);
+              gs.log(`${msg} Exited`, code, 'error');
             }
           });
         } else {

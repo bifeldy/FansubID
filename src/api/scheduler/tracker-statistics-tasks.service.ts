@@ -67,19 +67,21 @@ export class TrackerStatisticsService {
       const startTime = new Date();
       this.gs.log('[CRON_TASK_TRACKER_STATISTICS-START] 🐾', `${startTime}`);
       try {
-        const url = new URL(`http://tracker.${environment.domain}/stats.json`);
+        const url = new URL(`http://tracker.fansub.id/stats.json`);
         const res_raw = await this.api.getData(url, {
           ...environment.nodeJsXhrHeader
         });
         this.torrentTracker = await res_raw.json();
+        this.updateVisitor();
       } catch (error) {
         this.gs.log('[CRON_TASK_TRACKER_STATISTICS-ERROR] 🐾', error, 'error');
       }
-      this.updateVisitor();
       const endTime = new Date();
       const elapsedTime = endTime.getTime() - startTime.getTime();
       this.gs.log('[CRON_TASK_TRACKER_STATISTICS-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
       job.start();
+    } else {
+      this.sr.getCronJob(CONSTANTS.cronTrackerStatistics).stop();
     }
   }
 

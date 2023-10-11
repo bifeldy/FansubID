@@ -93,7 +93,7 @@ export class SitemapService {
   }
 
   @Cron(
-    CronExpression.EVERY_HOUR,
+    CronExpression.EVERY_30_MINUTES,
     {
       name: CONSTANTS.cronSitemap
     }
@@ -140,6 +140,8 @@ export class SitemapService {
       const elapsedTime = endTime.getTime() - startTime.getTime();
       this.gs.log('[CRON_TASK_SITEMAP-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
       job.start();
+    } else {
+      this.sr.getCronJob(CONSTANTS.cronSitemap).stop();
     }
   }
 

@@ -35,7 +35,7 @@ export class UploadService {
     //
   }
 
-  async uploadSubtitleAndFont(mkvAttachment: AttachmentModel) {
+  async uploadSubtitleAndFont(mkvAttachment: AttachmentModel): Promise<void> {
     const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
     const fIdx = files.findIndex(f => f.name === mkvAttachment.name || f.name === `${mkvAttachment.name}.${mkvAttachment.ext}`);
     if (fIdx >= 0) {
@@ -84,12 +84,13 @@ export class UploadService {
     }
   }
 
-  async extractAndUploadVideoAndZip(attachment: AttachmentModel) {
+  async extractAndUploadVideoAndZip(attachment: AttachmentModel): Promise<void> {
     const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
     const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
     if (fIdx >= 0) {
       if (attachment.ext === 'mkv') {
         try {
+          this.gs.log('[FILE_SUBTITLE_FONT-EXTRACT_MULAI] 🎼', attachment.name, 'error');
           const extractedFiles = await this.mkv.mkvExtract(attachment.name, `${environment.uploadFolder}/${files[fIdx].name}`);
           for (const ef of extractedFiles) {
             const fileNameExt = ef.name.split('.');
@@ -250,6 +251,8 @@ export class UploadService {
       const elapsedTime = endTime.getTime() - startTime.getTime();
       this.gs.log('[CRON_TASK_UPLOAD-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
       job.start();
+    } else {
+      this.sr.getCronJob(CONSTANTS.cronUpload).stop();
     }
   }
 

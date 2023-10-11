@@ -106,7 +106,7 @@ export class RssFeedTasksService {
   /** */
 
   @Cron(
-    CronExpression.EVERY_30_MINUTES,
+    CronExpression.EVERY_HOUR,
     {
       name: CONSTANTS.cronFansubRssFeed
     }
@@ -128,8 +128,8 @@ export class RssFeedTasksService {
             updated_at: 'DESC'
           }
         });
-        const rgx = new RegExp(CONSTANTS.regexUrl);
         for (const fs of fansubs) {
+          const rgx = new RegExp(CONSTANTS.regexUrl);
           if (fs.rss_feed.match(rgx)) {
             try {
               const feed = await this.getFeedByUrl(fs.rss_feed);
@@ -161,6 +161,8 @@ export class RssFeedTasksService {
       const elapsedTime = endTime.getTime() - startTime.getTime();
       this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
       job.start();
+    } else {
+      this.sr.getCronJob(CONSTANTS.cronFansubRssFeed).stop();
     }
   }
 
