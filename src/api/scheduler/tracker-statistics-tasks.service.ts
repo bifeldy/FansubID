@@ -1,4 +1,5 @@
 // NodeJS Library
+import cluster from 'node:cluster';
 import { URL } from 'node:url';
 
 import { Injectable } from '@nestjs/common';
@@ -60,24 +61,26 @@ export class TrackerStatisticsService {
     }
   )
   async statistics(): Promise<void> {
-    const job = this.sr.getCronJob(CONSTANTS.cronTrackerStatistics);
-    job.stop();
-    const startTime = new Date();
-    this.gs.log('[CRON_TASK_TRACKER_STATISTICS-START] 🐾', `${startTime}`);
-    try {
-      const url = new URL(`http://tracker.${environment.domain}/stats.json`);
-      const res_raw = await this.api.getData(url, {
-        ...environment.nodeJsXhrHeader
-      });
-      this.torrentTracker = await res_raw.json();
-    } catch (error) {
-      this.gs.log('[CRON_TASK_TRACKER_STATISTICS-ERROR] 🐾', error, 'error');
+    if (cluster.isMaster) {
+      const job = this.sr.getCronJob(CONSTANTS.cronTrackerStatistics);
+      job.stop();
+      const startTime = new Date();
+      this.gs.log('[CRON_TASK_TRACKER_STATISTICS-START] 🐾', `${startTime}`);
+      try {
+        const url = new URL(`http://tracker.${environment.domain}/stats.json`);
+        const res_raw = await this.api.getData(url, {
+          ...environment.nodeJsXhrHeader
+        });
+        this.torrentTracker = await res_raw.json();
+      } catch (error) {
+        this.gs.log('[CRON_TASK_TRACKER_STATISTICS-ERROR] 🐾', error, 'error');
+      }
+      this.updateVisitor();
+      const endTime = new Date();
+      const elapsedTime = endTime.getTime() - startTime.getTime();
+      this.gs.log('[CRON_TASK_TRACKER_STATISTICS-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+      job.start();
     }
-    this.updateVisitor();
-    const endTime = new Date();
-    const elapsedTime = endTime.getTime() - startTime.getTime();
-    this.gs.log('[CRON_TASK_TRACKER_STATISTICS-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
-    job.start();
   }
 
 }

@@ -1,4 +1,5 @@
 // NodeJS Library
+import cluster from 'node:cluster';
 import { existsSync, writeFileSync, createReadStream, readdirSync } from 'node:fs';
 
 import { Injectable } from '@nestjs/common';
@@ -209,45 +210,47 @@ export class UploadService {
     }
   )
   async uploadVideo(): Promise<void> {
-    const job = this.sr.getCronJob(CONSTANTS.cronUpload);
-    job.stop();
-    const startTime = new Date();
-    this.gs.log('[CRON_TASK_UPLOAD-START] 🐾', `${startTime}`);
-    try {
-      const attachments = await this.attachmentRepo.find({
-        where: [
-          {
-            ext: In([...CONSTANTS.extAttachment, ...CONSTANTS.extFonts, ...CONSTANTS.extSubs]),
-            pending: true
-          }
-        ],
-        relations: ['user_']
-      });
-      for (const a of attachments) {
-        const isVideo = CONSTANTS.extAttachment.includes(a.ext);
-        const isFontSubs = [...CONSTANTS.extFonts, ...CONSTANTS.extSubs].includes(a.ext);
-        if (a.google_drive || a.discord) {
-          a.pending = false;
-          await this.attachmentRepo.save(a);
-        } else if (isVideo) {
-          await this.extractAndUploadVideoAndZip(a);
-        } else if (isFontSubs) {
-          await this.uploadSubtitleAndFont(a);
-        } else {
-          try {
-            await this.attachmentRepo.remove(a);
-          } catch (e) {
-            this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e, 'error');
+    if (cluster.isMaster) {
+      const job = this.sr.getCronJob(CONSTANTS.cronUpload);
+      job.stop();
+      const startTime = new Date();
+      this.gs.log('[CRON_TASK_UPLOAD-START] 🐾', `${startTime}`);
+      try {
+        const attachments = await this.attachmentRepo.find({
+          where: [
+            {
+              ext: In([...CONSTANTS.extAttachment, ...CONSTANTS.extFonts, ...CONSTANTS.extSubs]),
+              pending: true
+            }
+          ],
+          relations: ['user_']
+        });
+        for (const a of attachments) {
+          const isVideo = CONSTANTS.extAttachment.includes(a.ext);
+          const isFontSubs = [...CONSTANTS.extFonts, ...CONSTANTS.extSubs].includes(a.ext);
+          if (a.google_drive || a.discord) {
+            a.pending = false;
+            await this.attachmentRepo.save(a);
+          } else if (isVideo) {
+            await this.extractAndUploadVideoAndZip(a);
+          } else if (isFontSubs) {
+            await this.uploadSubtitleAndFont(a);
+          } else {
+            try {
+              await this.attachmentRepo.remove(a);
+            } catch (e) {
+              this.gs.log('[FILE_ATTACHMENT-ERROR] 🎼', e, 'error');
+            }
           }
         }
+      } catch (error) {
+        this.gs.log('[CRON_TASK_UPLOAD-ERROR] 🐾', error, 'error');
       }
-    } catch (error) {
-      this.gs.log('[CRON_TASK_UPLOAD-ERROR] 🐾', error, 'error');
+      const endTime = new Date();
+      const elapsedTime = endTime.getTime() - startTime.getTime();
+      this.gs.log('[CRON_TASK_UPLOAD-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+      job.start();
     }
-    const endTime = new Date();
-    const elapsedTime = endTime.getTime() - startTime.getTime();
-    this.gs.log('[CRON_TASK_UPLOAD-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
-    job.start();
   }
 
 }

@@ -2,6 +2,7 @@
 import { xml2json, json2xml } from 'xml-js';
 
 // NodeJS Library
+import cluster from 'node:cluster';
 import { existsSync, readFileSync, writeFileSync, unlinkSync } from 'node:fs';
 
 import { Injectable } from '@nestjs/common';
@@ -98,46 +99,48 @@ export class SitemapService {
     }
   )
   async generateSitemap(): Promise<void> {
-    const job = this.sr.getCronJob(CONSTANTS.cronSitemap);
-    job.stop();
-    const startTime = new Date();
-    this.gs.log('[CRON_TASK_SITEMAP-START] 🐾', `${startTime}`);
-    try {
-      await this.getNewsUrl();
-      await this.getFansubUrl();
-      await this.getBerkasUrl();
-      const untrackedUrlsList = [...this.untrackedUrlsListNews, ...this.untrackedUrlsListFansub, ...this.untrackedUrlsListBerkas];
-      const contentString = readFileSync(`${environment.viewFolder}/sitemap.template.xml`, 'utf8');
-      const objString = xml2json(contentString, this.xmlOpt);
-      const existingSitemapList = JSON.parse(objString);
-      for (const u of untrackedUrlsList) {
-        const sm = {
-          loc: {
-            _text: u.url
-          },
-          lastmod: {
-            _text: new Date(u.lastmod).toISOString()
+    if (cluster.isMaster) {
+      const job = this.sr.getCronJob(CONSTANTS.cronSitemap);
+      job.stop();
+      const startTime = new Date();
+      this.gs.log('[CRON_TASK_SITEMAP-START] 🐾', `${startTime}`);
+      try {
+        await this.getNewsUrl();
+        await this.getFansubUrl();
+        await this.getBerkasUrl();
+        const untrackedUrlsList = [...this.untrackedUrlsListNews, ...this.untrackedUrlsListFansub, ...this.untrackedUrlsListBerkas];
+        const contentString = readFileSync(`${environment.viewFolder}/sitemap.template.xml`, 'utf8');
+        const objString = xml2json(contentString, this.xmlOpt);
+        const existingSitemapList = JSON.parse(objString);
+        for (const u of untrackedUrlsList) {
+          const sm = {
+            loc: {
+              _text: u.url
+            },
+            lastmod: {
+              _text: new Date(u.lastmod).toISOString()
+            }
+          };
+          const idx = existingSitemapList.urlset.url.findIndex(url => url.loc._text == u.url); 
+          if (idx < 0) {
+            existingSitemapList.urlset.url.push(sm);
+          } else {
+            existingSitemapList.urlset.url[idx] = sm;
           }
-        };
-        const idx = existingSitemapList.urlset.url.findIndex(url => url.loc._text == u.url); 
-        if (idx < 0) {
-          existingSitemapList.urlset.url.push(sm);
-        } else {
-          existingSitemapList.urlset.url[idx] = sm;
         }
+        const xmlString = json2xml(existingSitemapList, this.xmlOpt);
+        if (existsSync(`${environment.viewFolder}/sitemap.xml`)) {
+          unlinkSync(`${environment.viewFolder}/sitemap.xml`);
+        }
+        writeFileSync(`${environment.viewFolder}/sitemap.xml`, xmlString, 'utf8');
+      } catch (error) {
+        this.gs.log('[CRON_TASK_SITEMAP-ERROR] 🐾', error, 'error');
       }
-      const xmlString = json2xml(existingSitemapList, this.xmlOpt);
-      if (existsSync(`${environment.viewFolder}/sitemap.xml`)) {
-        unlinkSync(`${environment.viewFolder}/sitemap.xml`);
-      }
-      writeFileSync(`${environment.viewFolder}/sitemap.xml`, xmlString, 'utf8');
-    } catch (error) {
-      this.gs.log('[CRON_TASK_SITEMAP-ERROR] 🐾', error, 'error');
+      const endTime = new Date();
+      const elapsedTime = endTime.getTime() - startTime.getTime();
+      this.gs.log('[CRON_TASK_SITEMAP-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+      job.start();
     }
-    const endTime = new Date();
-    const elapsedTime = endTime.getTime() - startTime.getTime();
-    this.gs.log('[CRON_TASK_SITEMAP-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
-    job.start();
   }
 
 }

@@ -4,9 +4,14 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AbortController } from 'abort-controller';
 
+// NodeJS Library
+import cluster from 'node:cluster';
+import os from 'node:os';
+import process from 'node:process';
+
 import { environment } from '../environments/api/environment';
 
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, INestApplicationContext } from '@nestjs/common';
 import { DocumentBuilder, SwaggerDocumentOptions, SwaggerModule } from '@nestjs/swagger';
 import { NestFactory } from '@nestjs/core';
 import { urlencoded, json, Request, Response, NextFunction } from 'express';
@@ -21,31 +26,15 @@ import { ApiKeyService } from './repository/api-key.service';
 import { GlobalService } from './services/global.service';
 import { SocketIoService } from './services/socket-io.service';
 
-let gs: GlobalService = null;
-let aks: ApiKeyService = null;
-let sis: SocketIoService = null;
-
-function reqResEvent(req: Request, res: Response, next: NextFunction) {
-  const timeStart = new Date();
-  res.locals['abort-controller'] = new AbortController();
-  req.on('close', () => {
-    res.locals['abort-controller'].abort();
-  });
-  res.on('close', () => {
-    const clientOriginIpCc = aks.getOriginIpCc(req, true);
-    const timeEnd = Date.now() - timeStart.getTime();
-    const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
-    sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
-  });
-  return next();
+export async function ctx(): Promise<INestApplicationContext> {
+  return await NestFactory.createApplicationContext(AppModule);
 }
 
 // The Nest app is exported so that it can be used by serverless Functions.
 export async function app(): Promise<INestApplication> {
   const nestApp = await NestFactory.create(AppModule);
-  gs = nestApp.select(AppModule).get(GlobalService);
-  aks = nestApp.select(AppModule).get(ApiKeyService);
-  sis = nestApp.select(AppModule).get(SocketIoService);
+  const aks = nestApp.get(ApiKeyService);
+  const sis = nestApp.get(SocketIoService);
   nestApp.setGlobalPrefix('api');
   nestApp.getHttpAdapter().getInstance().set('trust proxy', true);
   nestApp.use(helmet({
@@ -71,7 +60,20 @@ export async function app(): Promise<INestApplication> {
   nestApp.use(urlencoded({ extended: false, limit: '128mb' }));
   nestApp.enableCors(aks.getCorsOptions());
   nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
-  nestApp.use(reqResEvent);
+  nestApp.use((req: Request, res: Response, next: NextFunction) => {
+    const timeStart = new Date();
+    res.locals['abort-controller'] = new AbortController();
+    req.on('close', () => {
+      res.locals['abort-controller'].abort();
+    });
+    res.on('close', () => {
+      const clientOriginIpCc = aks.getOriginIpCc(req, true);
+      const timeEnd = Date.now() - timeStart.getTime();
+      const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
+      sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
+    });
+    return next();
+  });
   const swaggerCfg = new DocumentBuilder()
     .setTitle(environment.siteName)
     .setDescription(environment.siteDescription)
@@ -94,11 +96,37 @@ declare const __non_webpack_require__: NodeRequire;
 const mainModule = __non_webpack_require__.main;
 const moduleFilename = (mainModule && mainModule.filename) || '';
 if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
-  app().then(
-    nestApp => {
-      nestApp.listen(process.env['PORT'] || 4200, async () => {
-        gs.log(`[APP_SERVER] 💻 Running on => ${process.cwd()} 💘`, await nestApp.getUrl());
-      });
+  ctx().then(
+    async (nestCtx) => {
+      try {
+        const nestApp = await app();
+        const workers = [];
+        if (cluster.isMaster) {
+          const gs = nestCtx.get(GlobalService);
+          const numCPUs = os.cpus().length;
+          gs.log(`[APP_MASTER_PID] 💻`, process.pid);
+          for (let i = 0; i < numCPUs; i++) {
+            const worker = cluster.fork({ FSID: `${i}` });
+            workers.push(worker);
+            gs.log(`[WORKER_${i}] Spawned`, worker.id);
+          }
+          cluster.on('exit', (worker, code, signal) => {
+            let msg = `[WORKER_${worker.id}]`;
+            if (signal) {
+              gs.log(`${msg} Killed`, signal);
+            } else {
+              gs.log(`${msg} Exited`, code);
+            }
+          });
+        } else {
+          const gs = nestApp.get(GlobalService);
+          nestApp.listen(process.env['PORT'] || 4200, async () => {
+            gs.log(`[APP_SLAVE_PID] 💘`, process.pid);
+          });
+        }
+      } catch (err) {
+        console.error('[APP_WORKER] 💢', cluster.worker.id);
+      }
     }
-  ).catch(err => gs.log('[APP-BOOTSTRAP] 💢', err, 'error'));
+  ).catch(err => console.error('[APP_CONTEXT] 💢', err));
 }

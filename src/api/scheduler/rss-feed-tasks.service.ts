@@ -2,6 +2,7 @@
 import { parse } from 'rss-to-json';
 
 // NodeJS Library
+import cluster from 'node:cluster';
 import { writeFile, rename, unlink } from 'node:fs';
 
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
@@ -111,54 +112,56 @@ export class RssFeedTasksService {
     }
   )
   async fansubRssFeedAll(): Promise<void> {
-    const job = this.sr.getCronJob(CONSTANTS.cronFansubRssFeed);
-    job.stop();
-    const startTime = new Date();
-    this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-START] 🐾', `${startTime}`);
-    try {
-      const rssFeedAll = [];
-      const rssFeedActive = [];
-      const fansubs = await this.fansubRepo.find({
-        where: [
-          { rss_feed: Not(IsNull()) }
-        ],
-        order: {
-          updated_at: 'DESC'
-        }
-      });
-      const rgx = new RegExp(CONSTANTS.regexUrl);
-      for (const fs of fansubs) {
-        if (fs.rss_feed.match(rgx)) {
-          try {
-            const feed = await this.getFeedByUrl(fs.rss_feed);
-            this.sortRssFeedWhileAdding(fs, rssFeedAll, feed);
-            if (fs.active) {
-              this.sortRssFeedWhileAdding(fs, rssFeedActive, feed, 1);
+    if (cluster.isMaster) {
+      const job = this.sr.getCronJob(CONSTANTS.cronFansubRssFeed);
+      job.stop();
+      const startTime = new Date();
+      this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-START] 🐾', `${startTime}`);
+      try {
+        const rssFeedAll = [];
+        const rssFeedActive = [];
+        const fansubs = await this.fansubRepo.find({
+          where: [
+            { rss_feed: Not(IsNull()) }
+          ],
+          order: {
+            updated_at: 'DESC'
+          }
+        });
+        const rgx = new RegExp(CONSTANTS.regexUrl);
+        for (const fs of fansubs) {
+          if (fs.rss_feed.match(rgx)) {
+            try {
+              const feed = await this.getFeedByUrl(fs.rss_feed);
+              this.sortRssFeedWhileAdding(fs, rssFeedAll, feed);
+              if (fs.active) {
+                this.sortRssFeedWhileAdding(fs, rssFeedActive, feed, 1);
+              }
+            } catch (e) {
+              this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR_PARSE] 🐾', e, 'error');
             }
-          } catch (e) {
-            this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR_PARSE] 🐾', e, 'error');
           }
         }
+        this.saveFeedToFileAndCache('fansub-rss-feed-all', {
+          info: `😅 200 - Fansub API :: RSS Feed All Full Fansubs 🤣`,
+          count: rssFeedAll.length,
+          pages: 1,
+          results: rssFeedAll
+        });
+        this.saveFeedToFileAndCache('fansub-rss-feed-active', {
+          info: `😅 200 - Fansub API :: RSS Feed All Active Fansubs 🤣`,
+          count: rssFeedActive.length,
+          pages: 1,
+          results: rssFeedActive
+        });
+      } catch (error) {
+        this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR] 🐾', error, 'error');
       }
-      this.saveFeedToFileAndCache('fansub-rss-feed-all', {
-        info: `😅 200 - Fansub API :: RSS Feed All Full Fansubs 🤣`,
-        count: rssFeedAll.length,
-        pages: 1,
-        results: rssFeedAll
-      });
-      this.saveFeedToFileAndCache('fansub-rss-feed-active', {
-        info: `😅 200 - Fansub API :: RSS Feed All Active Fansubs 🤣`,
-        count: rssFeedActive.length,
-        pages: 1,
-        results: rssFeedActive
-      });
-    } catch (error) {
-      this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR] 🐾', error, 'error');
+      const endTime = new Date();
+      const elapsedTime = endTime.getTime() - startTime.getTime();
+      this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
+      job.start();
     }
-    const endTime = new Date();
-    const elapsedTime = endTime.getTime() - startTime.getTime();
-    this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-END] 🐾', `${endTime} @ ${elapsedTime} ms`);
-    job.start();
   }
 
 }
