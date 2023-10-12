@@ -64,7 +64,7 @@ export class MkvExtractService {
     return new Promise((resolve, reject) => {
 
       const startTime = Date.now();
-      this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`, null, 'error');
+      this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`);
 
       const fileStream = createReadStream(filePath);
       const decoder = new Decoder();
@@ -82,11 +82,15 @@ export class MkvExtractService {
       decoder.on('error', error => {
         this.gs.log(`[MKVEXTRACT_DECODER_ERROR] 🌋 ${fileName} 🧬`, error, 'error');
         fileStream.destroy(error);
+      });
+
+      fileStream.on('error', error => {
+        this.gs.log(`[MKVEXTRACT_STREAM_ERROR] 🌋 ${fileName} 🧬`, error, 'error');
         reject(error);
       });
 
       decoder.on('data', chunk => {
-        this.gs.log(`[MKVEXTRACT_DATA_CHUNK] ⌛ ${fileName} -- ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`, null, 'error');
+        this.gs.log(`[MKVEXTRACT_DATA_CHUNK] ⌛ ${fileName} -- ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`, 'error');
         switch (chunk[0]) {
           case 'end':
             // if (chunk[1].name === 'Info') {
@@ -102,7 +106,8 @@ export class MkvExtractService {
             break;
           case 'tag':
             if (chunk[1].name === 'unknown') {
-              fileStream.destroy(new Error('Unknown File Tag'));
+              const error = new Error('Unknown File Tag');
+              fileStream.destroy(error);
             } else if (chunk[1].name === 'FileName') {
               if (!files[currentFile]) {
                 files[currentFile] = {};
@@ -183,7 +188,7 @@ export class MkvExtractService {
           });
         };
         const endTime = Date.now();
-        this.gs.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`, files, 'error');
+        this.gs.log(`[MKVEXTRACT_END] 🎬 ${fileName} -- ${endTime} -- ${(endTime - startTime) / 1000} seconds 🧬`, files);
         resolve(files);
       });
 
