@@ -1,3 +1,6 @@
+// NodeJS Library
+import cluster from 'node:cluster';
+
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Server, Socket  } from 'socket.io';
 import { Equal, ILike, IsNull } from 'typeorm';
@@ -5,8 +8,9 @@ import { Equal, ILike, IsNull } from 'typeorm';
 import { CONSTANTS } from '../../constants';
 
 import { RoleModel } from '../../models/req-res.model';
-import { VisitorModel, PayloadModel, PingPongModel, RoomInfoModel, StatsServerModel } from '../../models/socket-io.model';
+import { VisitorModel, PayloadModel, PingPongModel, RoomInfoModel, StatsServerModel, ServerInfoModel } from '../../models/socket-io.model';
 
+import { ClusterMasterSlaveService } from '../services/cluster-master-slave.service';
 import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
 import { QuizService } from '../services/quiz.service';
@@ -25,6 +29,7 @@ import { UserService } from '../repository/user.service';
 export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
+    private cms: ClusterMasterSlaveService,
     private cfg: ConfigService,
     private berkasRepo: BerkasService,
     private fansubRepo: FansubService,
@@ -60,27 +65,58 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
   /** */
 
+  async cfgServerSet(payload: PayloadModel): Promise<void> {
+    if (cluster.isMaster) {
+      this.cfg.serverSet(payload as any);
+    } else {
+      await this.cms.sendMessageToMaster('CFG_SERVER_SET', payload);
+    }
+  }
+
+  async cfgServerGet(): Promise<ServerInfoModel> {
+    if (cluster.isMaster) {
+      return this.cfg.serverGet();
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_SERVER_GET', null);
+    }
+  }
+
+  async cfgGithubGet(): Promise<any> {
+    if (cluster.isMaster) {
+      return this.cfg.githubGet();
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_GITHUB_GET', null);
+    }
+  }
+
+  /** */
+
   @SubscribeMessage('ping-pong')
-  pingPong(client: Socket, payload: PayloadModel): PingPongModel {
+  async pingPong(client: Socket, payload: PayloadModel): Promise<PingPongModel> {
     return {
-      github: this.cfg.github,
-      server: this.cfg.serverGet()
+      github: this.cfgGithubGet(),
+      server: await this.cfgServerGet()
     };
   }
 
   @SubscribeMessage('stats-server')
-  statsServer(client: Socket, payload: PayloadModel): StatsServerModel {
-    return this.cfg.statsServer;
+  async statsServer(client: Socket, payload: PayloadModel): Promise<StatsServerModel> {
+    if (cluster.isMaster) {
+      return this.cfg.statsServerGet();
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_STATS_GET', null);
+    }
   }
 
   @SubscribeMessage('server-set')
   async serverSet(client: Socket, payload: PayloadModel): Promise<void> {
     try {
+      const original_payload = { ...payload };
       await this.sis.checkUserLogin(client, payload);
       if (payload.user) {
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
-          this.cfg.serverSet(payload);
-          this.sis.emitToBroadcast('server-config', this.cfg.serverGet());
+          this.cfgServerSet(original_payload);
+          this.sis.emitToBroadcast('server-config', await this.cfgServerGet());
         }
       }
     } catch (error) {

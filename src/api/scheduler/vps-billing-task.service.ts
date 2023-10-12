@@ -18,7 +18,8 @@ export class VpsBillingService {
 
   header = { ...environment.nodeJsXhrHeader, apikey: environment.idCloudHost.apiKey };
 
-  constructor(private sr: SchedulerRegistry,
+  constructor(
+    private sr: SchedulerRegistry,
     private cfg: ConfigService,
     private gs: GlobalService,
     private api: ApiService
@@ -43,7 +44,9 @@ export class VpsBillingService {
         const res_raw = await this.api.getData(url, this.header);
         const res_json: any = await res_raw.json();
         const json = res_json[0];
-        this.cfg.statsServer.billing.ongoing = json.precalc_ongoing || json.running_totals?.ongoing;
+        this.cfg.statsServerSet({
+          billing: json.precalc_ongoing || json.running_totals?.ongoing
+        });
       } catch (error) {
         this.gs.log('[CRON_TASK_VPS_BILLING-ERROR] 🐾', error, 'error');
       }

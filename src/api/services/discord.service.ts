@@ -16,6 +16,7 @@ import {
 } from 'discord.js';
 
 // NodeJS Library
+import cluster from 'node:cluster';
 import { createReadStream } from 'node:fs';
 import { URL } from 'node:url';
 
@@ -95,10 +96,9 @@ export class DiscordService {
     this.bot.on('ready', async () => {
       try {
         this.gs.log(`[DISCORD_SERVICE-READY] 🎉 ${this.bot.user.username}#${this.bot.user.discriminator} - ${this.bot.user.id} 🎶`);
-        this.changeBotNickname();
+        await this.changeBotNickname();
       } catch (error) {
         this.gs.log('[DISCORD_SERVICE-FAILED] 🎉', error, 'error');
-        this.cfg.github = null;
       }
     });
     this.bot.on('guildMemberRemove', async member => {
@@ -273,24 +273,26 @@ export class DiscordService {
   }
 
   async changeBotNickname(): Promise<void> {
-    try {
-      const url = new URL(`https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`);
-      const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
-      if (res_raw.ok) {
-        const gh: any = await res_raw.json();
-        this.cfg.github = gh[0];
-        const botGuild = this.bot ? this.bot.guilds.cache.get(environment.discord.guild_id) : null;
-        if (botGuild) {
-          const botMember = botGuild.members.cache.get(this.bot.user.id);
-          if (botMember) {
-            botMember.setNickname(`${environment.siteName} - ${this.cfg.github?.sha?.slice(0, 7)}`);
+    if (cluster.isMaster) {
+      try {
+        const url = new URL(`https://api.github.com/repos/${environment.author}/${environment.siteName}/commits`);
+        const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
+        if (res_raw.ok) {
+          const gh: any = await res_raw.json();
+          this.cfg.githubSet(gh[0]);
+          const botGuild = this.bot ? this.bot.guilds.cache.get(environment.discord.guild_id) : null;
+          if (botGuild) {
+            const botMember = botGuild.members.cache.get(this.bot.user.id);
+            if (botMember) {
+              botMember.setNickname(`${environment.siteName} - ${this.cfg.githubGet()?.sha?.slice(0, 7)}`);
+            }
           }
+        } else {
+          throw new Error('Github API Error!');
         }
-      } else {
-        throw new Error('Github API Error!');
+      } catch (error) {
+        this.gs.log('[DISCORD_SERVICE-CHANGE_BOT_NICKNAME] 🎉', error, 'error');
       }
-    } catch (error) {
-      this.gs.log('[DISCORD_SERVICE-CHANGE_BOT_NICKNAME] 🎉', error, 'error');
     }
   }
 

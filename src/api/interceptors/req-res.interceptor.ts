@@ -1,7 +1,11 @@
+// NodeJS Library
+import cluster from 'node:cluster';
+
 import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
 import { Request, Response } from 'express';
 
+import { ClusterMasterSlaveService } from '../services/cluster-master-slave.service';
 import { ConfigService } from '../services/config.service';
 import { GlobalService } from '../services/global.service';
 
@@ -9,13 +13,22 @@ import { GlobalService } from '../services/global.service';
 export class ReqResInterceptor implements NestInterceptor {
 
   constructor(
+    private cms: ClusterMasterSlaveService,
     private cfg: ConfigService,
     private gs: GlobalService
   ) {
     //
   }
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  async cfgServerGetMaintenance(): Promise<boolean> {
+    if (cluster.isMaster) {
+      return this.cfg.serverGetMaintenance();
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_SERVER_GET_MAINTENANCE', null);
+    }
+  }
+
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
 
     const http = context.switchToHttp();
     const req = http.getRequest<Request>();
@@ -34,7 +47,7 @@ export class ReqResInterceptor implements NestInterceptor {
       case 'POST':
       // @ts-ignore error TS7029: Fallthrough case in switch.
       case 'PUT':
-        if (this.cfg.serverGetMaintenance()) {
+        if (await this.cfgServerGetMaintenance()) {
           throw new HttpException({
             info: '🤧 503 - Settings API :: Server Maintenance 😷',
             result: {

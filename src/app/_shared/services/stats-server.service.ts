@@ -32,16 +32,12 @@ export class StatsServerService {
   latency = 0;
 
   statsServer: StatsServerModel = {
-    mainSite: {
-      cpus: 0,
-      mem_ram: 0,
-      disk_io: 0,
-      net_tx: 0,
-      net_rx: 0
-    },
-    billing: {
-      ongoing: 0
-    }
+    cpus: 0,
+    mem_ram: 0,
+    disk_io: 0,
+    net_tx: 0,
+    net_rx: 0,
+    billing: 0
   };
 
   messageChatUnreadCount = 0;

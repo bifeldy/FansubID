@@ -1,6 +1,3 @@
-// 3rd Party Library
-import ClusterMessages from 'cluster-messages';
-
 // NodeJS Library
 import cluster from 'node:cluster';
 
@@ -14,18 +11,16 @@ import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorato
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
-import { GlobalService } from '../services/global.service';
 import { TaskCronJobService } from '../services/task-cron-job.service';
+import { ClusterMasterSlaveService } from '../services/cluster-master-slave.service';
 
 @ApiExcludeController()
 @Controller('/task-cron-job')
 export class TaskCronJobController {
 
-  messages: ClusterMessages = new ClusterMessages();
-
   constructor(
-    private gs: GlobalService,
-    private tcjs: TaskCronJobService
+    private tcjs: TaskCronJobService,
+    private cms: ClusterMasterSlaveService
   ) {
     //
   }
@@ -39,19 +34,7 @@ export class TaskCronJobController {
       if (cluster.isMaster) {
         jobs = this.tcjs.getAll();
       } else {
-        try {
-          jobs = await new Promise((resolve, reject) => {
-            this.messages.send('CRON_GET', null, response => {
-              if (response.error) {
-                reject(response.error);
-              } else {
-                resolve(response.data);
-              }
-            });
-          });
-        } catch (err) {
-          this.gs.log(`[MASTER_CRON_GET-ERROR]`, err, 'error');
-        }
+        jobs = await this.cms.sendMessageToMaster('CRON_GET', null);
       }
       return {
         info: `😅 200 - Task API :: List All 🤣`,
@@ -81,19 +64,7 @@ export class TaskCronJobController {
       if (cluster.isMaster) {
         cronJob = this.tcjs.getByIdKey(req.params['id']);
       } else {
-        try {
-          cronJob = await new Promise((resolve, reject) => {
-            this.messages.send('CRON_PUT', req.params['id'], response => {
-              if (response.error) {
-                reject(response.error);
-              } else {
-                resolve(response.data);
-              }
-            });
-          });
-        } catch (err) {
-          this.gs.log(`[MASTER_CRON_PUT-ERROR]`, err, 'error');
-        }
+        cronJob = await this.cms.sendMessageToMaster('CRON_PUT', req.params['id']);
       }
       return {
         info: `😅 201 - Task API :: Reload ${req.params['id']} 🤣`,

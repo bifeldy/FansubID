@@ -42,16 +42,12 @@ export interface PingPongModel {
 }
 
 export interface StatsServerModel {
-  mainSite?: {
-    cpus?: number,
-    mem_ram?: number,
-    disk_io?: number,
-    net_tx?: number,
-    net_rx?: number
-  };
-  billing?: {
-    ongoing?: number
-  };
+  cpus?: number;
+  mem_ram?: number;
+  disk_io?: number;
+  net_tx?: number;
+  net_rx?: number;
+  billing?: number;
 }
 
 export interface RoomModel {

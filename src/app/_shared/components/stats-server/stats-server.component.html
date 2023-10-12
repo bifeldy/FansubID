@@ -50,31 +50,31 @@
     <p class="px-2 text-truncate">
       CPUs Load ::
       <span class="text-warning">
-        {{ SS.statsServer.mainSite.cpus | number:'1.2-2' }} %
+        {{ SS.statsServer.cpus | number:'1.2-2' }} %
       </span>
     </p>
     <p class="px-2 text-truncate">
       RAM Usage ::
       <span class="text-warning">
-        {{ SS.statsServer.mainSite.mem_ram | bytes:2 }}
+        {{ SS.statsServer.mem_ram | bytes:2 }}
       </span>
     </p>
     <p class="px-2 text-truncate">
       Disk IO (/s) ::
       <span class="text-warning">
-        {{ SS.statsServer.mainSite.disk_io | bytes:2 }}
+        {{ SS.statsServer.disk_io | bytes:2 }}
       </span>
     </p>
     <p class="px-2 text-truncate">
       Net UD (/s) ::
       <span class="text-warning">
-        {{ SS.statsServer.mainSite.net_tx | bytes:2 }} / {{ SS.statsServer.mainSite.net_rx | bytes:2 }}
+        {{ SS.statsServer.net_tx | bytes:2 }} / {{ SS.statsServer.net_rx | bytes:2 }}
       </span>
     </p>
     <p class="px-2 text-truncate" matTooltip="Diperbarui 10 Menit Sekali">
       Sisa Saldo ::
       <span class="gradient-text">
-        {{ SS.statsServer.billing.ongoing | currency:'Rp ':'symbol':'1.2-2' }}
+        {{ SS.statsServer.billing | currency:'Rp ':'symbol':'1.2-2' }}
       </span>
     </p>
   </div>

@@ -1,4 +1,5 @@
 // NodeJS Library
+import cluster from 'node:cluster';
 import { URL } from 'node:url';
 
 import { HttpException, HttpStatus, Injectable, NestMiddleware, Next, Req, Res } from '@nestjs/common';
@@ -10,20 +11,22 @@ import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
-import { ApiKeyService } from '../repository/api-key.service';
+import { ClusterMasterSlaveService } from '../services/cluster-master-slave.service';
 import { ApiService } from '../services/api.service';
 import { ConfigService } from '../services/config.service';
 import { CryptoService } from '../services/crypto.service';
 import { GlobalService } from '../services/global.service';
-import { UserService } from '../repository/user.service';
 
+import { ApiKeyService } from '../repository/api-key.service';
 import { RegistrationService } from '../repository/registration.service';
+import { UserService } from '../repository/user.service';
 
 @Injectable()
 export class RegisterMiddleware implements NestMiddleware {
 
   constructor(
     private sr: SchedulerRegistry,
+    private cms: ClusterMasterSlaveService,
     private aks: ApiKeyService,
     private api: ApiService,
     private cfg: ConfigService,
@@ -35,9 +38,17 @@ export class RegisterMiddleware implements NestMiddleware {
     //
   }
 
+  async cfgServerGetOpenForRegister(): Promise<boolean> {
+    if (cluster.isMaster) {
+      return this.cfg.serverGetOpenForRegister();
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_SERVER_GET_OPEN_FOR_REGISTER', null);
+    }
+  }
+
   async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
     try {
-      if (!this.cfg.serverGetOpenForRegister()) {
+      if (!(await this.cfgServerGetOpenForRegister())) {
         throw new HttpException({
           info: '😫 403 - Register API :: Tidak Ada Layanan 💩',
           result: {

@@ -1,6 +1,9 @@
 // 3rd Party Library
 import { WebSocket } from 'ws';
 
+// NodeJS Library
+import cluster from 'node:cluster';
+
 import { Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
@@ -9,7 +12,7 @@ import { CONSTANTS } from '../../constants';
 import { environment } from '../../environments/api/environment';
 
 import { GlobalService } from './global.service';
-import { ConfigService } from '../services/config.service';
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class IdCloudHostService {
@@ -21,7 +24,7 @@ export class IdCloudHostService {
     private gs: GlobalService,
     private cfg: ConfigService
   ) {
-    if (environment.production) {
+    if (environment.production && cluster.isMaster) {
       this.connect();
     }
   }
@@ -47,31 +50,41 @@ export class IdCloudHostService {
     `.replace(/\s\s+/g, '').trim();
   }
 
-  onClose(code, data, statsName): void {
+  onClose(code, data): void {
     const reason = data.toString();
-    this.gs.log(`[ID_CLOUD_HOST_SERVICE-ON_CLOSE-${statsName}] ⛈`, { code, reason });
+    this.gs.log(`[ID_CLOUD_HOST_SERVICE-ON_CLOSE] ⛈`, { code, reason });
     this.sr.addTimeout(
-      `${CONSTANTS.timeoutReconnectSocketKey}-${statsName}`,
+      CONSTANTS.timeoutReconnectSocketKey,
       setTimeout(() => {
-        this[statsName]();
+        this.mainSite();
       }, CONSTANTS.timeoutReconnectSocketTime)
     );
   }
 
-  onMessage(data, isBinary, statsName): void {
+  async onMessage(data, isBinary): Promise<void> {
     const message = isBinary ? data : data.toString();
-    this.gs.log(`[ID_CLOUD_HOST_SERVICE-ON_MESSAGE-${statsName}] ⛈`, message);
+    this.gs.log('[ID_CLOUD_HOST_SERVICE-ON_MESSAGE] ⛈', message);
     const json = JSON.parse(message);
     if (json.service === 'libvirt.used_memory_kb') {
-      this.cfg.statsServer[statsName].mem_ram = json.metric * 1000;
+      this.cfg.statsServerSet({
+        mem_ram: json.metric * 1000
+      });
     } else if (json.service === 'libvirt.block_wr_bytes_delta') {
-      this.cfg.statsServer[statsName].disk_io = json.metric;
+      this.cfg.statsServerSet({
+        disk_io: json.metric
+      });
     } else if (json.service === 'libvirt.guest_time_per_vcpu_delta') {
-      this.cfg.statsServer[statsName].cpus = json.metric * 100;
+      this.cfg.statsServerSet({
+        cpus: json.metric * 100
+      });
     } else if (json.service === 'libvirt.net_tx_bytes_delta') {
-      this.cfg.statsServer[statsName].net_tx = json.metric;
+      this.cfg.statsServerSet({
+        net_tx: json.metric
+      });
     } else if (json.service === 'libvirt.net_rx_bytes_delta') {
-      this.cfg.statsServer[statsName].net_rx = json.metric;
+      this.cfg.statsServerSet({
+        net_rx: json.metric
+      });
     }
   }
 
@@ -89,11 +102,11 @@ export class IdCloudHostService {
     });
 
     this.wsMainSite.on('close', (code, data) => {
-      this.onClose(code, data, 'mainSite');
+      this.onClose(code, data);
     });
 
     this.wsMainSite.on('message', (data, isBinary) => {
-      this.onMessage(data, isBinary, 'mainSite');
+      this.onMessage(data, isBinary);
     });
   }
 

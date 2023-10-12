@@ -18,22 +18,18 @@ export class ConfigService {
     'localhost'
   ];
 
-  github = null;
+  private github = null;
 
-  statsServer: StatsServerModel = {
-    mainSite: {
-      cpus: 0,
-      mem_ram: 0,
-      disk_io: 0,
-      net_tx: 0,
-      net_rx: 0
-    },
-    billing: {
-      ongoing: 0
-    }
+  private statsServer: StatsServerModel = {
+    cpus: 0,
+    mem_ram: 0,
+    disk_io: 0,
+    net_tx: 0,
+    net_rx: 0,
+    billing: 0
   };
 
-  settings: ServerInfoModel = {
+  private settings: ServerInfoModel = {
     isMaintenance: false,
     winboxOpenLink: false,
     discordNotification: true,
@@ -46,11 +42,32 @@ export class ConfigService {
     //
   }
 
+  githubGet(): any {
+    return this.github;
+  }
+
+  githubSet(data): any {
+    this.github = data;
+  }
+
+  statsServerGet(): StatsServerModel {
+    return this.statsServer;
+  }
+
+  statsServerSet(data: StatsServerModel): void {
+    for (const key in data) {
+      if (this.statsServer.hasOwnProperty(key)) {
+        this.gs?.log(`[CONFIG_SERVICE-STATS_SET_${key.toUpperCase()}] 👀`, data[key]);
+        this.statsServer[key] = data[key];
+      }
+    }
+  }
+
   serverGet(): ServerInfoModel {
     return this.settings;
   }
 
-  serverSet(data): void {
+  serverSet(data: ServerInfoModel): void {
     for (const key in data) {
       if (this.settings.hasOwnProperty(key)) {
         this.gs?.log(`[CONFIG_SERVICE-SERVER_SET_${key.toUpperCase()}] 👀`, data[key]);
@@ -61,14 +78,6 @@ export class ConfigService {
 
   serverGetMaintenance(): boolean {
     return this.serverGet().isMaintenance;
-  }
-
-  serverGetWinboxOpenLink(): boolean {
-    return this.serverGet().winboxOpenLink;
-  }
-
-  serverGetDiscordNotification(): boolean {
-    return this.serverGet().discordNotification;
   }
 
   serverGetOpenForRegister(): boolean {
