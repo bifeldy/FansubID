@@ -100,7 +100,7 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
   app().then(async (nestApp) => {
     const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length;
     const gs = nestApp.get(GlobalService);
-    if (numCPUs >= 1) {
+    if (numCPUs > 1) {
       try {
         if (cluster.isMaster) {
           const nestCtx = await ctx();
