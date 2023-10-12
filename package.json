@@ -77,7 +77,7 @@
     "cookie-parser": "^1.4.6",
     "crypto-js": "^4.1.1",
     "discord.js": "^13.6.0",
-    "ebml": "^2.2.4",
+    "ebml": "^3.0.0",
     "express": "^4.15.2",
     "express-throttle-bandwidth": "^1.0.1",
     "ffmpeg-static": "^4.4.0",

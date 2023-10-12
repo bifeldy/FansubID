@@ -1113,8 +1113,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-buffers
-
 bufferutil
 MIT
 Copyright (c) 2011 Einar Otto Stangvik <einaros@gmail.com> (http://2x.io)
@@ -2284,7 +2282,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ebml
 MIT
-Copyright (c) 2013 Mark Schmale
+Copyright (c) 2013-2018 Mark Schmale and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
