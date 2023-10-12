@@ -90,7 +90,6 @@ export class UploadService {
     if (fIdx >= 0) {
       if (attachment.ext === 'mkv') {
         try {
-          this.gs.log('[FILE_SUBTITLE_FONT-EXTRACT_MULAI] 🎼', attachment.name, 'error');
           const extractedFiles = await this.mkv.mkvExtract(attachment.name, `${environment.uploadFolder}/${files[fIdx].name}`);
           for (const ef of extractedFiles) {
             const fileNameExt = ef.name.split('.');

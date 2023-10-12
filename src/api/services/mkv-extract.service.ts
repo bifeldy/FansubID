@@ -81,6 +81,7 @@ export class MkvExtractService {
 
       decoder.on('error', error => {
         this.gs.log(`[MKVEXTRACT_DECODER_ERROR] 🌋 ${fileName} 🧬`, error, 'error');
+        decoder.destroy(error);
         fileStream.destroy(error);
         reject(error);
       });
@@ -90,6 +91,7 @@ export class MkvExtractService {
         switch (chunk[0]) {
           case 'end':
             // if (chunk[1].name === 'Info') {
+            //   decoder.destroy();
             //   fileStream.destroy();
             // }
             if (chunk[1].name === 'TrackEntry') {
@@ -103,6 +105,7 @@ export class MkvExtractService {
           case 'tag':
             if (chunk[1].name === 'unknown') {
               const error = new Error('Unknown File Tag!');
+              decoder.destroy(error);
               fileStream.destroy(error);
               reject(error);
             }
