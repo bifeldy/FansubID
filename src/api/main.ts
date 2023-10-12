@@ -97,47 +97,39 @@ declare const __non_webpack_require__: NodeRequire;
 const mainModule = __non_webpack_require__.main;
 const moduleFilename = (mainModule && mainModule.filename) || '';
 if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
-  const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length;
-  if (numCPUs === 1) {
-    app().then((nestApp) => {
-      const gs = nestApp.get(GlobalService);
+  app().then(async (nestApp) => {
+    const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length;
+    const gs = nestApp.get(GlobalService);
+    if (numCPUs >= 1) {
+      try {
+        if (cluster.isMaster) {
+          const nestCtx = await ctx();
+          nestCtx.get(ClusterMasterSlaveService).masterHandleMessages();
+          gs.log(`[APP_MASTER_PID] 💻`, process.pid);
+          for (let i = 0; i < numCPUs - 1; i++) {
+            const worker = cluster.fork({ FSID: `${i}` });
+            gs.log(`[WORKER_${i}] Spawned`, worker.id);
+          }
+          cluster.on('exit', (worker, code, signal) => {
+            let msg = `[WORKER_${worker.id}]`;
+            if (signal) {
+              gs.log(`${msg} Killed`, signal, 'error');
+            } else {
+              gs.log(`${msg} Exited`, code, 'error');
+            }
+          });
+        } else {
+          nestApp.listen(process.env['PORT'] || 4200, async () => {
+            gs.log(`[APP_SLAVE_PID] 💘`, process.pid);
+          });
+        }
+      } catch (e) {
+        gs.log('[APP_WORKER] 💢', e, 'error');
+      }
+    } else {
       nestApp.listen(process.env['PORT'] || 4200, async () => {
         gs.log(`[APP_BOOTSTRAP_PID] 💘`, process.pid);
       });
-    });
-  } else {
-    ctx().then(
-      async (nestCtx) => {
-        try {
-          const nestApp = await app();
-          const workers = [];
-          if (cluster.isMaster) {
-            nestCtx.get(ClusterMasterSlaveService).masterHandleMessages();
-            const gs = nestCtx.get(GlobalService);
-            gs.log(`[APP_MASTER_PID] 💻`, process.pid);
-            for (let i = 0; i < numCPUs - 1; i++) {
-              const worker = cluster.fork({ FSID: `${i}` });
-              workers.push(worker);
-              gs.log(`[WORKER_${i}] Spawned`, worker.id);
-            }
-            cluster.on('exit', (worker, code, signal) => {
-              let msg = `[WORKER_${worker.id}]`;
-              if (signal) {
-                gs.log(`${msg} Killed`, signal, 'error');
-              } else {
-                gs.log(`${msg} Exited`, code, 'error');
-              }
-            });
-          } else {
-            const gs = nestApp.get(GlobalService);
-            nestApp.listen(process.env['PORT'] || 4200, async () => {
-              gs.log(`[APP_SLAVE_PID] 💘`, process.pid);
-            });
-          }
-        } catch (err) {
-          console.error('[APP_WORKER] 💢', cluster.worker.id);
-        }
-      }
-    ).catch(err => console.error('[APP_CONTEXT] 💢', err));
-  }
+    }
+  }).catch(err => console.error('[APP_CONTEXT] 💢', err));
 }
