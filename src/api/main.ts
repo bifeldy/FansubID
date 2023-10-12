@@ -106,8 +106,8 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
           const nestCtx = await ctx();
           nestCtx.get(ClusterMasterSlaveService).masterHandleMessages();
           gs.log(`[APP_MASTER_PID] 💻`, process.pid);
-          for (let i = 0; i < numCPUs - 1; i++) {
-            const worker = cluster.fork({ FSID: `${i}` });
+          for (let i = 0; i < numCPUs - 1 /* 1 Master CPU */ ; i++) {
+            const worker = cluster.fork();
             gs.log(`[WORKER_${i}] Spawned`, worker.id);
           }
           cluster.on('exit', (worker, code, signal) => {
@@ -117,6 +117,8 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
             } else {
               gs.log(`${msg} Exited`, code, 'error');
             }
+            const wrkr = cluster.fork();
+            gs.log(`${msg} Re-Spawned`, wrkr.id);
           });
         } else {
           nestApp.listen(process.env['PORT'] || 4200, async () => {

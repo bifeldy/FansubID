@@ -4,8 +4,6 @@ import { environment } from '../../environments/api/environment';
 
 import { ServerInfoModel, StatsServerModel } from '../../models/socket-io.model';
 
-import { GlobalService } from './global.service';
-
 @Injectable()
 export class ConfigService {
 
@@ -37,10 +35,17 @@ export class ConfigService {
   }
 
   constructor(
-    private gs: GlobalService
+    //
   ) {
     //
   }
+
+  //
+  // Shared
+  //
+  // Akses Dari Cluster Worker Via
+  // ClusterMasterSlaveService
+  //
 
   githubGet(): any {
     return this.github;
@@ -57,7 +62,6 @@ export class ConfigService {
   statsServerSet(data: StatsServerModel): void {
     for (const key in data) {
       if (this.statsServer.hasOwnProperty(key)) {
-        this.gs?.log(`[CONFIG_SERVICE-STATS_SET_${key.toUpperCase()}] 👀`, data[key]);
         this.statsServer[key] = data[key];
       }
     }
@@ -70,7 +74,6 @@ export class ConfigService {
   serverSet(data: ServerInfoModel): void {
     for (const key in data) {
       if (this.settings.hasOwnProperty(key)) {
-        this.gs?.log(`[CONFIG_SERVICE-SERVER_SET_${key.toUpperCase()}] 👀`, data[key]);
         this.settings[key] = data[key];
       }
     }
