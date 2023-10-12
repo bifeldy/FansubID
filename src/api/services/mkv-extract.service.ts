@@ -81,7 +81,6 @@ export class MkvExtractService {
 
       decoder.on('error', error => {
         this.gs.log(`[MKVEXTRACT_DECODER_ERROR] 🌋 ${fileName} 🧬`, error, 'error');
-        decoder.destroy(error);
         fileStream.destroy(error);
         reject(error);
       });
@@ -91,7 +90,6 @@ export class MkvExtractService {
         switch (chunk[0]) {
           case 'end':
             // if (chunk[1].name === 'Info') {
-            //   decoder.destroy();
             //   fileStream.destroy();
             // }
             if (chunk[1].name === 'TrackEntry') {
@@ -104,34 +102,25 @@ export class MkvExtractService {
             break;
           case 'tag':
             if (chunk[1].name === 'unknown') {
-              const error = new Error('Unknown File Tag!');
-              decoder.destroy(error);
-              fileStream.destroy(error);
-              reject(error);
-            }
-            if (chunk[1].name === 'FileName') {
+              fileStream.destroy(new Error('Unknown File Tag'));
+            } else if (chunk[1].name === 'FileName') {
               if (!files[currentFile]) {
                 files[currentFile] = {};
               }
               files[currentFile].name = chunk[1].data.toString();
-            }
-            if (chunk[1].name === 'FileData') {
+            } else if (chunk[1].name === 'FileData') {
               if (!files[currentFile]) {
                 files[currentFile] = {};
               }
               files[currentFile].data = chunk[1].data;
               files[currentFile].size = chunk[1].dataSize;
-            }
-            if (chunk[1].name === 'TrackNumber') {
+            } else if (chunk[1].name === 'TrackNumber') {
               trackIndexTemp = chunk[1].data[0];
-            }
-            if (chunk[1].name === 'TrackType') {
+            } else if (chunk[1].name === 'TrackType') {
               trackTypeTemp = chunk[1].data[0];
-            }
-            if (chunk[1].name === 'CodecPrivate') {
+            } else if (chunk[1].name === 'CodecPrivate') {
               trackDataTemp = chunk[1].data.toString();
-            }
-            if (chunk[1].name === 'SimpleBlock' || chunk[1].name === 'Block') {
+            } else if (chunk[1].name === 'SimpleBlock' || chunk[1].name === 'Block') {
               const trackLength = tools.readVint(chunk[1].data);
               trackIndex = tracks.indexOf(trackLength.value);
               if (trackIndex !== -1) {
@@ -141,12 +130,10 @@ export class MkvExtractService {
                 trackData[trackIndex].push(lineData.toString(), timestamp, currentTimecode);
                 subtitleFileSize[trackIndex] += chunk[1].dataSize;
               }
-            }
-            if (chunk[1].name === 'Timecode') {
+            } else if (chunk[1].name === 'Timecode') {
               const timecode = this.readUnsignedInteger(this.padZeroes(chunk[1].data));
               currentTimecode = timecode;
-            }
-            if (chunk[1].name === 'BlockDuration' && trackIndex !== -1) {
+            } else if (chunk[1].name === 'BlockDuration' && trackIndex !== -1) {
               // the duration is in milliseconds
               const duration = this.readUnsignedInteger(this.padZeroes(chunk[1].data));
               trackData[trackIndex].push(duration);
