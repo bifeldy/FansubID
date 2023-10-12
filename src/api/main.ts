@@ -98,14 +98,14 @@ const mainModule = __non_webpack_require__.main;
 const moduleFilename = (mainModule && mainModule.filename) || '';
 if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
   app().then(async (nestApp) => {
+    const port = process.env['PORT'] || 4200;
     const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length;
     const gs = nestApp.get(GlobalService);
     if (numCPUs > 1) {
       try {
         if (cluster.isMaster) {
-          const nestCtx = await ctx();
-          nestCtx.get(ClusterMasterSlaveService).masterHandleMessages();
-          gs.log(`[APP_MASTER_PID] 💻`, process.pid);
+          (await ctx()).get(ClusterMasterSlaveService).masterHandleMessages();
+          gs.log('[APP_MASTER_PID] 💻', process.pid);
           for (let i = 0; i < numCPUs - 1 /* 1 Master CPU */ ; i++) {
             const worker = cluster.fork();
             gs.log(`[WORKER_${i}] Spawned`, worker.id);
@@ -121,17 +121,17 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
             gs.log(`${msg} Re-Spawned`, wrkr.id);
           });
         } else {
-          nestApp.listen(process.env['PORT'] || 4200, async () => {
-            gs.log(`[APP_SLAVE_PID] 💘`, process.pid);
+          nestApp.listen(port, async () => {
+            gs.log('[APP_SLAVE_PID] 👀', process.pid);
           });
         }
       } catch (e) {
         gs.log('[APP_WORKER] 💢', e, 'error');
       }
     } else {
-      nestApp.listen(process.env['PORT'] || 4200, async () => {
-        gs.log(`[APP_BOOTSTRAP_PID] 💘`, process.pid);
+      nestApp.listen(port, async () => {
+        gs.log('[APP_BOOTSTRAP_PID] 💘', process.pid);
       });
     }
-  }).catch(err => console.error('[APP_CONTEXT] 💢', err));
+  }).catch(err => console.error('[APP_CONTEXT] 💣', err));
 }
