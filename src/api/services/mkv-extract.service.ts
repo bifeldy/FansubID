@@ -66,7 +66,9 @@ export class MkvExtractService {
       const startTime = Date.now();
       this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`, null, 'error');
 
-      const fileStream = createReadStream(filePath);
+      const fileStream = createReadStream(filePath, {
+        highWaterMark: 2 * 1024 * 1024
+      });
       const decoder = new Decoder();
       const tracks = [];
       const trackData = [];
@@ -86,73 +88,69 @@ export class MkvExtractService {
       });
 
       decoder.on('data', chunk => {
-        try {
-          this.gs.log(`[MKVEXTRACT_DATA_CHUNK] ⌛ ${fileName} -- ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`, null, 'error');
-          switch (chunk[0]) {
-            case 'end':
-              // if (chunk[1].name === 'Info') {
-              //   fileStream.destroy();
-              // }
-              if (chunk[1].name === 'TrackEntry') {
-                if (trackTypeTemp === 0x11) {
-                  tracks.push(trackIndexTemp);
-                  trackData.push([trackDataTemp]);
-                  subtitleFileSize.push(0);
-                }
+        this.gs.log(`[MKVEXTRACT_DATA_CHUNK] ⌛ ${fileName} -- ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`, null, 'error');
+        switch (chunk[0]) {
+          case 'end':
+            // if (chunk[1].name === 'Info') {
+            //   fileStream.destroy();
+            // }
+            if (chunk[1].name === 'TrackEntry') {
+              if (trackTypeTemp === 0x11) {
+                tracks.push(trackIndexTemp);
+                trackData.push([trackDataTemp]);
+                subtitleFileSize.push(0);
               }
-              break;
-            case 'tag':
-              if (chunk[1].name === 'FileName') {
-                if (!files[currentFile]) {
-                  files[currentFile] = {};
-                }
-                files[currentFile].name = chunk[1].data.toString();
+            }
+            break;
+          case 'tag':
+            if (chunk[1].name === 'FileName') {
+              if (!files[currentFile]) {
+                files[currentFile] = {};
               }
-              if (chunk[1].name === 'FileData') {
-                if (!files[currentFile]) {
-                  files[currentFile] = {};
-                }
-                files[currentFile].data = chunk[1].data;
-                files[currentFile].size = chunk[1].dataSize;
+              files[currentFile].name = chunk[1].data.toString();
+            }
+            if (chunk[1].name === 'FileData') {
+              if (!files[currentFile]) {
+                files[currentFile] = {};
               }
-              if (chunk[1].name === 'TrackNumber') {
-                trackIndexTemp = chunk[1].data[0];
+              files[currentFile].data = chunk[1].data;
+              files[currentFile].size = chunk[1].dataSize;
+            }
+            if (chunk[1].name === 'TrackNumber') {
+              trackIndexTemp = chunk[1].data[0];
+            }
+            if (chunk[1].name === 'TrackType') {
+              trackTypeTemp = chunk[1].data[0];
+            }
+            if (chunk[1].name === 'CodecPrivate') {
+              trackDataTemp = chunk[1].data.toString();
+            }
+            if (chunk[1].name === 'SimpleBlock' || chunk[1].name === 'Block') {
+              const trackLength = tools.readVint(chunk[1].data);
+              trackIndex = tracks.indexOf(trackLength.value);
+              if (trackIndex !== -1) {
+                const timestampArray = new Uint8Array(chunk[1].data).slice(trackLength.length, trackLength.length + 2);
+                const timestamp = new DataView(timestampArray.buffer).getInt16(0);
+                const lineData = chunk[1].data.slice(trackLength.length + 3);
+                trackData[trackIndex].push(lineData.toString(), timestamp, currentTimecode);
+                subtitleFileSize[trackIndex] += chunk[1].dataSize;
               }
-              if (chunk[1].name === 'TrackType') {
-                trackTypeTemp = chunk[1].data[0];
-              }
-              if (chunk[1].name === 'CodecPrivate') {
-                trackDataTemp = chunk[1].data.toString();
-              }
-              if (chunk[1].name === 'SimpleBlock' || chunk[1].name === 'Block') {
-                const trackLength = tools.readVint(chunk[1].data);
-                trackIndex = tracks.indexOf(trackLength.value);
-                if (trackIndex !== -1) {
-                  const timestampArray = new Uint8Array(chunk[1].data).slice(trackLength.length, trackLength.length + 2);
-                  const timestamp = new DataView(timestampArray.buffer).getInt16(0);
-                  const lineData = chunk[1].data.slice(trackLength.length + 3);
-                  trackData[trackIndex].push(lineData.toString(), timestamp, currentTimecode);
-                  subtitleFileSize[trackIndex] += chunk[1].dataSize;
-                }
-              }
-              if (chunk[1].name === 'Timecode') {
-                const timecode = this.readUnsignedInteger(this.padZeroes(chunk[1].data));
-                currentTimecode = timecode;
-              }
-              if (chunk[1].name === 'BlockDuration' && trackIndex !== -1) {
-                // the duration is in milliseconds
-                const duration = this.readUnsignedInteger(this.padZeroes(chunk[1].data));
-                trackData[trackIndex].push(duration);
-              }
-              break;
-          }
-          if (files[currentFile] && files[currentFile].name && files[currentFile].data && files[currentFile].size) {
-            currentFile++;
-          }
-        } catch (error) {
-          this.gs.log(`[MKVEXTRACT_DATA_ERROR] 🌋 ${fileName} 🧬`, error, 'error');
-          fileStream.destroy();
-          reject(error);
+            }
+            if (chunk[1].name === 'Timecode') {
+              const timecode = this.readUnsignedInteger(this.padZeroes(chunk[1].data));
+              currentTimecode = timecode;
+            }
+            if (chunk[1].name === 'BlockDuration' && trackIndex !== -1) {
+              // the duration is in milliseconds
+              const duration = this.readUnsignedInteger(this.padZeroes(chunk[1].data));
+              trackData[trackIndex].push(duration);
+            }
+            break;
+          default:
+            // do nothing
+        }
+        if (files[currentFile] && files[currentFile].name && files[currentFile].data && files[currentFile].size) {
+          currentFile++;
         }
       });
 
