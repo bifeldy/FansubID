@@ -67,9 +67,7 @@ export class MkvExtractService {
         const startTime = Date.now();
         this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`, null, 'error');
 
-        const fileStream = createReadStream(filePath, {
-          highWaterMark: 2 * 1024 * 1024
-        });
+        const fileStream = createReadStream(filePath);
         const decoder = new Decoder();
         const tracks = [];
         const trackData = [];
