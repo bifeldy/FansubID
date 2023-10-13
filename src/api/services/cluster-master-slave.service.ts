@@ -52,7 +52,7 @@ export class ClusterMasterSlaveService {
         this.gs.log(`[MASTER_CRON_GET]`, data);
         try {
           const jobs = this.tcjs.getAll();
-          this.gs.log('[MASTER_CRON_GET_JOBS]', jobs);
+          this.gs.log('[MASTER_CRON_GET]', jobs);
           callback({ error: null, data: jobs });
         } catch (e) {
           callback({ error: e, data: null });
@@ -63,7 +63,7 @@ export class ClusterMasterSlaveService {
         this.gs.log(`[MASTER_CRON_PUT]`, data);
         try {
           const job = this.tcjs.getByIdKey(data);
-          this.gs.log('[MASTER_CRON_PUT_JOB]', job);
+          this.gs.log('[MASTER_CRON_PUT]', job);
           callback({ error: null, data: job });
         } catch (e) {
           callback({ error: e, data: null });
@@ -76,16 +76,6 @@ export class ClusterMasterSlaveService {
           const github = this.cfg.githubGet();
           this.gs.log('[MASTER_CFG_GITHUB_GET]', github);
           callback({ error: null, data: github });
-        } catch (e) {
-          callback({ error: e, data: null });
-        }
-      });
-
-      this.messages.on('CFG_STATS_SET', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_STATS_SET]`, data);
-        try {
-          this.cfg.statsServerSet(data);
-          callback({ error: null, data: null });
         } catch (e) {
           callback({ error: e, data: null });
         }
@@ -116,7 +106,7 @@ export class ClusterMasterSlaveService {
         this.gs.log(`[MASTER_CFG_SERVER_GET]`, data);
         try {
           const config = this.cfg.serverGet();
-          this.gs.log('[MASTER_CFG_SERVER_GET_CONFIG]', config);
+          this.gs.log('[MASTER_CFG_SERVER_GET]', config);
           callback({ error: null, data: config });
         } catch (e) {
           callback({ error: e, data: null });

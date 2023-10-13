@@ -3,6 +3,8 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AbortController } from 'abort-controller';
+import { setupMaster } from '@socket.io/sticky';
+import { setupPrimary } from '@socket.io/cluster-adapter';
 
 // NodeJS Library
 import cluster from 'node:cluster';
@@ -17,6 +19,7 @@ import { NestFactory } from '@nestjs/core';
 import { urlencoded, json, Request, Response, NextFunction } from 'express';
 
 import { SocketIoAdapter } from './adapters/socket-io.adapter';
+import { SocketIoClusterAdapter } from './adapters/socket-io-cluster.adapter';
 
 import { AppModule } from './app.module';
 
@@ -60,7 +63,6 @@ export async function app(): Promise<INestApplication> {
   nestApp.use(json({ limit: '128mb' }));
   nestApp.use(urlencoded({ extended: false, limit: '128mb' }));
   nestApp.enableCors(aks.getCorsOptions());
-  nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
   nestApp.use((req: Request, res: Response, next: NextFunction) => {
     const timeStart = new Date();
     res.locals['abort-controller'] = new AbortController();
@@ -106,6 +108,13 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
         if (cluster.isMaster) {
           (await ctx()).get(ClusterMasterSlaveService).masterHandleMessages();
           gs.log('[APP_MASTER_PID] 💻', process.pid);
+          setupMaster(nestApp.getHttpServer(), {
+            loadBalancingMethod: 'least-connection'
+          });
+          setupPrimary();
+          cluster.setupMaster({
+            serialization: 'advanced'
+          });
           for (let i = 0; i < numCPUs - 1 /* 1 Master CPU */ ; i++) {
             const worker = cluster.fork();
             gs.log(`[WORKER_${i}] Spawned`, worker.id);
@@ -121,16 +130,19 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
             gs.log(`${msg} Re-Spawned`, wrkr.id);
           });
         } else {
+          gs.log('[APP_SLAVE_PID] 👀', process.pid);
+          nestApp.useWebSocketAdapter(new SocketIoClusterAdapter(nestApp));
           nestApp.listen(port, async () => {
-            gs.log('[APP_SLAVE_PID] 👀', process.pid);
+            gs.log(`[APP_SERVER] 💻 Running on => ${process.cwd()} 💘`, cluster.worker.id);
           });
         }
       } catch (e) {
         gs.log('[APP_WORKER] 💢', e, 'error');
       }
     } else {
+      nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
       nestApp.listen(port, async () => {
-        gs.log('[APP_BOOTSTRAP_PID] 💘', process.pid);
+        gs.log(`[APP_SERVER] 💻 Running on => ${process.cwd()} 💘`, await nestApp.getUrl());
       });
     }
   }).catch(err => console.error('[APP_CONTEXT] 💣', err));

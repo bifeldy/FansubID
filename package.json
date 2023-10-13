@@ -61,6 +61,8 @@
     "@nestjs/typeorm": "^8.0.3",
     "@nestjs/websockets": "^8.4.4",
     "@nguniversal/express-engine": "^14.0.0",
+    "@socket.io/cluster-adapter": "^0.2.2",
+    "@socket.io/sticky": "^1.0.4",
     "@types/morgan": "^1.9.3",
     "@uploadx/core": "^6.0.0",
     "abort-controller": "^3.0.0",
