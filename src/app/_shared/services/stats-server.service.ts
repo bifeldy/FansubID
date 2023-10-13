@@ -137,6 +137,9 @@ export class StatsServerService {
       if ('github' in response && response.github) {
         this.github = response.github;
       }
+      if ('visitor' in response && response.visitor) {
+        this.visitor = response.visitor;
+      }
       if ('server' in response && response.server) {
         this.currentServerSubject.next(response.server);
       }
@@ -184,9 +187,9 @@ export class StatsServerService {
       this.pingPong();
       this.sw.checkForUpdate();
     });
-    this.mySocket.on('visitors', visitors => {
-      this.gs.log('[SOCKET_VISITOR]', this.visitor);
-      this.visitor = visitors;
+    this.mySocket.on('visitor', vstr => {
+      this.gs.log('[SOCKET_VISITOR]', vstr);
+      this.visitor = vstr;
     });
     this.mySocket.on('console-log', log => {
       this.gs.log('[SOCKET_CONSOLE_LOG]', log);

@@ -1,3 +1,6 @@
+// NodeJS Library
+import cluster from 'node:cluster';
+
 import { Injectable } from '@nestjs/common';
 import { WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
@@ -13,6 +16,8 @@ import { ApiKeyService } from '../repository/api-key.service';
 import { ProfileService } from '../repository/profile.service';
 import { UserService } from '../repository/user.service';
 
+import { ClusterMasterSlaveService } from './cluster-master-slave.service';
+import { ConfigService } from './config.service';
 import { CryptoService } from './crypto.service';
 import { GlobalService } from './global.service';
 import { QuizService } from './quiz.service';
@@ -23,10 +28,10 @@ export class SocketIoService {
   @WebSocketServer()
   io: Server;
 
-  rooms: RoomModel = {};
-
   constructor(
-    private cs:CryptoService,
+    private cms: ClusterMasterSlaveService,
+    private cfg: ConfigService,
+    private cs: CryptoService,
     private gs: GlobalService,
     private aks: ApiKeyService,
     private profileRepo: ProfileService,
@@ -46,84 +51,124 @@ export class SocketIoService {
     return this.io.emit(key, data);
   }
 
-  emitToRoomOrId(socketOrRoomId: string, key: string, data: any, callback = null): boolean {
+  async emitToRoomOrId(socketOrRoomId: string, key: string, data: any, callback = null): Promise<boolean> {
     this.gs.log('[SOCKET_IO_SERVICE-EMIT_PRIVATE] 📢', { socketOrRoomId, key, data });
     if (callback) {
-      return this.getClientSocket(socketOrRoomId)?.emit(key, data, callback);
+      return (await this.getClientSocket(socketOrRoomId))?.emit(key, data, callback);
     }
     return this.io.to(socketOrRoomId).emit(key, data);
   }
 
-  getAllClientsSocket(): Map<string, Socket> {
-    const allClients = this.io?.sockets?.sockets;
-    this.gs.log('[SOCKET_IO_SERVICE-GET_ALL_CLIENT_SOCKET] 📢', allClients?.size);
-    return allClients;
+  async getAllClientsSocket(roomId = CONSTANTS.socketRoomNameGlobalPublic): Promise<any[]> {
+    const sockets = await this.io?.in(roomId).fetchSockets();
+    this.gs.log('[SOCKET_IO_SERVICE-GET_ALL_CLIENT_SOCKET] 📢', sockets.length);
+    return sockets;
   }
 
-  getClientSocket(socketId: string): Socket {
-    const socket = this.getAllClientsSocket()?.get(socketId);
-    this.gs.log('[SOCKET_IO_SERVICE-GET_CLIENT_SOCKET] 📢', socket?.id);
-    return socket;
+  async getClientSocket(socketId: string): Promise<any> {
+    const sockets = await this.io?.in(socketId).fetchSockets();
+    if (sockets.length === 1) {
+      const sckt = sockets[0];
+      this.gs.log('[SOCKET_IO_SERVICE-GET_CLIENT_SOCKET] 📢', sckt.id);
+      return sckt;
+    }
+    return null;
   }
 
   /** */
 
-  getRoomInfo(roomId: string): RoomInfoModel {
+  async cfgRoomSocketGetAll(): Promise<RoomModel> {
+    if (cluster.isMaster) {
+      return this.cfg.roomSocketGetAll();
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_ROOM_SOCKET_GET_ALL', null);
+    }
+  }
+
+  async cfgRoomSocketGetRoom(roomId: string): Promise<any> {
+    if (cluster.isMaster) {
+      return this.cfg.roomSocketGetRoom(roomId);
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_ROOM_SOCKET_GET_ROOM', roomId);
+    }
+  }
+
+  async cfgRoomSocketGetUser(roomId: string, socketId: string): Promise<UserModel> {
+    if (cluster.isMaster) {
+      return this.cfg.roomSocketGetUser(roomId, socketId);
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_ROOM_SOCKET_GET_USER', { roomId, socketId });
+    }
+  }
+
+  async cfgRoomSocketRemoveUser(roomId: string, socketId: string): Promise<void> {
+    if (cluster.isMaster) {
+      this.cfg.roomSocketRemoveUser(roomId, socketId);
+    } else {
+      await this.cms.sendMessageToMaster('CFG_ROOM_SOCKET_REMOVE_USER', { roomId, socketId });
+    }
+  }
+
+  async cfgRoomSocketAddOrUpdateUser(roomId: string, socketId: string, user: UserModel): Promise<void> {
+    if (cluster.isMaster) {
+      this.cfg.roomSocketAddOrUpdateUser(roomId, socketId, user);
+    } else {
+      await this.cms.sendMessageToMaster('CFG_ROOM_SOCKET_ADD_OR_UPDATE_USER', { roomId, socketId, user });
+    }
+  }
+
+  /** */
+
+  async getRoomInfo(roomId: string): Promise<RoomInfoModel> {
     return {
       room_id: roomId,
-      member_list: this.rooms[roomId],
-      socket_count: this.io.sockets.adapter.rooms.get(roomId)?.size || 0
+      member_list: await this.cfgRoomSocketGetRoom(roomId),
+      socket_count: (await this.getAllClientsSocket(roomId)).length
     };
   }
 
-  checkMultipleConnection(socket: Socket, data: RoomInfoInOutModel): void {
+  async checkMultipleConnection(socket: Socket, data: RoomInfoInOutModel): Promise<void> {
     if (data.user) {
       const multipleSocketId = [];
-      for (const socketId of Object.keys(this.rooms[CONSTANTS.socketRoomNameGlobalPublic])) {
-        if (
-          socketId !== socket.id && this.rooms[CONSTANTS.socketRoomNameGlobalPublic][socketId] &&
-          this.rooms[CONSTANTS.socketRoomNameGlobalPublic][socketId].username === data.user.username
-        ) {
+      for (const socketId of Object.keys(await this.cfgRoomSocketGetRoom(CONSTANTS.socketRoomNameGlobalPublic))) {
+        const userRoom = await this.cfgRoomSocketGetUser(CONSTANTS.socketRoomNameGlobalPublic, socketId);
+        if (socketId !== socket.id && userRoom && userRoom.username === data.user.username) {
           multipleSocketId.push(socketId);
         }
       }
       for (const id of multipleSocketId) {
-        this.emitToRoomOrId(id, 'multiple-connection', [...multipleSocketId, socket.id], () => {
-          this.getClientSocket(id)?.disconnect(true);
+        await this.emitToRoomOrId(id, 'multiple-connection', [...multipleSocketId, socket.id], async () => {
+          (await this.getClientSocket(id))?.disconnect(true);
         });
       }
     }
   }
 
-  disconnectRoom(socket: Socket) {
-    for (const roomId of Object.keys(this.rooms)) {
+  async disconnectRoom(socket: Socket): Promise<void> {
+    for (const roomId of Object.keys(await this.cfgRoomSocketGetAll())) {
       this.leaveRoom(socket, { oldRoom: roomId });
     }
   }
 
   async leaveRoom(socket: Socket, data: RoomInfoInOutModel): Promise<void> {
     if (data.oldRoom) {
-      if (!this.rooms[data.oldRoom]) {
-        this.rooms[data.oldRoom] = {};
+      await this.cfgRoomSocketRemoveUser(data.oldRoom, socket.id);
+      for (const r of Object.keys(await this.cfgRoomSocketGetAll())) {
+        try {
+          await socket.leave(r);
+        } catch (err) {
+          this.gs.log('[SOCKET_IO-LEAVE_ROOM] 📢', err, 'error');
+        }
       }
-      try {
-        await socket.leave(data.oldRoom);
-        delete this.rooms[data.oldRoom][socket.id];
-      } catch (err) {
-        this.gs.log('[SOCKET_IO-LEAVE_ROOM] 📢', err, 'error');
-      }
-      this.emitToRoomOrId(data.oldRoom, 'room-info', this.getRoomInfo(data.oldRoom));
+      await this.emitToRoomOrId(data.oldRoom, 'room-info', await this.getRoomInfo(data.oldRoom));
     }
   }
 
   async joinOrUpdateRoom(socket: Socket, data: RoomInfoInOutModel): Promise<void> {
     if (data.newRoom) {
-      if (!this.rooms[data.newRoom]) {
-        this.rooms[data.newRoom] = {};
-      }
+      await this.cfgRoomSocketAddOrUpdateUser(data.newRoom, socket.id, data.user);
       try {
         await socket.join(data.newRoom);
-        this.rooms[data.newRoom][socket.id] = data.user;
       } catch (err) {
         this.gs.log('[SOCKET_IO-JOIN_UPDATE_ROOM] 📢', err, 'error');
       }
@@ -155,7 +200,7 @@ export class SocketIoService {
           });
         }
       }
-      this.emitToRoomOrId(data.newRoom, 'room-info', this.getRoomInfo(data.newRoom));
+      await this.emitToRoomOrId(data.newRoom, 'room-info', await this.getRoomInfo(data.newRoom));
     }
   }
 
@@ -176,7 +221,9 @@ export class SocketIoService {
     const resSaveProfile = await this.profileRepo.save(selectedProfile);
     delete resSaveProfile.description;
     delete resSaveProfile.updated_at;
-    this.rooms[data.roomId][socket.id].profile_ = resSaveProfile;
+    const userRoom = await this.cfgRoomSocketGetUser(data.roomId, socket.id);
+    userRoom.profile_ = resSaveProfile;
+    await this.cfgRoomSocketAddOrUpdateUser(data.roomId, socket.id, userRoom);
     return points;
   }
 
@@ -201,7 +248,9 @@ export class SocketIoService {
       const resSaveProfile = await this.profileRepo.save(selectedProfile);
       delete resSaveProfile.description;
       delete resSaveProfile.updated_at;
-      this.rooms[data.roomId][socket.id].profile_ = resSaveProfile;
+      const userRoom = await this.cfgRoomSocketGetUser(data.roomId, socket.id);
+      userRoom.profile_ = resSaveProfile;
+      await this.cfgRoomSocketAddOrUpdateUser(data.roomId, socket.id, userRoom);
     }
     return (points * -1);
   }

@@ -38,6 +38,7 @@ export interface ServerInfoModel {
 
 export interface PingPongModel {
   github?: object;
+  visitor?: number;
   server?: ServerInfoModel;
 }
 

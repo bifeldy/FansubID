@@ -28,6 +28,8 @@ import { UserService } from '../repository/user.service';
 @WebSocketGateway()
 export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
+  timeOutVisitor = null;
+
   constructor(
     private cms: ClusterMasterSlaveService,
     private cfg: ConfigService,
@@ -51,16 +53,28 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
   handleConnection(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_CONNECTED] 🌟', client.id);
-    this.sis.emitToBroadcast('visitors', this.sis.getAllClientsSocket()?.size || 0);
     this.sis.checkNewNotification(client);
-    this.ts.updateVisitor();
+    if (this.timeOutVisitor) {
+      clearTimeout(this.timeOutVisitor);
+    }
+    this.timeOutVisitor = setTimeout(async () => {
+      const totalSockets = (await this.sis.getAllClientsSocket()).length;
+      this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
+      this.sis.emitToBroadcast('visitor', totalSockets);
+    }, 5 * 1000);
   }
 
   handleDisconnect(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_DISCONNECTED] 🌟', client.id);
-    this.sis.emitToBroadcast('visitors', this.sis.getAllClientsSocket()?.size || 0);
-    this.sis.disconnectRoom(client);
-    this.ts.updateVisitor();
+    if (this.timeOutVisitor) {
+      clearTimeout(this.timeOutVisitor);
+    }
+    this.timeOutVisitor = setTimeout(async () => {
+      await this.sis.disconnectRoom(client);
+      const totalSockets = (await this.sis.getAllClientsSocket()).length;
+      this.sis.emitToBroadcast('visitor', totalSockets);
+      this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
+    }, 5 * 1000);
   }
 
   /** */
@@ -89,23 +103,29 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     }
   }
 
+  async cfgStatsServerGet(): Promise<any> {
+    if (cluster.isMaster) {
+      return this.cfg.statsServerGet();
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_STATS_GET', null);
+    }
+  }
+
   /** */
 
   @SubscribeMessage('ping-pong')
   async pingPong(client: Socket, payload: PayloadModel): Promise<PingPongModel> {
+    this.gs.log('[WS_PING_PONG] PID :: WID 🌟', `${process.pid} :: ${cluster.worker.id}`);
     return {
       github: this.cfgGithubGet(),
+      visitor: (await this.sis.getAllClientsSocket()).length,
       server: await this.cfgServerGet()
     };
   }
 
   @SubscribeMessage('stats-server')
   async statsServer(client: Socket, payload: PayloadModel): Promise<StatsServerModel> {
-    if (cluster.isMaster) {
-      return this.cfg.statsServerGet();
-    } else {
-      return await this.cms.sendMessageToMaster('CFG_STATS_GET', null);
-    }
+    return await this.cfgStatsServerGet();
   }
 
   @SubscribeMessage('server-set')
@@ -333,7 +353,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       await this.sis.leaveRoom(client, payload);
       await this.sis.joinOrUpdateRoom(client, payload);
       await this.sis.joinOrUpdateRoom(client, { user: payload.user, newRoom: CONSTANTS.socketRoomNameGlobalPublic });
-      this.sis.checkMultipleConnection(client, payload);
+      await this.sis.checkMultipleConnection(client, payload);
       if (payload.user) {
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR || payload.user.role === RoleModel.FANSUBBER) {
           if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR){
@@ -348,9 +368,9 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   }
 
   @SubscribeMessage('room-info')
-  roomInfo(client: Socket, payload: PayloadModel): RoomInfoModel | void {
+  async roomInfo(client: Socket, payload: PayloadModel): Promise<void | RoomInfoModel> {
     if (payload.roomId) {
-      return this.sis.getRoomInfo(payload.roomId);
+      return await this.sis.getRoomInfo(payload.roomId);
     }
   }
 
@@ -361,11 +381,9 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       if (payload.user) {
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
           const multipleSocketId = [];
-          for (const socketId of Object.keys(this.sis.rooms[CONSTANTS.socketRoomNameGlobalPublic])) {
-            if (
-              socketId !== client.id && this.sis.rooms[CONSTANTS.socketRoomNameGlobalPublic][socketId] &&
-              this.sis.rooms[CONSTANTS.socketRoomNameGlobalPublic][socketId].username === payload.username
-            ) {
+          for (const socketId of Object.keys(await this.sis.cfgRoomSocketGetRoom(CONSTANTS.socketRoomNameGlobalPublic))) {
+            const userRoom = await this.sis.cfgRoomSocketGetUser(CONSTANTS.socketRoomNameGlobalPublic, socketId);
+            if (socketId !== client.id && userRoom && userRoom.username === payload.username) {
               multipleSocketId.push(socketId);
             }
           }
@@ -390,13 +408,13 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
           message: payload.message
         };
         if (payload.roomId === CONSTANTS.socketRoomNameGlobalPublic) {
-          this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameGlobalPublic, 'receive-chat', chatData);
+          await this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameGlobalPublic, 'receive-chat', chatData);
         } else if (payload.roomId === CONSTANTS.socketRoomNameGlobalFansub) {
           if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR || payload.user.role === RoleModel.FANSUBBER) {
-            this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameGlobalFansub, 'receive-chat', chatData);
+            await this.sis.emitToRoomOrId(CONSTANTS.socketRoomNameGlobalFansub, 'receive-chat', chatData);
           }
         } else {
-          this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', chatData);
+          await this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', chatData);
         }
       }
     } catch (error) {
@@ -421,25 +439,25 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
             try {
               await this.qs.getNewQuestion(payload.roomId);
             } catch (err) {
-              this.sis.emitToRoomOrId(payload.roomId, 'force-redirect', {
+              await this.sis.emitToRoomOrId(payload.roomId, 'force-redirect', {
                 title: 'Terjadi Kesalahan',
                 message: 'Kuis Tidak Tersedia',
                 url: '/nihongo'
               });
               throw err;
             }
-            this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', {
+            await this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', {
               room_id: payload.roomId,
               sender: {
                 username: `[📢-LOG]`
               },
               message: `'${payload.user.username}' Menjawab ${answer > 0 ? 'Benar ' : 'Salah '} (${answer})`
             });
-            this.sis.emitToRoomOrId(payload.roomId, 'quiz-question', {
+            await this.sis.emitToRoomOrId(payload.roomId, 'quiz-question', {
               room_id: payload.roomId,
               ...this.qs.quiz[payload.roomId]
             });
-            this.sis.emitToRoomOrId(payload.roomId, 'room-info', this.sis.getRoomInfo(payload.roomId));
+            await this.sis.emitToRoomOrId(payload.roomId, 'room-info', await this.sis.getRoomInfo(payload.roomId));
           }
         }
       }

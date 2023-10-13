@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { ServerInfoModel, StatsServerModel } from '../../models/socket-io.model';
+import { RoomModel, ServerInfoModel, StatsServerModel } from '../../models/socket-io.model';
+import { UserModel } from '../../models/req-res.model';
 
 @Injectable()
 export class ConfigService {
@@ -33,6 +34,8 @@ export class ConfigService {
     discordNotification: true,
     openForRegister: true
   }
+
+  private room_socket: RoomModel = {};
 
   constructor(
     //
@@ -85,6 +88,35 @@ export class ConfigService {
 
   serverGetOpenForRegister(): boolean {
     return this.serverGet().openForRegister;
+  }
+
+  roomSocketGetAll(): RoomModel {
+    return this.room_socket;
+  }
+
+  roomSocketGetRoom(roomId: string): any {
+    return this.room_socket[roomId];
+  }
+
+  roomSocketGetUser(roomId: string, socketId: string): UserModel {
+    if (!this.room_socket[roomId]) {
+      this.room_socket[roomId] = {};
+    }
+    return this.room_socket[roomId][socketId];
+  }
+
+  roomSocketRemoveUser(roomId: string, socketId: string): void {
+    if (!this.room_socket[roomId]) {
+      this.room_socket[roomId] = {};
+    }
+    delete this.room_socket[roomId][socketId];
+  }
+
+  roomSocketAddOrUpdateUser(roomId: string, socketId: string, user: UserModel): void {
+    if (!this.room_socket[roomId]) {
+      this.room_socket[roomId] = {};
+    }
+    this.room_socket[roomId][socketId] = user;
   }
 
 }

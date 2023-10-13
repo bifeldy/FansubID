@@ -11,7 +11,6 @@ import { environment } from '../../environments/api/environment';
 
 import { ApiService } from '../services/api.service';
 import { GlobalService } from '../services/global.service';
-import { SocketIoService } from '../services/socket-io.service';
 import { DiscordService } from '../services/discord.service';
 
 @Injectable()
@@ -32,26 +31,23 @@ export class TrackerStatisticsService {
   constructor(
     private sr: SchedulerRegistry,
     private gs: GlobalService,
-    private sis: SocketIoService,
     private api: ApiService,
     private ds: DiscordService
   ) {
     //
   }
 
-  updateVisitor(): void {
-    if (this.ds && this.sis) {
-      this.ds.bot?.user?.setPresence({
-        status: 'idle',
-        activities: [
-          {
-            name: `:: 🏃‍♂️ ${this.sis.getAllClientsSocket()?.size || 0} • 🔗 ${this.torrentTracker?.peersAll || 0}`,
-            type: 'WATCHING',
-            url: environment.baseUrl
-          }
-        ]
-      });
-    }
+  updateVisitor(discordBotStatus: string): void {
+    this.ds.bot?.user?.setPresence({
+      status: 'idle',
+      activities: [
+        {
+          name: `:: ${discordBotStatus}`,
+          type: 'WATCHING',
+          url: environment.baseUrl
+        }
+      ]
+    });
   }
 
   @Cron(
@@ -72,7 +68,7 @@ export class TrackerStatisticsService {
           ...environment.nodeJsXhrHeader
         });
         this.torrentTracker = await res_raw.json();
-        this.updateVisitor();
+        this.updateVisitor(`🔗 ${this.torrentTracker?.peersAll || 0} Peers`);
       } catch (error) {
         this.gs.log('[CRON_TASK_TRACKER_STATISTICS-ERROR] 🐾', error, 'error');
       }

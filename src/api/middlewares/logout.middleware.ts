@@ -30,9 +30,9 @@ export class LogoutMiddleware implements NestMiddleware {
       await this.userRepo.save(user as User);
       const socketId = (req.headers['x-socket-id'] || '').toString();
       if (socketId) {
-        const socket = this.sis.getClientSocket(socketId);
+        const socket = await this.sis.getClientSocket(socketId);
         if (socket) {
-          this.sis.disconnectRoom(socket);
+          await this.sis.disconnectRoom(socket);
         }
       }
       res.cookie(environment.tokenName, 'TOKEN_EXPIRED', {

@@ -135,6 +135,59 @@ export class ClusterMasterSlaveService {
         }
       });
 
+      this.messages.on('CFG_ROOM_SOCKET_GET_ALL', (data, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_ALL]`, data);
+        try {
+          const rooms = this.cfg.roomSocketGetAll();
+          this.gs.log('[MASTER_CFG_ROOM_SOCKET_GET_ALL]', rooms);
+          callback({ error: null, data: rooms });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
+      this.messages.on('CFG_ROOM_SOCKET_GET_ROOM', (data, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_ROOM]`, data);
+        try {
+          const room = this.cfg.roomSocketGetRoom(data);
+          this.gs.log('[MASTER_CFG_ROOM_SOCKET_GET_ROOM]', room);
+          callback({ error: null, data: room });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
+      this.messages.on('CFG_ROOM_SOCKET_GET_USER', (data, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_USER]`, data);
+        try {
+          const user = this.cfg.roomSocketGetUser(data.roomId, data.socketId);
+          this.gs.log('[MASTER_CFG_ROOM_SOCKET_GET_USER]', user);
+          callback({ error: null, data: user });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
+      this.messages.on('CFG_ROOM_SOCKET_REMOVE_USER', (data, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_REMOVE_USER]`, data);
+        try {
+          this.cfg.roomSocketRemoveUser(data.roomId, data.socketId);
+          callback({ error: null, data: null });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
+      this.messages.on('CFG_ROOM_SOCKET_ADD_OR_UPDATE_USER', (data, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_ADD_OR_UPDATE_USER]`, data);
+        try {
+          this.cfg.roomSocketAddOrUpdateUser(data.roomId, data.socketId, data.user);
+          callback({ error: null, data: null });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
     }
   }
 

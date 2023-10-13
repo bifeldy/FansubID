@@ -69,11 +69,11 @@ export async function app(): Promise<INestApplication> {
     req.on('close', () => {
       res.locals['abort-controller'].abort();
     });
-    res.on('close', () => {
+    res.on('close', async () => {
       const clientOriginIpCc = aks.getOriginIpCc(req, true);
       const timeEnd = Date.now() - timeStart.getTime();
       const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
-      sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
+      await sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
     });
     return next();
   });
