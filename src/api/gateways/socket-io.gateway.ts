@@ -115,7 +115,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
   @SubscribeMessage('ping-pong')
   async pingPong(client: Socket, payload: PayloadModel): Promise<PingPongModel> {
-    this.gs.log('[WS_PING_PONG] PID :: WID 🌟', `${process.pid} :: ${cluster.worker.id}`);
+    this.gs.log('[SOCKET_IO_PING_PONG] PID :: WID 🌟', `${process.pid} :: ${cluster.worker.id}`);
     return {
       github: this.cfgGithubGet(),
       visitor: (await this.sis.getAllClientsSocket()).length,
