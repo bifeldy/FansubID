@@ -58,6 +58,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       clearTimeout(this.timeOutVisitor);
     }
     this.timeOutVisitor = setTimeout(async () => {
+      this.timeOutVisitor = null;
       const totalSockets = (await this.sis.getAllClientsSocket()).length;
       this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
       this.sis.emitToBroadcast('visitor', totalSockets);
@@ -70,6 +71,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       clearTimeout(this.timeOutVisitor);
     }
     this.timeOutVisitor = setTimeout(async () => {
+      this.timeOutVisitor = null;
       await this.sis.disconnectRoom(client);
       const totalSockets = (await this.sis.getAllClientsSocket()).length;
       this.sis.emitToBroadcast('visitor', totalSockets);
