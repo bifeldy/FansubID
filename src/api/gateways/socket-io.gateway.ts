@@ -434,15 +434,11 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       if (payload.user) {
         const check1 = await this.qs.cfgQuizRoomShowQuestion(payload.roomId);
         if (check1) {
-            console.log('MUTEX_LOCK-PAYLOAD', payload);
-            console.log('MUTEX_LOCK-CHECK1', check1);
           if (check1.randomInteger === payload.randomInteger) {
-            console.log('MUTEX_LOCK-START');
             const _mutex = await Mutex.acquire(payload.roomId);
-            console.log('MUTEX_LOCK-INSIDE', _mutex);
+            this.gs.log('[SOCKET_IO_QUIZ_MUTEX_LOCK-INFO] 🌟', _mutex);
             try {
               const check2 = await this.qs.cfgQuizRoomShowQuestion(payload.roomId);
-              console.log('MUTEX_LOCK-CHECK2', check2);
               if (check2.randomInteger === payload.randomInteger) {
                 let answer = 0;
                 if (Object.entries(check2.question).toString() === Object.entries(payload.answer).toString()) {
@@ -464,7 +460,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
                 await this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', {
                   room_id: payload.roomId,
                   sender: {
-                    username: `[📢-LOG]`
+                    username: '[📢-LOG]'
                   },
                   message: `'${payload.user.username}' Menjawab ${answer > 0 ? 'Benar ' : 'Salah '} (${answer})`
                 });
@@ -478,7 +474,6 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
               this.gs.log('[SOCKET_IO_QUIZ_MUTEX_LOCK-ERROR] 🌟', e, 'error');
             }
             _mutex.release();
-            console.log('MUTEX_LOCK-END');
           }
         }
       }
