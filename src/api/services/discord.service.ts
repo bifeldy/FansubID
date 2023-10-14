@@ -304,7 +304,16 @@ export class DiscordService {
       const res_raw = await this.api.getData(url, environment.nodeJsXhrHeader);
       if (res_raw.ok) {
         const gh: any = await res_raw.json();
-        await this.cfgGithubSet(gh[0]);
+        const data = {
+          sha: gh[0]?.sha,
+          commit: {
+            author: {
+              date: gh[0]?.commit?.author?.date
+            },
+            message: gh[0]?.commit?.message
+          }
+        };
+        await this.cfgGithubSet(data);
         const botGuild = this.bot ? this.bot.guilds.cache.get(environment.discord.guild_id) : null;
         if (botGuild) {
           const botMember = botGuild.members.cache.get(this.bot.user.id);
