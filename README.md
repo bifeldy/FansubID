@@ -5,7 +5,15 @@ Proyek ini awalnya dibuat menggunakan [Angular CLI](https://github.com/angular/a
 
 > Ayo gabung di saluran kanal Discord kita! <br /> [![Chat on Discord](https://discordapp.com/api/guilds/342220398022098944/widget.png "Chat on Discord")](https://discord.gg/xGWdExk)
 
-![](src/assets/img/fansub-banner.png)
+![](src/assets/img/banner/fansub.png)
+
+## NodeJS *Cluster* :: *Multi CPU(s) Worker* ~
+
+- [x] Sudah mendukung untuk berjalan di banyak CPU [*Master* & *Slave(s)*]
+- [x] NestJS Cron / *Task Scheduler* jalan di Cluster Master saja (Tanpa *Listen* HTTP)
+- [x] Komunikasi via *Inter Process Communication* [IPC]
+- [x] Web Socket [Socket.IO] *Event Broadcast* antar *Cluster*
+- [x] *Mutual Exclusion* [Mutex] *Lock* antar *Cluster*
 
 ----
 
@@ -17,18 +25,17 @@ $ sudo apt install -y libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 libxi-d
 
 ## *Build & Run*
 
-* Buat salinan `secret.example.json` dengan nama `secret.json`. <br />
+1. Buat salinan `secret.example.json` dengan nama `secret.json`. <br />
   Lengkapi data untuk *configurasi environment*.
 
-* Jalankan `npm run bifeldy:dev` untuk *serve* SSR dalam *development mode*. <br />
+2. Jalankan `npm run bifeldy:dev` untuk *serve* SSR dalam *development mode*. <br />
   Lalu buka situs di `http://localhost:4200` portnya dapat dilihat pada terminal.
   
-* Untuk perintah lainnya, misalnya `npm run bifeldy:lint` dapat dilihat pada berkas [package.json](package.json)
+3. Untuk perintah lainnya, misalnya `npm run bifeldy:lint` dapat dilihat pada berkas [package.json](package.json)
 
 ## Bantuan lebih lanjut
 
 * Angular CLI menggunakan `ng help` atau kunjungi [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).  <br />
-
 * NestJS menggunakan `nest --help` atau kunjungi [NestJS README](https://github.com/nestjs/nest/blob/master/Readme.md).
 
 ## Lisensi
