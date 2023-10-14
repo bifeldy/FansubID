@@ -1,25 +1,50 @@
+// NodeJS Library
+import cluster from 'node:cluster';
+
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
-import { QuizCategoryModel, QuizHirakataModel, QuizKanjiModel, QuizRoom } from '../../models/quiz.model';
+import { QuizCategoryModel, QuizHirakataModel, QuizKanjiModel, QuizModel } from '../../models/quiz.model';
 import { RoomInfoInOutModel } from '../../models/socket-io.model';
 
+import { ConfigService } from './config.service';
+import { ClusterMasterSlaveService } from './cluster-master-slave.service';
 import { GlobalService } from './global.service';
 
 @Injectable()
 export class QuizService {
 
-  quiz: QuizRoom = {};
+  // private quiz: QuizRoom = {};
 
   constructor(
     @InjectEntityManager() private manager: EntityManager,
+    private cms: ClusterMasterSlaveService,
+    private cfg: ConfigService,
     private gs: GlobalService
   ) {
     //
   }
+
+  async cfgQuizRoomShowQuestion(roomId: string): Promise<QuizModel<any>> {
+    if (cluster.isMaster) {
+      return this.cfg.quizRoomShowQuestion(roomId);
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_ROOM_SHOW_QUESTION', roomId);
+    }
+  }
+
+  async cfgQuizRoomCreateQuestion(roomId: string, question: QuizModel<any>): Promise<QuizModel<any>> {
+    if (cluster.isMaster) {
+      return this.cfg.quizRoomCreateQuestion(roomId, question);
+    } else {
+      return await this.cms.sendMessageToMaster('CFG_ROOM_CREATE_QUESTION', { roomId, question });
+    }
+  }
+
+  /** */
   
   getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);
@@ -93,7 +118,6 @@ export class QuizService {
       const randomInteger = this.getRandomInt(0, hirakatas.length - 1);
       return {
         randomInteger,
-        isAnswering: false,
         question: hirakatas[randomInteger],
         options: hirakatas
       };
@@ -162,7 +186,6 @@ export class QuizService {
       const randomInteger = this.getRandomInt(0, nihongo.length - 1);
       return {
         randomInteger,
-        isAnswering: false,
         question: nihongo[randomInteger],
         options: nihongo
       };
@@ -244,7 +267,6 @@ export class QuizService {
       const randomInteger = this.getRandomInt(0, kanjis.length - 1);
       return {
         randomInteger,
-        isAnswering: false,
         question: kanjis[randomInteger],
         options: kanjis
       };
@@ -254,18 +276,15 @@ export class QuizService {
     }
   }
 
-  async getNewQuestion(roomId: string) {
+  async getNewQuestion(roomId: string): Promise<QuizModel<any>> {
     switch (roomId) {
       case '/nihongo/hiragana':
       case '/nihongo/katakana':
-        this.quiz[roomId] = await this.getQuizHirakata();
-        return;
+        return await this.cfgQuizRoomCreateQuestion(roomId, await this.getQuizHirakata());
       case '/nihongo/kelas-lanjutan-2':
-        this.quiz[roomId] = await this.getQuizKanji('9', null);
-        return;
+        return await this.cfgQuizRoomCreateQuestion(roomId, await this.getQuizKanji('9', null));
       case '/nihongo/kelas-lanjutan-1':
-        this.quiz[roomId] = await this.getQuizKanji('8', null);
-        return;
+        return await this.cfgQuizRoomCreateQuestion(roomId, await this.getQuizKanji('8', null));
       case '/nihongo/kelas-6':
       case '/nihongo/kelas-5':
       case '/nihongo/kelas-4':
@@ -273,35 +292,32 @@ export class QuizService {
       case '/nihongo/kelas-2':
       case '/nihongo/kelas-1':
         const schoolLevel = roomId.split('-').pop()[0];
-        this.quiz[roomId] = await this.getQuizKanji(schoolLevel, null);
-        return;
+        return await this.cfgQuizRoomCreateQuestion(roomId, await this.getQuizKanji(schoolLevel, null));
       case '/nihongo/jlpt-n5':
       case '/nihongo/jlpt-n4':
       case '/nihongo/jlpt-n3':
       case '/nihongo/jlpt-n2':
       case '/nihongo/jlpt-n1':
         const jlptLevel = roomId.split('-').pop()[1];
-        this.quiz[roomId] = await this.getQuizKanji(null, jlptLevel);
-        return;
+        return await this.cfgQuizRoomCreateQuestion(roomId, await this.getQuizKanji(null, jlptLevel));
       case '/nihongo/semua-kanji':
-        this.quiz[roomId] = await this.getQuizKanji(null, null);
-        return;
+        return await this.cfgQuizRoomCreateQuestion(roomId, await this.getQuizKanji(null, null));
       default:
         if (roomId.startsWith('/nihongo/latihan-')) {
           const categoryUrl = roomId.split('-').pop();
           const categoryDb = await this.manager.query(`SELECT DISTINCT category FROM nihongo`);
           const availableCategory: string[] = categoryDb.map(c => c.category);
           if (availableCategory.includes(categoryUrl)) {
-            this.quiz[roomId] = await this.getQuizCategory(categoryUrl);
-            return;
+            return this.cfgQuizRoomCreateQuestion(roomId, await this.getQuizCategory(categoryUrl));
           }
         }
         throw new Error('Kuis Tidak Tersedia!');
     }
   }
 
-  calculatePoints(data: RoomInfoInOutModel): number {
-    const question: any = this.quiz[data.roomId].question;
+  async calculatePoints(data: RoomInfoInOutModel): Promise<number> {
+    const quiz: QuizModel<any> = await this.cfgQuizRoomShowQuestion(data.roomId);
+    const question = quiz.question;
     let points = 1;
     if (question.jlpt === 0) {
       points = 64;

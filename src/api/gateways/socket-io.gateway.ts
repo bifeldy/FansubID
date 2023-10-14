@@ -1,3 +1,6 @@
+// 3rd Party Library
+import Mutex from 'standalone-mutex';
+
 // NodeJS Library
 import cluster from 'node:cluster';
 
@@ -117,7 +120,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
   @SubscribeMessage('ping-pong')
   async pingPong(client: Socket, payload: PayloadModel): Promise<PingPongModel> {
-    this.gs.log('[SOCKET_IO_PING_PONG] PID :: WID 🌟', `${process.pid} :: ${cluster.worker.id}`);
+    this.gs.log('[SOCKET_IO_PING_PONG] PID :: WID 🌟', `${process.pid} :: ${cluster.worker?.id || 0}`);
     return {
       github: this.cfgGithubGet(),
       visitor: (await this.sis.getAllClientsSocket()).length,
@@ -429,37 +432,53 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     try {
       await this.sis.checkUserLogin(client, payload);
       if (payload.user) {
-        if (this.qs.quiz[payload.roomId]) {
-          if (this.qs.quiz[payload.roomId].randomInteger === payload.randomInteger && !this.qs.quiz[payload.roomId].isAnswering) {
-            this.qs.quiz[payload.roomId].isAnswering = true;
-            let answer = 0;
-            if (Object.entries(this.qs.quiz[payload.roomId].question).toString() === Object.entries(payload.answer).toString()) {
-              answer = await this.sis.increasePlayerPoint(client, payload);
-            } else {
-              answer = await this.sis.decreasePlayerPoint(client, payload);
-            }
+        const check1 = await this.qs.cfgQuizRoomShowQuestion(payload.roomId);
+        if (check1) {
+            console.log('MUTEX_LOCK-PAYLOAD', payload);
+            console.log('MUTEX_LOCK-CHECK1', check1);
+          if (check1.randomInteger === payload.randomInteger) {
+            console.log('MUTEX_LOCK-START');
+            const _mutex = await Mutex.acquire(payload.roomId);
+            console.log('MUTEX_LOCK-INSIDE', _mutex);
             try {
-              await this.qs.getNewQuestion(payload.roomId);
-            } catch (err) {
-              await this.sis.emitToRoomOrId(payload.roomId, 'force-redirect', {
-                title: 'Terjadi Kesalahan',
-                message: 'Kuis Tidak Tersedia',
-                url: '/nihongo'
-              });
-              throw err;
+              const check2 = await this.qs.cfgQuizRoomShowQuestion(payload.roomId);
+              console.log('MUTEX_LOCK-CHECK2', check2);
+              if (check2.randomInteger === payload.randomInteger) {
+                let answer = 0;
+                if (Object.entries(check2.question).toString() === Object.entries(payload.answer).toString()) {
+                  answer = await this.sis.increasePlayerPoint(client, payload);
+                } else {
+                  answer = await this.sis.decreasePlayerPoint(client, payload);
+                }
+                let question = null;
+                try {
+                  question = await this.qs.getNewQuestion(payload.roomId);
+                } catch (err) {
+                  await this.sis.emitToRoomOrId(payload.roomId, 'force-redirect', {
+                    title: 'Terjadi Kesalahan',
+                    message: 'Kuis Tidak Tersedia',
+                    url: '/nihongo'
+                  });
+                  throw err;
+                }
+                await this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', {
+                  room_id: payload.roomId,
+                  sender: {
+                    username: `[📢-LOG]`
+                  },
+                  message: `'${payload.user.username}' Menjawab ${answer > 0 ? 'Benar ' : 'Salah '} (${answer})`
+                });
+                await this.sis.emitToRoomOrId(payload.roomId, 'quiz-question', {
+                  room_id: payload.roomId,
+                  ...question
+                });
+                await this.sis.emitToRoomOrId(payload.roomId, 'room-info', await this.sis.getRoomInfo(payload.roomId));
+              }
+            } catch (e) {
+              this.gs.log('[SOCKET_IO_QUIZ_MUTEX_LOCK-ERROR] 🌟', e, 'error');
             }
-            await this.sis.emitToRoomOrId(payload.roomId, 'receive-chat', {
-              room_id: payload.roomId,
-              sender: {
-                username: `[📢-LOG]`
-              },
-              message: `'${payload.user.username}' Menjawab ${answer > 0 ? 'Benar ' : 'Salah '} (${answer})`
-            });
-            await this.sis.emitToRoomOrId(payload.roomId, 'quiz-question', {
-              room_id: payload.roomId,
-              ...this.qs.quiz[payload.roomId]
-            });
-            await this.sis.emitToRoomOrId(payload.roomId, 'room-info', await this.sis.getRoomInfo(payload.roomId));
+            _mutex.release();
+            console.log('MUTEX_LOCK-END');
           }
         }
       }

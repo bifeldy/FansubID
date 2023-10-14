@@ -1,25 +1,17 @@
 import { HirakataModel, KanjiModel, NihongoModel } from "./req-res.model";
 
-export interface QuizModel {
+export interface QuizModel<T> {
   randomInteger: number;
-  isAnswering: boolean;
+  question: T;
+  options: T[];
 }
 
-export interface QuizHirakataModel extends QuizModel {
-  question: HirakataModel;
-  options: HirakataModel[];
-}
+export interface QuizHirakataModel extends QuizModel<HirakataModel> {}
 
-export interface QuizCategoryModel extends QuizModel {
-  question: NihongoModel;
-  options: NihongoModel[];
-}
+export interface QuizCategoryModel extends QuizModel<NihongoModel> {}
 
-export interface QuizKanjiModel extends QuizModel {
-  question: KanjiModel;
-  options: KanjiModel[];
-}
+export interface QuizKanjiModel extends QuizModel<KanjiModel> {}
 
 export interface QuizRoom {
-  [roomId: string]: QuizHirakataModel | QuizKanjiModel;
+  [roomId: string]: QuizModel<any>;
 }

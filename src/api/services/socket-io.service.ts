@@ -182,9 +182,10 @@ export class SocketIoService {
           data.newRoom.startsWith('/nihongo/jlpt') ||
           data.newRoom.startsWith('/nihongo/semua-kanji')
         ) {
-          if (!this.qs.quiz[data.newRoom]) {
+          let question = await this.qs.cfgQuizRoomShowQuestion(data.newRoom);
+          if (!question) {
             try {
-              await this.qs.getNewQuestion(data.newRoom);
+              question = await this.qs.getNewQuestion(data.newRoom);
             } catch (err) {
               socket.emit('force-redirect', {
                 title: 'Terjadi Kesalahan',
@@ -196,7 +197,7 @@ export class SocketIoService {
           }
           socket.emit('quiz-question', {
             room_id: data.newRoom,
-            ...this.qs.quiz[data.newRoom]
+            ...question
           });
         }
       }
@@ -216,7 +217,7 @@ export class SocketIoService {
         { id: Equal(selectedUser.profile_.id) }
       ]
     });
-    let points = this.qs.calculatePoints(data);
+    let points = await this.qs.calculatePoints(data);
     selectedProfile.points += points;
     const resSaveProfile = await this.profileRepo.save(selectedProfile);
     delete resSaveProfile.description;
@@ -239,7 +240,7 @@ export class SocketIoService {
         { id: Equal(selectedUser.profile_.id) }
       ]
     });
-    let points = this.qs.calculatePoints(data);
+    let points = await this.qs.calculatePoints(data);
     if (selectedProfile.points > 0) {
       selectedProfile.points += (points * -1);
       if (selectedProfile.points <= 0) {

@@ -48,8 +48,8 @@ export class ClusterMasterSlaveService {
   masterHandleMessages(): void {
     if (cluster.isMaster) {
 
-      this.messages.on('CRON_GET', (data, callback) => {
-        this.gs.log(`[MASTER_CRON_GET]`, data);
+      this.messages.on('CRON_GET', (_, callback) => {
+        this.gs.log(`[MASTER_CRON_GET]`, _);
         try {
           const jobs = this.tcjs.getAll();
           this.gs.log('[MASTER_CRON_GET]', jobs);
@@ -59,10 +59,10 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CRON_PUT', (data, callback) => {
-        this.gs.log(`[MASTER_CRON_PUT]`, data);
+      this.messages.on('CRON_PUT', (text, callback) => {
+        this.gs.log(`[MASTER_CRON_PUT]`, text);
         try {
-          const job = this.tcjs.getByIdKey(data);
+          const job = this.tcjs.getByIdKey(text);
           this.gs.log('[MASTER_CRON_PUT]', job);
           callback({ error: null, data: job });
         } catch (e) {
@@ -70,8 +70,8 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_GITHUB_GET', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_GITHUB_GET]`, data);
+      this.messages.on('CFG_GITHUB_GET', (_, callback) => {
+        this.gs.log(`[MASTER_CFG_GITHUB_GET]`, _);
         try {
           const github = this.cfg.githubGet();
           this.gs.log('[MASTER_CFG_GITHUB_GET]', github);
@@ -81,8 +81,8 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_STATS_GET', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_STATS_GET]`, data);
+      this.messages.on('CFG_STATS_GET', (_, callback) => {
+        this.gs.log(`[MASTER_CFG_STATS_GET]`, _);
         try {
           const stats = this.cfg.statsServerGet();
           this.gs.log('[MASTER_CFG_STATS_GET]', stats);
@@ -92,18 +92,18 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_SERVER_SET', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_SERVER_SET]`, data);
+      this.messages.on('CFG_SERVER_SET', (text, callback) => {
+        this.gs.log(`[MASTER_CFG_SERVER_SET]`, text);
         try {
-          this.cfg.serverSet(data);
+          this.cfg.serverSet(text);
           callback({ error: null, data: null });
         } catch (e) {
           callback({ error: e, data: null });
         }
       });
 
-      this.messages.on('CFG_SERVER_GET', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_SERVER_GET]`, data);
+      this.messages.on('CFG_SERVER_GET', (_, callback) => {
+        this.gs.log(`[MASTER_CFG_SERVER_GET]`, _);
         try {
           const config = this.cfg.serverGet();
           this.gs.log('[MASTER_CFG_SERVER_GET]', config);
@@ -113,8 +113,8 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_SERVER_GET_MAINTENANCE', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_SERVER_GET_MAINTENANCE]`, data);
+      this.messages.on('CFG_SERVER_GET_MAINTENANCE', (_, callback) => {
+        this.gs.log(`[MASTER_CFG_SERVER_GET_MAINTENANCE]`, _);
         try {
           const isMaintenance = this.cfg.serverGetMaintenance();
           this.gs.log('[MASTER_CFG_SERVER_GET_MAINTENANCE]', isMaintenance);
@@ -124,8 +124,8 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_SERVER_GET_OPEN_FOR_REGISTER', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_SERVER_GET_OPEN_FOR_REGISTER]`, data);
+      this.messages.on('CFG_SERVER_GET_OPEN_FOR_REGISTER', (_, callback) => {
+        this.gs.log(`[MASTER_CFG_SERVER_GET_OPEN_FOR_REGISTER]`, _);
         try {
           const isoOpenForRegister = this.cfg.serverGetOpenForRegister();
           this.gs.log('[MASTER_CFG_SERVER_GET_OPEN_FOR_REGISTER]', isoOpenForRegister);
@@ -135,8 +135,8 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_ROOM_SOCKET_GET_ALL', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_ALL]`, data);
+      this.messages.on('CFG_ROOM_SOCKET_GET_ALL', (_, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_ALL]`, _);
         try {
           const rooms = this.cfg.roomSocketGetAll();
           this.gs.log('[MASTER_CFG_ROOM_SOCKET_GET_ALL]', rooms);
@@ -146,10 +146,10 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_ROOM_SOCKET_GET_ROOM', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_ROOM]`, data);
+      this.messages.on('CFG_ROOM_SOCKET_GET_ROOM', (text, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_ROOM]`, text);
         try {
-          const room = this.cfg.roomSocketGetRoom(data);
+          const room = this.cfg.roomSocketGetRoom(text);
           this.gs.log('[MASTER_CFG_ROOM_SOCKET_GET_ROOM]', room);
           callback({ error: null, data: room });
         } catch (e) {
@@ -157,10 +157,10 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_ROOM_SOCKET_GET_USER', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_USER]`, data);
+      this.messages.on('CFG_ROOM_SOCKET_GET_USER', (obj, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_GET_USER]`, obj);
         try {
-          const user = this.cfg.roomSocketGetUser(data.roomId, data.socketId);
+          const user = this.cfg.roomSocketGetUser(obj.roomId, obj.socketId);
           this.gs.log('[MASTER_CFG_ROOM_SOCKET_GET_USER]', user);
           callback({ error: null, data: user });
         } catch (e) {
@@ -168,21 +168,43 @@ export class ClusterMasterSlaveService {
         }
       });
 
-      this.messages.on('CFG_ROOM_SOCKET_REMOVE_USER', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_REMOVE_USER]`, data);
+      this.messages.on('CFG_ROOM_SOCKET_REMOVE_USER', (obj, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_REMOVE_USER]`, obj);
         try {
-          this.cfg.roomSocketRemoveUser(data.roomId, data.socketId);
+          this.cfg.roomSocketRemoveUser(obj.roomId, obj.socketId);
           callback({ error: null, data: null });
         } catch (e) {
           callback({ error: e, data: null });
         }
       });
 
-      this.messages.on('CFG_ROOM_SOCKET_ADD_OR_UPDATE_USER', (data, callback) => {
-        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_ADD_OR_UPDATE_USER]`, data);
+      this.messages.on('CFG_ROOM_SOCKET_ADD_OR_UPDATE_USER', (obj, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SOCKET_ADD_OR_UPDATE_USER]`, obj);
         try {
-          this.cfg.roomSocketAddOrUpdateUser(data.roomId, data.socketId, data.user);
+          this.cfg.roomSocketAddOrUpdateUser(obj.roomId, obj.socketId, obj.user);
           callback({ error: null, data: null });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
+      this.messages.on('CFG_ROOM_SHOW_QUESTION', (text, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_SHOW_QUESTION]`, text);
+        try {
+          const question = this.cfg.quizRoomShowQuestion(text);
+          this.gs.log('[MASTER_CFG_ROOM_SHOW_QUESTION]', question);
+          callback({ error: null, data: question });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
+      this.messages.on('CFG_ROOM_CREATE_QUESTION', (obj, callback) => {
+        this.gs.log(`[MASTER_CFG_ROOM_CREATE_QUESTION]`, obj);
+        try {
+          const question = this.cfg.quizRoomCreateQuestion(obj.roomId, obj.question);
+          this.gs.log('[MASTER_CFG_ROOM_SHOW_QUESTION]', question);
+          callback({ error: null, data: question });
         } catch (e) {
           callback({ error: e, data: null });
         }

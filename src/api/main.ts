@@ -2,6 +2,7 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import Mutex from 'standalone-mutex';
 import { AbortController } from 'abort-controller';
 import { setupMaster } from '@socket.io/sticky';
 import { setupPrimary } from '@socket.io/cluster-adapter';
@@ -119,6 +120,7 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
             const worker = cluster.fork();
             gs.log(`[WORKER_${i}] Spawned`, worker.id);
           }
+          Mutex.init();
           cluster.on('exit', (worker, code, signal) => {
             let msg = `[WORKER_${worker.id}]`;
             if (signal) {
@@ -140,6 +142,7 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
         gs.log('[APP_WORKER] 💢', e, 'error');
       }
     } else {
+      Mutex.init();
       nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
       nestApp.listen(port, async () => {
         gs.log(`[APP_SERVER] 💻 Running on => ${process.cwd()} 💘`, await nestApp.getUrl());

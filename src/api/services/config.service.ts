@@ -4,6 +4,7 @@ import { environment } from '../../environments/api/environment';
 
 import { RoomModel, ServerInfoModel, StatsServerModel } from '../../models/socket-io.model';
 import { UserModel } from '../../models/req-res.model';
+import { QuizModel, QuizRoom } from '../../models/quiz.model';
 
 @Injectable()
 export class ConfigService {
@@ -36,6 +37,8 @@ export class ConfigService {
   }
 
   private room_socket: RoomModel = {};
+
+  private quiz: QuizRoom = {};
 
   constructor(
     //
@@ -117,6 +120,15 @@ export class ConfigService {
       this.room_socket[roomId] = {};
     }
     this.room_socket[roomId][socketId] = user;
+  }
+
+  quizRoomShowQuestion<T>(roomId: string): QuizModel<T> {
+    return this.quiz[roomId];
+  }
+
+  quizRoomCreateQuestion<T>(roomId: string, question: QuizModel<T>): QuizModel<T> {
+    this.quiz[roomId] = question;
+    return this.quizRoomShowQuestion(roomId);
   }
 
 }

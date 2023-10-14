@@ -114,6 +114,7 @@
     "rxjs": "~7.5.0",
     "sakura-js": "^1.1.1",
     "socket.io-client": "^2.4.0",
+    "standalone-mutex": "^0.1.0",
     "string-strip-html": "^13.4.2",
     "swiper": "^6.8.4",
     "tslib": "^2.3.0",
