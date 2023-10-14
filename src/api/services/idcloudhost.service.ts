@@ -25,7 +25,7 @@ export class IdCloudHostService {
     private cfg: ConfigService
   ) {
     if (environment.production && cluster.isMaster) {
-      this.connect();
+      this.startWs();
     }
   }
 
@@ -56,7 +56,7 @@ export class IdCloudHostService {
     this.sr.addTimeout(
       CONSTANTS.timeoutReconnectSocketKey,
       setTimeout(() => {
-        this.mainSite();
+        this.startWs();
       }, CONSTANTS.timeoutReconnectSocketTime)
     );
   }
@@ -88,7 +88,7 @@ export class IdCloudHostService {
     }
   }
 
-  mainSite(): void {
+  startWs(): void {
     const urlMainSite = this.getStatsUrl('jkt01', environment.idCloudHost.mainSite);
     this.wsMainSite = new WebSocket(urlMainSite);
 
@@ -108,10 +108,6 @@ export class IdCloudHostService {
     this.wsMainSite.on('message', (data, isBinary) => {
       this.onMessage(data, isBinary);
     });
-  }
-
-  connect(): void {
-    this.mainSite();
   }
 
 }
