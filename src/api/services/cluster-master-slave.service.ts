@@ -70,6 +70,16 @@ export class ClusterMasterSlaveService {
         }
       });
 
+      this.messages.on('CFG_GITHUB_SET', (obj, callback) => {
+        this.gs.log(`[MASTER_CFG_GITHUB_SET]`, obj);
+        try {
+          this.cfg.githubSet(obj);
+          callback({ error: null, data: null });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
       this.messages.on('CFG_GITHUB_GET', (_, callback) => {
         this.gs.log(`[MASTER_CFG_GITHUB_GET]`, _);
         try {

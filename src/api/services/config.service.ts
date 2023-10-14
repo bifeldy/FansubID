@@ -57,7 +57,7 @@ export class ConfigService {
     return this.github;
   }
 
-  githubSet(data): any {
+  githubSet(data): void {
     this.github = data;
   }
 
