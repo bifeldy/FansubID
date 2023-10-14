@@ -10,9 +10,9 @@ Proyek ini awalnya dibuat menggunakan [Angular CLI](https://github.com/angular/a
 ## NodeJS *Cluster* :: *Multi CPU(s) Worker* ~
 
 - [x] Sudah mendukung untuk berjalan di banyak CPU [*Master* & *Slave(s)*]
-- [x] NestJS Cron / *Task Scheduler* jalan di Cluster Master saja (Tanpa *Listen* HTTP)
-- [x] Komunikasi via *Inter Process Communication* [IPC]
-- [x] Web Socket [Socket.IO] *Event Broadcast* antar *Cluster*
+- [x] NestJS Cron / *Task Scheduler* hanya di *Master* saja (Tidak *Listen* HTTP)
+- [x] Komunikasi *Slave(s)* ― *Master* via *Inter Process Communication* [IPC] + ada *Callback Function*
+- [x] *Web Socket* [Socket.IO] *Event Broadcast* antar *Cluster*
 - [x] *Mutual Exclusion* [Mutex] *Lock* antar *Cluster*
 
 ----
