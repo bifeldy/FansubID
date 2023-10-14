@@ -31,8 +31,6 @@ import { UserService } from '../repository/user.service';
 @WebSocketGateway()
 export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
-  timeOutVisitor = null;
-
   constructor(
     private cms: ClusterMasterSlaveService,
     private cfg: ConfigService,
@@ -57,29 +55,19 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   handleConnection(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_CONNECTED] 🌟', client.id);
     this.sis.checkNewNotification(client);
-    if (this.timeOutVisitor) {
-      clearTimeout(this.timeOutVisitor);
-    }
-    this.timeOutVisitor = setTimeout(async () => {
-      this.timeOutVisitor = null;
+    setTimeout(async () => {
       const totalSockets = (await this.sis.getAllClientsSocket()).length;
       this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
       this.sis.emitToBroadcast('visitor', totalSockets);
     }, 5 * 1000);
   }
 
-  handleDisconnect(client: Socket, ...args: any[]) {
+  async handleDisconnect(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_DISCONNECTED] 🌟', client.id);
-    if (this.timeOutVisitor) {
-      clearTimeout(this.timeOutVisitor);
-    }
-    this.timeOutVisitor = setTimeout(async () => {
-      this.timeOutVisitor = null;
-      await this.sis.disconnectRoom(client);
-      const totalSockets = (await this.sis.getAllClientsSocket()).length;
-      this.sis.emitToBroadcast('visitor', totalSockets);
-      this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
-    }, 5 * 1000);
+    await this.sis.disconnectRoom(client);
+    const totalSockets = (await this.sis.getAllClientsSocket()).length;
+    this.sis.emitToBroadcast('visitor', totalSockets);
+    this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
   }
 
   /** */
