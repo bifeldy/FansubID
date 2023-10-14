@@ -46,6 +46,8 @@ export class RegisterMiddleware implements NestMiddleware {
     }
   }
 
+  /** */
+
   async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
     try {
       if (!(await this.cfgServerGetOpenForRegister())) {
