@@ -30,6 +30,7 @@ import { ApiKeyService } from './repository/api-key.service';
 import { GlobalService } from './services/global.service';
 import { SocketIoService } from './services/socket-io.service';
 import { ClusterMasterSlaveService } from './services/cluster-master-slave.service';
+import { DiscordService } from './services/discord.service';
 
 export async function ctx(): Promise<INestApplicationContext> {
   return await NestFactory.createApplicationContext(AppModule);
@@ -107,7 +108,9 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
     if (numCPUs > 1) {
       try {
         if (cluster.isMaster) {
-          (await ctx()).get(ClusterMasterSlaveService).masterHandleMessages();
+          const nestCtx = await ctx();
+          nestCtx.get(ClusterMasterSlaveService).masterHandleMessages();
+          await nestCtx.get(DiscordService).startBot();
           gs.log('[APP_MASTER_PID] 💻', process.pid);
           setupMaster(nestApp.getHttpServer(), {
             loadBalancingMethod: 'least-connection'

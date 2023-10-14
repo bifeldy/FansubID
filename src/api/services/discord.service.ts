@@ -55,11 +55,14 @@ export class DiscordService {
     private sosmedRepo: SocialMediaService
   ) {
     if (environment.production) {
-      this.startBot();
+      this.setupBot();
+      if (cluster.isWorker) {
+        this.startBot();
+      }
     }
   }
 
-  startBot(): void {
+  setupBot(): void {
     this.bot = new Client({
       restRequestTimeout: 60 * 1000,
       intents: [
@@ -90,7 +93,9 @@ export class DiscordService {
     this.bot.on('messageCreate', (msg: Message) => {
       if (msg.channel.id === environment.discord.channelBotId && msg.content.startsWith('~')) {
         this.gs.log(`[${msg.guild.name}] 🎉 [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content} 🎶`);
-        this.handleMessage(msg);
+        if (cluster.isMaster) {
+          this.handleMessage(msg);
+        }
       }
     });
     this.bot.on('ready', async () => {
@@ -105,7 +110,14 @@ export class DiscordService {
       this.gs.log(`[DISCORD_SERVICE-MEMBER_LEAVE] 🎉 ${member.user.username}#${member.user.discriminator} - ${member.user.id} 🎶`);
       this.memberLeftRemoveVerifiedDemote(member);
     });
-    this.bot.login(environment.discord.loginToken).catch(err => this.gs.log('[DISCORD_SERVICE-LOGIN] 🎉', err, 'error'));
+  }
+
+  async startBot(): Promise<void> {
+    try {
+      await this.bot.login(environment.discord.loginToken);
+    } catch (error) {
+      this.gs.log('[DISCORD_SERVICE-LOGIN] 🎉', error, 'error');
+    }
   }
 
   async sendNews(message: MessageOptions): Promise<void> {
