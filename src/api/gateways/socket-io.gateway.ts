@@ -31,6 +31,8 @@ import { UserService } from '../repository/user.service';
 @WebSocketGateway()
 export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
+  private timeoutSocketConnect = null;
+
   constructor(
     private cms: ClusterMasterSlaveService,
     private cfg: ConfigService,
@@ -55,7 +57,11 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   handleConnection(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_CONNECTED] 🌟', client.id);
     this.sis.checkNewNotification(client);
-    setTimeout(async () => {
+    if (this.timeoutSocketConnect) {
+      clearTimeout(this.timeoutSocketConnect);
+    }
+    this.timeoutSocketConnect = setTimeout(async () => {
+      this.timeoutSocketConnect = null;
       const totalSockets = (await this.sis.getAllClientsSocket()).length;
       this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
       this.sis.emitToBroadcast('visitor', totalSockets);
