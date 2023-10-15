@@ -11,13 +11,15 @@ import { setupPrimary } from '@socket.io/cluster-adapter';
 import cluster from 'node:cluster';
 import os from 'node:os';
 import process from 'node:process';
+import http from 'node:http';
 
 import { environment } from '../environments/api/environment';
 
 import { INestApplication, INestApplicationContext } from '@nestjs/common';
 import { DocumentBuilder, SwaggerDocumentOptions, SwaggerModule } from '@nestjs/swagger';
-import { NestFactory } from '@nestjs/core';
-import { urlencoded, json, Request, Response, NextFunction } from 'express';
+import { AbstractHttpAdapter, NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import express, { urlencoded, json, Request, Response, NextFunction } from 'express';
 
 import { SocketIoAdapter } from './adapters/socket-io.adapter';
 import { SocketIoClusterAdapter } from './adapters/socket-io-cluster.adapter';
@@ -37,8 +39,11 @@ export async function ctx(): Promise<INestApplicationContext> {
 }
 
 // The Nest app is exported so that it can be used by serverless Functions.
-export async function app(): Promise<INestApplication> {
-  const nestApp = await NestFactory.create(AppModule);
+export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INestApplication> {
+  if (!httpAdapter) {
+    httpAdapter = new ExpressAdapter(express());
+  }
+  const nestApp = await NestFactory.create(AppModule, httpAdapter);
   const aks = nestApp.get(ApiKeyService);
   const sis = nestApp.get(SocketIoService);
   nestApp.setGlobalPrefix('api');
@@ -94,6 +99,64 @@ export async function app(): Promise<INestApplication> {
   return nestApp;
 }
 
+async function bootstrap(): Promise<void> {
+  const port = process.env['PORT'] || 4200;
+  const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length;
+  if (numCPUs > 1) {
+    try {
+      const expressApp = express();
+      const httpServer = http.createServer(expressApp);
+      if (cluster.isMaster) {
+        const nestCtx = await ctx();
+        const gs = nestCtx.get(GlobalService);
+        nestCtx.get(ClusterMasterSlaveService).masterHandleMessages();
+        await nestCtx.get(DiscordService).startBot();
+        gs.log('[APP_MASTER_PID] 💻', process.pid);
+        setupMaster(httpServer, {
+          loadBalancingMethod: 'least-connection'
+        });
+        setupPrimary();
+        cluster.setupMaster({
+          serialization: 'advanced'
+        });
+        for (let i = 0; i < numCPUs - 1 /* i Slave(s) & 1 Master CPU */ ; i++) {
+          const worker = cluster.fork();
+          gs.log(`[WORKER_${i}] Spawned`, worker.id);
+        }
+        Mutex.init();
+        cluster.on('exit', (worker, code, signal) => {
+          let msg = `[WORKER_${worker.id}]`;
+          if (signal) {
+            gs.log(`${msg} Killed`, signal, 'error');
+          } else {
+            gs.log(`${msg} Exited`, code, 'error');
+          }
+          const wrkr = cluster.fork();
+          gs.log(`${msg} Re-Spawned`, wrkr.id);
+        });
+      } else {
+        const nestApp = await app(new ExpressAdapter(expressApp));
+        const gs = nestApp.get(GlobalService);
+        gs.log('[APP_SLAVE_PID] 👀', process.pid);
+        nestApp.useWebSocketAdapter(new SocketIoClusterAdapter(nestApp));
+        await nestApp.listen(port, async () => {
+          gs.log(`[APP_SLAVE_SERVER] 💻 Running on => ${process.cwd()} 💘`, cluster.worker.id);
+        });
+      }
+    } catch (e) {
+      console.error('[APP_WORKER] 💢', e);
+    }
+  } else {
+    Mutex.init();
+    const nestApp = await app();
+    const gs = nestApp.get(GlobalService);
+    nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
+    await nestApp.listen(port, async () => {
+      gs.log(`[APP_MASTER_SERVER] 💻 Running on => ${process.cwd()} 💘`, process.pid);
+    });
+  }
+}
+
 // Webpack will replace 'require' with '__webpack_require__'
 // '__non_webpack_require__' is a proxy to Node 'require'
 // The below code is to ensure that the server is run only when not requiring the bundle.
@@ -101,55 +164,5 @@ declare const __non_webpack_require__: NodeRequire;
 const mainModule = __non_webpack_require__.main;
 const moduleFilename = (mainModule && mainModule.filename) || '';
 if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
-  app().then(async (nestApp) => {
-    const port = process.env['PORT'] || 4200;
-    const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length;
-    const gs = nestApp.get(GlobalService);
-    if (numCPUs > 1) {
-      try {
-        if (cluster.isMaster) {
-          const nestCtx = await ctx();
-          nestCtx.get(ClusterMasterSlaveService).masterHandleMessages();
-          await nestCtx.get(DiscordService).startBot();
-          gs.log('[APP_MASTER_PID] 💻', process.pid);
-          setupMaster(nestApp.getHttpServer(), {
-            loadBalancingMethod: 'least-connection'
-          });
-          setupPrimary();
-          cluster.setupMaster({
-            serialization: 'advanced'
-          });
-          for (let i = 0; i < numCPUs - 1 /* 1 Master CPU */ ; i++) {
-            const worker = cluster.fork();
-            gs.log(`[WORKER_${i}] Spawned`, worker.id);
-          }
-          Mutex.init();
-          cluster.on('exit', (worker, code, signal) => {
-            let msg = `[WORKER_${worker.id}]`;
-            if (signal) {
-              gs.log(`${msg} Killed`, signal, 'error');
-            } else {
-              gs.log(`${msg} Exited`, code, 'error');
-            }
-            const wrkr = cluster.fork();
-            gs.log(`${msg} Re-Spawned`, wrkr.id);
-          });
-        } else {
-          gs.log('[APP_SLAVE_PID] 👀', process.pid);
-          nestApp.useWebSocketAdapter(new SocketIoClusterAdapter(nestApp));
-          nestApp.listen(port, async () => {
-            gs.log(`[APP_SERVER] 💻 Running on => ${process.cwd()} 💘`, cluster.worker.id);
-          });
-        }
-      } catch (e) {
-        gs.log('[APP_WORKER] 💢', e, 'error');
-      }
-    } else {
-      Mutex.init();
-      nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
-      nestApp.listen(port, async () => {
-        gs.log(`[APP_SERVER] 💻 Running on => ${process.cwd()} 💘`, await nestApp.getUrl());
-      });
-    }
-  }).catch(err => console.error('[APP_CONTEXT] 💣', err));
+  bootstrap().catch(err => console.error('[APP_BOOTSTRAP] 💣', err));
 }
