@@ -128,7 +128,7 @@ export class DiscordService {
 
   async startBot(): Promise<void> {
     try {
-      await this.bot.login(environment.discord.loginToken);
+      await this.bot?.login(environment.discord.loginToken);
     } catch (error) {
       this.gs.log('[DISCORD_SERVICE-LOGIN] 🎉', error, 'error');
     }
