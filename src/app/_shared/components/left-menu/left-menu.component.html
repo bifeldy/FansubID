@@ -6,7 +6,7 @@
 }">
 
   <mat-nav-list>
-    <div *ngIf="AS.currentUserSubject?.value; then sudahLogin; else belumLogin;"></div>
+    <ng-container *ngIf="AS.currentUserSubject?.value; then sudahLogin; else belumLogin;"></ng-container>
     <ng-template #sudahLogin>
       <a mat-list-item routerLink="/user" routerLinkActive="side-menu-link-active" (click)="forceCloseSideNav()" class="{{ TRUSTED ? 'gradient-border' : '' }}">
         <img class="jim" src="{{ AS.currentUserSubject?.value?.image_url }}" />

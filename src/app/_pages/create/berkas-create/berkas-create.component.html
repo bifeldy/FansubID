@@ -173,7 +173,7 @@
                     <mat-divider></mat-divider>
                   </div>
                 </div>
-                <div *ngIf="AS.currentUserSubject?.value?.verified; then ddlVerified; else ddlNotVerified;"></div>
+                <ng-container *ngIf="AS.currentUserSubject?.value?.verified; then ddlVerified; else ddlNotVerified;"></ng-container>
                 <ng-template #ddlVerified>
                   <div class="row">
                     <div class="col-12 px-3">

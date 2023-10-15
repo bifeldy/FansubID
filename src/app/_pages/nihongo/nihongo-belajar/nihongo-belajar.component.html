@@ -23,7 +23,7 @@
             </mat-form-field>
           </h3>
         </div>
-        <div *ngIf="(modeTampilan === 'hiragana' || modeTampilan === 'katakana') && daftarHuruf; then hirakata; else kataBendaLainnya;"></div>
+        <ng-container *ngIf="(modeTampilan === 'hiragana' || modeTampilan === 'katakana') && daftarHuruf; then hirakata; else kataBendaLainnya;"></ng-container>
         <ng-template #hirakata>
           <div class="col-12">
             <div class="row">
@@ -105,7 +105,7 @@
           </div>
         </ng-template>
         <ng-template #kataBendaLainnya>
-          <div *ngIf="modeTampilan === 'angka'; then angka; else selainAngka;"></div>
+          <ng-container *ngIf="modeTampilan === 'angka'; then angka; else selainAngka;"></ng-container>
           <ng-template #angka>
             <div class="p-3">
               <app-material-table [tableDataColumn]="daftarAngka.column" [tableDataRow]="daftarAngka.row"></app-material-table>

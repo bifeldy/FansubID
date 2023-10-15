@@ -170,7 +170,7 @@
                     <mat-divider></mat-divider>
                   </div>
                 </div>
-                <div *ngIf="attachmentFile; then ddlExist; else ddlNotExist;"></div>
+                <ng-container *ngIf="attachmentFile; then ddlExist; else ddlNotExist;"></ng-container>
                 <ng-template #ddlExist>
                   <div class="row">
                     <mat-list>
@@ -185,7 +185,7 @@
                   </div>
                 </ng-template>
                 <ng-template #ddlNotExist>
-                  <div *ngIf="AS.currentUserSubject?.value?.verified; then ddlVerified; else ddlNotVerified;"></div>
+                  <ng-container *ngIf="AS.currentUserSubject?.value?.verified; then ddlVerified; else ddlNotVerified;"></ng-container>
                   <ng-template #ddlVerified>
                     <div class="row">
                       <div class="col-12 px-3">
