@@ -13,6 +13,7 @@ import { UserService } from '../../../_shared/services/user.service';
 import { ApiKeyService } from '../../../_shared/services/api-key.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
+import { WinboxService } from '../../../_shared/services/winbox.service';
 
 @Component({
   selector: 'app-user-list',
@@ -51,7 +52,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private us: UserService,
     private fansub: FansubService,
-    private aks: ApiKeyService
+    private aks: ApiKeyService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -382,6 +384,10 @@ export class UserListComponent implements OnInit, OnDestroy {
         comment: k.id
       }
     });
+  }
+
+  openApiDocs(): void {
+    this.wb.winboxOpenUri(`${environment.baseUrl}/api`, '_self', true);
   }
 
 }
