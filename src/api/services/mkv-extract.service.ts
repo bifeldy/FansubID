@@ -6,6 +6,8 @@ import { createReadStream } from 'node:fs';
 
 import { Injectable } from '@nestjs/common';
 
+import { CONSTANTS } from '../../constants';
+
 import { GlobalService } from './global.service';
 
 @Injectable()
@@ -93,10 +95,9 @@ export class MkvExtractService {
         this.gs.log(`[MKVEXTRACT_DATA_CHUNK] ⌛ ${fileName} -- ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`);
         switch (chunk[0]) {
           case 'end':
-            // if (chunk[1].name === 'Info') {
-            //   fileStream.destroy();
-            // }
-            if (chunk[1].name === 'TrackEntry') {
+            if (chunk[1].name === 'unknown') {
+              fileStream.destroy(new Error(`Unknown 'End'`));
+            } else if (chunk[1].name === 'TrackEntry') {
               if (trackTypeTemp === 0x11) {
                 tracks.push(trackIndexTemp);
                 trackData.push([trackDataTemp]);
@@ -106,12 +107,12 @@ export class MkvExtractService {
             break;
           case 'tag':
             if (chunk[1].name === 'unknown') {
-              fileStream.destroy(new Error('Unknown File Tag'));
+              fileStream.destroy(new Error(`Unknown 'Tag'`));
             } else if (chunk[1].name === 'FileName') {
               if (!files[currentFile]) {
                 files[currentFile] = {};
               }
-              files[currentFile].name = chunk[1].data.toString();
+              files[currentFile].name = chunk[1].data.toString().replace(CONSTANTS.regexIllegalFileName, '-');
             } else if (chunk[1].name === 'FileData') {
               if (!files[currentFile]) {
                 files[currentFile] = {};
