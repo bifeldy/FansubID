@@ -225,7 +225,7 @@ export class BerkasController {
     try {
       if (
         'name' in req.body && 'projectType_id' in req.body &&
-        ('anime_id' in req.body || 'dorama_id' in req.body) &&
+        ('anime_id' in req.body || 'dorama_id' in req.body || 'sn_code' in req.body) &&
         ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
       ) {
         const user: UserModel = res.locals['user'];
@@ -282,6 +282,20 @@ export class BerkasController {
         if ('image' in req.body) {
           berkas.image_url = req.body.image;
         }
+        if ('sn_code' in req.body) {
+          const sn = req.body.sn_code.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+          if (!sn) {
+            throw new HttpException({
+              info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+              result: {
+                message: 'Kode Serial Hanya Huruf Besar, Strip, Dan Angka!'
+              }
+            }, HttpStatus.BAD_REQUEST);
+          }
+          berkas.anime_ = null;
+          berkas.dorama_ = null;
+          berkas.sn_code = sn;
+        }
         if ('anime_id' in req.body) {
           const anime = await this.animeRepo.findOneOrFail({
             where: [
@@ -290,6 +304,7 @@ export class BerkasController {
           });
           berkas.anime_ = anime;
           berkas.dorama_ = null;
+          berkas.sn_code = null;
         }
         if ('dorama_id' in req.body) {
           const dorama = await this.doramaRepo.findOneOrFail({
@@ -299,6 +314,7 @@ export class BerkasController {
           });
           berkas.anime_ = null;
           berkas.dorama_ = dorama;
+          berkas.sn_code = null;
         }
         const fansub = await this.fansubRepo.find({
           where: [
@@ -355,7 +371,11 @@ export class BerkasController {
                 url: environment.baseUrl
               })
               .setDescription(this.gs.htmlToText(resFileSave.description))
-              .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
+              .addField(
+                (resFileSave.anime_ ? 'Anime' : (resFileSave.dorama_ ? 'Dorama' : 'Film Lainnya')),
+                (resFileSave.anime_ ? resFileSave.anime_.name : (resFileSave.dorama_ ? resFileSave.dorama_.name : resFileSave.sn_code)),
+                false
+              )
               .addFields(
                 { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
                 { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
@@ -505,7 +525,7 @@ export class BerkasController {
     try {
       if (
         'name' in req.body || 'description' in req.body || 'private' in req.body || 'image' in req.body || 'attachment_id' in req.body ||
-        ('anime_id' in req.body || 'dorama_id' in req.body) || 'projectType_id' in req.body || 'r18' in req.body ||
+        ('anime_id' in req.body || 'dorama_id' in req.body || 'sn_code' in req.body) || 'projectType_id' in req.body || 'r18' in req.body ||
         ('download_url' in req.body && Array.isArray(req.body.download_url) && req.body.download_url.length > 0) ||
         ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
       ) {
@@ -533,7 +553,7 @@ export class BerkasController {
           if (user.verified) {
             if (filteredUrls.length <= 0 && !req.body.attachment_id && !file.attachment_?.id) {
               throw new HttpException({
-                info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+                info: `🙄 400 - Berkas API :: Gagal Mengubah Berkas ${req.params['id']} 😪`,
                 result: {
                   message: 'Wajib Mengisi Min 1 URL Eksternal / Upload 1 DDL Stream!'
                 }
@@ -542,7 +562,7 @@ export class BerkasController {
           } else {
             if (filteredUrls.length <= 0) {
               throw new HttpException({
-                info: `🙄 400 - Berkas API :: Gagal Menambahkan Berkas 😪`,
+                info: `🙄 400 - Berkas API :: Gagal Mengubah Berkas ${req.params['id']} 😪`,
                 result: {
                   message: 'Wajib Mengisi Min 1 URL Eksternal!'
                 }
@@ -564,6 +584,20 @@ export class BerkasController {
           if ('r18' in req.body) {
             file.r18 = (req.body.r18 === true);
           }
+          if ('sn_code' in req.body) {
+            const sn = req.body.sn_code.toUpperCase().replace(/[^A-Z0-9\-]/g,'');
+            if (!sn) {
+              throw new HttpException({
+                info: `🙄 400 - Berkas API :: Gagal Mengubah Berkas ${req.params['id']} 😪`,
+                result: {
+                  message: 'Kode Serial Hanya Huruf Besar, Strip, Dan Angka!'
+                }
+              }, HttpStatus.BAD_REQUEST);
+            }
+            file.anime_ = null;
+            file.dorama_ = null;
+            file.sn_code = sn;
+          }
           if ('anime_id' in req.body) {
             const anime = await this.animeRepo.findOneOrFail({
               where: [
@@ -572,6 +606,7 @@ export class BerkasController {
             });
             file.anime_ = anime;
             file.dorama_ = null;
+            file.sn_code = null;
           }
           if ('dorama_id' in req.body) {
             const dorama = await this.doramaRepo.findOneOrFail({
@@ -581,6 +616,7 @@ export class BerkasController {
             });
             file.anime_ = null;
             file.dorama_ = dorama;
+            file.sn_code = null;
           }
           if ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0) {
             const fansub = await this.fansubRepo.find({
@@ -644,7 +680,11 @@ export class BerkasController {
                   url: environment.baseUrl
                 })
                 .setDescription(this.gs.htmlToText(resFileSave.description))
-                .addField(resFileSave.anime_ ? 'Anime' : 'Dorama', resFileSave.anime_ ? resFileSave.anime_.name : resFileSave.dorama_.name, false)
+                .addField(
+                  (resFileSave.anime_ ? 'Anime' : (resFileSave.dorama_ ? 'Dorama' : 'Film Lainnya')),
+                  (resFileSave.anime_ ? resFileSave.anime_.name : (resFileSave.dorama_ ? resFileSave.dorama_.name : resFileSave.sn_code)),
+                  false
+                )
                 .addFields(
                   { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
                   { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }

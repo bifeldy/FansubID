@@ -42,19 +42,23 @@
                 <mat-selection-list [multiple]="false">
                   <mat-list-option routerLink="/anime/{{ berkasData.anime_.id }}-{{ animeName }}" *ngIf="berkasData.anime_">
                     <img matListAvatar src="{{ berkasData.anime_.image_url }}" class="ms-3" style="border-radius: 0;" />
-                    <h4>{{ berkasData.anime_.name }}</h4>
+                    <h4 class="text-truncate">{{ berkasData.anime_.name }}</h4>
                   </mat-list-option>
                   <mat-list-option routerLink="/dorama/{{ berkasData.dorama_.slug }}" *ngIf="berkasData.dorama_">
                     <img matListAvatar src="{{ berkasData.dorama_.image_url }}" class="ms-3" style="border-radius: 0;" />
-                    <h4>{{ berkasData.dorama_.name }}</h4>
+                    <h4 class="text-truncate">{{ berkasData.dorama_.name }}</h4>
+                  </mat-list-option>
+                  <mat-list-option *ngIf="berkasData.sn_code">
+                    <img matListAvatar src="{{ ENV.baseUrl }}/assets/img/favicon.png" class="ms-3" style="border-radius: 0;" />
+                    <h4 class="text-truncate">{{ berkasData.sn_code }}</h4>
                   </mat-list-option>
                   <mat-list-option routerLink="/fansub/{{ fs.slug }}" *ngFor="let fs of berkasData.fansub_">
                     <img matListAvatar src="{{ fs.image_url }}" class="ms-3" style="border-radius: 0;" />
-                    <h4>{{ fs.name }}</h4>
+                    <h4 class="text-truncate">{{ fs.name }}</h4>
                   </mat-list-option>
                   <mat-list-option routerLink="/user/{{ berkasData.user_.username }}">
                     <img matListAvatar src="{{ berkasData.user_.image_url }}" class="ms-3" style="border-radius: 0;" />
-                    <h4>{{ berkasData.user_.username }}</h4>
+                    <h4 class="text-truncate">{{ berkasData.user_.username }}</h4>
                   </mat-list-option>
                 </mat-selection-list>
               </div>

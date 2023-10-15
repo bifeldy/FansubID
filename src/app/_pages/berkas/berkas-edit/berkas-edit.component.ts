@@ -317,6 +317,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       dorama_name: [data.dorama_?.name || null, Validators.compose([])],
       fansub_list: this.fb.array([]),
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      sn_code: [data.sn_code, Validators.compose([])],
       attachment_id: [data.attachment_?.id, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([]),
       private: [data.private, Validators.compose([Validators.required])],
@@ -383,43 +384,50 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       retry(-1)
     ).subscribe({
       next: projectId => {
-        this.gs.log('[BERKAS_EDIT_PROJECT_CHANGED]', projectId);
-        const selectedProject = this.projectList.find(p => p.id === projectId);
+        this.gs.log('[BERKAS_CREATE_PROJECT_CHANGED]', projectId);
         this.fg.controls['anime_id'].patchValue(null);
         this.fg.controls['anime_name'].patchValue(null);
         this.fg.controls['dorama_id'].patchValue(null);
         this.fg.controls['dorama_name'].patchValue(null);
+        this.fg.controls['sn_code'].patchValue(null);
         this.fg.controls['anime_id'].setErrors(null);
         this.fg.controls['anime_name'].setErrors(null);
         this.fg.controls['dorama_id'].setErrors(null);
         this.fg.controls['dorama_name'].setErrors(null);
+        this.fg.controls['sn_code'].setErrors(null);
         this.fg.controls['anime_id'].clearValidators();
         this.fg.controls['anime_name'].clearValidators();
         this.fg.controls['dorama_id'].clearValidators();
         this.fg.controls['dorama_name'].clearValidators();
+        this.fg.controls['sn_code'].clearValidators();
         this.fg.controls['anime_id'].markAsPristine();
         this.fg.controls['anime_name'].markAsPristine();
         this.fg.controls['dorama_id'].markAsPristine();
         this.fg.controls['dorama_name'].markAsPristine();
+        this.fg.controls['sn_code'].markAsPristine();
         this.fg.controls['anime_id'].markAsUntouched();
         this.fg.controls['anime_name'].markAsUntouched();
         this.fg.controls['dorama_id'].markAsUntouched();
         this.fg.controls['dorama_name'].markAsUntouched();
-        if (selectedProject.name.toLowerCase().includes('anime')) {
+        this.fg.controls['sn_code'].markAsUntouched();
+        const selectedProject = this.projectList.find(p => p.id === projectId);
+        if (selectedProject) {
           this.berkasType = selectedProject.name;
-          this.fg.controls['anime_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-          this.fg.controls['anime_name'].setValidators([Validators.required]);
-        } else if (selectedProject.name.toLowerCase().includes('dorama')) {
-          this.berkasType = selectedProject.name;
-          this.fg.controls['dorama_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-          this.fg.controls['dorama_name'].setValidators([Validators.required]);
-        } else {
-          this.berkasType = '';
+          if (selectedProject.name.toLowerCase().includes('anime_')) {
+            this.fg.controls['anime_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+            this.fg.controls['anime_name'].setValidators([Validators.required]);
+          } else if (selectedProject.name.toLowerCase().includes('dorama_')) {
+            this.fg.controls['dorama_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+            this.fg.controls['dorama_name'].setValidators([Validators.required]);
+          } else {
+            this.fg.controls['sn_code'].setValidators([Validators.required, Validators.pattern(/^[A-Z0-9\-]+$/)]);
+          }
         }
         this.fg.controls['anime_id'].updateValueAndValidity();
         this.fg.controls['anime_name'].updateValueAndValidity();
         this.fg.controls['dorama_id'].updateValueAndValidity();
         this.fg.controls['dorama_name'].updateValueAndValidity();
+        this.fg.controls['sn_code'].updateValueAndValidity();
       }
     });
   }

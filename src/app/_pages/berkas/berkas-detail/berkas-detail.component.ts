@@ -62,6 +62,10 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     this.gs.bgRepeat = false;
   }
 
+  get ENV(): any {
+    return environment;
+  }
+
   get GS(): GlobalService {
     return this.gs;
   }

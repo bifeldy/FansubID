@@ -34,6 +34,9 @@ export class Berkas implements BerkasModel {
   @Column({ type: 'text', default: '/assets/img/favicon.png' })
   image_url: string;
 
+  @Column({ type: 'text', nullable: true })
+  sn_code: string;
+
   @Column({ type: 'int', default: 0 })
   view_count: number;
 

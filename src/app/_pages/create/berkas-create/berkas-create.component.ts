@@ -229,6 +229,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
       dorama_name: [null, Validators.compose([])],
       fansub_list: this.fb.array([this.createFansub()]),
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      sn_code: [null, Validators.compose([])],
       attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([this.createDownloadLink()]),
       private: [false, Validators.compose([Validators.required])],
@@ -279,42 +280,49 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     ).subscribe({
       next: projectId => {
         this.gs.log('[BERKAS_CREATE_PROJECT_CHANGED]', projectId);
-        const selectedProject = this.projectList.find(p => p.id === projectId);
         this.fg.controls['anime_id'].patchValue(null);
         this.fg.controls['anime_name'].patchValue(null);
         this.fg.controls['dorama_id'].patchValue(null);
         this.fg.controls['dorama_name'].patchValue(null);
+        this.fg.controls['sn_code'].patchValue(null);
         this.fg.controls['anime_id'].setErrors(null);
         this.fg.controls['anime_name'].setErrors(null);
         this.fg.controls['dorama_id'].setErrors(null);
         this.fg.controls['dorama_name'].setErrors(null);
+        this.fg.controls['sn_code'].setErrors(null);
         this.fg.controls['anime_id'].clearValidators();
         this.fg.controls['anime_name'].clearValidators();
         this.fg.controls['dorama_id'].clearValidators();
         this.fg.controls['dorama_name'].clearValidators();
+        this.fg.controls['sn_code'].clearValidators();
         this.fg.controls['anime_id'].markAsPristine();
         this.fg.controls['anime_name'].markAsPristine();
         this.fg.controls['dorama_id'].markAsPristine();
         this.fg.controls['dorama_name'].markAsPristine();
+        this.fg.controls['sn_code'].markAsPristine();
         this.fg.controls['anime_id'].markAsUntouched();
         this.fg.controls['anime_name'].markAsUntouched();
         this.fg.controls['dorama_id'].markAsUntouched();
         this.fg.controls['dorama_name'].markAsUntouched();
-        if (selectedProject.name.toLowerCase().includes('anime')) {
+        this.fg.controls['sn_code'].markAsUntouched();
+        const selectedProject = this.projectList.find(p => p.id === projectId);
+        if (selectedProject) {
           this.berkasType = selectedProject.name;
-          this.fg.controls['anime_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-          this.fg.controls['anime_name'].setValidators([Validators.required]);
-        } else if (selectedProject.name.toLowerCase().includes('dorama')) {
-          this.berkasType = selectedProject.name;
-          this.fg.controls['dorama_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-          this.fg.controls['dorama_name'].setValidators([Validators.required]);
-        } else {
-          this.berkasType = '';
+          if (selectedProject.name.toLowerCase().includes('anime_')) {
+            this.fg.controls['anime_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+            this.fg.controls['anime_name'].setValidators([Validators.required]);
+          } else if (selectedProject.name.toLowerCase().includes('dorama_')) {
+            this.fg.controls['dorama_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+            this.fg.controls['dorama_name'].setValidators([Validators.required]);
+          } else {
+            this.fg.controls['sn_code'].setValidators([Validators.required, Validators.pattern(/^[A-Z0-9\-]+$/)]);
+          }
         }
         this.fg.controls['anime_id'].updateValueAndValidity();
         this.fg.controls['anime_name'].updateValueAndValidity();
         this.fg.controls['dorama_id'].updateValueAndValidity();
         this.fg.controls['dorama_name'].updateValueAndValidity();
+        this.fg.controls['sn_code'].updateValueAndValidity();
       }
     });
   }
@@ -527,6 +535,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
       projectType_id: this.fg.value.projectType_id,
       anime_id: this.fg.value.anime_id,
       dorama_id: this.fg.value.dorama_id,
+      sn_code: this.fg.value.sn_code,
       fansub_id: fansubId,
       download_url: this.fg.value.download_url,
       attachment_id: this.fg.value.attachment_id

@@ -230,6 +230,7 @@ export interface BerkasModel {
   private?: boolean;
   download_url?: string;
   image_url?: string;
+  sn_code?: string;
   view_count?: number;
   like_count?: number;
   created_at?: number | Date;
