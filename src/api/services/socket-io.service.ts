@@ -222,6 +222,7 @@ export class SocketIoService {
     const resSaveProfile = await this.profileRepo.save(selectedProfile);
     delete resSaveProfile.description;
     delete resSaveProfile.updated_at;
+    delete resSaveProfile.deleted_at;
     const userRoom = await this.cfgRoomSocketGetUser(data.roomId, socket.id);
     userRoom.profile_ = resSaveProfile;
     await this.cfgRoomSocketAddOrUpdateUser(data.roomId, socket.id, userRoom);
@@ -249,6 +250,7 @@ export class SocketIoService {
       const resSaveProfile = await this.profileRepo.save(selectedProfile);
       delete resSaveProfile.description;
       delete resSaveProfile.updated_at;
+      delete resSaveProfile.deleted_at;
       const userRoom = await this.cfgRoomSocketGetUser(data.roomId, socket.id);
       userRoom.profile_ = resSaveProfile;
       await this.cfgRoomSocketAddOrUpdateUser(data.roomId, socket.id, userRoom);
@@ -285,6 +287,7 @@ export class SocketIoService {
       delete payload.user.password;
       delete payload.user.session_token;
       delete payload.user.session_origin;
+      delete payload.user.deleted_at;
       if ('kartu_tanda_penduduk_' in payload.user && payload.user.kartu_tanda_penduduk_) {
         delete payload.user.kartu_tanda_penduduk_.nik;
         delete payload.user.kartu_tanda_penduduk_.tanggal_lahir;
@@ -300,10 +303,12 @@ export class SocketIoService {
         delete payload.user.kartu_tanda_penduduk_.kewarganegaraan;
         delete payload.user.kartu_tanda_penduduk_.created_at;
         delete payload.user.kartu_tanda_penduduk_.updated_at;
+        delete payload.user.kartu_tanda_penduduk_.deleted_at;
       }
       if ('profile_' in payload.user && payload.user.profile_) {
         delete payload.user.profile_.description;
         delete payload.user.profile_.updated_at;
+        delete payload.user.profile_.deleted_at;
       }
     } catch (error) {
       payload.user = null;

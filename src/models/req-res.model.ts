@@ -58,7 +58,7 @@ export enum AgamaModel {
 
 export enum WargaNegaraModel {
   WNA = 'WNA',
-  WNI = 'WNI',
+  WNI = 'WNI'
 }
 
 export enum LikeAndDislikeModel {
@@ -82,6 +82,7 @@ export interface ProfileModel {
   points?: number;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
 }
 
 export interface KartuTandaPendudukModel {
@@ -103,6 +104,7 @@ export interface KartuTandaPendudukModel {
   kewarganegaraan?: WargaNegaraModel;
   created_at?: number | Date;
   updated_at?: number | Date;
+  deleted_at?: number | Date;
 }
 
 export interface UserModel {
