@@ -18,7 +18,6 @@
     {
       "name": "assets",
       "installMode": "lazy",
-      "updateMode": "prefetch",
       "resources": {
         "files": [
           "/*.(ico|svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
@@ -42,7 +41,7 @@
       ],
       "cacheConfig": {
         "maxSize": 64,
-        "maxAge": "1d",
+        "maxAge": "1h",
         "timeout": "10s",
         "strategy": "freshness"
       }

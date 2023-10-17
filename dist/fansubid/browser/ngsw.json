@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1697385897508,
+  "timestamp": 1697504138656,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -40,7 +40,7 @@
         "/common.b0527391eae3d4e8.js",
         "/favicon.ico",
         "/index.html",
-        "/main.e0742bf98dcc9caa.js",
+        "/main.c4f97f97d0d19fe5.js",
         "/manifest.webmanifest",
         "/polyfills.bbae203fdd01cf64.js",
         "/runtime.f9b63484f8d87cae.js",
@@ -52,7 +52,7 @@
     {
       "name": "assets",
       "installMode": "lazy",
-      "updateMode": "prefetch",
+      "updateMode": "lazy",
       "cacheQueryOptions": {
         "ignoreVary": true
       },
@@ -75,7 +75,7 @@
       ],
       "strategy": "freshness",
       "maxSize": 64,
-      "maxAge": 86400000,
+      "maxAge": 3600000,
       "timeoutMs": 10000,
       "cacheQueryOptions": {
         "ignoreVary": true
@@ -112,8 +112,8 @@
     "/960.1e1fe3434266e9a4.js": "c649bd883373fc66f7e2781d27054b5da57413a3",
     "/common.b0527391eae3d4e8.js": "d79410310958a1938a5c670f1661497780d97764",
     "/favicon.ico": "071facb8fab2e4b3493dcfbb0b02d7bd21bca97e",
-    "/index.html": "b14e88ab5584e6216d7730d040789b7f23a1fb9e",
-    "/main.e0742bf98dcc9caa.js": "17f3ae90655896bf5bf56cd95bfc667ee1391f64",
+    "/index.html": "7d25a21f0a0e15f7babd4fcd2fab66b32e9c916f",
+    "/main.c4f97f97d0d19fe5.js": "6b377ffae741460df9b9fba8f4862103b0a0e0bb",
     "/manifest.webmanifest": "eafb5426cdc9fd714787e5453af315b9972875a3",
     "/polyfills.bbae203fdd01cf64.js": "a59f17cf29cb649f708d7ec7aa6b7247712859e1",
     "/runtime.f9b63484f8d87cae.js": "bccf12f89443e336b1ceb5c8dd456a7d0ca04ebd",
