@@ -112,6 +112,10 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     return this.gs;
   }
 
+  get extAttachment(): string {
+    return CONSTANTS.extAttachment.join(', ');
+  }
+
   get fileTypeAttachmentAllowed(): string {
     return CONSTANTS.fileTypeAttachmentAllowed.join(', ');
   }

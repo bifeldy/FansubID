@@ -29,18 +29,20 @@ export const CONSTANTS = {
   decoratorFilterApiKeyAccess: 'filter-api-key-access',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
-  extAttachment: ['avi', 'mkv', 'mp4', 'zip'],
+  extAttachment: ['avi', 'flv', 'mkv', 'mp4', 'zip'],
   extFonts: ['ttf', 'otf', 'woff', 'woff2'],
   extSubs: ['ass', 'srt'],
   externalApiCacheTime: 15 * 60 * 1, // 15 Minutes [v4 seconds, v5 miliseconds]
   fileTypeAttachmentAllowed: [
+    'video/flv',
+    'video/x-flv',
     'video/x-msvideo',
     'video/x-matroska',
     'video/mp4',
     'application/zip',
     'application/zip-compressed',
     'application/x-zip',
-    'application/x-zip-compressed',
+    'application/x-zip-compressed'
   ],
   fileSizeAttachmentChunkCloudflareLimit: 64 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileSizeAttachmentChunkDiscordLimit: 8 * 1000 * 1000, // Discord -- Without Nitro Is 8 MB ~ T.T
