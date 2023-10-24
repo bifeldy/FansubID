@@ -221,7 +221,7 @@ export class DiscordService {
                 ddlFile.user_ = attachment.user_ || user;
                 ddlFile.id = msg.attachments.first().id;
                 ddlFile.name = msg.attachments.first().name;
-                ddlFile.url = msg.attachments.first().url;
+                ddlFile.url = msg.attachments.first().url.split('?')[0];
                 ddlFile.size = msg.attachments.first().size;
                 ddlFile.mime = attachment.mime;
                 await this.ddlFileRepo.save(ddlFile);

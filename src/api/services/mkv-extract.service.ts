@@ -1,5 +1,6 @@
 // 3rd Party Library
 import { Decoder, tools } from 'ebml';
+import detect from 'detect-file-type';
 
 // NodeJS Library
 import { createReadStream } from 'node:fs';
@@ -62,11 +63,30 @@ export class MkvExtractService {
     return `${hh}:${mm}:${ss}`;
   }
 
-  async mkvExtract(fileName: string, filePath: string): Promise<any[]> {
+  async checkMkvType(filePath: string): Promise<any> {
     return new Promise((resolve, reject) => {
+      detect.fromFile(filePath, (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+    });
+  }
+
+  async mkvExtract(fileName: string, filePath: string): Promise<any[]> {
+    return new Promise(async (resolve, reject) => {
 
       const startTime = Date.now();
-      this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`);
+      const fileType = await this.checkMkvType(filePath);
+
+      this.gs.log(`[MKVEXTRACT_START] 📂 ${fileName} -- ${startTime} 🧬`, fileType);
+
+      if (fileType.ext !== 'mkv' && fileType.mime !== 'video/x-matroska') {
+        reject(new Error('File Rejected, Only .MKV Files Accepted!'));
+        return;
+      }
 
       const fileStream = createReadStream(filePath);
       const decoder = new Decoder();
@@ -95,9 +115,7 @@ export class MkvExtractService {
         this.gs.log(`[MKVEXTRACT_DATA_CHUNK] ⌛ ${fileName} -- ${chunk[0]} -- ${chunk[1].name} -- ${chunk[1].dataSize} 🧬`);
         switch (chunk[0]) {
           case 'end':
-            if (chunk[1].name === 'unknown') {
-              fileStream.destroy(new Error(`Unknown 'End'`));
-            } else if (chunk[1].name === 'TrackEntry') {
+            if (chunk[1].name === 'TrackEntry') {
               if (trackTypeTemp === 0x11) {
                 tracks.push(trackIndexTemp);
                 trackData.push([trackDataTemp]);
@@ -106,9 +124,7 @@ export class MkvExtractService {
             }
             break;
           case 'tag':
-            if (chunk[1].name === 'unknown') {
-              fileStream.destroy(new Error(`Unknown 'Tag'`));
-            } else if (chunk[1].name === 'FileName') {
+            if (chunk[1].name === 'FileName') {
               if (!files[currentFile]) {
                 files[currentFile] = {};
               }
