@@ -180,9 +180,14 @@ export class MkvExtractService {
             const line = val[i];
             const lineTimestamp = val[i + 1];
             const chunkTimestamp = val[i + 2];
-            const duration = val[i + 3];
             const lineParts = isASS && line.split(',');
             const lineIndex = isASS ? lineParts[0] : (i - 1) / 4;
+            let duration = val[i + 3];
+            if (typeof duration === 'string') {
+              // Missing Duration
+              duration = 0;
+              i--;
+            }
             const startTimestamp = formatFn(chunkTimestamp + lineTimestamp);
             const endTimestamp = formatFn(chunkTimestamp + lineTimestamp + duration);
             let fixedLine: any;

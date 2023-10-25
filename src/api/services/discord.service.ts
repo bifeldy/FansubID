@@ -150,7 +150,7 @@ export class DiscordService {
   // async recoverAndFindMessageByAttachmentCrawl(): Promise<void> {
   //   try {
   //     const ddl = await this.ddlFileRepo.query(`
-  //       SELECT msg_id, max(chunk_idx) AS max
+  //       SELECT msg_id, MAX(chunk_idx) AS max
   //       FROM public.ddl_file
   //       WHERE msg_id IN (
   //         SELECT DISTINCT msg_id
