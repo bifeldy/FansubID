@@ -18,6 +18,7 @@ import { DdlFileService } from '../repository/ddl-file';
 
 import { ApiService } from '../services/api.service';
 import { GlobalService } from '../services/global.service';
+import { DiscordService } from '../services/discord.service';
 
 @Controller('/ddl-part')
 export class DdlPartController {
@@ -26,7 +27,8 @@ export class DdlPartController {
     private api: ApiService,
     private attachmentRepo: AttachmentService,
     private gs: GlobalService,
-    private ddlFileRepo: DdlFileService
+    private ddlFileRepo: DdlFileService,
+    private ds: DiscordService
   ) {
     //
   }
@@ -39,11 +41,24 @@ export class DdlPartController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async downloadChunk(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
-      const ddlFile = await this.ddlFileRepo.findOneOrFail({
+      let ddlFile = await this.ddlFileRepo.findOneOrFail({
         where: [
           { id: Equal(req.params['id']) }
         ]
       });
+      const msg = await this.ds.getMessageAttachment(ddlFile.msg_id);
+      const att = msg.attachments.get(ddlFile.id);
+      let newUrl = att.url;
+      if (newUrl.endsWith('/?')) {
+        newUrl = newUrl.substring(0, newUrl.length - 2);
+      }
+      if (newUrl.endsWith('&') || newUrl.endsWith('/') || newUrl.endsWith('?')) {
+        newUrl = newUrl.substring(0, newUrl.length - 1);
+      }
+      if (ddlFile.url !== newUrl) {
+        ddlFile.url = newUrl;
+        ddlFile = await this.ddlFileRepo.save(ddlFile);
+      }
       const res_raw = await this.api.getData(
         new URL(ddlFile.url),
         {
@@ -95,7 +110,8 @@ export class DdlSeekController {
     private api: ApiService,
     private attachmentRepo: AttachmentService,
     private gs: GlobalService,
-    private ddlFileRepo: DdlFileService
+    private ddlFileRepo: DdlFileService,
+    private ds: DiscordService
   ) {
     //
   }
@@ -148,10 +164,23 @@ export class DdlSeekController {
         chunkSize += df.size;
         chunkIdx++;
       }
-      const ddlFile = ddlFiles[chunkIdx];
+      let ddlFile = ddlFiles[chunkIdx];
       let hdrRngPrxy = `bytes=${skippedChunkSize}-`;
       if (headerRangeStartEnd.length > 1 && headerRangeStartEnd[1]) {
         hdrRngPrxy += `${parseInt(headerRangeStartEnd[1], 10) - target + skippedChunkSize}`;
+      }
+      const msg = await this.ds.getMessageAttachment(ddlFile.msg_id);
+      const att = msg.attachments.get(ddlFile.id);
+      let newUrl = att.url;
+      if (newUrl.endsWith('/?')) {
+        newUrl = newUrl.substring(0, newUrl.length - 2);
+      }
+      if (newUrl.endsWith('&') || newUrl.endsWith('/') || newUrl.endsWith('?')) {
+        newUrl = newUrl.substring(0, newUrl.length - 1);
+      }
+      if (ddlFile.url !== newUrl) {
+        ddlFile.url = newUrl;
+        ddlFile = await this.ddlFileRepo.save(ddlFile);
       }
       const res_raw = await this.api.getData(
         new URL(ddlFile.url),

@@ -115,6 +115,7 @@ export class DiscordService {
         this.gs.log(`[DISCORD_SERVICE-READY] 🎉 ${this.bot.user.username}#${this.bot.user.discriminator} - ${this.bot.user.id} 🎶`);
         if (cluster.isMaster) {
           await this.changeBotNickname();
+          // await this.recoverAndFindMessageByAttachmentCrawl();
         }
       } catch (error) {
         this.gs.log('[DISCORD_SERVICE-FAILED] 🎉', error, 'error');
@@ -146,15 +147,66 @@ export class DiscordService {
     }
   }
 
+  // async recoverAndFindMessageByAttachmentCrawl(): Promise<void> {
+  //   try {
+  //     const ddl = await this.ddlFileRepo.query(`
+  //       SELECT msg_id, max(chunk_idx) AS max
+  //       FROM public.ddl_file
+  //       WHERE msg_id IN (
+  //         SELECT DISTINCT msg_id
+  //         FROM public.ddl_file
+  //         WHERE msg_id = msg_parent
+  //       )
+  //       GROUP BY msg_id
+  //     `);
+  //     for (const d of ddl) {
+  //       let lastMessageId = d.msg_id;
+  //       for (let i = 0; i < d.max; i++) {
+  //         const chnl = await this.bot.channels.fetch(environment.discord.channelDdlId);
+  //         const res = await (chnl as NewsChannel).messages.fetch({ after: lastMessageId, limit: 1 });
+  //         const kys = res.keys();
+  //         for (const k of kys) {
+  //           const msg = res.get(k);
+  //           lastMessageId = msg.id;
+  //           const att = msg.attachments?.first();
+  //           if (att) {
+  //             this.gs.log('[DISCORD_SERVICE-ATTACHMMENT_MESSAGE_CRAWLER] 🎉', `${att.id} => ${att.name} :: ${msg.id}`);
+  //             const dfrs = await this.ddlFileRepo.find({
+  //               where: [
+  //                 { id: Equal(att.id) }
+  //               ]
+  //             });
+  //             if (dfrs.length === 1) {
+  //               const dfr = dfrs[0];
+  //               if (dfr.msg_id !== msg.id) {
+  //                 dfr.msg_id = msg.id;
+  //                 await this.ddlFileRepo.save(dfr);
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     this.gs.log(`[DISCORD_SERVICE-ATTACHMMENT_MESSAGE_CRAWLER] 🎉`, error, 'error');
+  //   }
+  // }
+
+  async getMessageAttachment(msg_id: string): Promise<Message<boolean>> {
+    const botDdlChannel = this.bot ? (this.bot.channels.cache.get(environment.discord.channelDdlId) as NewsChannel) : null;
+    if (botDdlChannel) {
+      // Fore Re-Fresh `.fetch()`
+      return await botDdlChannel.messages.fetch(msg_id);
+    }
+    return null;
+  }
+
   async deleteAttachment(msg_ids: string[]): Promise<void> {
     try {
-      const botDdlChannel = this.bot ? (this.bot.channels.cache.get(environment.discord.channelDdlId) as NewsChannel) : null;
-      if (botDdlChannel) {
-        for (const msg_id of msg_ids) {
-          const botMessage = botDdlChannel.messages.cache.get(msg_id);
-          if (botMessage) {
-            await botMessage.delete();
-          }
+      for (const msg_id of msg_ids) {
+        const botMessage = await this.getMessageAttachment(msg_id);
+        if (botMessage) {
+          await botMessage.delete();
         }
       }
     } catch (error) {
@@ -166,7 +218,8 @@ export class DiscordService {
     let currentChunkIdx: number = 0;
     let chunkParent: string = attachment?.discord;
     let chunkSize = CONSTANTS.fileSizeAttachmentChunkDiscordLimit;
-    const botGuild = this.bot ? this.bot.guilds.cache.get(environment.discord.guild_id) : null;
+    // Fore Re-Fresh `.fetch()`
+    const botGuild = this.bot ? await this.bot.guilds.fetch(environment.discord.guild_id) : null;
     if (botGuild) {
       const totalBoosts = botGuild.premiumSubscriptionCount;
       if (totalBoosts >= 14) {
@@ -221,7 +274,11 @@ export class DiscordService {
                 ddlFile.user_ = attachment.user_ || user;
                 ddlFile.id = msg.attachments.first().id;
                 ddlFile.name = msg.attachments.first().name;
-                ddlFile.url = msg.attachments.first().url.split('?')[0];
+                let newUrl = msg.attachments.first().url;
+                if (newUrl.endsWith('&') || newUrl.endsWith('/')) {
+                  newUrl = newUrl.substring(0, -1);
+                }
+                ddlFile.url = newUrl;
                 ddlFile.size = msg.attachments.first().size;
                 ddlFile.mime = attachment.mime;
                 await this.ddlFileRepo.save(ddlFile);
