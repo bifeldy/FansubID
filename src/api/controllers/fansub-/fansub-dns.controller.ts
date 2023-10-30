@@ -124,26 +124,36 @@ export class FansubDnsController {
     if ('verification_name' in req.body && 'verification_target' in req.body) {
       let verification_name: string = this.gs.cleanUpUrlStringRecord(req.body.verification_name);
       let verification_target: string = this.gs.cleanUpUrlStringRecord(req.body.verification_target);
-      if (verification_name && verification_target && CONSTANTS.verificationDomain.includes(serverTarget)) {
-        let dns_id_alt = null;
-        if (fansub.dns_id_alt) {
-          dns_id_alt = await this.cfs.updateDns(fansub.dns_id_alt, verification_name, verification_target, 'CNAME', fansub.slug);
+      if (verification_name && verification_target) {
+        let type: string = null;
+        if (this.gs.matchRuleOneOf(serverTarget, CONSTANTS.verificationDomainCname)) {
+          type = 'CNAME';
+        } else if (this.gs.matchRuleOneOf(serverTarget, CONSTANTS.verificationDomainTxt)) {
+          type = 'TXT';
         } else {
-          dns_id_alt = await this.cfs.createDns(verification_name, verification_target, 'CNAME', fansub.slug);
+          type = '';
         }
-        if (dns_id_alt && dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
-          fansub.dns_id_alt = dns_id_alt.result.id;
-          fansub = await this.fansubRepo.save(fansub);
-          result.dns_id_alt = {
-            id: dns_id_alt.result.id,
-            name: dns_id_alt.result.name,
-            content: dns_id_alt.result.content,
-            proxied: dns_id_alt.result.proxied,
-            ttl: dns_id_alt.result.ttl,
-            type: dns_id_alt.result.type,
-            created_at: dns_id_alt.result.created_on,
-            updated_at: dns_id_alt.result.modified_on
-          };
+        if (type) {
+          let dns_id_alt = null;
+          if (fansub.dns_id_alt) {
+            dns_id_alt = await this.cfs.updateDns(fansub.dns_id_alt, verification_name, verification_target, type, fansub.slug);
+          } else {
+            dns_id_alt = await this.cfs.createDns(verification_name, verification_target, type, fansub.slug);
+          }
+          if (dns_id_alt && dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
+            fansub.dns_id_alt = dns_id_alt.result.id;
+            fansub = await this.fansubRepo.save(fansub);
+            result.dns_id_alt = {
+              id: dns_id_alt.result.id,
+              name: dns_id_alt.result.name,
+              content: dns_id_alt.result.content,
+              proxied: dns_id_alt.result.proxied,
+              ttl: dns_id_alt.result.ttl,
+              type: dns_id_alt.result.type,
+              created_at: dns_id_alt.result.created_on,
+              updated_at: dns_id_alt.result.modified_on
+            };
+          }
         }
       }
     }

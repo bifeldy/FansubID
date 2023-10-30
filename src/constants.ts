@@ -83,7 +83,10 @@ export const CONSTANTS = {
   timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days
   timeResetAccount: 5 * 60, // 5 Minutes
   timeMaxDaysNotification: 7 * 24 * 60 * 60 * 1000, // 7 Days
-  verificationDomain: [
+  verificationDomainCname: [
     'ghs.google.com'
+  ],
+  verificationDomainTxt: [
+    '*.repl.co'
   ]
 };
