@@ -108,4 +108,8 @@ export class FansubService {
     return this.api.putData(`/fansub-dns/${fansubSlug}`, dnsData);
   }
 
+  revokeDomain(fansubSlug: string): Observable<JsonResponse<any>> {
+    return this.api.deleteData(`/fansub-dns/${fansubSlug}`);
+  }
+
 }

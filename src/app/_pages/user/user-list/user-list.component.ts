@@ -261,18 +261,30 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
   }
 
-  revokeApiKey(ak: any): void {
-    this.bs.busy();
-    this.subsRevokeApiKey = this.aks.revokeApiKey(ak.id).subscribe({
-      next: res => {
-        this.gs.log('[USER_REVOKE_APIKEY_SUCCESS]', res);
-        this.bs.idle();
-        this.getUserApiKey();
-      },
-      error: err => {
-        this.gs.log('[USER_REVOKE_APIKEY_ERROR]', err, 'error');
-        this.bs.idle();
-        this.getUserApiKey();
+  async revokeApiKey(ak: any): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Hapus API Key -- '${ak.api_key}'`,
+      `Apakah Yakin Akan Menghapus ${ak.ip_domain} ?`,
+      false
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.bs.busy();
+          this.subsRevokeApiKey = this.aks.revokeApiKey(ak.id).subscribe({
+            next: res => {
+              this.gs.log('[USER_REVOKE_APIKEY_SUCCESS]', res);
+              this.bs.idle();
+              this.getUserApiKey();
+            },
+            error: err => {
+              this.gs.log('[USER_REVOKE_APIKEY_ERROR]', err, 'error');
+              this.bs.idle();
+              this.getUserApiKey();
+            }
+          });
+        }
+        this.subsDialog.unsubscribe();
       }
     });
   }
@@ -388,6 +400,32 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   openApiDocs(): void {
     this.wb.winboxOpenUri(`${environment.baseUrl}/api`, '_self', true);
+  }
+
+  async revokeDns(f: any): Promise<void> {
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      `Hapus Sub-Domain -- '${f.slug}'`,
+      'Apakah Yakin Ingin Menghapus / Nonaktifkan Sub-Domain ?',
+      false
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.bs.busy();
+          this.subsRevokeApiKey = this.fansub.revokeDomain(f.slug).subscribe({
+            next: res => {
+              this.gs.log('[USER_REVOKE_DNS_SUCCESS]', res);
+              this.bs.idle();
+            },
+            error: err => {
+              this.gs.log('[USER_REVOKE_DNS_ERROR]', err, 'error');
+              this.bs.idle();
+            }
+          });
+        }
+        this.subsDialog.unsubscribe();
+      }
+    });
   }
 
 }

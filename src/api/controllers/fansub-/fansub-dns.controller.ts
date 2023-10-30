@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, Controller, Get, HttpCode, HttpException, HttpStatus, Inject, Post, Put, Req, Res } from '@nestjs/common';
+import { CACHE_MANAGER, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Inject, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
@@ -330,7 +330,7 @@ export class FansubDnsController {
       throw new HttpException({
         info: `🙄 404 - Cloudflare API :: Gagal Mencari Fansub 😪`,
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'DNS Fansub Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }
@@ -465,7 +465,75 @@ export class FansubDnsController {
       throw new HttpException({
         info: `🙄 404 - Cloudflare API :: Gagal Mengubah DNS ${req.params['slug']} 😪`,
         result: {
-          message: 'Data Tidak Lengkap!'
+          message: 'DNS Fansub Tidak Ditemukan!'
+        }
+      }, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  // DELETE `/api/fansub-dns/:slug`
+  @Delete('/:slug')
+  @HttpCode(202)
+  @FilterApiKeyAccess()
+  @VerifiedOnly()
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
+  async removeBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+    try {
+      const user: UserModel = res.locals['user'];
+      const group = await this.fansubMemberRepo.findOneOrFail({
+        where: [
+          {
+            approved: true,
+            fansub_: {
+              slug: ILike(req.params['slug'])
+            },
+            user_: {
+              id: Equal(user.id)
+            }
+          }
+        ],
+        order: {
+          keterangan: 'ASC',
+          created_at: 'DESC'
+        },
+        relations: ['fansub_', 'user_']
+      });
+      const fansub = await this.fansubRepo.findOneOrFail({
+        where: [
+          { slug: ILike(group.fansub_.slug) }
+        ]
+      });
+      const result = {
+        dns_id: null,
+        dns_id_alt: null,
+        fansub: null
+      };
+      if (fansub.dns_id) {
+        result.dns_id = await this.cfs.deleteDns(fansub.dns_id);
+        fansub.dns_id = null;
+      }
+      if (fansub.dns_id_alt) {
+        result.dns_id_alt = await this.cfs.deleteDns(fansub.dns_id_alt);
+        fansub.dns_id_alt = null;
+      }
+      if (result.dns_id || result.dns_id_alt) {
+        result.fansub = await this.fansubRepo.save(fansub);
+        if ('user_' in result.fansub && result.fansub.user_) {
+          delete result.fansub.user_.created_at;
+          delete result.fansub.user_.updated_at;
+        }
+        return {
+          info: `😅 202 - Cloudflare API :: Berhasil Menghapus DNS ${req.params['slug']} 🤣`,
+          result
+        };
+      }
+      throw new Error('Data Tidak Lengkap!');
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException({
+        info: `🙄 404 - Cloudflare API :: Gagal Menghapus DNS ${req.params['slug']} 😪`,
+        result: {
+          message: 'DNS Fansub Tidak Ditemukan!'
         }
       }, HttpStatus.NOT_FOUND);
     }

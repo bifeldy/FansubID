@@ -163,7 +163,10 @@
               <div class="h-100" style="overflow-y: auto;">
                 <mat-selection-list [multiple]="false">
                   <mat-list-option class="h-100" *ngFor="let f of groupFansub" (click)="editSubDomain(f.fansub_)">
-                    <img matListAvatar src="{{ f.fansub_.image_url }}" class="ms-3" style="border-radius: 0;" />
+                    <img matListAvatar src="{{ f.fansub_.image_url }}" style="border-radius: 0;" />
+                    <a mat-button matListAvatar color="accent" (click)="$event.stopPropagation(); revokeDns(f.fansub_)" style="border-radius: 0;">
+                      <mat-icon fontIcon="delete_sweep" class="me-1"></mat-icon>
+                    </a>
                     <a class="text-truncate text-decoration-none">
                       <span class="bg-bifeldy px-2 me-1 text-warning" style="position: absolute; right: 0;">
                         {{ f.updated_at | date:'d-MM-y' }}
