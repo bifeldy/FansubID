@@ -149,16 +149,14 @@ export class ProjectTypeController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      if (
-        'name' in req.body || 'description' in req.body || 'image' in req.body
-        ) {
+      if ('name' in req.body || 'description' in req.body || 'image' in req.body) {
         const projectType = await this.projectTypeRepo.findOneOrFail({
           where: [
             { id: Equal(parseInt(req.params['id'])) }
           ]
         });
         if ('name' in req.body) {
-          projectType.name = req.body.neam;
+          projectType.name = req.body.name;
         }
         if ('description' in req.body) {
           projectType.description = req.body.description;
