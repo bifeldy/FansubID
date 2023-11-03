@@ -125,7 +125,7 @@ export class MailController {
         mailbox.from = `${user.kartu_tanda_penduduk_.nama} <${user.username}@${environment.mailTrap.domain}>`;
         mailbox.to = [...new Set<string>(req.body.to)].join(', ');
         if (!mailbox.to.match(CONSTANTS.regexEmailMulti)) {
-          throw new Error('Alamat Tidak Valid!');
+          throw new Error('Alamat Surel Tidak Valid!');
         }
         mailbox.subject = req.body.subject;
         mailbox.html = req.body.message;
@@ -137,7 +137,7 @@ export class MailController {
           },
           to: [...new Set<string>(req.body.to)].map(to => {
             if (!to.match(CONSTANTS.regexEmail)) {
-              throw new Error('Alamat Tidak Valid!');
+              throw new Error('Alamat Surel Tidak Valid!');
             }
             return { email: to };
           }),
@@ -151,7 +151,7 @@ export class MailController {
           mailbox.cc = ccs.join(', ');
           mailBody.cc = ccs.map(cc => {
             if (!cc.match(CONSTANTS.regexEmail)) {
-              throw new Error('Alamat Tidak Valid!');
+              throw new Error('Alamat Surel Tidak Valid!');
             }
             return { email: cc };
           });
@@ -161,7 +161,7 @@ export class MailController {
           mailbox.bcc = bccs.join(', ');
           mailBody.bcc = bccs.map(bcc => {
             if (!bcc.match(CONSTANTS.regexEmail)) {
-              throw new Error('Alamat Tidak Valid!');
+              throw new Error('Alamat Surel Tidak Valid!');
             }
             return { email: bcc };
           });
