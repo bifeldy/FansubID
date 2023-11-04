@@ -26,7 +26,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RecaptchaModule,
-    RecaptchaFormsModule,
+    RecaptchaFormsModule
   ]
 })
 export class RegisterModule { }
