@@ -248,7 +248,7 @@ export class CommentComponent implements OnInit, OnDestroy {
     const url = (k.path.startsWith('/') ? environment.baseUrl : '') + k.path;
     this.router.navigate(['/create/ticket'], {
       queryParams: {
-        url
+        url: `${url}?comment=${k.id}`
       }
     });
   }

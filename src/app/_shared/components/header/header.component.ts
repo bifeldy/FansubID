@@ -182,9 +182,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleReport(): void {
+    const url = this.router.url.split('?')[0];
     this.router.navigate(['/create/ticket'], {
       queryParams: {
-        url: this.router.url.split('?')[0]
+        url: (url.startsWith('/') ? environment.baseUrl : '') + url
       }
     });
   }
