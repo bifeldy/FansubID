@@ -74,6 +74,7 @@ import { PromoteController } from './controllers/promote.controller';
 import { QuizLeaderboardController } from './controllers/quiz-/quiz-leaderboard.controller';
 import { RegisterController } from './controllers/register.controller';
 import { TaskCronJobController } from './controllers/task-cron-job.controller';
+import { TicketController } from './controllers/ticket.controller';
 import { TorrentController } from './controllers/torrent.controller';
 import { UserController } from './controllers/user.controller';
 import { VerifyController } from './controllers/verify.controller';
@@ -148,6 +149,7 @@ import { RegistrationService } from './repository/registration.service';
 import { SocialMediaService } from './repository/social-media.service';
 import { TatoebaService } from './repository/tatoeba.service';
 import { TempAttachmentService } from './repository/temp-attachment.service';
+import { TicketService } from './repository/ticket.service';
 import { TrackService } from './repository/track.service';
 import { UserService } from './repository/user.service';
 
@@ -220,6 +222,7 @@ import { UserService } from './repository/user.service';
     QuizLeaderboardController,
     RegisterController,
     TaskCronJobController,
+    TicketController,
     TorrentController,
     UserController,
     VerifyController,
@@ -302,6 +305,7 @@ import { UserService } from './repository/user.service';
     SocialMediaService,
     TatoebaService,
     TempAttachmentService,
+    TicketService,
     TrackService,
     UserService
   ]

@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { environment } from '../../environments/api/environment';
 
-import { RegistrationModel, SosMedModel, UserModel } from '../../models/req-res.model';
+import { RegistrationModel, SosMedModel, TicketModel, UserModel } from '../../models/req-res.model';
 
 import { GlobalService } from './global.service';
 
@@ -108,7 +108,7 @@ export class MailService {
         email: `${environment.mailTrap.clientOptions.username}@${environment.mailTrap.domain}`
       },
       to: [
-        { 
+        {
           name: user.nama,
           email: user.email
         }
@@ -160,7 +160,7 @@ export class MailService {
         email: `${environment.mailTrap.clientOptions.username}@${environment.mailTrap.domain}`
       },
       to: [
-        { 
+        {
           name: user.kartu_tanda_penduduk_.nama,
           email: user.email
         }
@@ -199,6 +199,55 @@ export class MailService {
         Token :: ${token}
         ${environment.baseUrl}/reset-password?token=${token}
         Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.
+        (つ≧▽≦)つ
+        Terima kasih.
+        (っ.❛ ᴗ ❛.)っ
+      `.replace(/\s\s+/g, ' ').trim()
+    };
+    return await this.mailTrapSend(content);
+  }
+
+  async sendReportLaporanMail(ticket: TicketModel): Promise<any> {
+    const content: Mail = {
+      from: {
+        name: environment.mailTrap.fullName,
+        email: `${environment.mailTrap.clientOptions.username}@${environment.mailTrap.domain}`
+      },
+      to: [
+        { email: ticket.contact_email }
+      ],
+      subject: `${environment.siteName} | Laporan Kamu`,
+      category: 'Laporan',
+      html: `
+        <h1>Laporan Sudah Selesai Diproses.</h1>
+        <h2>
+          <a href="${environment.baseUrl}">
+            ${environment.baseUrl}
+          </a>
+        </h2>
+        <p>(づ￣ ³￣)づ</p>
+        <p>
+          Hai, terima kasih telah turut ikut serta dalam menjaga dan mengawasi ${environment.siteName}. <br />
+          ${environment.baseUrl}/ticket/${ticket.id}?secret=${ticket.secret} <br />
+          Berikut ini rinciannya.
+        </p>
+        <p>Pelanggaran :: ${ticket.reported_issue}</p>
+        ${ticket.expected_solution ? `<p>Ekspektasi :: ${ticket.expected_solution}</p>` : ''}
+        <p>Keputusan :: ${ticket.final_decision}</p>
+        <p>(つ≧▽≦)つ</p>
+        <p>Terima kasih.</p>
+        <p>(っ.❛ ᴗ ❛.)っ</p>
+      `.replace(/\s\s+/g, ' ').trim(),
+      text: `
+        Laporan Sudah Selesai Diproses.
+        ${environment.baseUrl}
+        (づ￣ ³￣)づ
+        Hai, terima kasih telah turut ikut serta dalam menjaga dan mengawasi ${environment.siteName}.
+        ${environment.baseUrl}/ticket/${ticket.id}?secret=${ticket.secret}
+        Berikut ini rinciannya.
+        Pelanggaran :: ${ticket.reported_issue}
+        ${ticket.expected_solution ? `Ekspektasi :: ${ticket.expected_solution}` : ''}
+        Keputusan :: ${ticket.final_decision}
         (つ≧▽≦)つ
         Terima kasih.
         (っ.❛ ᴗ ❛.)っ

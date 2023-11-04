@@ -428,6 +428,21 @@ export interface TempAttachmentModel {
   user_?: UserModel;
 }
 
+export interface TicketModel {
+  id: number;
+  url: string;
+  reported_issue: string;
+  expected_solution: string;
+  final_decision: string;
+  finished: boolean;
+  created_at: number | Date;
+  updated_at: number | Date;
+  deleted_at: number | Date;
+  contact_email: string;
+  secret: string;
+  user_: UserModel;
+}
+
 export interface TaskCronJobModel {
   id?: string;
   last_date?: number | Date;

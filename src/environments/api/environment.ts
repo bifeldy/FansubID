@@ -29,6 +29,7 @@ import { Registration } from '../../api/entities/Registration';
 import { SocialMedia } from '../../api/entities/SocialMedia';
 import { Tatoeba } from '../../api/entities/Tatoeba';
 import { TempAttachment } from '../../api/entities/TempAttachment';
+import { Ticket } from '../../api/entities/Ticket';
 import { Track } from '../../api/entities/Track';
 import { User } from '../../api/entities/User';
 
@@ -84,6 +85,7 @@ export const environment = {
       SocialMedia,
       Tatoeba,
       TempAttachment,
+      Ticket,
       Track,
       User
     ],
