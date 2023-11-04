@@ -215,7 +215,7 @@ export class CommentComponent implements OnInit, OnDestroy {
   }
 
   copyCommentLink(k: KomentarModel): void {
-    const url = (k.path.startsWith('/') ? environment.baseUrl : '') + k.path
+    const url = (k.path.startsWith('/') ? environment.baseUrl : '') + k.path;
     if (this.clipboard.copy(`${url}?comment=${k.id}`)) {
       this.snackBar.open(`URL Komentar :: Telah Di Salin Pada Clipboard`, 'Ok');
     }
@@ -239,6 +239,16 @@ export class CommentComponent implements OnInit, OnDestroy {
         } else {
           this.getComment(true);
         }
+      }
+    });
+  }
+
+  reportComment(k: KomentarModel): void {
+    this.gs.log('[KOMENTAR_REPORT_COMMENT]', k);
+    const url = (k.path.startsWith('/') ? environment.baseUrl : '') + k.path;
+    this.router.navigate(['/create/ticket'], {
+      queryParams: {
+        url
       }
     });
   }

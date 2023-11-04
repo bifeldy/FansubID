@@ -110,7 +110,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, CanComponentDea
     }
   }
 
-  showInfo(message: string) {
+  showInfo(message: string): void {
     this.subsDialog = this.ds.openInfoDialog({
       data: {
         title: 'Pembuatan Laporan',

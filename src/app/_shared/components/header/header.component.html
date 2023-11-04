@@ -20,6 +20,10 @@
     <mat-icon fontIcon="delete"></mat-icon>
   </button>
 
+  <button type="button" class="animate__animated animate__headShake animate__infinite animate__slower" mat-icon-button (click)="toggleReport()" matTooltip="Lapor Pelanggaran" *ngIf="canReport">
+    <mat-icon fontIcon="flag"></mat-icon>
+  </button>
+
   <button type="button" class="animate__animated animate__tada animate__infinite animate__slower" mat-icon-button (click)="toggleWeather()" matTooltip="Weather Effect" *ngIf="GS.weatherEffect">
     <mat-icon fontIcon="filter_vintage"></mat-icon>
   </button>

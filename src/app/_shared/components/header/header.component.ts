@@ -83,6 +83,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
   }
 
+  get canReport(): boolean {
+    return (
+      this.router.url.startsWith('/berkas/') ||
+      this.router.url.startsWith('/fansub/') ||
+      this.router.url.startsWith('/user/')
+    );
+  }
+
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       const osTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -145,39 +153,40 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   async toggleDelete(): Promise<void> {
     const urlPath = this.router.url.split('?')[0];
-    if (
-      urlPath.startsWith('/berkas/') ||
-      urlPath.startsWith('/fansub/') ||
-      urlPath.startsWith('/news/') ||
-      urlPath.startsWith('/user/')
-    ) {
-      const trackType = urlPath.split('/')[1];
-      const idSlugUsername = urlPath.split('/')[2];
-      this.subsDialog = (await this.ds.openKonfirmasiDialog(
-        'Konfirmasi Hapus',
-        `Yakin Akan Menghapus ${trackType[0].toUpperCase()}${trackType.slice(1)} -- '${idSlugUsername}' ?`,
-        true
-      )).afterClosed().subscribe({
-        next: re => {
-          this.gs.log('[INFO_DIALOG_CLOSED]', re);
-          if (re === true) {
-            this.bs.busy();
-            this.subsDelete = this.deleteHandle[trackType].delete(idSlugUsername).subscribe({
-              next: res => {
-                this.gs.log(`[${trackType.toUpperCase()}_CLICK_DELETE_SUCCESS]`, res);
-                this.bs.idle();
-                this.router.navigateByUrl(`/${trackType}`);
-              },
-              error: err => {
-                this.gs.log(`[${trackType.toUpperCase()}_CLICK_DELETE_ERROR]`, err, 'error');
-                this.bs.idle();
-              }
-            });
-          }
-          this.subsDialog.unsubscribe();
+    const trackType = urlPath.split('/')[1];
+    const idSlugUsername = urlPath.split('/')[2];
+    this.subsDialog = (await this.ds.openKonfirmasiDialog(
+      'Konfirmasi Hapus',
+      `Yakin Akan Menghapus ${trackType[0].toUpperCase()}${trackType.slice(1)} -- '${idSlugUsername}' ?`,
+      true
+    )).afterClosed().subscribe({
+      next: re => {
+        this.gs.log('[INFO_DIALOG_CLOSED]', re);
+        if (re === true) {
+          this.bs.busy();
+          this.subsDelete = this.deleteHandle[trackType].delete(idSlugUsername).subscribe({
+            next: res => {
+              this.gs.log(`[${trackType.toUpperCase()}_CLICK_DELETE_SUCCESS]`, res);
+              this.bs.idle();
+              this.router.navigateByUrl(`/${trackType}`);
+            },
+            error: err => {
+              this.gs.log(`[${trackType.toUpperCase()}_CLICK_DELETE_ERROR]`, err, 'error');
+              this.bs.idle();
+            }
+          });
         }
-      });
-    }
+        this.subsDialog.unsubscribe();
+      }
+    });
+  }
+
+  toggleReport(): void {
+    this.router.navigate(['/create/ticket'], {
+      queryParams: {
+        url: this.router.url.split('?')[0]
+      }
+    });
   }
 
 }

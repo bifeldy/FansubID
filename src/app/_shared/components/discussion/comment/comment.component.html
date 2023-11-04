@@ -33,6 +33,10 @@
           <mat-icon fontIcon="more_vert"></mat-icon>
         </button>
         <mat-menu #komentarMenu="matMenu">
+          <button type="button" mat-menu-item (click)="reportComment(k)">
+            <mat-icon fontIcon="flag" class="me-1"></mat-icon>
+            Laporkan
+          </button>
           <button type="button" mat-menu-item (click)="deleteComment(k)">
             <mat-icon fontIcon="delete" class="me-1"></mat-icon>
             Hapus
