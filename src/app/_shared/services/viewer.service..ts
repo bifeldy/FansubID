@@ -97,7 +97,7 @@ export class ViewerService {
           this.gs.log('[VIEWERJS]', e.type);
           this.currentViewer.destroy();
           this.currentViewer = null;
-        },
+        }
       }
     );
   }

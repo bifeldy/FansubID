@@ -68,7 +68,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
       romaji: [data?.romaji, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       meaning: [data?.meaning, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       category: [data?.category || this.data.modeTampilan, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
     if (data) {
       this.image_url = data?.image_url;

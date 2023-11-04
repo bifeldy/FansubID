@@ -10,6 +10,6 @@ import { AppComponent } from './app.component';
     ServerModule,
     ServerTransferStateModule
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppServerModule {}

@@ -357,7 +357,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
   createFansub(): UntypedFormGroup {
     const fbGroup = this.fb.group({
       fansub_id: [null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
-      fansub_name: [null, Validators.compose([Validators.required])],
+      fansub_name: [null, Validators.compose([Validators.required])]
     });
     this.subsFansubDetail.push(fbGroup.get('fansub_id').valueChanges.pipe(
       debounceTime(500),

@@ -107,7 +107,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
       title: [data.title, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       content: [data.content, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
-      tags: [data.tags, Validators.compose([])],
+      tags: [data.tags, Validators.compose([])]
     });
   }
 

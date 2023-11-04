@@ -116,7 +116,7 @@ export class AdminListProjectTypeComponent implements OnInit, OnDestroy {
     this.subsProjectCreate = this.project.createProject({
       name: this.fg.value.name,
       description: this.fg.value.description,
-      image: this.fg.value.image,
+      image: this.fg.value.image
     }).subscribe({
       next: res => {
         this.gs.log('[PROJECT_CREATE_SUCCESS]', res);

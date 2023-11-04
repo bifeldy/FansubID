@@ -466,7 +466,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   createFansub(data = null): any {
     const fbGroup = this.fb.group({
       fansub_id: [data?.id || null, Validators.compose([Validators.required, Validators.pattern(/^\d+$/)])],
-      fansub_name: [data?.name || null, Validators.compose([Validators.required])],
+      fansub_name: [data?.name || null, Validators.compose([Validators.required])]
     });
     this.subsFansubDetail.push(fbGroup.get('fansub_id').valueChanges.pipe(
       debounceTime(500),

@@ -75,7 +75,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fg = new UntypedFormGroup({
-      currentDate: new UntypedFormControl({ value: moment(), disabled: true }, Validators.required),
+      currentDate: new UntypedFormControl({ value: moment(), disabled: true }, Validators.required)
     });
     this.currentMonth = new Date(this.fg.value.currentDate.format()).getMonth() + 1;
     this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
@@ -160,7 +160,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
             Jenis: `${sA.media_type?.toUpperCase()} • ${sA.mean || 0}`,
             Poster: sA.image_url,
             'Judul Anime': sA.title,
-            'Nama Fansub': sA.namaFansubs,
+            'Nama Fansub': sA.namaFansubs
           });
         }
         seasonalAnimeWithFansub = seasonalAnimeWithFansub.sort((a, b) => b['Nama Fansub'].length - a['Nama Fansub'].length);

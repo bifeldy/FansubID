@@ -40,7 +40,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
     responsive: true,
     legend: {
       position: 'right'
-    },
+    }
   };
   doughnutChartGarapanOptions: ChartOptions = {
     title: {
@@ -50,7 +50,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
     responsive: true,
     legend: {
       position: 'right'
-    },
+    }
   };
 
   barChartAnimeOptions: ChartOptions = {

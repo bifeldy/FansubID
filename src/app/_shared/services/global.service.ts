@@ -69,11 +69,11 @@ export class GlobalService {
     customClasses: [
       {
         name: 'white-space-normal-important',
-        class: 'white-space-normal-important',
+        class: 'white-space-normal-important'
       },
       {
         name: 'text-decoration-none',
-        class: 'text-decoration-none',
+        class: 'text-decoration-none'
       },
     ]
   };

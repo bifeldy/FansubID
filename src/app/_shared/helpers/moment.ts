@@ -8,14 +8,14 @@ export const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {
   parse: {
-    dateInput: 'YYYY',
+    dateInput: 'YYYY'
   },
   display: {
     dateInput: 'YYYY',
     monthYearLabel: 'YYYY',
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'YYYY',
-  },
+    monthYearA11yLabel: 'YYYY'
+  }
 };
 
 export const CUSTOM_DATE_FORMATS: NgxMatDateFormats = {

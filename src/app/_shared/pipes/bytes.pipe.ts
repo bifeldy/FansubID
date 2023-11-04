@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export type ByteUnit = 'B' | 'kB' | 'KB' | 'MB' | 'GB' | 'TB';
 
 @Pipe({
-  name: 'bytes',
+  name: 'bytes'
 })
 export class BytesPipe implements PipeTransform {
 
@@ -13,7 +13,7 @@ export class BytesPipe implements PipeTransform {
     KB: { max: Math.pow(1024, 2), prev: 'B' }, // Backward compatible
     MB: { max: Math.pow(1024, 3), prev: 'kB' },
     GB: { max: Math.pow(1024, 4), prev: 'MB' },
-    TB: { max: Number.MAX_SAFE_INTEGER, prev: 'GB' },
+    TB: { max: Number.MAX_SAFE_INTEGER, prev: 'GB' }
   };
 
   static formatResult(result: number, unit: string): string {

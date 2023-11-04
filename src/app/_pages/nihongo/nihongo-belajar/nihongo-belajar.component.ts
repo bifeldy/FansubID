@@ -177,7 +177,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
           huruf[r.category][r.segment].push({
             romaji: r.romaji,
             hiragana: r.hiragana,
-            katakana: r.katakana,
+            katakana: r.katakana
           });
         }
         this.daftarHuruf = huruf;
@@ -213,7 +213,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
       error: err => {
         this.gs.log('[BELAJAR_KANA_KATEGORI_ERROR]', err, 'error');
         this.bs.idle();
-      },
+      }
     });
   }
 
@@ -229,7 +229,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
       error: err => {
         this.gs.log('[BELAJAR_KANA_LIST_ERROR]', err, 'error');
         this.bs.idle();
-      },
+      }
     });
   }
 

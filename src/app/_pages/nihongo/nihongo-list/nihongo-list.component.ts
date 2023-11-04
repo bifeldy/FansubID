@@ -231,7 +231,7 @@ export class NihongoListComponent implements OnInit, OnDestroy {
       error: err => {
         this.gs.log('[BELAJAR_KANA_KATEGORI_ERROR]', err, 'error');
         this.bs.idle();
-      },
+      }
     });
   }
 

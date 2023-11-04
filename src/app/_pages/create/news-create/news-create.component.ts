@@ -150,7 +150,7 @@ export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeact
       image: this.fg.value.image,
       title: this.fg.value.title,
       content: this.fg.value.content,
-      tags: this.fg.value.tags,
+      tags: this.fg.value.tags
     }).subscribe({
       next: res => {
         this.gs.log('[NEWS_CREATE_SUCCESS]', res);

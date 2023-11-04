@@ -94,7 +94,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
       agree_tatib: [null, [Validators.required]],
       agree_pp: [null, [Validators.required]],
-      'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
+      'g-recaptcha-response': [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]]
     });
   }
 

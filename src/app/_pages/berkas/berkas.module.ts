@@ -37,7 +37,7 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        component: BerkasDetailComponent,
+        component: BerkasDetailComponent
       },
       {
         path: 'edit',

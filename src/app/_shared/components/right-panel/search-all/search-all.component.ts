@@ -26,7 +26,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     doramaResults: [],
     fansubResults: [],
     berkasResults: [],
-    penggunaResults: [],
+    penggunaResults: []
   };
 
   subsBerita = null;

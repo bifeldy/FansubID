@@ -81,7 +81,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fg = new UntypedFormGroup({
-      currentDate: new UntypedFormControl({ value: moment(), disabled: true }, Validators.required),
+      currentDate: new UntypedFormControl({ value: moment(), disabled: true }, Validators.required)
     });
     this.currentMonth = new Date(this.fg.value.currentDate.format()).getMonth() + 1;
     this.currentYear = new Date(this.fg.value.currentDate.format()).getFullYear();
@@ -178,7 +178,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
             Jenis: `${sD.type} • ${sD.rating || 0}`,
             Poster: sD.image_url,
             'Judul Dorama': sD.title,
-            'Nama Fansub': sD.namaFansubs,
+            'Nama Fansub': sD.namaFansubs
           });
         }
         this.seasonalDoramaWithFansub = this.seasonalDoramaWithFansub.sort((a, b) => b['Nama Fansub'].length - a['Nama Fansub'].length);

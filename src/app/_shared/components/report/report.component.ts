@@ -38,7 +38,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     responsive: true,
     legend: {
       position: 'right'
-    },
+    }
   };
 
   lineChartVisitorOptions: ChartOptions = {
