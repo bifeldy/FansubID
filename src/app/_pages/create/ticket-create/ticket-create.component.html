@@ -1,0 +1,84 @@
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container">
+
+  <!-- Detail -->
+  <div class="row px-3">
+    <div class="col-12">
+      <form [formGroup]="fg" (submit)="onSubmit();" *ngIf="fg">
+        <div class="row mt-3 mb-3">
+          <div class="col-12 sticky-top bg-bifeldy">
+            <h2 class="pt-3 border-bottom-dotted">
+              <b class="text-bifeldy">Tambah Data Berita & Informasi Baru</b>
+            </h2>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-12 col-md-7 col-xl-8 p-3">
+                <div class="row">
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                    <mat-label>URL Link Tautan Terkait</mat-label>
+                    <input matInput formControlName="url" placeholder="https://sub-domain.fansub.id/berkas/konten-melanggar.html" required />
+                    <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
+                    <mat-error>
+                      <div *ngIf="fg.get('url').hasError('required')">Alamat URL Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('url').hasError('pattern')">Format Alamat URL Salah</div>
+                    </mat-error>
+                  </mat-form-field>
+                  <angular-editor class="p-3 w-100" formControlName="reported_issue" [config]="GS.angularEditorConfig" required></angular-editor>
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                    <mat-label>Ekspektasi Hasil Yang Diharapkan</mat-label>
+                    <input matInput formControlName="expected_solution" placeholder="Harap kontent tersebut di hapus dan akun yang bersangkutan segera di tangguhkan ..." />
+                    <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
+                    <mat-error>
+                      <div *ngIf="fg.get('expected_solution').hasError('pattern')">Ekspektasi Hanya Boleh Huruf Standar Papan Ketik</div>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-12 col-md-5 col-xl-4 p-3">
+                <div class="row">
+                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                    <mat-label>Surel Informasi Hasil Tindak Lanjut</mat-label>
+                    <input matInput formControlName="contact_email" placeholder="email-untuk-info-update@example.com" required />
+                    <mat-icon fontIcon="alternate_email" matSuffix></mat-icon>
+                    <mat-error>
+                      <div *ngIf="fg.get('contact_email').hasError('required')">Alamat Surel Tidak Boleh Kosong</div>
+                      <div *ngIf="fg.get('contact_email').hasError('pattern')">Format Alamat Surel Salah</div>
+                    </mat-error>
+                  </mat-form-field>
+                  <div class="p-3 col-12">
+                    <re-captcha #captchaRef formControlName="g-recaptcha-response" [siteKey]="G_CAPTCHA_SITE_KEY"
+                      (resolved)="captcha($event, captchaRef)"></re-captcha>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="row gy-3">
+                  <div class="col g-0"></div>
+                  <div class="col-12 col-md-3">
+                    <a mat-stroked-button routerLink="/news" class="w-100" [disabled]="submitted">
+                      <mat-icon fontIcon="undo" class="me-1"></mat-icon>
+                      Batal
+                    </a>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <button type="submit" mat-flat-button color="accent" class="w-100" [disabled]="submitted || fg.invalid">
+                      Simpan
+                      <mat-icon fontIcon="save" class="ms-1"></mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
