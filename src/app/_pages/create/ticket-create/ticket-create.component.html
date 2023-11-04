@@ -11,7 +11,7 @@
         <div class="row mt-3 mb-3">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">
-              <b class="text-bifeldy">Tambah Data Berita & Informasi Baru</b>
+              <b class="text-bifeldy">Buat Laporan Pelanggaran Penyalahgunaan</b>
             </h2>
           </div>
           <div class="col-12">
@@ -19,8 +19,9 @@
               <div class="col-12 col-md-7 col-xl-8 p-3">
                 <div class="row">
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
-                    <mat-label>URL Link Tautan Terkait</mat-label>
-                    <input matInput formControlName="url" placeholder="https://sub-domain.fansub.id/berkas/konten-melanggar.html" required />
+                    <mat-label>URL Link Tautan Yang Di Laporkan</mat-label>
+                    <input matInput formControlName="url" placeholder="https://sub-domain.fansub.id/berkas/konten-melanggar.html" required
+                      matTooltip="Alamat URL yang ingin kamu laporkan" />
                     <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('url').hasError('required')">Alamat URL Tidak Boleh Kosong</div>
@@ -41,8 +42,9 @@
               <div class="col-12 col-md-5 col-xl-4 p-3">
                 <div class="row">
                   <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
-                    <mat-label>Surel Informasi Hasil Tindak Lanjut</mat-label>
-                    <input matInput formControlName="contact_email" placeholder="email-untuk-info-update@example.com" required />
+                    <mat-label>Surel Informasi Proses Hasil Tindak Lanjut</mat-label>
+                    <input matInput formControlName="contact_email" placeholder="email-untuk-info-update@example.com" required
+                      matTooltip="Kami akan mengirimkan informasi jika laporanmu sudah selesai ditangani melalui surel ini" />
                     <mat-icon fontIcon="alternate_email" matSuffix></mat-icon>
                     <mat-error>
                       <div *ngIf="fg.get('contact_email').hasError('required')">Alamat Surel Tidak Boleh Kosong</div>
