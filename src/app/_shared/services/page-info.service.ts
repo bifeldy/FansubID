@@ -48,27 +48,31 @@ export class PageInfoService {
   }
 
   updatePageMetaData(newTitle: string, newDescription: string, newKeywords: string, newImage = `${environment.baseUrl}/assets/img/favicon.png`, newAuthor = '「💤 Fansub ✨ ID 🌞」'): void {
-    this.title = newTitle;
-    this.updatePageHeader();
-    this.description = this.gs.htmlToText(newDescription);
-    this.keywords = newKeywords;
-    this.image = newImage.startsWith('/') ? environment.baseUrl + newImage : newImage;
-    this.author = newAuthor;
-    this.t.setTitle(`${this.title} | ${this.siteName}`);
-    this.m.updateTag({ name: 'keywords', content: this.keywords });
-    this.m.updateTag({ name: 'author', content: this.author });
-    this.m.updateTag({ property: 'og:title', content: `${this.title} | ${this.siteName}` });
-    this.m.updateTag({ property: 'og:image', content: this.image });
-    this.m.updateTag({ name: 'twitter:title', content: `${this.title} | ${this.siteName}` });
-    if (this.description) {
+    if (newTitle) {
+      this.title = newTitle;
+      this.t.setTitle(`${this.title} | ${this.siteName}`);
+      this.m.updateTag({ property: 'og:title', content: `${this.title} | ${this.siteName}` });
+      this.m.updateTag({ name: 'twitter:title', content: `${this.title} | ${this.siteName}` });
+    }
+    if (newDescription) {
+      this.description = this.gs.htmlToText(newDescription);
       this.m.updateTag({ name: 'description', content: this.description });
       this.m.updateTag({ property: 'og:description', content: this.description });
       this.m.updateTag({ name: 'twitter:description', content: this.description });
     }
+    if (newKeywords) {
+      this.keywords = newKeywords;
+      this.m.updateTag({ name: 'keywords', content: this.keywords });
+    }
+    this.image = newImage.startsWith('/') ? environment.baseUrl + newImage : newImage;
+    this.m.updateTag({ property: 'og:image', content: this.image });
     this.m.updateTag({ name: 'twitter:image', content: this.image });
     if (this.router.url.split('?')[0].includes('/berkas/') && !this.image.includes(environment.baseUrl)) {
       this.m.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     }
+    this.author = newAuthor;
+    this.m.updateTag({ name: 'author', content: this.author });
+    this.updatePageHeader();
   }
 
   updateStatusBarTheme(isDarkMode) {

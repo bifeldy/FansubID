@@ -11,7 +11,6 @@ import { CONSTANTS } from '../../../../constants';
 import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
 import { DoramaService } from '../../../_shared/services/dorama.service';
 import { ProjectService } from '../../../_shared/services/project.service';
@@ -82,7 +81,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     private router: Router,
     private fb: UntypedFormBuilder,
     private bs: BusyService,
-    private pi: PageInfoService,
     private anime: AnimeService,
     private dorama: DoramaService,
     private project: ProjectService,
@@ -121,11 +119,6 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `Berkas - Buat Baru`,
-      `Halaman Membuat Berkas Baru`,
-      `Create Berkas`
-    );
     if (this.gs.isBrowser) {
       this.loadProjectList();
       this.initForm();

@@ -9,7 +9,6 @@ import { UploadState, Uploader, UploadxService } from 'ngx-uploadx';
 import { CONSTANTS } from '../../../../constants';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { AnimeService } from '../../../_shared/services/anime.service';
 import { DoramaService } from '../../../_shared/services/dorama.service';
 import { ProjectService } from '../../../_shared/services/project.service';
@@ -85,7 +84,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private fb: UntypedFormBuilder,
     private bs: BusyService,
-    private pi: PageInfoService,
     private anime: AnimeService,
     private dorama: DoramaService,
     private project: ProjectService,
@@ -123,11 +121,6 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `Berkas - Ubah Berkas`,
-      `Halaman Pembaharuan Data Berkas`,
-      `Ubah Berkas`
-    );
     if (this.gs.isBrowser) {
       this.berkasId = this.activatedRoute.snapshot.paramMap.get('berkasId');
       this.bs.busy();

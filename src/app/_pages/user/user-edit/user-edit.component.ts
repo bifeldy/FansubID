@@ -10,7 +10,6 @@ import { BusyService } from '../../../_shared/services/busy.service';
 import { UserService } from '../../../_shared/services/user.service';
 import { GlobalService } from '../../../_shared/services/global.service';
 import { AuthService } from '../../../_shared/services/auth.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { CryptoService } from '../../../_shared/services/crypto.service';
 import { ToastService } from '../../../_shared/services/toast.service';
@@ -58,7 +57,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private bs: BusyService,
     private us: UserService,
-    private pi: PageInfoService,
     private fb: UntypedFormBuilder,
     private imgbb: ImgbbService,
     private gs: GlobalService,
@@ -91,11 +89,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `User - Ubah Profile`,
-      `Halaman Pembaharuan Profile`,
-      `Ubah Profile`
-    );
     if (this.gs.isBrowser) {
       this.username = this.activatedRoute.snapshot.paramMap.get('username');
       this.bs.busy();

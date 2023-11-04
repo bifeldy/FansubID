@@ -6,7 +6,6 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { CONSTANTS } from '../../../../constants';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { NewsService } from '../../../_shared/services/news.service';
@@ -44,7 +43,6 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private bs: BusyService,
     private activatedRoute: ActivatedRoute,
-    private pi: PageInfoService,
     private imgbb: ImgbbService,
     private news: NewsService,
     private toast: ToastService,
@@ -61,11 +59,6 @@ export class NewsEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `Informasi - Ubah Berita`,
-      `Halaman Pembaharuan Berita`,
-      `Edit News`
-    );
     if (this.gs.isBrowser) {
       this.newsId = Number(this.activatedRoute.snapshot.paramMap.get('newsId'));
       this.bs.busy();

@@ -11,7 +11,6 @@ import { environment } from '../../../../environments/app/environment';
 import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { TicketService } from '../../../_shared/services/ticket.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
@@ -40,7 +39,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, CanComponentDea
     private router: Router,
     private as: AuthService,
     private bs: BusyService,
-    private pi: PageInfoService,
     private ticket: TicketService,
     private gs: GlobalService,
     private ds: DialogService
@@ -59,11 +57,6 @@ export class TicketCreateComponent implements OnInit, OnDestroy, CanComponentDea
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `Ticket - Permintaan Baru`,
-      `Halaman Permohonan Baru`,
-      `Ajukan Permintaan Permohonan`
-    );
     if (this.gs.isBrowser) {
       this.initForm();
       this.subsUser = this.as.currentUser.subscribe({

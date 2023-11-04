@@ -10,7 +10,6 @@ import { CONSTANTS } from '../../../../constants';
 import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { NewsService } from '../../../_shared/services/news.service';
@@ -41,7 +40,6 @@ export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeact
     private fb: UntypedFormBuilder,
     private router: Router,
     private bs: BusyService,
-    private pi: PageInfoService,
     private imgbb: ImgbbService,
     private news: NewsService,
     private gs: GlobalService,
@@ -57,11 +55,6 @@ export class NewsCreateComponent implements OnInit, OnDestroy, CanComponentDeact
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `Informasi - Buat Baru`,
-      `Halaman Menambahkan Berita Baru`,
-      `Create News`
-    );
     if (this.gs.isBrowser) {
       this.initForm();
     }

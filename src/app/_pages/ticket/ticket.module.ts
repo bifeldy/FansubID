@@ -19,9 +19,6 @@ const routes: Routes = [
     component: TicketListComponent,
     canActivate: [VerifiedGuard, RolesGuard],
     data: {
-      title: 'Ticket Ajuan Permohonan',
-      description: 'Progress Laporan',
-      keywords: 'Ticket',
       [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },

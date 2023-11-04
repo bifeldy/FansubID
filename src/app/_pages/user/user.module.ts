@@ -33,9 +33,6 @@ const routes: Routes = [
     component: UserListComponent,
     canActivate: [RolesGuard],
     data: {
-      title: 'User - Dashboard Overview',
-      description: 'Halaman Informasi Pengguna',
-      keywords: 'User',
       [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },

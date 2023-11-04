@@ -102,7 +102,12 @@ const routes: Routes = [
   },
   {
     path: 'ticket',
-    loadChildren: () => import('./_pages/ticket/ticket.module').then(m => m.TicketModule)
+    loadChildren: () => import('./_pages/ticket/ticket.module').then(m => m.TicketModule),
+    data: {
+      title: 'Ticket - Lapor Pelanggaran',
+      description: 'Pelanggaran & Penyalahgunaan',
+      keywords: 'Report',
+    }
   },
   {
     path: 'mailbox',

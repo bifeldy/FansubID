@@ -13,7 +13,6 @@ import { RoleModel } from '../../../../models/req-res.model';
 import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { MailService } from '../../../_shared/services/mail.service';
 import { AuthService } from '../../../_shared/services/auth.service';
@@ -37,7 +36,6 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
     private fb: UntypedFormBuilder,
     private router: Router,
     private bs: BusyService,
-    private pi: PageInfoService,
     private gs: GlobalService,
     private as: AuthService,
     private ms: MailService,
@@ -62,11 +60,6 @@ export class MailboxCreateComponent implements OnInit, OnDestroy, CanComponentDe
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `Mailbox - Buat Baru`,
-      `Halaman Membuat Surel Baru`,
-      `Create Email`
-    );
     if (this.gs.isBrowser) {
       this.initForm();
     }

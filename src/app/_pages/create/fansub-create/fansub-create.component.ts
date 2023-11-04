@@ -13,7 +13,6 @@ import { RoleModel } from '../../../../models/req-res.model';
 import { CanComponentDeactivate } from '../../../_shared/guards/leave-page.guard';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
@@ -60,7 +59,6 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
     private router: Router,
     private as: AuthService,
     private bs: BusyService,
-    private pi: PageInfoService,
     private imgbb: ImgbbService,
     private fansub: FansubService,
     private toast: ToastService,
@@ -90,11 +88,6 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `Fansub - Buat Baru`,
-      `Halaman Menambahkan Fansub Baru`,
-      `Create Fansub`
-    );
     if (this.gs.isBrowser) {
       this.initForm();
     }

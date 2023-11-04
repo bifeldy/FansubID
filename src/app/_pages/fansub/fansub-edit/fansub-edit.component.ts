@@ -10,7 +10,6 @@ import { CONSTANTS } from '../../../../constants';
 import { RoleModel } from '../../../../models/req-res.model';
 
 import { GlobalService } from '../../../_shared/services/global.service';
-import { PageInfoService } from '../../../_shared/services/page-info.service';
 import { FansubService } from '../../../_shared/services/fansub.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
@@ -65,7 +64,6 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private bs: BusyService,
     private activatedRoute: ActivatedRoute,
-    private pi: PageInfoService,
     private imgbb: ImgbbService,
     private fansub: FansubService,
     private toast: ToastService,
@@ -98,11 +96,6 @@ export class FansubEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.pi.updatePageMetaData(
-      `Fansub - Ubah Data`,
-      `Halaman Pembaharuan Data Fansub`,
-      `Ubah Fansub`
-    );
     if (this.gs.isBrowser) {
       this.fansubSlug = this.activatedRoute.snapshot.paramMap.get('fansubSlug');
       this.bs.busy();
