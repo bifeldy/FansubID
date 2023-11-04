@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 
 import { CONSTANTS } from '../../../constants';
 
@@ -23,6 +24,7 @@ import { BerkasCreateComponent } from '../create/berkas-create/berkas-create.com
 import { FansubCreateComponent } from '../create/fansub-create/fansub-create.component';
 import { MailboxCreateComponent } from '../create/mailbox-create/mailbox-create.component';
 import { NewsCreateComponent } from '../create/news-create/news-create.component';
+import { TicketCreateComponent } from './ticket-create/ticket-create.component';
 
 const routes: Routes = [
   {
@@ -33,35 +35,39 @@ const routes: Routes = [
   {
     path: 'berkas',
     component: BerkasCreateComponent,
+    canActivate: [RolesGuard],
     canDeactivate: [LeavePageGuard],
     data: {
       title: 'Berkas - Buat Baru',
       description: 'Halaman Unggah Berkas Baru',
-      keywords: 'Tambah Berkas Baru'
+      keywords: 'Tambah Berkas Baru',
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
     path: 'fansub',
     component: FansubCreateComponent,
-    canActivate: [VerifiedGuard],
+    canActivate: [VerifiedGuard, RolesGuard],
     canDeactivate: [LeavePageGuard],
     data: {
       title: 'Fansub - Buat Baru',
       description: 'Halaman Menambahkan Fansub Baru',
       keywords: 'Create Fansub',
-      [CONSTANTS.decoratorVerifiedOnly]: true
+      [CONSTANTS.decoratorVerifiedOnly]: true,
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
     path: 'mailbox',
     component: MailboxCreateComponent,
-    canActivate: [VerifiedGuard],
+    canActivate: [VerifiedGuard, RolesGuard],
     canDeactivate: [LeavePageGuard],
     data: {
       title: 'Surel - Buat Baru',
       description: 'Halaman Kirim Surel Baru',
       keywords: 'Buat Surel Baru',
-      [CONSTANTS.decoratorVerifiedOnly]: true
+      [CONSTANTS.decoratorVerifiedOnly]: true,
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
     }
   },
   {
@@ -76,6 +82,16 @@ const routes: Routes = [
       [CONSTANTS.decoratorVerifiedOnly]: true,
       [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR]
     }
+  },
+  {
+    path: 'ticket',
+    component: TicketCreateComponent,
+    canDeactivate: [LeavePageGuard],
+    data: {
+      title: 'Ticket - Permintaan Baru',
+      description: 'Halaman Permohonan Baru',
+      keywords: 'Ajukan Permintaan Permohonan'
+    }
   }
 ];
 
@@ -84,7 +100,8 @@ const routes: Routes = [
     BerkasCreateComponent,
     FansubCreateComponent,
     MailboxCreateComponent,
-    NewsCreateComponent
+    NewsCreateComponent,
+    TicketCreateComponent
   ],
   imports: [
     CommonModule,
@@ -95,7 +112,9 @@ const routes: Routes = [
     MaterialFileInputModule,
     NotificationsModule,
     AngularEditorModule,
-    CustomPipeModule
+    CustomPipeModule,
+    RecaptchaModule,
+    RecaptchaFormsModule
   ]
 })
 export class CreateModule { }

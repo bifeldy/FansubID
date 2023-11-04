@@ -29,12 +29,10 @@ const routes: Routes = [
   {
     path: 'create',
     loadChildren: () => import('./_pages/create/create.module').then(m => m.CreateModule),
-    canActivate: [RolesGuard],
     data: {
       title: 'Membuat Konten Baru',
       description: 'Membuat Konten Baru',
-      keywords: 'Add New Content',
-      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+      keywords: 'Add New Content'
     }
   },
   {
@@ -101,6 +99,10 @@ const routes: Routes = [
       description: 'Papan Pengumuman',
       keywords: 'News'
     }
+  },
+  {
+    path: 'ticket',
+    loadChildren: () => import('./_pages/ticket/ticket.module').then(m => m.TicketModule)
   },
   {
     path: 'mailbox',
