@@ -1,3 +1,71 @@
-<p>ticket-detail works!</p>
-<p>cooming-soon!</p>
-<p>please-come-back-later!</p>
+<!-- Notification -->
+<app-notifications></app-notifications>
+
+<!-- Content -->
+<div class="container" *ngIf="ticketData">
+
+  <!-- Detail -->
+  <div class="row pb-3 px-0">
+    <div class="col-12">
+      <div class="row">
+        <div class="sticky-top bg-bifeldy">
+          <div class="col-12">
+            <h2 class="pt-3 m-0">
+              <b class="text-bifeldy">Ticket #{{ ticketData.id }}</b>
+            </h2>
+          </div>
+          <div class="col-12">
+            <hr class="my-1 border-bottom-dotted" style="height: 4px; background: url('/assets/img/stripe.png');" />
+          </div>
+          <div class="col-12">
+            <h5 class="pb-3 m-0 text-bifeldy">
+              .:
+              <a routerLink="/user/{{ ticketData.user_.username }}" class="text-warning text-decoration-none" *ngIf="ticketData.user_">
+                {{ ticketData.user_.username }}
+              </a>
+              <span class="text-warning" *ngIf="!ticketData.user_">Anonim!</span>
+              ::
+              {{ ticketData.created_at | date:'d MMMM y, hh:mm:ss a z' }}
+              :.
+            </h5>
+          </div>
+        </div>
+        <div class="col-12 pt-3 mt-3">
+          URL Terkait ::
+          <br />
+          <a href="{{ ticketData.url }}" class="text-warning text-decoration-none" target="_blank">
+            {{ ticketData.url }}
+          </a>
+        </div>
+        <div class="col-12 pt-3 mt-3" *ngIf="ticketData.expected_solution">
+          Ekspektasi Tindakan ::
+          <br />
+          {{ ticketData.expected_solution }}
+        </div>
+        <div class="col-12 pt-3 mt-3" *ngIf="ticketData.final_decision">
+          Hasil Putusan ::
+          <br />
+          {{ ticketData.final_decision }}
+        </div>
+        <div class="col-12 pt-3 mt-3">
+          Isi Laporan ::
+          <br />
+          <div [innerHTML]="ticketData.reported_issue | safeInnerHtml"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-12 sticky-top bg-bifeldy">
+      <h2 class="pt-3 border-bottom-dotted">
+        <b class="text-bifeldy">Komentar</b>
+      </h2>
+    </div>
+    <div class="col-12">
+      <div class="p-3">
+        <app-discussion></app-discussion>
+      </div>
+    </div>
+  </div>
+
+</div>

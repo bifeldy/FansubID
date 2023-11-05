@@ -38,10 +38,11 @@ export class TicketController {
   @HttpCode(200)
   @FilterApiKeyAccess()
   @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const searchQuery = req.query['q'] || '';
     try {
+      const user: UserModel = res.locals['user'];
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
       const sqlWhere: any[] = [
@@ -51,9 +52,14 @@ export class TicketController {
         { final_decision: ILike(`%${searchQuery}%`) },
         { contact_email: ILike(`%${searchQuery}%`) }
       ];
-      if (req.query['finished'] === 'true') {
-        for (const sw of sqlWhere) {
+      for (const sw of sqlWhere) {
+        if (req.query['finished'] === 'true') {
           sw.finished = true;
+        }
+        if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+          sw.user_ = {
+            id: Equal(user.id)
+          };
         }
       }
       const [tickets, count] = await this.ticketRepo.findAndCount({
@@ -63,7 +69,7 @@ export class TicketController {
             [req.query['sort'] as string]: (req.query['order'] as string).toUpperCase()
           } : {
             created_at: 'DESC',
-            title: 'ASC'
+            url: 'ASC'
           })
         },
         relations: ['user_'],
@@ -178,8 +184,6 @@ export class TicketController {
   @Get('/:id')
   @HttpCode(200)
   @FilterApiKeyAccess()
-  @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     const secretQuery = req.query['secret'] || '';
     try {
@@ -188,7 +192,7 @@ export class TicketController {
         where: [
           { 
             id: Equal(parseInt(req.params['id'])),
-            ...((user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) ? {
+            ...((user?.role === RoleModel.ADMIN || user?.role === RoleModel.MODERATOR) ? {
               // Admin, Moderator Can See All Reports
             } : {
               secret: Equal(secretQuery)
@@ -196,6 +200,9 @@ export class TicketController {
           }
         ]
       });
+      if (!ticket.url.startsWith('http')) {
+        ticket.url = `http://${ticket.url}`;
+      }
       if ('user_' in ticket && ticket.user_) {
         delete ticket.user_.created_at;
         delete ticket.user_.updated_at;

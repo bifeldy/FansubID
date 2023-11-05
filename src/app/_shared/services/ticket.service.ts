@@ -37,8 +37,8 @@ export class TicketService {
     return this.api.putData(`/ticket/${ticketId}`, ticketData);
   }
 
-  getTicket(ticketId: number): Observable<JsonResponse<TicketModel>> {
-    return this.api.getData(`/ticket/${ticketId}`);
+  getTicket(ticketId: number, secret: string): Observable<JsonResponse<TicketModel>> {
+    return this.api.getData(`/ticket/${ticketId}?secret=${secret}`);
   }
 
 }
