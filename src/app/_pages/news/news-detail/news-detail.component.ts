@@ -55,9 +55,9 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
             this.gs.log('[NEWS_DETAIL_SUCCESS]', res);
             this.newsData = res.result;
             this.pi.updatePageMetaData(
-              `${this.newsData.title}`,
-              `${this.newsData.content}`,
-              `${Array.isArray(this.newsData.tags) ? this.newsData.tags.join(', ') : this.newsData.title}`,
+              this.newsData.title,
+              this.newsData.content,
+              Array.isArray(this.newsData.tags) ? this.newsData.tags.join(', ') : this.newsData.title,
               this.newsData.image_url,
               this.newsData.user_.username
             );

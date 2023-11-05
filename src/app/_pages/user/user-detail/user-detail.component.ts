@@ -122,9 +122,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             this.gs.log('[USER_DETAIL_SUCCESS]', res);
             this.userData = res.result;
             this.pi.updatePageMetaData(
-              `${this.userData.kartu_tanda_penduduk_.nama}`,
-              `${this.userData.profile_.description}`,
-              `${this.userData.username}`,
+              this.userData.kartu_tanda_penduduk_.nama,
+              this.userData.profile_.description,
+              this.userData.username,
               this.userData.image_url,
               this.userData.username
             );

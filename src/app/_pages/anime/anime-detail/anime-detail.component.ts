@@ -111,9 +111,9 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             this.gs.log('[ANIME_DETAIL_SUCCESS]', res);
             this.animeData = res.result;
             this.pi.updatePageMetaData(
-              `${this.animeData.title}`,
-              `${this.animeData.synopsis}`,
-              `${this.animeData.alternative_titles?.synonyms?.join(', ')}`,
+              this.animeData.title,
+              this.animeData.synopsis,
+              this.animeData.alternative_titles?.synonyms?.join(', '),
               this.animeData.image_url
             );
             this.bs.idle();

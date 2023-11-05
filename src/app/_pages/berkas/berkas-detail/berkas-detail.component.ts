@@ -95,9 +95,9 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             this.gs.log('[BERKAS_DETAIL_SUCCESS]', res);
             this.berkasData = res.result;
             this.pi.updatePageMetaData(
-              `${this.berkasData.name}`,
-              `${this.berkasData.description}`,
-              `${this.berkasData.name}`,
+              this.berkasData.name,
+              this.berkasData.description,
+              this.berkasData.name,
               this.berkasData.image_url,
               this.berkasData.user_.username
             );

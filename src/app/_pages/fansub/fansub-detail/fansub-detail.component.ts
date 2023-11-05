@@ -158,9 +158,9 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
         this.fansubData = res.result;
         this.pi.updatePageMetaData(
-          `${this.fansubData.name}`,
-          `${this.fansubData.description}`,
-          `${Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name}`,
+          this.fansubData.name,
+          this.fansubData.description,
+          Array.isArray(this.fansubData.tags) ? this.fansubData.tags.join(', ') : this.fansubData.name,
           this.fansubData.image_url,
           this.fansubData.user_.username
         );
