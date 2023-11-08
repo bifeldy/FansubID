@@ -366,6 +366,11 @@ export class UserController {
             }
           },
           {
+            ...((user?.verified || user?.username === req.params['username'] || (user && this.gs.isFreeTime())) ? {
+              // Verified User & User Itself Can See Private Berkas
+            } : {
+              private: false
+            }),
             name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             user_: {
               username: ILike(req.params['username']),
