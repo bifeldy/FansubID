@@ -94,18 +94,28 @@ export class MailController {
       properties: {
         to: {
           type: 'array',
-          items: { type: 'string' }
+          items: {
+            type: 'string'
+          }
         },
         cc: {
           type: 'array',
-          items: { type: 'string' }
+          items: {
+            type: 'string'
+          }
         },
         bcc: {
           type: 'array',
-          items: { type: 'string' }
+          items: {
+            type: 'string'
+          }
         },
-        subject: { type: 'string' },
-        message: { type: 'string' }
+        subject: {
+          type: 'string'
+        },
+        message: {
+          type: 'string'
+        }
       },
       required: ['to', 'subject', 'message']
     }
