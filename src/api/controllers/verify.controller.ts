@@ -26,6 +26,7 @@ export class VerifyController {
     const user: UserModel = res.locals['user'];
     const token: string = res.locals['token'];
     const key: string = res.locals['key'];
+    const apiKey = res.locals['key'];
     if (user) {
       if (token) {
         res.cookie(environment.tokenName, token, {
@@ -36,8 +37,10 @@ export class VerifyController {
           domain: environment.domain
         });
       }
-      (user as any)._email = (user as any).email;
-      (user as any)._session_origin = (user as any).session_origin;
+      if (!apiKey) {
+        (user as any)._email = (user as any).email;
+        (user as any)._session_origin = (user as any).session_origin;
+      }
       if ('kartu_tanda_penduduk_' in user && user.kartu_tanda_penduduk_) {
         delete user.kartu_tanda_penduduk_.created_at;
         delete user.kartu_tanda_penduduk_.updated_at;

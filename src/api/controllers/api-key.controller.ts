@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Equal, ILike, In, Raw } from 'typeorm';
 
@@ -7,6 +7,7 @@ import { CONSTANTS } from '../../constants';
 
 import { RoleModel, UserModel } from '../../models/req-res.model';
 
+import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
@@ -201,16 +202,8 @@ export class ApiKeyController {
 
   @Put('/:id')
   @HttpCode(201)
-  @ApiTags(CONSTANTS.apiTagApiKey)
-  @ApiParam({ name: 'id', type: 'number' })
-  @ApiBody({
-    schema: {
-      properties: {
-        name: { type: 'string' },
-        ip_domain: { type: 'string' }
-      }
-    }
-  })
+  @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   @VerifiedOnly()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
@@ -268,8 +261,8 @@ export class ApiKeyController {
 
   @Delete('/:id')
   @HttpCode(202)
-  @ApiTags(CONSTANTS.apiTagApiKey)
-  @ApiParam({ name: 'id', type: 'number' })
+  @ApiExcludeEndpoint()
+  @FilterApiKeyAccess()
   @VerifiedOnly()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {

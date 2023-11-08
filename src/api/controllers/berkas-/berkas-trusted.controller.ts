@@ -1,13 +1,12 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
-import { ApiExcludeController } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { In } from 'typeorm';
 
-import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+import { CONSTANTS } from '../../../constants';
 
 import { BerkasService } from '../../repository/berkas.service';
 
-@ApiExcludeController()
 @Controller('/berkas-trusted')
 export class BerkasTrustedController {
 
@@ -20,7 +19,19 @@ export class BerkasTrustedController {
   // PATCH `/api/berkas-trusted?id=`
   @Patch('/')
   @HttpCode(202)
-  @FilterApiKeyAccess()
+  @ApiTags(CONSTANTS.apiTagBerkas)
+  @ApiBody({
+    schema: {
+      properties: {
+        id: {
+          type: 'array',
+          items: {
+            type: 'string'
+          }
+        }
+      }
+    }
+  })
   async berkasTrusted(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try{
       const berkasId = req.query['id'] ? (req.query['id'] as string).split(',').map(b => b.trim()) : req.body.id;
@@ -35,12 +46,13 @@ export class BerkasTrustedController {
           ]
         });
         if (files.length > 0) {
-          let bid = '';
-          for (const f of files) {
-            if (bid)  {
-              bid += ', ';
+          let prm = '$1';
+          const bid: string[] = [];
+          for (let i = 0; i < files.length; i++) {
+            if (i > 0) {
+              prm += `, $${i+1}`;
             }
-            bid += `'${f.id}'`;
+            bid.push(files[i].id);
           }
           const berkas = await this.berkasRepo.query(`
             SELECT b.id bid, f.id fid, fm.user_id fm_uid
@@ -49,10 +61,10 @@ export class BerkasTrustedController {
               LEFT JOIN fansub f ON f.id = bff."fansubId"
               LEFT JOIN fansub_member fm ON (fm.fansub_id = f.id AND fm.user_id = b.user_id)
             WHERE
-              b.id IN (${bid})
+              b.id IN (${prm})
               AND fm.user_id IS NOT NULL
               AND fm.approved = true
-          `);
+          `, bid);
           for (const b of berkas) {
             results[b.bid] = true;
           }
