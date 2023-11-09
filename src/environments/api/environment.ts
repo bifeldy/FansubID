@@ -1,5 +1,7 @@
 import { SECRETS } from '../../secrets';
 
+import { CONSTANTS } from '../../constants';
+
 import { Anime } from '../../api/entities/Anime';
 import { Attachment } from '../../api/entities/Attachment';
 import { ApiKey } from '../../api/entities/ApiKey';
@@ -162,9 +164,7 @@ export const environment = {
   externalApiDorama: 'https://kuryana.vercel.app',
   externalApiImage: 'https://api.imgbb.com/1/upload',
   torrent: {
-    trackerAnnounce: [
-      `wss://tracker.fansub.id`
-    ],
+    trackerAnnounce: CONSTANTS.torrentTracker
   },
   malClientId: SECRETS().MAL_CLIENT_ID,                                                                          // '',
   idCloudHost: {

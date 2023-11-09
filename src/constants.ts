@@ -83,6 +83,17 @@ export const CONSTANTS = {
   timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days
   timeResetAccount: 5 * 60, // 5 Minutes
   timeMaxDaysNotification: 7 * 24 * 60 * 60 * 1000, // 7 Days
+  torrentIceStunServer: [
+    'stun:stun.cloudflare.com',
+    'stun:stun.l.google.com:19302',
+    'stun:tracker.fansub.id:11111'
+  ],
+  torrentTracker: [
+    'wss://tracker.fansub.id',
+    'wss://tracker.openwebtorrent.com',
+    'wss://tracker.webtorrent.dev',
+    'wss://tracker.btorrent.xyz'
+  ],
   verificationDomainCname: [
     'ghs.google.com'
   ],

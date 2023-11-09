@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Options, Instance, Torrent, TorrentOptions } from 'webtorrent';
 import { Wire } from 'bittorrent-protocol';
 import { openDB } from 'idb';
-import { Buffer } from 'buffer'; 
+import { Buffer } from 'buffer';
 
 import { environment } from '../../../environments/app/environment';
 
@@ -211,7 +211,9 @@ export class TorrentService {
     this.refCallback = callback;
     this.checkHealthOnTracker({
       magnetHash,
-      trackTimeout: 1234
+      trackTimeout: 1234,
+      trackList: environment.torrent.trackerAnnounce,
+      iceServers: environment.torrent.iceServers
     }).subscribe({
       next: (res: any) => {
         this.gs.log('[TORRENT_CLIENT_HEALTH_SUCCESS]', res.result);

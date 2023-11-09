@@ -62,8 +62,6 @@ export class TorrentComponent implements OnInit, OnDestroy {
   subsUser = null;
   subsTableDataRow = null;
 
-  timedOut = null;
-
   constructor(
     private snackBar: MatSnackBar,
     private clipboard: Clipboard,
@@ -106,10 +104,6 @@ export class TorrentComponent implements OnInit, OnDestroy {
     this.subsDialog?.unsubscribe();
     this.subsUser?.unsubscribe();
     this.subsTableDataRow?.unsubscribe();
-    if (this.timedOut) {
-      clearTimeout(this.timedOut);
-      this.timedOut = null;
-    }
   }
 
   copyMagnetHashToClipboard(magnetHash: string): void {
@@ -140,8 +134,10 @@ export class TorrentComponent implements OnInit, OnDestroy {
   }
 
   reviveTorrent(): void {
+    this.bs.busy();
     this.torrent.resurrectFiles((error, result) => {
       this.refreshAllGraph();
+      this.bs.idle();
     });
   }
 
@@ -278,7 +274,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
 
   refreshAllGraph(): void {
     for (const d of this.dataSource.data) {
-      this.timedOut = setTimeout(() => {
+      setTimeout(() => {
         this.refreshGraph(d);
       }, 1234);
     }

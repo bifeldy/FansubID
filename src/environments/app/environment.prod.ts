@@ -1,3 +1,5 @@
+import { CONSTANTS } from "../../constants";
+
 export const environment = {
   production: true,
   siteName: 'FansubID',
@@ -13,19 +15,9 @@ export const environment = {
     guild_id: '342220398022098944'
   },
   torrent: {
-    trackerAnnounce: [
-      'wss://tracker.fansub.id',
-      'wss://tracker.btorrent.xyz',
-      'wss://tracker.openwebtorrent.com'
-    ],
+    trackerAnnounce: CONSTANTS.torrentTracker,
     iceServers: [
-      {
-        urls: [
-          'stun:tracker.fansub.id:11111',
-          'stun:openrelay.metered.ca:80',
-          'stun:stun.l.google.com:19302'
-        ]
-      }
+      { urls: CONSTANTS.torrentIceStunServer }
     ]
   }
 };
