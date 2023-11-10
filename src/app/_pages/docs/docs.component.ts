@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { environment } from '../../../environments/app/environment';
 
 import { FansubService } from '../../_shared/services/fansub.service';
 import { GlobalService } from '../../_shared/services/global.service';
 import { InformationService } from '../../_shared/services/information.service';
+import { DialogService } from '../../_shared/services/dialog.service';
+import { WinboxService } from '../../_shared/services/winbox.service';
 
 @Component({
   selector: 'app-docs',
@@ -13,6 +16,7 @@ import { InformationService } from '../../_shared/services/information.service';
 })
 export class DocsComponent implements OnInit {
 
+  url = '';
   dnsData = [];
   tutorialData = null;
 
@@ -21,11 +25,17 @@ export class DocsComponent implements OnInit {
 
   subsDns = null;
   subsTutorial = null;
+  subsDialog = null;
+  subsFansub = null;
 
   constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private fansub: FansubService,
-    private info: InformationService
+    private info: InformationService,
+    private ds: DialogService,
+    private wb: WinboxService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -40,12 +50,66 @@ export class DocsComponent implements OnInit {
     if (this.gs.isBrowser) {
       this.getDns();
       this.getTutorial();
+      this.checkUrl();
     }
   }
 
   ngOnDestroy(): void {
     this.subsDns?.unsubscribe();
     this.subsTutorial?.unsubscribe();
+    this.subsDialog?.unsubscribe();
+    this.subsFansub?.unsubscribe();
+  }
+
+  async checkUrl(): Promise<void> {
+    this.url = this.activatedRoute.snapshot.queryParamMap.get('url') || '';
+    if (this.url) {
+      if (this.url.endsWith('&') || this.url.endsWith('/') || this.url.endsWith('?')) {
+        this.url = this.url.substring(0, this.url.length - 1);
+      }
+      this.url = this.gs.cleanIpOrigin(this.url);
+      const domain = `.${environment.domain}`;
+      if (this.url.toLowerCase().endsWith(domain)) {
+        this.url = this.url.substring(0, this.url.length - domain.length);
+      }
+      this.subsFansub = this.fansub.getFansub(this.url).subscribe({
+        next: async res => {
+          this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
+          let fansubUrls: any = (res.result.urls as any);
+          const idx = fansubUrls.findIndex(u => u.name === 'web');
+          if (idx >= 0) {
+            this.subsDialog = (await this.ds.openKonfirmasiDialog(
+              'Sub-Domain Tidak Aktif',
+              `Ingin Mengunjungi Situs ${fansubUrls[idx].url} ?`
+            )).afterClosed().subscribe({
+              next: re => {
+                this.gs.log('[INFO_DIALOG_CLOSED]', re);
+                if (re) {
+                  this.wb.winboxOpenUri(fansubUrls[idx].url);
+                }
+                this.subsDialog.unsubscribe();
+              }
+            });
+          } else {
+            this.subsDialog = (await this.ds.openKonfirmasiDialog(
+              'Alamat Website Tidak Tersedia',
+              `Ingin Mengunjungi Halaman ${this.url} ?`
+            )).afterClosed().subscribe({
+              next: re => {
+                this.gs.log('[INFO_DIALOG_CLOSED]', re);
+                if (re) {
+                  this.router.navigateByUrl(`/fansub/${this.url}`);
+                }
+                this.subsDialog.unsubscribe();
+              }
+            });
+          }
+        },
+        error: err => {
+          this.gs.log('[FANSUB_DETAIL_ERROR]', err, 'error');
+        }
+      });
+    }
   }
 
   getDns(): void {
