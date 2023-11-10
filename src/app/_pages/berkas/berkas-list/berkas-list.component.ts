@@ -9,6 +9,7 @@ import { FabService } from '../../../_shared/services/fab.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { AuthService } from '../../../_shared/services/auth.service';
 import { LocalStorageService } from '../../../_shared/services/local-storage.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-berkas-list',
@@ -44,6 +45,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   subsBerkas = null;
   subsTrusted = null;
+  subsDialog = null;
 
   r18 = false;
 
@@ -54,7 +56,8 @@ export class BerkasListComponent implements OnInit, OnDestroy {
     private bs: BusyService,
     private berkas: BerkasService,
     private fs: FabService,
-    private as: AuthService
+    private as: AuthService,
+    private ds: DialogService
   ) {
     this.gs.bannerImg = '/assets/img/banner/berkas.jpg';
     this.gs.sizeContain = false;
@@ -76,6 +79,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsBerkas?.unsubscribe();
     this.subsTrusted?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -89,9 +93,23 @@ export class BerkasListComponent implements OnInit, OnDestroy {
     }
   }
 
-  r18Changed(): void {
-    this.ls.setItem(this.gs.localStorageKeys.R18, JSON.stringify(this.r18));
-    this.getBerkas();
+  async r18Changed(): Promise<void> {
+    if (this.r18) {
+      this.subsDialog = (await this.ds.openKonfirmasiDialog(
+        'Tampilkan Kontent R-18+',
+        'Apakah Yakin Untuk Melanjutkan ?'
+      )).afterClosed().subscribe({
+        next: re => {
+          this.gs.log('[INFO_DIALOG_CLOSED]', re);
+          if (!re) {
+            this.r18 = false;
+          }
+          this.ls.setItem(this.gs.localStorageKeys.R18, JSON.stringify(this.r18));
+          this.getBerkas();
+          this.subsDialog.unsubscribe();
+        }
+      });
+    }
   }
 
   getBerkas(): void {
