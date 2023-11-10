@@ -275,8 +275,8 @@ export class DiscordService {
                 ddlFile.id = msg.attachments.first().id;
                 ddlFile.name = msg.attachments.first().name;
                 let newUrl = msg.attachments.first().url;
-                if (newUrl.endsWith('&') || newUrl.endsWith('/')) {
-                  newUrl = newUrl.substring(0, -1);
+                if (newUrl.endsWith('&') || newUrl.endsWith('/') || newUrl.endsWith('?')) {
+                  newUrl = newUrl.substring(0, newUrl.length - 1);
                 }
                 ddlFile.url = newUrl;
                 ddlFile.size = msg.attachments.first().size;
