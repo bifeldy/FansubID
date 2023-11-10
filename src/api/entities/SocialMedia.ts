@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm'
 
 import { SocialMediaModel, SosMedModel, UserModel } from '../../models/req-res.model';
 
@@ -17,6 +17,7 @@ export class SocialMedia implements SocialMediaModel {
   type: SosMedModel;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
+  @Index()
   created_at: number | Date;
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

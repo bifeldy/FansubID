@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Index } from 'typeorm'
 
 import { AgamaModel, GolonganDarahModel, JenisKelaminModel, KartuTandaPendudukModel, WargaNegaraModel } from '../../models/req-res.model';
 
@@ -67,6 +67,7 @@ export class KartuTandaPenduduk implements KartuTandaPendudukModel {
   kewarganegaraan: WargaNegaraModel;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
+  @Index()
   created_at: number | Date;
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

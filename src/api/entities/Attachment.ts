@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Index } from 'typeorm'
 
 import { AttachmentModel, UserModel } from '../../models/req-res.model';
 
@@ -39,6 +39,7 @@ export class Attachment implements AttachmentModel {
   pending: boolean;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
+  @Index()
   created_at: number | Date;
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm'
 
 import { BerkasModel, FansubModel, LikeAndDislikeModel, LikeDislikeModel, NewsModel, UserModel } from '../../models/req-res.model';
 
@@ -17,6 +17,7 @@ export class LikeDislike implements LikeDislikeModel {
   type: LikeAndDislikeModel;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
+  @Index()
   created_at: number | Date;
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

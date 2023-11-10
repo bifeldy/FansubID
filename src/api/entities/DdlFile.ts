@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn, Index } from 'typeorm'
 
 import { DdlFileModel, UserModel } from '../../models/req-res.model';
 
@@ -35,6 +35,7 @@ export class DdlFile implements DdlFileModel {
   chunk_idx: number;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
+  @Index()
   created_at: number | Date;
 
   @UpdateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

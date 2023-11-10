@@ -1,4 +1,4 @@
-import { Entity, Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, JoinTable, ManyToMany, PrimaryGeneratedColumn, Index } from 'typeorm'
 
 import { AttachmentModel, MailboxModel } from '../../models/req-res.model';
 
