@@ -109,6 +109,9 @@ export class BerkasListComponent implements OnInit, OnDestroy {
           this.subsDialog.unsubscribe();
         }
       });
+    } else {
+      this.ls.setItem(this.gs.localStorageKeys.R18, JSON.stringify(this.r18));
+      this.getBerkas();
     }
   }
 
