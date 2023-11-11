@@ -79,6 +79,7 @@ export const CONSTANTS = {
   timeoutMailWebhookTime: 1 * 60 * 1000, // 1 Minutes
   timeoutReconnectSocketKey: 'TIMEOUT_RECONNECT_SOCKET',
   timeoutReconnectSocketTime: 5 * 1000, // 5 Seconds
+  timeDiscord: 1 * 60 * 1000, // 1 Minutes
   timeJwtEncryption: 3 * 60, // 3 Minutes
   timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days
   timeResetAccount: 5 * 60, // 5 Minutes
