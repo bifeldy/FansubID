@@ -390,7 +390,7 @@ export class DiscordService {
         if (args?.length >= 2 && args?.length <= 3) {
           await this.verifyAccount(args, interaction.user.id, interaction);
         } else {
-          await interaction.reply({ content: `<@${interaction.user.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
+          await interaction.reply({ content: `<@${interaction.user.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/discord-verifikasi 🤔` });
         }
       } else {
         await interaction.reply({ content: `<@${interaction.user.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs dan ${environment.baseUrl}/api` });
@@ -416,7 +416,7 @@ export class DiscordService {
           if (args.length >= 2 && args.length <= 3) {
             await this.verifyAccount([args[1], args[2]], msg.author.id, msg);
           } else {
-            await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
+            await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/discord-verifikasi 🤔` });
           }
         } else {
           await msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs dan ${environment.baseUrl}/api` });
