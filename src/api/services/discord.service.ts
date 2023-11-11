@@ -12,8 +12,12 @@ import {
   EmbedFooterData,
   GuildMember,
   PartialGuildMember,
-  MessageAttachment
+  MessageAttachment,
+  CommandInteraction
 } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
 
 // NodeJS Library
 import cluster from 'node:cluster';
@@ -56,12 +60,15 @@ export class DiscordService {
     private ddlFileRepo: DdlFileService,
     private sosmedRepo: SocialMediaService
   ) {
-    if (environment.production) {
+    // if (environment.production) {
       this.setupBot();
+      if (cluster.isMaster) {
+        this.setupSlash();
+      }
       if (cluster.isWorker) {
         this.startBot();
       }
-    }
+    // }
   }
 
   async cfgGithubSet(data): Promise<void> {
@@ -74,9 +81,39 @@ export class DiscordService {
 
   /** */
 
+  async setupSlash(): Promise<this> {
+    try {
+      const rest = new REST({ version: '9' }).setToken(environment.discord.loginToken);
+      const globalCommands = [
+        new SlashCommandBuilder().setName('about').setDescription('FansubID Information ~'),
+        new SlashCommandBuilder().setName('ping').setDescription('Pong!')
+      ].map(command => command.toJSON());
+      await rest.put(
+        Routes.applicationCommands(environment.discord.client_id),
+        {
+          body: globalCommands
+        }
+      );
+      const fsidCommands = [
+        new SlashCommandBuilder().setName('verify').setDescription('FansubID Account Verification')
+          .addStringOption(option => option.setName('app_token').setDescription('App Token Verifikasi'))
+      ].map(command => command.toJSON());
+      await rest.put(
+        Routes.applicationGuildCommands(environment.discord.client_id, environment.discord.guild_id),
+        {
+          body: fsidCommands
+        }
+      );
+      this.gs.log('[DISCORD_SLASH_COMMAND-SUCCESS] 🎉', [...globalCommands, ...fsidCommands]);
+    } catch (error) {
+      this.gs.log('[DISCORD_SLASH_COMMAND-FAILED] 🎉', error, 'error');
+    }
+    return this;
+  }
+
   setupBot(): void {
     this.bot = new Client({
-      restRequestTimeout: 60 * 1000,
+      restRequestTimeout: CONSTANTS.timeDiscord,
       intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MEMBERS,
@@ -102,14 +139,19 @@ export class DiscordService {
         'CHANNEL'
       ]
     });
-    this.bot.on('messageCreate', (msg: Message) => {
-      if (msg.channel.id === environment.discord.channelBotId && msg.content.startsWith('~')) {
-        this.gs.log(`[${msg.guild.name}] 🎉 [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content} 🎶`);
-        if (cluster.isMaster) {
+    if (cluster.isMaster) {
+      this.bot.on('interactionCreate', async interaction => {
+        if (!interaction.isCommand()) return;
+        this.gs.log(`[${interaction.guild.name}] 🎉 [${(interaction.channel as TextChannel).name}] [${interaction.user.username}#${interaction.user.discriminator}] ${interaction.commandName} 🎶`);
+        this.handleInteraction(interaction);
+      });
+      this.bot.on('messageCreate', (msg: Message) => {
+        if (msg.channel.id === environment.discord.channelBotId && msg.content.startsWith('~')) {
+          this.gs.log(`[${msg.guild.name}] 🎉 [${(msg.channel as TextChannel).name}] [${msg.author.username}#${msg.author.discriminator}] ${msg.content} 🎶`);
           this.handleMessage(msg);
         }
-      }
-    });
+      });
+    }
     this.bot.on('ready', async () => {
       try {
         this.gs.log(`[DISCORD_SERVICE-READY] 🎉 ${this.bot.user.username}#${this.bot.user.discriminator} - ${this.bot.user.id} 🎶`);
@@ -335,20 +377,53 @@ export class DiscordService {
     };
   }
 
+  async handleInteraction(interaction: CommandInteraction): Promise<void> {
+    try {
+      if (interaction.commandName === 'about') {
+        await interaction.reply({ content: `<@${interaction.user.id}> https://github.com/${environment.author}/${environment.siteName}` });
+      } else if (interaction.commandName === 'ping') {
+        const latency = Date.now() - new Date(interaction.createdTimestamp).getTime();
+        await interaction.reply({ content: `<@${interaction.user.id}> Pong ${latency} ms late!` });
+      } else if (interaction.commandName === 'verify') {
+        const appToken = interaction.options.getString('app_token');
+        const args = appToken?.split(' ');
+        if (args?.length >= 2 && args?.length <= 3) {
+          await this.verifyAccount(args, interaction.user.id, interaction);
+        } else {
+          await interaction.reply({ content: `<@${interaction.user.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
+        }
+      } else {
+        await interaction.reply({ content: `<@${interaction.user.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs dan ${environment.baseUrl}/api` });
+      }
+    } catch (error) {
+      this.gs.log('[DISCORD_SERVICE-HANDLE_INTERACTION] 🎉', error, 'error');
+    }
+  }
+
   async handleMessage(msg: Message): Promise<void> {
     try {
-      if (msg.content === '~about') {
-        await msg.reply({ content: `<@${msg.author.id}> https://github.com/${environment.author}/${environment.siteName}` });
-      } else if (msg.content === '~ping') {
-        const latency = Date.now() - new Date(msg.createdTimestamp).getTime();
-        await msg.reply({ content: `<@${msg.author.id}> Pong ${latency} ms late!` });
-      } else if (msg.content.startsWith('~verify ')) {
-        await this.verifyAccount(msg);
-      } else {
-        await msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs dan ${environment.baseUrl}/api` });
-      }
-      if (msg.content.includes('DELETE_CHAT')) {
-        await msg.delete();
+      if (msg.content) {
+        if (msg.content === '~about') {
+          await msg.reply({ content: `<@${msg.author.id}> https://github.com/${environment.author}/${environment.siteName}` });
+        } else if (msg.content === '~ping') {
+          const latency = Date.now() - new Date(msg.createdTimestamp).getTime();
+          await msg.reply({ content: `<@${msg.author.id}> Pong ${latency} ms late!` });
+        } else if (msg.content.startsWith('~verify ')) {
+          const args = msg.content.split(' ');
+          args.reverse();
+          args.pop();
+          args.reverse();
+          if (args.length >= 2 && args.length <= 3) {
+            await this.verifyAccount([args[1], args[2]], msg.author.id, msg);
+          } else {
+            await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
+          }
+        } else {
+          await msg.reply({ content: `<@${msg.author.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs dan ${environment.baseUrl}/api` });
+        }
+        if (msg.content.includes('DELETE_CHAT')) {
+          await msg.delete();
+        }
       }
     } catch (error) {
       this.gs.log('[DISCORD_SERVICE-HANDLE_MESSAGE] 🎉', error, 'error');
@@ -386,60 +461,57 @@ export class DiscordService {
     }
   }
 
-  async verifyAccount(msg: Message): Promise<Message<boolean>> {
+  async verifyAccount(appToken: string[], userAuthorId: string, interactionMessage): Promise<void> {
     try {
-      const args = msg.content.split(' ');
-      if (args.length >= 3 && args.length <= 4) {
-        const decoded = this.cs.jwtDecode(args[2]);
-        if (decoded.discord.id === msg.author.id) {
-          const user = await this.userRepo.findOneOrFail({
-            where: [
-              { id: Equal(decoded.user.id) }
-            ],
-            relations: ['kartu_tanda_penduduk_', 'profile_']
-          })
-          if (user.verified) {
-            return await msg.reply({ content: `<@${msg.author.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
-          } else if (args[1] === SosMedModel.DISCORD) {
-            if (!decoded.discord.verified) {
-              return await msg.reply({ content: `<@${msg.author.id}> Akun discord belum terverifikasi 🤔` });
-            }
-            user.verified = true;
-            await this.userRepo.save(user);
-            const laboratoryRatsRole = msg.guild.roles.cache.get(environment.discord.laboratoryRatsRoleId);
-            if (!msg.member.roles.cache.has(laboratoryRatsRole.id)) {
-              await msg.guild.members.cache.get(decoded.discord.id).roles.add(laboratoryRatsRole);
-            }
-            await msg.reply({ content: `<@${msg.author.id}> 😚 .: Berhasil :: ${user.username}@${environment.mailTrap.domain} :. 🤩` });
-            return await (msg.guild.channels.cache.get(environment.discord.channelEventId) as TextChannel).send({
-              embeds: [
-                new MessageEmbed()
-                  .setColor('#69f0ae')
-                  .setTitle(user.kartu_tanda_penduduk_.nama)
-                  .setURL(`${environment.baseUrl}/user/${user.username}`)
-                  .setAuthor({
-                    name: `${environment.siteName} - Verifikasi Pengguna`,
-                    iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
-                    url: environment.baseUrl
-                  })
-                  .setDescription(this.gs.htmlToText(user.profile_.description))
-                  .setThumbnail(user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url)
-                  .setTimestamp(user.updated_at)
-                  .setFooter({
-                    text: user.username,
-                    iconURL: user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url
-                  })
-              ]
-            });
+      const decoded = this.cs.jwtDecode(appToken[1]);
+      if (decoded.discord.id === userAuthorId) {
+        const user = await this.userRepo.findOneOrFail({
+          where: [
+            { id: Equal(decoded.user.id) }
+          ],
+          relations: ['kartu_tanda_penduduk_', 'profile_']
+        })
+        if (user.verified) {
+          return await interactionMessage.reply({ content: `<@${userAuthorId}> Akun sudah diverifikasi 😍 Yeay 🥰` });
+        } else if (appToken[0] === SosMedModel.DISCORD) {
+          if (!decoded.discord.verified) {
+            return await interactionMessage.reply({ content: `<@${userAuthorId}> Akun discord belum terverifikasi 🤔` });
           }
-          throw new Error('Format Data Salah / Token Expired!');
+          user.verified = true;
+          await this.userRepo.save(user);
+          const laboratoryRatsRole = interactionMessage.guild.roles.cache.get(environment.discord.laboratoryRatsRoleId);
+          const member = interactionMessage.guild.members.cache.get(userAuthorId);
+          if (!member.roles.cache.has(laboratoryRatsRole.id)) {
+            await member.roles.add(laboratoryRatsRole);
+          }
+          (interactionMessage.guild.channels.cache.get(environment.discord.channelEventId) as TextChannel).send({
+            embeds: [
+              new MessageEmbed()
+                .setColor('#69f0ae')
+                .setTitle(user.kartu_tanda_penduduk_.nama)
+                .setURL(`${environment.baseUrl}/user/${user.username}`)
+                .setAuthor({
+                  name: `${environment.siteName} - Verifikasi Pengguna`,
+                  iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                  url: environment.baseUrl
+                })
+                .setDescription(this.gs.htmlToText(user.profile_.description))
+                .setThumbnail(user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url)
+                .setTimestamp(user.updated_at)
+                .setFooter({
+                  text: user.username,
+                  iconURL: user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url
+                })
+            ]
+          });
+          return await interactionMessage.reply({ content: `<@${userAuthorId}> 😚 .: Berhasil :: ${user.username}@${environment.mailTrap.domain} :. 🤩` });
         }
-        return await msg.reply({ content: `<@${msg.author.id}> Siapa ya? Ini milik orang lain 🤔` });
+        throw new Error('Format Data Salah / Token Expired!');
       }
-      return await msg.reply({ content: `<@${msg.author.id}> Untuk verifikasi, kunjungi ${environment.baseUrl}/verify-discord 🤔` });
+      return await interactionMessage.reply({ content: `<@${userAuthorId}> Siapa ya? Ini milik orang lain 🤔` });
     } catch (error) {
       try {
-        return await msg.reply({ content: `<@${msg.author.id}> Format data salah atau token expired 🤔` });
+        return await interactionMessage.reply({ content: `<@${userAuthorId}> Format data salah atau token expired 🤔` });
       } catch (e) {
         this.gs.log('[DISCORD_SERVICE-VERIFY_ACCOUNT] 🎉', e, 'error');
         return null;
