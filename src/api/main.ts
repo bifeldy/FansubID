@@ -101,7 +101,7 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
 
 async function bootstrap(): Promise<void> {
   const port = process.env['PORT'] || 4200;
-  const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length;
+  const numCPUs = Math.min(Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length, 2);
   if (numCPUs > 1) {
     try {
       const expressApp = express();
@@ -150,6 +150,7 @@ async function bootstrap(): Promise<void> {
     Mutex.init();
     const nestApp = await app();
     const gs = nestApp.get(GlobalService);
+    await nestApp.get(DiscordService).startBot();
     nestApp.useWebSocketAdapter(new SocketIoAdapter(nestApp));
     await nestApp.listen(port, async () => {
       gs.log(`[APP_MASTER_SERVER] 💻 Running on => ${process.cwd()} 💘`, process.pid);
