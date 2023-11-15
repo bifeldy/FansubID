@@ -80,6 +80,7 @@
               "./node_modules/viewerjs/dist/viewer.min.js"
             ],
             "allowedCommonJsDependencies": [
+              "@nestjs/ng-universal/dist/tokens",
               "@videojs/xhr",
               "buffer/",
               "crypto-js",
