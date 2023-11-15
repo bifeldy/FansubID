@@ -50,6 +50,7 @@ testem.log
 Thumbs.db
 
 # Other & Environments
+/src/assets/backup
 /src/assets/raw
 /secret.json
 /secret.prod.json
