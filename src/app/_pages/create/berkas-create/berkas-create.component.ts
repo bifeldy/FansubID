@@ -215,23 +215,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     return abstractControl.get(controlName).hasValidator(Validators.required);
   }
 
-  initForm(): void {
-    this.fg = this.fb.group({
-      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      description: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      anime_id: [null, Validators.compose([])],
-      anime_name: [null, Validators.compose([])],
-      dorama_id: [null, Validators.compose([])],
-      dorama_name: [null, Validators.compose([])],
-      fansub_list: this.fb.array([this.createFansub()]),
-      image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
-      sn_code: [null, Validators.compose([])],
-      attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      download_url: this.fb.array([this.createDownloadLink()]),
-      private: [false, Validators.compose([Validators.required])],
-      r18: [false, Validators.compose([Validators.required])]
-    });
+  animeValueChanged(): void {
     this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -247,8 +231,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
       },
       error: err => {
         this.gs.log('[BERKAS_CREATE_SEARCH_ANIME_RESULT_ERROR]', err, 'error');
+        this.animeValueChanged();
       }
     });
+  }
+
+  doramaValueChanged(): void {
     this.subsDoramaDetail = this.fg.get('dorama_id').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -268,8 +256,12 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
       },
       error: err => {
         this.gs.log('[BERKAS_CREATE_SEARCH_DORAMA_RESULT_ERROR]', err, 'error');
+        this.doramaValueChanged();
       }
     });
+  }
+
+  projectTypeValueChanged(): void {
     this.subsProjectDetail = this.fg.get('projectType_id').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -308,9 +300,13 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
           if (selectedProject.name.toLowerCase().includes('anime_')) {
             this.fg.controls['anime_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
             this.fg.controls['anime_name'].setValidators([Validators.required]);
+            this.subsAnimeDetail?.unsubscribe();
+            this.animeValueChanged();
           } else if (selectedProject.name.toLowerCase().includes('dorama_')) {
             this.fg.controls['dorama_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
             this.fg.controls['dorama_name'].setValidators([Validators.required]);
+            this.subsDoramaDetail?.unsubscribe();
+            this.doramaValueChanged();
           } else {
             this.fg.controls['sn_code'].setValidators([Validators.required, Validators.pattern(/^[A-Z0-9\-]+$/)]);
           }
@@ -322,6 +318,26 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
         this.fg.controls['sn_code'].updateValueAndValidity();
       }
     });
+  }
+
+  initForm(): void {
+    this.fg = this.fb.group({
+      name: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      description: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      projectType_id: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      anime_id: [null, Validators.compose([])],
+      anime_name: [null, Validators.compose([])],
+      dorama_id: [null, Validators.compose([])],
+      dorama_name: [null, Validators.compose([])],
+      fansub_list: this.fb.array([this.createFansub()]),
+      image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      sn_code: [null, Validators.compose([])],
+      attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      download_url: this.fb.array([this.createDownloadLink()]),
+      private: [false, Validators.compose([Validators.required])],
+      r18: [false, Validators.compose([Validators.required])]
+    });
+    this.projectTypeValueChanged();
   }
 
   get getDownloadUrlControl(): UntypedFormArray {

@@ -290,6 +290,111 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     return abstractControl.get(controlName).hasValidator(Validators.required);
   }
 
+  animeValueChanged(): void {
+    this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => this.isLoading = true),
+      switchMap(searchQuery => this.anime.searchAnime(searchQuery).pipe(
+        finalize(() => this.isLoading = false)
+      )),
+      retry(-1)
+    ).subscribe({
+      next: res => {
+        this.gs.log('[BERKAS_EDIT_SEARCH_ANIME_RESULT_SUCCESS]', res);
+        this.filteredAnime = (res as any).results;
+      },
+      error: err => {
+        this.gs.log('[BERKAS_EDIT_SEARCH_ANIME_RESULT_ERROR]', err, 'error');
+        this.animeValueChanged();
+      }
+    });
+  }
+
+  doramaValueChanged(): void {
+    this.subsDoramaDetail = this.fg.get('dorama_id').valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => this.isLoading = true),
+      switchMap(searchQuery => this.dorama.searchDorama(searchQuery).pipe(
+        finalize(() => this.isLoading = false)
+      )),
+      retry(-1)
+    ).subscribe({
+      next: res => {
+        this.gs.log('[BERKAS_EDIT_SEARCH_DORAMA_RESULT_SUCCESS]', res);
+        for (const r of (res as any).results) {
+          r.mdl_id = r.mdl_id.split('-')[1];
+          r.image_url = r.thumb;
+        }
+        this.filteredDorama = (res as any).results;
+      },
+      error: err => {
+        this.gs.log('[BERKAS_EDIT_SEARCH_DORAMA_RESULT_ERROR]', err, 'error');
+        this.doramaValueChanged();
+      }
+    });
+  }
+
+  projectTypeValueChanged(): void {
+    this.subsProjectDetail = this.fg.get('projectType_id').valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      retry(-1)
+    ).subscribe({
+      next: projectId => {
+        this.gs.log('[BERKAS_CREATE_PROJECT_CHANGED]', projectId);
+        this.fg.controls['anime_id'].patchValue(null);
+        this.fg.controls['anime_name'].patchValue(null);
+        this.fg.controls['dorama_id'].patchValue(null);
+        this.fg.controls['dorama_name'].patchValue(null);
+        this.fg.controls['sn_code'].patchValue(null);
+        this.fg.controls['anime_id'].setErrors(null);
+        this.fg.controls['anime_name'].setErrors(null);
+        this.fg.controls['dorama_id'].setErrors(null);
+        this.fg.controls['dorama_name'].setErrors(null);
+        this.fg.controls['sn_code'].setErrors(null);
+        this.fg.controls['anime_id'].clearValidators();
+        this.fg.controls['anime_name'].clearValidators();
+        this.fg.controls['dorama_id'].clearValidators();
+        this.fg.controls['dorama_name'].clearValidators();
+        this.fg.controls['sn_code'].clearValidators();
+        this.fg.controls['anime_id'].markAsPristine();
+        this.fg.controls['anime_name'].markAsPristine();
+        this.fg.controls['dorama_id'].markAsPristine();
+        this.fg.controls['dorama_name'].markAsPristine();
+        this.fg.controls['sn_code'].markAsPristine();
+        this.fg.controls['anime_id'].markAsUntouched();
+        this.fg.controls['anime_name'].markAsUntouched();
+        this.fg.controls['dorama_id'].markAsUntouched();
+        this.fg.controls['dorama_name'].markAsUntouched();
+        this.fg.controls['sn_code'].markAsUntouched();
+        const selectedProject = this.projectList.find(p => p.id === projectId);
+        if (selectedProject) {
+          this.berkasType = selectedProject.name;
+          if (selectedProject.name.toLowerCase().includes('anime_')) {
+            this.fg.controls['anime_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+            this.fg.controls['anime_name'].setValidators([Validators.required]);
+            this.subsAnimeDetail?.unsubscribe();
+            this.animeValueChanged();
+          } else if (selectedProject.name.toLowerCase().includes('dorama_')) {
+            this.fg.controls['dorama_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+            this.fg.controls['dorama_name'].setValidators([Validators.required]);
+            this.subsDoramaDetail?.unsubscribe();
+            this.doramaValueChanged();
+          } else {
+            this.fg.controls['sn_code'].setValidators([Validators.required, Validators.pattern(/^[A-Z0-9\-]+$/)]);
+          }
+        }
+        this.fg.controls['anime_id'].updateValueAndValidity();
+        this.fg.controls['anime_name'].updateValueAndValidity();
+        this.fg.controls['dorama_id'].updateValueAndValidity();
+        this.fg.controls['dorama_name'].updateValueAndValidity();
+        this.fg.controls['sn_code'].updateValueAndValidity();
+      }
+    });
+  }
+
   initForm(data): void {
     if ('attachment_' in data && data.attachment_) {
       this.attachmentFile = data.attachment_;
@@ -337,96 +442,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     for (const fs of data.fansub_) {
       this.addFansub(fs);
     }
-    this.subsAnimeDetail = this.fg.get('anime_id').valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      tap(() => this.isLoading = true),
-      switchMap(searchQuery => this.anime.searchAnime(searchQuery).pipe(
-        finalize(() => this.isLoading = false)
-      )),
-      retry(-1)
-    ).subscribe({
-      next: res => {
-        this.gs.log('[BERKAS_EDIT_SEARCH_ANIME_RESULT_SUCCESS]', res);
-        this.filteredAnime = (res as any).results;
-      },
-      error: err => {
-        this.gs.log('[BERKAS_EDIT_SEARCH_ANIME_RESULT_ERROR]', err, 'error');
-      }
-    });
-    this.subsDoramaDetail = this.fg.get('dorama_id').valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      tap(() => this.isLoading = true),
-      switchMap(searchQuery => this.dorama.searchDorama(searchQuery).pipe(
-        finalize(() => this.isLoading = false)
-      )),
-      retry(-1)
-    ).subscribe({
-      next: res => {
-        this.gs.log('[BERKAS_EDIT_SEARCH_DORAMA_RESULT_SUCCESS]', res);
-        for (const r of (res as any).results) {
-          r.mdl_id = r.mdl_id.split('-')[1];
-          r.image_url = r.thumb;
-        }
-        this.filteredDorama = (res as any).results;
-      },
-      error: err => {
-        this.gs.log('[BERKAS_EDIT_SEARCH_DORAMA_RESULT_ERROR]', err, 'error');
-      }
-    });
-    this.subsProjectDetail = this.fg.get('projectType_id').valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      retry(-1)
-    ).subscribe({
-      next: projectId => {
-        this.gs.log('[BERKAS_CREATE_PROJECT_CHANGED]', projectId);
-        this.fg.controls['anime_id'].patchValue(null);
-        this.fg.controls['anime_name'].patchValue(null);
-        this.fg.controls['dorama_id'].patchValue(null);
-        this.fg.controls['dorama_name'].patchValue(null);
-        this.fg.controls['sn_code'].patchValue(null);
-        this.fg.controls['anime_id'].setErrors(null);
-        this.fg.controls['anime_name'].setErrors(null);
-        this.fg.controls['dorama_id'].setErrors(null);
-        this.fg.controls['dorama_name'].setErrors(null);
-        this.fg.controls['sn_code'].setErrors(null);
-        this.fg.controls['anime_id'].clearValidators();
-        this.fg.controls['anime_name'].clearValidators();
-        this.fg.controls['dorama_id'].clearValidators();
-        this.fg.controls['dorama_name'].clearValidators();
-        this.fg.controls['sn_code'].clearValidators();
-        this.fg.controls['anime_id'].markAsPristine();
-        this.fg.controls['anime_name'].markAsPristine();
-        this.fg.controls['dorama_id'].markAsPristine();
-        this.fg.controls['dorama_name'].markAsPristine();
-        this.fg.controls['sn_code'].markAsPristine();
-        this.fg.controls['anime_id'].markAsUntouched();
-        this.fg.controls['anime_name'].markAsUntouched();
-        this.fg.controls['dorama_id'].markAsUntouched();
-        this.fg.controls['dorama_name'].markAsUntouched();
-        this.fg.controls['sn_code'].markAsUntouched();
-        const selectedProject = this.projectList.find(p => p.id === projectId);
-        if (selectedProject) {
-          this.berkasType = selectedProject.name;
-          if (selectedProject.name.toLowerCase().includes('anime_')) {
-            this.fg.controls['anime_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-            this.fg.controls['anime_name'].setValidators([Validators.required]);
-          } else if (selectedProject.name.toLowerCase().includes('dorama_')) {
-            this.fg.controls['dorama_id'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-            this.fg.controls['dorama_name'].setValidators([Validators.required]);
-          } else {
-            this.fg.controls['sn_code'].setValidators([Validators.required, Validators.pattern(/^[A-Z0-9\-]+$/)]);
-          }
-        }
-        this.fg.controls['anime_id'].updateValueAndValidity();
-        this.fg.controls['anime_name'].updateValueAndValidity();
-        this.fg.controls['dorama_id'].updateValueAndValidity();
-        this.fg.controls['dorama_name'].updateValueAndValidity();
-        this.fg.controls['sn_code'].updateValueAndValidity();
-      }
-    });
+    this.projectTypeValueChanged();
   }
 
   get getDownloadUrlControl(): UntypedFormArray {
