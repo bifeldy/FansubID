@@ -60,7 +60,7 @@ export class DiscordService {
     private ddlFileRepo: DdlFileService,
     private sosmedRepo: SocialMediaService
   ) {
-    // if (environment.production) {
+    if (environment.production) {
       this.setupBot();
       if (cluster.isMaster) {
         this.setupSlash();
@@ -68,7 +68,7 @@ export class DiscordService {
       if (cluster.isWorker) {
         this.startBot();
       }
-    // }
+    }
   }
 
   async cfgGithubSet(data): Promise<void> {
