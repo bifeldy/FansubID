@@ -204,7 +204,7 @@ export class UploadService {
   }
 
   @Cron(
-    CronExpression.EVERY_5_MINUTES,
+    CronExpression.EVERY_10_MINUTES,
     {
       name: CONSTANTS.cronUpload
     }

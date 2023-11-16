@@ -51,7 +51,7 @@ export class TrackerStatisticsService {
   }
 
   @Cron(
-    CronExpression.EVERY_MINUTE,
+    CronExpression.EVERY_5_MINUTES,
     {
       name: CONSTANTS.cronTrackerStatistics
     }

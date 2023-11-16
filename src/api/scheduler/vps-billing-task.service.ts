@@ -3,7 +3,7 @@ import cluster from 'node:cluster';
 import { URL } from 'node:url';
 
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 
 import { CONSTANTS } from '../../constants';
 
@@ -28,7 +28,7 @@ export class VpsBillingService {
   }
 
   @Cron(
-    CronExpression.EVERY_10_MINUTES,
+    '0 */20 * * * *',
     {
       name: CONSTANTS.cronVpsBilling
     }
