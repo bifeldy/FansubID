@@ -9,14 +9,14 @@
 
   <!-- Left Side Menu -->
   <mat-sidenav #leftSideNav disableClose [mode]="sideNavType" [opened]="LMS.opened" [ngStyle]="{
-    'background-image': 'url(' + GS.leftMenuImage + ')'
+    'background-image': GS.leftMenuImage ? 'url(' + GS.leftMenuImage + ')' : ''
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-left-menu></app-left-menu>
   </mat-sidenav>
 
   <!-- Right Side Menu -->
   <mat-sidenav #rightSidePanel [mode]="'over'" [opened]="false" position="end" class="bg-bifeldy" (closedStart)="RPS.onClose()" [ngStyle]="{
-    'background-image': 'url(' + GS.rightMenuImage + ')'
+    'background-image': GS.rightMenuImage ? 'url(' + GS.rightMenuImage + ')' : ''
   }" style="background-position: bottom center; background-size: 128px; background-repeat: no-repeat;">
     <app-right-panel></app-right-panel>
   </mat-sidenav>
@@ -49,7 +49,7 @@
       ROUTER.url.startsWith('/admin-mod/')
       ? ', center' : ''
     )"
-    [style.background-image]="'url(' + GS.bgImgUrl + ')' + (
+    [style.background-image]="(GS.bgImgUrl ? 'url(' + GS.bgImgUrl + '), ' : '') + (
       ROUTER.url.startsWith('/login') ||
       ROUTER.url.startsWith('/register') ||
       ROUTER.url.startsWith('/home') ||
@@ -60,7 +60,7 @@
       ROUTER.url.startsWith('/torrent') ||
       ROUTER.url.startsWith('/news/') ||
       ROUTER.url.startsWith('/admin-mod/')
-      ? ', url(\'/assets/img/background/paint.svg\')' : ''
+      ? 'url(\'/assets/img/background/paint.svg\')' : ''
     )">
 
     <!-- Routing Content -->

@@ -35,13 +35,13 @@ export class GlobalService {
   routerData = null;
   previousUrl = null;
 
-  bgImgUrlPath = null;
+  bgImgUrlPath = '';
   bannerImg = null;
   sizeContain = false;
   bgRepeat = false;
 
-  leftMenuImage = null;
-  rightMenuImage = null;
+  leftMenuImage = '';
+  rightMenuImage = '';
 
   isBrowser = null;
   document: Document = null;
@@ -140,7 +140,7 @@ export class GlobalService {
     if (this.isDesktop) {
       return this.bgImgUrlPath;
     }
-    return null;
+    return '';
   }
 
   onResize(event, source = 'APP_COMPONENT'): void {
@@ -163,7 +163,7 @@ export class GlobalService {
       } else {
         this.isDesktop = false;
         this.gridListBreakpoint = 1;
-        this.leftMenuImage = null;
+        this.leftMenuImage = '';
         this.rightMenuImage = '';
       }
     }
