@@ -137,6 +137,14 @@ export interface ApiKeyModel {
   user_?: UserModel;
 }
 
+export interface FailToBanModel {
+  ip_domain: string;
+  fail_count: number;
+  rule_id: string;
+  created_at: number | Date;
+  updated_at: number | Date;
+}
+
 export interface AttachmentModel {
   id?: string;
   name?: string;

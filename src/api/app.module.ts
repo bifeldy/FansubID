@@ -116,6 +116,7 @@ import { QuizService } from './services/quiz.service';
 import { SocketIoService } from './services/socket-io.service';
 import { TaskCronJobService } from './services/task-cron-job.service';
 
+import { CfWafService } from './scheduler/cf-waf-task.service';
 import { RssFeedTasksService } from './scheduler/rss-feed-tasks.service';
 import { SitemapService } from './scheduler/sitemap-tasks.service';
 import { TrackerStatisticsService } from './scheduler/tracker-statistics-tasks.service';
@@ -130,6 +131,7 @@ import { BerkasService } from './repository/berkas.service';
 import { DdlFileService } from './repository/ddl-file';
 import { DoramaService } from './repository/dorama.service';
 import { EdictService } from './repository/edict.service';
+import { FailToBanService } from './repository/fail-to-ban.service';
 import { FansubService } from './repository/fansub.service';
 import { FansubMemberService } from './repository/fansub-member.service';
 import { HirakataService } from './repository/hirakata.service';
@@ -272,12 +274,13 @@ import { UserService } from './repository/user.service';
     SocketIoService,
     TaskCronJobService,
     // Service Task Schedulers
+    CfWafService,
     RssFeedTasksService,
     SitemapService,
     TrackerStatisticsService,
     UploadService,
     VpsBillingService,
-    // Service Entities
+    // Repository Entities
     AnimeService,
     ApiKeyService,
     AttachmentService,
@@ -286,6 +289,7 @@ import { UserService } from './repository/user.service';
     DdlFileService,
     DoramaService,
     EdictService,
+    FailToBanService,
     FansubService,
     FansubMemberService,
     HirakataService,

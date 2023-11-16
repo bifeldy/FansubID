@@ -10,6 +10,7 @@ import { Berkas } from '../../api/entities/Berkas';
 import { DdlFile } from '../../api/entities/DdlFile';
 import { Dorama } from '../../api/entities/Dorama';
 import { Edict } from '../../api/entities/Edict';
+import { FailToBan } from '../../api/entities/FailToBan';
 import { Fansub } from '../../api/entities/Fansub';
 import { FansubMember } from '../../api/entities/FansubMember';
 import { Hirakata } from '../../api/entities/Hirakata';
@@ -66,6 +67,7 @@ export const environment = {
       DdlFile,
       Dorama,
       Edict,
+      FailToBan,
       Fansub,
       FansubMember,
       Hirakata,

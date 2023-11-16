@@ -20,6 +20,7 @@ import { DocumentBuilder, SwaggerDocumentOptions, SwaggerModule } from '@nestjs/
 import { AbstractHttpAdapter, NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express, { urlencoded, json, Request, Response, NextFunction } from 'express';
+import { Equal } from 'typeorm';
 
 import { SocketIoAdapter } from './adapters/socket-io.adapter';
 import { SocketIoClusterAdapter } from './adapters/socket-io-cluster.adapter';
@@ -33,6 +34,8 @@ import { GlobalService } from './services/global.service';
 import { SocketIoService } from './services/socket-io.service';
 import { ClusterMasterSlaveService } from './services/cluster-master-slave.service';
 import { DiscordService } from './services/discord.service';
+import { CloudflareService } from './services/cloudflare.service';
+import { FailToBanService } from './repository/fail-to-ban.service';
 
 export async function ctx(): Promise<INestApplicationContext> {
   return await NestFactory.createApplicationContext(AppModule);
@@ -44,7 +47,10 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
     httpAdapter = new ExpressAdapter(express());
   }
   const nestApp = await NestFactory.create(AppModule, httpAdapter);
+  const gs = nestApp.get(GlobalService);
   const aks = nestApp.get(ApiKeyService);
+  const cfs = nestApp.get(CloudflareService);
+  const ftb = nestApp.get(FailToBanService);
   const sis = nestApp.get(SocketIoService);
   nestApp.setGlobalPrefix('api');
   nestApp.getHttpAdapter().getInstance().set('trust proxy', true);
@@ -74,13 +80,55 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
     const timeStart = new Date();
     res.locals['abort-controller'] = new AbortController();
     req.on('close', () => {
-      res.locals['abort-controller'].abort();
+      try {
+        res.locals['abort-controller'].abort();
+      } catch (e) {
+        gs.log('[REQUEST_ON_CLOSED] ❌', e, 'error');
+      }
     });
     res.on('close', async () => {
-      const clientOriginIpCc = aks.getOriginIpCc(req, true);
-      const timeEnd = Date.now() - timeStart.getTime();
-      const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
-      await sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
+      try {
+        const clientOriginIpCc = aks.getOriginIpCc(req, true);
+        const timeEnd = Date.now() - timeStart.getTime();
+        const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
+        await sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
+        if (
+          clientOriginIpCc.origin_ip !== environment.domain &&
+          clientOriginIpCc.origin_ip !== environment.domain_alt &&
+          clientOriginIpCc.origin_ip !== environment.ip &&
+          // 404 Not Found Will Redirect To Home Page
+          (res.statusCode === 404 || res.statusCode === 429)
+        ) {
+          const failToBan = await ftb.find({
+            where: [
+              { ip_domain: Equal(clientOriginIpCc.origin_ip) }
+            ],
+            order: {
+              ip_domain: 'ASC'
+            }
+          });
+          if (failToBan.length === 0) {
+            const _ftb = ftb.new();
+            _ftb.ip_domain = clientOriginIpCc.origin_ip;
+            await ftb.save(_ftb);
+          } else if (failToBan.length === 1) {
+            const _ftb = failToBan[0];
+            _ftb.fail_count++;
+            const resSaveFtb = await ftb.save(_ftb);
+            if (resSaveFtb.fail_count >= CONSTANTS.failToBanMaxCountPerMin) {
+              const resBan = await cfs.createFailToBan(resSaveFtb.ip_domain);
+              if (resBan && resBan.status >= 200 && resBan.status < 400) {
+                resSaveFtb.rule_id = resBan.result.id;
+                await ftb.save(resSaveFtb);
+              }
+            }
+          } else {
+            throw new Error('Data Duplikat!');
+          }
+        }
+      } catch (e) {
+        gs.log('[RESPONSE_ON_CLOSED] ❌', e, 'error');
+      }
     });
     return next();
   });

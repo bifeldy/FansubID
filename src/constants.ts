@@ -20,6 +20,7 @@ export const CONSTANTS = {
     'ferdion', 'bifeldy', 'dev', 'api', 'docs', 'cs', 'help', 'support', 'proxy',
     'admin', 'administrator', 'info', 'information', 'noreply', 'mod', 'moderator'
   ],
+  cronCloudflareBan: 'CRON_CLOUDFLARE_BAN',
   cronFansubRssFeed: 'CRON_FANSUB_RSS_FEED',
   cronTrackerStatistics: 'CRON_TRACKER_STATISTICS',
   cronSitemap: 'CRON_SITEMAP',
@@ -33,6 +34,7 @@ export const CONSTANTS = {
   extFonts: ['ttf', 'otf', 'woff', 'woff2'],
   extSubs: ['ass', 'srt'],
   externalApiCacheTime: 15 * 60 * 1, // 15 Minutes [v4 seconds, v5 miliseconds]
+  failToBanMaxCountPerMin: 20, // 20x Http 404 Status Code Lead To Ban
   fileTypeAttachmentAllowed: [
     'video/flv',
     'video/x-flv',
