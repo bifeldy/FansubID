@@ -49,7 +49,7 @@
       ROUTER.url.startsWith('/admin-mod/')
       ? ', center' : ''
     )"
-    [style.background-image]="(GS.bgImgUrl ? 'url(' + GS.bgImgUrl + '), ' : '') + (
+    [style.background-image]="'url(' + GS.bgImgUrl + ')' + (
       ROUTER.url.startsWith('/login') ||
       ROUTER.url.startsWith('/register') ||
       ROUTER.url.startsWith('/home') ||
@@ -60,7 +60,7 @@
       ROUTER.url.startsWith('/torrent') ||
       ROUTER.url.startsWith('/news/') ||
       ROUTER.url.startsWith('/admin-mod/')
-      ? 'url(\'/assets/img/background/paint.svg\')' : ''
+      ? ', url(\'/assets/img/background/paint.svg\')' : ''
     )">
 
     <!-- Routing Content -->
