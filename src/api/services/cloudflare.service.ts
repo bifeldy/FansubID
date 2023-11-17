@@ -114,15 +114,18 @@ export class CloudflareService {
   async updateDns(id: string, name: string, content: string, type: string, comment: string): Promise<any> {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records/${id}`);
-      const data: any = {
-        name: name.includes(`.${environment.cloudflare.domain}`) ? name : `${name}.${environment.cloudflare.domain}`,
-        type, content, comment, ttl: 1,
-        proxied: type === 'A' ? true : false
-      };
-      const res_raw = await this.api.putData(url, JSON.stringify(data), {
-        Authorization: `Bearer ${environment.cloudflare.key}`,
-        ...environment.nodeJsXhrHeader
-      });
+      const res_raw = await this.api.putData(
+        url,
+        JSON.stringify({
+          name: name.includes(`.${environment.cloudflare.domain}`) ? name : `${name}.${environment.cloudflare.domain}`,
+          type, content, comment, ttl: 1,
+          proxied: type === 'A' ? true : false
+        }),
+        {
+          Authorization: `Bearer ${environment.cloudflare.key}`,
+          ...environment.nodeJsXhrHeader
+        }
+      );
       const res = {
         status: res_raw.status,
         result: null
@@ -199,7 +202,7 @@ export class CloudflareService {
     }
   }
 
-  async createFailToBan(ip_domain: string, mode = 'block'): Promise<any> {
+  async createFailToBan(ip_domain: string, mode = 'block', notes = '[404, 429, 5XX] Too Much ...'): Promise<any> {
     try {
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/firewall/access_rules/rules`);
       const res_raw = await this.api.postData(
@@ -209,7 +212,8 @@ export class CloudflareService {
             target: 'ip',
             value: ip_domain
           },
-          mode
+          mode,
+          notes
         }),
         {
           Authorization: `Bearer ${environment.cloudflare.key}`,

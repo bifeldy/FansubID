@@ -97,7 +97,7 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
           clientOriginIpCc.origin_ip !== environment.domain_alt &&
           clientOriginIpCc.origin_ip !== environment.ip &&
           // 404 Not Found Will Redirect To Home Page
-          (res.statusCode === 404 || res.statusCode === 429)
+          (res.statusCode === 404 || res.statusCode === 429 || (res.statusCode >= 500 && res.statusCode < 600))
         ) {
           const failToBan = await ftb.find({
             where: [
