@@ -316,27 +316,27 @@ export class UserListComponent implements OnInit, OnDestroy {
             title: `Ubah CNAME / A Record IP v4 v6 :: '${f.slug}'`,
             input: {
               server_target: {
-                inputLabel: 'Server Target',
-                inputPlaceholder: `ghs.google.com`,
+                inputLabel: 'Server Target Domain IP Publik',
+                inputPlaceholder: `127.0.0.1 | ghs.google.com | blablabla.id.repl.co`,
                 inputValue: subDomain.dns_id.content,
                 inputRequired: true
               },
               verification_name: {
-                inputLabel: 'Tambahan Khusus Blogger :: Name',
-                inputPlaceholder: `blablabla-name`,
+                inputLabel: 'Tambahan Khusus Blogger / Replit',
+                inputPlaceholder: `blablabla-name | slug-fs`,
                 inputValue: subDomain.dns_id_alt?.name,
                 inputRequired: false
               },
               verification_target: {
-                inputLabel: 'Tambahan Khusus Blogger :: Target',
-                inputPlaceholder: `blablabla-target.dv.googlehosted.com`,
+                inputLabel: 'Tambahan Khusus Blogger / Replit',
+                inputPlaceholder: `blablabla-target.dv.googlehosted.com | replit-verify=blablabla`,
                 inputValue: subDomain.dns_id_alt?.content,
                 inputRequired: false
               }
             },
             confirmText: 'OK',
             cancelText: 'Batal',
-            infoText: 'Abaikan 2 Input Terakhir Jika Bukan Blogger'
+            infoText: 'Abaikan 2 Input Terakhir Jika Bukan Blogger / Replit'
           }
         }).afterClosed().subscribe({
           next: re => {
