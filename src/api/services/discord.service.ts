@@ -461,7 +461,7 @@ export class DiscordService {
     }
   }
 
-  async verifyAccount(appToken: string[], userAuthorId: string, interactionMessage): Promise<void> {
+  async verifyAccount(appToken: string[], userAuthorId: string, interactionMessage): Promise<any> {
     try {
       const decoded = this.cs.jwtDecode(appToken[1]);
       if (decoded.discord.id === userAuthorId) {
@@ -511,10 +511,11 @@ export class DiscordService {
       return await interactionMessage.reply({ content: `<@${userAuthorId}> Siapa ya? Ini milik orang lain 🤔` });
     } catch (error) {
       try {
+        this.gs.log('[DISCORD_SERVICE-VERIFY_ACCOUNT] 🎉', error, 'error');
         return await interactionMessage.reply({ content: `<@${userAuthorId}> Format data salah atau token expired 🤔` });
       } catch (e) {
         this.gs.log('[DISCORD_SERVICE-VERIFY_ACCOUNT] 🎉', e, 'error');
-        return null;
+        return;
       }
     }
   }
