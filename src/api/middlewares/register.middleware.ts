@@ -79,13 +79,15 @@ export class RegisterMiddleware implements NestMiddleware {
             where: [
               { username: ILike(usrName) },
               { email: ILike(req.body.email) }
-            ]
+            ],
+            withDeleted: true
           });
           const selectedUser = await this.userRepo.find({
             where: [
               { username: ILike(usrName) },
               { email: ILike(req.body.email) }
-            ]
+            ],
+            withDeleted: true
           });
           const userNotAvailable = [...selectedRegistration, ...selectedUser];
           if (userNotAvailable.length === 0) {
