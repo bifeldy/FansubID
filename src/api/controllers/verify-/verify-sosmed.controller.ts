@@ -154,7 +154,7 @@ export class VerifySosmedController {
           info: `😅 201 - Discord API :: Masuk & Verify 🤣`,
           result: {
             title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam ${CONSTANTS.timeJwtEncryption / 60} Menit! #🚮-bot-spam`,
-            message: '~verify DISCORD ' + this.cs.credentialEncode(
+            message: '/verify ' + this.cs.credentialEncode(
               {
                 discord: {
                   id: res_json2.id,
@@ -169,7 +169,7 @@ export class VerifySosmedController {
               },
               false,
               CONSTANTS.timeJwtEncryption
-            ) + ' DELETE_CHAT'
+            )
           }
         };
       } else {
