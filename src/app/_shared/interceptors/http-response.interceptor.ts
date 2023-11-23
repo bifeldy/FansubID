@@ -105,12 +105,14 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               });
               break;
             case 404:
-              this.bs.idle();
-              this.router.navigate(['/error'], {
-                queryParams: {
-                  returnUrl: this.activatedRoute.snapshot.parent?.url || '/'
-                }
-              });
+              if (!this.router.url.startsWith('/docs')) {
+                this.bs.idle();
+                this.router.navigate(['/error'], {
+                  queryParams: {
+                    returnUrl: this.activatedRoute.snapshot.parent?.url || '/'
+                  }
+                });
+              }
               break;
             case 418:
               this.bs.idle();
