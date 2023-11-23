@@ -178,6 +178,10 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       twitter: [(TWITTER?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       rss_feed: [data.rss_feed, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
+    this.slugValueChanged();
+  }
+
+  slugValueChanged(): void {
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -186,8 +190,12 @@ export class FansubEditComponent implements OnInit, OnDestroy {
       retry(-1)
     ).subscribe({
       next: res => {
-        this.gs.log('[FANSUB_CEK_SLUG_RESULT]', res);
+        this.gs.log('[FANSUB_CEK_SLUG_RESULT_SUCCESS]', res);
         this.slugInfo = (res as any).result.message;
+      },
+      error: err => {
+        this.gs.log('[FANSUB_CEK_SLUG_RESULT_ERROR]', err, 'error');
+        this.slugValueChanged();
       }
     });
   }
