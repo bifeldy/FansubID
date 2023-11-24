@@ -60,8 +60,8 @@ export class FansubService {
     return this.api.patchData(`/fansub-dorama?page=${page}&row=${row}`, { id: fansubId });
   }
 
-  getRssFeedFansubAll(active = false, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<RssFeedModel>> {
-    return this.api.getData(`/fansub-rss-feed?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}&active=${active ? 'true' : ''}`);
+  getRssFeedFansubAll(summary = false, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<RssFeedModel>> {
+    return this.api.getData(`/fansub-rss-feed?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}&summary=${summary ? 'true' : ''}`);
   }
 
   getRssFeedFansub(fansubSlug: string): Observable<JsonResponse<RssFeedModel>> {

@@ -1,14 +1,13 @@
 import { Controller, HttpCode, Get, Req, Res, HttpException, HttpStatus } from '@nestjs/common';
-import { ApiExcludeController } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ILike } from 'typeorm';
 
-import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+import { CONSTANTS } from '../../../constants';
 
 import { FansubService } from '../../repository/fansub.service';
 import { RssFeedService } from '../../repository/rss-feed.service';
 
-@ApiExcludeController()
 @Controller('/fansub-rss-feed')
 export class FansubRssFeedController {
 
@@ -22,7 +21,11 @@ export class FansubRssFeedController {
   // GET `/api/fansub-rss-feed`
   @Get('/')
   @HttpCode(200)
-  @FilterApiKeyAccess()
+  @ApiTags(CONSTANTS.apiTagRss)
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
+  @ApiQuery({ name: 'summary', required: false, type: 'boolean' })
   async getFansubFeed(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const queryPage = parseInt(req.query['page'] as string);
@@ -30,9 +33,7 @@ export class FansubRssFeedController {
       let rslt = [];
       let cnt = 0;
       let pg = 0;
-      console.log('===== A =====');
-      if (req.query['active'] === 'true') {
-        console.log('===== B =====');
+      if (req.query['summary'] === 'true') {
         const rfs = await this.rssFeedRepo.query(`
           SELECT
             rf.title rf_title,
@@ -97,9 +98,7 @@ export class FansubRssFeedController {
         });
         cnt = rslt.length;
         pg = 1;
-        console.log('===== C =====');
       } else {
-        console.log('===== D =====');
         const [rfs, count] = await this.rssFeedRepo.findAndCount({
           where: [
             { title: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`) },
@@ -125,11 +124,7 @@ export class FansubRssFeedController {
         rslt = rfs;
         cnt = count;
         pg = Math.ceil(count / (queryRow ? queryRow : 10));
-        console.log('===== E =====');
       }
-      console.log('===== F =====');
-      console.log(rslt);
-      console.log('===== G =====');
       for (const r of rslt) {
         if ('fansub_' in r && r.fansub_) {
           delete r.fansub_.description;
@@ -139,7 +134,6 @@ export class FansubRssFeedController {
           delete r.fansub_.updated_at;
         }
       }
-      console.log('===== H =====');
       return {
         info: `😅 200 - RSS Feed API :: All Fansubs 🤣`,
         count: cnt,

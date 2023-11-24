@@ -540,8 +540,13 @@ export class FansubController {
   @HttpCode(200)
   @ApiTags(CONSTANTS.apiTagFansub)
   @ApiParam({ name: 'slug', type: 'string' })
+  @ApiQuery({ name: 'q', required: false, type: 'string' })
+  @ApiQuery({ name: 'row', required: false, type: 'number' })
+  @ApiQuery({ name: 'page', required: false, type: 'number' })
   async getFansubFeedBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
+      const queryPage = parseInt(req.query['page'] as string);
+      const queryRow = parseInt(req.query['row'] as string);
       const fansub = await this.fansubRepo.findOneOrFail({
         where: [
           { slug: ILike(req.params['slug']) }
@@ -553,16 +558,29 @@ export class FansubController {
       const [rssFeeds, count] = await this.rssFeedRepo.findAndCount({
         where: [
           {
+            title: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
+            fansub_: {
+              id: Equal(fansub.id)
+            }
+          },
+          {
+            link: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`),
             fansub_: {
               id: Equal(fansub.id)
             }
           }
         ],
         order: {
-          created_at: 'DESC'
+          ...((req.query['sort'] && req.query['order']) ? {
+            [req.query['sort'] as string]: (req.query['order'] as string).toUpperCase()
+          } : {
+            created_at: 'DESC',
+            link: 'ASC'
+          })
         },
         relations: ['fansub_'],
-        take: 5
+        skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
+        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 5
       });
       for (const r of rssFeeds) {
         if ('fansub_' in r && r.fansub_) {
@@ -576,7 +594,7 @@ export class FansubController {
       return {
         info: `😅 200 - Fansub API :: RSS Feed 🤣`,
         count,
-        pages: 1,
+        pages: Math.ceil(count / (queryRow ? queryRow : 5)),
         results: rssFeeds
       };
     } catch (error) {
