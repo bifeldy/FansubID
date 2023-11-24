@@ -73,8 +73,11 @@ export class CrawlController {
         if (url.startsWith('http://')) {
           url = 'https://' + url.slice(7, url.length);
         }
-        const uri = new URL(`https://crawl.${environment.domain}`);
-        uri.searchParams.append('url', url);
+        let uri = url;
+        if (environment.production) {
+          uri = new URL(`https://crawl.${environment.domain}`);
+          uri.searchParams.append('url', url);
+        }
         page = await this.browser.newPage();
         const requestHeaders = { ...req.headers };
         for (const header of [...this.requestHeadersToRemove, ...this.prohibitedHeaders]) {
