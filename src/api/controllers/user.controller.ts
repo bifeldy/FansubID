@@ -787,15 +787,11 @@ export class UserController {
       });
       for (const group of groups) {
         if ('fansub_' in group && group.fansub_) {
+          delete group.fansub_.description;
           delete group.fansub_.urls;
           delete group.fansub_.tags;
-          delete group.fansub_.view_count;
-          delete group.fansub_.like_count;
-          delete group.fansub_.description;
-          delete group.fansub_.rss_feed;
           delete group.fansub_.created_at;
           delete group.fansub_.updated_at;
-          delete group.fansub_.user_;
         }
         if ('user_' in group && group.user_) {
           delete group.user_.created_at;
