@@ -59,7 +59,7 @@ export class KomentarService {
     return this.komentarRepo.softRemove(komentar as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[KOMENTAR_SERVICE-QUERY] 💬', query);
     return this.komentarRepo.query(query, parameters);
   }

@@ -59,7 +59,7 @@ export class FansubMemberService {
     return this.fansubMemberRepo.remove(fansubMember as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[FANSUB_MEMBER_SERVICE-QUERY] 🕵️‍♀️', query);
     return this.fansubMemberRepo.query(query, parameters);
   }

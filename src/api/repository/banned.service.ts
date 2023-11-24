@@ -59,7 +59,7 @@ export class BannedService {
     return this.bannedRepo.remove(banned as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[BANNED_SERVICE-QUERY] 🔓', query);
     return this.bannedRepo.query(query, parameters);
   }

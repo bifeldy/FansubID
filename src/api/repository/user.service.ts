@@ -59,7 +59,7 @@ export class UserService {
     return this.userRepo.softRemove(user as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[USER_SERVICE-QUERY] 🤖', query);
     return this.userRepo.query(query, parameters);
   }

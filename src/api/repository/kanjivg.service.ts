@@ -59,7 +59,7 @@ export class KanjivgService {
     return this.kanjiVgRepo.remove(kanjiVg as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[KANJIVG_SERVICE-QUERY] 🗾', query);
     return this.kanjiVgRepo.query(query, parameters);
   }

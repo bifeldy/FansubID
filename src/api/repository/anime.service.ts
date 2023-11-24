@@ -59,7 +59,7 @@ export class AnimeService {
     return this.animeRepo.remove(anime as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[ANIME_SERVICE-QUERY] 🐱‍👤', query);
     return this.animeRepo.query(query, parameters);
   }

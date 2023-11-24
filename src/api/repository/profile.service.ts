@@ -59,7 +59,7 @@ export class ProfileService {
     return this.profileRepo.softRemove(profile as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[PROFILE_SERVICE-QUERY] 👬', query);
     return this.profileRepo.query(query, parameters);
   }

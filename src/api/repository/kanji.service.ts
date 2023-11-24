@@ -59,7 +59,7 @@ export class KanjiService {
     return this.kanjiRepo.remove(kanji as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[KANJI_SERVICE-QUERY] 🗾', query);
     return this.kanjiRepo.query(query, parameters);
   }

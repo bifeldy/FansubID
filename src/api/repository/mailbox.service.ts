@@ -59,7 +59,7 @@ export class MailboxService {
     return this.mailboxRepo.remove(mailbox as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[MAILBOX_SERVICE-QUERY] 💾', query);
     return this.mailboxRepo.query(query, parameters);
   }

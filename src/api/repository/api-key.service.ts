@@ -64,7 +64,7 @@ export class ApiKeyService {
     return this.apiKeyRepo.remove(apiKey as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[API_KEY_SERVICE-QUERY] 🏓', query);
     return this.apiKeyRepo.query(query, parameters);
   }

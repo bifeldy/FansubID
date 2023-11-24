@@ -59,7 +59,7 @@ export class HirakataService {
     return this.hirakataRepo.remove(hirakata as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[HIRAKATA_SERVICE-QUERY] 🗾', query);
     return this.hirakataRepo.query(query, parameters);
   }

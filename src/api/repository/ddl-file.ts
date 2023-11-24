@@ -59,7 +59,7 @@ export class DdlFileService {
     return this.ddlFileRepo.remove(ddlFile as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[DDL_FILE_SERVICE-QUERY] 💾', query);
     return this.ddlFileRepo.query(query, parameters);
   }

@@ -59,7 +59,7 @@ export class EdictService {
     return this.edictRepo.remove(edict as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[EDICT_SERVICE-QUERY] 🗾', query);
     return this.edictRepo.query(query, parameters);
   }

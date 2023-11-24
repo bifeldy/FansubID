@@ -59,7 +59,7 @@ export class InformationService {
     return this.informationRepo.softRemove(information as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[INFORMATION_SERVICE-QUERY] 🔔', query);
     return this.informationRepo.query(query, parameters);
   }

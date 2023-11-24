@@ -59,7 +59,7 @@ export class SocialMediaService {
     return this.socialMediaRepo.remove(sosmed as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[SOCIAL_MEDIA_SERVICE-QUERY] 🙇‍♂️', query);
     return this.socialMediaRepo.query(query, parameters);
   }

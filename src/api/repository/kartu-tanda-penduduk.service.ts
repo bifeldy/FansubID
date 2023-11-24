@@ -59,7 +59,7 @@ export class KartuTandaPendudukService {
     return this.kartuTandaPendudukRepo.softRemove(kartuTandaPenduduk as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-QUERY] 👨‍👩‍👧‍👦', query);
     return this.kartuTandaPendudukRepo.query(query, parameters);
   }

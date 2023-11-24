@@ -59,7 +59,7 @@ export class NihongoService {
     return this.nihongoRepo.remove(nihongo as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[NIHONGO_SERVICE-QUERY] 🗾', query);
     return this.nihongoRepo.query(query, parameters);
   }

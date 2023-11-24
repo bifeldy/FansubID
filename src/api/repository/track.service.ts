@@ -59,7 +59,7 @@ export class TrackService {
     return this.trackRepo.remove(track as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[TRACK_SERVICE-QUERY] 🛤', query);
     return this.trackRepo.query(query, parameters);
   }

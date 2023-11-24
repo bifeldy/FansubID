@@ -59,7 +59,7 @@ export class ProjectTypeService {
     return this.projectTypeRepo.softRemove(projectType as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[PROJECT_TYPE_SERVICE-QUERY] 💉', query);
     return this.projectTypeRepo.query(query, parameters);
   }

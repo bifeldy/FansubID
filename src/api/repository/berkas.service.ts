@@ -59,7 +59,7 @@ export class BerkasService {
     return this.berkasRepo.softRemove(berkas as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[BERKAS_SERVICE-QUERY] 📂', query);
     return this.berkasRepo.query(query, parameters);
   }

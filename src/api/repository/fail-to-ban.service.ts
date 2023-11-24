@@ -59,7 +59,7 @@ export class FailToBanService {
     return this.failToBanRepo.remove(failToBan as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[FAIL_TO_BAN_SERVICE-QUERY] 🧱', query);
     return this.failToBanRepo.query(query, parameters);
   }

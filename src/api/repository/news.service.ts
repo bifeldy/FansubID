@@ -59,7 +59,7 @@ export class NewsService {
     return this.newsRepo.softRemove(news as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[NEWS_SERVICE-QUERY] 📰', query);
     return this.newsRepo.query(query, parameters);
   }

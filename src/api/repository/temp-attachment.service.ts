@@ -59,7 +59,7 @@ export class TempAttachmentService {
     return this.tempAttachmentRepo.remove(tempAttachment as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[TEMP_ATTACHMENT_SERVICE-QUERY] 💾', query);
     return this.tempAttachmentRepo.query(query, parameters);
   }

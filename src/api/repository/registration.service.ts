@@ -59,7 +59,7 @@ export class RegistrationService {
     return this.registrationRepo.remove(registration as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[REGISTRATION_SERVICE-QUERY] 🔏', query);
     return this.registrationRepo.query(query, parameters);
   }

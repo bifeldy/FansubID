@@ -59,7 +59,7 @@ export class LikedislikeService {
     return this.likeDislikeRepo.remove(likeDislike as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[LIKE_DISLIKE_SERVICE-QUERY] 💖', query);
     return this.likeDislikeRepo.query(query, parameters);
   }

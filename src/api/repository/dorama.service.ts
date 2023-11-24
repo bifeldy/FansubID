@@ -59,7 +59,7 @@ export class DoramaService {
     return this.doramaRepo.remove(dorama as any);
   }
 
-  query(query: string, parameters: any = []): Promise<any> {
+  query(query: string, parameters: any = []): Promise<any[]> {
     this.gs.log('[DORAMA_SERVICE-QUERY] 🎬', query);
     return this.doramaRepo.query(query, parameters);
   }
