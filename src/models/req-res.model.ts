@@ -406,6 +406,13 @@ export interface RegistrationModel {
   updated_at?: number | Date;
 }
 
+export interface RssFeedModel {
+  title: string;
+  link: string;
+  created_at: number | Date;
+  fansub_: FansubModel;
+}
+
 export interface SocialMediaModel {
   id?: string;
   refresh_token?: string;

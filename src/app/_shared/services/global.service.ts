@@ -242,20 +242,6 @@ export class GlobalService {
     }
   }
 
-  rssLink(links: string | Array<any>): string {
-    if (typeof links === 'string') {
-      return links;
-    }
-    let idx = links.findIndex(l => l.rel === 'alternate' && l.type === 'text/html');
-    if (idx < 0) {
-      if (links.length > 0) {
-        return links[links.length - 1].href;
-      }
-      return '';
-    }
-    return links[idx].href;
-  }
-
   weatherJS(): void {
     const currentMonth = new Date().getMonth() + 1;
     const weather = this.seasonalWeather.find(sB => sB.id === Math.ceil(currentMonth / 3));

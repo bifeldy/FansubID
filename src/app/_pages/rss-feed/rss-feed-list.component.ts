@@ -20,7 +20,7 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
       icon: 'rss_feed',
       type: 'table',
       data: {
-        column: ['Tanggal', 'Fansub', 'Judul Surat Kabar'],
+        column: ['Tanggal', 'Fansub', 'Topik'],
         row: []
       }
     }
@@ -29,6 +29,8 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
   count = 0;
   page = 1;
   row = 10;
+
+  tablePageSizeOptions = [50, 75, 100, 125, 150];
 
   q = '';
   sort = '';
@@ -49,6 +51,10 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
+      if (!this.gs.isDesktop) {
+        this.tablePageSizeOptions = [10, 25, 50, 75, 100];
+      }
+      this.row = this.tablePageSizeOptions[0];
       this.getRssFeed();
     }
   }
@@ -63,18 +69,18 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
       this.subsRssFeed.unsubscribe();
       this.bs.idle();
     }
-    this.subsRssFeed = this.fansub.getRssFeedFansubAll().subscribe({
+    this.subsRssFeed = this.fansub.getRssFeedFansubAll(null, this.q, this.page, this.row, this.sort, this.order).subscribe({
       next: res => {
         this.gs.log('[RSS_FEED_LIST_SUCCESS]', res);
         this.count = res.count;
         this.rssFeedData = [];
         for (const r of res.results) {
           this.rssFeedData.push({
-            foto_fansub: r.image_url,
-            link: r.item?.link,
-            Fansub: r.slug,
-            Tanggal: r.item?.created || r.item?.published,
-            'Judul Surat Kabar': r.item?.title
+            foto_fansub: r.fansub_.image_url,
+            link: r.link,
+            Fansub: r.fansub_.slug,
+            Tanggal: r.created_at,
+            Topik: r.title
           });
         }
         this.tabData[0].data.row = this.rssFeedData;
@@ -89,7 +95,28 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
 
   openRssFeed(data): void {
     this.gs.log('[RSS_FEED_LIST_OPEN_URL]', data);
-    this.wb.winboxOpenUri(this.gs.rssLink(data.link));
+    this.wb.winboxOpenUri(data.link);
+  }
+
+  onPaginatorClicked(data): void {
+    this.gs.log('[RSS_FEED_CLICK_PAGINATOR]', data);
+    this.page = data.pageIndex + 1;
+    this.row = data.pageSize;
+    this.getRssFeed();
+  }
+
+  onServerSideFilter(data: any): void {
+    this.gs.log('[RSS_FEED_ENTER_FILTER]', data);
+    this.q = data;
+    this.getRssFeed();
+  }
+
+  onServerSideOrder(data: any): void {
+    this.gs.log('[RSS_FEED_CLICK_ORDER]', data);
+    this.q = data.q;
+    this.sort = data.active;
+    this.order = data.direction;
+    this.getRssFeed();
   }
 
 }

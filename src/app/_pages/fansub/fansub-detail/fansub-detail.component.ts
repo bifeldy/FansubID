@@ -27,7 +27,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
 
   fansubSlug = '';
   fansubData = null;
-  rssFeedData = null;
+  rssFeedData = [];
 
   approvedMembers: FansubMemberModel[] = [];
   pendingMembers: FansubMemberModel[] = [];
@@ -210,7 +210,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.subsRssFeed = this.fansub.getRssFeedFansub(this.fansubSlug).subscribe({
       next: res => {
         this.gs.log('[RSS_FEED_LIST_SUCCESS]', res);
-        this.rssFeedData = res.result;
+        this.rssFeedData = res.results;
         this.bs.idle();
       },
       error: err => {
@@ -221,7 +221,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   }
 
   openRssFeed(link: string): void {
-    this.wb.winboxOpenUri(this.gs.rssLink(link));
+    this.wb.winboxOpenUri(link);
   }
 
   getBerkasFansub(): void {

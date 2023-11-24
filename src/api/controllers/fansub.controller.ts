@@ -4,7 +4,7 @@ import { parse } from 'rss-to-json';
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { ILike } from 'typeorm';
+import { Equal, ILike } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -21,7 +21,7 @@ import { SocketIoService } from '../services/socket-io.service';
 
 import { FansubService } from '../repository/fansub.service';
 import { FansubMemberService } from '../repository/fansub-member.service';
-import { GlobalService } from '../services/global.service';
+import { RssFeedService } from '../repository/rss-feed.service';
 
 @Controller('/fansub')
 export class FansubController {
@@ -30,7 +30,7 @@ export class FansubController {
     private ds: DiscordService,
     private fansubRepo: FansubService,
     private fansubMemberRepo: FansubMemberService,
-    private gs: GlobalService,
+    private rssFeedRepo: RssFeedService,
     private sis: SocketIoService
   ) {
     //
@@ -131,7 +131,16 @@ export class FansubController {
           if ('rss_feed' in req.body && (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER)) {
             const rssFeed: string = req.body.rss_feed;
             if (rssFeed.match(CONSTANTS.regexUrl)) {
-              fansub.rss_feed = rssFeed;
+              try {
+                const uri = new URL(`${environment.baseUrl}/api/crawl`);
+                uri.searchParams.append('url', rssFeed);
+                const feed = await parse(uri.toString(), null);
+                if (feed.items.length >= 0) {
+                  fansub.rss_feed = rssFeed;
+                }
+              } catch (e) {
+                //
+              }
             }
           }
           if ('image' in req.body) {
@@ -329,7 +338,16 @@ export class FansubController {
         if ('rss_feed' in req.body && (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER)) {
           const rssFeed: string = req.body.rss_feed;
           if (rssFeed.match(CONSTANTS.regexUrl)) {
-            fansub.rss_feed = rssFeed;
+            try {
+              const uri = new URL(`${environment.baseUrl}/api/crawl`);
+              uri.searchParams.append('url', rssFeed);
+              const feed = await parse(uri.toString(), null);
+              if (feed.items.length >= 0) {
+                fansub.rss_feed = rssFeed;
+              }
+            } catch (e) {
+              //
+            }
           }
         }
         if ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) {
@@ -485,15 +503,11 @@ export class FansubController {
       });
       for (const member of members) {
         if ('fansub_' in member && member.fansub_) {
+          delete member.fansub_.description;
           delete member.fansub_.urls;
           delete member.fansub_.tags;
-          delete member.fansub_.view_count;
-          delete member.fansub_.like_count;
-          delete member.fansub_.description;
-          delete member.fansub_.rss_feed;
           delete member.fansub_.created_at;
           delete member.fansub_.updated_at;
-          delete member.fansub_.user_;
         }
         if ('user_' in member && member.user_) {
           delete member.user_.created_at;
@@ -528,7 +542,6 @@ export class FansubController {
   @ApiParam({ name: 'slug', type: 'string' })
   async getFansubFeedBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const rssFeed: any = {};
       const fansub = await this.fansubRepo.findOneOrFail({
         where: [
           { slug: ILike(req.params['slug']) }
@@ -537,52 +550,34 @@ export class FansubController {
           updated_at: 'DESC'
         }
       });
-      const rgx = new RegExp(CONSTANTS.regexUrl);
-      if (fansub.rss_feed && fansub.rss_feed.match(rgx)) {
-        try {
-          let rssUrl = fansub.rss_feed;
-          if (!rssUrl.includes('?')) {
-            rssUrl += '?';
+      const [rssFeeds, count] = await this.rssFeedRepo.findAndCount({
+        where: [
+          {
+            fansub_: {
+              id: Equal(fansub.id)
+            }
           }
-          if (rssUrl[rssUrl.length - 1] !== '?') {
-            rssUrl += '&';
-          }
-          if (!rssUrl.includes('alt=rss')) {
-            rssUrl += 'alt=rss';
-          }
-          const feed = await parse(`${environment.baseUrl}/api/crawl?url=${rssUrl}`, null);
-          rssFeed.slug = fansub.slug;
-          rssFeed.title = feed.title;
-          // rssFeed.description: feed.description;
-          rssFeed.link = feed.link;
-          // rssFeed.image: feed.image;
-          // rssFeed.category: feed.category;
-          rssFeed.items = [];
-          for (const f of feed.items) {
-            rssFeed.items.push({
-              title: f.title,
-              // description: f.description,
-              link: f.link,
-              published: f.published,
-              created: f.created,
-              author: f.author,
-              // category: f.category,
-              // enclosures: f.enclosures,
-              // media: f.media
-            });
-          }
-        } catch (e) {
-          this.gs.log('[FANSUB_RSS_FEED] 🐾', e, 'error');
+        ],
+        order: {
+          created_at: 'DESC'
+        },
+        relations: ['fansub_'],
+        take: 5
+      });
+      for (const r of rssFeeds) {
+        if ('fansub_' in r && r.fansub_) {
+          delete r.fansub_.description;
+          delete r.fansub_.urls;
+          delete r.fansub_.tags;
+          delete r.fansub_.created_at;
+          delete r.fansub_.updated_at;
         }
-      } else {
-        rssFeed.slug = fansub.slug;
-        rssFeed.items = [];
       }
       return {
         info: `😅 200 - Fansub API :: RSS Feed 🤣`,
-        count: rssFeed.items.length,
+        count,
         pages: 1,
-        result: rssFeed
+        results: rssFeeds
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;

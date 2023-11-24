@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.gs.isBrowser) {
       this.getNews();
       this.getComment();
-      this.getRssFeedAll();
+      this.getRssFeed();
       this.fs.initializeFab(null, '/assets/img/discord/pink.png', 'Discord Server', environment.discord.join_url, true);
     }
   }
@@ -105,9 +105,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  getRssFeedAll(): void {
+  getRssFeed(): void {
     this.bs.busy();
-    this.subsRssFeed = this.fansub.getRssFeedFansubAllActiveOnly().subscribe({
+    this.subsRssFeed = this.fansub.getRssFeedFansubAll(true).subscribe({
       next: res => {
         this.gs.log('[HOME_RSS_FEED_LIST_SUCCESS]', res);
         this.rssFeedData = res.results;
@@ -121,7 +121,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   openRssFeed(link: string): void {
-    this.wb.winboxOpenUri(this.gs.rssLink(link));
+    this.wb.winboxOpenUri(link);
   }
 
   openComment(k): void {

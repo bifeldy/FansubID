@@ -29,6 +29,7 @@ import { Notification } from '../../api/entities/Notification';
 import { Profile } from '../../api/entities/Profile';
 import { ProjectType } from '../../api/entities/ProjectType';
 import { Registration } from '../../api/entities/Registration';
+import { RssFeed } from '../../api/entities/RssFeed';
 import { SocialMedia } from '../../api/entities/SocialMedia';
 import { Tatoeba } from '../../api/entities/Tatoeba';
 import { TempAttachment } from '../../api/entities/TempAttachment';
@@ -86,6 +87,7 @@ export const environment = {
       Profile,
       ProjectType,
       Registration,
+      RssFeed,
       SocialMedia,
       Tatoeba,
       TempAttachment,

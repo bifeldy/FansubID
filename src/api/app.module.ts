@@ -46,8 +46,7 @@ import { FansubBerkasController } from './controllers/fansub-/fansub-berkas.cont
 import { FansubDnsController } from './controllers/fansub-/fansub-dns.controller';
 import { FansubDoramaController } from './controllers/fansub-/fansub-dorama.controller';
 import { FansubMemberController } from './controllers/fansub-/fansub-member.controller';
-import { FansubRssFeedActiveController } from './controllers/fansub-/fansub-rss-feed-active.controller';
-import { FansubRssFeedAllController } from './controllers/fansub-/fansub-rss-feed-all.controller';
+import { FansubRssFeedController } from './controllers/fansub-/fansub-rss-feed.controller';
 import { FansubSlugController } from './controllers/fansub-/fansub-slug.controller';
 import { ImageController } from './controllers/image.controller';
 import { InformationController } from './controllers/information.controller';
@@ -147,6 +146,7 @@ import { NihongoService } from './repository/nihongo.service';
 import { NotificationService } from './repository/notification.service';
 import { ProfileService } from './repository/profile.service';
 import { ProjectTypeService } from './repository/project-type.service';
+import { RssFeedService } from './repository/rss-feed.service';
 import { RegistrationService } from './repository/registration.service';
 import { SocialMediaService } from './repository/social-media.service';
 import { TatoebaService } from './repository/tatoeba.service';
@@ -196,8 +196,7 @@ import { UserService } from './repository/user.service';
     FansubDnsController,
     FansubDoramaController,
     FansubMemberController,
-    FansubRssFeedActiveController,
-    FansubRssFeedAllController,
+    FansubRssFeedController,
     FansubSlugController,
     ImageController,
     InformationController,
@@ -305,6 +304,7 @@ import { UserService } from './repository/user.service';
     NotificationService,
     ProfileService,
     ProjectTypeService,
+    RssFeedService,
     RegistrationService,
     SocialMediaService,
     TatoebaService,

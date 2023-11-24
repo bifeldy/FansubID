@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { JsonResponse, FansubModel, FansubMemberModel } from '../../../models/req-res.model';
+import { JsonResponse, FansubModel, FansubMemberModel, RssFeedModel } from '../../../models/req-res.model';
 
 import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
@@ -60,15 +60,11 @@ export class FansubService {
     return this.api.patchData(`/fansub-dorama?page=${page}&row=${row}`, { id: fansubId });
   }
 
-  getRssFeedFansubAllActiveOnly(): Observable<JsonResponse> {
-    return this.api.getData('/fansub-rss-feed-active');
+  getRssFeedFansubAll(active = false, q = '', page = 1, row = 10, sort = '', order = ''): Observable<JsonResponse<RssFeedModel>> {
+    return this.api.getData(`/fansub-rss-feed?q=${q}&page=${page}&row=${row}&sort=${sort}&order=${order}&active=${active ? 'true' : ''}`);
   }
 
-  getRssFeedFansubAll(): Observable<JsonResponse> {
-    return this.api.getData('/fansub-rss-feed-all');
-  }
-
-  getRssFeedFansub(fansubSlug: string): Observable<JsonResponse> {
+  getRssFeedFansub(fansubSlug: string): Observable<JsonResponse<RssFeedModel>> {
     return this.api.getData(`/fansub/${fansubSlug}/rss`);
   }
 

@@ -3,20 +3,18 @@ import { parse } from 'rss-to-json';
 
 // NodeJS Library
 import cluster from 'node:cluster';
-import { writeFile, rename, unlink } from 'node:fs';
+import { URL } from 'node:url';
 
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { IsNull, Not } from 'typeorm';
-import { Cache } from 'cache-manager';
 
 import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
-import { FansubModel } from '../../models/req-res.model';
-
 import { FansubService } from '../repository/fansub.service';
+import { RssFeedService } from '../repository/rss-feed.service';
 
 import { GlobalService } from '../services/global.service';
 
@@ -24,86 +22,13 @@ import { GlobalService } from '../services/global.service';
 export class RssFeedTasksService {
 
   constructor(
-    @Inject(CACHE_MANAGER) private cm: Cache,
     private sr: SchedulerRegistry,
     private fansubRepo: FansubService,
+    private rssFeedRepo: RssFeedService,
     private gs: GlobalService
   ) {
     //
   }
-
-  getFeedByUrl(rssUrl: string): Promise<{ title: any; description: any; link: any; image: any; category: any; items: any[]; }> {
-    if (!rssUrl.includes('alt=rss')) {
-      if (!rssUrl.includes('?')) {
-        rssUrl += '?';
-      } else if (rssUrl[rssUrl.length - 1] !== '?') {
-        rssUrl += '&';
-      }
-      rssUrl += 'alt=rss';
-    }
-    this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-PARSING] 🐾', rssUrl);
-    return parse(`${environment.baseUrl}/api/crawl?url=${rssUrl}`, null);
-  }
-
-  sortRssFeedWhileAdding(fansub: FansubModel, rssFeed: any[], feed: { title: any; description: any; link: any; image: any; category: any; items: any[]; }, countData: number = null): void {
-    if (!countData) {
-      countData = feed.items.length;
-    }
-    for (let i = 0; i < countData; i++) {
-      let j = 0;
-      while (j < rssFeed.length) {
-        const dateFeedNew = feed.items[i].created || feed.items[i].published;
-        const dateFeedOld = rssFeed[j].item.created || rssFeed[j].item.published;
-        if (dateFeedNew > dateFeedOld) {
-          break;
-        }
-        j++;
-      }
-      rssFeed.splice(j, 0, {
-        image_url: fansub.image_url,
-        slug: fansub.slug,
-        title: feed.title,
-        // description: feed.description,
-        link: feed.link,
-        // image: feed.image,
-        // category: feed.category,
-        item: {
-          title: feed.items[i].title,
-          // description: feed.items[i].description,
-          link: feed.items[i].link,
-          published: feed.items[i].published,
-          created: feed.items[i].created,
-          author: feed.items[i].author,
-          // category: feed.items[i].category,
-          // enclosures: feed.items[i].enclosures,
-          // media: feed.items[i].media
-        }
-      });
-    }
-  }
-
-  saveFeedToFileAndCache(reqUrl: string, resBody: any) {
-    this.cm.del(`/api/${reqUrl}`);
-    this.cm.set(`/api/${reqUrl}`, { status: 200, body: resBody }, { ttl: CONSTANTS.externalApiCacheTime });
-    writeFile(`${environment.jsonCacheFolder}/${reqUrl}.new.json`, JSON.stringify(resBody, null, 2), 'utf8', (e1) => {
-      if (e1) {
-        this.gs.log('[NODE_FS_WRITE_FILE-ERROR] 📝', e1, 'error');
-      } else {
-        unlink(`${environment.jsonCacheFolder}/${reqUrl}.old.json`, (e2) => {
-          if (e2) {
-            this.gs.log('[NODE_FS_UNLINK-ERROR] 🔗', e2, 'error');
-          }
-          rename(`${environment.jsonCacheFolder}/${reqUrl}.new.json`, `${environment.jsonCacheFolder}/${reqUrl}.old.json`, (e3) => {
-            if (e3) {
-              this.gs.log('[NODE_FS_RENAME-ERROR] 📛', e3, 'error');
-            }
-          });
-        });
-      }
-    });
-  }
-
-  /** */
 
   @Cron(
     CronExpression.EVERY_HOUR,
@@ -118,8 +43,6 @@ export class RssFeedTasksService {
       const startTime = new Date();
       this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-START] 🐾', `${startTime}`);
       try {
-        const rssFeedAll = [];
-        const rssFeedActive = [];
         const fansubs = await this.fansubRepo.find({
           where: [
             { rss_feed: Not(IsNull()) }
@@ -132,28 +55,54 @@ export class RssFeedTasksService {
           const rgx = new RegExp(CONSTANTS.regexUrl);
           if (fs.rss_feed.match(rgx)) {
             try {
-              const feed = await this.getFeedByUrl(fs.rss_feed);
-              this.sortRssFeedWhileAdding(fs, rssFeedAll, feed);
-              if (fs.active) {
-                this.sortRssFeedWhileAdding(fs, rssFeedActive, feed, 1);
+              let halaman = 1;
+              while (true) {
+                const url = new URL(fs.rss_feed);
+                const params = {
+                  'start-index': halaman.toString(),
+                  paged: halaman.toString(),
+                  page: halaman.toString(),
+                  alt: 'rss'
+                };
+                for (const [key, value] of Object.entries(params)) {
+                  if (!url.searchParams.has(key)) {
+                    url.searchParams.append(key, value);
+                  }
+                }
+                const ru = url.toString();
+                const uri = new URL(`${environment.baseUrl}/api/crawl`);
+                uri.searchParams.append('url', ru);
+                const feed = await parse(uri.toString(), null);
+                if (feed.items.length <= 0) {
+                  break;
+                }
+                for (const fi of feed.items) {
+                  const f = this.rssFeedRepo.new();
+                  f.fansub_ = fs;
+                  f.title = fi.title;
+                  f.created_at = new Date(fi.created || fi.published);
+                  if (typeof fi.link === 'string') {
+                    f.link = fi.link;
+                  } else {
+                    let idx = fi.link.findIndex(l => l.rel === 'alternate' && l.type === 'text/html');
+                    if (idx < 0) {
+                      continue;
+                    }
+                    f.link = fi.link[idx].href;
+                  }
+                  await this.rssFeedRepo.insert(f);
+                }
+                if (fs.rss_feed.includes('/feeds/posts/default')) {
+                  halaman += feed.items.length;
+                } else {
+                  halaman += 1;
+                }
               }
             } catch (e) {
               this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR_PARSE] 🐾', e, 'error');
             }
           }
         }
-        this.saveFeedToFileAndCache('fansub-rss-feed-all', {
-          info: `😅 200 - Fansub API :: RSS Feed All Full Fansubs 🤣`,
-          count: rssFeedAll.length,
-          pages: 1,
-          results: rssFeedAll
-        });
-        this.saveFeedToFileAndCache('fansub-rss-feed-active', {
-          info: `😅 200 - Fansub API :: RSS Feed All Active Fansubs 🤣`,
-          count: rssFeedActive.length,
-          pages: 1,
-          results: rssFeedActive
-        });
       } catch (error) {
         this.gs.log('[CRON_TASK_FANSUB_RSS_FEED-ERROR] 🐾', error, 'error');
       }
