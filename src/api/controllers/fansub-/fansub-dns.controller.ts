@@ -157,15 +157,11 @@ export class FansubDnsController {
         }
       }
     }
+    delete fansub.description;
     delete fansub.urls;
     delete fansub.tags;
-    delete fansub.view_count;
-    delete fansub.like_count;
-    delete fansub.description;
-    delete fansub.rss_feed;
     delete fansub.created_at;
     delete fansub.updated_at;
-    delete fansub.user_;
     return { result, fansub };
   }
 

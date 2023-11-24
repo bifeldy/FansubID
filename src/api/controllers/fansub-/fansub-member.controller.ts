@@ -68,15 +68,11 @@ export class FansubMemberController {
       });
       for (const member of members) {
         if ('fansub_' in member && member.fansub_) {
+          delete member.fansub_.description;
           delete member.fansub_.urls;
           delete member.fansub_.tags;
-          delete member.fansub_.view_count;
-          delete member.fansub_.like_count;
-          delete member.fansub_.description;
-          delete member.fansub_.rss_feed;
           delete member.fansub_.created_at;
           delete member.fansub_.updated_at;
-          delete member.fansub_.user_;
         }
         if ('user_' in member && member.user_) {
           delete member.user_.created_at;
@@ -138,15 +134,11 @@ export class FansubMemberController {
           member.fansub_ = fansub;
           const resMemberSave = await this.fansubMemberRepo.save(member);
           if ('fansub_' in resMemberSave && resMemberSave.fansub_) {
+            delete resMemberSave.fansub_.description;
             delete resMemberSave.fansub_.urls;
             delete resMemberSave.fansub_.tags;
-            delete resMemberSave.fansub_.view_count;
-            delete resMemberSave.fansub_.like_count;
-            delete resMemberSave.fansub_.description;
-            delete resMemberSave.fansub_.rss_feed;
             delete resMemberSave.fansub_.created_at;
             delete resMemberSave.fansub_.updated_at;
-            delete resMemberSave.fansub_.user_;
           }
           if ('user_' in resMemberSave && resMemberSave.user_) {
             delete resMemberSave.user_.created_at;
@@ -296,15 +288,11 @@ export class FansubMemberController {
             resMember = await this.fansubMemberRepo.remove(member);
           }
           if ('fansub_' in resMember && resMember.fansub_) {
+            delete resMember.fansub_.description;
             delete resMember.fansub_.urls;
             delete resMember.fansub_.tags;
-            delete resMember.fansub_.view_count;
-            delete resMember.fansub_.like_count;
-            delete resMember.fansub_.description;
-            delete resMember.fansub_.rss_feed;
             delete resMember.fansub_.created_at;
             delete resMember.fansub_.updated_at;
-            delete resMember.fansub_.user_;
           }
           if ('user_' in resMember && resMember.user_) {
             delete resMember.user_.created_at;
@@ -356,15 +344,11 @@ export class FansubMemberController {
       if (user.id === member.user_.id || user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR) {
         const resMemberLeave = await this.fansubMemberRepo.remove(member);
         if ('fansub_' in resMemberLeave && resMemberLeave.fansub_) {
+          delete resMemberLeave.fansub_.description;
           delete resMemberLeave.fansub_.urls;
           delete resMemberLeave.fansub_.tags;
-          delete resMemberLeave.fansub_.view_count;
-          delete resMemberLeave.fansub_.like_count;
-          delete resMemberLeave.fansub_.description;
-          delete resMemberLeave.fansub_.rss_feed;
           delete resMemberLeave.fansub_.created_at;
           delete resMemberLeave.fansub_.updated_at;
-          delete resMemberLeave.fansub_.user_;
         }
         if ('user_' in resMemberLeave && resMemberLeave.user_) {
           delete resMemberLeave.user_.created_at;
