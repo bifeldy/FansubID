@@ -2,7 +2,7 @@
 import { readdirSync } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Request, Response } from 'express';
 import { Equal, ILike, In } from 'typeorm';
@@ -218,8 +218,39 @@ export class BerkasController {
 
   @Post('/')
   @HttpCode(201)
-  @ApiExcludeEndpoint()
-  @FilterApiKeyAccess()
+  @ApiTags(CONSTANTS.apiTagBerkas)
+  @ApiBody({
+    schema: {
+      properties: {
+        name: { type: 'string' },
+        projectType_id: { type: 'integer' },
+        fansub_id: {
+          type: 'array',
+          items: { type: 'integer' }
+        },
+        anime_id: { type: 'integer' },
+        dorama_id: { type: 'integer' },
+        sn_code: { type: 'string' },
+        download_url: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              url: { type: 'string' }
+            },
+            required: ['name', 'url']
+          }
+        },
+        attachment_id: { type: 'string' },
+        description: { type: 'string' },
+        private: { type: 'boolean' },
+        r18: { type: 'boolean' },
+        image: { type: 'string' }
+      },
+      required: ['name', 'projectType_id', 'fansub_id']
+    }
+  })
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async addNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
@@ -518,8 +549,40 @@ export class BerkasController {
 
   @Put('/:id')
   @HttpCode(201)
-  @ApiExcludeEndpoint()
-  @FilterApiKeyAccess()
+  @ApiTags(CONSTANTS.apiTagBerkas)
+  @ApiParam({ name: 'id', type: 'string' })
+  @ApiBody({
+    schema: {
+      properties: {
+        name: { type: 'string' },
+        projectType_id: { type: 'integer' },
+        fansub_id: {
+          type: 'array',
+          items: { type: 'integer' }
+        },
+        anime_id: { type: 'integer' },
+        dorama_id: { type: 'integer' },
+        sn_code: { type: 'string' },
+        download_url: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              url: { type: 'string' }
+            },
+            required: ['name', 'url']
+          }
+        },
+        attachment_id: { type: 'string' },
+        description: { type: 'string' },
+        private: { type: 'boolean' },
+        r18: { type: 'boolean' },
+        image: { type: 'string' }
+      },
+      required: []
+    }
+  })
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async updateById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {

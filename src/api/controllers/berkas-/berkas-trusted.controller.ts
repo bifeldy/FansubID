@@ -25,9 +25,7 @@ export class BerkasTrustedController {
       properties: {
         id: {
           type: 'array',
-          items: {
-            type: 'string'
-          }
+          items: { type: 'string' }
         }
       }
     }
