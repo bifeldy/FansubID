@@ -374,10 +374,10 @@ export class DiscordService {
   async handleInteraction(interaction: CommandInteraction): Promise<void> {
     try {
       if (interaction.commandName === 'about') {
-        await interaction.reply({ content: `<@${interaction.user.id}> https://github.com/${environment.author}/${environment.siteName}`, ephemeral: true });
+        await interaction.reply({ content: `<@${interaction.user.id}> https://github.com/${environment.author}/${environment.siteName}` });
       } else if (interaction.commandName === 'ping') {
         const latency = Date.now() - new Date(interaction.createdTimestamp).getTime();
-        await interaction.reply({ content: `<@${interaction.user.id}> Pong ${latency} ms late!`, ephemeral: true });
+        await interaction.reply({ content: `<@${interaction.user.id}> Pong ${latency} ms late!` });
       } else if (interaction.commandName === 'verify' && interaction.channelId === environment.discord.channelBotId) {
         const appToken = interaction.options.getString('token');
         const decoded = this.cs.jwtDecode(appToken);
@@ -389,9 +389,9 @@ export class DiscordService {
             relations: ['kartu_tanda_penduduk_', 'profile_']
           })
           if (user.verified) {
-            await interaction.reply({ content: `<@${interaction.user.id}> Akun sudah diverifikasi 😍 Yeay 🥰`, ephemeral: true });
+            await interaction.reply({ content: `<@${interaction.user.id}> Akun sudah diverifikasi 😍 Yeay 🥰` });
           } else if (!decoded.discord.verified) {
-            await interaction.reply({ content: `<@${interaction.user.id}> Akun discord belum terverifikasi 🤔`, ephemeral: true });
+            await interaction.reply({ content: `<@${interaction.user.id}> Akun discord belum terverifikasi 🤔` });
           } else {
             user.verified = true;
             await this.userRepo.save(user);
@@ -420,17 +420,17 @@ export class DiscordService {
                   })
               ]
             });
-            await interaction.reply({ content: `<@${interaction.user.id}> 😚 .: Berhasil :: ${user.username}@${environment.mailTrap.domain} :. 🤩`, ephemeral: true });
+            await interaction.reply({ content: `<@${interaction.user.id}> 😚 .: Berhasil :: ${user.username}@${environment.mailTrap.domain} :. 🤩` });
           }
         } else {
-          await interaction.reply({ content: `<@${interaction.user.id}> Siapa ya? Ini milik orang lain 🤔`, ephemeral: true });
+          await interaction.reply({ content: `<@${interaction.user.id}> Siapa ya? Ini milik orang lain 🤔` });
         }
       } else {
-        await interaction.reply({ content: `<@${interaction.user.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs dan ${environment.baseUrl}/api`, ephemeral: true });
+        await interaction.reply({ content: `<@${interaction.user.id}> Perintah tidak sesuai, silahkan lihat ${environment.baseUrl}/docs dan ${environment.baseUrl}/api` });
       }
     } catch (error) {
       this.gs.log('[DISCORD_SERVICE-HANDLE_INTERACTION] 🎉', error, 'error');
-      await interaction.reply({ content: `<@${interaction.user.id}> Format data salah 🤔`, ephemeral: true });
+      await interaction.reply({ content: `<@${interaction.user.id}> Format data salah 🤔` });
     }
   }
 
