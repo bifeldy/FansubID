@@ -294,7 +294,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.subsGroupGet = this.us.getUserGroup(this.as.currentUserSubject?.value?.username).subscribe({
       next: res => {
         this.gs.log('[USER_GROUP_LIST_SUCCESS]', res);
-        this.groupFansub = res.results;
+        this.groupFansub = res.results.filter(gf => gf.fansub_.dns_id);
         this.bs.idle();
       },
       error: err => {
