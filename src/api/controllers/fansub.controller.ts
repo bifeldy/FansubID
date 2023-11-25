@@ -272,10 +272,10 @@ export class FansubController {
               where: [
                 {
                   fansub_ : {
-                    id: fansub.id
+                    id: Equal(fansub.id)
                   },
                   user_ : {
-                    id: user.id
+                    id: Equal(user.id)
                   }
                 }
               ],
@@ -438,10 +438,10 @@ export class FansubController {
             where: [
               {
                 fansub_ : {
-                  id: fansub.id
+                  id: Equal(fansub.id)
                 },
                 user_ : {
-                  id: user.id
+                  id: Equal(user.id)
                 }
               }
             ],

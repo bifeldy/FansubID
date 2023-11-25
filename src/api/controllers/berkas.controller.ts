@@ -146,7 +146,7 @@ export class BerkasController {
         } else {
           // Current User Can See Private Berkas From Their Private Profile
           userFilesCriteria.user_ = {
-            id: user.id
+            id: Equal(user.id)
           };
         }
         sqlWhere.push(userFilesCriteria);

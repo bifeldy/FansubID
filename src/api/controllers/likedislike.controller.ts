@@ -118,7 +118,7 @@ export class LikedislikeController {
     try {
       const likedislike = await this.likedislikeRepo.findOneOrFail({
         where: [
-          { id: req.params['id'] }
+          { id: Equal(req.params['id']) }
         ],
         relations: ['berkas_', 'fansub_', 'user_', 'report_by_']
       });

@@ -281,7 +281,7 @@ export class BannedController {
       const adminMod: UserModel = res.locals['user'];
       const banned = await this.bannedRepo.findOneOrFail({
         where: [
-          { id: req.params['id'] }
+          { id: Equal(req.params['id']) }
         ],
         relations: ['user_', 'banned_by_']
       });

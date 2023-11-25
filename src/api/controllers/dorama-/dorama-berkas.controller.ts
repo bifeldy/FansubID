@@ -1,7 +1,7 @@
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { ILike, In } from 'typeorm';
+import { Equal, ILike, In } from 'typeorm';
 
 import { RoleModel, UserModel } from '../../../models/req-res.model';
 
@@ -69,7 +69,7 @@ export class DoramaBerkasController {
           } else {
             // Current User Can See Private Berkas From Their Private Profile
             userFilesCriteria.user_ = {
-              id: user.id
+              id: Equal(user.id)
             };
           }
           sqlWhere.push(userFilesCriteria);
