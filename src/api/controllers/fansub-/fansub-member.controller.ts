@@ -58,7 +58,6 @@ export class FansubMemberController {
           ...((req.query['sort'] && req.query['order']) ? {
             [req.query['sort'] as string]: (req.query['order'] as string).toUpperCase()
           } : {
-            fansub_: 'DESC',
             created_at: 'DESC'
           })
         },
@@ -119,7 +118,7 @@ export class FansubMemberController {
           where: [
             {
               fansub_: {
-                slug: ILike(req.body.slug)
+                id: Equal(fansub.id)
               },
               user_: {
                 id: Equal(user.id)

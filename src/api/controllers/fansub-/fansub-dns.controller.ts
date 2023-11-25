@@ -278,31 +278,31 @@ export class FansubDnsController {
   async createNew(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if ('slug' in req.body && 'server_target' in req.body) {
-        let user: UserModel = res.locals['user'];
-        let fansub = await this.fansubRepo.findOneOrFail({
+        const user: UserModel = res.locals['user'];
+        const fansub = await this.fansubRepo.findOneOrFail({
           where: [
             { slug: ILike(req.body.slug) }
           ]
         });
         if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
           try {
-            const member = await this.fansubMemberRepo.findOneOrFail({
+            await this.fansubMemberRepo.findOneOrFail({
               where: [
                 {
+                  approved: true,
                   fansub_ : {
-                    id: fansub.id
+                    id: Equal(fansub.id)
                   },
                   user_ : {
-                    id: user.id
+                    id: Equal(user.id)
                   }
                 }
               ],
-              relations: ['fansub_', 'user_']
+              relations: ['fansub_']
             });
-            user = member.user_;
           } catch (e) {
             throw new HttpException({
-              info: `😅 403 - Cloudflare API :: Pendaftaran Sub-Domain Ditolak 🤣`,
+              info: `😅 403 - Cloudflare API :: Pendaftaran Sub-Domain 🤣`,
               result: {
                 message: `Harus Menjadi Anggota Untuk Klaim Sub-Domain!`
               }
@@ -310,15 +310,11 @@ export class FansubDnsController {
           }
         }
         const r = await this.createNewOrUpdateDns({ req, user, fansub });
-        fansub = r.fansub;
-        const result = r.result;
-        if (result.dns_id) {
-          return {
-            info: `😅 200 - Cloudflare API :: Pengubahan Sub-Domain Berhasil 🥰`,
-            result,
-            fansub
-          };
-        }
+        return {
+          info: `😅 200 - Cloudflare API :: Pendaftaran Sub-Domain Berhasil 🥰`,
+          result: r.result,
+          fansub: r.fansub
+        };
       }
       throw new Error('Data Tidak Lengkap!');
     } catch (error) {
@@ -340,30 +336,42 @@ export class FansubDnsController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async getBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const user: UserModel = res.locals['user'];
-      const group = await this.fansubMemberRepo.findOneOrFail({
+      let user: UserModel = res.locals['user'];
+      const fansub = await this.fansubRepo.findOneOrFail({
         where: [
-          {
-            approved: true,
-            fansub_: {
-              slug: ILike(req.params['slug'])
-            },
-            user_: {
-              id: Equal(user.id)
-            }
-          }
-        ],
-        order: {
-          keterangan: 'ASC',
-          created_at: 'DESC'
-        },
-        relations: ['fansub_', 'user_']
+          { slug: ILike(req.params['slug']) }
+        ]
       });
+      if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+        try {
+          await this.fansubMemberRepo.findOneOrFail({
+            where: [
+              {
+                approved: true,
+                fansub_ : {
+                  id: Equal(fansub.id)
+                },
+                user_ : {
+                  id: Equal(user.id)
+                }
+              }
+            ],
+            relations: ['fansub_']
+          });
+        } catch (e) {
+          throw new HttpException({
+            info: `😅 403 - Cloudflare API :: Informasi Detail Sub-Domain 🤣`,
+            result: {
+              message: `Harus Menjadi Anggota Untuk Melihat Sub-Domain!`
+            }
+          }, HttpStatus.FORBIDDEN);
+        }
+      }
       const result = {
         dns_id: null,
         dns_id_alt: null
       };
-      const dns_id = await this.cfs.detailDns(group.fansub_.dns_id);
+      const dns_id = await this.cfs.detailDns(fansub.dns_id);
       if (dns_id && dns_id.status >= 200 && dns_id.status < 400) {
         result.dns_id = {
           id: dns_id.result.id,
@@ -383,8 +391,8 @@ export class FansubDnsController {
           }
         }, dns_id?.status || HttpStatus.NOT_FOUND);
       }
-      if (group.fansub_.dns_id_alt) {
-        const dns_id_alt = await this.cfs.detailDns(group.fansub_.dns_id_alt);
+      if (fansub.dns_id_alt) {
+        const dns_id_alt = await this.cfs.detailDns(fansub.dns_id_alt);
         if (dns_id_alt && dns_id_alt.status >= 200 && dns_id_alt.status < 400) {
           result.dns_id_alt = {
             id: dns_id_alt.result.id,
@@ -397,7 +405,12 @@ export class FansubDnsController {
             updated_at: dns_id_alt.result.modified_on
           };
         } else {
-          // Not Required
+          throw new HttpException({
+            info: `💩 ${dns_id_alt?.status || 404} - Cloudflare API :: Gagal Mengambil Data 🤬`,
+            result: {
+              message: 'Gagal Terhubung Dengan DNS Server!'
+            }
+          }, dns_id_alt?.status || HttpStatus.NOT_FOUND);
         }
       }
       return {
@@ -425,29 +438,36 @@ export class FansubDnsController {
     try {
       if ('server_target' in req.body) {
         const user: UserModel = res.locals['user'];
-        const group = await this.fansubMemberRepo.findOneOrFail({
-          where: [
-            {
-              approved: true,
-              fansub_: {
-                slug: ILike(req.params['slug'])
-              },
-              user_: {
-                id: Equal(user.id)
-              }
-            }
-          ],
-          order: {
-            keterangan: 'ASC',
-            created_at: 'DESC'
-          },
-          relations: ['fansub_', 'user_']
-        });
         const fansub = await this.fansubRepo.findOneOrFail({
           where: [
-            { slug: ILike(group.fansub_.slug) }
+            { slug: ILike(req.params['slug']) }
           ]
         });
+        if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+          try {
+            await this.fansubMemberRepo.findOneOrFail({
+              where: [
+                {
+                  approved: true,
+                  fansub_ : {
+                    id: Equal(fansub.id)
+                  },
+                  user_ : {
+                    id: Equal(user.id)
+                  }
+                }
+              ],
+              relations: ['fansub_']
+            });
+          } catch (e) {
+            throw new HttpException({
+              info: `😅 403 - Cloudflare API :: Ubah Informasi Sub-Domain 🤣`,
+              result: {
+                message: `Harus Menjadi Anggota Untuk Mengubah Sub-Domain!`
+              }
+            }, HttpStatus.FORBIDDEN);
+          }
+        }
         const r = await this.createNewOrUpdateDns({ req, user, fansub });
         return {
           info: `😅 200 - Cloudflare API :: Pengubahan Sub-Domain Berhasil 🥰`,
@@ -476,29 +496,36 @@ export class FansubDnsController {
   async removeBySlug(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
-      const group = await this.fansubMemberRepo.findOneOrFail({
-        where: [
-          {
-            approved: true,
-            fansub_: {
-              slug: ILike(req.params['slug'])
-            },
-            user_: {
-              id: Equal(user.id)
-            }
-          }
-        ],
-        order: {
-          keterangan: 'ASC',
-          created_at: 'DESC'
-        },
-        relations: ['fansub_', 'user_']
-      });
       const fansub = await this.fansubRepo.findOneOrFail({
         where: [
-          { slug: ILike(group.fansub_.slug) }
+          { slug: ILike(req.params['slug']) }
         ]
       });
+      if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR) {
+        try {
+          await this.fansubMemberRepo.findOneOrFail({
+            where: [
+              {
+                approved: true,
+                fansub_ : {
+                  id: Equal(fansub.id)
+                },
+                user_ : {
+                  id: Equal(user.id)
+                }
+              }
+            ],
+            relations: ['fansub_']
+          });
+        } catch (e) {
+          throw new HttpException({
+            info: `😅 403 - Cloudflare API :: Hapus Sub-Domain 🤣`,
+            result: {
+              message: `Harus Menjadi Anggota Untuk Menghapus Sub-Domain!`
+            }
+          }, HttpStatus.FORBIDDEN);
+        }
+      }
       const result = {
         dns_id: null,
         dns_id_alt: null,
