@@ -127,14 +127,14 @@
         <div class="row py-3" *ngIf="rssFeedData.length > 0">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">
-              <span class="float-end text-warning" style="font-size: small;">
-                <small class="text-success" (click)="getRssFeed()" style="cursor: pointer;">
+              <span class="float-end text-bifeldy" style="font-size: small;">
+                <a class="text-warning text-decoration-none" (click)="getRssFeed()" style="cursor: pointer;">
                   Refresh
-                </small>
+                </a>
                 |
-                <small class="text-danger" (click)="showAllRssFeed()" style="cursor: pointer;">
-                  Lebih Banyak
-                </small>
+                <a class="text-warning text-decoration-none" (click)="showAllRssFeed()" style="cursor: pointer;">
+                  Lainnya
+                </a>
               </span>
               <b class="text-bifeldy">RSS Feed Fansub</b>
             </h2>
@@ -145,7 +145,7 @@
                 <mat-icon fontIcon="rss_feed" mat-list-icon class="ps-3"></mat-icon>
                 <a class="text-truncate text-decoration-none" href="{{ r.link }}">
                   <span class="bg-bifeldy px-2 me-1 text-danger" style="position: absolute; right: 0;">{{ r.created_at | dateAgo }}</span>
-                  <span class="text-warning" [innerHTML]="r.title"></span>
+                  <span class="text-success" [innerHTML]="r.title"></span>
                 </a>
               </mat-list-option>
             </mat-selection-list>
