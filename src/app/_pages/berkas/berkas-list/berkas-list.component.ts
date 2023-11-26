@@ -84,7 +84,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.r18 = this.ls.getItem(this.gs.localStorageKeys.R18) === 'true' || false;
+      this.r18 = this.ls.getItem(this.gs.localStorageKeys.R18) === 'true';
       if (!this.gs.isDesktop) {
         this.tablePageSizeOptions = [10, 25, 50, 75, 100];
       }

@@ -69,7 +69,12 @@ export class TorrentService {
     private ls: LocalStorageService
   ) {
     if (this.gs.isBrowser) {
-      this.torrentsQueue = this.ls.getItem(this.gs.localStorageKeys.Torrents, true) || this.torrentsQueue;
+      const lsObj = this.ls.getItem(this.gs.localStorageKeys.Torrents, true);
+      if (lsObj) {
+        for (const [key, value] of Object.entries(lsObj)) {
+          this.torrentsQueue[key] = value;
+        }
+      }
       if (WebTorrent.WEBRTC_SUPPORT) {
         this.webClient = new WebTorrent(this.clientOptions);
         this.gs.log('[TORRENT_CLIENT_WEB_MODE_INITIALIZED]', this.webClient);
