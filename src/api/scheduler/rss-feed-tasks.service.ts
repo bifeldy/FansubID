@@ -56,13 +56,16 @@ export class RssFeedTasksService {
           if (fs.rss_feed.match(rgx)) {
             try {
               let halaman = 1;
+              let totalNew = 0;
               while (true) {
                 const url = new URL(fs.rss_feed);
                 const params = {
                   'start-index': halaman.toString(),
                   paged: halaman.toString(),
                   page: halaman.toString(),
-                  alt: 'rss'
+                  alt: 'rss',
+                  'max-results': '10',
+                  row: '10'
                 };
                 for (const [key, value] of Object.entries(params)) {
                   if (!url.searchParams.has(key)) {
@@ -76,26 +79,50 @@ export class RssFeedTasksService {
                 if (feed.items.length <= 0) {
                   break;
                 }
-                for (const fi of feed.items) {
+                let inserted = 0;
+                for (let i = 0; i < feed.items.length; i++) {
                   const f = this.rssFeedRepo.new();
                   f.fansub_ = fs;
-                  f.title = fi.title;
-                  f.created_at = new Date(fi.created || fi.published);
-                  if (typeof fi.link === 'string') {
-                    f.link = fi.link;
+                  f.title = feed.items[i].title;
+                  f.created_at = new Date(feed.items[i].created || feed.items[i].published);
+                  if (typeof feed.items[i].link === 'string') {
+                    f.link = feed.items[i].link;
                   } else {
-                    let idx = fi.link.findIndex(l => l.rel === 'alternate' && l.type === 'text/html');
+                    let idx = feed.items[i].link.findIndex(l => l.rel === 'alternate' && l.type === 'text/html');
                     if (idx < 0) {
                       continue;
                     }
-                    f.link = fi.link[idx].href;
+                    f.link = feed.items[i].link[idx].href;
                   }
-                  await this.rssFeedRepo.insert(f);
+                  try {
+                    await this.rssFeedRepo.insert(f);
+                    inserted++;
+                  } catch (err) {
+                    if (inserted === 0 && i >= feed.items.length - 1) {
+                      throw new Error(`Tidak Ada RSS Feed Terbaru Dari ${i + 1} Data!`);
+                    }
+                  }
                 }
+                totalNew += inserted;
+                let noNew = null;
                 if (fs.rss_feed.includes('/feeds/posts/default')) {
                   halaman += feed.items.length;
+                  // Default Blogger Feed Per Page => 25 Items, But Forced To 10 Items
+                  // So The Total Of Items Will Be 30 After Page 3 Loaded
+                  // Blogger Paging Is Not A Page But Skip Offset Of Items
+                  if (totalNew === 0 && halaman > 30) {
+                    noNew = `Tidak Ada RSS Feed Terbaru Setelah Mengecek ${halaman / 10} Halaman!`;
+                  }
                 } else {
                   halaman += 1;
+                  // Default Universal Feed (Wordpress, etc) Per Page => 10 Items
+                  // So The Total Of Items Will Be 30 After Page 3 Loaded
+                  if (totalNew === 0 && halaman > 3) {
+                    noNew = `Tidak Ada RSS Feed Terbaru Setelah Mengecek ${halaman} Halaman!`;
+                  }
+                }
+                if (noNew) {
+                  throw new Error(noNew);
                 }
               }
             } catch (e) {
