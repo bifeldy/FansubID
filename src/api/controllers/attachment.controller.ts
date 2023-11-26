@@ -206,7 +206,6 @@ export class AttachmentController {
             delete ddlFile.user_.password;
             delete ddlFile.user_.session_token;
             delete ddlFile.user_.session_origin;
-            delete ddlFile.user_.deleted_at;
             delete ddlFile.user_.created_at;
             delete ddlFile.user_.updated_at;
           }
