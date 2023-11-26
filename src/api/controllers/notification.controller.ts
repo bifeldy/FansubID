@@ -49,7 +49,8 @@ export class NotificationController {
         },
         relations: ['user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
-        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
+        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10,
+        withDeleted: true
       });
       for (const n of notifications) {
         if ('user_' in n && n.user_) {
@@ -94,6 +95,7 @@ export class NotificationController {
           title: req.body.title,
           content: req.body.content,
           dismissible: (req.body.dismissible === true),
+          timeout: req.body.timeout || 10000,
           user_: {
             username: user.username
           }
@@ -104,6 +106,7 @@ export class NotificationController {
           notif.title = notifTemplate.title;
           notif.content = notifTemplate.content;
           notif.dismissible = notifTemplate.dismissible;
+          notif.timeout = notifTemplate.timeout;
           notif.deadline = req.body.deadline;
           notif.user_ = user;
           notifTemplate = await this.notificationRepo.save(notif);
@@ -115,7 +118,8 @@ export class NotificationController {
             type: notifTemplate.type,
             title: notifTemplate.title,
             content: notifTemplate.content,
-            dismissible: notifTemplate.dismissible
+            dismissible: notifTemplate.dismissible,
+            timeout: notifTemplate.timeout
           }
         });
         return {
@@ -150,7 +154,9 @@ export class NotificationController {
         ],
         relations: ['user_']
       });
-      const deletedNotification = await this.notificationRepo.remove(notification);
+      notification.deadline = new Date(0);
+      const resSaveNotification = await this.notificationRepo.save(notification);
+      const deletedNotification = await this.notificationRepo.remove(resSaveNotification);
       if ('user_' in deletedNotification && deletedNotification.user_) {
         delete deletedNotification.user_.created_at;
         delete deletedNotification.user_.updated_at;

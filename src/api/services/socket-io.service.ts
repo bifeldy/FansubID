@@ -332,7 +332,8 @@ export class SocketIoService {
           type: n.type,
           title: n.title,
           content: n.content,
-          dismissible: n.dismissible
+          dismissible: n.dismissible,
+          timeout: n.timeout
         }
       });
     }

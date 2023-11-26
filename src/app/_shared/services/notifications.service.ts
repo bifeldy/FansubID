@@ -37,9 +37,9 @@ export class NotificationsService {
     }
   }
 
-  addNotif(notifCreator, notifId, notifType, notifTitle, notifContent, dismissible = true): void {
+  addNotif(notifCreator, notifId, notifType, notifTitle, notifContent, dismissible = true, timeout = 10000): void {
     if (dismissible) {
-      this.dissmissTimeout[notifId] = setTimeout(() => this.removeNotif(notifId), 10000);
+      this.dissmissTimeout[notifId] = setTimeout(() => this.removeNotif(notifId), timeout);
     }
     const idx = this.notifications.findIndex(n => n.notifData.id === notifId);
     if (idx < 0) {

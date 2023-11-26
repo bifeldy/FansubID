@@ -213,7 +213,8 @@ export class StatsServerService {
         notifObj.notifData.type,
         notifObj.notifData.title,
         notifObj.notifData.content,
-        notifObj.notifData.dismissible
+        notifObj.notifData.dismissible,
+        notifObj.notifData.timeout
       );
     });
     this.mySocket.on('new-information', async (notifObj: any) => {

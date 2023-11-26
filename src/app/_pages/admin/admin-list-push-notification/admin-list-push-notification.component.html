@@ -35,7 +35,7 @@
                   <div *ngIf="fg.get('content').hasError('pattern')">Isi Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
                 <mat-label>Jenis Warna</mat-label>
                 <mat-select formControlName="type" placeholder="Class Warna Bootstrap" required>
                   <mat-option value="danger">Merah</mat-option>
@@ -52,7 +52,7 @@
                   <div *ngIf="fg.get('type').hasError('pattern')">Tipe Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
                 <mat-label>Dapat Ditutup</mat-label>
                 <mat-select formControlName="dismissible" placeholder="Ya / Tidak" required>
                   <mat-option value="1">Ya</mat-option>
@@ -64,7 +64,16 @@
                   <div *ngIf="fg.get('dismissible').hasError('pattern')">Dismissible Hanya Boleh Huruf Standar Papan Ketik</div>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="p-3 col-12 col-md-4" [color]="'accent'">
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
+                <mat-label>Timeout</mat-label>
+                <input type="number" matInput formControlName="timeout" placeholder="10000" />
+                <mat-icon fontIcon="123" matSuffix></mat-icon>
+                <mat-hint align="end">Dalam Mili-Detik</mat-hint>
+                <mat-error>
+                  <div *ngIf="fg.get('timeout').hasError('pattern')">Timeout Hanya Boleh Angka</div>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
                 <mat-label>Deadline</mat-label>
                 <input matInput [ngxMatDatetimePicker]="kalender" formControlName="deadline" (focus)="kalender.open()" placeholder="{{ currentDateTime | date:'d MMMM y, HH:mm:ss' }}"
                   [min]="currentDateTime" [max]="maxDateTime" />

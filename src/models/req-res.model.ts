@@ -388,6 +388,7 @@ export interface NotificationModel {
   title?: string;
   content?: string;
   dismissible?: boolean;
+  timeout?: number;
   deadline?: Date;
   created_at?: number | Date;
   updated_at?: number | Date;

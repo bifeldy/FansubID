@@ -23,6 +23,9 @@ export class Notification implements NotificationModel {
   @Column({ type: 'boolean' })
   dismissible: boolean;
 
+  @Column({ type: 'int', default: 10000 })
+  timeout: number;
+
   @Column({ type: 'timestamp' })
   deadline: Date;
 

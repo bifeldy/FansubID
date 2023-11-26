@@ -79,6 +79,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
       content: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       type: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       dismissible: [null, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      timeout: [null, Validators.compose([Validators.pattern(/^[0-9]+$/)])],
       deadline: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])]
     });
   }
@@ -101,11 +102,12 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
         for (const r of res.results) {
           notifDataRow.push({
             foto: r.user_.image_url,
+            deleted: new Date(r.deadline).getTime() === new Date(0).getTime(),
             Deadline: r.deadline,
             Judul: r.title,
             Konten: r.content,
             Pemilik: r.user_.username,
-            Aksi: [
+            Aksi: (new Date().getTime() > new Date(r.deadline).getTime()) ? [] : [
               { type: 'button', icon: 'close', name: 'Hapus', row: r }
             ]
           });
@@ -133,6 +135,7 @@ export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
       title: this.fg.value.title,
       content: this.fg.value.content,
       dismissible: (this.fg.value.dismissible === '1'),
+      timeout: this.fg.value.timeout,
       deadline: this.fg.value.deadline
     }).subscribe({
       next: res => {
