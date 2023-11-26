@@ -107,6 +107,11 @@ export class FansubRssFeedController {
               fansub_: {
                 name: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
               }
+            },
+            {
+              fansub_: {
+                slug: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
+              }
             }
           ],
           order: {

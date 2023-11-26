@@ -127,8 +127,14 @@
         <div class="row py-3" *ngIf="rssFeedData.length > 0">
           <div class="col-12 sticky-top bg-bifeldy">
             <h2 class="pt-3 border-bottom-dotted">
-              <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getRssFeed()">
-                Refresh
+              <span class="float-end text-warning" style="font-size: small;">
+                <small class="text-success" (click)="getRssFeed()" style="cursor: pointer;">
+                  Refresh
+                </small>
+                |
+                <small class="text-danger" (click)="showAllRssFeed()" style="cursor: pointer;">
+                  Lebih Banyak
+                </small>
               </span>
               <b class="text-bifeldy">RSS Feed Fansub</b>
             </h2>

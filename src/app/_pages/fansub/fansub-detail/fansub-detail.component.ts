@@ -220,6 +220,14 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  showAllRssFeed(): void {
+    this.router.navigate(['/rss-feed'], {
+      queryParams: {
+        q: this.fansubSlug
+      }
+    });
+  }
+
   openRssFeed(link: string): void {
     this.wb.winboxOpenUri(link);
   }
