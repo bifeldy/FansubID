@@ -41,16 +41,19 @@ export class NotificationsService {
     if (dismissible) {
       this.dissmissTimeout[notifId] = setTimeout(() => this.removeNotif(notifId), 10000);
     }
-    this.notifications.splice(0, 0, {
-      notifCreator,
-      notifData: {
-        id: notifId,
-        type: notifType,
-        title: notifTitle,
-        content: notifContent,
-        dismissible
-      }
-    });
+    const idx = this.notifications.findIndex(n => n.notifData.id === notifId);
+    if (idx < 0) {
+      this.notifications.splice(0, 0, {
+        notifCreator,
+        notifData: {
+          id: notifId,
+          type: notifType,
+          title: notifTitle,
+          content: notifContent,
+          dismissible
+        }
+      });
+    }
   }
 
   removeNotif(id): void {
