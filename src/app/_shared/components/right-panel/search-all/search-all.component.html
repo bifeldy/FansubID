@@ -103,6 +103,24 @@
         </mat-selection-list>
       </div>
     </div>
+    <div class="row" *ngIf="searchResult.rssResults.length > 0">
+      <div class="col-12">
+        <h2 class="pt-3 border-bottom-dotted">
+          <b class="text-bifeldy">RSS</b>
+        </h2>
+      </div>
+      <div class="col-12">
+        <mat-selection-list class="pt-0" [multiple]="false">
+          <mat-list-option (click)="openRssFeed(r)" *ngFor="let r of searchResult.rssResults | slice:0:5">
+            <img matListAvatar src="{{ r.fansub_.image_url }}" class="ms-3" style="border-radius: 0;" />
+            <h4 matLine>{{ r.title }}</h4>
+            <h5 matLine>
+              <span class="text-success">{{ r.created_at | date:'d-MM-y' }}</span>
+            </h5>
+          </mat-list-option>
+        </mat-selection-list>
+      </div>
+    </div>
     <div class="row" *ngIf="searchResult.berkasResults.length > 0">
       <div class="col-12">
         <h2 class="pt-3 border-bottom-dotted">

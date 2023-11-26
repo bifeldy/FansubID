@@ -10,6 +10,7 @@ import { FansubService } from '../../../services/fansub.service';
 import { BerkasService } from '../../../services/berkas.service';
 import { UserService } from '../../../services/user.service';
 import { LocalStorageService } from '../../../services/local-storage.service';
+import { WinboxService } from '../../../services/winbox.service';
 
 @Component({
   selector: 'app-search-all',
@@ -25,6 +26,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     animeResults: [],
     doramaResults: [],
     fansubResults: [],
+    rssResults: [],
     berkasResults: [],
     penggunaResults: []
   };
@@ -34,6 +36,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   subsAnime = null;
   subsDorama = null;
   subsFansub = null;
+  subsRss = null;
   subsBerkas = null;
   subsPengguna = null;
   subsDialog = null;
@@ -45,6 +48,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   timedOut5 = null;
   timedOut6 = null;
   timedOut7 = null;
+  timedOut8 = null;
 
   constructor(
     private gs: GlobalService,
@@ -56,7 +60,8 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     private fansub: FansubService,
     private berkas: BerkasService,
     private user: UserService,
-    private ls: LocalStorageService
+    private ls: LocalStorageService,
+    private wb: WinboxService
   ) {
     if (this.gs.isBrowser) {
       //
@@ -65,7 +70,12 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.searchResult = this.ls.getItem(this.gs.localStorageKeys.SearchResults, true) || this.searchResult;
+      const lsObj = this.ls.getItem(this.gs.localStorageKeys.SearchResults, true);
+      if (lsObj) {
+        for (const [key, value] of Object.entries(lsObj)) {
+          this.searchResult[key] = value;
+        }
+      }
     }
   }
 
@@ -76,6 +86,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.subsAnime?.unsubscribe();
     this.subsDorama?.unsubscribe();
     this.subsFansub?.unsubscribe();
+    this.subsRss?.unsubscribe();
     this.subsBerkas?.unsubscribe();
     this.subsPengguna?.unsubscribe();
     this.subsDialog?.unsubscribe();
@@ -107,6 +118,10 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       clearTimeout(this.timedOut7);
       this.timedOut7 = null;
     }
+    if (this.timedOut8) {
+      clearTimeout(this.timedOut8);
+      this.timedOut8 = null;
+    }
   }
 
   applyFilter(event): void {
@@ -117,6 +132,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.searchResult.animeResults = [];
     this.searchResult.doramaResults = [];
     this.searchResult.fansubResults = [];
+    this.searchResult.rssResults = [];
     this.searchResult.berkasResults = [];
     this.searchResult.penggunaResults = [];
     if (this.searchResult.q) {
@@ -127,6 +143,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       this.timedOut5 = setTimeout(() => { this.getFansub(); }, 1250);
       this.timedOut6 = setTimeout(() => { this.getBerkas(); }, 1500);
       this.timedOut7 = setTimeout(() => { this.getPengguna(); }, 1750);
+      this.timedOut7 = setTimeout(() => { this.getRss(); }, 2000);
     }
   }
 
@@ -268,6 +285,26 @@ export class SearchAllComponent implements OnInit, OnDestroy {
         this.gs.log('[PENGGUNA_SEARCH_ERROR]', err, 'error');
       }
     });
+  }
+
+  getRss(): void {
+    if (this.subsRss) {
+      this.subsRss.unsubscribe();
+    }
+    this.subsRss = this.fansub.getRssFeedFansubAll(null, this.searchResult.q, 1, 5).subscribe({
+      next: res => {
+        this.gs.log('[RSS_SEARCH_SUCCESS]', res);
+        this.searchResult.rssResults = res.results;
+      },
+      error: err => {
+        this.gs.log('[RSS_SEARCH_ERROR]', err, 'error');
+      }
+    });
+  }
+
+  openRssFeed(data): void {
+    this.gs.log('[RSS_FEED_LIST_OPEN_URL]', data);
+    this.wb.winboxOpenUri(data.link);
   }
 
 }
