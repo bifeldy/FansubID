@@ -13,7 +13,7 @@
             <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedComment()">
               Refresh
             </span>
-            <b class="text-bifeldy">Riwayat Komentar</b>
+            <b class="text-bifeldy">Riwayat Komentar :: {{ totalKomentar }}</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedKomentarData.length > 0; else noData;">
@@ -34,7 +34,7 @@
             <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedLikeDislike()">
               Refresh
             </span>
-            <b class="text-bifeldy">Riwayat Like & Dislike</b>
+            <b class="text-bifeldy">Riwayat Like & Dislike :: {{ totalLikeDislike }}</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedLikeDislikeData.length > 0; else noData;">
@@ -65,7 +65,7 @@
             <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="getUserFeedVisit()">
               Refresh
             </span>
-            <b class="text-bifeldy">Riwayat Kunjungan</b>
+            <b class="text-bifeldy">Riwayat Kunjungan :: {{ totalKunjungan }}</b>
           </h2>
         </div>
         <div class="col-12" *ngIf="feedVisitData.length > 0; else noData;">

@@ -41,6 +41,10 @@ export class UserListComponent implements OnInit, OnDestroy {
   apiKey = [];
   groupFansub = [];
 
+  totalKomentar = 0;
+  totalLikeDislike = 0;
+  totalKunjungan = 0;
+
   constructor(
     private clipboard: Clipboard,
     private router: Router,
@@ -104,6 +108,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.subsFeedKomentar = this.us.getUserFeedComment(this.as.currentUserSubject?.value?.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_COMMENT_SUCCESS]', res);
+        this.totalKomentar = res.count;
         this.feedKomentarData = res.results;
         this.bs.idle();
       },
@@ -119,6 +124,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.subsFeedLikeDislike = this.us.getUserFeedLikeDislike(this.as.currentUserSubject?.value?.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_LIKEDISLIKE_SUCCESS]', res);
+        this.totalLikeDislike = res.count;
         this.feedLikeDislikeData = res.results;
         this.bs.idle();
       },
@@ -134,6 +140,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.subsFeedVisit = this.us.getUserFeedVisit(this.as.currentUserSubject?.value?.username, '', 1, 5).subscribe({
       next: res => {
         this.gs.log('[USER_FEED_VISIT_SUCCESS]', res);
+        this.totalKunjungan = res.count;
         this.feedVisitData = res.results;
         this.bs.idle();
       },
