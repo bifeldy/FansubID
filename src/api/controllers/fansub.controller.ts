@@ -432,6 +432,14 @@ export class FansubController {
         ],
         relations: ['user_']
       });
+      if (fansub.dns_id || fansub.dns_id_alt) {
+        throw new HttpException({
+          info: `🙄 400 - Fansub API :: Gagal Menghapus Fansub ${req.params['slug']} 😪`,
+          result: {
+            message: 'Fansub Sedang Terikat Domain'
+          }
+        }, HttpStatus.BAD_REQUEST);
+      }
       if (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR && fansub.user_.id !== user.id) {
         try {
           const member = await this.fansubMemberRepo.findOneOrFail({
