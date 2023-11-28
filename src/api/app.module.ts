@@ -79,7 +79,7 @@ import { UserController } from './controllers/user.controller';
 import { VerifyController } from './controllers/verify.controller';
 import { VerifySosmedController } from './controllers/verify-/verify-sosmed.controller';
 
-import { UrlXmlMiddleware } from './middlewares/url-xml.middleware';
+import { UrlPathMiddleware } from './middlewares/url-path.middleware';
 import { ApiKeyMiddleware } from './middlewares/api-key.middleware';
 import { BannedMiddleware } from './middlewares/banned.middleware';
 import { LoginMiddleware } from './middlewares/login.middleware';
@@ -320,7 +320,7 @@ export class AppModule {
   // https://stackoverflow.com/questions/61152975/nestjs-middleware-for-all-routes-except-auth
   configure(mc: MiddlewareConsumer) {
 
-    mc.apply(UrlXmlMiddleware).forRoutes(
+    mc.apply(UrlPathMiddleware).forRoutes(
       { path: '*', method: RequestMethod.ALL }
     );
 

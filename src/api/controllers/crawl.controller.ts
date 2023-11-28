@@ -14,8 +14,6 @@ import { environment } from '../../environments/api/environment';
 
 import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 
-import { GlobalService } from '../services/global.service';
-
 @ApiExcludeController()
 @Controller('/crawl')
 export class CrawlController {
@@ -44,8 +42,7 @@ export class CrawlController {
   browser: Browser = null;
 
   constructor(
-    @Inject(CACHE_MANAGER) private cm: Cache,
-    private gs: GlobalService
+    @Inject(CACHE_MANAGER) private cm: Cache
   ) {
     puppeteer.use(StealthPlugin());
     this.initialize();
@@ -126,19 +123,12 @@ export class CrawlController {
       if (page) {
         await page.close();
       }
-      const body = {
+      res.status(HttpStatus.BAD_REQUEST).json({
         info: '🙄 400 - Crawl API :: UR[I/L] Tidak Valid 😪',
         result: {
           message: 'Data Tidak Lengkap!'
         }
-      };
-      res.status(HttpStatus.BAD_REQUEST);
-      if (res.locals['xml']) {
-        res.set('Content-Type', 'application/xml');
-        res.send(this.gs.OBJ2XML(body));
-      } else {
-        res.json(body);
-      }
+      });
     }
   }
 

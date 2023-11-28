@@ -85,19 +85,12 @@ export class DdlPartController {
         `, [ddlFile.msg_parent, ddlFile.msg_parent]);
       }).pipe(res);
     } catch (error) {
-      const body: any = {
+      res.status(HttpStatus.NOT_FOUND).json({
         info: `🙄 404 - DDL File API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }
-      };
-      res.status(HttpStatus.NOT_FOUND);
-      if (res.locals['xml']) {
-        res.set('Content-Type', 'application/xml');
-        res.send(this.gs.OBJ2XML(body));
-      } else {
-        res.json(body);
-      }
+      });
     }
   }
 
@@ -216,19 +209,12 @@ export class DdlSeekController {
         `, [ddlFile.msg_parent, ddlFile.msg_parent]);
       }).pipe(res);
     } catch (error) {
-      const body: any = {
+      res.status(HttpStatus.NOT_FOUND).json({
         info: `🙄 404 - DDL File API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }
-      };
-      res.status(HttpStatus.NOT_FOUND);
-      if (res.locals['xml']) {
-        res.set('Content-Type', 'application/xml');
-        res.send(this.gs.OBJ2XML(body));
-      } else {
-        res.json(body);
-      }
+      });
     }
   }
 

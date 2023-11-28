@@ -3,14 +3,12 @@ import { Request, Response } from 'express';
 
 import { environment } from '../../environments/api/environment';
 
-import { GlobalService } from '../services/global.service';
 import { SocketIoService } from '../services/socket-io.service';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
 
   constructor(
-    private gs: GlobalService,
     private sis: SocketIoService
   ) {
     //
@@ -22,7 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const res = ctx.getResponse<Response>();
 
     const statusCode = exception.getStatus();
-    let body: any = exception.getResponse();
+    const body: any = exception.getResponse();
 
     if (statusCode === HttpStatus.UNAUTHORIZED) {
       const socketId = (req.headers['x-socket-id'] || '').toString();
@@ -41,13 +39,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
     }
 
-    this.gs.log(`[HTTP_EXCEPTION-RESPONSE_HEADER_${statusCode}] 🏹`, res.getHeaders());
-    if (res.locals['xml']) {
-      this.gs.log('[HTTP_EXCEPTION-RESPONSE_BODY_JSON_2_XML] 🏹', body);
-      res.set('Content-Type', 'application/xml');
-      body = this.gs.OBJ2XML(body);
-    }
-    this.gs.log(`[HTTP_EXCEPTION-RESPONSE_BODY_${statusCode}] 🏹`, body);
     res.status(statusCode).send(body);
   }
 

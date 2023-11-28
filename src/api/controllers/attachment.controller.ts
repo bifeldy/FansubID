@@ -210,19 +210,12 @@ export class AttachmentController {
             delete ddlFile.user_.updated_at;
           }
         }
-        const body: any = {
+        res.status(HttpStatus.OK).json({
           info: `😅 200 - Attachment API :: DDL List 🤣`,
           results: ddlFiles,
           count,
           pages: 1
-        };
-        res.status(HttpStatus.OK);
-        if (res.locals['xml']) {
-          res.set('Content-Type', 'application/xml');
-          res.send(this.gs.OBJ2XML(body));
-        } else {
-          res.json(body);
-        }
+        });
       } else if (attachment.google_drive) {
         const gdrive = await this.gdrive.gDrive();
         const dfile = await gdrive.files.get(
@@ -269,19 +262,12 @@ export class AttachmentController {
         throw new Error('Lampiran Tidak Ditemukan!');
       }
     } catch (error) {
-      const body: any = {
+      res.status(HttpStatus.NOT_FOUND).json({
         info: `🙄 404 - Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }
-      };
-      res.status(HttpStatus.NOT_FOUND);
-      if (res.locals['xml']) {
-        res.set('Content-Type', 'application/xml');
-        res.send(this.gs.OBJ2XML(body));
-      } else {
-        res.json(body);
-      }
+      });
     }
   }
 

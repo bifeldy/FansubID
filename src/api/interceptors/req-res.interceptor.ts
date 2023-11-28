@@ -68,11 +68,6 @@ export class ReqResInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(body => {
         this.gs.log(`[REQ_RES_INTERCEPTOR-RESPONSE_HEADER_${res.statusCode}] 🏹`, res.getHeaders());
-        if (res.locals['xml']) {
-          this.gs.log('[REQ_RES_INTERCEPTOR-RESPONSE_BODY_JSON_2_XML] 🏹', req.body);
-          res.set('Content-Type', 'application/xml');
-          body = this.gs.OBJ2XML(body);
-        }
         this.gs.log(`[REQ_RES_INTERCEPTOR-RESPONSE_BODY_${res.statusCode}] 🏹`, body);
         return body;
       })

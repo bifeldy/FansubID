@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import { GlobalService } from '../services/global.service';
 
 @Injectable()
-export class UrlXmlMiddleware implements NestMiddleware {
+export class UrlPathMiddleware implements NestMiddleware {
 
   constructor(
     private gs: GlobalService
@@ -18,14 +18,9 @@ export class UrlXmlMiddleware implements NestMiddleware {
       req.originalUrl = urlPath[0];
     } else {
       let urlQuery = urlPath[1].split('&').sort();
-      if (req.query['xml'] === 'true') {
-        res.locals['xml'] = true;
-        delete req.query['xml'];
-        urlQuery = urlQuery.filter(x => !x.includes('xml=true'));
-      }
       req.originalUrl = urlPath[0] + '?' + urlQuery.join('&');
     }
-    this.gs.log(`[XML_MIDDLEWARE-${req.query['xml']}] ⚡`, req.originalUrl);
+    this.gs.log(`[URL_PATH_MIDDLEWARE] ⚡`, req.originalUrl);
     return next();
   }
 
