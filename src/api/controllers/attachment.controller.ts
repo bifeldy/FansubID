@@ -8,6 +8,7 @@ import { DiskFile } from '@uploadx/core';
 
 import { Request, Response } from 'express';
 import { Equal, ILike, IsNull } from 'typeorm';
+import { classToPlain } from 'class-transformer';
 
 import { CONSTANTS } from '../../constants';
 
@@ -210,12 +211,12 @@ export class AttachmentController {
             delete ddlFile.user_.updated_at;
           }
         }
-        res.status(HttpStatus.OK).json({
+        res.status(HttpStatus.OK).json(classToPlain({
           info: `😅 200 - Attachment API :: DDL List 🤣`,
           results: ddlFiles,
           count,
           pages: 1
-        });
+        }));
       } else if (attachment.google_drive) {
         const gdrive = await this.gdrive.gDrive();
         const dfile = await gdrive.files.get(
@@ -262,12 +263,12 @@ export class AttachmentController {
         throw new Error('Lampiran Tidak Ditemukan!');
       }
     } catch (error) {
-      res.status(HttpStatus.NOT_FOUND).json({
+      res.status(HttpStatus.NOT_FOUND).json(classToPlain({
         info: `🙄 404 - Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }
-      });
+      }));
     }
   }
 

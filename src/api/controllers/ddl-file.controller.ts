@@ -3,6 +3,7 @@ import { ApiHeader, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { Request, Response } from 'express';
 import { Equal, IsNull } from 'typeorm';
+import { classToPlain } from 'class-transformer';
 
 import { CONSTANTS } from '../../constants';
 
@@ -85,12 +86,12 @@ export class DdlPartController {
         `, [ddlFile.msg_parent, ddlFile.msg_parent]);
       }).pipe(res);
     } catch (error) {
-      res.status(HttpStatus.NOT_FOUND).json({
+      res.status(HttpStatus.NOT_FOUND).json(classToPlain({
         info: `🙄 404 - DDL File API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }
-      });
+      }));
     }
   }
 
@@ -209,12 +210,12 @@ export class DdlSeekController {
         `, [ddlFile.msg_parent, ddlFile.msg_parent]);
       }).pipe(res);
     } catch (error) {
-      res.status(HttpStatus.NOT_FOUND).json({
+      res.status(HttpStatus.NOT_FOUND).json(classToPlain({
         info: `🙄 404 - DDL File API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }
-      });
+      }));
     }
   }
 

@@ -7,6 +7,7 @@ import { CACHE_MANAGER, Controller, Get, HttpCode, HttpStatus, Inject, Req, Res 
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
+import { classToPlain } from 'class-transformer';
 
 import { CONSTANTS } from '../../constants';
 
@@ -123,12 +124,12 @@ export class CrawlController {
       if (page) {
         await page.close();
       }
-      res.status(HttpStatus.BAD_REQUEST).json({
+      res.status(HttpStatus.BAD_REQUEST).json(classToPlain({
         info: '🙄 400 - Crawl API :: UR[I/L] Tidak Valid 😪',
         result: {
           message: 'Data Tidak Lengkap!'
         }
-      });
+      }));
     }
   }
 
