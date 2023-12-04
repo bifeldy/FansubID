@@ -15,23 +15,31 @@
                 <div class="form-group row py-2">
                   <label for="username" class="col-md-4 col-form-label text-md-end">Nama Pengguna</label>
                   <div class="col-md-8">
-                    <input type="text" id="username" class="text-bifeldy form-control {{
-                        !fg.get('username').valid && fg.get('username').touched ? 'is-invalid' : ''
-                      }}" placeholder="Username Minimal 8 Huruf" required formControlName="username" autocomplete="username" />
-                    <span class="invalid-feedback" role="alert">
-                      <strong *ngIf="fg.get('username').hasError('required')">
-                        Username Tidak Boleh Kosong <br />
-                      </strong>
-                      <strong *ngIf="fg.get('username').hasError('minlength')">
-                        Username Minimal 8 Huruf <br />
-                      </strong>
-                      <strong *ngIf="fg.get('username').hasError('pattern')">
-                        Username Hanya Boleh Huruf Kecil Dan Angka <br />
-                      </strong>
-                    </span>
-                    <small style="font-size: 80%; color: #dc3545;">
-                      <strong *ngIf="usernameUsed">{{ usernameUsed }}</strong>
-                    </small>
+                    <div class="input-group">
+                      <input type="text" id="username" class="text-bifeldy form-control {{
+                          !fg.get('username').valid && fg.get('username').touched ? 'is-invalid' : ''
+                        }}" placeholder="Username Minimal 8 Huruf" required formControlName="username" autocomplete="username"
+                        style="border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                      <div class="input-group-append">
+                        <span class="input-group-text" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                          @ {{ ENV.domain }}
+                        </span>
+                      </div>
+                      <span class="invalid-feedback" role="alert">
+                        <strong *ngIf="fg.get('username').hasError('required')">
+                          Username Tidak Boleh Kosong <br />
+                        </strong>
+                        <strong *ngIf="fg.get('username').hasError('minlength')">
+                          Username Minimal 8 Huruf <br />
+                        </strong>
+                        <strong *ngIf="fg.get('username').hasError('pattern')">
+                          Username Hanya Boleh Huruf Kecil Dan Angka <br />
+                        </strong>
+                      </span>
+                      <small style="font-size: 80%; color: #dc3545;">
+                        <strong *ngIf="usernameUsed">{{ usernameUsed }}</strong>
+                      </small>
+                    </div>
                   </div>
                 </div>
                 <div class="form-group row py-2">

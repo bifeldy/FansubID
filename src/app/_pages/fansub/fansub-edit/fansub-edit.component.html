@@ -19,7 +19,7 @@
           <div class="col-12">
             <div class="row">
               <div class="col-12 col-md-5 col-xl-4 p-3">
-                <div class="row mb-3">
+                <div class="row">
                   <div class="col-12">
                     <img class="w-100 border" [src]="image_url" />
                     <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
@@ -42,10 +42,53 @@
                     </button>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="row">
+                      <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
+                        <mat-label>Tautan Website</mat-label>
+                        <input matInput formControlName="web" placeholder="http://www.domain.id" />
+                        <mat-icon fontIcon="web" matSuffix></mat-icon>
+                        <mat-error>
+                          <div *ngIf="fg.get('web').hasError('required')">Website Tidak Boleh Kosong</div>
+                          <div *ngIf="fg.get('web').hasError('pattern')">Website Link Tidak Valid</div>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
+                        <mat-label>Facebook Fanpage</mat-label>
+                        <input matInput formControlName="facebook" placeholder="http://www.facebook.com" />
+                        <mat-icon fontIcon="facebook" matSuffix></mat-icon>
+                        <mat-error>
+                          <div *ngIf="fg.get('facebook').hasError('pattern')">Facebook Link Tidak Valid</div>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
+                        <mat-label>Tautan Discord</mat-label>
+                        <input matInput formControlName="discord" placeholder="http://www.discord.gg" />
+                        <mat-icon matSuffix>
+                          <img src="/assets/img/discord/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" style="vertical-align: baseline;" />
+                        </mat-icon>
+                        <mat-error>
+                          <div *ngIf="fg.get('discord').hasError('pattern')">Discord Link Tidak Valid</div>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
+                        <mat-label>Cuitan Twitter</mat-label>
+                        <input matInput formControlName="twitter" placeholder="http://www.twitter.com" />
+                        <mat-icon matSuffix>
+                          <img src="/assets/img/twitter/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" style="vertical-align: baseline;" />
+                        </mat-icon>
+                        <mat-error>
+                          <div *ngIf="fg.get('twitter').hasError('pattern')">Twitter Link Tidak Valid</div>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="col-12 col-md-7 col-xl-8 p-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
                     <mat-label>Cover</mat-label>
                     <ngx-mat-file-input class="w-100" (change)="uploadCover($event, gambar_)" #gambar_ [disabled]="fg.value.cover"
                       [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
@@ -57,13 +100,13 @@
                       <div *ngIf="coverErrorText">{{ coverErrorText }}</div>
                     </small>
                   </mat-error>
-                  <div class="col-12 p-3" *ngIf="cover && !fg.value.cover">
+                  <div class="col-12 py-3" *ngIf="cover && !fg.value.cover">
                     <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitCover()">
                       <mat-icon fontIcon="add_photo_alternate" class="me-1"></mat-icon>
                       Unggah
                     </button>
                   </div>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-7" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12 col-md-7" [color]="'accent'">
                     <mat-label>Nama Fansub</mat-label>
                     <input matInput formControlName="name" placeholder="Fansub Jalanan" />
                     <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
@@ -72,7 +115,7 @@
                       <div *ngIf="fg.get('name').hasError('pattern')">Nama Fansub Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-5" [color]="'accent'" matTooltip="Digunakan Juga Untuk Sub-Domain">
+                  <mat-form-field appearance="outline" class="py-3 col-12 col-md-5" [color]="'accent'" matTooltip="Digunakan Juga Untuk Sub-Domain">
                     <mat-label>Singkatan</mat-label>
                     <input matInput formControlName="slug" placeholder="Jalsub" />
                     <mat-icon fontIcon="short_text" matSuffix></mat-icon>
@@ -84,8 +127,8 @@
                       <div *ngIf="fg.get('slug').hasError('pattern')">Singkatan Hanya Boleh Huruf Dan 一</div>
                     </mat-error>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-6" [color]="'accent'">
+                  <angular-editor class="py-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
+                  <mat-form-field appearance="outline" class="py-3 col-12 col-md-6" [color]="'accent'">
                     <mat-label>Mulai Ada Sejak</mat-label>
                     <input matInput [matDatepicker]="kalender" formControlName="born" (focus)="kalender.open()" placeholder="{{ currentDate | date:'d MMMM y' }}" />
                     <mat-datepicker-toggle matSuffix [for]="kalender"></mat-datepicker-toggle>
@@ -95,7 +138,7 @@
                       <div *ngIf="fg.get('born').hasError('pattern')">Tanggal Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-6" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12 col-md-6" [color]="'accent'">
                     <mat-label>Status</mat-label>
                     <mat-select formControlName="active" placeholder="Aktif / Non-Aktif">
                       <mat-option value="0">Tidak Aktif</mat-option>
@@ -107,13 +150,7 @@
                       <div *ngIf="fg.get('active').hasError('pattern')">Status Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Tags & Kategori</mat-label>
                     <mat-chip-list #tag>
                       <mat-chip *ngFor="let t of fg.value.tags" (removed)="removeTag(t)" color="accent" selected [removable]="true">
@@ -126,61 +163,16 @@
                     </mat-chip-list>
                     <mat-hint align="end">Isi Dengan Bebas, Pisahkan Dengan Koma</mat-hint>
                   </mat-form-field>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
-                    <mat-label>Tautan Website</mat-label>
-                    <input matInput formControlName="web" placeholder="http://www.domain.id" />
-                    <mat-icon fontIcon="web" matSuffix></mat-icon>
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'" *ngIf="rssFeedAllowed">
+                    <mat-label>URI / URL RSS v2.0 Feed</mat-label>
+                    <input matInput formControlName="rss_feed" placeholder="http://my-site.blogspot.com/feeds/posts/default?alt=rss" />
+                    <mat-icon fontIcon="rss_feed" matSuffix></mat-icon>
                     <mat-error>
-                      <div *ngIf="fg.get('web').hasError('required')">Website Tidak Boleh Kosong</div>
-                      <div *ngIf="fg.get('web').hasError('pattern')">Website Link Tidak Valid</div>
-                    </mat-error>
-                  </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
-                    <mat-label>Facebook Fanpage</mat-label>
-                    <input matInput formControlName="facebook" placeholder="http://www.facebook.com" />
-                    <mat-icon fontIcon="facebook" matSuffix></mat-icon>
-                    <mat-error>
-                      <div *ngIf="fg.get('facebook').hasError('pattern')">Facebook Link Tidak Valid</div>
-                    </mat-error>
-                  </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
-                    <mat-label>Tautan Discord</mat-label>
-                    <input matInput formControlName="discord" placeholder="http://www.discord.gg" />
-                    <mat-icon matSuffix>
-                      <img src="/assets/img/discord/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" style="vertical-align: baseline;" />
-                    </mat-icon>
-                    <mat-error>
-                      <div *ngIf="fg.get('discord').hasError('pattern')">Discord Link Tidak Valid</div>
-                    </mat-error>
-                  </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12 col-md-3" [color]="'accent'">
-                    <mat-label>Cuitan Twitter</mat-label>
-                    <input matInput formControlName="twitter" placeholder="http://www.twitter.com" />
-                    <mat-icon matSuffix>
-                      <img src="/assets/img/twitter/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" style="vertical-align: baseline;" />
-                    </mat-icon>
-                    <mat-error>
-                      <div *ngIf="fg.get('twitter').hasError('pattern')">Twitter Link Tidak Valid</div>
+                      <div *ngIf="fg.get('rss_feed').hasError('pattern')">Discord Link Tidak Valid</div>
                     </mat-error>
                   </mat-form-field>
                 </div>
               </div>
-            </div>
-            <div class="row" *ngIf="rssFeedAllowed">
-              <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
-                <mat-label>URI / URL RSS v2.0 Feed</mat-label>
-                <input matInput formControlName="rss_feed" placeholder="http://my-site.blogspot.com/feeds/posts/default?alt=rss" />
-                <mat-icon fontIcon="rss_feed" matSuffix></mat-icon>
-                <mat-error>
-                  <div *ngIf="fg.get('rss_feed').hasError('pattern')">Discord Link Tidak Valid</div>
-                </mat-error>
-              </mat-form-field>
             </div>
             <div class="row">
               <div class="col-12">

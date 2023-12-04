@@ -39,12 +39,12 @@
                       Unggah
                     </button>
                   </div>
-                  <div class="col-12 p-3" *ngIf="AS.currentUserSubject?.value?.verified">
+                  <div class="col-12 py-3" *ngIf="AS.currentUserSubject?.value?.verified">
                     <mat-slide-toggle formControlName="private" matTooltip="Hanya Dapat Di Akses Melalui URL">
                       <i>Private</i> Akses Hanya Dengan URL
                     </mat-slide-toggle>
                   </div>
-                  <div class="col-12 p-3">
+                  <div class="col-12 py-3">
                     <mat-slide-toggle formControlName="r18" matTooltip="Konten Eksplisit">
                       R-18+ Konten Eksplisit
                     </mat-slide-toggle>
@@ -61,7 +61,7 @@
                   </mat-form-field>
                   <ng-container *ngIf="berkasType.toLowerCase().includes('anime_'); then anime_; else notAnime_;"></ng-container>
                   <ng-template #anime_>
-                    <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
+                    <mat-form-field appearance="outline" class="py-3 w-100" [color]="'accent'">
                       <mat-label>Anime Terkait</mat-label>
                       <input matInput formControlName="anime_id" placeholder="Full Metal Alchemist" [matAutocomplete]="autoCompleteAnime" (keyup)="resetSelectedAnime()" />
                       <mat-icon fontIcon="short_text" matSuffix></mat-icon>
@@ -86,7 +86,7 @@
                   <ng-template #notAnime_>
                     <ng-container *ngIf="berkasType.toLowerCase().includes('dorama_'); then dorama_; else notDorama_;"></ng-container>
                     <ng-template #dorama_>
-                      <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
+                      <mat-form-field appearance="outline" class="py-3 w-100" [color]="'accent'">
                         <mat-label>Dorama Terkait</mat-label>
                         <input matInput formControlName="dorama_id" placeholder="Flying Colors" [matAutocomplete]="autoCompleteDorama" (keyup)="resetSelectedDorama()" />
                         <mat-icon fontIcon="short_text" matSuffix></mat-icon>
@@ -109,7 +109,7 @@
                       </mat-form-field>
                     </ng-template>
                     <ng-template #notDorama_>
-                      <mat-form-field appearance="outline" class="p-3 col-12" *ngIf="berkasType" [color]="'accent'">
+                      <mat-form-field appearance="outline" class="py-3 col-12" *ngIf="berkasType" [color]="'accent'">
                         <mat-label>Kode / Serial Number</mat-label>
                         <input matInput formControlName="sn_code" placeholder="XXX-999" required />
                         <mat-icon fontIcon="tag" matSuffix></mat-icon>
@@ -120,7 +120,7 @@
                       </mat-form-field>
                     </ng-template>
                   </ng-template>
-                  <div class="col-12 p-3">
+                  <div class="col-12 py-3">
                     <mat-divider></mat-divider>
                   </div>
                   <div formArrayName="fansub_list" matTooltip="Silahkan Buat Terlebih Dahulu Jika Tidak Ada">
@@ -164,7 +164,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-12 p-3">
+                  <div class="col-12 py-3">
                     <a class="text-warning text-decoration-none" routerLink="/create/fansub">
                       * Jika pencarian tidak ditemukan, silahkan membuat halaman Fansub baru terlebih dahulu
                     </a>
@@ -173,7 +173,7 @@
               </div>
               <div class="col-12 col-md-7 col-xl-8 p-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Nama Berkas</mat-label>
                     <input matInput formControlName="name" placeholder="[Fansub] Judul Anime - 00 [BD 4K x265 FLAC][CRC32].mkv" />
                     <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
@@ -182,10 +182,10 @@
                       <div *ngIf="fg.get('name').hasError('pattern')">Nama Berkas Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
+                  <angular-editor class="py-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
                 </div>
                 <div class="row">
-                  <div class="col-12 p-3">
+                  <div class="col-12 py-3">
                     <mat-divider></mat-divider>
                   </div>
                 </div>
@@ -199,7 +199,7 @@
                         <div mat-line>{{ attachmentFile.name }}.{{ attachmentFile.ext }}</div>
                         <div mat-line>{{ attachmentFile.size | bytes }}</div>
                       </mat-list-item>
-                      <p class="p-3 m-0" *ngIf="attachmentFontSubtitle.length > 0">{{ attachmentFontSubtitle.join(', ').toLowerCase() }}</p>
+                      <p class="py-3 m-0" *ngIf="attachmentFontSubtitle.length > 0">{{ attachmentFontSubtitle.join(', ').toLowerCase() }}</p>
                     </mat-list>
                   </div>
                 </ng-template>
@@ -252,7 +252,7 @@
                   </ng-template>
                 </ng-template>
                 <div class="row">
-                  <div class="col-12 p-3">
+                  <div class="col-12 py-3">
                     <mat-divider></mat-divider>
                   </div>
                 </div>

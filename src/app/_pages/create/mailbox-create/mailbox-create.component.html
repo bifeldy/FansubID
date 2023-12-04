@@ -18,7 +18,7 @@
             <div class="row">
               <div class="col-12 col-md-5 col-xl-4 p-3">
                 <div class="row">
-                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Penerima</mat-label>
                     <mat-chip-list #to>
                       <mat-chip *ngFor="let t of fg.value.to" (removed)="removeTo(t)" color="accent" selected [removable]="true">
@@ -36,7 +36,7 @@
                       </mat-error>
                     </mat-hint>
                   </mat-form-field>
-                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Carbon Copy</mat-label>
                     <mat-chip-list #cc>
                       <mat-chip *ngFor="let c of fg.value.cc" (removed)="removeCc(c)" color="accent" selected [removable]="true">
@@ -53,7 +53,7 @@
                       </mat-error>
                     </mat-hint>
                   </mat-form-field>
-                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field hintLabel="Gunakan , Jika Lebih Dari 1" appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Blind Carbon Copy</mat-label>
                     <mat-chip-list #bcc>
                       <mat-chip *ngFor="let b of fg.value.bcc" (removed)="removeBcc(b)" color="accent" selected [removable]="true">
@@ -70,7 +70,7 @@
                       </mat-error>
                     </mat-hint>
                   </mat-form-field>
-                  <div class="col-12 p-3" *ngIf="canSendAsNoReply">
+                  <div class="col-12 py-3" *ngIf="canSendAsNoReply">
                     <mat-slide-toggle formControlName="no_reply" matTooltip="Kirim sebagai noreply@{{ ENV.domain }}" (change)="noReplyMode($event)">
                       Kirim sebagai noreply@{{ ENV.domain }}
                     </mat-slide-toggle>
@@ -79,7 +79,7 @@
               </div>
               <div class="col-12 col-md-7 col-xl-8 p-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Judul</mat-label>
                     <input matInput formControlName="subject" placeholder="Judul Pesan Blablabla ..." required />
                     <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
@@ -88,7 +88,7 @@
                       <div *ngIf="fg.get('subject').hasError('pattern')">Judul Pesan Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="message" [config]="GS.angularEditorConfig" required></angular-editor>
+                  <angular-editor class="py-3 w-100" formControlName="message" [config]="GS.angularEditorConfig" required></angular-editor>
                 </div>
               </div>
             </div>

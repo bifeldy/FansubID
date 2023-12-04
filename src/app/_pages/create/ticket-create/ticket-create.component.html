@@ -18,7 +18,7 @@
             <div class="row">
               <div class="col-12 col-md-7 col-xl-8 p-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>URL Link Tautan Yang Di Laporkan</mat-label>
                     <input matInput formControlName="url" placeholder="https://sub-domain.fansub.id/berkas/konten-melanggar.html" required
                       matTooltip="Alamat URL yang ingin kamu laporkan" />
@@ -28,8 +28,8 @@
                       <div *ngIf="fg.get('url').hasError('pattern')">Format Alamat URL Salah</div>
                     </mat-error>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="reported_issue" [config]="GS.angularEditorConfig" required></angular-editor>
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <angular-editor class="py-3 w-100" formControlName="reported_issue" [config]="GS.angularEditorConfig" required></angular-editor>
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Ekspektasi Hasil Yang Diharapkan</mat-label>
                     <input matInput formControlName="expected_solution" placeholder="Harap kontent tersebut di hapus dan akun yang bersangkutan segera di tangguhkan ..." />
                     <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
@@ -41,7 +41,7 @@
               </div>
               <div class="col-12 col-md-5 col-xl-4 p-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Surel Informasi Proses Hasil Tindak Lanjut</mat-label>
                     <input matInput formControlName="contact_email" placeholder="email-untuk-info-update@example.com" required
                       matTooltip="Kami akan mengirimkan informasi jika laporanmu sudah selesai ditangani melalui surel ini" />
@@ -51,7 +51,7 @@
                       <div *ngIf="fg.get('contact_email').hasError('pattern')">Format Alamat Surel Salah</div>
                     </mat-error>
                   </mat-form-field>
-                  <div class="p-3 col-12">
+                  <div class="py-3 col-12">
                     <re-captcha #captchaRef formControlName="g-recaptcha-response" [siteKey]="G_CAPTCHA_SITE_KEY"
                       (resolved)="captcha($event, captchaRef)"></re-captcha>
                   </div>

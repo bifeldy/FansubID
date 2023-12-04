@@ -4,7 +4,7 @@
       <div class="row py-3 px-2">
 
         <!-- Information -->
-        <div class="col-md-4 col-xl-3 px-3">
+        <div class="col-md-4 col-xl-3 p-3">
           <div class="row sticky-top pt-3">
             <div class="col-12">
               <img class="w-100" src="{{ image_photo }}" />
@@ -27,12 +27,12 @@
                 Unggah
               </button>
             </div>
-            <div class="col-12 p-3">
+            <div class="col-12 py-3">
               <mat-slide-toggle formControlName="private" matTooltip="Hanya Tampilkan Informasi Profil">
                 Jadikan Private, Sembunyikan Aktivitas
               </mat-slide-toggle>
             </div>
-            <div class="col-12 p-3 text-warning">
+            <div class="col-12 py-3 text-warning">
               * Jika ingin mengubah <i>username</i> silahkan menghubungi Admin menggunakan surel
               <span class="text-success" style="cursor: pointer;" (click)="changeUname()">{{ userData.username }}@{{ ENV.domain }}</span>
             </div>
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Content -->
-        <div class="col-md-8 col-xl-9 pt-3">
+        <div class="col-md-8 col-xl-9 p-3">
           <div class="row py-3 px-0 profile-height-large">
             <!--
               <h1 class="m-0 mt-auto">
@@ -49,7 +49,7 @@
             -->
           </div>
           <div class="row py-3">
-            <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+            <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
               <mat-label>Nama Lengkap</mat-label>
               <input matInput formControlName="nama" placeholder="Nama Lengkap" />
               <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
@@ -58,7 +58,7 @@
                 <div *ngIf="fg.get('nama').hasError('pattern')">Nama Hanya Boleh Huruf Standar Papan Ketik</div>
               </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
+            <mat-form-field appearance="outline" class="pt-3 w-100" [color]="'accent'">
               <mat-label>Cover Image</mat-label>
               <ngx-mat-file-input class="w-100" placeholder="Basic Input" (change)="uploadCoverImage($event, coverImage)" #coverImage
                 [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
@@ -70,14 +70,14 @@
                 <div *ngIf="imageCoverErrorText">{{ imageCoverErrorText }}</div>
               </small>
             </mat-error>
-            <div class="col-12 p-3" *ngIf="imageCover && !fg.value.image_cover">
+            <div class="col-12 py-3" *ngIf="imageCover && !fg.value.image_cover">
               <button type="button" mat-raised-button class="w-100" color="primary" [disabled]="submitted" (click)="submitCoverImage()">
                 <mat-icon fontIcon="add_photo_alternate" class="me-1"></mat-icon>
                 Unggah
               </button>
             </div>
-            <angular-editor class="p-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
-            <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
+            <angular-editor class="py-3 w-100" formControlName="description" [config]="GS.angularEditorConfig"></angular-editor>
+            <mat-form-field appearance="outline" class="py-3 w-100" [color]="'accent'">
               <mat-label>Konfirmasi Kata Sandi</mat-label>
               <input matInput [type]="passwordHide ? 'password' : 'text'" formControlName="old_password" required
                 placeholder="Password Sekarang" autocomplete="current-password" />
@@ -90,7 +90,7 @@
                 <div *ngIf="fg.get('old_password').hasError('pattern')">Password Hanya Boleh Huruf Standar Papan Ketik</div>
               </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="outline" class="p-3 w-100" [color]="'accent'">
+            <mat-form-field appearance="outline" class="py-3 w-100" [color]="'accent'">
               <mat-label>Ubah Kata Sandi</mat-label>
               <input matInput [type]="passwordHide ? 'password' : 'text'" formControlName="new_password"
                 placeholder="Isi Jika Ingin Ubah Password Baru" autocomplete="new-password" />

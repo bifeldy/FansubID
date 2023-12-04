@@ -43,7 +43,7 @@
               </div>
               <div class="col-12 col-md-7 col-xl-8 p-3">
                 <div class="row">
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Judul</mat-label>
                     <input matInput formControlName="title" placeholder="Berita Terkini Blablabla ..." required />
                     <mat-icon fontIcon="wysiwyg" matSuffix></mat-icon>
@@ -52,7 +52,7 @@
                       <div *ngIf="fg.get('title').hasError('pattern')">Judul Berita Hanya Boleh Huruf Standar Papan Ketik</div>
                     </mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="p-3 col-12" [color]="'accent'">
+                  <mat-form-field appearance="outline" class="py-3 col-12" [color]="'accent'">
                     <mat-label>Tags & Kategori</mat-label>
                     <mat-chip-list #tag>
                       <mat-chip *ngFor="let t of fg.value.tags" (removed)="removeTag(t)" color="accent" selected [removable]="true">
@@ -65,7 +65,7 @@
                     </mat-chip-list>
                     <mat-hint align="end">Isi Dengan Bebas, Pisahkan Dengan Koma</mat-hint>
                   </mat-form-field>
-                  <angular-editor class="p-3 w-100" formControlName="content" [config]="GS.angularEditorConfig" required></angular-editor>
+                  <angular-editor class="py-3 w-100" formControlName="content" [config]="GS.angularEditorConfig" required></angular-editor>
                 </div>
               </div>
             </div>
