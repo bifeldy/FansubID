@@ -1,6 +1,9 @@
+// NodeJS Library
+import { URL } from 'node:url';
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindManyOptions, FindOneOptions, EntityMetadata, FindConditions, InsertResult, UpdateResult } from 'typeorm';
+import { Repository, FindManyOptions, FindOneOptions, EntityMetadata, FindConditions, InsertResult, UpdateResult, Not, IsNull, Equal } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { RssFeed } from '../entities/RssFeed';
@@ -14,7 +17,26 @@ export class RssFeedService {
     @InjectRepository(RssFeed) private rssFeedRepo: Repository<RssFeed>,
     private gs: GlobalService,
   ) {
-    //
+    this.migrateUrlRssFeedPath().catch(console.error);
+  }
+
+  async migrateUrlRssFeedPath(): Promise<void> {
+    const rssFeed = await this.rssFeedRepo.find({
+      where: [
+        { link: Not(IsNull()) }
+      ],
+      relations: ['fansub_']
+    });
+    for (const rf of rssFeed) {
+      try {
+        await this.rssFeedRepo.update(
+          { link: Equal(rf.link) },
+          { link: new URL(rf.link).pathname }
+        );
+      } catch (e) {
+        await this.rssFeedRepo.remove(rf);
+      }
+    }
   }
 
   new(): RssFeed {

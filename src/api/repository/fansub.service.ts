@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOneOptions, FindManyOptions, EntityMetadata, FindConditions, InsertResult, UpdateResult } from 'typeorm';
+import { Repository, FindOneOptions, FindManyOptions, EntityMetadata, FindConditions, InsertResult, UpdateResult, Not, IsNull } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { Fansub } from '../entities/Fansub';
@@ -14,7 +14,24 @@ export class FansubService {
     @InjectRepository(Fansub) private fansubRepo: Repository<Fansub>,
     private gs: GlobalService,
   ) {
-    //
+    this.migrateUrlFansub().catch(console.error);
+  }
+
+  async migrateUrlFansub(): Promise<void> {
+    const fs = await this.fansubRepo.find({
+      where: [
+        { urls: Not(IsNull()) }
+      ]
+    });
+    for (const f of fs) {
+      const urls = JSON.parse(f.urls);
+      const u = {};
+      for (const url of urls) {
+        u[url.name] = url.url;
+      }
+      f.urls = JSON.stringify(u);
+    }
+    await this.fansubRepo.save(fs);
   }
 
   new(): Fansub {
