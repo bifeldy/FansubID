@@ -56,8 +56,8 @@ export class NewsController {
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const n of news) {
-        delete n.content;
         (n as any).tags = JSON.parse(n.tags);
+        delete n.content;
         if ('user_' in n && n.user_) {
           delete n.user_.created_at;
           delete n.user_.updated_at;

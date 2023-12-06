@@ -60,13 +60,13 @@ export class MailController {
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const m of mailboxs) {
-        delete m.html;
-        delete m.text;
         if ('attachment_' in m && m.attachment_) {
           (m as any).attachment_count = m.attachment_.length;
         } else {
           (m as any).attachment_count = 0;
         }
+        delete m.html;
+        delete m.text;
         delete m.attachment_;
       }
       return {

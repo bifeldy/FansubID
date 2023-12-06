@@ -29,9 +29,9 @@ export class FansubAllController {
         }
       });
       for (const f of fansubs) {
-        delete f.description;
         (f as any).urls = JSON.parse(f.urls);
         (f as any).tags = JSON.parse(f.tags);
+        delete f.description;
       }
       return {
         info: `😅 200 - Fansub API :: List All 🤣`,

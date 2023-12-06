@@ -123,11 +123,8 @@ export class TicketController {
           if (!email.match(CONSTANTS.regexEmail)) {
             throw new Error('Alamat Surel Tidak Valid!');
           }
-          let reported_url: string = req.body.url;
-          if (!reported_url.match(CONSTANTS.regexUrl)) {
-            throw new Error('Alamat URL Tidak Valid!');
-          }
-          reported_url = this.gs.cleanUpUrlStringRecord(reported_url);
+          const reported_address = new URL(req.body.url);
+          const reported_url = this.gs.cleanUpUrlStringRecord(reported_address.toString());
           const urlRules = [
             `${environment.domain}/berkas/*`,
             `${environment.domain}/fansub/*`,
