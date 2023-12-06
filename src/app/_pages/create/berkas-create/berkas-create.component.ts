@@ -150,6 +150,11 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
                 info: 'Expired, Silahkan Upload Ulang!'
               });
             }, CONSTANTS.timeoutDeleteTempAttachmentTime);
+            if (this.fg.value.auto_send) {
+              setTimeout(() => {
+                this.onSubmit();
+              }, 2500);
+            }
           } else if (state.status === 'error') {
             this.gs.log('[UPLOAD_ERROR]', state.response, 'error');
             this.failOrCancelUpload(state.response);
@@ -335,7 +340,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
       attachment_id: [null, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([this.createDownloadLink()]),
       private: [false, Validators.compose([Validators.required])],
-      r18: [false, Validators.compose([Validators.required])]
+      r18: [false, Validators.compose([Validators.required])],
+      auto_send: [false, Validators.compose([Validators.required])]
     });
     this.projectTypeValueChanged();
   }

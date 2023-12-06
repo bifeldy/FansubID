@@ -170,6 +170,11 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
                       info: 'Expired, Silahkan Upload Ulang!'
                     });
                   }, CONSTANTS.timeoutDeleteTempAttachmentTime);
+                  if (this.fg.value.auto_send) {
+                    setTimeout(() => {
+                      this.onSubmit();
+                    }, 2500);
+                  }
                 } else if (state.status === 'error') {
                   this.gs.log('[UPLOAD_ERROR]', state.response, 'error');
                   this.failOrCancelUpload(state.response);
@@ -423,7 +428,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       attachment_id: [data.attachment_?.id, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       download_url: this.fb.array([]),
       private: [data.private, Validators.compose([Validators.required])],
-      r18: [data.r18, Validators.compose([Validators.required])]
+      r18: [data.r18, Validators.compose([Validators.required])],
+      auto_send: [false, Validators.compose([Validators.required])]
     });
     this.image_url = data.image_url;
     this.image_url_original = this.image_url;
@@ -646,6 +652,9 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
       }
       body.fansub_id = fansubId;
       delete body.fansub_list;
+    }
+    if ('auto_send' in body) {
+      delete body.auto_send;
     }
     if (this.fg.value.attachment_id === null && this.fg.value.download_url.lenth === 0) {
       this.submitted = false;
