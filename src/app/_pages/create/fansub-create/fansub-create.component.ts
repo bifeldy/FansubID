@@ -276,7 +276,7 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
     }
     this.submitted = true;
     if (this.fg.value.rss_feed) {
-      if (!this.fg.value.web || this.fg.value.rss_feed.startsWith(this.fg.value.web)) {
+      if (!this.fg.value.web || !this.fg.value.rss_feed.startsWith(this.fg.value.web)) {
         this.toast.warning('RSS Feed Tidak Sesuai Dengan Alamat Web', 'URL RSS Feed & WEB', null, true);
         this.submitted = false;
         this.bs.idle();
