@@ -53,7 +53,7 @@ export const CONSTANTS = {
     'mkv',
     'mp4'
   ],
-  fileSizeAttachmentTotalLimit: 2 * 1000 * 1000 * 1000, // Max Upload Limits -- < 2 GB Streamable
+  fileSizeAttachmentTotalLimit: 4 * 1000 * 1000 * 1000, // Max Upload Limits -- < 4 GB Streamable
   fileSizeImageLimit: 512 * 1000, // 512 KB
   freeTimeStart: '02:00:00',
   freeTimeEnd: '02:30:00',
