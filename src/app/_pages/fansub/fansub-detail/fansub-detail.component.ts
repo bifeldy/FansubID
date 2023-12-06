@@ -218,8 +218,17 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  openRssFeed(link: string): void {
-    this.wb.winboxOpenUri(link);
+  openRssFeed(fansub_: any, link: string): void {
+    const domain: string = fansub_.urls['web'];
+    if (domain) {
+      const url = new URL(domain);
+      let uri = `${url.protocol}//${url.host}`;
+      if (!link.startsWith('/')) {
+        uri += '/';
+      }
+      uri += link;
+      this.wb.winboxOpenUri(uri);
+    }
   }
 
   getBerkasFansub(): void {

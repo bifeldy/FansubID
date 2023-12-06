@@ -355,6 +355,14 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     body.urls = urls;
     this.gs.log('[FANSUB_EDIT_DIRTY]', body);
     this.submitted = true;
+    if (this.fg.value.rss_feed) {
+      if (!this.fg.value.web || this.fg.value.rss_feed.startsWith(this.fg.value.web)) {
+        this.toast.warning('RSS Feed Tidak Sesuai Dengan Alamat Web', 'URL RSS Feed & WEB', null, true);
+        this.submitted = false;
+        this.bs.idle();
+        return;
+      }
+    }
     const urlCount = Object.keys(urls).length;
     if (this.fg.invalid || urlCount === 0) {
       if (urlCount === 0) {

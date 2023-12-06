@@ -77,6 +77,7 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
         for (const r of res.results) {
           this.rssFeedData.push({
             foto_fansub: r.fansub_.image_url,
+            url: r.fansub_.urls['web'],
             link: r.link,
             Fansub: r.fansub_.slug,
             Tanggal: r.created_at,
@@ -95,7 +96,16 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
 
   openRssFeed(data): void {
     this.gs.log('[RSS_FEED_LIST_OPEN_URL]', data);
-    this.wb.winboxOpenUri(data.link);
+    const domain: string = data.url;
+    if (domain) {
+      const url = new URL(domain);
+      let uri = `${url.protocol}//${url.host}`;
+      if (!data.link.startsWith('/')) {
+        uri += '/';
+      }
+      uri += data.link;
+      this.wb.winboxOpenUri(uri);
+    }
   }
 
   onPaginatorClicked(data): void {

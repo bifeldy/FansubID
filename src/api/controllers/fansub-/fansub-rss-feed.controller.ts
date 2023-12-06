@@ -132,8 +132,11 @@ export class FansubRssFeedController {
       }
       for (const r of rslt) {
         if ('fansub_' in r && r.fansub_) {
+          const wu = JSON.parse(r.fansub_.urls);
+          (r as any).fansub_.urls = {
+            web: wu['web']
+          };
           delete r.fansub_.description;
-          delete r.fansub_.urls;
           delete r.fansub_.tags;
           delete r.fansub_.created_at;
           delete r.fansub_.updated_at;

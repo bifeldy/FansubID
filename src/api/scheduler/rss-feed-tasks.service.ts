@@ -81,20 +81,23 @@ export class RssFeedTasksService {
                 }
                 let inserted = 0;
                 for (let i = 0; i < feed.items.length; i++) {
-                  const f = this.rssFeedRepo.new();
-                  f.fansub_ = fs;
-                  f.title = feed.items[i].title;
-                  f.created_at = new Date(feed.items[i].created || feed.items[i].published);
-                  if (typeof feed.items[i].link === 'string') {
-                    f.link = feed.items[i].link;
-                  } else {
-                    let idx = feed.items[i].link.findIndex(l => l.rel === 'alternate' && l.type === 'text/html');
-                    if (idx < 0) {
-                      continue;
-                    }
-                    f.link = feed.items[i].link[idx].href;
-                  }
                   try {
+                    const f = this.rssFeedRepo.new();
+                    f.fansub_ = fs;
+                    f.title = feed.items[i].title;
+                    f.created_at = new Date(feed.items[i].created || feed.items[i].published);
+                    const link = feed.items[i].link;
+                    let url: string = null;
+                    if (typeof link === 'string') {
+                      url = new URL(link).pathname;
+                    } else {
+                      let idx = link.findIndex(l => l.rel === 'alternate' && l.type === 'text/html');
+                      if (idx < 0) {
+                        continue;
+                      }
+                      url = new URL(link[idx].href).pathname;
+                    }
+                    f.link = url;
                     await this.rssFeedRepo.insert(f);
                     inserted++;
                   } catch (err) {

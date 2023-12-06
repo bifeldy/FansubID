@@ -1,5 +1,6 @@
 // 3rd Party Library
 import { parse } from 'rss-to-json';
+import { URL } from 'node:url';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -64,9 +65,9 @@ export class FansubController {
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const f of fansubs) {
-        delete f.description;
         (f as any).urls = JSON.parse(f.urls);
         (f as any).tags = JSON.parse(f.tags);
+        delete f.description;
       }
       return {
         info: `😅 200 - Fansub API :: List All 🤣`,
@@ -125,6 +126,9 @@ export class FansubController {
                 message: 'Harap Menyediakan Minimal Satu URL'
               }
             }, HttpStatus.BAD_REQUEST);
+          }
+          for (const address of Object.values(req.body.urls)) {
+            new URL(address as string);
           }
           fansub.urls = JSON.stringify(req.body.urls);
           if ('rss_feed' in req.body && (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER)) {
@@ -353,7 +357,7 @@ export class FansubController {
           const filteredTagsUnique = [...new Set<string>(req.body.tags)];
           fansub.tags = JSON.stringify(filteredTagsUnique);
         }
-        if ('urls' in req.body) {
+        if ('urls' in req.body && typeof req.body.urls === 'object') {
           if (Object.keys(req.body.urls).length <= 0) {
             throw new HttpException({
               info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
@@ -361,6 +365,9 @@ export class FansubController {
                 message: 'Harap Menyediakan Minimal Satu URL'
               }
             }, HttpStatus.BAD_REQUEST);
+          }
+          for (const address of Object.values(req.body.urls)) {
+            new URL(address as string);
           }
           fansub.urls = JSON.stringify(req.body.urls);
         }
@@ -590,8 +597,11 @@ export class FansubController {
       });
       for (const r of rssFeeds) {
         if ('fansub_' in r && r.fansub_) {
+          const wu = JSON.parse(r.fansub_.urls);
+          (r as any).fansub_.urls = {
+            web: wu['web']
+          };
           delete r.fansub_.description;
-          delete r.fansub_.urls;
           delete r.fansub_.tags;
           delete r.fansub_.created_at;
           delete r.fansub_.updated_at;

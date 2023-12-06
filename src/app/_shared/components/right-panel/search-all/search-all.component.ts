@@ -304,7 +304,16 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   openRssFeed(data): void {
     this.gs.log('[RSS_FEED_LIST_OPEN_URL]', data);
-    this.wb.winboxOpenUri(data.link);
+    const domain: string = data.fansub_.urls['web'];
+    if (domain) {
+      const url = new URL(domain);
+      let uri = `${url.protocol}//${url.host}`;
+      if (!data.link.startsWith('/')) {
+        uri += '/';
+      }
+      uri += data.link;
+      this.wb.winboxOpenUri(uri);
+    }
   }
 
 }
