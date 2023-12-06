@@ -193,14 +193,15 @@ export class FansubListComponent implements OnInit, OnDestroy {
         for (const r of res.results) {
           this.allFansubId.push(r.id);
           const tautanLink = [];
-          if (Array.isArray(r.urls)) {
-            for (const i of r.urls) {
+          const urlCount = Object.keys(r.urls).length;
+          if (urlCount > 0) {
+            for (const [key, value] of Object.entries(r.urls)) {
               tautanLink.push({
                 type: 'button',
-                icon: (i.name === 'discord' || i.name === 'twitter' ? undefined : i.name),
-                image: (i.name === 'discord' ? '/assets/img/discord/blue.png' : (i.name === 'twitter' ? '/assets/img/twitter/blue.png' : undefined)),
-                url: i.url,
-                name: i.name
+                icon: (key === 'discord' || key === 'twitter' ? undefined : key),
+                image: (key === 'discord' ? '/assets/img/discord/blue.png' : (key === 'twitter' ? '/assets/img/twitter/blue.png' : undefined)),
+                url: value,
+                name: key
               });
             }
           }

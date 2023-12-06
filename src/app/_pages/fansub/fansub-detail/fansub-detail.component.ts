@@ -173,9 +173,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           }
           this.panelData = [];
           this.panelData.push({ title: 'Informasi', icon: 'notification_important', text: this.fansubData.description });
-          const webUrl = this.getUrlByName('web');
-          if (webUrl) {
-            this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.getUrlByName('web'), true);
+          if (this.fansubData.urls['web']) {
+            this.fs.initializeFab('web', null, 'Buka Halaman Website Fansub', this.fansubData.urls['web'], true);
           }
           this.getAnimeFansub();
           this.getDoramaFansub();
@@ -194,15 +193,6 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         });
       }
     });
-  }
-
-  getUrlByName(name): string {
-    const fansubDataUrl = this.fansubData.urls.find(u => u.name === name);
-    if (fansubDataUrl) {
-      return fansubDataUrl.url;
-    } else {
-      return null;
-    }
   }
 
   getRssFeed(): void {

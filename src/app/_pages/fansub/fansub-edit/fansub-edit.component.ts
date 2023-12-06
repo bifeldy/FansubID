@@ -157,25 +157,19 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     this.image_url_original = this.image_url;
     this.cover_url = data.cover_url;
     this.cover_url_original = this.cover_url;
-    const urls = data.urls;
-    const WEB = urls.find(u => u.name === 'web');
-    const FACEBOOK = urls.find(u => u.name === 'facebook');
-    const DISCORD = urls.find(u => u.name === 'discord');
-    const TWITTER = urls.find(u => u.name === 'twitter');
-    const ACTIVE = data.active === true ? '1' : '0';
     this.fg = this.fb.group({
       name: [data.name, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       description: [data.description, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       born: [data.born, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      active: [ACTIVE, Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      active: [data.active === true ? '1' : '0', Validators.compose([Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       slug: [{ value: data.slug, disabled: data.dns_id }, Validators.compose([Validators.required, Validators.pattern(/^[0-9a-zA-Z-]*$/)])],
       tags: [data.tags, Validators.compose([])],
       image: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       cover: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
-      web: [(WEB?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
-      facebook: [(FACEBOOK?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
-      discord: [(DISCORD?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
-      twitter: [(TWITTER?.url || null), Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      web: [data.urls['web'], Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      facebook: [data.urls['facebook'], Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      discord: [data.urls['discord'], Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
+      twitter: [data.urls['twitter'], Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       rss_feed: [data.rss_feed, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])]
     });
     this.slugValueChanged();
@@ -332,18 +326,18 @@ export class FansubEditComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.bs.busy();
-    const urls = [];
+    const urls = {};
     if (this.fg.value.web) {
-      urls.push({ name: 'web', url: this.fg.value.web });
+      urls['web'] = this.fg.value.web;
     }
     if (this.fg.value.facebook) {
-      urls.push({ name: 'facebook', url: this.fg.value.facebook });
+      urls['facebook'] = this.fg.value.facebook;
     }
     if (this.fg.value.discord) {
-      urls.push({ name: 'discord', url: this.fg.value.discord });
+      urls['discord'] = this.fg.value.discord;
     }
     if (this.fg.value.twitter) {
-      urls.push({ name: 'twitter', url: this.fg.value.twitter });
+      urls['twitter'] = this.fg.value.twitter;
     }
     const body = this.gs.getDirtyValues(this.fg);
     if ('web' in body) {
@@ -361,8 +355,9 @@ export class FansubEditComponent implements OnInit, OnDestroy {
     body.urls = urls;
     this.gs.log('[FANSUB_EDIT_DIRTY]', body);
     this.submitted = true;
-    if (this.fg.invalid || urls.length === 0) {
-      if (urls.length === 0) {
+    const urlCount = Object.keys(urls).length;
+    if (this.fg.invalid || urlCount === 0) {
+      if (urlCount === 0) {
         this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)', null, true);
       }
       this.submitted = false;

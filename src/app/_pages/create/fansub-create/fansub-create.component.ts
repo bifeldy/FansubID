@@ -261,22 +261,23 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
 
   onSubmit(): void {
     this.bs.busy();
-    const urls = [];
+    const urls = {};
     if (this.fg.value.web) {
-      urls.push({ name: 'web', url: this.fg.value.web });
+      urls['web'] = this.fg.value.web;
     }
     if (this.fg.value.facebook) {
-      urls.push({ name: 'facebook', url: this.fg.value.facebook });
+      urls['facebook'] = this.fg.value.facebook;
     }
     if (this.fg.value.discord) {
-      urls.push({ name: 'discord', url: this.fg.value.discord });
+      urls['discord'] = this.fg.value.discord;
     }
     if (this.fg.value.twitter) {
-      urls.push({ name: 'twitter', url: this.fg.value.twitter });
+      urls['twitter'] = this.fg.value.twitter;
     }
     this.submitted = true;
-    if (this.fg.invalid || urls.length === 0) {
-      if (urls.length === 0) {
+    const urlCount = Object.keys(urls).length;
+    if (this.fg.invalid || urlCount === 0) {
+      if (urlCount === 0) {
         this.toast.warning('Harap Isi Salah Satu URL', 'Form Tidak lengkap (Web/FB/DC)', null, true);
       }
       this.submitted = false;

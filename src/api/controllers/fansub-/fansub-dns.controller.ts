@@ -99,14 +99,7 @@ export class FansubDnsController {
     if (dns_id && dns_id.status >= 200 && dns_id.status < 400) {
       fansub.dns_id = dns_id.result.id;
       const fansubUrls = JSON.parse(fansub.urls);
-      if (fansubUrls && Array.isArray(fansubUrls)) {
-        const idx = fansubUrls.findIndex(u => u.name === 'web');
-        if (idx >= 0) {
-          fansubUrls[idx].url = `https://${dns_id.result.name}`;
-        } else {
-          fansubUrls.push({ name: 'web', url: `https://${dns_id.result.name}` });
-        }
-      }
+      fansubUrls['web'] = `https://${dns_id.result.name}`;
       fansub.urls = JSON.stringify(fansubUrls);
       fansub.user_ = user;
       fansub = await this.fansubRepo.save(fansub);
@@ -198,17 +191,9 @@ export class FansubDnsController {
             }
             let isFansubUrlChanged = false;
             const fansubUrls = JSON.parse(fansub.urls);
-            if (fansubUrls && Array.isArray(fansubUrls)) {
-              const idx = fansubUrls.findIndex(u => u.name === 'web');
-              if (idx >= 0) {
-                if (fansubUrls[idx].url !== rec.name) {
-                  fansubUrls[idx].url = `https://${rec.name}`;
-                  isFansubUrlChanged = true;
-                }
-              } else {
-                fansubUrls.push({ name: 'web', url: `https://${rec.name}` });
-                isFansubUrlChanged = true;
-              }
+            if (fansubUrls['web'] !== rec.name) {
+              fansubUrls['web'] = `https://${rec.name}`;
+              isFansubUrlChanged = true;
             }
             if (isFansubDnsChanged || isFansubUrlChanged) {
               if (isFansubUrlChanged) {

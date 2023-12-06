@@ -76,16 +76,15 @@ export class DocsComponent implements OnInit {
         next: async res => {
           this.gs.log('[FANSUB_DETAIL_SUCCESS]', res);
           let fansubUrls: any = (res.result.urls as any);
-          const idx = fansubUrls.findIndex(u => u.name === 'web');
-          if (idx >= 0) {
+          if (fansubUrls['web']) {
             this.subsDialog = (await this.ds.openKonfirmasiDialog(
               'Sub-Domain Tidak Aktif',
-              `Ingin Mengunjungi Situs ${fansubUrls[idx].url} ?`
+              `Ingin Mengunjungi Situs ${fansubUrls['web']} ?`
             )).afterClosed().subscribe({
               next: re => {
                 this.gs.log('[INFO_DIALOG_CLOSED]', re);
                 if (re) {
-                  this.wb.winboxOpenUri(fansubUrls[idx].url);
+                  this.wb.winboxOpenUri(fansubUrls['web']);
                 }
                 this.subsDialog.unsubscribe();
               }

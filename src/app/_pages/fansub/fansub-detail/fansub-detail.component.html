@@ -18,20 +18,20 @@
               {{ fansubData.active ? 'Aktif' : 'Tidak Aktif' }}
             </button>
           </div>
-          <div class="col-12 text-center pt-3" *ngIf="getUrlByName('facebook')">
-            <a [href]="getUrlByName('facebook')" mat-stroked-button class="w-100" matTooltip="Kunjungi Halaman Fanpage" style="color: rgb(114, 137, 218);">
+          <div class="col-12 text-center pt-3" *ngIf="fansubData.urls['facebook']">
+            <a [href]="fansubData.urls['facebook']" mat-stroked-button class="w-100" matTooltip="Kunjungi Halaman Fanpage" style="color: rgb(114, 137, 218);">
               <mat-icon fontIcon="facebook" class="me-1"></mat-icon>
               Facebook Fanpage
             </a>
           </div>
-          <div class="col-12 text-center pt-3" *ngIf="getUrlByName('discord')">
-            <a [href]="getUrlByName('discord')" mat-stroked-button class="w-100" matTooltip="Kunjungi Ruang Obrolan" style="color: rgb(114, 137, 218);">
+          <div class="col-12 text-center pt-3" *ngIf="fansubData.urls['discord']">
+            <a [href]="fansubData.urls['discord']" mat-stroked-button class="w-100" matTooltip="Kunjungi Ruang Obrolan" style="color: rgb(114, 137, 218);">
               <img src="/assets/img/discord/blue.png" width="24px" />
               Ruang Obrolan Discord
             </a>
           </div>
-          <div class="col-12 text-center pt-3" *ngIf="getUrlByName('twitter')">
-            <a [href]="getUrlByName('twitter')" mat-stroked-button class="w-100" matTooltip="Lihat Cuitan" style="color: rgb(114, 137, 218);">
+          <div class="col-12 text-center pt-3" *ngIf="fansubData.urls['twitter']">
+            <a [href]="fansubData.urls['twitter']" mat-stroked-button class="w-100" matTooltip="Lihat Cuitan" style="color: rgb(114, 137, 218);">
               <img src="/assets/img/twitter/blue.png" width="24px" />
               Cuitan Twitter
             </a>

@@ -95,7 +95,7 @@ export class FansubController {
     try {
       if (
         'name' in req.body && 'born' in req.body && 'slug' in req.body &&
-        ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
+        ('urls' in req.body && typeof req.body.urls === 'object')
       ) {
         const user: UserModel = res.locals['user'];
         const slug = req.body.slug.replace(/[^0-9a-zA-Z-]/g, '').toLowerCase();
@@ -118,16 +118,15 @@ export class FansubController {
           fansub.name = req.body.name;
           fansub.born = new Date(req.body.born);
           fansub.slug = slug;
-          const filteredUrls = [];
-          for (const u of req.body.urls) {
-            if ('url' in u && 'name' in u && u.url && u.name) {
-              filteredUrls.push({
-                url: u.url,
-                name: u.name
-              });
-            }
+          if (Object.keys(req.body.urls).length <= 0) {
+            throw new HttpException({
+              info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
+              result: {
+                message: 'Harap Menyediakan Minimal Satu URL'
+              }
+            }, HttpStatus.BAD_REQUEST);
           }
-          fansub.urls = JSON.stringify(filteredUrls);
+          fansub.urls = JSON.stringify(req.body.urls);
           if ('rss_feed' in req.body && (user.role === RoleModel.ADMIN || user.role === RoleModel.MODERATOR || user.role === RoleModel.FANSUBBER)) {
             const rssFeed: string = req.body.rss_feed;
             if (rssFeed.match(CONSTANTS.regexUrl)) {
@@ -254,7 +253,7 @@ export class FansubController {
         'name' in req.body || 'born' in req.body || 'description' in req.body ||
         'slug' in req.body || 'active' in req.body || 'image' in req.body ||
         ('tags' in req.body && Array.isArray(req.body.tags) && req.body.tags.length > 0) ||
-        ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0)
+        ('urls' in req.body && typeof req.body.urls === 'object')
       ) {
         let user: UserModel = res.locals['user'];
         const fansub = await this.fansubRepo.findOneOrFail({
@@ -354,17 +353,16 @@ export class FansubController {
           const filteredTagsUnique = [...new Set<string>(req.body.tags)];
           fansub.tags = JSON.stringify(filteredTagsUnique);
         }
-        if ('urls' in req.body && Array.isArray(req.body.urls) && req.body.urls.length > 0) {
-          const filteredUrls = [];
-          for (const u of req.body.urls) {
-            if ('url' in u && 'name' in u && u.url && u.name) {
-              filteredUrls.push({
-                url: u.url,
-                name: u.name
-              });
-            }
+        if ('urls' in req.body) {
+          if (Object.keys(req.body.urls).length <= 0) {
+            throw new HttpException({
+              info: '🙄 400 - Fansub API :: Gagal Menambah Fansub Baru 😪',
+              result: {
+                message: 'Harap Menyediakan Minimal Satu URL'
+              }
+            }, HttpStatus.BAD_REQUEST);
           }
-          fansub.urls = JSON.stringify(filteredUrls);
+          fansub.urls = JSON.stringify(req.body.urls);
         }
         fansub.user_ = user;
         const resFansubSave = await this.fansubRepo.save(fansub);
