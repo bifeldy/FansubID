@@ -2,6 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, Up
 
 import { TempAttachmentModel, UserModel } from '../../models/req-res.model';
 
+import { ColumnNumberBigIntTransformer } from '../transformers/column-number-bigint.transformer';
+
 import { User } from './User';
 
 @Entity({ name: 'temp_attachment' })
@@ -19,7 +21,7 @@ export class TempAttachment implements TempAttachmentModel {
   @Column({ type: 'text' })
   ext: string;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', transformer: new ColumnNumberBigIntTransformer() })
   size: number;
 
   @Column({ type: 'text', nullable: true })

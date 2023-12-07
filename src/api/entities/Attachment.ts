@@ -3,6 +3,8 @@ import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, Up
 
 import { AttachmentModel, UserModel } from '../../models/req-res.model';
 
+import { ColumnNumberBigIntTransformer } from '../transformers/column-number-bigint.transformer';
+
 import { User } from './User';
 
 @Entity({ name: 'attachment' })
@@ -20,7 +22,7 @@ export class Attachment implements AttachmentModel {
   @Column({ type: 'text' })
   ext: string;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', transformer: new ColumnNumberBigIntTransformer() })
   size: number;
 
   @Column({ type: 'text', nullable: true })

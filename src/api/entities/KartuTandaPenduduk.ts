@@ -3,6 +3,8 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 
 import { AgamaModel, GolonganDarahModel, JenisKelaminModel, KartuTandaPendudukModel, WargaNegaraModel } from '../../models/req-res.model';
 
+import { ColumnNumberBigIntTransformer } from '../transformers/column-number-bigint.transformer';
+
 @Entity({ name: 'kartu_tanda_penduduk' })
 export class KartuTandaPenduduk implements KartuTandaPendudukModel {
 
@@ -10,7 +12,7 @@ export class KartuTandaPenduduk implements KartuTandaPendudukModel {
   id: number;
 
   @Exclude()
-  @Column({ type: 'bigint', nullable: true })
+  @Column({ type: 'bigint', nullable: true, transformer: new ColumnNumberBigIntTransformer() })
   nik: number;
 
   @Column({ type: 'text' })
