@@ -66,7 +66,7 @@
                         <mat-label>Tautan Discord</mat-label>
                         <input matInput formControlName="discord" placeholder="http://www.discord.gg" />
                         <mat-icon matSuffix>
-                          <img src="/assets/img/discord/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" style="vertical-align: baseline;" />
+                          <img src="/assets/img/discord/{{ GS.isDarkMode ? 'white' : 'black' }}.png" height="24px" style="vertical-align: baseline;" />
                         </mat-icon>
                         <mat-error>
                           <div *ngIf="fg.get('discord').hasError('pattern')">Discord Link Tidak Valid</div>
@@ -76,7 +76,7 @@
                         <mat-label>Cuitan Twitter</mat-label>
                         <input matInput formControlName="twitter" placeholder="http://www.twitter.com" />
                         <mat-icon matSuffix>
-                          <img src="/assets/img/twitter/{{ GS.isDarkMode ? 'white' : 'black' }}.png" width="24px" style="vertical-align: baseline;" />
+                          <img src="/assets/img/twitter/{{ GS.isDarkMode ? 'white' : 'black' }}.png" height="24px" style="vertical-align: baseline;" />
                         </mat-icon>
                         <mat-error>
                           <div *ngIf="fg.get('twitter').hasError('pattern')">Twitter Link Tidak Valid</div>

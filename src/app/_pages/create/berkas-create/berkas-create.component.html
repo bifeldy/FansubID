@@ -197,9 +197,9 @@
                   <div class="row">
                     <div class="col-12 px-3">
                       <small class="text-success">
-                        * <i>Resume-able Upload</i> (Tidak wajib, jika sudah ada URL eksternal, misal alamat webmu gdrive mediafire mega dan lain sebagainya).
-                        Mohon ditunggu, jika ingin di tinggal dapat menyelesaikan semua isian yang diperlukan dan menyalakan 'Auto Simpan & Kirim' dibawah ini,
-                        berkas lampiran akan <i>expired</i> apabila tidak disimpan dalam {{ CONSTANTS.timeoutDeleteTempAttachmentTime / 60 / 1000 }} menit setelah berhasil <i>upload</i>.
+                        * <i>Resume-able Upload</i> :: <i>expired</i> 3 hari (Tidak wajib, jika sudah ada URL eksternal, misal alamat webmu gdrive mediafire mega dan lain sebagainya).
+                        Mohon ditunggu, jika ingin di tinggal dapat menyelesaikan semua isian yang diperlukan dan menyalakan 'Otomatis Simpan & Kirim' dibawah ini,
+                        berkas lampiran akan dibatalkan dan dihapus apabila tidak disimpan dalam {{ CONSTANTS.timeoutDeleteTempAttachmentTime / 60 / 1000 }} menit setelah berhasil <i>upload</i>.
                         Lalu kemudian saat berkas berhasil dibuat, lampiran tidak akan bisa di modifikasi. Tipe file yang diperbolehkan :: {{ extAttachment }}
                       </small>
                     </div>
@@ -235,7 +235,7 @@
                   <div class="row">
                     <mat-slide-toggle formControlName="auto_send" [disabled]="fg.invalid || attachmentSelected?.status !== 'uploading'"
                       class="px-3" matTooltip="Pastikan Semua Isian Yang Dibutuhkan Sudah Terisi">
-                      Auto Simpan & Kirim Setelah Selesai Upload DDL
+                      Otomatis Simpan & Kirim Setelah Selesai Upload DDL
                     </mat-slide-toggle>
                   </div>
                 </ng-template>

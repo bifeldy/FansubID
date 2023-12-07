@@ -280,4 +280,13 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  getIconFromUrl(urlPath): string {
+    try {
+      const domain = new URL(urlPath).host;
+      return 'http://www.google.com/s2/favicons?sz=64&domain=' + domain;
+    } catch (e) {
+      return `${environment.baseUrl}/favicon.ico`;
+    }
+  }
+
 }

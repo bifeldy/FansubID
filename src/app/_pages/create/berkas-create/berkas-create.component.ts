@@ -58,7 +58,8 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
 
   uploadToast = null;
 
-  timerTimeout = null;
+  timerTimeout1 = null;
+  timerTimeout2 = null;
 
   gambar = null;
   ddl = null;
@@ -144,14 +145,14 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
               },
               true
             );
-            this.timerTimeout = setTimeout(() => {
+            this.timerTimeout1 = setTimeout(() => {
               this.gs.log('[UPLOAD_TIMEOUT]', CONSTANTS.timeoutDeleteTempAttachmentTime);
               this.failOrCancelUpload({
                 info: 'Expired, Silahkan Upload Ulang!'
               });
             }, CONSTANTS.timeoutDeleteTempAttachmentTime);
             if (this.fg.value.auto_send) {
-              setTimeout(() => {
+              this.timerTimeout2 = setTimeout(() => {
                 this.onSubmit();
               }, 2500);
             }
@@ -172,9 +173,13 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     if (this.uploadToast) {
       this.toast.remove(this.uploadToast.toastId);
     }
-    if (this.timerTimeout) {
-      clearTimeout(this.timerTimeout);
-      this.timerTimeout = null;
+    if (this.timerTimeout1) {
+      clearTimeout(this.timerTimeout1);
+      this.timerTimeout1 = null;
+    }
+    if (this.timerTimeout2) {
+      clearTimeout(this.timerTimeout2);
+      this.timerTimeout2 = null;
     }
     this.subsProject?.unsubscribe();
     this.subsFansub?.unsubscribe();
