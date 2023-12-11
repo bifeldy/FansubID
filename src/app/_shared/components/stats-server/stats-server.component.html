@@ -5,6 +5,12 @@
     </h2>
   </div>
   <div class="col-12">
+    <p class="px-2 text-truncate" matTooltip="Diperbarui 10 Menit Sekali">
+      Wallet ::
+      <span class="gradient-text">
+        {{ SS.statsServer.billing | currency:'Rp ':'symbol':'1.2-2' }}
+      </span>
+    </p>
     <p class="px-2 text-truncate" *ngIf="SS.github?.sha">
       Portal ::
       <span class="text-success">
@@ -69,12 +75,6 @@
       Net UD (/s) ::
       <span class="text-warning">
         {{ SS.statsServer.net_tx | bytes:2 }} / {{ SS.statsServer.net_rx | bytes:2 }}
-      </span>
-    </p>
-    <p class="px-2 text-truncate" matTooltip="Diperbarui 10 Menit Sekali">
-      Sisa Saldo ::
-      <span class="gradient-text">
-        {{ SS.statsServer.billing | currency:'Rp ':'symbol':'1.2-2' }}
       </span>
     </p>
   </div>
