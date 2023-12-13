@@ -75,6 +75,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
   subsImgbb = null;
   subsBerkasCreate = null;
   subsUpload = null;
+  subsDialog = null;
 
   berkasType = '';
 
@@ -195,6 +196,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     this.subsBerkasCreate?.unsubscribe();
     this.uploadService.disconnect();
     this.subsUpload?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
   async canDeactivate(): Promise<boolean> {
@@ -582,7 +584,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     });
   }
 
-  uploadAttachment(event, ddl): void {
+  async uploadAttachment(event, ddl): Promise<void> {
     this.ddl = ddl;
     const file = event.target.files[0];
     this.attachmentLimitExceeded = null;
@@ -593,6 +595,19 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     try {
       if (file.size <= CONSTANTS.fileSizeAttachmentTotalLimit) {
         this.uploadService.handleFiles(file);
+        this.subsDialog = (await this.ds.openKonfirmasiDialog(
+          'Saran Penamaan Berkas',
+          'Apakah Ingin Mengganti Penamaan Berkas Sesuai Dengan Nama Lampiran Yang Di Unggah ?'
+        )).afterClosed().subscribe({
+          next: re => {
+            this.gs.log('[INFO_DIALOG_CLOSED]', re);
+            if (re === true) {
+              this.fg.controls['name'].patchValue(file.name);
+              this.fg.controls['name'].markAsDirty();
+            }
+            this.subsDialog.unsubscribe();
+          }
+        });
       } else {
         this.attachmentLimitExceeded = CONSTANTS.fileSizeAttachmentTotalLimit;
         this.ddl.clear(event);

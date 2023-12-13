@@ -18,6 +18,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { BusyService } from '../../../_shared/services/busy.service';
 import { ImgbbService } from '../../../_shared/services/imgbb.service';
 import { ToastService } from '../../../_shared/services/toast.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 
 @Component({
   selector: 'app-berkas-edit',
@@ -77,6 +78,7 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
   subsBerkasDetail = null;
   subsBerkasUpdate = null;
   subsUpload = null;
+  subsDialog = null;
 
   berkasType = '';
 
@@ -94,7 +96,8 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     private imgbb: ImgbbService,
     private gs: GlobalService,
     private as: AuthService,
-    private uploadService: UploadxService
+    private uploadService: UploadxService,
+    private ds: DialogService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -227,9 +230,10 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     this.subsBerkasDetail?.unsubscribe();
     this.subsBerkasUpdate?.unsubscribe();
     this.subsUpload?.unsubscribe();
+    this.subsDialog?.unsubscribe();
   }
 
-  uploadAttachment(event, ddl): void {
+  async uploadAttachment(event, ddl): Promise<void> {
     this.ddl = ddl;
     const file = event.target.files[0];
     this.attachmentLimitExceeded = null;
@@ -240,6 +244,19 @@ export class BerkasEditComponent implements OnInit, OnDestroy {
     try {
       if (file.size <= CONSTANTS.fileSizeAttachmentTotalLimit) {
         this.uploadService.handleFiles(file);
+        this.subsDialog = (await this.ds.openKonfirmasiDialog(
+          'Saran Penamaan Berkas',
+          'Apakah Ingin Mengganti Penamaan Berkas Sesuai Dengan Nama Lampiran Yang Di Unggah ?'
+        )).afterClosed().subscribe({
+          next: re => {
+            this.gs.log('[INFO_DIALOG_CLOSED]', re);
+            if (re === true) {
+              this.fg.controls['name'].patchValue(file.name);
+              this.fg.controls['name'].markAsDirty();
+            }
+            this.subsDialog.unsubscribe();
+          }
+        });
       } else {
         this.attachmentLimitExceeded = CONSTANTS.fileSizeAttachmentTotalLimit;
         this.ddl.clear(event);

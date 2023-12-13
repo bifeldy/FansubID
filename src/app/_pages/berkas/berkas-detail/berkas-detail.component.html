@@ -129,7 +129,10 @@
             <div class="row py-3" *ngIf="!AS.currentUserSubject?.value || (AS.currentUserSubject?.value && berkasData.download_url?.length > 0)">
               <div class="col-12 pt-3 sticky-top bg-bifeldy">
                 <h2 class="border-bottom-dotted">
-                  <b class="text-bifeldy">Tautan Unduhan {{ AS.currentUserSubject?.value ? 'External' : '' }}</b>
+                  <b class="text-bifeldy">
+                    Tautan Unduhan
+                    <i>{{ AS.currentUserSubject?.value ? 'External' : '' }}</i>
+                  </b>
                 </h2>
               </div>
               <div class="col-12 text-center" *ngIf="AS.currentUserSubject?.value">
