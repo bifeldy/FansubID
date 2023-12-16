@@ -125,7 +125,7 @@ export class BannedController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Banned API :: Gagal Mencari Banned ${req.query['id']} 😪`,
+        info: `🙄 400 - Banned API :: Gagal Mencari Banned ${req.query['username']} 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }
