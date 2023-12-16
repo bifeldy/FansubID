@@ -240,7 +240,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
     });
   }
 
-  checkInternetPositif():void {
+  checkInternetPositif(): void {
     this.bs.busy();
     const chunkSize = 100;
     const chunkHandlers: Observable<any>[] = [];

@@ -58,7 +58,11 @@ import { environment } from '../environments/app/environment';
       positionClass: 'toast-top-right',
       closeButton: true,
       progressBar: true,
-      progressAnimation: 'increasing'
+      progressAnimation: 'increasing',
+      preventDuplicates: true,
+      resetTimeoutOnDuplicate: true,
+      includeTitleDuplicates: true,
+      countDuplicates: true
     }),
     NgProgressModule,
     NgProgressHttpModule,

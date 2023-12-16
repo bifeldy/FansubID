@@ -203,7 +203,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  checkInternetPositif():void {
+  checkInternetPositif(): void {
     this.bs.busy();
     this.subsInternetPositif = this.fansub.checkInternetPositif([this.fansubData.id]).subscribe({
       next: res => {
