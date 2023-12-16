@@ -108,4 +108,8 @@ export class FansubService {
     return this.api.deleteData(`/fansub-dns/${fansubSlug}`);
   }
 
+  checkInternetPositif(fansubId = []): Observable<JsonResponse<FansubModel>> {
+    return this.api.patchData(`/fansub-internet-positif`, { id: fansubId });
+  }
+
 }

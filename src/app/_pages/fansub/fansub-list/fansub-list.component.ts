@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, concat } from 'rxjs';
 
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
@@ -134,6 +135,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
   subsAnime = null;
   subsDorama = null;
   subsQueryParam = null;
+  subsInternetPositif = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -157,6 +159,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
     this.subsFansub?.unsubscribe();
     this.subsAnime?.unsubscribe();
     this.subsQueryParam?.unsubscribe();
+    this.subsInternetPositif?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -222,13 +225,44 @@ export class FansubListComponent implements OnInit, OnDestroy {
         this.pieChartStatusLabels = ['Aktif', 'Tidak Aktif'];
         this.pieChartStatusData = [this.fansubActive, this.fansubInActive];
         this.tabData[0].data.row = this.fansubData;
-        this.getAnimeFansub();
-        this.getDoramaFansub();
+        if (this.allFansubId.length > 0) {
+          this.getAnimeFansub();
+          this.getDoramaFansub();
+          this.checkInternetPositif();
+        }
         this.fs.initializeFab('add', null, 'Tambahkan Fansub Baru', '/create/fansub', false);
         this.bs.idle();
       },
       error: err => {
         this.gs.log('[FANSUB_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  checkInternetPositif():void {
+    this.bs.busy();
+    const chunkSize = 100;
+    const chunkHandlers: Observable<any>[] = [];
+    for (let i = 0; i < this.allFansubId.length; i += chunkSize) {
+      const chunk = this.allFansubId.slice(i, i + chunkSize);
+      const handler = this.fansub.checkInternetPositif(chunk);
+      chunkHandlers.push(handler);
+    }
+    this.subsInternetPositif = concat(...chunkHandlers).subscribe({
+      next: res => {
+        this.gs.log('[FANSUB_KOMINFO_SUCCESS]', res);
+        for (const f of this.fansubData) {
+          if (res.results[f.id]) {
+            f.internet_positif = res.results[f.id];
+          }
+        }
+      },
+      error: err => {
+        this.gs.log('[FANSUB_KOMINFO_ERROR]', err, 'error');
+        this.bs.idle();
+      },
+      complete: () => {
         this.bs.idle();
       }
     });

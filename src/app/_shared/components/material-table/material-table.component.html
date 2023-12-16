@@ -20,7 +20,7 @@
         <h3 class="m-0" [style.color]="'#ff4081'">{{ tdc.toUpperCase() }}</h3>
       </th>
       <td mat-cell *matCellDef="let row" class="px-3" style="cursor: pointer;" [style.background-color]="
-        row.pending || row.private || row.banned || row.deleted ? (GS.isDarkMode ? 'rgba(47, 79, 79, 0.25)' : 'rgba(47, 79, 79, 0.0625)') : ''
+        row.pending || row.private || row.banned || row.deleted || row.internet_positif ? (GS.isDarkMode ? 'rgba(47, 79, 79, 0.25)' : 'rgba(47, 79, 79, 0.0625)') : ''
       " [style.max-width]="
         GS.isDesktop && (
           tdc.toUpperCase() === 'NAMA BERKAS' || tdc.toUpperCase() === 'PENGIRIM' || tdc.toUpperCase() === 'PENERIMA' || tdc.toUpperCase() ===  'NAMA LENGKAP' ||

@@ -17,6 +17,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { DialogService } from '../../../_shared/services/dialog.service';
 import { ToastService } from '../../../_shared/services/toast.service';
 import { BerkasService } from '../../../_shared/services/berkas.service';
+import { NotificationsService } from '../../../_shared/services/notifications.service';
 
 @Component({
   selector: 'app-fansub-detail',
@@ -96,6 +97,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   subsDialog = null;
   subsClaimSubDomain = null;
   subsTrusted = null;
+  subsInternetPositif = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -110,7 +112,8 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     private ss: StatsServerService,
     private toast: ToastService,
     private wb: WinboxService,
-    private berkas: BerkasService
+    private berkas: BerkasService,
+    private notif: NotificationsService
   ) {
     this.gs.bannerImg = null;
     this.gs.sizeContain = false;
@@ -140,6 +143,10 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.subsDialog?.unsubscribe();
     this.subsClaimSubDomain?.unsubscribe();
     this.subsTrusted?.unsubscribe();
+    this.subsInternetPositif?.unsubscribe();
+    if (this.fansubData) {
+      this.notif.removeNotif(`${environment.siteName.toUpperCase()}_FANSUB#${this.fansubData.id}`);
+    }
   }
 
   ngOnInit(): void {
@@ -181,6 +188,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           this.getBerkasFansub();
           this.getRssFeed();
           this.getFansubMember();
+          this.checkInternetPositif();
         }
       },
       error: err => {
@@ -191,6 +199,32 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
             returnUrl: '/fansub'
           }
         });
+      }
+    });
+  }
+
+  checkInternetPositif():void {
+    this.bs.busy();
+    this.subsInternetPositif = this.fansub.checkInternetPositif([this.fansubData.id]).subscribe({
+      next: res => {
+        this.gs.log('[FANSUB_KOMINFO_SUCCESS]', res);
+        if (res.results[this.fansubData.id]) {
+          this.notif.addNotif(
+            null,
+            `${environment.siteName.toUpperCase()}_FANSUB#${this.fansubData.id}`,
+            'secondary',
+            'Internet Positif',
+            'Halaman website Fansub ini ada di dalam daftar situs yang diblokir oleh Kominfo ~',
+            false
+          );
+        }
+      },
+      error: err => {
+        this.gs.log('[FANSUB_KOMINFO_ERROR]', err, 'error');
+        this.bs.idle();
+      },
+      complete: () => {
+        this.bs.idle();
       }
     });
   }

@@ -37,6 +37,10 @@ import { DiscordService } from './services/discord.service';
 import { CloudflareService } from './services/cloudflare.service';
 import { FailToBanService } from './repository/fail-to-ban.service';
 
+// Website Pemerintah Memang Kadang-Kadang Rada-Rada ..
+// Meng-Full Hadeh ..
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+
 export async function ctx(): Promise<INestApplicationContext> {
   return await NestFactory.createApplicationContext(AppModule);
 }

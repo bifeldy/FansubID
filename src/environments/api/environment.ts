@@ -167,6 +167,7 @@ export const environment = {
   externalApiAnime: 'https://api.myanimelist.net/v2',
   externalApiDorama: 'https://kuryana.vercel.app',
   externalApiImage: 'https://api.imgbb.com/1/upload',
+  externalApiInternetPositif: 'https://trustpositif.kominfo.go.id/rest_server/getrecordsname',
   torrent: {
     trackerAnnounce: CONSTANTS.torrentTracker
   },
