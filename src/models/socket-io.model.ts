@@ -49,6 +49,7 @@ export interface StatsServerModel {
   net_tx?: number;
   net_rx?: number;
   billing?: number;
+  storage?: number;
 }
 
 export interface RoomModel {

@@ -9,6 +9,8 @@ import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
+import { AttachmentService } from '../repository/attachment.service';
+
 import { ApiService } from '../services/api.service';
 import { GlobalService } from '../services/global.service';
 import { ConfigService } from '../services/config.service';
@@ -22,7 +24,8 @@ export class VpsBillingService {
     private sr: SchedulerRegistry,
     private cfg: ConfigService,
     private gs: GlobalService,
-    private api: ApiService
+    private api: ApiService,
+    private attachmentRepo: AttachmentService
   ) {
     //
   }
@@ -40,6 +43,12 @@ export class VpsBillingService {
       const startTime = new Date();
       this.gs.log('[CRON_TASK_VPS_BILLING-START] 🐾', `${startTime}`);
       try {
+        const attachmentSize = await this.attachmentRepo.query('SELECT SUM(size) sz FROM attachment');
+        if (attachmentSize.length === 1) {
+          this.cfg.statsServerSet({
+            storage: Number(attachmentSize[0].sz) || 0
+          });
+        }
         const url = new URL(`${environment.idCloudHost.apiUrl}/payment/billing_account/list`)
         const res_raw = await this.api.getData(url, this.header);
         const res_json: any = await res_raw.json();

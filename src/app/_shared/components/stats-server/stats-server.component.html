@@ -4,11 +4,17 @@
       <b class="text-bifeldy">Statistik Server</b>
     </h2>
   </div>
-  <div class="col-12">
-    <p class="px-2 text-truncate" matTooltip="Diperbarui 10 Menit Sekali">
+  <div class="col-12" matTooltip="Diperbarui Beberapa Menit Sekali">
+    <p class="px-2 text-truncate">
       Wallet ::
       <span class="gradient-text">
         {{ SS.statsServer.billing | currency:'Rp ':'symbol':'1.2-2' }}
+      </span>
+    </p>
+    <p class="px-2 text-truncate">
+      Total Storage ::
+      <span class="gradient-text">
+        {{ SS.statsServer.storage | bytes:2 }}
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="SS.github?.sha">
