@@ -90,7 +90,7 @@
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="tableDataColumn"></tr>
-    <tr mat-row matRipple [matRippleDisabled]="GS.isDesktop" class="{{ row.trusted ? 'gradient-border' + (GS.isDesktop ? '' : ' rgb-border') : '' }}"
+    <tr mat-row matRipple [matRippleDisabled]="GS.isDesktop" class="{{ row.trusted ? 'trusted-border' + (GS.isDesktop ? '' : ' rgb-border') : '' }}"
       *matRowDef="let row; columns: tableDataColumn;" (click)="onRowClicked(row)"></tr>
     <tr class="mat-row" *matNoDataRow matRipple [matRippleDisabled]="GS.isDesktop">
       <td class="mat-cell text-center align-items-center p-3" [attr.colspan]="tableDataColumn.length" style="

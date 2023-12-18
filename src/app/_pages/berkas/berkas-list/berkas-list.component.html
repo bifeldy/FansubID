@@ -13,8 +13,11 @@
       <div class="text-danger text-end" *ngIf="AS.currentUserSubject?.value && AS.currentUserSubject?.value?.verified && !showTruelyPrivate">
         * Berkas <i>Private</i> Dari Pengguna <i>Private</i> Tidak Di Tampilkan
       </div>
+      <div class="text-success text-end" *ngIf="(AS.currentUserSubject?.value && AS.currentUserSubject?.value?.verified) || showTruelyPrivate">
+        * Berkas <i>Private</i> => Warna Abu-Abu
+      </div>
       <div class="text-success text-end">
-        * Berkas Dari Anggota Fansub => Warna - Warni
+        * Berkas Anggota Fansub => Warna Oranye
       </div>
     </div>
   </div>
