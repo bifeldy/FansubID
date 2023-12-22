@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { DialogInfoDataModel } from '../../../../../models/dialog';
@@ -10,9 +10,11 @@ import { GlobalService } from '../../../../_shared/services/global.service';
   templateUrl: './material-dialog-info.component.html',
   styleUrls: ['./material-dialog-info.component.css']
 })
-export class MaterialDialogInfoComponent implements OnInit {
+export class MaterialDialogInfoComponent implements OnInit, AfterViewInit {
 
-  buttonDisabled = true;
+  buttonDisabled = false;
+
+  @ViewChild('htmlElementContentDialog') el: ElementRef;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: DialogInfoDataModel,
@@ -31,8 +33,27 @@ export class MaterialDialogInfoComponent implements OnInit {
     this.gs.log('[DIALOG_DATA_IN]', this.data);
   }
 
-  checkReadContent(ev: any): void {
+  ngAfterViewInit(): void {
+    const isScrollable = this.checkOverflow();
+    if (isScrollable) {
+      this.buttonDisabled = true;
+    }
+  }
+
+  onScroll(ev: any): void {
     this.buttonDisabled = !(ev.target.offsetHeight + ev.target.scrollTop >= ev.target.scrollHeight);
+  }
+
+  // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
+  checkOverflow(): boolean {
+    const e = this.el.nativeElement;
+    const curOverflow = e.style.overflow;
+    if (!curOverflow || curOverflow === 'visible' ) {
+      e.style.overflow = 'hidden';
+    }
+    const isOverflowing = e.clientWidth < e.scrollWidth || e.clientHeight < e.scrollHeight;
+    e.style.overflow = curOverflow;
+    return isOverflowing;
   }
 
 }

@@ -1,10 +1,8 @@
-<h1 mat-dialog-title (mouseover)="checkReadContent($event)">
-  {{ DATA.title }}
-</h1>
-<div mat-dialog-content class="p-4" (scroll)="checkReadContent($event)" (mouseover)="checkReadContent($event)"
+<h1 mat-dialog-title>{{ DATA.title }}</h1>
+<div mat-dialog-content class="p-4" (scroll)="onScroll($event)" #htmlElementContentDialog
   [innerHTML]="DATA.htmlMessage | safeInnerHtml" class="text-break text-warning">
 </div>
-<div mat-dialog-actions (mouseover)="checkReadContent($event)">
+<div mat-dialog-actions>
   <small *ngIf="DATA.infoText" class="text-start m-2">
     <i>* {{ DATA.infoText }}</i>
   </small>
