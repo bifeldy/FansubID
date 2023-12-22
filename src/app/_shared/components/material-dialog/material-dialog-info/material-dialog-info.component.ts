@@ -12,7 +12,7 @@ import { GlobalService } from '../../../../_shared/services/global.service';
 })
 export class MaterialDialogInfoComponent implements OnInit {
 
-  buttonDisabled = false;
+  buttonDisabled = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: DialogInfoDataModel,
@@ -31,7 +31,7 @@ export class MaterialDialogInfoComponent implements OnInit {
     this.gs.log('[DIALOG_DATA_IN]', this.data);
   }
 
-  onScroll(ev: any): void {
+  checkReadContent(ev: any): void {
     this.buttonDisabled = !(ev.target.offsetHeight + ev.target.scrollTop >= ev.target.scrollHeight);
   }
 
