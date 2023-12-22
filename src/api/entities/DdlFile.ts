@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Entity, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn, Index } from 'typeorm'
 
 import { DdlFileModel, UserModel } from '../../models/req-res.model';
@@ -25,9 +26,11 @@ export class DdlFile implements DdlFileModel {
   @Column({ type: 'int', default: 0 })
   download_count: number;
 
+  @Exclude()
   @Column({ type: 'text' })
   msg_id: string;
 
+  @Exclude()
   @Column({ type: 'text', nullable: true })
   msg_parent: string;
 
