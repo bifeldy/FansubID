@@ -66,7 +66,7 @@ const routes: Routes = [
     path: 'privacy-policy',
     loadChildren: () => import('./_pages/privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyModule),
     data: {
-      title: 'Privacy Policy',
+      title: 'Kebijakan Privasi',
       description: 'Halaman Kebijakan Privasi',
       keywords: 'privacy-policy'
     }

@@ -20,10 +20,10 @@ export class PrivacyPolicyComponent implements OnInit, OnDestroy {
       <img src="${environment.baseUrl}/assets/img/logo/privacy-policy.png" class="bifeldy-vh-25" />
     </div>
     <div class="text-start pb-5">
-      <h2 class="text-primary">Privacy Policy</h2>
-      <h3 class="text-success">
+      <h1 class="gradient-text">Privacy Policy</h1>
+      <h4 class="text-success">
         Loading ...
-      </h3>
+      </h4>
     </div>
   `;
 

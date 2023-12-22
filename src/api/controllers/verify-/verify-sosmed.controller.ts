@@ -322,7 +322,7 @@ export class VerifySosmedController {
               iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
               url: environment.baseUrl
             },
-            userVerified.profile_.description,
+            `Diverifikasi Menggunakan :: ${sosmed}`,
             userVerified.image_url,
             userVerified.updated_at,
             {

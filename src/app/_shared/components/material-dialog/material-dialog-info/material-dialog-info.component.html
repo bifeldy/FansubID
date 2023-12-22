@@ -1,11 +1,14 @@
 <h1 mat-dialog-title>{{ DATA.title }}</h1>
-<div mat-dialog-content class="p-4" [innerHTML]="DATA.htmlMessage | safeInnerHtml" class="text-break text-warning"></div>
+<div mat-dialog-content class="p-4" (scroll)="onScroll($event)"
+  [innerHTML]="DATA.htmlMessage | safeInnerHtml" class="text-break text-warning">
+</div>
 <div mat-dialog-actions>
   <small *ngIf="DATA.infoText" class="text-start m-2">
     <i>* {{ DATA.infoText }}</i>
   </small>
-  <button type="button" mat-button [mat-dialog-close]="true" class="ms-auto text-success shiny">
-    {{ DATA.confirmText }}
+  <button type="button" mat-button class="ms-auto text-success shiny"
+    [mat-dialog-close]="true" [disabled]="buttonDisabled">
+    {{ buttonDisabled ? 'Baca Hingga Selesai 🔽' : DATA.confirmText }}
   </button>
   <button type="button" mat-button [mat-dialog-close]="false" *ngIf="DATA.cancelText">
     {{ DATA.cancelText }}

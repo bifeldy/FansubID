@@ -351,7 +351,7 @@ export class DiscordService {
   ): MessageOptions {
     return {
       embeds: [
-        new MessageEmbed()
+        this.createEmbedMessageEmptyRawTemplate()
           .setColor(setColor)
           .setTitle(setTitle)
           .setURL(setUrl)
@@ -400,26 +400,25 @@ export class DiscordService {
             if (!member.roles.cache.has(laboratoryRatsRole.id)) {
               await member.roles.add(laboratoryRatsRole);
             }
-            (interaction.guild.channels.cache.get(environment.discord.channelEventId) as TextChannel).send({
-              embeds: [
-                new MessageEmbed()
-                  .setColor('#69f0ae')
-                  .setTitle(user.kartu_tanda_penduduk_.nama)
-                  .setURL(`${environment.baseUrl}/user/${user.username}`)
-                  .setAuthor({
-                    name: `${environment.siteName} - Verifikasi Pengguna`,
-                    iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
-                    url: environment.baseUrl
-                  })
-                  .setDescription(this.gs.htmlToText(user.profile_.description))
-                  .setThumbnail(user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url)
-                  .setTimestamp(user.updated_at)
-                  .setFooter({
-                    text: user.username,
-                    iconURL: user.image_url.startsWith('/') ? environment.baseUrl + user.image_url : user.image_url
-                  })
-              ]
-            });
+            (interaction.guild.channels.cache.get(environment.discord.channelEventId) as TextChannel).send(
+              this.createEmbedMessage(
+                '#69f0ae',
+                user.kartu_tanda_penduduk_.nama,
+                `${environment.baseUrl}/user/${user.username}`,
+                {
+                  name: `${environment.siteName} - Verifikasi Pengguna`,
+                  iconURL: `${environment.baseUrl}/assets/img/favicon.png`,
+                  url: environment.baseUrl
+                },
+                'Diverifikasi Menggunakan :: DISCORD',
+                user.image_url,
+                user.updated_at,
+                {
+                  text: user.username,
+                  iconURL: user.image_url
+                }
+              )
+            );
             await interaction.reply({ content: `<@${interaction.user.id}> 😚 .: Berhasil :: ${user.username}@${environment.mailTrap.domain} :. 🤩` });
           }
         } else {
