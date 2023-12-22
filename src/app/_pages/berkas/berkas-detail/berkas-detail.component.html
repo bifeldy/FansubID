@@ -137,7 +137,7 @@
               </div>
               <div class="col-12 text-center" *ngIf="AS.currentUserSubject?.value">
                 <a href="{{ i.url }}" class="m-1" target="_blank" mat-stroked-button color="accent" *ngFor="let i of berkasData.download_url">
-                  <img src="{{ getIconFromUrl(i.url) }}" height="24px" class="me-1" />
+                  <img src="{{ getIconFromUrl(i.url) }}" width="24px" height="24px" class="me-1" style="object-fit: cover;" />
                   {{ i.name }}
                 </a>
               </div>
