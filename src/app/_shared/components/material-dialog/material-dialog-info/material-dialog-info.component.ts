@@ -12,7 +12,7 @@ import { GlobalService } from '../../../../_shared/services/global.service';
 })
 export class MaterialDialogInfoComponent implements OnInit {
 
-  buttonDisabled = true;
+  buttonDisabled = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: DialogInfoDataModel,
