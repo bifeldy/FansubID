@@ -41,7 +41,8 @@ export class MaterialDialogInfoComponent implements OnInit, AfterViewInit {
   }
 
   onScroll(ev: any): void {
-    this.buttonDisabled = !(ev.target.offsetHeight + ev.target.scrollTop >= ev.target.scrollHeight);
+    this.gs.log('[MOUSE_SCROLL]', ev);
+    this.buttonDisabled = !(ev.target.offsetHeight + ev.target.scrollTop >= ev.target.scrollHeight - 1);
   }
 
   // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
