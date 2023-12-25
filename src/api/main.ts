@@ -97,8 +97,6 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
         const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
         await sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
         if (
-          clientOriginIpCc.origin_ip !== environment.domain &&
-          clientOriginIpCc.origin_ip !== environment.domain_alt &&
           clientOriginIpCc.origin_ip !== environment.ip &&
           // 404 Not Found Will Redirect To Home Page
           (res.statusCode === 404 || res.statusCode === 429 || (res.statusCode >= 500 && res.statusCode < 600))
