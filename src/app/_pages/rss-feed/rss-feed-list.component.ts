@@ -37,6 +37,7 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
   order = '';
 
   subsRssFeed = null;
+  subsInternetPositif = null;
 
   constructor(
     private gs: GlobalService,
@@ -61,6 +62,7 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subsRssFeed?.unsubscribe();
+    this.subsInternetPositif?.unsubscribe();
   }
 
   getRssFeed(): void {
@@ -79,16 +81,40 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
             foto_fansub: r.fansub_.image_url,
             url: r.fansub_.urls['web'],
             link: r.link,
+            fansub_id: r.fansub_.id,
             Fansub: r.fansub_.slug,
             Tanggal: r.created_at,
             Topik: r.title
           });
         }
         this.tabData[0].data.row = this.rssFeedData;
+        if (this.count > 0) {
+          this.checkInternetPositif();
+        }
         this.bs.idle();
       },
       error: err => {
         this.gs.log('[RSS_FEED_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  checkInternetPositif(): void {
+    this.bs.busy();
+    const allFansubId = [...new Set(this.rssFeedData.map(rf => rf.fansub_id))];
+    this.subsInternetPositif = this.fansub.checkInternetPositif(allFansubId).subscribe({
+      next: res => {
+        this.gs.log('[RSS_FEED_KOMINFO_SUCCESS]', res);
+        for (const rf of this.rssFeedData) {
+          if (res.results[rf.fansub_id]) {
+            rf.internet_positif = res.results[rf.fansub_id];
+          }
+        }
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[RSS_FEED_KOMINFO_ERROR]', err, 'error');
         this.bs.idle();
       }
     });
