@@ -64,7 +64,7 @@
                   </mat-form-field>
                   <ng-container *ngIf="berkasType.toLowerCase().includes('anime_'); then anime_; else notAnime_;"></ng-container>
                   <ng-template #anime_>
-                    <mat-form-field appearance="outline" class="py-3 w-100" [color]="'accent'">
+                    <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
                       <mat-label>Anime Terkait</mat-label>
                       <input matInput formControlName="anime_id" placeholder="Full Metal Alchemist" [matAutocomplete]="autoCompleteAnime" (keyup)="resetSelectedAnime()" />
                       <mat-icon fontIcon="short_text" matSuffix></mat-icon>
@@ -89,7 +89,7 @@
                   <ng-template #notAnime_>
                     <ng-container *ngIf="berkasType.toLowerCase().includes('dorama_'); then dorama_; else notDorama_;"></ng-container>
                     <ng-template #dorama_>
-                      <mat-form-field appearance="outline" class="py-3 w-100" [color]="'accent'">
+                      <mat-form-field appearance="outline" class="px-3 pt-3 w-100" [color]="'accent'">
                         <mat-label>Dorama Terkait</mat-label>
                         <input matInput formControlName="dorama_id" placeholder="Flying Colors" [matAutocomplete]="autoCompleteDorama" (keyup)="resetSelectedDorama()" />
                         <mat-icon fontIcon="short_text" matSuffix></mat-icon>
@@ -112,7 +112,7 @@
                       </mat-form-field>
                     </ng-template>
                     <ng-template #notDorama_>
-                      <mat-form-field appearance="outline" class="py-3 col-12" *ngIf="berkasType" [color]="'accent'">
+                      <mat-form-field appearance="outline" class="px-3 pt-3 col-12" *ngIf="berkasType" [color]="'accent'">
                         <mat-label>Kode / Serial Number</mat-label>
                         <input matInput formControlName="sn_code" placeholder="XXX-999" required />
                         <mat-icon fontIcon="tag" matSuffix></mat-icon>
