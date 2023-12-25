@@ -121,7 +121,7 @@
                           <div *ngIf="fg.get('sn_code').hasError('pattern')">Kode Serial Hanya Boleh Huruf Besar, Strip, Dan Angka</div>
                         </mat-error>
                       </mat-form-field>
-                      <div class="col-12 px-3">
+                      <div class="col-12 px-3" *ngIf="berkasType">
                         <small class="text-success">
                           * Jika tidak ada kode serial isi saja - strip
                         </small>
