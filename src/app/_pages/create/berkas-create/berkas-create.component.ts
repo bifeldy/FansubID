@@ -320,7 +320,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
             this.subsDoramaDetail?.unsubscribe();
             this.doramaValueChanged();
           } else {
-            this.fg.controls['sn_code'].setValidators([Validators.pattern(/^[A-Z0-9\-]+$/)]);
+            this.fg.controls['sn_code'].setValidators([Validators.required, Validators.pattern(/^[A-Z0-9\-]+$/)]);
           }
         }
         this.fg.controls['anime_id'].updateValueAndValidity();

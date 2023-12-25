@@ -256,7 +256,7 @@ export class BerkasController {
     try {
       if (
         'name' in req.body && 'projectType_id' in req.body &&
-        ('anime_id' in req.body || 'dorama_id' in req.body) &&
+        ('anime_id' in req.body || 'dorama_id' in req.body || 'sn_code' in req.body) &&
         ('fansub_id' in req.body && Array.isArray(req.body.fansub_id) && req.body.fansub_id.length > 0)
       ) {
         const user: UserModel = res.locals['user'];
@@ -404,7 +404,7 @@ export class BerkasController {
               .setDescription(this.gs.htmlToText(resFileSave.description))
               .addField(
                 (resFileSave.anime_ ? 'Anime' : (resFileSave.dorama_ ? 'Dorama' : 'Film Lainnya')),
-                (resFileSave.anime_ ? resFileSave.anime_.name : (resFileSave.dorama_ ? resFileSave.dorama_.name : resFileSave.sn_code || 'ー')),
+                (resFileSave.anime_ ? resFileSave.anime_.name : (resFileSave.dorama_ ? resFileSave.dorama_.name : resFileSave.sn_code)),
                 false
               )
               .addFields(
@@ -745,7 +745,7 @@ export class BerkasController {
                 .setDescription(this.gs.htmlToText(resFileSave.description))
                 .addField(
                   (resFileSave.anime_ ? 'Anime' : (resFileSave.dorama_ ? 'Dorama' : 'Film Lainnya')),
-                  (resFileSave.anime_ ? resFileSave.anime_.name : (resFileSave.dorama_ ? resFileSave.dorama_.name : resFileSave.sn_code || 'ー')),
+                  (resFileSave.anime_ ? resFileSave.anime_.name : (resFileSave.dorama_ ? resFileSave.dorama_.name : resFileSave.sn_code)),
                   false
                 )
                 .addFields(

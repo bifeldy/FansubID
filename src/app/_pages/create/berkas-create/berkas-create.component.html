@@ -114,12 +114,18 @@
                     <ng-template #notDorama_>
                       <mat-form-field appearance="outline" class="py-3 col-12" *ngIf="berkasType" [color]="'accent'">
                         <mat-label>Kode / Serial Number</mat-label>
-                        <input matInput formControlName="sn_code" placeholder="XXX-999" />
+                        <input matInput formControlName="sn_code" placeholder="XXX-999" required />
                         <mat-icon fontIcon="tag" matSuffix></mat-icon>
                         <mat-error>
+                          <div *ngIf="fg.get('sn_code').hasError('required')">Kode Serial Tidak Boleh Kosong</div>
                           <div *ngIf="fg.get('sn_code').hasError('pattern')">Kode Serial Hanya Boleh Huruf Besar, Strip, Dan Angka</div>
                         </mat-error>
                       </mat-form-field>
+                      <div class="col-12 px-3">
+                        <small class="text-success">
+                          * Jika tidak ada kode serial isi saja - strip
+                        </small>
+                      </div>
                     </ng-template>
                   </ng-template>
                   <div class="col-12 py-3">
