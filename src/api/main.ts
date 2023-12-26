@@ -151,8 +151,10 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
 
 async function bootstrap(): Promise<void> {
   const port = process.env['PORT'] || 4200;
-  const numCPUs = Math.min(Number.parseInt(process.env['MAX_CPUS']) || os.cpus().length, 2);
-  if (numCPUs > 1) {
+  const totCPUs = os.cpus().length;
+  /* We Will Using 75 % Available CPUs Power */
+  const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || Math.max(Math.round(totCPUs * 3 / 4), 2);
+  if (numCPUs <= totCPUs && numCPUs > 1) {
     try {
       const expressApp = express();
       const httpServer = http.createServer(expressApp);
