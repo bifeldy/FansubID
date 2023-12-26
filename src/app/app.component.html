@@ -81,8 +81,10 @@
 <app-footer></app-footer>
 
 <!-- Loading Animation -->
-<ngx-spinner [bdColor]="'#0000007f'" [type]="'square-jelly-box'" [size]="'medium'" [color]="'#e84360'">
-  <p class="text-light text-center">
+<ngx-spinner
+  [bdColor]="'#0000007f'"
+  template="<img src='/assets/img/loader.gif' class='mb-5' width='128' height='128' />">
+  <p class="text-light text-center mt-5">
     Sedang Memuat Data ^_^ <br /> Mohon Menunggu ... <br />
     <span class="text-info text-decoration-none" (click)="resetLoading()">
       <b style="cursor: pointer;">Batalkan</b>
