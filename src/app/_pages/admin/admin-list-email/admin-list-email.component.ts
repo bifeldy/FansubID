@@ -139,8 +139,12 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
               Date: ${new Date(res.result.date)}
               <br />
               Lampiran: ${this.filterLampiran(res.result.attachment_)}
-              <hr class="my-3">
-              ${res.result.html || res.result.text}
+              <br />
+              <hr class="my-3" />
+              <br />
+              <div class="m-3">
+                ${res.result.html || res.result.text}
+              </div>
             `,
             confirmText: 'Tutup',
             infoText: res.result.id
