@@ -117,7 +117,7 @@ export class ResetPasswordComponent implements OnInit, AfterViewInit, OnDestroy 
     });
     this.fg2 = this.fb.group({
       token: [null, [Validators.required, Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]],
-      password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]]
+      password: [null, [Validators.required, Validators.minLength(6), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)]]
     });
   }
 

@@ -120,8 +120,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.fg = this.fb.group({
       nama: [data.kartu_tanda_penduduk_.nama, [Validators.required, Validators.pattern(/^[a-zA-Z. ]+$/)]],
       description: [data.profile_.description, Validators.compose([Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      old_password: [null, Validators.compose([Validators.required, Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
-      new_password: [null, Validators.compose([Validators.minLength(8), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      old_password: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
+      new_password: [null, Validators.compose([Validators.minLength(6), Validators.pattern(CONSTANTS.regexEnglishKeyboardKeys)])],
       image_photo: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       image_cover: [null, Validators.compose([Validators.pattern(CONSTANTS.regexUrl)])],
       private: [data.private, Validators.compose([Validators.required])]

@@ -56,7 +56,7 @@ export class ServiceWorkerService {
         this.dialogRef = this.ds.openInfoDialog({
           data: {
             title: `Pembaharuan ${au ? 'Berhasil' : 'Gagal'}`,
-            htmlMessage: `Ingin Refresh Halaman (?)`,
+            htmlMessage: `Ingin Refresh Halaman Sekarang (?)`,
             confirmText: 'Ya',
             cancelText: 'Tidak'
           }

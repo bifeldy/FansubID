@@ -100,8 +100,8 @@ export class RegisterMiddleware implements NestMiddleware {
               }, HttpStatus.BAD_REQUEST);
             }
             const result: any = {};
-            if (usrName.length < 8) {
-              result.username = 'Nama Pengguna Minimal 8 Huruf';
+            if (usrName.length < 6) {
+              result.username = 'Nama Pengguna Minimal 6 Huruf';
             }
             if (!req.body.email.match(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)) {
               result.email = 'Email Tidak Valid';
