@@ -18,9 +18,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            sudo pm2 stop fansubid
             cd ~/www/fansubid
             git pull
             npm install
             sudo pm2 restart fansubid
-            sudo systemctl reload nginx
