@@ -118,7 +118,7 @@ const routes: Routes = [
       description: 'E-Mail & DM\'s',
       keywords: 'Surel Email DM',
       [CONSTANTS.decoratorVerifiedOnly]: true,
-      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER]
+      [CONSTANTS.decoratorRoles]: [RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER]
     }
   },
   {

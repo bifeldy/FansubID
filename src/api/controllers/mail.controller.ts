@@ -112,7 +112,7 @@ export class MailController {
   })
   @Throttle(25, 3600) // Special API Limit => 1 / 4
   @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async sendNewMail(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       if (
@@ -242,7 +242,7 @@ export class MailController {
   @ApiTags(CONSTANTS.apiTagMail)
   @ApiParam({ name: 'id', type: 'string' })
   @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
+  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER)
   async getById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
