@@ -28,8 +28,8 @@ export class StatsServerService {
   mySocket: typeof Socket = null;
 
   visitor = 0;
-
   latency = 0;
+  maxReConnDisc = 0;
 
   statsServer: StatsServerModel = {
     cpus: 0,
@@ -173,7 +173,10 @@ export class StatsServerService {
         'Tidak dapat terhubung dengan <i>Server</i> melalui <i>WebSocket</i> !!',
         false
       );
-      this.sw.isUpdateAvailable = false;
+      this.maxReConnDisc++;
+      if (this.maxReConnDisc > 5) {
+        window.location.reload();
+      }
     });
     this.mySocket.on('ping', () => {
       this.gs.log('[SOCKET_PING]', Date.now());
