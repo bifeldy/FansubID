@@ -17,7 +17,6 @@ import { BerkasService } from '../repository/berkas.service';
 import { UserPremiumService } from '../repository/user-premium.service';
 
 import { GlobalService } from '../services/global.service';
-import { ConfigService } from '../services/config.service';
 import { DiscordService } from '../services/discord.service';
 import { GoogleCloudService } from '../services/google-cloud.service';
 import { MkvExtractService } from '../services/mkv-extract.service';
@@ -27,7 +26,6 @@ export class UploadService {
 
   constructor(
     private sr: SchedulerRegistry,
-    private cfg: ConfigService,
     private attachmentRepo: AttachmentService,
     private berkasRepo: BerkasService,
     private userPremiumRepo: UserPremiumService,
@@ -184,7 +182,7 @@ export class UploadService {
             ],
             relations: ['user_']
           });
-          if (this.cfg.serverGetDdlDiscord() || attachment.size > CONSTANTS.fileSizeAttachmentDdlBucketLimit || primeCount <= 0) {
+          if (primeCount <= 0) {
             const chunkParent = await this.ds.sendAttachment(attachment);
             attachment.discord = chunkParent;
             attachment.pending = false;

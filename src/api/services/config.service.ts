@@ -34,8 +34,7 @@ export class ConfigService {
     isMaintenance: false,
     winboxOpenLink: false,
     discordNotification: true,
-    openForRegister: true,
-    ddlDiscord: true
+    openForRegister: true
   }
 
   private room_socket: RoomModel = {};
@@ -93,10 +92,6 @@ export class ConfigService {
 
   serverGetOpenForRegister(): boolean {
     return this.serverGet().openForRegister;
-  }
-
-  serverGetDdlDiscord(): boolean {
-    return this.serverGet().ddlDiscord;
   }
 
   roomSocketGetAll(): RoomModel {

@@ -34,7 +34,6 @@ export interface ServerInfoModel {
   winboxOpenLink: boolean;
   discordNotification: boolean;
   openForRegister: boolean;
-  ddlDiscord: boolean;
 }
 
 export interface PingPongModel {

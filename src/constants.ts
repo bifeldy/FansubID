@@ -47,7 +47,6 @@ export const CONSTANTS = {
     'application/x-zip',
     'application/x-zip-compressed'
   ],
-  fileSizeAttachmentDdlBucketLimit: 64 * 1000 * 1000, // < 128 MB Masuk Bucket DDL Enteng Kenceng :V
   fileSizeAttachmentChunkCloudflareLimit: 32 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileSizeAttachmentChunkDiscordLimit: 8 * 1000 * 1000, // Discord -- Without Nitro Is 8 MB ~ T.T
   fileTypeAttachmentStreamable: [
