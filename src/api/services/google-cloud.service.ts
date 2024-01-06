@@ -13,7 +13,7 @@ import { ApiService } from './api.service';
 import { GlobalService } from './global.service';
 
 @Injectable()
-export class GdriveService {
+export class GoogleCloudService {
 
   constructor(
     private api: ApiService,

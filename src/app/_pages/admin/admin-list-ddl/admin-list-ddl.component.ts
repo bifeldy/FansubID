@@ -77,7 +77,7 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
             Mime: r.mime,
             Tanggal: r.created_at,
             Pemilik: (r.user_?.username || r.parent_attachment_?.user_?.username || 'SYSTEM'),
-            Aksi: (r.pending || r.discord || r.google_drive) ? [] : [
+            Aksi: (r.pending || r.discord || r.google_drive || r.cf_r2) ? [] : [
               { type: 'button', icon: 'cloud_upload', name: 'ReUpload', row: r }
             ]
           });

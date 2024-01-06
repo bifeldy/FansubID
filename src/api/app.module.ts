@@ -107,8 +107,8 @@ import { ClusterMasterSlaveService } from './services/cluster-master-slave.servi
 import { ConfigService } from './services/config.service';
 import { CryptoService } from './services/crypto.service';
 import { DiscordService } from './services/discord.service';
-import { GdriveService } from './services/gdrive.service';
 import { GlobalService } from './services/global.service';
+import { GoogleCloudService } from './services/google-cloud.service';
 import { IdCloudHostService } from './services/idcloudhost.service';
 import { MailService } from './services/mail.service';
 import { MkvExtractService } from './services/mkv-extract.service';
@@ -266,8 +266,8 @@ import { UserService } from './repository/user.service';
     ConfigService,
     CryptoService,
     DiscordService,
-    GdriveService,
     GlobalService,
+    GoogleCloudService,
     IdCloudHostService,
     MkvExtractService,
     MailService,

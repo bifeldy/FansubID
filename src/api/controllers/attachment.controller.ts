@@ -1,7 +1,7 @@
 // NodeJS Library
 import { readdirSync } from 'node:fs';
 
-import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Patch, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpException, HttpStatus, Patch, Post, Req, Res } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { ApiExcludeEndpoint, ApiParam, ApiTags } from '@nestjs/swagger';
 import { DiskFile } from '@uploadx/core';
@@ -24,7 +24,7 @@ import { AttachmentService } from '../repository/attachment.service';
 import { TempAttachmentService } from '../repository/temp-attachment.service';
 import { DdlFileService } from '../repository/ddl-file';
 
-import { GdriveService } from '../services/gdrive.service';
+import { GoogleCloudService } from '../services/google-cloud.service';
 import { GlobalService } from '../services/global.service';
 
 @Controller('/attachment')
@@ -33,8 +33,8 @@ export class AttachmentController {
   constructor(
     private sr: SchedulerRegistry,
     private attachmentRepo: AttachmentService,
-    private gdrive: GdriveService,
     private gs: GlobalService,
+    private gcs: GoogleCloudService,
     private ddlFileRepo: DdlFileService,
     private tempAttachmentRepo: TempAttachmentService
   ) {
@@ -218,7 +218,7 @@ export class AttachmentController {
           pages: 1
         }));
       } else if (attachment.google_drive) {
-        const gdrive = await this.gdrive.gDrive();
+        const gdrive = await this.gcs.gDrive();
         const dfile = await gdrive.files.get(
           {
             fileId: attachment.google_drive,
@@ -311,40 +311,6 @@ export class AttachmentController {
           message: 'Data Tidak Lengkap!'
         }
       }, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  @Delete('/:id')
-  @HttpCode(202)
-  @ApiExcludeEndpoint()
-  @FilterApiKeyAccess()
-  @VerifiedOnly()
-  @Roles(RoleModel.ADMIN, RoleModel.MODERATOR)
-  async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-    try {
-      const attachment =  await this.attachmentRepo.findOneOrFail({
-        where: [
-          { id: Equal(req.params['id']) }
-        ]
-      });
-      this.gs.deleteAttachment(attachment.name);
-      const deletedAttachment = await this.attachmentRepo.remove(attachment);
-      if ('user_' in deletedAttachment && deletedAttachment.user_) {
-        delete deletedAttachment.user_.created_at;
-        delete deletedAttachment.user_.updated_at;
-      }
-      return {
-        info: `😅 202 - Attachment API :: Berhasil Menghapus Lampiran ${req.params['id']} 🤣`,
-        result: deletedAttachment
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException({
-        info: `🙄 404 - Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
-        result: {
-          message: 'Lampiran Tidak Ditemukan!'
-        }
-      }, HttpStatus.NOT_FOUND);
     }
   }
 

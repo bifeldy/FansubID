@@ -16,8 +16,9 @@ import { AttachmentService } from '../repository/attachment.service';
 import { BerkasService } from '../repository/berkas.service';
 
 import { GlobalService } from '../services/global.service';
+import { ConfigService } from '../services/config.service';
 import { DiscordService } from '../services/discord.service';
-import { GdriveService } from '../services/gdrive.service';
+import { GoogleCloudService } from '../services/google-cloud.service';
 import { MkvExtractService } from '../services/mkv-extract.service';
 
 @Injectable()
@@ -25,11 +26,12 @@ export class UploadService {
 
   constructor(
     private sr: SchedulerRegistry,
+    private cfg: ConfigService,
     private attachmentRepo: AttachmentService,
     private berkasRepo: BerkasService,
     private gs: GlobalService,
     private ds: DiscordService,
-    private gdrive: GdriveService,
+    private gcs: GoogleCloudService,
     private mkv: MkvExtractService
   ) {
     //
@@ -40,7 +42,7 @@ export class UploadService {
     const fIdx = files.findIndex(f => f.name === mkvAttachment.name || f.name === `${mkvAttachment.name}.${mkvAttachment.ext}`);
     if (fIdx >= 0) {
       try {
-        const gdrive = await this.gdrive.gDrive(true);
+        const gdrive = await this.gcs.gDrive(true);
         const dfile = await gdrive.files.create({
           requestBody: {
             name: `${mkvAttachment.name}.${mkvAttachment.ext}`,
@@ -52,7 +54,12 @@ export class UploadService {
             body: createReadStream(`${environment.uploadFolder}/${mkvAttachment.name}.${mkvAttachment.ext}`)
           },
           fields: 'id'
-        }, { signal: null });
+        }, {
+          params: {
+            uploadType: 'resumable'
+          },
+          signal: null
+        });
         const otherAttachment2 = await this.attachmentRepo.find({
           where: [
             {
@@ -164,11 +171,15 @@ export class UploadService {
       }
       if (environment.production) {
         try {
-          const chunkParent = await this.ds.sendAttachment(attachment);
-          attachment.discord = chunkParent;
-          attachment.pending = false;
-          await this.attachmentRepo.save(attachment);
-          this.gs.deleteAttachment(files[fIdx].name);
+          if (this.cfg.serverGetDdlDiscord()) {
+            const chunkParent = await this.ds.sendAttachment(attachment);
+            attachment.discord = chunkParent;
+            attachment.pending = false;
+            await this.attachmentRepo.save(attachment);
+            this.gs.deleteAttachment(files[fIdx].name);
+          } else {
+            throw '// TODO :: Upload To Other Cloud Services (ex. R2, S3, GCS)';
+          }
         } catch (e) {
           this.gs.log('[DISCORD-ERROR] 💽', e, 'error');
           attachment.pending = false;

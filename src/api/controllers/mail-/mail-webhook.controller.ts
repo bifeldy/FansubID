@@ -18,8 +18,8 @@ import { AttachmentService } from '../../repository/attachment.service';
 import { MailboxService } from '../../repository/mailbox.service';
 import { UserService } from '../../repository/user.service';
 
-import { GdriveService } from '../../services/gdrive.service';
 import { GlobalService } from '../../services/global.service';
+import { GoogleCloudService } from '../../services/google-cloud.service';
 import { MailService } from '../../services/mail.service';
 
 @ApiExcludeController()
@@ -28,8 +28,8 @@ export class MailWebhookController {
 
   constructor(
     private sr: SchedulerRegistry,
-    private gdrive: GdriveService,
     private gs: GlobalService,
+    private gcs: GoogleCloudService,
     private attachmentRepo: AttachmentService,
     private mailboxRepo: MailboxService,
     private userRepo: UserService,
@@ -155,7 +155,7 @@ export class MailWebhookController {
               mailbox.text = req.body['body-plain'];
               mailbox.date = new Date(req.body.Date);
               mailboxSave = await this.mailboxRepo.insert(mailbox);
-              if (req.files?.length > 0) {
+              if ((req.files as Express.Multer.File[])?.length > 0) {
                 if (!this.ms.webhook[req.body['Message-Id']]) {
                   this.ms.webhook[req.body['Message-Id']] = {};
                 }
@@ -163,7 +163,7 @@ export class MailWebhookController {
                   this.ms.webhook[req.body['Message-Id']].col = {};
                 }
                 this.ms.webhook[req.body['Message-Id']].col.attachment_ = [];
-                for (const file of req.files as any) {
+                for (const file of req.files as Express.Multer.File[]) {
                   const fileExt = file.originalname.split('.').pop().toLowerCase();
                   const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
                   const fIdx = files.findIndex(f => f.name === file.filename || f.name === `${file.filename}.${fileExt}`);
@@ -178,7 +178,7 @@ export class MailWebhookController {
                     this.ms.webhook[req.body['Message-Id']].col.attachment_.push(resAttachmentSave);
                     // Upload Attachment -- Jpg, Png, etc
                     if (environment.production) {
-                      this.gdrive.gDrive(true).then(async (gdrive) => {
+                      this.gcs.gDrive(true).then(async (gdrive) => {
                         const dfile = await gdrive.files.create({
                           requestBody: {
                             name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
@@ -190,7 +190,12 @@ export class MailWebhookController {
                             body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
                           },
                           fields: 'id'
-                        }, { signal: null });
+                        }, {
+                          params: {
+                            uploadType: 'resumable'
+                          },
+                          signal: null
+                        });
                         resAttachmentSave.google_drive = dfile.data.id;
                         resAttachmentSave.pending = false;
                         await this.attachmentRepo.save(resAttachmentSave);
@@ -224,8 +229,8 @@ export class MailWebhookController {
                 this.ms.webhook[mailboxSave.mail].col.bcc = bccUniq.join(', ');
                 this.updateLater(mailboxSave.mail);
               }
-              if (req.files?.length > 0) {
-                for (const file of req.files as any) {
+              if ((req.files as Express.Multer.File[])?.length > 0) {
+                for (const file of req.files as Express.Multer.File[]) {
                   const fileExt = file.originalname.split('.').pop().toLowerCase();
                   const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
                   const fIdx = files.findIndex(f => f.name === file.filename || f.name === `${file.filename}.${fileExt}`);
