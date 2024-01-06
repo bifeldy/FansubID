@@ -171,14 +171,14 @@ export class UploadService {
       }
       if (environment.production) {
         try {
-          if (this.cfg.serverGetDdlDiscord()) {
+          if (this.cfg.serverGetDdlDiscord() || attachment.size > CONSTANTS.fileSizeAttachmentDdlBucketLimit) {
             const chunkParent = await this.ds.sendAttachment(attachment);
             attachment.discord = chunkParent;
             attachment.pending = false;
             await this.attachmentRepo.save(attachment);
             this.gs.deleteAttachment(files[fIdx].name);
           } else {
-            throw '// TODO :: Upload To Other Cloud Services (ex. R2, S3, GCS)';
+            throw '// TODO :: Upload To AWS S3 Compatible Storage';
           }
         } catch (e) {
           this.gs.log('[DISCORD-ERROR] 💽', e, 'error');

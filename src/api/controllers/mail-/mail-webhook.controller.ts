@@ -72,7 +72,7 @@ export class MailWebhookController {
       {
         dest: environment.uploadFolder,
         limits: {
-          fileSize: CONSTANTS.fileSizeAttachmentChunkCloudflareLimit
+          fileSize: CONSTANTS.fileSizeAttachmentChunkCloudflareLimit // Default Max Email 25 MB
         }
       }
     )

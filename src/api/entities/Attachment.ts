@@ -38,7 +38,7 @@ export class Attachment implements AttachmentModel {
   discord: string;
 
   @Column({ type: 'text', nullable: true })
-  cf_r2: string;
+  aws_s3: string;
 
   @Column({ type: 'boolean', default: true })
   pending: boolean;

@@ -36,6 +36,7 @@ import { TempAttachment } from '../../api/entities/TempAttachment';
 import { Ticket } from '../../api/entities/Ticket';
 import { Track } from '../../api/entities/Track';
 import { User } from '../../api/entities/User';
+import { UserPremium } from '../../api/entities/UserPremium';
 
 export const environment = {
   production: SECRETS().IS_PRODUCTION,                                                                            // false,
@@ -93,7 +94,8 @@ export const environment = {
       TempAttachment,
       Ticket,
       Track,
-      User
+      User,
+      UserPremium
     ],
   },
   viewFolder: 'dist/fansubid/browser',

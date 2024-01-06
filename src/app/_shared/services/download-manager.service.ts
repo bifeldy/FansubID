@@ -36,7 +36,7 @@ export class DownloadManagerService {
       this.attachmentsDownload[attachment.id].ext = attachment.ext;
       this.attachmentsDownload[attachment.id].download_count = attachment.download_count;
       this.attachmentsDownload[attachment.id].google_drive = attachment.google_drive;
-      this.attachmentsDownload[attachment.id].cf_r2 = attachment.cf_r2;
+      this.attachmentsDownload[attachment.id].aws_s3 = attachment.aws_s3;
       this.attachmentsDownload[attachment.id].discord = attachment.discord;
       this.attachmentsDownload[attachment.id].mode = 'indeterminate';
       this.attachmentsDownload[attachment.id].isDownloading = false;
