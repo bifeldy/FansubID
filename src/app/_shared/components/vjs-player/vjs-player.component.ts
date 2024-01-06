@@ -29,7 +29,6 @@ export class VjsPlayerComponent implements OnInit, OnDestroy, OnChanges {
   @Input() subtitleUrl = null;
   @Input() subtitleFonts = [];
 
-
   constructor(
     private gs: GlobalService
   ) {
