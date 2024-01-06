@@ -4,7 +4,7 @@ import { existsSync, writeFileSync, createReadStream, readdirSync } from 'node:f
 
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import { Equal, In, IsNull } from 'typeorm';
+import { Equal, In, IsNull, MoreThanOrEqual } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -14,6 +14,7 @@ import { AttachmentModel } from '../../models/req-res.model';
 
 import { AttachmentService } from '../repository/attachment.service';
 import { BerkasService } from '../repository/berkas.service';
+import { UserPremiumService } from '../repository/user-premium.service';
 
 import { GlobalService } from '../services/global.service';
 import { ConfigService } from '../services/config.service';
@@ -29,6 +30,7 @@ export class UploadService {
     private cfg: ConfigService,
     private attachmentRepo: AttachmentService,
     private berkasRepo: BerkasService,
+    private userPremiumRepo: UserPremiumService,
     private gs: GlobalService,
     private ds: DiscordService,
     private gcs: GoogleCloudService,
@@ -171,7 +173,18 @@ export class UploadService {
       }
       if (environment.production) {
         try {
-          if (this.cfg.serverGetDdlDiscord() || attachment.size > CONSTANTS.fileSizeAttachmentDdlBucketLimit) {
+          const primeCount = await this.userPremiumRepo.count({
+            where: [
+              {
+                expired_at: MoreThanOrEqual(new Date()),
+                user_: {
+                  id: Equal(attachment.user_.id)
+                }
+              }
+            ],
+            relations: ['user_']
+          });
+          if (this.cfg.serverGetDdlDiscord() || attachment.size > CONSTANTS.fileSizeAttachmentDdlBucketLimit || primeCount <= 0) {
             const chunkParent = await this.ds.sendAttachment(attachment);
             attachment.discord = chunkParent;
             attachment.pending = false;

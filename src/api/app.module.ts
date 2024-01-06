@@ -155,6 +155,7 @@ import { TempAttachmentService } from './repository/temp-attachment.service';
 import { TicketService } from './repository/ticket.service';
 import { TrackService } from './repository/track.service';
 import { UserService } from './repository/user.service';
+import { UserPremiumService } from './repository/user-premium.service';
 
 @Module({
   imports: [
@@ -313,7 +314,8 @@ import { UserService } from './repository/user.service';
     TempAttachmentService,
     TicketService,
     TrackService,
-    UserService
+    UserService,
+    UserPremiumService
   ]
 })
 export class AppModule {

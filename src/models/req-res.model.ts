@@ -127,6 +127,13 @@ export interface UserModel {
   _session_origin?: string;
 }
 
+export interface UserPremiumModel {
+  id?: string;
+  created_at?: number | Date;
+  updated_at?: number | Date;
+  user_?: UserModel;
+}
+
 export interface ApiKeyModel {
   id?: number;
   name?: string;
@@ -155,7 +162,7 @@ export interface AttachmentModel {
   download_count?: number;
   google_drive?: string;
   discord?: string;
-  cf_r2?: string;
+  aws_s3?: string;
   pending?: boolean;
   created_at?: number | Date;
   updated_at?: number | Date;

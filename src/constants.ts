@@ -17,7 +17,7 @@ export const CONSTANTS = {
   attachmentSpeedLimiterBps: 256 * 1000, // 256 KB/s
   blacklistedWords: [
     '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id', 'crawl', 'crawler',
-    'localhost', 'mail', 'email', 'e-mail', 'tracker', 'fansub', 'fansubber',
+    'localhost', 'mail', 'email', 'e-mail', 'tracker', 'fansub', 'fansubber', 'ddl',
     'ferdion', 'bifeldy', 'dev', 'api', 'docs', 'cs', 'help', 'support', 'proxy',
     'admin', 'administrator', 'info', 'information', 'noreply', 'mod', 'moderator'
   ],
@@ -47,7 +47,8 @@ export const CONSTANTS = {
     'application/x-zip',
     'application/x-zip-compressed'
   ],
-  fileSizeAttachmentChunkCloudflareLimit: 64 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
+  fileSizeAttachmentDdlBucketLimit: 64 * 1000 * 1000, // < 128 MB Masuk Bucket DDL Enteng Kenceng :V
+  fileSizeAttachmentChunkCloudflareLimit: 32 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileSizeAttachmentChunkDiscordLimit: 8 * 1000 * 1000, // Discord -- Without Nitro Is 8 MB ~ T.T
   fileTypeAttachmentStreamable: [
     'mkv',
