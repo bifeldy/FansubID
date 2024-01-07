@@ -9,7 +9,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "fansubid": {
+    "main-site": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -34,25 +34,25 @@
           "strict": true
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/main-site",
+      "sourceRoot": "projects/main-site/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/fansubid/browser",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/main-site/browser",
+            "index": "projects/main-site/src/index.html",
+            "main": "projects/main-site/src/main.ts",
+            "polyfills": "projects/main-site/src/polyfills.ts",
+            "tsConfig": "projects/main-site/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/manifest.webmanifest",
-              "src/robots.txt",
-              "src/sitemap.template.xml",
-              "src/yandex_fce02fa8250544ee.html"
+              "projects/main-site/src/favicon.ico",
+              "projects/main-site/src/manifest.webmanifest",
+              "projects/main-site/src/robots.txt",
+              "projects/main-site/src/sitemap.template.xml",
+              "projects/main-site/src/yandex_fce02fa8250544ee.html"
             ],
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -62,15 +62,15 @@
               "./node_modules/animate.css/animate.min.css",
               "./node_modules/ngx-spinner/animations/square-jelly-box.css",
               "./node_modules/viewerjs/dist/viewer.min.css",
-              "src/assets/lib/sakura.min.css",
-              "src/styles.scss"
+              "projects/main-site/src/assets/lib/sakura.min.css",
+              "projects/main-site/src/styles.scss"
             ],
             "scripts": [
-              "src/assets/lib/raphael.js",
-              "src/assets/lib/dmak.js",
-              "src/assets/lib/dmakLoader.js",
-              "src/assets/lib/subtitles-octopus.js",
-              "src/assets/lib/sakura.min.js",
+              "projects/main-site/src/assets/lib/raphael.js",
+              "projects/main-site/src/assets/lib/dmak.js",
+              "projects/main-site/src/assets/lib/dmakLoader.js",
+              "projects/main-site/src/assets/lib/subtitles-octopus.js",
+              "projects/main-site/src/assets/lib/sakura.min.js",
               "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "./node_modules/winbox/dist/winbox.bundle.js",
               "./node_modules/webtorrent/webtorrent.min.js",
@@ -124,8 +124,8 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/environments/app/environment.ts",
-                  "with": "src/environments/app/environment.prod.ts"
+                  "replace": "projects/main-site/src/environments/app/environment.ts",
+                  "with": "projects/main-site/src/environments/app/environment.prod.ts"
                 }
               ],
               "outputHashing": "all"
@@ -145,10 +145,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "fansubid:build:production"
+              "browserTarget": "main-site:build:production"
             },
             "development": {
-              "browserTarget": "fansubid:build:development"
+              "browserTarget": "main-site:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -156,23 +156,23 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "fansubid:build"
+            "browserTarget": "main-site:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
+            "main": "projects/main-site/src/test.ts",
+            "polyfills": "projects/main-site/src/polyfills.ts",
+            "tsConfig": "projects/main-site/tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/manifest.webmanifest",
-              "src/robots.txt",
-              "src/sitemap.template.xml",
-              "src/yandex_fce02fa8250544ee.html"
+              "projects/main-site/src/favicon.ico",
+              "projects/main-site/src/manifest.webmanifest",
+              "projects/main-site/src/robots.txt",
+              "projects/main-site/src/sitemap.template.xml",
+              "projects/main-site/src/yandex_fce02fa8250544ee.html"
             ],
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -182,15 +182,15 @@
               "./node_modules/animate.css/animate.min.css",
               "./node_modules/ngx-spinner/animations/square-jelly-box.css",
               "./node_modules/viewerjs/dist/viewer.min.css",
-              "src/assets/lib/sakura.min.css",
-              "src/styles.scss"
+              "projects/main-site/src/assets/lib/sakura.min.css",
+              "projects/main-site/src/styles.scss"
             ],
             "scripts": [
-              "src/assets/lib/raphael.js",
-              "src/assets/lib/dmak.js",
-              "src/assets/lib/dmakLoader.js",
-              "src/assets/lib/subtitles-octopus.js",
-              "src/assets/lib/sakura.min.js",
+              "projects/main-site/src/assets/lib/raphael.js",
+              "projects/main-site/src/assets/lib/dmak.js",
+              "projects/main-site/src/assets/lib/dmakLoader.js",
+              "projects/main-site/src/assets/lib/subtitles-octopus.js",
+              "projects/main-site/src/assets/lib/sakura.min.js",
               "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "./node_modules/winbox/dist/winbox.bundle.js",
               "./node_modules/webtorrent/webtorrent.min.js",
@@ -204,9 +204,9 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/fansubid/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json",
+            "outputPath": "dist/main-site/server",
+            "main": "projects/main-site/server.ts",
+            "tsConfig": "projects/main-site/tsconfig.server.json",
             "inlineStyleLanguage": "scss",
             "externalDependencies": [
               "@discordjs/opus",
@@ -240,8 +240,8 @@
               "outputHashing": "media",
               "fileReplacements": [
                 {
-                  "replace": "src/environments/app/environment.ts",
-                  "with": "src/environments/app/environment.prod.ts"
+                  "replace": "projects/main-site/src/environments/app/environment.ts",
+                  "with": "projects/main-site/src/environments/app/environment.prod.ts"
                 }
               ]
             },
@@ -258,12 +258,12 @@
           "builder": "@nguniversal/builders:ssr-dev-server",
           "configurations": {
             "development": {
-              "browserTarget": "fansubid:build:development",
-              "serverTarget": "fansubid:server:development"
+              "browserTarget": "main-site:build:development",
+              "serverTarget": "main-site:server:development"
             },
             "production": {
-              "browserTarget": "fansubid:build:production",
-              "serverTarget": "fansubid:server:production"
+              "browserTarget": "main-site:build:production",
+              "serverTarget": "main-site:server:production"
             }
           },
           "defaultConfiguration": "development"
@@ -289,12 +289,12 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "fansubid:build:production",
-              "serverTarget": "fansubid:server:production"
+              "browserTarget": "main-site:build:production",
+              "serverTarget": "main-site:server:production"
             },
             "development": {
-              "browserTarget": "fansubid:build:development",
-              "serverTarget": "fansubid:server:development"
+              "browserTarget": "main-site:build:development",
+              "serverTarget": "main-site:server:development"
             }
           },
           "defaultConfiguration": "production"
@@ -303,8 +303,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
+              "projects/main-site/src/**/*.ts",
+              "projects/main-site/src/**/*.html"
             ]
           }
         }

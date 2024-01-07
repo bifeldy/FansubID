@@ -49,18 +49,13 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Other & Environments
-/src/assets/backup
-/src/assets/raw
-/secret.json
-/secret.prod.json
-/stdout.log
-/stderr.log
-/report.*
-/bifeldy.ovpn
+# Angular Build
 /.angular/*
-/client_secret_598050793246-gnp81cgdk70ufhnuv283vpts7ntlnjju.apps.googleusercontent.com.json
-/service-60eeb225675f.json
-/secret.prod.json.bak
-/secret.json.bak
-.gitignore
+/dist/main-site/temp
+/dist/main-site/uploads
+/dist/main-site/browser/assets
+/dist/main-site/browser/sitemap.xml
+
+# Other & Environments
+/projects/main-site/secret.json
+/projects/main-site/secret.prod.json
