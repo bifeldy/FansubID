@@ -78,7 +78,12 @@
                 <input matInput [ngxMatDatetimePicker]="kalender" formControlName="deadline" (focus)="kalender.open()" placeholder="{{ currentDateTime | date:'d MMMM y, HH:mm:ss' }}"
                   [min]="currentDateTime" [max]="maxDateTime" />
                 <mat-datepicker-toggle matSuffix [for]="dateTimePicker"></mat-datepicker-toggle>
-                <ngx-mat-datetime-picker #kalender [showSpinners]="true" [showSeconds]="true" [enableMeridian]="true"></ngx-mat-datetime-picker>
+                <ngx-mat-datetime-picker #kalender [showSpinners]="true" [showSeconds]="true" [enableMeridian]="true">
+                  <ngx-mat-datepicker-actions>
+                    <button mat-stroked-button [color]="'warn'" ngxMatDatepickerCancel>Batal</button>
+                    <button mat-flat-button [color]="'primary'" ngxMatDatepickerApply>Simpan</button>
+                  </ngx-mat-datepicker-actions>
+                </ngx-mat-datetime-picker>
                 <mat-hint align="end">Muncul Setiap Halaman Di Refresh</mat-hint>
                 <mat-error>
                   <div *ngIf="fg.get('deadline').hasError('matDatetimePickerParse')">Tanggal Tidak Valid</div>
