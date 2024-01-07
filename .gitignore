@@ -54,3 +54,4 @@ Thumbs.db
 # Other & Environments
 /projects/main-site/secret.json
 /projects/main-site/secret.prod.json
+/projects/main-site/src/assets/raw
