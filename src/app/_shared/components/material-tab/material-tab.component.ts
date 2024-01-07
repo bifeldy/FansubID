@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
 import { ActivatedRoute } from '@angular/router';
 
 import { GlobalService } from '../../services/global.service';

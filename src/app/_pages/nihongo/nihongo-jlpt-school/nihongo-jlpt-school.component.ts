@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 
 import { GlobalService } from '../../../_shared/services/global.service';
 import { BusyService } from '../../../_shared/services/busy.service';
