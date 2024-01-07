@@ -324,7 +324,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   injectServerTimeClock(): void {
     if (this.gs.isDesktop) {
-      const backdrop = this.gs.document?.getElementsByClassName('mat-drawer-backdrop');
+      const backdrop = this.gs.document.getElementsByClassName('mat-drawer-backdrop');
       if (backdrop.length > 0) {
         const drawerBackdrop = backdrop[0];
         drawerBackdrop.innerHTML = `
@@ -336,7 +336,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             </div>
           </div>
         `;
-        const script = this.gs.document?.createElement('script');
+        const script = this.gs.document.createElement('script');
         script.type = 'text/javascript';
         script.textContent = `
           function runCalendar() {
@@ -358,7 +358,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           runCalendar();
         `;
-        this.gs.document?.head.appendChild(script);
+        this.gs.document.head.appendChild(script);
       }
     }
   }

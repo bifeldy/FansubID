@@ -18,7 +18,6 @@ import { BerkasService } from '../../services/berkas.service';
 import { FansubService } from '../../services/fansub.service';
 import { NewsService } from '../../services/news.service';
 import { UserService } from '../../services/user.service';
-import { BrowserCacheService } from '../../services/browser-cache.service';
 
 @Component({
   selector: 'app-header',
@@ -49,8 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private berkas: BerkasService,
     private fansub: FansubService,
     private news: NewsService,
-    private user: UserService,
-    private bcs: BrowserCacheService
+    private user: UserService
   ) {
     if (this.gs.isBrowser) {
       this.deleteHandle['berkas'] = this.berkas;
@@ -129,9 +127,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.snackBar.open(`Berhasil ${this.gs.weatherRunning ? 'Menyalakan' : 'Mematikan'} Efek Musiman`, 'OK');
   }
 
-  clearAllCacheAndRestart(): void {
+  reloadPage(): void {
     this.bs.busy();
-    this.bcs.clearAllCacheAndRestart();
+    this.gs.window.location.reload();
   }
 
   openSearch(): void {

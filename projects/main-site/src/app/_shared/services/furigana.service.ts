@@ -35,7 +35,7 @@ export class FuriganaService {
   }
 
   replace(node, html): any[] {
-    const e = this.gs.document?.createRange().createContextualFragment(html);
+    const e = this.gs.document.createRange().createContextualFragment(html);
     const newNodes = [];
     e.childNodes.forEach((node) => newNodes.push(node));
     node.parentNode?.replaceChild(e, node);
@@ -63,7 +63,7 @@ export class FuriganaService {
           this.convertAndReplace(node);
         } else {
           const nodeList = [];
-          const walk = this.gs.document?.createTreeWalker(node, NodeFilter.SHOW_TEXT, null);
+          const walk = this.gs.document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null);
           while(walk.nextNode()) nodeList.push(walk.currentNode);
           this.gs.log('[KUROSHIRO_NODE_WATCHER_LIST]', nodeList);
           for (const node of nodeList) {

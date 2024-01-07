@@ -85,12 +85,7 @@ export class BerkasController {
           attachment.user_ = user;
           berkas.attachment_ = await this.attachmentRepo.save(attachment);
         } else {
-          throw new HttpException({
-            info: `🙄 406 - Berkas API :: Gagal Mencari Lampiran 😪`,
-            result: {
-              message: 'Lampiran Tidak Ditemukan!'
-            }
-          }, HttpStatus.NOT_ACCEPTABLE);
+          throw 'Lampiran Tidak Ditemukan / Dalam Proses Penggabungan!';
         }
       }
     } catch (error) {
@@ -98,7 +93,7 @@ export class BerkasController {
       throw new HttpException({
         info: `🙄 406 - Berkas API :: Gagal Mencari Lampiran 😪`,
         result: {
-          message: 'Lampiran Tidak Ditemukan!'
+          message: 'Lampiran Tidak Ditemukan / Dalam Proses Penggabungan!'
         }
       }, HttpStatus.NOT_ACCEPTABLE);
     }
