@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
 import { CONSTANTS } from '../../../constants';

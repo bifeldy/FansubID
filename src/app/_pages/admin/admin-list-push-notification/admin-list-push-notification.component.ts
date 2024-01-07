@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
+import { NgxMatDatetimepicker } from '@angular-material-components/datetime-picker';
 
 import { CONSTANTS } from '../../../../constants';
 
@@ -16,7 +16,7 @@ import { DialogService } from '../../../_shared/services/dialog.service';
 })
 export class AdminListPushNotificationComponent implements OnInit, OnDestroy {
 
-  @ViewChild('kalender', { static: true }) kalender: NgxMatDatetimePicker<any>;
+  @ViewChild('kalender', { static: true }) kalender: NgxMatDatetimepicker<any>;
 
   fg: UntypedFormGroup;
 

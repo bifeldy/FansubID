@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 
 import { CONSTANTS } from '../../../constants';
