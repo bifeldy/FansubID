@@ -155,7 +155,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
             if (this.fg.value.auto_send) {
               this.timerTimeout2 = setTimeout(() => {
                 this.onSubmit();
-              }, 2500);
+              }, 1 * 60 * 1000);
             }
           } else if (state.status === 'error') {
             this.gs.log('[UPLOAD_ERROR]', state.response, 'error');

@@ -174,7 +174,7 @@ export class StatsServerService {
         false
       );
       this.maxReConnDisc++;
-      if (this.maxReConnDisc > 5) {
+      if (this.maxReConnDisc > 10) {
         this.bs.busy();
         this.gs.window.location.reload();
       }

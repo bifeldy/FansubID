@@ -250,8 +250,8 @@
                       </div>
                     </div>
                     <div class="row">
-                      <mat-slide-toggle formControlName="auto_send" [disabled]="fg.invalid || attachmentSelected?.status !== 'uploading'"
-                        class="px-3" matTooltip="Pastikan Semua Isian Yang Dibutuhkan Sudah Terisi">
+                      <mat-slide-toggle formControlName="auto_send" [disabled]="fg.untouched || fg.invalid || attachmentSelected?.status !== 'uploading'"
+                        class="px-3" matTooltip="Pastikan Semua Isian Yang Dibutuhkan Sudah Terisi (Delay 1 Menit Setelah Berhasil Unggah)">
                         Otomatis Simpan & Kirim Setelah Selesai Upload DDL
                       </mat-slide-toggle>
                     </div>
