@@ -106,7 +106,7 @@
               "webtorrent"
             ],
             "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "ngswConfigPath": "projects/main-site/ngsw-config.json"
           },
           "configurations": {
             "production": {

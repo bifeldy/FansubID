@@ -1,0 +1,150 @@
+{
+  "configVersion": 1,
+  "timestamp": 1704603647135,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/109.8584ea77f5e66aec.js",
+        "/25.5936e0bb8274fece.js",
+        "/268.2bf237c8f938cc19.js",
+        "/305.c95853ace4f0bafc.js",
+        "/31.20012e7631a4459a.js",
+        "/338.e456b7495d3489d9.js",
+        "/348.958bb5900865dc73.js",
+        "/370.1ea0a06ad8a61453.js",
+        "/375.ee4c6a4506d78add.js",
+        "/38.598b416584995879.js",
+        "/513.4f75c6a6a3a262a9.js",
+        "/526.9f52acb066a76a1d.js",
+        "/541.1e1c9e226cdfca50.js",
+        "/570.2ef4235c32c59bc6.js",
+        "/578.1f7e8c330d1a54fd.js",
+        "/655.4f87da37c01c6228.js",
+        "/679.c4e6c29eb976496b.js",
+        "/683.ecbd9a1120e48a2f.js",
+        "/702.65c8fa4d9b98538e.js",
+        "/708.c3013c57d9a029b0.js",
+        "/743.2504c93e27335cc2.js",
+        "/745.2cff08e60a2e91a2.js",
+        "/748.11ebb5d76ac3aa16.js",
+        "/76.296531d0d519977b.js",
+        "/767.99cce3e19d19b9f7.js",
+        "/794.fd9cc9d5f7bc84d2.js",
+        "/797.af3edabe38354abb.js",
+        "/935.297c8ba9525ff76f.js",
+        "/common.2f998780ef9f2b80.js",
+        "/favicon.ico",
+        "/index.html",
+        "/main.4863b9fc1ddd8957.js",
+        "/manifest.webmanifest",
+        "/polyfills.c264b580e8a973fe.js",
+        "/runtime.4a5e67c9585ae934.js",
+        "/scripts.6711f2f223ff3b40.js",
+        "/styles.b849b3eb93129b2e.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [],
+      "patterns": [
+        "\\/assets\\/.*",
+        "https:\\/\\/i\\.ibb\\.co\\/.*",
+        "https:\\/\\/fonts\\.gstatic\\.com\\/.*",
+        "https:\\/\\/i\\.mydramalist\\.com\\/.*",
+        "https:\\/\\/cdn\\.myanimelist\\.net\\/.*",
+        "https:\\/\\/fonts\\.googleapis\\.com\\/.*"
+      ]
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "patterns": [
+        "\\/api\\/.*"
+      ],
+      "strategy": "freshness",
+      "maxSize": 64,
+      "maxAge": 3600000,
+      "timeoutMs": 10000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    }
+  ],
+  "hashTable": {
+    "/109.8584ea77f5e66aec.js": "611e66eca1020b4da116449517ed6fd7e3a74f4c",
+    "/25.5936e0bb8274fece.js": "a64f839d73c21616defac610ddda0a95235e3134",
+    "/268.2bf237c8f938cc19.js": "e4f3180086fa7d6b6a856d0c523cf175d53dd21d",
+    "/305.c95853ace4f0bafc.js": "b2bdb5c3e6a7a706e11d123c528510fbec651bd9",
+    "/31.20012e7631a4459a.js": "70d4807f0789648d23481539832be437cb4d1145",
+    "/338.e456b7495d3489d9.js": "ba5f4ceaaa0119020da73cb96907406603109a7d",
+    "/348.958bb5900865dc73.js": "eb7343f4e4ee46bdec78a0073d60a080a6df020c",
+    "/370.1ea0a06ad8a61453.js": "6398842541dd47dc65223b7241ad8b4e7d3fdf73",
+    "/375.ee4c6a4506d78add.js": "7fdd449c11040dff5461d4e5639045bc28b94cb4",
+    "/38.598b416584995879.js": "0df1e35e7f69dc0d7d7d5964401876728e86fbb3",
+    "/513.4f75c6a6a3a262a9.js": "68864cb4216f09f4dfb4137c24bbe2cfd56ee4d2",
+    "/526.9f52acb066a76a1d.js": "851ad24159dfc8134da5bb9bd5fd04d06302f7de",
+    "/541.1e1c9e226cdfca50.js": "3815b68466bf509aab538ec43245981a5a8d1650",
+    "/570.2ef4235c32c59bc6.js": "2ae0047ef946ce75334514940ee9806045061b07",
+    "/578.1f7e8c330d1a54fd.js": "176b8f41a58db6965e9d40b849425eb7eae6a40b",
+    "/655.4f87da37c01c6228.js": "01ddf94e0ef946ea4bfb462a431bd33f93ed56ab",
+    "/679.c4e6c29eb976496b.js": "9806bae69b34ee0aab484c6754036c322696c96b",
+    "/683.ecbd9a1120e48a2f.js": "fcd7e589128c57a0f8a2cf9596994fe91d91aa10",
+    "/702.65c8fa4d9b98538e.js": "84d8720eed831b725dc586d2f0dae845b8d32d37",
+    "/708.c3013c57d9a029b0.js": "8b2b8b01273795335506264490c988884464238a",
+    "/743.2504c93e27335cc2.js": "a1fae6fecb4a4ffdb46cf6790dc30e172e88b4d5",
+    "/745.2cff08e60a2e91a2.js": "e9d8874e9e83f84854fd9178cf7b73fe3221cfa7",
+    "/748.11ebb5d76ac3aa16.js": "2a1f17c34c960593c7ce8832320703cd3170f3b8",
+    "/76.296531d0d519977b.js": "3c9f351c04686994b65342dffd5ea46a2e879323",
+    "/767.99cce3e19d19b9f7.js": "9e11d147a4d4a4541bb833133a55bef50628172f",
+    "/794.fd9cc9d5f7bc84d2.js": "68426fa1a9ba34792f005b67c4fb7db782dc1b23",
+    "/797.af3edabe38354abb.js": "b3dbc2a9b80b63a72a5b1c284f669d6430140c73",
+    "/935.297c8ba9525ff76f.js": "baa0480d7f4c538c4c935a94f0a7577a9b23b246",
+    "/common.2f998780ef9f2b80.js": "b5f0c1896dd8619b2f177e4815274f5bf5217187",
+    "/favicon.ico": "071facb8fab2e4b3493dcfbb0b02d7bd21bca97e",
+    "/index.html": "bbbeb5804749fc189c55b707d0e59df23203c0f4",
+    "/main.4863b9fc1ddd8957.js": "33cece68e6a6897c0427b9b40446132df37d452d",
+    "/manifest.webmanifest": "2ae67e74e4dac9525adbb9e4aa4ac908fcdfa20d",
+    "/polyfills.c264b580e8a973fe.js": "67f24a57563377058dfcd5306c56c0cd696ba2e5",
+    "/runtime.4a5e67c9585ae934.js": "0e6e1e727f7aa5d046db1b3907b50ab576d17469",
+    "/scripts.6711f2f223ff3b40.js": "35559a6d563d42afebd457f70894e90667cdd981",
+    "/styles.b849b3eb93129b2e.css": "d68b5778bdca764c5297b8067a72b676f8cce12d"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/api\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "freshness"
+}

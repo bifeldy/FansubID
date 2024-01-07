@@ -36,7 +36,7 @@ let SECRETS_DATA: SECRETS_DATA_TYPE = null;
 export function SECRETS() {
   if (!SECRETS_DATA) {
     try {
-      const jsonFile = readFileSync('secret.json', 'utf8');
+      const jsonFile = readFileSync('projects/main-site/secret.json', 'utf8');
       SECRETS_DATA = JSON.parse(jsonFile);
     } catch (e) {
       console.error('[NODE_FS_READ_FILE_SYNC-ERROR] 📖', e);
