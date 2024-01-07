@@ -108,7 +108,7 @@ export class LeftMenuService {
     private gs: GlobalService
   ) {
     if (this.gs.isBrowser) {
-      this.opened = (window.innerWidth >= 992) ? true : false;
+      this.opened = (this.gs.isDesktop) ? true : false;
     }
   }
 

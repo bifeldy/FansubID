@@ -44,7 +44,7 @@
     <mat-icon fontIcon="search"></mat-icon>
   </button>
 
-  <button type="button" mat-icon-button (click)="reloadPage()" *ngIf="!SS.mySocket?.id" matTooltip="Refresh">
+  <button type="button" mat-icon-button (click)="clearAllCacheAndRestart()" *ngIf="!SS.mySocket?.id" matTooltip="Clear Cache & Refresh">
     <mat-icon fontIcon="replay"></mat-icon>
   </button>
 

@@ -241,7 +241,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
   copyCommentLink(k: KomentarModel): void {
     const url = (k.path.startsWith('/') ? environment.baseUrl : '') + k.path;
     if (this.clipboard.copy(`${url}?comment=${k.id}`)) {
-      this.snackBar.open(`URL Komentar :: Telah Di Salin Pada Clipboard`, 'Ok');
+      this.snackBar.open(`URL Komentar :: Telah Di Salin Pada Clipboard`, 'OK');
     }
   }
 

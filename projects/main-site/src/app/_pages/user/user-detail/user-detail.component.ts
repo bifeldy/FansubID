@@ -278,7 +278,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   badgeClicked(text: string): void {
-    this.snackBar.open(text, 'Ok');
+    this.snackBar.open(text, 'OK');
   }
 
 }

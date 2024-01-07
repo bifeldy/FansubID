@@ -168,7 +168,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   copyApiKey(ak: any): void {
     if (this.clipboard.copy(ak.api_key)) {
-      this.snackBar.open(`API Key :: Telah Di Salin Pada Clipboard`, 'Ok');
+      this.snackBar.open(`API Key :: Telah Di Salin Pada Clipboard`, 'OK');
     }
   }
 

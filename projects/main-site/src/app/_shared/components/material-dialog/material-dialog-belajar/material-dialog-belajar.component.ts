@@ -92,7 +92,7 @@ export class MaterialDialogBelajarComponent implements OnInit, OnDestroy {
       reader.onload = e => {
         this.gs.log('[IMAGE_SELECTED]', e);
         if (file.size <= CONSTANTS.fileSizeImageLimit) {
-          const img = this.gs.document.createElement('img');
+          const img = this.gs.document?.createElement('img');
           img.onload = () => {
             this.image = file;
             this.image_url = reader.result.toString();

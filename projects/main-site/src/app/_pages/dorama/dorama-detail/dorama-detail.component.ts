@@ -149,7 +149,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   }
 
   openRank(): void {
-    // window.open(`https://myanimelist.net/topanime.php?limit=${this.animeData.rank - 1}`, '_blank');
+    // this.gs.window.open(`https://myanimelist.net/topanime.php?limit=${this.animeData.rank - 1}`, '_blank');
   }
 
   get yearDorama(): Date {
@@ -273,7 +273,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
 
   openGenre(data): void {
     this.gs.log('[DORAMA_DETAIL_CLICK_GENRE]', data);
-    // window.open(data.url, '_blank');
+    // this.gs.window.open(data.url, '_blank');
   }
 
   openFansub(data): void {

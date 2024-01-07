@@ -78,7 +78,7 @@ export class AuthService {
               clearInterval(this.intervalLogout);
               this.intervalLogout = null;
               this.logoutTimerText = '';
-              window.location.reload();
+              this.gs.window.location.reload();
             }
           }, 1000);
         }

@@ -3,6 +3,7 @@ import { SwPush, SwUpdate } from '@angular/service-worker';
 
 import { GlobalService } from './global.service';
 import { DialogService } from './dialog.service';
+import { BrowserCacheService } from './browser-cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class ServiceWorkerService {
     private su: SwUpdate,
     private sp: SwPush,
     private gs: GlobalService,
-    private ds: DialogService
+    private ds: DialogService,
+    private bcs: BrowserCacheService
   ) {
     if (this.gs.isBrowser) {
       this.initialize();
@@ -67,7 +69,7 @@ export class ServiceWorkerService {
             this.dialogRef = null;
             this.subsDialog.unsubscribe();
             if (re === true) {
-              window.location.reload();
+              this.gs.window.location.reload();
             }
           }
         });
@@ -79,9 +81,9 @@ export class ServiceWorkerService {
     return au;
   }
 
-  async initialize() {
+  initialize() {
     this.swuVerUpd = this.su.versionUpdates.subscribe({
-      next: async (event) => {
+      next: async event => {
         this.gs.log(`[SERVICE_WORKER_${event.type}]`, event);
         if (event.type === 'VERSION_DETECTED') {
           this.dialogRef?.close(null);
@@ -102,21 +104,25 @@ export class ServiceWorkerService {
         if (event.type === 'VERSION_INSTALLATION_FAILED') {
           this.dialogRef = this.ds.openInfoDialog({
             data: {
-              title: 'Pembaharuan Gagal',
+              title: 'Pembaharuan Gagal, Silahkan Hapus Cache & Refresh Halaman',
               htmlMessage: `
                 <div>Versi :: ${event.version?.hash?.slice(0, 8)}</div>
                 <div>Error :: ${event.error}</div>
               `,
-              confirmText: 'Ulangi',
-              cancelText: 'Lewati'
+              confirmText: 'Ulangi'
             }
           });
         }
         this.subsDialog = this.dialogRef?.afterClosed().subscribe({
-          next: re => {
+          next: async re => {
             this.gs.log('[INFO_DIALOG_CLOSED]', re);
             if (re === true) {
-              this.activateUpdate();
+              if (event.type === 'VERSION_READY') {
+                await this.activateUpdate();
+              }
+              if (event.type === 'VERSION_INSTALLATION_FAILED') {
+                this.bcs.clearAllCacheAndRestart();
+              }
             }
             this.dialogRef = null;
             this.subsDialog.unsubscribe();
@@ -125,7 +131,7 @@ export class ServiceWorkerService {
       }
     });
     this.swuUnRecv = this.su.unrecoverable.subscribe({
-      next: (event) => {
+      next: event => {
         this.gs.log(`[SERVICE_WORKER_${event.type}]`, event.reason);
         this.dialogRef?.close(null);
         this.subsDialog?.unsubscribe();
@@ -141,7 +147,7 @@ export class ServiceWorkerService {
             this.gs.log('[INFO_DIALOG_CLOSED]', re);
             this.dialogRef = null;
             this.subsDialog.unsubscribe();
-            window.location.reload();
+            this.gs.window.location.reload();
           }
         });
       }

@@ -45,6 +45,7 @@ export class GlobalService {
 
   isBrowser = null;
   document: Document = null;
+  window: Window = null;
 
   gridListBreakpoint = 1;
   isDesktop = true;
@@ -91,6 +92,7 @@ export class GlobalService {
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
     this.document = document;
+    this.window = document.defaultView;
     this.isDevMode = isDevMode();
     if (this.isBrowser) {
       this.onResize(null);
@@ -227,17 +229,17 @@ export class GlobalService {
   toggleDarkTheme(firstRun = false): void {
     if (firstRun) {
       if (this.isDarkMode) {
-        this.document.body.classList.add('bifeldy-dark-theme');
+        this.document?.body.classList.add('bifeldy-dark-theme');
       } else {
-        this.document.body.classList.remove('bifeldy-dark-theme');
+        this.document?.body.classList.remove('bifeldy-dark-theme');
       }
     } else {
       if (this.isDarkMode) {
         this.isDarkMode = false;
-        this.document.body.classList.remove('bifeldy-dark-theme');
+        this.document?.body.classList.remove('bifeldy-dark-theme');
       } else {
         this.isDarkMode = true;
-        this.document.body.classList.add('bifeldy-dark-theme');
+        this.document?.body.classList.add('bifeldy-dark-theme');
       }
     }
   }

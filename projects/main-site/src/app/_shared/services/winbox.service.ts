@@ -41,7 +41,7 @@ export class WinboxService {
       next: re => {
         this.gs.log('[INFO_DIALOG_CLOSED]', re);
         if (re === true) {
-          window.open(uriUrl, windowTarget);
+          this.gs.window.open(uriUrl, windowTarget);
         }
         this.subsDialog.unsubscribe();
       }

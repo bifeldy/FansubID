@@ -19,6 +19,7 @@ import { DialogService } from './dialog.service';
 import { ServiceWorkerService } from './service-worker.service';
 import { ToastService } from './toast.service';
 import { BusyService } from './busy.service';
+import { BrowserCacheService } from './browser-cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -82,7 +83,8 @@ export class StatsServerService {
     private lms: LeftMenuService,
     private toast: ToastService,
     private ds: DialogService,
-    private sw: ServiceWorkerService
+    private sw: ServiceWorkerService,
+    private bcs: BrowserCacheService
   ) {
     if (this.gs.isBrowser) {
       this.mySocket = io('//', {
@@ -175,7 +177,7 @@ export class StatsServerService {
       );
       this.maxReConnDisc++;
       if (this.maxReConnDisc > 5) {
-        window.location.reload();
+        this.bcs.clearAllCacheAndRestart();
       }
     });
     this.mySocket.on('ping', () => {

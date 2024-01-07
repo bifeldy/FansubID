@@ -108,7 +108,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
 
   copyMagnetHashToClipboard(magnetHash: string): void {
     if (this.clipboard.copy(magnetHash)) {
-      this.snackBar.open('Magnet Link Hash :: Telah Di Salin Pada Clipboard', 'Ok');
+      this.snackBar.open('Magnet Link Hash :: Telah Di Salin Pada Clipboard', 'OK');
     }
   }
 

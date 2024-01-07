@@ -18,6 +18,7 @@ import { BerkasService } from '../../services/berkas.service';
 import { FansubService } from '../../services/fansub.service';
 import { NewsService } from '../../services/news.service';
 import { UserService } from '../../services/user.service';
+import { BrowserCacheService } from '../../services/browser-cache.service';
 
 @Component({
   selector: 'app-header',
@@ -48,7 +49,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private berkas: BerkasService,
     private fansub: FansubService,
     private news: NewsService,
-    private user: UserService
+    private user: UserService,
+    private bcs: BrowserCacheService
   ) {
     if (this.gs.isBrowser) {
       this.deleteHandle['berkas'] = this.berkas;
@@ -93,10 +95,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      const osTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const osTheme = this.gs.window.matchMedia && this.gs.window.matchMedia('(prefers-color-scheme: dark)').matches;
       this.gs.isDarkMode = osTheme || this.ls.getItem(this.gs.localStorageKeys.DarkMode) === 'true';
       this.toggleDarkTheme(true);
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      this.gs.window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
         this.gs.isDarkMode = event.matches;
         this.toggleDarkTheme(true);
       });
@@ -124,12 +126,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleWeather(): void {
     this.gs.weatherToggle();
-    this.snackBar.open(`Berhasil ${this.gs.weatherRunning ? 'Menyalakan' : 'Mematikan'} Efek Musiman`, 'Ok');
+    this.snackBar.open(`Berhasil ${this.gs.weatherRunning ? 'Menyalakan' : 'Mematikan'} Efek Musiman`, 'OK');
   }
 
-  reloadPage(): void {
+  clearAllCacheAndRestart(): void {
     this.bs.busy();
-    window.location.reload();
+    this.bcs.clearAllCacheAndRestart();
   }
 
   openSearch(): void {
@@ -148,7 +150,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.gs.toggleDarkTheme(firstRun);
     this.ls.setItem(this.gs.localStorageKeys.DarkMode, JSON.stringify(this.gs.isDarkMode));
     this.pi.updateStatusBarTheme(this.gs.isDarkMode);
-    this.snackBar.open(`Menggunakan Mode ${this.gs.isDarkMode ? 'Gelap' : 'Terang'}`, 'Ok');
+    this.snackBar.open(`Menggunakan Mode ${this.gs.isDarkMode ? 'Gelap' : 'Terang'}`, 'OK');
   }
 
   async toggleDelete(): Promise<void> {

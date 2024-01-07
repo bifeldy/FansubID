@@ -229,7 +229,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.injectServerTimeClock();
         if (this.gs.weatherEffect) {
-          this.snackBar.open('Gunakan Menu Di Kanan Atas (Gambar Bunga) Untuk Mematikan Animasi Efek Musiman!', 'Ok');
+          this.snackBar.open('Gunakan Menu Di Kanan Atas (Gambar Bunga) Untuk Mematikan Animasi Efek Musiman!', 'OK');
         }
       }, 1234);
 
@@ -269,7 +269,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onWindowLeftClick(ev): boolean {
     this.gs.log('[MOUSE_LEFT_CLICK]', ev);
-    const e = ev || window.event;
+    const e = ev || this.gs.window.event;
     let el = e.target || e.srcElement;
     if (el) {
       let maxLoop = 5;
@@ -302,7 +302,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onWindowDoubleClick(ev): any {
     this.gs.log('[MOUSE_DOUBLE_CLICK]', ev);
-    const e = ev || window.event;
+    const e = ev || this.gs.window.event;
     const el = e.target || e.srcElement;
     if (el.tagName === 'IMG' || el.tagName === 'img') {
       if (this.gs.isDesktop) {
@@ -324,7 +324,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   injectServerTimeClock(): void {
     if (this.gs.isDesktop) {
-      const backdrop = this.gs.document.getElementsByClassName('mat-drawer-backdrop');
+      const backdrop = this.gs.document?.getElementsByClassName('mat-drawer-backdrop');
       if (backdrop.length > 0) {
         const drawerBackdrop = backdrop[0];
         drawerBackdrop.innerHTML = `
@@ -336,7 +336,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             </div>
           </div>
         `;
-        const script = this.gs.document.createElement('script');
+        const script = this.gs.document?.createElement('script');
         script.type = 'text/javascript';
         script.textContent = `
           function runCalendar() {
@@ -358,7 +358,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           runCalendar();
         `;
-        this.gs.document.head.appendChild(script);
+        this.gs.document?.head.appendChild(script);
       }
     }
   }
