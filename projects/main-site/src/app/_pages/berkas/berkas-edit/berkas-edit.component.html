@@ -26,7 +26,7 @@
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
                       <mat-icon fontIcon="image" matSuffix></mat-icon>
                     </mat-form-field>
-                    <mat-error class="px-3 w-100">
+                    <mat-error class="px-3 pb-3 w-100">
                       <small>
                         <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
                         <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
@@ -226,7 +226,7 @@
                           [accept]="fileTypeAttachmentAllowed" uploadx></ngx-mat-file-input>
                         <mat-icon fontIcon="attach_file" matSuffix></mat-icon>
                       </mat-form-field>
-                      <mat-error class="px-4 w-100">
+                      <mat-error class="px-4 pb-4 w-100">
                         <small>
                           <div *ngIf="attachmentLimitExceeded">Ukuran Upload Melebihi Batas {{ attachmentLimitExceeded | bytes }} !</div>
                           <div *ngIf="attachmentErrorText">{{ attachmentErrorText }}</div>

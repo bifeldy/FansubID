@@ -21,4 +21,5 @@ jobs:
             cd ~/www/fansubid
             git pull
             npm install
+            sudo systemctl reload nginx
             sudo pm2 restart fansubid

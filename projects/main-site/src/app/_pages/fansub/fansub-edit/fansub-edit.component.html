@@ -28,7 +28,7 @@
                         [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
                       <mat-icon fontIcon="image" matSuffix></mat-icon>
                     </mat-form-field>
-                    <mat-error class="px-3 w-100">
+                    <mat-error class="px-3 pb-3 w-100">
                       <small>
                         <div *ngIf="imageLimitExceeded">Ukuran Upload Melebihi Batas {{ imageLimitExceeded | bytes }} !</div>
                         <div *ngIf="imageErrorText">{{ imageErrorText }}</div>
@@ -94,7 +94,7 @@
                       [accept]="'image/gif, image/jpeg, image/jpg, image/png'"></ngx-mat-file-input>
                     <mat-icon fontIcon="image" matSuffix></mat-icon>
                   </mat-form-field>
-                  <mat-error class="px-3 w-100">
+                  <mat-error class="px-3 pb-3 w-100">
                     <small>
                       <div *ngIf="coverLimitExceeded">Ukuran Upload Melebihi Batas {{ coverLimitExceeded | bytes }} !</div>
                       <div *ngIf="coverErrorText">{{ coverErrorText }}</div>
