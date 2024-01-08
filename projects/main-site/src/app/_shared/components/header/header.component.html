@@ -1,5 +1,5 @@
 <!-- Top Toolbar -->
-<mat-toolbar color="primary" style="height: 56px; padding: 0 12px;">
+<mat-toolbar color="primary" style="height: 56px; padding: 0 12px;" [style.background]="SS.mySocket?.id ? '' : '#4f555d'">
 
   <button type="button" mat-icon-button (click)="toggleSideNav()" matTooltip="Menu" class="shiny">
     <mat-icon fontIcon="menu"></mat-icon>

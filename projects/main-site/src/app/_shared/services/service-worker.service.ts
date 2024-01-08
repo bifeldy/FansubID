@@ -92,7 +92,7 @@ export class ServiceWorkerService {
         if (event.type === 'VERSION_READY') {
           this.dialogRef = this.ds.openInfoDialog({
             data: {
-              title: 'Ada Pembaharuan Tersedia',
+              title: 'Pembaruan Tersedia',
               htmlMessage: `
                 <div>Sekarang :: ${event.currentVersion?.hash?.slice(0, 8)}</div>
                 <div>Tersedia :: ${event.latestVersion?.hash?.slice(0, 8)}</div>
@@ -104,7 +104,7 @@ export class ServiceWorkerService {
         if (event.type === 'VERSION_INSTALLATION_FAILED') {
           this.dialogRef = this.ds.openInfoDialog({
             data: {
-              title: 'Pembaharuan Gagal, Silahkan Hapus Cache & Refresh Halaman',
+              title: 'Pembaharuan Gagal',
               htmlMessage: `
                 <div>Versi :: ${event.version?.hash?.slice(0, 8)}</div>
                 <div>Error :: ${event.error}</div>
@@ -116,16 +116,10 @@ export class ServiceWorkerService {
         this.subsDialog = this.dialogRef?.afterClosed().subscribe({
           next: async re => {
             this.gs.log('[INFO_DIALOG_CLOSED]', re);
-            if (re === true) {
-              if (event.type === 'VERSION_READY') {
-                await this.activateUpdate();
-              }
-              if (event.type === 'VERSION_INSTALLATION_FAILED') {
-                this.bcs.clearAllCacheAndRestart();
-              }
-            }
             this.dialogRef = null;
             this.subsDialog.unsubscribe();
+            await this.bcs.clearCacheByUrl();
+            await this.activateUpdate();
           }
         });
       }
@@ -143,11 +137,11 @@ export class ServiceWorkerService {
           }
         });
         this.subsDialog = this.dialogRef?.afterClosed().subscribe({
-          next: re => {
+          next: async re => {
             this.gs.log('[INFO_DIALOG_CLOSED]', re);
             this.dialogRef = null;
             this.subsDialog.unsubscribe();
-            this.gs.window.location.reload();
+            await this.bcs.clearAllCacheAndRestart()
           }
         });
       }

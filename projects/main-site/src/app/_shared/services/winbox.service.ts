@@ -71,7 +71,7 @@ export class WinboxService {
         top: 56,
         right: 0,
         bottom: 32,
-        left: 64,
+        left: this.gs.isDesktop ? 64 : 0,
         onclose: (force): any => {
           this.confirmationOpenUrl(uriUrl, windowTarget);
           return false;
