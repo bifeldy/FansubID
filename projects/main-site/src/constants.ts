@@ -47,8 +47,7 @@ export const CONSTANTS = {
     'application/x-zip',
     'application/x-zip-compressed'
   ],
-  fileSizeAttachmentChunkCloudflareLimit: 32 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
-  fileSizeAttachmentChunkDiscordLimit: 8 * 1000 * 1000, // Discord -- Without Nitro Is 8 MB ~ T.T
+  fileSizeAttachmentChunkLimit: 8 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileTypeAttachmentStreamable: [
     'mkv',
     'mp4'

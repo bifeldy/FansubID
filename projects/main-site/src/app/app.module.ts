@@ -81,15 +81,15 @@ import { environment } from '../environments/app/environment';
     ),
     UploadxModule.withConfig({
       autoUpload: false,
-      concurrency: 1,
+      concurrency: 2,
       endpoint: `${environment.apiUrl}/attachment`,
       headers: {
         'ngsw-bypass': 'true'
       },
       retryConfig: {
-        maxAttempts: 3
+        maxAttempts: 8
       },
-      maxChunkSize: CONSTANTS.fileSizeAttachmentChunkCloudflareLimit
+      maxChunkSize: CONSTANTS.fileSizeAttachmentChunkLimit
     })
   ],
   providers: [

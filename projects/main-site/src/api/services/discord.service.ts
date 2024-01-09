@@ -253,19 +253,7 @@ export class DiscordService {
   async sendAttachment(attachment: AttachmentModel, user: UserModel = null, chunkIdx = null): Promise<string> {
     let currentChunkIdx: number = 0;
     let chunkParent: string = attachment?.discord;
-    let chunkSize = CONSTANTS.fileSizeAttachmentChunkDiscordLimit;
-    // Fore Re-Fresh `.fetch()`
-    const botGuild = this.bot ? await this.bot.guilds.fetch(environment.discord.guild_id) : null;
-    if (botGuild) {
-      const totalBoosts = botGuild.premiumSubscriptionCount;
-      if (totalBoosts >= 14) {
-        chunkSize = 100 * 1000 * 1000; // Level 3
-      } else if (totalBoosts >= 7) {
-        chunkSize = 50 * 1000 * 1000; // Level 2
-      } else {
-        chunkSize = CONSTANTS.fileSizeAttachmentChunkDiscordLimit;
-      }
-    }
+    let chunkSize = CONSTANTS.fileSizeAttachmentChunkLimit;
     const crs = createReadStream(
       `${environment.uploadFolder}/${attachment.name}`,
       {
