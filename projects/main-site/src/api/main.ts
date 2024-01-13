@@ -153,7 +153,7 @@ async function bootstrap(): Promise<void> {
   const port = process.env['PORT'] || 4200;
   const totCPUs = os.cpus().length;
   /* We Will Using 75 % Available CPUs Power */
-  const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || Math.max(Math.round(totCPUs * 3 / 4), 2);
+  const numCPUs = Number.parseInt(process.env['MAX_CPUS']) || Math.max(Math.round(totCPUs / 2), 2);
   if (numCPUs <= totCPUs && numCPUs > 1) {
     try {
       const expressApp = express();
