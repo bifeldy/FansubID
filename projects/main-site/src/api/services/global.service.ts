@@ -123,13 +123,13 @@ export class GlobalService {
     const startTime = CONSTANTS.freeTimeStart;
     const endTime = CONSTANTS.freeTimeEnd;
     const startDate = new Date(currentDate.getTime());
-    startDate.setHours(Number.parseInt(startTime.split(":")[0]));
-    startDate.setMinutes(Number.parseInt(startTime.split(":")[1]));
-    startDate.setSeconds(Number.parseInt(startTime.split(":")[2]));
+    startDate.setHours(Number(startTime.split(":")[0]));
+    startDate.setMinutes(Number(startTime.split(":")[1]));
+    startDate.setSeconds(Number(startTime.split(":")[2]));
     const endDate = new Date(currentDate.getTime());
-    endDate.setHours(Number.parseInt(endTime.split(":")[0]));
-    endDate.setMinutes(Number.parseInt(endTime.split(":")[1]));
-    endDate.setSeconds(Number.parseInt(endTime.split(":")[2]));
+    endDate.setHours(Number(endTime.split(":")[0]));
+    endDate.setMinutes(Number(endTime.split(":")[1]));
+    endDate.setSeconds(Number(endTime.split(":")[2]));
     return startDate < currentDate && endDate > currentDate;
   }
 
