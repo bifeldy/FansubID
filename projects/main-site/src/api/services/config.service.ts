@@ -27,7 +27,9 @@ export class ConfigService {
     net_tx: 0,
     net_rx: 0,
     billing: 0,
-    storage: 0
+    storage: 0,
+    nodes: 0,
+    peers: 0
   };
 
   private settings: ServerInfoModel = {

@@ -53,10 +53,16 @@
         {{ SS.latency }} ms
       </span>
     </p>
-    <p class="px-2 text-truncate" *ngIf="SS.visitor">
+    <p class="px-2 text-truncate">
       Nodes ::
       <span class="text-success">
-        {{ SS.visitor }} Koneksi
+        {{ SS.statsServer.nodes }} Pengunjung
+      </span>
+    </p>
+    <p class="px-2 text-truncate">
+      Peers ::
+      <span class="text-success">
+        {{ SS.statsServer.peers }} Koneksi
       </span>
     </p>
     <p class="px-2 text-truncate">

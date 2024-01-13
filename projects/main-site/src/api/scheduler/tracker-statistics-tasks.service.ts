@@ -1,3 +1,6 @@
+// 3rd Party Library
+import parsePrometheusTextFormat from 'parse-prometheus-text-format';
+
 // NodeJS Library
 import cluster from 'node:cluster';
 import { URL } from 'node:url';
@@ -12,25 +15,15 @@ import { environment } from '../../environments/api/environment';
 import { ApiService } from '../services/api.service';
 import { GlobalService } from '../services/global.service';
 import { DiscordService } from '../services/discord.service';
+import { ConfigService } from '../services/config.service';
 
 @Injectable()
 export class TrackerStatisticsService {
 
-  torrentTracker: any = {
-    torrents: 0,
-    activeTorrents: 0,
-    peersAll: 0,
-    peersSeederOnly: 0,
-    peersLeecherOnly: 0,
-    peersSeederAndLeecher: 0,
-    peersIPv4: 0,
-    peersIPv6: 0,
-    clients: {}
-  };
-
   constructor(
     private sr: SchedulerRegistry,
     private gs: GlobalService,
+    private cfg: ConfigService,
     private api: ApiService,
     private ds: DiscordService
   ) {
@@ -63,12 +56,39 @@ export class TrackerStatisticsService {
       const startTime = new Date();
       this.gs.log('[CRON_TASK_TRACKER_STATISTICS-START] 🐾', `${startTime}`);
       try {
-        const url = new URL(`http://tracker.fansub.id/stats.json`);
-        const res_raw = await this.api.getData(url, {
+        let torrentTrackerHttp = 0;
+        const url1 = new URL(`http://tracker.fansub.id/stats-http`);
+        const res_raw1 = await this.api.getData(url1, {
           ...environment.nodeJsXhrHeader
         });
-        this.torrentTracker = await res_raw.json();
-        this.updateVisitor(`🔗 ${this.torrentTracker?.peersAll || 0} Peers`);
+        if (res_raw1.ok) {
+          const http: any[] = parsePrometheusTextFormat(await res_raw1.text());
+          const aquatic_peers = http.find(x => x.name === 'aquatic_peers');
+          if (aquatic_peers) {
+            const metrics: any[] = aquatic_peers.metrics;
+            for (const m of metrics) {
+              torrentTrackerHttp += Number(m.value);
+            }
+          }
+        }
+        let torrentTrackerWs = 0;
+        const url2 = new URL(`http://tracker.fansub.id/stats-ws`);
+        const res_raw2 = await this.api.getData(url2, {
+          ...environment.nodeJsXhrHeader
+        });
+        if (res_raw2.ok) {
+          const ws: any[] = parsePrometheusTextFormat(await res_raw2.text());
+          const aquatic_peers = ws.find(x => x.name === 'aquatic_peers');
+          if (aquatic_peers) {
+            const metrics: any[] = aquatic_peers.metrics;
+            for (const m of metrics) {
+              torrentTrackerWs += Number(m.value);
+            }
+          }
+        }
+        const peers = torrentTrackerHttp + torrentTrackerWs;
+        this.cfg.statsServerSet({ peers });
+        this.updateVisitor(`🔗 ${peers} Peers`);
       } catch (error) {
         this.gs.log('[CRON_TASK_TRACKER_STATISTICS-ERROR] 🐾', error, 'error');
       }

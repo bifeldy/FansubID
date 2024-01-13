@@ -91,6 +91,16 @@ export class ClusterMasterSlaveService {
         }
       });
 
+      this.messages.on('CFG_STATS_SET', (text, callback) => {
+        this.gs.log(`[MASTER_CFG_STATS_SET]`, text);
+        try {
+          this.cfg.serverSet(text);
+          callback({ error: null, data: null });
+        } catch (e) {
+          callback({ error: e, data: null });
+        }
+      });
+
       this.messages.on('CFG_STATS_GET', (_, callback) => {
         this.gs.log(`[MASTER_CFG_STATS_GET]`, _);
         try {

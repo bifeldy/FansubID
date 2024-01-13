@@ -62,7 +62,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     }
     this.timeoutSocketConnect = setTimeout(async () => {
       this.timeoutSocketConnect = null;
-      const totalSockets = (await this.sis.getAllClientsSocket()).length;
+      const totalSockets = await this.getTotalSocket();
       this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
       this.sis.emitToBroadcast('visitor', totalSockets);
     }, 5 * 1000);
@@ -71,18 +71,24 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
   async handleDisconnect(client: Socket, ...args: any[]) {
     this.gs.log('[SOCKET_IO_GATEWAY-CLIENT_DISCONNECTED] 🌟', client.id);
     await this.sis.disconnectRoom(client);
-    const totalSockets = (await this.sis.getAllClientsSocket()).length;
+    const totalSockets = await this.getTotalSocket();
     this.sis.emitToBroadcast('visitor', totalSockets);
     this.ts.updateVisitor(`🏃‍♂️ ${totalSockets} Pengunjung`);
   }
 
+  async getTotalSocket(): Promise<number> {
+    const visitor = (await this.sis.getAllClientsSocket()).length;
+    await this.cfgStatsServerSet({ nodes: visitor });
+    return visitor;
+  }
+
   /** */
 
-  async cfgServerSet(payload: PayloadModel): Promise<void> {
+  async cfgServerSet(serverInfo: ServerInfoModel): Promise<void> {
     if (cluster.isMaster) {
-      this.cfg.serverSet(payload as any);
+      this.cfg.serverSet(serverInfo);
     } else {
-      await this.cms.sendMessageToMaster('CFG_SERVER_SET', payload);
+      await this.cms.sendMessageToMaster('CFG_SERVER_SET', serverInfo);
     }
   }
 
@@ -102,6 +108,14 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     }
   }
 
+  async cfgStatsServerSet(statsServer: StatsServerModel): Promise<void> {
+    if (cluster.isMaster) {
+      this.cfg.statsServerSet(statsServer as any);
+    } else {
+      await this.cms.sendMessageToMaster('CFG_STATS_SET', statsServer);
+    }
+  }
+
   async cfgStatsServerGet(): Promise<any> {
     if (cluster.isMaster) {
       return this.cfg.statsServerGet();
@@ -117,7 +131,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
     this.gs.log('[SOCKET_IO_PING_PONG] PID :: WID 🌟', `${process.pid} :: ${cluster.worker?.id || 0}`);
     return {
       github: await this.cfgGithubGet(),
-      visitor: (await this.sis.getAllClientsSocket()).length,
+      visitor: await this.getTotalSocket(),
       server: await this.cfgServerGet()
     };
   }
@@ -134,7 +148,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
       await this.sis.checkUserLogin(client, payload);
       if (payload.user) {
         if (payload.user.role === RoleModel.ADMIN || payload.user.role === RoleModel.MODERATOR) {
-          this.cfgServerSet(original_payload);
+          this.cfgServerSet(original_payload as any);
           this.sis.emitToBroadcast('server-config', await this.cfgServerGet());
         }
       }

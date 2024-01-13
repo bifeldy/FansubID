@@ -12,8 +12,8 @@ export interface PayloadModel {
   username?: string;
   reason?: string;
   message?: string;
-  randomInteger: number;
-  answer: string;
+  randomInteger?: number;
+  answer?: string;
   [data: string]: any;
 }
 
@@ -30,10 +30,10 @@ export interface VisitorModel {
 }
 
 export interface ServerInfoModel {
-  isMaintenance: boolean;
-  winboxOpenLink: boolean;
-  discordNotification: boolean;
-  openForRegister: boolean;
+  isMaintenance?: boolean;
+  winboxOpenLink?: boolean;
+  discordNotification?: boolean;
+  openForRegister?: boolean;
 }
 
 export interface PingPongModel {
@@ -50,6 +50,8 @@ export interface StatsServerModel {
   net_rx?: number;
   billing?: number;
   storage?: number;
+  nodes?: number;
+  peers?: number;
 }
 
 export interface RoomModel {

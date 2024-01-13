@@ -27,7 +27,6 @@ export class StatsServerService {
 
   mySocket: typeof Socket = null;
 
-  visitor = 0;
   latency = 0;
   maxReConnDisc = 0;
 
@@ -37,7 +36,10 @@ export class StatsServerService {
     disk_io: 0,
     net_tx: 0,
     net_rx: 0,
-    billing: 0
+    billing: 0,
+    storage: 0,
+    nodes: 0,
+    peers: 0
   };
 
   messageChatUnreadCount = 0;
@@ -138,7 +140,7 @@ export class StatsServerService {
         this.github = response.github;
       }
       if ('visitor' in response && response.visitor) {
-        this.visitor = response.visitor;
+        this.statsServer.nodes = response.visitor;
       }
       if ('server' in response && response.server) {
         this.currentServerSubject.next(response.server);
@@ -193,7 +195,7 @@ export class StatsServerService {
     });
     this.mySocket.on('visitor', vstr => {
       this.gs.log('[SOCKET_VISITOR]', vstr);
-      this.visitor = vstr;
+      this.statsServer.nodes = vstr;
     });
     this.mySocket.on('console-log', log => {
       this.gs.log('[SOCKET_CONSOLE_LOG]', log);
