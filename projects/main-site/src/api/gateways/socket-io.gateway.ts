@@ -110,7 +110,7 @@ export class SocketIoGateway implements OnGatewayInit, OnGatewayConnection, OnGa
 
   async cfgStatsServerSet(statsServer: StatsServerModel): Promise<void> {
     if (cluster.isMaster) {
-      this.cfg.statsServerSet(statsServer as any);
+      this.cfg.statsServerSet(statsServer);
     } else {
       await this.cms.sendMessageToMaster('CFG_STATS_SET', statsServer);
     }
