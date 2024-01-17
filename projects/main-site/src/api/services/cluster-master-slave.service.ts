@@ -94,7 +94,7 @@ export class ClusterMasterSlaveService {
       this.messages.on('CFG_STATS_SET', (text, callback) => {
         this.gs.log(`[MASTER_CFG_STATS_SET]`, text);
         try {
-          this.cfg.serverSet(text);
+          this.cfg.statsServerSet(text);
           callback({ error: null, data: null });
         } catch (e) {
           callback({ error: e, data: null });
