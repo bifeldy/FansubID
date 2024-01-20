@@ -1,4 +1,4 @@
-import { Entity, Column, CreateDateColumn, Index, ManyToOne, PrimaryColumn } from 'typeorm'
+import { Entity, Column, CreateDateColumn, Index, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { FansubModel, RssFeedModel } from '../../models/req-res.model';
 

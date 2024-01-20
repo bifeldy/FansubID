@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Entity, Column, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn, DeleteDateColumn, Index } from 'typeorm'
+import { Entity, Column, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn, DeleteDateColumn, Index } from 'typeorm';
 
 import { InformationModel, UserModel } from '../../models/req-res.model';
 

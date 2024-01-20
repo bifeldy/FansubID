@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 import { NewsModel, BerkasModel, FansubModel, UserModel } from '../../models/req-res.model';
 import { TrackModel } from '../../models/socket-io.model';

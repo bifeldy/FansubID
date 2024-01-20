@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm'
+import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 import { SocialMediaModel, SosMedModel, UserModel } from '../../models/req-res.model';
 

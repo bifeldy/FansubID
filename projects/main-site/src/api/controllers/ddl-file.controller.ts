@@ -76,14 +76,14 @@ export class DdlGenerateController {
       }
       const ddl =  await this.aws.getDdl(resSaveAttachment.aws_s3, user, expiredSeconds);
       return {
-        info: '🙄 400 - Attachment API :: Gagal Mengunggah Lampiran 😪',
+        info: `😅 200 - DDL File API :: Generate URL 🤣`,
         result: resSaveAttachment,
         ddl: ddl.toString(),
         expired: new Date(Number(ddl.searchParams.get('Expires')) * 1000)
       };
     } catch (error) {
       return res.status(HttpStatus.NOT_FOUND).json(classToPlain({
-        info: `🙄 404 - Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
+        info: `🙄 404 - DDL File API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
         }

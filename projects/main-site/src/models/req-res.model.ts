@@ -129,7 +129,7 @@ export interface UserModel {
 
 export interface UserPremiumModel {
   id?: string;
-  created_at?: number | Date;
+  started_at?: number | Date;
   updated_at?: number | Date;
   user_?: UserModel;
 }
