@@ -64,67 +64,66 @@ export class CrawlController {
     let responseHeaders: Record<string, string> = {};
     let tryCount = 0;
     try {
-      if (url) {
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          url = 'http://' + url;
-        }
-        if (url.startsWith('http://')) {
-          url = 'https://' + url.slice(7, url.length);
-        }
-        let uri = url;
-        if (environment.production) {
-          uri = new URL(`https://crawl.${environment.domain}`);
-          uri.searchParams.append('url', url);
-        }
-        page = await this.browser.newPage();
-        const requestHeaders = { ...req.headers };
-        for (const header of [...this.requestHeadersToRemove, ...this.prohibitedHeaders]) {
-          delete requestHeaders[header];
-        }
-        await page.setExtraHTTPHeaders(requestHeaders as any);
-        let response = await page.goto(uri.toString(), {
+      if (!url) {
+        throw new Error('Data Tidak Lengkap!');
+      }
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'http://' + url;
+      }
+      if (url.startsWith('http://')) {
+        url = 'https://' + url.slice(7, url.length);
+      }
+      let uri = url;
+      if (environment.production) {
+        uri = new URL(`https://crawl.${environment.domain}`);
+        uri.searchParams.append('url', url);
+      }
+      page = await this.browser.newPage();
+      const requestHeaders = { ...req.headers };
+      for (const header of [...this.requestHeadersToRemove, ...this.prohibitedHeaders]) {
+        delete requestHeaders[header];
+      }
+      await page.setExtraHTTPHeaders(requestHeaders as any);
+      let response = await page.goto(uri.toString(), {
+        timeout: 30000,
+        waitUntil: 'domcontentloaded'
+      });
+      responseBody = await response.text();
+      responseData = await response.buffer();
+      while (responseBody.includes('cf-browser-verification') && tryCount <= 10) {
+        const newResponse = await page.waitForNavigation({
           timeout: 30000,
           waitUntil: 'domcontentloaded'
         });
+        if (newResponse) {
+          response = newResponse;
+        }
         responseBody = await response.text();
         responseData = await response.buffer();
-        while (responseBody.includes('cf-browser-verification') && tryCount <= 10) {
-          const newResponse = await page.waitForNavigation({
-            timeout: 30000,
-            waitUntil: 'domcontentloaded'
-          });
-          if (newResponse) {
-            response = newResponse;
-          }
-          responseBody = await response.text();
-          responseData = await response.buffer();
-          tryCount++;
-        }
-        responseHeaders = response.headers();
-        for (const header of [...this.responseHeadersToRemove, ...this.prohibitedHeaders]) {
-          delete responseHeaders[header];
-        }
-        for (const header in responseHeaders) {
-          res.set(header, responseHeaders[header].replace(/(\r\n|\n|\r)/gm, ', '));
-        }
-        const cookies = await page.cookies();
-        if (cookies) {
-          for (const cookie of cookies) {
-            const { name, value, secure, expires, domain, ...options } = cookie;
-            res.cookie(cookie.name, cookie.value, options as any);
-          }
-        }
-        await page.close();
-        this.cm.set(req.originalUrl, { status: response.status(), body: responseData }, { ttl: CONSTANTS.externalApiCacheTime });
-        res.send(responseData);
-      } else {
-        throw new Error('Data Tidak Lengkap!');
+        tryCount++;
       }
+      responseHeaders = response.headers();
+      for (const header of [...this.responseHeadersToRemove, ...this.prohibitedHeaders]) {
+        delete responseHeaders[header];
+      }
+      for (const header in responseHeaders) {
+        res.set(header, responseHeaders[header].replace(/(\r\n|\n|\r)/gm, ', '));
+      }
+      const cookies = await page.cookies();
+      if (cookies) {
+        for (const cookie of cookies) {
+          const { name, value, secure, expires, domain, ...options } = cookie;
+          res.cookie(cookie.name, cookie.value, options as any);
+        }
+      }
+      await page.close();
+      this.cm.set(req.originalUrl, { status: response.status(), body: responseData }, { ttl: CONSTANTS.externalApiCacheTime });
+      return res.send(responseData);
     } catch (error) {
       if (page) {
         await page.close();
       }
-      res.status(HttpStatus.BAD_REQUEST).json(classToPlain({
+      return res.status(HttpStatus.BAD_REQUEST).json(classToPlain({
         info: '🙄 400 - Crawl API :: UR[I/L] Tidak Valid 😪',
         result: {
           message: 'Data Tidak Lengkap!'

@@ -489,7 +489,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.subsDialog = this.ds.openInfoDialog({
             data: {
-              title: `Permintaan Gabung Berhasil`,
+              title: 'Permintaan Gabung Berhasil',
               htmlMessage: 'Silahkan Menghubungi Anggota Yang Sudah Tergabung / Admin / Moderator Fansub Untuk Menerima Permintaan Gabung.',
               confirmText: 'Tutup'
             }
@@ -608,7 +608,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
                   this.bs.idle();
                   this.subsDialog = this.ds.openInfoDialog({
                     data: {
-                      title: `Klaim Berhasil`,
+                      title: 'Klaim Berhasil',
                       htmlMessage: `
                         Domain '${this.fansubSlug}.${this.ENV.domain}' Selesai Didaftarkan.
                         Silahkan Tunggu Hingga Propagasi Dns Selesai.

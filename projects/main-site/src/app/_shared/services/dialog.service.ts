@@ -125,7 +125,7 @@ export class DialogService {
     const defaultData = {
       id: 'MAINTENANCE',
       data: {
-        title: `Informasi Perbaikan Web & Server`,
+        title: 'Informasi Perbaikan Web & Server',
         htmlMessage: 'Gagal Memuat Perbaikan Web & Server',
         confirmText: 'Ok, Saya Mengerti!',
         cancelText: null

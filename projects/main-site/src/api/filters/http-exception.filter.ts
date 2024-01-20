@@ -39,7 +39,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
     }
 
-    res.status(statusCode).send(body);
+    return res.status(statusCode).send(body);
   }
 
 }

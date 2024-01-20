@@ -175,7 +175,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   generateNewApiKey(): void {
     this.subsDialog = this.ds.openInputDialog({
       data: {
-        title: `Tambah API Key Baru`,
+        title: 'Tambah API Key Baru',
         input: {
           name: {
             inputLabel: 'Nama / Deskripsi',
@@ -223,7 +223,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   editApiKey(ak: any): void {
     this.subsDialog = this.ds.openInputDialog({
       data: {
-        title: `Ubah API Key`,
+        title: 'Ubah API Key',
         input: {
           name: {
             inputLabel: 'Nama / Deskripsi',

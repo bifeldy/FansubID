@@ -204,7 +204,7 @@ export class TorrentComponent implements OnInit, OnDestroy {
     } else if (this.files.length > 1) {
       this.subsDialog = this.ds.openInputDialog({
         data: {
-          title: `Silahkan Masukkan Nama Untuk Torrent Kamu!`,
+          title: 'Silahkan Masukkan Nama Untuk Torrent Kamu!',
           input: userInput,
           confirmText: 'Ya, Mulai SEED',
           cancelText: 'Tidak, Batal'
