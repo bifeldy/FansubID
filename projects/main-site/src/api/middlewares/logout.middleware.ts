@@ -42,7 +42,7 @@ export class LogoutMiddleware implements NestMiddleware {
         maxAge: 0,
         domain: environment.domain
       });
-      return next();
+      next();
     } catch (error) {
       this.gs.log('[LOGOUT_MIDDLEWARE-ERROR] 🔪', error, 'error');
       if (error instanceof HttpException) throw error;

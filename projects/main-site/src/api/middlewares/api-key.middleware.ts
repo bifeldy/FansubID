@@ -28,36 +28,38 @@ export class ApiKeyMiddleware implements NestMiddleware {
     this.gs.log('[API_KEY_MIDDLEWARE-ORIGIN_KEY] 🌸', `${key} @ ${clientOriginIpCc.origin_ip}`);
     if (!req.originalUrl.includes('/api')) {
       res.locals['user'] = null;
-      return next();
-    }
-    res.locals['key'] = key;
-    const check = await this.aks.checkKey(clientOriginIpCc.origin_ip, key);
-    if (check.allowed) {
-      let user: UserModel = check.user;
-      if (user) {
-        try {
-          user = await this.userRepo.findOneOrFail({
-            where: [
-              { id: Equal(user.id) }
-            ],
-            relations: ['kartu_tanda_penduduk_', 'profile_']
-          });
-        } catch (error) {
-          user = null;
+      next();
+    } else {
+      res.locals['key'] = key;
+      const check = await this.aks.checkKey(clientOriginIpCc.origin_ip, key);
+      if (check.allowed) {
+        let user: UserModel = check.user;
+        if (user) {
+          try {
+            user = await this.userRepo.findOneOrFail({
+              where: [
+                { id: Equal(user.id) }
+              ],
+              relations: ['kartu_tanda_penduduk_', 'profile_']
+            });
+          } catch (error) {
+            user = null;
+          }
         }
+        res.locals['user'] = user;
+        next();
+      } else {
+        throw new HttpException({
+          info: '🙄 401 - API Key :: Kunci Tidak Dapat Digunakan 😪',
+          result: {
+            key,
+            origin: clientOriginIpCc.origin_ip,
+            country: clientOriginIpCc.country_code,
+            message: `Api Key Salah / Tidak Terdaftar!`
+          }
+        }, HttpStatus.UNAUTHORIZED);
       }
-      res.locals['user'] = user;
-      return next();
     }
-    throw new HttpException({
-      info: '🙄 401 - API Key :: Kunci Tidak Dapat Digunakan 😪',
-      result: {
-        key,
-        origin: clientOriginIpCc.origin_ip,
-        country: clientOriginIpCc.country_code,
-        message: `Api Key Salah / Tidak Terdaftar!`
-      }
-    }, HttpStatus.UNAUTHORIZED);
   }
 
 }

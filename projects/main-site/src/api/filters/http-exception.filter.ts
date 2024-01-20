@@ -14,7 +14,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     //
   }
 
-  async catch(exception: HttpException, host: ArgumentsHost) {
+  async catch(exception: HttpException, host: ArgumentsHost): Promise<any> {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
@@ -39,7 +39,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
     }
 
-    return res.status(statusCode).send(body);
+    res.status(statusCode).send(body);
   }
 
 }

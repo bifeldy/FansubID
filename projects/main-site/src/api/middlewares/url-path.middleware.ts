@@ -12,7 +12,7 @@ export class UrlPathMiddleware implements NestMiddleware {
     //
   }
 
-  async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void> {
+  async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
     const urlPath = req.originalUrl.split('?');
     if (urlPath.length === 1) {
       req.originalUrl = urlPath[0];
@@ -21,7 +21,7 @@ export class UrlPathMiddleware implements NestMiddleware {
       req.originalUrl = urlPath[0] + '?' + urlQuery.join('&');
     }
     this.gs.log(`[URL_PATH_MIDDLEWARE] ⚡`, req.originalUrl);
-    return next();
+    next();
   }
 
 }

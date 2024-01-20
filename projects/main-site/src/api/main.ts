@@ -134,7 +134,7 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
         gs.log('[RESPONSE_ON_CLOSED] ❌', e, 'error');
       }
     });
-    return next();
+    next();
   });
   const swaggerCfg = new DocumentBuilder()
     .setTitle(environment.siteName)

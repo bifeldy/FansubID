@@ -65,13 +65,14 @@ export class AppController {
   }
 
   @Get('/img-seasonal-backdrop')
+  @HttpCode(200)
   @FilterApiKeyAccess()
   async resetPassword(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     const currDate = new Date();
     const season = this.gs.seasonal.find(sB => sB.id === Math.ceil((currDate.getMonth() + 1) / 3)).name;
     const files = readdirSync(`${environment.viewFolder}/assets/img/backdrop/`, { withFileTypes: true });
     const fIdx = files.findIndex(f => f.name.includes(`${season}`));
-    return res.download(`${environment.viewFolder}/assets/img/backdrop/${files[fIdx].name}`, files[fIdx].name, async (e) => {
+    res.download(`${environment.viewFolder}/assets/img/backdrop/${files[fIdx].name}`, files[fIdx].name, async (e) => {
       if (e) {
         this.gs.log('[RES_DOWNLOAD_IMAGE_BACKDROP-ERROR] 🔻', e, 'error');
       }

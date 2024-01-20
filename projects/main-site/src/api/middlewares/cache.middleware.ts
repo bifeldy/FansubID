@@ -20,9 +20,9 @@ export class CacheMiddleware implements NestMiddleware {
     const cacheData: ResponseCache = await this.cm.get(req.originalUrl);
     if (cacheData) {
       this.gs.log(`[CACHE_MIDDLEWARE-${req.originalUrl}] ✨`, cacheData);
-      return res.status(cacheData.status).send(cacheData.body);
+      res.status(cacheData.status).send(cacheData.body);
     } else {
-      return next();
+      next();
     }
   }
 

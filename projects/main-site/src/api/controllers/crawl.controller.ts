@@ -118,12 +118,12 @@ export class CrawlController {
       }
       await page.close();
       this.cm.set(req.originalUrl, { status: response.status(), body: responseData }, { ttl: CONSTANTS.externalApiCacheTime });
-      return res.send(responseData);
+      res.send(responseData);
     } catch (error) {
       if (page) {
         await page.close();
       }
-      return res.status(HttpStatus.BAD_REQUEST).json(classToPlain({
+      res.status(HttpStatus.BAD_REQUEST).json(classToPlain({
         info: '🙄 400 - Crawl API :: UR[I/L] Tidak Valid 😪',
         result: {
           message: 'Data Tidak Lengkap!'

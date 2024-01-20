@@ -216,7 +216,7 @@ export class AttachmentController {
             delete ddlFile.user_.updated_at;
           }
         }
-        return res.status(HttpStatus.OK).json(classToPlain({
+        res.status(HttpStatus.OK).json(classToPlain({
           info: `😅 200 - Attachment API :: DDL List 🤣`,
           results: ddlFiles,
           count,
@@ -271,7 +271,7 @@ export class AttachmentController {
           this.gs.log('[DDL-ERROR] 💽', e, 'error');
         }
         const ddl =  await this.aws.getDdl(resSaveAttachment.aws_s3, user, expiredSeconds);
-        return res.redirect(301, ddl.toString());
+        res.redirect(301, ddl.toString());
       } else {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
@@ -279,7 +279,7 @@ export class AttachmentController {
           throw new Error('Lampiran Tidak Ditemukan!');
         }
         res.setHeader('content-type', attachment.mime);
-        return res.download(
+        res.download(
           `${environment.uploadFolder}/${files[fIdx].name}`,
           `${attachment.orig || attachment.name + '.' + attachment.ext}`,
           async (e) => {
@@ -293,7 +293,7 @@ export class AttachmentController {
         );
       }
     } catch (error) {
-      return res.status(HttpStatus.NOT_FOUND).json(classToPlain({
+      res.status(HttpStatus.NOT_FOUND).json(classToPlain({
         info: `🙄 404 - Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'

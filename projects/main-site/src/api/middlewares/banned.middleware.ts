@@ -27,6 +27,7 @@ export class BannedMiddleware implements NestMiddleware {
     let user: UserModel = res.locals['user'];
     const key = res.locals['key'];
     const token = (req.cookies[environment.tokenName] || req.headers.authorization || req.headers['x-access-token'] || req.body.token || req.query['token'] || '').toString();
+    let suspicious = false;
     try {
       if (!key) {
         const decoded = this.cs.credentialDecode(token);
@@ -41,30 +42,45 @@ export class BannedMiddleware implements NestMiddleware {
               maxAge: 0,
               domain: environment.domain
             });
-            return res.redirect(301, `${environment.baseUrl}/?ngsw-bypass=true`);
+            suspicious = true;
           }
         }
       }
-      this.gs.log('[BANNED_MIDDLEWARE-USER] 🧨', user);
-      if (!user) {
-        throw new Error('User Not Login!');
-      }
-      const banned = await this.as.isAccountBanned(user.id);
-      if (banned) {
-        throw new HttpException({
-          info: '🙄 403 - Banned :: Akun Dikunci 😪',
-          result: {
-            message: `Akun Tidak Dapat Digunakan :: ${banned.reason}`
-          }
-        }, HttpStatus.FORBIDDEN);
+      if (!suspicious) {
+        this.gs.log('[BANNED_MIDDLEWARE-USER] 🧨', user);
+        if (!user) {
+          throw new Error('User Not Login!');
+        }
+        const banned = await this.as.isAccountBanned(user.id);
+        if (banned) {
+          throw new HttpException({
+            info: '🙄 403 - Banned :: Akun Dikunci 😪',
+            result: {
+              message: `Akun Tidak Dapat Digunakan :: ${banned.reason}`
+            }
+          }, HttpStatus.FORBIDDEN);
+        }
       }
     } catch (error) {
       if (error instanceof HttpException) throw error;
       res.locals['error'] = error;
     }
-    res.locals['user'] = user;
-    res.locals['token'] = token;
-    return next();
+    if (suspicious) {
+      if (req.headers.accept.includes('application/json')) {
+        throw new HttpException({
+          info: '💩 401 - Rate Limit :: Sesi Mencurigakan 🤬',
+          result: {
+            message: 'Silahkan Login Ulang!'
+          }
+        }, HttpStatus.UNAUTHORIZED);
+      } else {
+        res.redirect(301, `${environment.baseUrl}/?ngsw-bypass=true`);
+      }
+    } else {
+      res.locals['user'] = user;
+      res.locals['token'] = token;
+      next();
+    }
   }
 
 }

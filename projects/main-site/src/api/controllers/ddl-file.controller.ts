@@ -41,7 +41,7 @@ export class DdlGenerateController {
   @ApiParam({ name: 'id', type: 'string' })
   @VerifiedOnly()
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
-  async generateDdl(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async generateDdl(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
       const attachment =  await this.attachmentRepo.findOneOrFail({
@@ -75,14 +75,14 @@ export class DdlGenerateController {
         this.gs.log('[DDL-ERROR] 💽', e, 'error');
       }
       const ddl =  await this.aws.getDdl(resSaveAttachment.aws_s3, user, expiredSeconds);
-      return {
+      res.status(HttpStatus.OK).json(classToPlain({
         info: `😅 200 - DDL File API :: Generate URL 🤣`,
         result: resSaveAttachment,
         ddl: ddl.toString(),
         expired: new Date(Number(ddl.searchParams.get('Expires')) * 1000)
-      };
+      }));
     } catch (error) {
-      return res.status(HttpStatus.NOT_FOUND).json(classToPlain({
+      res.status(HttpStatus.NOT_FOUND).json(classToPlain({
         info: `🙄 404 - DDL File API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
@@ -158,7 +158,7 @@ export class DdlPartController {
         `, [ddlFile.msg_parent, ddlFile.msg_parent]);
       }).pipe(res);
     } catch (error) {
-      return res.status(HttpStatus.NOT_FOUND).json(classToPlain({
+      res.status(HttpStatus.NOT_FOUND).json(classToPlain({
         info: `🙄 404 - DDL File API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'
@@ -282,7 +282,7 @@ export class DdlSeekController {
         `, [ddlFile.msg_parent, ddlFile.msg_parent]);
       }).pipe(res);
     } catch (error) {
-      return res.status(HttpStatus.NOT_FOUND).json(classToPlain({
+      res.status(HttpStatus.NOT_FOUND).json(classToPlain({
         info: `🙄 404 - DDL File API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'

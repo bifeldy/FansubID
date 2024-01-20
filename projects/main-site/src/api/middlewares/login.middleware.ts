@@ -113,9 +113,10 @@ export class LoginMiddleware implements NestMiddleware {
           expires: new Date(this.cs.jwtView(resUserSave.session_token).exp * 1000),
           domain: environment.domain
         });
-        return next();
+        next();
+      } else {
+        throw new Error('Username, Email, atau Password tidak tepat!');
       }
-      throw new Error('Username, Email, atau Password tidak tepat!');
     } catch (error) {
       this.gs.log('[LOGIN_MIDDLEWARE-ERROR] 🎃', error, 'error');
       if (error instanceof HttpException) throw error;

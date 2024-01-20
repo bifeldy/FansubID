@@ -144,7 +144,7 @@ export class RegisterMiddleware implements NestMiddleware {
                 }
               }, CONSTANTS.timeoutCancelRegisterTime)
             );
-            return next();
+            next();
           } else {
             const result: any = {};
             for (const user of userNotAvailable) {
@@ -160,15 +160,17 @@ export class RegisterMiddleware implements NestMiddleware {
               result
             }, HttpStatus.BAD_REQUEST);
           }
+        } else {
+          throw new HttpException({
+            info: `🙄 ${res_raw.status || 400} - Google API :: Captcha Bermasalah 😪`,
+            result: {
+              message: 'Captcha Salah / Expired / Google API Down!'
+            }
+          }, res_raw.status || HttpStatus.BAD_REQUEST);
         }
-        throw new HttpException({
-          info: `🙄 ${res_raw.status || 400} - Google API :: Captcha Bermasalah 😪`,
-          result: {
-            message: 'Captcha Salah / Expired / Google API Down!'
-          }
-        }, res_raw.status || HttpStatus.BAD_REQUEST);
+      } else {
+        throw new Error('Data Tidak Lengkap!');
       }
-      throw new Error('Data Tidak Lengkap!');
     } catch (error) {
       this.gs.log('[REGISTER_MIDDLEWARE-ERROR] 🎃', error, 'error');
       if (error instanceof HttpException) throw error;
