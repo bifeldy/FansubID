@@ -184,7 +184,7 @@ export class UploadService {
             ],
             relations: ['user_']
           });
-          const paksaAutoDdl = (attachment.size <= CONSTANTS.fileSizeAttachmentAutoDdl && attachment.user_.role !== RoleModel.FANSUBBER);
+          const paksaAutoDdl = (attachment.size <= CONSTANTS.fileSizeAttachmentAutoDdl && attachment.user_.role !== RoleModel.USER);
           if (primeCount >= 0 || paksaAutoDdl) {
             const upload = await this.aws.uploadDdl(files[fIdx].name);
             let urlFile = upload.Location;
