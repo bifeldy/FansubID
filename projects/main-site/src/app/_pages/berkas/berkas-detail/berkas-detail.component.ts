@@ -16,7 +16,7 @@ import { AuthService } from '../../../_shared/services/auth.service';
 import { DownloadManagerService } from '../../../_shared/services/download-manager.service';
 import { WinboxService } from '../../../_shared/services/winbox.service';
 import { StatsServerService } from '../../../_shared/services/stats-server.service';
-// import { DialogService } from '../../../_shared/services/dialog.service';
+import { DialogService } from '../../../_shared/services/dialog.service';
 import { DdlLampiranService } from '../../../_shared/services/ddl-lampiran.service';
 
 @Component({
@@ -33,6 +33,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   subsParam = null;
   subsDialog = null;
   subsSubtitlesFonts = null;
+  subsGenerateLink = null;
 
   subtitles = [];
   fonts = [];
@@ -47,7 +48,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private bs: BusyService,
-    // private ds: DialogService,
+    private ds: DialogService,
     private pi: PageInfoService,
     private berkas: BerkasService,
     private fs: FabService,
@@ -83,6 +84,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     this.subsParam?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsSubtitlesFonts?.unsubscribe();
+    this.subsGenerateLink?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -173,8 +175,38 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
     return this.isHaveDDL && this.berkasData.attachment_?.discord;
   }
 
+  get isAwsS3(): boolean {
+    return this.isHaveDDL && this.berkasData.attachment_?.aws_s3;
+  }
+
   get isStreamable(): boolean {
     return this.isHaveDDL && this.gs.includesOneOf(this.berkasData.attachment_?.ext, CONSTANTS.fileTypeAttachmentStreamable);
+  }
+
+  async generateLink(id): Promise<void> {
+    this.bs.busy();
+    this.subsGenerateLink = this.dls.generateLink(id).subscribe({
+      next: res => {
+        this.gs.log('[BERKAS_GENERATE_LINK_SUCCESS]', res);
+        this.bs.idle();
+        this.subsDialog = this.ds.openInfoDialog({
+          data: {
+            title: `Tautan Expired :: ${new Date(res.expired)}`,
+            htmlMessage: res.ddl,
+            confirmText: 'Tutup'
+          }
+        }).afterClosed().subscribe({
+          next: r => {
+            this.gs.log('[INFO_DIALOG_CLOSED]', r);
+            this.subsDialog.unsubscribe();
+          }
+        });
+      },
+      error: err => {
+        this.gs.log('[BERKAS_GENERATE_LINK_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
   }
 
   async ddl(id): Promise<void> {

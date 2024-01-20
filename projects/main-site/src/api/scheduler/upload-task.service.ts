@@ -10,7 +10,7 @@ import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
-import { AttachmentModel } from '../../models/req-res.model';
+import { AttachmentModel, RoleModel } from '../../models/req-res.model';
 
 import { AttachmentService } from '../repository/attachment.service';
 import { BerkasService } from '../repository/berkas.service';
@@ -19,6 +19,7 @@ import { UserPremiumService } from '../repository/user-premium.service';
 import { GlobalService } from '../services/global.service';
 import { DiscordService } from '../services/discord.service';
 import { GoogleCloudService } from '../services/google-cloud.service';
+import { AmazonWebService } from '../services/amazon-web.service';
 import { MkvExtractService } from '../services/mkv-extract.service';
 
 @Injectable()
@@ -32,6 +33,7 @@ export class UploadService {
     private gs: GlobalService,
     private ds: DiscordService,
     private gcs: GoogleCloudService,
+    private aws: AmazonWebService,
     private mkv: MkvExtractService
   ) {
     //
@@ -182,17 +184,32 @@ export class UploadService {
             ],
             relations: ['user_']
           });
-          if (primeCount <= 0) {
+          const paksaAutoDdl = (attachment.size <= CONSTANTS.fileSizeAttachmentAutoDdl && attachment.user_.role !== RoleModel.FANSUBBER);
+          if (primeCount >= 0 || paksaAutoDdl) {
+            const upload = await this.aws.uploadDdl(files[fIdx].name);
+            let urlFile = upload.Location;
+            if (urlFile.startsWith('http://')) {
+              urlFile = urlFile.slice(7, urlFile.length);
+            } else if (urlFile.startsWith('https://')) {
+              urlFile = urlFile.slice(8, urlFile.length);
+            }
+            const directLink1 = `${environment.s3Compatible.endpoint}/`;
+            if (urlFile.startsWith(directLink1)) {
+              urlFile = urlFile.slice(directLink1.length, urlFile.length);
+            }
+            attachment.aws_s3 = `https://${urlFile}`;
+            attachment.pending = false;
+            await this.attachmentRepo.save(attachment);
+            this.gs.deleteAttachment(files[fIdx].name);
+          } else {
             const chunkParent = await this.ds.sendAttachment(attachment);
             attachment.discord = chunkParent;
             attachment.pending = false;
             await this.attachmentRepo.save(attachment);
             this.gs.deleteAttachment(files[fIdx].name);
-          } else {
-            throw '// TODO :: Upload To AWS S3 Compatible Storage';
           }
         } catch (e) {
-          this.gs.log('[DISCORD-ERROR] 💽', e, 'error');
+          this.gs.log('[DDL-ERROR] 💽', e, 'error');
           attachment.pending = false;
           await this.attachmentRepo.save(attachment);
         }
@@ -250,7 +267,7 @@ export class UploadService {
         for (const a of attachments) {
           const isVideo = CONSTANTS.extAttachment.includes(a.ext);
           const isFontSubs = [...CONSTANTS.extFonts, ...CONSTANTS.extSubs].includes(a.ext);
-          if (a.google_drive || a.discord) {
+          if (a.google_drive || a.discord || a.aws_s3) {
             a.pending = false;
             await this.attachmentRepo.save(a);
           } else if (isVideo) {

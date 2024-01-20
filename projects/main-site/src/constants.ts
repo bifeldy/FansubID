@@ -47,6 +47,7 @@ export const CONSTANTS = {
     'application/x-zip',
     'application/x-zip-compressed'
   ],
+  fileSizeAttachmentAutoDdl: 50 * 1000 * 1000, // Under 50 MB Always Get DDL -- NC OP/ED
   fileSizeAttachmentChunkLimit: 8 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T
   fileTypeAttachmentStreamable: [
     'mkv',
@@ -81,6 +82,7 @@ export const CONSTANTS = {
   timeoutMailWebhookTime: 1 * 60 * 1000, // 1 Minutes
   timeoutReconnectSocketKey: 'TIMEOUT_RECONNECT_SOCKET',
   timeoutReconnectSocketTime: 5 * 1000, // 5 Seconds
+  timeDdlS3: 1 * 60 * 60, // 1 Hours
   timeDiscord: 1 * 60 * 1000, // 1 Minutes
   timeJwtEncryption: 3 * 60, // 3 Minutes
   timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days

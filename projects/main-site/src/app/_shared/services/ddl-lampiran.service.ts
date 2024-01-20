@@ -66,4 +66,8 @@ export class DdlLampiranService {
     });
   }
 
+  generateLink(attachmentId): Observable<any> {
+    return this.api.getData(`/ddl-generate/${attachmentId}`);
+  }
+
 }

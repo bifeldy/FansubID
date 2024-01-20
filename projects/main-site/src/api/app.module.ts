@@ -34,7 +34,7 @@ import { BerkasController } from './controllers/berkas.controller';
 import { BerkasTrustedController } from './controllers/berkas-/berkas-trusted.controller';
 import { CommentController } from './controllers/comment.controller';
 import { CrawlController } from './controllers/crawl.controller';
-import { DdlPartController, DdlSeekController } from './controllers/ddl-file.controller';
+import { DdlGenerateController, DdlPartController, DdlSeekController } from './controllers/ddl-file.controller';
 import { DoramaController } from './controllers/dorama.controller';
 import { DoramaBerkasController } from './controllers/dorama-/dorama-berkas.controller';
 import { DoramaFansubController } from './controllers/dorama-/dorama-fansub.controller';
@@ -100,6 +100,7 @@ import { ReqResInterceptor } from './interceptors/req-res.interceptor';
 
 import { SocketIoGateway } from './gateways/socket-io.gateway';
 
+import { AmazonWebService } from './services/amazon-web.service';
 import { ApiService } from './services/api.service';
 import { AuthService } from './services/auth.service';
 import { CloudflareService } from './services/cloudflare.service';
@@ -185,6 +186,7 @@ import { UserPremiumService } from './repository/user-premium.service';
     BerkasTrustedController,
     CommentController,
     CrawlController,
+    DdlGenerateController,
     DdlPartController,
     DdlSeekController,
     DoramaController,
@@ -260,6 +262,7 @@ import { UserPremiumService } from './repository/user-premium.service';
     SocketIoGateway,
     // Services - Service(s) Aren't Available Globally Like Angular
     // https://docs.nestjs.com/modules#global-modules
+    AmazonWebService,
     ApiService,
     AuthService,
     CloudflareService,

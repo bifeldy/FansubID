@@ -178,6 +178,13 @@ export const environment = {
     apiUrl: 'https://api.idcloudhost.com/v1',
     wsUrl: 'wss://api.idcloudhost.com/v1',
     apiKey: SECRETS().ID_CLOUD_HOST_API_KEY,                                                                     // '',
-    mainSite: "01b00d5a-905d-4328-bc8d-bf748f1fc3dc"                                                             // '',
+    mainSite: '01b00d5a-905d-4328-bc8d-bf748f1fc3dc'                                                             // '',
+  },
+  s3Compatible: {
+    endpoint: 'is3.cloudhost.id',
+    bucket: 'ddl.fansub.id',
+    region: 'auto',
+    accessKeyId: SECRETS().S3_ACCESS_KEY_ID,                                                                     // '',
+    secretAccessKey: SECRETS().S3_SECRET_ACCESS_KEY                                                              // '',
   }
 };

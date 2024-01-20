@@ -63,6 +63,23 @@
                 </mat-selection-list>
               </div>
             </div>
+            <div class="row py-3" *ngIf="AS.currentUserSubject?.value && berkasData.attachment_ && isAwsS3">
+              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+                <h2 class="border-bottom-dotted">
+                  <b class="text-bifeldy">
+                    <i>Direct Link</i>
+                  </b>
+                </h2>
+              </div>
+              <div class="col-12 text-center">
+                <div class="px-3">
+                  <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="generateLink(berkasData.attachment_.id)">
+                    <mat-icon fontIcon="share" class="me-1"></mat-icon>
+                    Buat Tautan Unduhan
+                  </button>
+                </div>
+              </div>
+            </div>
             <div class="row py-3" *ngIf="AS.currentUserSubject?.value && berkasData.attachment_">
               <div class="col-12 pt-3 sticky-top bg-bifeldy">
                 <h2 class="border-bottom-dotted">
@@ -73,7 +90,7 @@
               </div>
               <div class="col-12 text-center" *ngIf="isHaveDDL">
                 <div class="px-3">
-                  <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
+                  <button type="button" class="m-1 w-100 {{ isAwsS3 ? '' : 'shiny' }}" mat-stroked-button color="accent" (click)="ddl(berkasData.attachment_.id)"
                     matTooltip="{{ lampiran.orig || lampiran.name + '.' + lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan" *ngIf="!lampiran.data && !lampiran.isDownloading && !lampiran.isCompleted">
                     <mat-icon fontIcon="movie" class="me-1"></mat-icon>
                     {{ lampiran.orig?.split('.')[0] || lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})
@@ -83,7 +100,7 @@
                     <mat-icon fontIcon="close" class="me-1"></mat-icon>
                     Batal Unduh
                   </button>
-                  <button type="button" class="m-1 w-100 shiny" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
+                  <button type="button" class="m-1 w-100 {{ isAwsS3 ? '' : 'shiny' }}" mat-stroked-button color="accent" (click)="saveFileAs(berkasData.attachment_.id)" *ngIf="lampiran.data"
                     matTooltip="{{ lampiran.orig || lampiran.name + '.' + lampiran.ext }} :: {{ lampiran.download_count }}x Unduhan">
                     <mat-icon fontIcon="save" class="me-1"></mat-icon>
                     {{ lampiran.orig?.split('.')[0] || lampiran.name | slice:0:5 }}.....{{ lampiran.ext }} ({{ lampiran.size | bytes }})

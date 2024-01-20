@@ -7,7 +7,7 @@ import { ApiExcludeEndpoint, ApiParam, ApiTags } from '@nestjs/swagger';
 import { DiskFile } from '@uploadx/core';
 
 import { Request, Response } from 'express';
-import { Equal, ILike, IsNull } from 'typeorm';
+import { Equal, ILike, IsNull, MoreThanOrEqual } from 'typeorm';
 import { classToPlain } from 'class-transformer';
 
 import { CONSTANTS } from '../../constants';
@@ -26,6 +26,8 @@ import { DdlFileService } from '../repository/ddl-file';
 
 import { GoogleCloudService } from '../services/google-cloud.service';
 import { GlobalService } from '../services/global.service';
+import { AmazonWebService } from '../services/amazon-web.service';
+import { UserPremiumService } from '../repository/user-premium.service';
 
 @Controller('/attachment')
 export class AttachmentController {
@@ -35,8 +37,10 @@ export class AttachmentController {
     private attachmentRepo: AttachmentService,
     private gs: GlobalService,
     private gcs: GoogleCloudService,
+    private aws: AmazonWebService,
     private ddlFileRepo: DdlFileService,
-    private tempAttachmentRepo: TempAttachmentService
+    private tempAttachmentRepo: TempAttachmentService,
+    private userPremiumRepo: UserPremiumService
   ) {
     //
   }
@@ -179,6 +183,7 @@ export class AttachmentController {
   @Roles(RoleModel.ADMIN, RoleModel.MODERATOR, RoleModel.FANSUBBER, RoleModel.USER)
   async getById(@Req() req: Request, @Res( /* { passthrough: true } */ ) res: Response): Promise<any> {
     try {
+      const user: UserModel = res.locals['user'];
       const attachment =  await this.attachmentRepo.findOneOrFail({
         where: [
           { id: Equal(req.params['id']) }
@@ -211,7 +216,7 @@ export class AttachmentController {
             delete ddlFile.user_.updated_at;
           }
         }
-        res.status(HttpStatus.OK).json(classToPlain({
+        return res.status(HttpStatus.OK).json(classToPlain({
           info: `😅 200 - Attachment API :: DDL List 🤣`,
           results: ddlFiles,
           count,
@@ -242,28 +247,53 @@ export class AttachmentController {
           attachment.download_count++;
           await this.attachmentRepo.save(attachment);
         }).pipe(res);
+      } else if (attachment.aws_s3) {
+        attachment.download_count++;
+        const resSaveAttachment = await this.attachmentRepo.save(attachment);
+        let expiredSeconds = CONSTANTS.timeDdlS3;
+        try {
+          const primeCount = await this.userPremiumRepo.count({
+            where: [
+              {
+                expired_at: MoreThanOrEqual(new Date()),
+                user_: {
+                  id: Equal(user.id)
+                }
+              }
+            ],
+            relations: ['user_']
+          });
+          if (primeCount > 0) {
+            // Active Premium Users Get 4 Hours
+            expiredSeconds = 4 * 60 * 60;
+          }
+        } catch (e) {
+          this.gs.log('[DDL-ERROR] 💽', e, 'error');
+        }
+        const ddl =  await this.aws.getDdl(resSaveAttachment.aws_s3, user, expiredSeconds);
+        return res.redirect(301, ddl.toString());
       } else {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
-        if (fIdx >= 0) {
-          res.setHeader('content-type', attachment.mime);
-          return res.download(
-            `${environment.uploadFolder}/${files[fIdx].name}`,
-            `${attachment.orig || attachment.name + '.' + attachment.ext}`,
-            async (e) => {
-              if (e) {
-                this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
-              } else {
-                attachment.download_count++;
-                await this.attachmentRepo.save(attachment);
-              }
-            }
-          );
+        if (fIdx < 0) {
+          throw new Error('Lampiran Tidak Ditemukan!');
         }
-        throw new Error('Lampiran Tidak Ditemukan!');
+        res.setHeader('content-type', attachment.mime);
+        return res.download(
+          `${environment.uploadFolder}/${files[fIdx].name}`,
+          `${attachment.orig || attachment.name + '.' + attachment.ext}`,
+          async (e) => {
+            if (e) {
+              this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');
+            } else {
+              attachment.download_count++;
+              await this.attachmentRepo.save(attachment);
+            }
+          }
+        );
       }
     } catch (error) {
-      res.status(HttpStatus.NOT_FOUND).json(classToPlain({
+      return res.status(HttpStatus.NOT_FOUND).json(classToPlain({
         info: `🙄 404 - Attachment API :: Gagal Mencari Lampiran ${req.params['id']} 😪`,
         result: {
           message: 'Lampiran Tidak Ditemukan!'

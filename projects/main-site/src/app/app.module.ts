@@ -87,7 +87,7 @@ import { environment } from '../environments/app/environment';
         'ngsw-bypass': 'true'
       },
       retryConfig: {
-        maxAttempts: 8
+        maxAttempts: 4
       },
       maxChunkSize: CONSTANTS.fileSizeAttachmentChunkLimit
     })
