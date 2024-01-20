@@ -36,6 +36,7 @@ import { ClusterMasterSlaveService } from './services/cluster-master-slave.servi
 import { DiscordService } from './services/discord.service';
 import { CloudflareService } from './services/cloudflare.service';
 import { FailToBanService } from './repository/fail-to-ban.service';
+import { ConfigService } from './services/config.service';
 
 // Website Pemerintah Memang Kadang-Kadang Rada-Rada ..
 // Meng-Full Hadeh ..
@@ -52,6 +53,7 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
   }
   const nestApp = await NestFactory.create(AppModule, httpAdapter);
   const gs = nestApp.get(GlobalService);
+  const cfg = nestApp.get(ConfigService);
   const aks = nestApp.get(ApiKeyService);
   const cfs = nestApp.get(CloudflareService);
   const ftb = nestApp.get(FailToBanService);
@@ -97,7 +99,7 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
         const reqResInfo = `${clientOriginIpCc.origin_ip} ~ ${timeStart.toString()} ~ ${req.method} ~ ${res.statusCode} ~ ${req.originalUrl} ~ ${timeEnd} ms`;
         await sis.emitToRoomOrId(CONSTANTS.socketRoomNameServerLogs, 'console-log', reqResInfo);
         if (
-          clientOriginIpCc.origin_ip !== environment.ip &&
+          !cfg.domainIpBypass.includes(clientOriginIpCc.origin_ip) &&
           // 404 Not Found Will Redirect To Home Page
           (res.statusCode === 404 || res.statusCode === 429 || (res.statusCode >= 500 && res.statusCode < 600))
         ) {
