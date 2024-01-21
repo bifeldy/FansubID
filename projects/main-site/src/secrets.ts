@@ -29,6 +29,7 @@ interface SECRETS_DATA_TYPE {
   DISCORD_BOT_LOGIN_TOKEN: string;
   MAL_CLIENT_ID: string;
   ID_CLOUD_HOST_API_KEY: string;
+  S3_BUCKET: string;
   S3_ACCESS_KEY_ID: string;
   S3_SECRET_ACCESS_KEY: string;
 };

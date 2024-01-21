@@ -182,7 +182,7 @@ export const environment = {
   },
   s3Compatible: {
     endpoint: 'is3.cloudhost.id',
-    bucket: 'ddl.fansub.id',
+    bucket: SECRETS().S3_BUCKET,                                                                                 // '',
     region: 'auto',
     accessKeyId: SECRETS().S3_ACCESS_KEY_ID,                                                                     // '',
     secretAccessKey: SECRETS().S3_SECRET_ACCESS_KEY                                                              // '',

@@ -16,7 +16,7 @@ export const CONSTANTS = {
   apiTagUser: 'User',
   attachmentSpeedLimiterBps: 256 * 1000, // 256 KB/s
   blacklistedWords: [
-    '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id', 'crawl', 'crawler',
+    '*', 'www', 'fansub', 'fansub.id', 'fansubid', 'fansub-id', 'cdn', 'crawl', 'crawler',
     'localhost', 'mail', 'email', 'e-mail', 'tracker', 'fansub', 'fansubber', 'ddl',
     'ferdion', 'bifeldy', 'dev', 'api', 'docs', 'cs', 'help', 'support', 'proxy',
     'admin', 'administrator', 'info', 'information', 'noreply', 'mod', 'moderator'

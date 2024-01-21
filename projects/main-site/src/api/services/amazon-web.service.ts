@@ -43,17 +43,18 @@ export class AmazonWebService {
     if (fileName.startsWith(directLink1)) {
       fileName = fileName.slice(directLink1.length, fileName.length);
     }
+    const bucketName = fileName.split('/')[0];
     const directLink2 = `${environment.s3Compatible.bucket}/`;
     if (fileName.startsWith(directLink2)) {
       fileName = fileName.slice(directLink2.length, fileName.length);
     }
     const ddl = await this.s3().getSignedUrlPromise('getObject', {
-      Bucket: environment.s3Compatible.bucket,
+      Bucket: bucketName,
       Key: fileName,
       Expires: expiredSeconds
     });
     const uri = new URL(ddl);
-    const url = new URL(`https://${environment.s3Compatible.bucket}/${fileName}`);
+    const url = new URL(`https://${bucketName}/${fileName}`);
     const sp = ['AWSAccessKeyId', 'Expires', 'Signature'];
     for (const q of sp) {
       url.searchParams.append(q, uri.searchParams.get(q));
