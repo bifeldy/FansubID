@@ -33,7 +33,7 @@ export class AmazonWebService {
     });
   }
 
-  async getDdl(fileName: string, user: UserModel, expiredSeconds = CONSTANTS.timeDdlS3): Promise<URL> {
+  async getDdl(fileName: string, user: UserModel, expiredSeconds = CONSTANTS.timeDdlS3, customFileName = null, customMimeType = null): Promise<URL> {
     if (fileName.startsWith('http://')) {
       fileName = fileName.slice(7, fileName.length);
     } else if (fileName.startsWith('https://')) {
@@ -48,11 +48,18 @@ export class AmazonWebService {
     if (fileName.startsWith(directLink2)) {
       fileName = fileName.slice(directLink2.length, fileName.length);
     }
-    const ddl = await this.s3().getSignedUrlPromise('getObject', {
+    const optParam: any = {
       Bucket: bucketName,
       Key: fileName,
       Expires: expiredSeconds
-    });
+    };
+    if (customFileName) {
+      optParam.ResponseContentDisposition = `attachment; filename ="${customFileName}"`;
+    }
+    if (customMimeType) {
+      optParam.ResponseContentType = customMimeType;
+    }
+    const ddl = await this.s3().getSignedUrlPromise('getObject', optParam);
     const uri = new URL(ddl);
     const url = new URL(`https://${bucketName}/${fileName}`);
     const sp = ['AWSAccessKeyId', 'Expires', 'Signature'];

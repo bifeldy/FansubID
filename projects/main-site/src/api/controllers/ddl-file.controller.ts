@@ -74,7 +74,12 @@ export class DdlGenerateController {
       } catch (e) {
         this.gs.log('[DDL-ERROR] 💽', e, 'error');
       }
-      const ddl =  await this.aws.getDdl(resSaveAttachment.aws_s3, user, expiredSeconds);
+      const ddl =  await this.aws.getDdl(
+        resSaveAttachment.aws_s3,
+        user, expiredSeconds,
+        resSaveAttachment.orig,
+        resSaveAttachment.mime
+      );
       res.status(HttpStatus.OK).json(classToPlain({
         info: `😅 200 - DDL File API :: Generate URL 🤣`,
         result: resSaveAttachment,

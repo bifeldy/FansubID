@@ -270,7 +270,13 @@ export class AttachmentController {
         } catch (e) {
           this.gs.log('[DDL-ERROR] 💽', e, 'error');
         }
-        const ddl =  await this.aws.getDdl(resSaveAttachment.aws_s3, user, expiredSeconds);
+        const ddl =  await this.aws.getDdl(
+          resSaveAttachment.aws_s3,
+          user,
+          expiredSeconds,
+          resSaveAttachment.orig,
+          resSaveAttachment.mime
+        );
         res.redirect(301, ddl.toString());
       } else {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
