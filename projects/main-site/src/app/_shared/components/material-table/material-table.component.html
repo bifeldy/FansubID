@@ -26,7 +26,8 @@
           tdc.toUpperCase() === 'NAMA BERKAS' || tdc.toUpperCase() === 'PENGIRIM' || tdc.toUpperCase() === 'PENERIMA' || tdc.toUpperCase() ===  'NAMA LENGKAP' ||
           tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
           tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() ===  'EMAIL' ||
-          tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN'
+          tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN' || tdc.toUpperCase() === 'JUDUL ANIME' ||
+          tdc.toUpperCase() === 'JUDUL DORAMA'
         ) ? '30vw' : ''
       ">
         <div *ngIf="checkIsArray(row[tdc]) === false" class="{{
@@ -42,7 +43,8 @@
               tdc.toUpperCase() === 'NAMA BERKAS' || tdc.toUpperCase() === 'PENGIRIM' || tdc.toUpperCase() === 'PENERIMA' || tdc.toUpperCase() ===  'NAMA LENGKAP' ||
               tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
               tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() ===  'EMAIL' ||
-              tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN' || tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'
+              tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN' || tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS' ||
+              tdc.toUpperCase() === 'JUDUL ANIME' || tdc.toUpperCase() === 'JUDUL DORAMA'
             ) ? 'text-truncate' : ''
           }}">
             <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'" />
@@ -72,7 +74,8 @@
               tdc.toUpperCase() === 'NAMA BERKAS' || tdc.toUpperCase() === 'PENGIRIM' || tdc.toUpperCase() === 'PENERIMA' || tdc.toUpperCase() ===  'NAMA LENGKAP' ||
               tdc.toUpperCase() === 'TOPIK' || tdc.toUpperCase() ===  'JUDUL SURAT KABAR' || tdc.toUpperCase() ===  'JUDUL' || tdc.toUpperCase() ===  'ALASAN' ||
               tdc.toUpperCase() === 'NAMA LAMPIRAN' || tdc.toUpperCase() === 'NAMA API' || tdc.toUpperCase() === 'IP DOMAIN' || tdc.toUpperCase() ===  'EMAIL' ||
-              tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN' || tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'
+              tdc.toUpperCase() === 'KETERANGAN' || tdc.toUpperCase() === 'DESKRIPSI' || tdc.toUpperCase() === 'KONTEN' || tdc.toUpperCase() === 'PEMILIK' ||
+              tdc.toUpperCase() === 'PENULIS' || tdc.toUpperCase() === 'JUDUL ANIME' || tdc.toUpperCase() === 'JUDUL DORAMA'
             ) ? row[tdc] : ''">
               {{ row[tdc] }}
             </span>
