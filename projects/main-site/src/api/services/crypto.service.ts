@@ -17,7 +17,7 @@ import { GlobalService } from './global.service';
 export class CryptoService {
 
   jwtAlgorithm = (CONSTANTS.jwtAlgorithm as Algorithm);
-  jwtIssuer = environment.author;
+  jwtIssuer = environment.domain;
   jwtAudience = environment.siteName;
   jwtSecretKey = this.hashPassword(environment.jwtSecretKey);
   jwtExpiredIn = CONSTANTS.jwtExpiredIn;

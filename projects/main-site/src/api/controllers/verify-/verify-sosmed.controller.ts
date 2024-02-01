@@ -222,12 +222,10 @@ export class VerifySosmedController {
           {
             google: {
               id: res_json.id,
-              email: res_json.email,
               verified: res_json.verified_email
             },
             user: {
               id: user.id,
-              username: user.username,
               verified: user.verified
             }
           },
@@ -269,7 +267,7 @@ export class VerifySosmedController {
           info: `😅 201 - Verifikasi API :: User Telah Diverifikasi 🤣`,
           result: {
             title: 'Akun Telah Diverifikasi!',
-            message: 'Whoops! Yeay~'
+            message: 'Yeay! Silahkan Re-Login ulang, keluar & masuk kembali~'
           }
         };
       } else if ('app' in req.body && 'code' in req.body) {

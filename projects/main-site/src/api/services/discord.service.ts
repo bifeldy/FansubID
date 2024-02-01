@@ -407,7 +407,7 @@ export class DiscordService {
                 }
               )
             );
-            await interaction.reply({ content: `<@${interaction.user.id}> 😚 .: Berhasil :: ${user.username}@${environment.mailTrap.domain} :. 🤩` });
+            await interaction.reply({ content: `<@${interaction.user.id}> 😚 .: Yeay! Silahkan Re-Login ulang, keluar & masuk kembali~ :. 🤩` });
           }
         } else {
           await interaction.reply({ content: `<@${interaction.user.id}> Siapa ya? Ini milik orang lain 🤔` });
