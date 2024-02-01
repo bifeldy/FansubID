@@ -20,6 +20,14 @@
         </h3>
         <div class="row pb-3">
           <div class="col-12 col-lg-8 mx-auto">
+            <a class="m-1" mat-stroked-button routerLink="/rss-feed">
+              <mat-icon fontIcon="rss_feed" class="me-1"></mat-icon>
+              Lihat Semua Aktivitas Fansub
+            </a>
+          </div>
+        </div>
+        <div class="row pb-3">
+          <div class="col-12 col-lg-8 mx-auto">
             <a class="m-1 {{ menu.link ==='/berkas' ? 'shiny' : '' }}" mat-stroked-button color="warn" routerLink="{{ menu.link }}" *ngFor="let menu of contentMenus">
               <mat-icon [fontIcon]="menu.icon" class="me-1"></mat-icon>
               {{ menu.name }}

@@ -13,6 +13,7 @@ import { KomentarService } from '../../_shared/services/komentar.service';
 import { FansubService } from '../../_shared/services/fansub.service';
 import { WinboxService } from '../../_shared/services/winbox.service';
 import { FabService } from '../../_shared/services/fab.service';
+import { AuthService } from '../../_shared/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private gs: GlobalService,
+    private as: AuthService,
     private lms: LeftMenuService,
     private news: NewsService,
     private komen: KomentarService,
@@ -66,8 +68,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.gs.isBrowser) {
       this.getNews();
-      this.getComment();
       this.getRssFeed();
+      if (this.as.currentUserSubject?.value) {
+        this.getComment();
+      }
       this.fs.initializeFab(null, '/assets/img/discord/pink.png', 'Discord Server', environment.discord.join_url, true);
     }
   }
