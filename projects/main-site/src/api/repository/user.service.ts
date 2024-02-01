@@ -29,17 +29,20 @@ export class UserService {
     return this.userRepo.metadata;
   }
 
-  find(options: FindManyOptions<User>): Promise<User[]> {
+  find(options: FindManyOptions<User>, withDeleted = false): Promise<User[]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[USER_SERVICE-FIND_ALL] 🤖', options);
     return this.userRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<User>): Promise<[User[], number]> {
+  findAndCount(options: FindManyOptions<User>, withDeleted = false): Promise<[User[], number]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[USER_SERVICE-FIND_AND_COUNT] 🤖', options);
     return this.userRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<User>): Promise<User> {
+  findOneOrFail(options: FindOneOptions<User>, withDeleted = false): Promise<User> {
+    options.withDeleted = withDeleted;
     this.gs.log('[USER_SERVICE-GET_BY] 🤖', options);
     return this.userRepo.findOneOrFail(options);
   }

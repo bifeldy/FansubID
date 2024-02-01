@@ -29,17 +29,20 @@ export class TicketService {
     return this.ticketRepo.metadata;
   }
 
-  find(options: FindManyOptions<Ticket>): Promise<Ticket[]> {
+  find(options: FindManyOptions<Ticket>, withDeleted = false): Promise<Ticket[]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[TICKET_SERVICE-FIND_ALL] 🎫', options);
     return this.ticketRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Ticket>): Promise<[Ticket[], number]> {
+  findAndCount(options: FindManyOptions<Ticket>, withDeleted = false): Promise<[Ticket[], number]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[TICKET_SERVICE-FIND_AND_COUNT] 🎫', options);
     return this.ticketRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Ticket>): Promise<Ticket> {
+  findOneOrFail(options: FindOneOptions<Ticket>, withDeleted = false): Promise<Ticket> {
+    options.withDeleted = withDeleted;
     this.gs.log('[TICKET_SERVICE-GET_BY] 🎫', options);
     return this.ticketRepo.findOneOrFail(options);
   }

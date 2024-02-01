@@ -29,17 +29,20 @@ export class InformationService {
     return this.informationRepo.metadata;
   }
 
-  find(options: FindManyOptions<Information>): Promise<Information[]> {
+  find(options: FindManyOptions<Information>, withDeleted = false): Promise<Information[]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[INFORMATION_SERVICE-FIND_ALL] 🔔', options);
     return this.informationRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Information>): Promise<[Information[], number]> {
+  findAndCount(options: FindManyOptions<Information>, withDeleted = false): Promise<[Information[], number]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[INFORMATION_SERVICE-FIND_AND_COUNT] 🔔', options);
     return this.informationRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Information>): Promise<Information> {
+  findOneOrFail(options: FindOneOptions<Information>, withDeleted = false): Promise<Information> {
+    options.withDeleted = withDeleted;
     this.gs.log('[INFORMATION_SERVICE-GET_BY] 🔔', options);
     return this.informationRepo.findOneOrFail(options);
   }

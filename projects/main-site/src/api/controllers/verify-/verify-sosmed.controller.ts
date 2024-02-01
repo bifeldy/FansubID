@@ -153,17 +153,15 @@ export class VerifySosmedController {
         return {
           info: `😅 201 - Discord API :: Masuk & Verify 🤣`,
           result: {
-            title: `Kirim Token Ke ${environment.siteName} Discord BOT Dalam ${CONSTANTS.timeJwtEncryption / 60} Menit! #🚮-bot-spam`,
-            message: '/verify ' + this.cs.credentialEncode(
+            title: `Kirim Token Menggunakan Perintah '/verify' Ke ${environment.siteName} Discord BOT Dalam ${CONSTANTS.timeJwtEncryption / 60} Menit! #🚮-bot-spam`,
+            message: this.cs.credentialEncode(
               {
                 discord: {
                   id: res_json2.id,
-                  email: res_json2.email,
                   verified: res_json2.verified
                 },
                 user: {
                   id: user.id,
-                  username: user.username,
                   verified: user.verified
                 }
               },

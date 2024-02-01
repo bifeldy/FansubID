@@ -46,17 +46,20 @@ export class FansubService {
     return this.fansubRepo.metadata;
   }
 
-  find(options: FindManyOptions<Fansub>): Promise<Fansub[]> {
+  find(options: FindManyOptions<Fansub>, withDeleted = false): Promise<Fansub[]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[FANSUB_SERVICE-FIND_ALL] 🍿', options);
     return this.fansubRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Fansub>): Promise<[Fansub[], number]> {
+  findAndCount(options: FindManyOptions<Fansub>, withDeleted = false): Promise<[Fansub[], number]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[FANSUB_SERVICE-FIND_AND_COUNT] 🍿', options);
     return this.fansubRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Fansub>): Promise<Fansub> {
+  findOneOrFail(options: FindOneOptions<Fansub>, withDeleted = false): Promise<Fansub> {
+    options.withDeleted = withDeleted;
     this.gs.log('[FANSUB_SERVICE-GET_BY] 🍿', options);
     return this.fansubRepo.findOneOrFail(options);
   }

@@ -29,17 +29,20 @@ export class BerkasService {
     return this.berkasRepo.metadata;
   }
 
-  find(options: FindManyOptions<Berkas>): Promise<Berkas[]> {
+  find(options: FindManyOptions<Berkas>, withDeleted = false): Promise<Berkas[]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[BERKAS_SERVICE-FIND_ALL] 📂', options);
     return this.berkasRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Berkas>): Promise<[Berkas[], number]> {
+  findAndCount(options: FindManyOptions<Berkas>, withDeleted = false): Promise<[Berkas[], number]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[BERKAS_SERVICE-FIND_AND_COUNT] 📂', options);
     return this.berkasRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Berkas>): Promise<Berkas> {
+  findOneOrFail(options: FindOneOptions<Berkas>, withDeleted = false): Promise<Berkas> {
+    options.withDeleted = withDeleted;
     this.gs.log('[BERKAS_SERVICE-GET_BY] 📂', options);
     return this.berkasRepo.findOneOrFail(options);
   }

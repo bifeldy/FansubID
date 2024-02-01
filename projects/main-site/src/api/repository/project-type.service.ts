@@ -29,17 +29,20 @@ export class ProjectTypeService {
     return this.projectTypeRepo.metadata;
   }
 
-  find(options: FindManyOptions<ProjectType>): Promise<ProjectType[]> {
+  find(options: FindManyOptions<ProjectType>, withDeleted = false): Promise<ProjectType[]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[PROJECT_TYPE_SERVICE-FIND_ALL] 💉', options);
     return this.projectTypeRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<ProjectType>): Promise<[ProjectType[], number]> {
+  findAndCount(options: FindManyOptions<ProjectType>, withDeleted = false): Promise<[ProjectType[], number]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[PROJECT_TYPE_SERVICE-FIND_AND_COUNT] 💉', options);
     return this.projectTypeRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<ProjectType>): Promise<ProjectType> {
+  findOneOrFail(options: FindOneOptions<ProjectType>, withDeleted = false): Promise<ProjectType> {
+    options.withDeleted = withDeleted;
     this.gs.log('[PROJECT_TYPE_SERVICE-GET_BY] 💉', options);
     return this.projectTypeRepo.findOneOrFail(options);
   }

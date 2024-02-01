@@ -29,17 +29,20 @@ export class KomentarService {
     return this.komentarRepo.metadata;
   }
 
-  find(options: FindManyOptions<Komentar>): Promise<Komentar[]> {
+  find(options: FindManyOptions<Komentar>, withDeleted = false): Promise<Komentar[]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[KOMENTAR_SERVICE-FIND_ALL] 💬', options);
     return this.komentarRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Komentar>): Promise<[Komentar[], number]> {
+  findAndCount(options: FindManyOptions<Komentar>, withDeleted = false): Promise<[Komentar[], number]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[KOMENTAR_SERVICE-FIND_AND_COUNT] 💬', options);
     return this.komentarRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Komentar>): Promise<Komentar> {
+  findOneOrFail(options: FindOneOptions<Komentar>, withDeleted = false): Promise<Komentar> {
+    options.withDeleted = withDeleted;
     this.gs.log('[KOMENTAR_SERVICE-GET_BY] 💬', options);
     return this.komentarRepo.findOneOrFail(options);
   }

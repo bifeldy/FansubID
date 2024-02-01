@@ -29,17 +29,20 @@ export class AttachmentService {
     return this.attachmentRepo.metadata;
   }
 
-  find(options: FindManyOptions<Attachment>): Promise<Attachment[]> {
+  find(options: FindManyOptions<Attachment>, withDeleted = false): Promise<Attachment[]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[ATTACHMENT_SERVICE-FIND_ALL] 💾', options);
     return this.attachmentRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Attachment>): Promise<[Attachment[], number]> {
+  findAndCount(options: FindManyOptions<Attachment>, withDeleted = false): Promise<[Attachment[], number]> {
+    options.withDeleted = withDeleted;
     this.gs.log('[ATTACHMENT_SERVICE-FIND_AND_COUNT] 💾', options);
     return this.attachmentRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Attachment>): Promise<Attachment> {
+  findOneOrFail(options: FindOneOptions<Attachment>, withDeleted = false): Promise<Attachment> {
+    options.withDeleted = withDeleted;
     this.gs.log('[ATTACHMENT_SERVICE-GET_BY] 💾', options);
     return this.attachmentRepo.findOneOrFail(options);
   }
