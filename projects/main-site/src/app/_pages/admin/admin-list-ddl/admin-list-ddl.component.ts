@@ -106,7 +106,7 @@ export class AdminListDdlComponent implements OnInit, OnDestroy {
       'Upload Ulang ?',
       `
         Id: ${data.id} <br />
-        Filename: ${data.name}.${data.ext} <br />
+        Filename: ${data.name}${data.name}${data.ext ? `.${data.ext}` : ''} <br />
         Size: ${data.size} Bytes <br />
         Mime: ${data.mime} <br />
         Pemilik: ${data.user_.username}

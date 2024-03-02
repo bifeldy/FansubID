@@ -164,13 +164,14 @@ export class MailWebhookController {
                 }
                 this.ms.webhook[req.body['Message-Id']].col.attachment_ = [];
                 for (const file of req.files as Express.Multer.File[]) {
-                  const fileExt = file.originalname.split('.').pop().toLowerCase();
+                  const fileExt = file.originalname.includes('.') && !file.originalname.endsWith('.') ? file.originalname.split('.').pop().toLowerCase() : null;
                   const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-                  const fIdx = files.findIndex(f => f.name === file.filename || f.name === `${file.filename}.${fileExt}`);
+                  const fIdx = files.findIndex(f => f.name === file.filename || f.name === `${file.filename}${fileExt ? `.${fileExt}` : ''}`);
                   if (fIdx >= 0) {
                     const attachment = this.attachmentRepo.new();
                     attachment.pending = true;
                     attachment.name = file.filename;
+                    attachment.orig = file.originalname;
                     attachment.ext = fileExt;
                     attachment.size = file.size;
                     attachment.mime = file.mimetype;
@@ -181,7 +182,7 @@ export class MailWebhookController {
                       this.gcs.gDrive(true).then(async (gdrive) => {
                         const dfile = await gdrive.files.create({
                           requestBody: {
-                            name: `${resAttachmentSave.name}.${resAttachmentSave.ext}`,
+                            name: resAttachmentSave.orig || `${resAttachmentSave.name}${resAttachmentSave.ext ? `.${resAttachmentSave.ext}` : ''}`,
                             parents: [environment.gCloudPlatform.gDrive.folder_id],
                             mimeType: resAttachmentSave.mime
                           },
@@ -231,9 +232,9 @@ export class MailWebhookController {
               }
               if ((req.files as Express.Multer.File[])?.length > 0) {
                 for (const file of req.files as Express.Multer.File[]) {
-                  const fileExt = file.originalname.split('.').pop().toLowerCase();
+                  const fileExt = file.originalname.includes('.') && !file.originalname.endsWith('.') ? file.originalname.split('.').pop().toLowerCase() : null;
                   const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-                  const fIdx = files.findIndex(f => f.name === file.filename || f.name === `${file.filename}.${fileExt}`);
+                  const fIdx = files.findIndex(f => f.name === file.filename || f.name === `${file.filename}${fileExt ? `.${fileExt}` : ''}`);
                   if (fIdx >= 0) {
                     this.gs.deleteAttachment(files[fIdx].name);
                   }

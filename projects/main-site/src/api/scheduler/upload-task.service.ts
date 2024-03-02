@@ -41,19 +41,19 @@ export class UploadService {
 
   async uploadSubtitleAndFont(mkvAttachment: AttachmentModel): Promise<void> {
     const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-    const fIdx = files.findIndex(f => f.name === mkvAttachment.name || f.name === `${mkvAttachment.name}.${mkvAttachment.ext}`);
+    const fIdx = files.findIndex(f => f.name === mkvAttachment.name || f.name === `${mkvAttachment.name}${mkvAttachment.ext ? `.${mkvAttachment.ext}` : ''}`);
     if (fIdx >= 0) {
       try {
         const gdrive = await this.gcs.gDrive(true);
         const dfile = await gdrive.files.create({
           requestBody: {
-            name: `${mkvAttachment.name}.${mkvAttachment.ext}`,
+            name: mkvAttachment.orig || `${mkvAttachment.name}${mkvAttachment.ext ? `.${mkvAttachment.ext}` : ''}`,
             parents: [environment.gCloudPlatform.gDrive.folder_id],
             mimeType: mkvAttachment.mime
           },
           media: {
             mimeType: mkvAttachment.mime,
-            body: createReadStream(`${environment.uploadFolder}/${mkvAttachment.name}.${mkvAttachment.ext}`)
+            body: createReadStream(`${environment.uploadFolder}/${files[fIdx].name}`)
           },
           fields: 'id'
         }, {
@@ -76,7 +76,7 @@ export class UploadService {
           oa.pending = false;
         }
         await this.attachmentRepo.save(otherAttachment2);
-        this.gs.deleteAttachment(`${mkvAttachment.name}.${mkvAttachment.ext}`);
+        this.gs.deleteAttachment(`${mkvAttachment.name}${mkvAttachment.ext ? `.${mkvAttachment.ext}` : ''}`);
       } catch (e3) {
         this.gs.log('[GDRIVE-ERROR] 💽', e3, 'error');
         mkvAttachment.pending = false;
@@ -95,18 +95,19 @@ export class UploadService {
 
   async extractAndUploadVideoAndZip(attachment: AttachmentModel): Promise<void> {
     const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-    const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
+    const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}${attachment.ext ? `.${attachment.ext}` : ''}`);
     if (fIdx >= 0) {
       if (attachment.ext === 'mkv') {
         try {
           const extractedFiles = await this.mkv.mkvExtract(attachment.name, `${environment.uploadFolder}/${files[fIdx].name}`);
           for (const ef of extractedFiles) {
             const fileNameExt = ef.name.split('.');
-            const fileExt = fileNameExt.pop().toLowerCase();
-            const fileName = fileNameExt.join('.').toLowerCase();
+            const fileExt = fileNameExt.length > 1 ? fileNameExt.pop().toLowerCase() : null;
+            const fileName = fileNameExt.length > 1 ? fileNameExt.join('.').toLowerCase() : fileNameExt[0];
             try {
               const mkvAttachment = this.attachmentRepo.new();
               mkvAttachment.name = fileName;
+              mkvAttachment.orig = ef.name;
               mkvAttachment.ext = fileExt;
               mkvAttachment.size = ef.size;
               mkvAttachment.pending = environment.production;
@@ -139,6 +140,7 @@ export class UploadService {
               const fileExist = existsSync(`${environment.uploadFolder}/${fileName}.${fileExt}`);
               if (mkvAttachmentDuplicate) {
                 mkvAttachment.name = mkvAttachmentDuplicate.name;
+                mkvAttachment.orig = mkvAttachmentDuplicate.orig;
                 mkvAttachment.ext = mkvAttachmentDuplicate.ext;
                 mkvAttachment.size = mkvAttachmentDuplicate.size;
                 mkvAttachment.mime = mkvAttachmentDuplicate.mime;

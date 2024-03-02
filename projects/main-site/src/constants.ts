@@ -31,7 +31,7 @@ export const CONSTANTS = {
   decoratorFilterApiKeyAccess: 'filter-api-key-access',
   decoratorRoles: 'roles',
   decoratorVerifiedOnly: 'verified-only',
-  extAttachment: ['avi', 'flv', 'mkv', 'mp4', 'zip'],
+  extAttachment: ['avi', 'flv', 'mkv', 'mp4', 'rar', 'zip'],
   extFonts: ['ttf', 'otf', 'woff', 'woff2'],
   extSubs: ['ass', 'srt'],
   externalApiCacheTime: 15 * 60 * 1, // 15 Minutes [v4 seconds, v5 miliseconds]
@@ -45,7 +45,9 @@ export const CONSTANTS = {
     'application/zip',
     'application/zip-compressed',
     'application/x-zip',
-    'application/x-zip-compressed'
+    'application/x-zip-compressed',
+    'application/vnd.rar',
+    'application/octet-stream' // Browser & Windows Lawas Gak Detect MKV Salah Kirim Info
   ],
   fileSizeAttachmentAutoDdl: 50 * 1000 * 1000, // Under 50 MB Always Get DDL -- NC OP/ED
   fileSizeAttachmentChunkLimit: 8 * 1000 * 1000, // Cloudflare User Plan -- Free Is 100 MB ~ T.T

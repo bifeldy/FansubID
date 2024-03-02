@@ -74,7 +74,7 @@ export class BerkasController {
         });
         await this.tempAttachmentRepo.remove(tempAttachment);
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-        const fIdx = files.findIndex(f => f.name === tempAttachment.name || f.name === `${tempAttachment.name}.${tempAttachment.ext}`);
+        const fIdx = files.findIndex(f => f.name === tempAttachment.name || f.name === `${tempAttachment.name}${tempAttachment.ext ? `.${tempAttachment.ext}` : ''}`);
         if (fIdx >= 0) {
           const attachment = this.attachmentRepo.new();
           attachment.name = tempAttachment.name;

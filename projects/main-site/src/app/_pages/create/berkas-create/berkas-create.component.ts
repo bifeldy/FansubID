@@ -117,7 +117,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
   }
 
   get fileTypeAttachmentAllowed(): string {
-    return CONSTANTS.fileTypeAttachmentAllowed.join(', ');
+    return CONSTANTS.fileTypeAttachmentAllowed.filter(mime => mime != 'application/octet-stream').join(', ');
   }
 
   ngOnInit(): void {
@@ -594,20 +594,25 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
     this.uploadService.disconnect();
     try {
       if (file.size <= CONSTANTS.fileSizeAttachmentTotalLimit) {
-        this.uploadService.handleFiles(file);
-        this.subsDialog = (await this.ds.openKonfirmasiDialog(
-          'Saran Penamaan Berkas',
-          'Apakah Ingin Mengganti Penamaan Berkas Sesuai Dengan Nama Lampiran Yang Di Unggah ?'
-        )).afterClosed().subscribe({
-          next: re => {
-            this.gs.log('[INFO_DIALOG_CLOSED]', re);
-            if (re === true) {
-              this.fg.controls['name'].patchValue(file.name);
-              this.fg.controls['name'].markAsDirty();
+        if (!file.name.includes('.') || file.name.endsWith('.')) {
+          this.attachmentErrorText = 'Ekstensi Nama Lampiran Tidak Valid!';
+          this.ddl.clear(event);
+        } else {
+          this.uploadService.handleFiles(file);
+          this.subsDialog = (await this.ds.openKonfirmasiDialog(
+            'Saran Penamaan Berkas',
+            'Apakah Ingin Mengganti Penamaan Berkas Sesuai Dengan Nama Lampiran Yang Di Unggah ?'
+          )).afterClosed().subscribe({
+            next: re => {
+              this.gs.log('[INFO_DIALOG_CLOSED]', re);
+              if (re === true) {
+                this.fg.controls['name'].patchValue(file.name);
+                this.fg.controls['name'].markAsDirty();
+              }
+              this.subsDialog.unsubscribe();
             }
-            this.subsDialog.unsubscribe();
-          }
-        });
+          });
+        }
       } else {
         this.attachmentLimitExceeded = CONSTANTS.fileSizeAttachmentTotalLimit;
         this.ddl.clear(event);

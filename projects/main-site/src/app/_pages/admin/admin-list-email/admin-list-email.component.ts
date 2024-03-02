@@ -80,7 +80,7 @@ export class AdminListEmailComponent implements OnInit, OnDestroy {
         }
         lampiran += `
           <a href="${environment.apiUrl}/attachment/${a.id}?ngsw-bypass=true" target="_blank">
-            ${a.name}.${a.ext} (${a.size} Bytes)
+          ${a.name}${a.ext ? `.${a.ext}` : ''} (${a.size} Bytes)
           </a>
         `;
       }

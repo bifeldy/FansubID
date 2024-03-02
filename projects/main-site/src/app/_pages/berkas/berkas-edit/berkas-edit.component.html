@@ -201,7 +201,7 @@
                       <div mat-subheader class="text-warning">Berkas yang terlampir tidak boleh diubah.</div>
                       <mat-list-item>
                         <mat-icon fontIcon="attach_file" mat-list-icon></mat-icon>
-                        <div mat-line>{{ attachmentFile.name }}.{{ attachmentFile.ext }}</div>
+                        <div mat-line>{{ attachmentFile.name }}{{ attachmentFile.ext ? '.' + attachmentFile.ext : '' }}</div>
                         <div mat-line>{{ attachmentFile.size | bytes }}</div>
                       </mat-list-item>
                       <p class="py-3 m-0" *ngIf="attachmentFontSubtitle.length > 0">{{ attachmentFontSubtitle.join(', ').toLowerCase() }}</p>

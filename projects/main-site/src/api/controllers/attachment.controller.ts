@@ -132,7 +132,7 @@ export class AttachmentController {
         const tempAttachment = this.tempAttachmentRepo.new();
         tempAttachment.name = file.id;
         tempAttachment.orig = file.originalName;
-        tempAttachment.ext = file.originalName.split('.').pop().toLowerCase();
+        tempAttachment.ext = file.originalName.includes('.') && !file.originalName.endsWith('.') ? file.originalName.split('.').pop().toLowerCase() : null;
         tempAttachment.size = file.size;
         tempAttachment.mime = file.metadata.mimeType;
         tempAttachment.user_ = user;
@@ -274,20 +274,20 @@ export class AttachmentController {
           resSaveAttachment.aws_s3,
           user,
           expiredSeconds,
-          resSaveAttachment.orig,
+          resSaveAttachment.orig || `${resSaveAttachment.name}${resSaveAttachment.ext ? `.${resSaveAttachment.ext}` : ''}`,
           resSaveAttachment.mime
         );
         res.redirect(301, ddl.toString());
       } else {
         const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-        const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}.${attachment.ext}`);
+        const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}${attachment.ext ? `.${attachment.ext}` : ''}`);
         if (fIdx < 0) {
           throw new Error('Lampiran Tidak Ditemukan!');
         }
         res.setHeader('content-type', attachment.mime);
         res.download(
           `${environment.uploadFolder}/${files[fIdx].name}`,
-          `${attachment.orig || attachment.name + '.' + attachment.ext}`,
+          attachment.orig || `${attachment.name}${attachment.ext ? `.${attachment.ext}` : ''}`,
           async (e) => {
             if (e) {
               this.gs.log('[RES_DOWNLOAD_ATTACHMENT-ERROR] 🔻', e, 'error');

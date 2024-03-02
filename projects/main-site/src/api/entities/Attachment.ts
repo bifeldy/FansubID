@@ -19,7 +19,7 @@ export class Attachment implements AttachmentModel {
   @Column({ type: 'text', nullable: true })
   orig: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   ext: string;
 
   @Column({ type: 'bigint', transformer: new ColumnNumberBigIntTransformer() })

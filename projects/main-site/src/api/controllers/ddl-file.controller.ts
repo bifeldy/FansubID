@@ -267,6 +267,7 @@ export class DdlSeekController {
       res_raw_headers.delete('Content-Range');
       res_raw_headers.set('Content-Range', `bytes ${target}-${res_raw_headers_content_length_minus_1}/${attachment.size}`);
       res_raw_headers.delete('Content-Disposition');
+      // Biar Nama File Gak Bisa Di Tebak ~
       res_raw_headers.set('Content-Disposition', `attachment; filename="${attachment.name}.${attachment.ext}"`);
       res_raw_headers.delete('Content-Type');
       res_raw_headers.set('Content-Type', attachment.mime);

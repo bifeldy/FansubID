@@ -188,7 +188,7 @@ export class DownloadManagerService {
   saveFileAs(attachmentId): void {
     this.gs.log('[SAVE_FILE]', attachmentId);
     const attachment = this.attachmentsDownload[attachmentId];
-    saveAs(attachment.data, `${attachment.orig || attachment.name + '.' + attachment.ext}`);
+    saveAs(attachment.data, attachment.orig || `${attachment.name}${attachment.ext ? `.${attachment.ext}` : ''}`);
   }
 
 }
