@@ -184,21 +184,8 @@ export class FansubDnsController {
                 { slug: ILike(fansubSlug) }
               ]
             });
-            let isFansubDnsChanged = false;
             if (fansub.dns_id !== rec.id) {
               fansub.dns_id = rec.id;
-              isFansubDnsChanged = true;
-            }
-            let isFansubUrlChanged = false;
-            const fansubUrls = JSON.parse(fansub.urls);
-            if (fansubUrls['web'] !== rec.name) {
-              fansubUrls['web'] = `https://${rec.name}`;
-              isFansubUrlChanged = true;
-            }
-            if (isFansubDnsChanged || isFansubUrlChanged) {
-              if (isFansubUrlChanged) {
-                fansub.urls = JSON.stringify(fansubUrls);
-              }
               fansub = await this.fansubRepo.save(fansub);
             }
             delete fansub.urls;
