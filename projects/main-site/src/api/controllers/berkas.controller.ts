@@ -85,7 +85,7 @@ export class BerkasController {
           attachment.user_ = user;
           berkas.attachment_ = await this.attachmentRepo.save(attachment);
         } else {
-          throw 'Lampiran Tidak Ditemukan / Dalam Proses Penggabungan!';
+          throw new Error('Lampiran Tidak Ditemukan / Dalam Proses Penggabungan!');
         }
       }
     } catch (error) {
