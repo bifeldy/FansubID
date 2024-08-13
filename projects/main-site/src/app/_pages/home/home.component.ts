@@ -14,6 +14,7 @@ import { FansubService } from '../../_shared/services/fansub.service';
 import { WinboxService } from '../../_shared/services/winbox.service';
 import { FabService } from '../../_shared/services/fab.service';
 import { AuthService } from '../../_shared/services/auth.service';
+import { BerkasService } from '../../_shared/services/berkas.service';
 
 @Component({
   selector: 'app-home',
@@ -24,11 +25,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   newsData = [];
   komentarData = [];
+  berkasData = [];
   rssFeedData = [];
 
   subsNews = null;
   subsKomenGet = null;
+  subsBerkas = null;
   subsRssFeed = null;
+  subsUser = null;
 
   constructor(
     private router: Router,
@@ -38,6 +42,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private news: NewsService,
     private komen: KomentarService,
     private fansub: FansubService,
+    private berkas: BerkasService,
     private bs: BusyService,
     private wb: WinboxService,
     private fs: FabService
@@ -62,16 +67,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsNews?.unsubscribe();
     this.subsKomenGet?.unsubscribe();
+    this.subsBerkas?.unsubscribe();
     this.subsRssFeed?.unsubscribe();
+    this.subsUser?.unsubscribe();
   }
 
   ngOnInit(): void {
     if (this.gs.isBrowser) {
-      this.getNews();
+      this.getBerkas();
       this.getRssFeed();
-      if (this.as.currentUserSubject?.value) {
-        this.getComment();
-      }
+      this.subsUser = this.as.currentUser.subscribe({
+        next: user => {
+          if (user) {
+            this.getNews();
+            this.getComment();
+          }
+        }
+      });
       this.fs.initializeFab(null, '/assets/img/discord/pink.png', 'Discord Server', environment.discord.join_url, true);
     }
   }
@@ -104,6 +116,21 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: err => {
         this.gs.log('[HOME_KOMENTAR_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  getBerkas(): void {
+    this.bs.busy();
+    this.subsBerkas = this.berkas.getAllBerkas('', 1, 12, '', '', false).subscribe({
+      next: res => {
+        this.gs.log('[HOME_BERKAS_LIST_SUCCESS]', res);
+        this.berkasData = res.results;
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[HOME_BERKAS_LIST_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

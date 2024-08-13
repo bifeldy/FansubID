@@ -78,11 +78,11 @@
 
 <!-- Content -->
 <div class="container">
-  
+
   <!-- Detail -->
   <div class="row pb-3 px-0">
     <div class="col-lg-8 col-xl-9">
-      <div class="row">
+      <div class="row" *ngIf="newsData.length > 0">
         <div class="col-12 sticky-top bg-bifeldy">
           <h2 class="pt-3 border-bottom-dotted">
             <a class="float-end text-decoration-none text-warning" routerLink="/news" style="font-size: small;">
@@ -92,29 +92,28 @@
           </h2>
         </div>
         <div class="col-12">
-          <div class="row">
-            <app-no-data class="col-12 p-3" *ngIf="newsData.length <= 0"></app-no-data>
-            <div class="col-12" *ngIf="newsData.length > 0">
-              <div class="row px-3">
-                <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let n of newsData | slice:0:(GS.gridListBreakpoint === 3 ? 2 : GS.gridListBreakpoint)">
-                  <mat-card>
-                    <img mat-card-image [src]="n.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/news/{{ n.id }}" />
-                    <mat-card-content routerLink="/news/{{ n.id }}" style="cursor: pointer;">
-                      <h3 matLine style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-                        {{ n.title }}
-                      </h3>
-                    </mat-card-content>
-                    <mat-card-header>
-                      <div mat-card-avatar style="background-size: cover; border-radius: 0; background-position: center;"
-                      [style.background-image]="'url(' + n.user_.image_url + ')'"></div>
-                      <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-warning mb-1" style="cursor: pointer;">
-                        <h3 class="mb-0">{{ n.user_.username }}</h3>
-                      </mat-card-title>
-                      <mat-card-subtitle class="mb-0">{{ n.created_at | date:'d MMMM y, HH:mm:ss z' }}</mat-card-subtitle>
-                    </mat-card-header>
-                  </mat-card>
-                </div>
-              </div>
+          <div class="row px-3">
+            <div class="col-12 col-md-6 col-xl-4 p-2" *ngFor="let n of newsData | slice:0:(GS.gridListBreakpoint === 3 ? 2 : GS.gridListBreakpoint)">
+              <mat-card class="card">
+                <img mat-card-image [src]="n.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/news/{{ n.id }}" />
+                <mat-card-content routerLink="/news/{{ n.id }}" style="cursor: pointer;">
+                  <h3 matLine matTooltip="{{ n.title }}"style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                    {{ n.title }}
+                  </h3>
+                </mat-card-content>
+                <mat-card-header style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                  <div mat-card-avatar style="background-size: cover; border-radius: 0; background-position: center;"
+                  [style.background-image]="'url(' + n.user_.image_url + ')'"></div>
+                  <mat-card-title routerLink="/user/{{ n.user_.username }}" class="text-warning mb-1" style="cursor: pointer;">
+                    <h3 matLine class="mb-0">
+                      {{ n.user_.username }}
+                    </h3>
+                  </mat-card-title>
+                  <mat-card-subtitle class="mb-0">
+                    {{ n.created_at | date:'d MMMM y, HH:mm:ss z' }}
+                  </mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
             </div>
           </div>
         </div>
@@ -154,6 +153,48 @@
               </a>
             </mat-list-option>
           </mat-selection-list>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 sticky-top bg-bifeldy">
+          <h2 class="pt-3 border-bottom-dotted">
+            <a class="float-end text-decoration-none text-warning" routerLink="/berkas" style="font-size: small;">
+              Selengkapnya
+            </a>
+            <b class="text-bifeldy">Berkas Terkini</b>
+          </h2>
+        </div>
+        <div class="col-12">
+          <div class="row px-3">
+            <ng-container *ngIf="berkasData.length > 0; then found_; else notFound_;"></ng-container>
+            <ng-template #found_>
+              <div class="col-6 col-md-4 col-xl-3 p-2" *ngFor="let b of berkasData">
+                <mat-card class="card">
+                  <img mat-card-image [src]="b.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/berkas/{{ b.id }}" />
+                  <mat-card-content routerLink="/berkas/{{ b.id }}" style="cursor: pointer;">
+                    <h3 matLine matTooltip="{{ b.name }}" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                      {{ b.name }}
+                    </h3>
+                  </mat-card-content>
+                  <mat-card-header style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                    <div mat-card-avatar style="background-size: cover; border-radius: 0; background-position: center;"
+                    [style.background-image]="'url(' + b.user_.image_url + ')'"></div>
+                    <mat-card-title routerLink="/user/{{ b.user_.username }}" class="text-warning mb-1" style="cursor: pointer;">
+                      <h3 matLine class="mb-0">
+                        {{ b.user_.username }}
+                      </h3>
+                    </mat-card-title>
+                    <mat-card-subtitle class="text-success mb-0">
+                      {{ b.fansub_.length }} Grup Fansub
+                    </mat-card-subtitle>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+            </ng-template>
+            <ng-template #notFound_>
+              <app-no-data class="col-12 py-3"></app-no-data>
+            </ng-template>
+          </div>
         </div>
       </div>
       <div class="row" *ngIf="rssFeedData.length > 0">
