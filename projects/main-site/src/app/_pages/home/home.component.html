@@ -171,9 +171,9 @@
               <div class="col-6 col-md-4 col-xl-3 p-2" *ngFor="let b of berkasData">
                 <mat-card class="card">
                   <img mat-card-image [src]="b.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/berkas/{{ b.id }}" />
-                  <mat-card-content routerLink="/berkas/{{ b.id }}" style="cursor: pointer;">
+                  <mat-card-content class="mb-2" routerLink="/berkas/{{ b.id }}" style="cursor: pointer;">
                     <h3 matLine matTooltip="{{ b.name }}" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-                      {{ b.name }}
+                      <marquee>{{ b.name }}</marquee>
                     </h3>
                   </mat-card-content>
                   <mat-card-header style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
@@ -185,7 +185,7 @@
                       </h3>
                     </mat-card-title>
                     <mat-card-subtitle class="text-success mb-0">
-                      {{ b.fansub_.length }} Grup Fansub
+                      {{ b.fansub_.length }} Fansub
                     </mat-card-subtitle>
                   </mat-card-header>
                 </mat-card>
