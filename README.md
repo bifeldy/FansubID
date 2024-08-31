@@ -1,7 +1,7 @@
 # <img src="projects/main-site/src/assets/img/favicon.png" width="24px" /> [FansubID | Database Fansub Indonesia](https://www.fansub.id)
 
 Proyek ini awalnya dibuat menggunakan salinan dari [Angular CLI](https://github.com/angular/angular-cli) dengan versi 7.1.0 yaitu [PTI-TugasAkhir](https://github.com/main-site/PTI-TugasAkhir). <br />
-=> <i>Live Demo</i> :: https://main-site.github.io/PTI-TugasAkhir (<i>Archived</i>). <br />
+=> <i>Live Demo</i> :: https://bifeldy.github.io/PTI-TugasAkhir (<i>Archived</i>). <br />
 <i>With 💖 Angular + NestJS 💘 From Indonesia ~</i>
 
 > Ayo gabung di saluran kanal Discord kita! <br /> [![Chat on Discord](https://discordapp.com/api/guilds/342220398022098944/widget.png "Chat on Discord")](https://discord.gg/xGWdExk)
