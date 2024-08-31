@@ -4,7 +4,7 @@ import { Equal, ILike } from 'typeorm';
 
 import { environment } from '../../environments/api/environment';
 
-import { SosMedModel } from '../../models/req-res.model';
+import { RoleModel, SosMedModel } from '../../models/req-res.model';
 
 import { ApiService } from '../services/api.service';
 import { CryptoService } from '../services/crypto.service';
@@ -40,14 +40,16 @@ export class LoginMiddleware implements NestMiddleware {
             { email: ILike(req.body.userNameOrEmail), password: Equal(reqBodyPassword) }
           ]
         });
-        const banned = await this.as.isAccountBanned(selectedUser.id);
-        if (banned) {
-          throw new HttpException({
-            info: '🙄 403 - Banned :: Akun Dikunci 😪',
-            result: {
-              message: `Akun Tidak Dapat Digunakan :: ${banned.reason}`
-            }
-          }, HttpStatus.FORBIDDEN);
+        if (selectedUser.role !== RoleModel.ADMIN) {
+          const banned = await this.as.isAccountBanned(selectedUser.id);
+          if (banned) {
+            throw new HttpException({
+              info: '🙄 403 - Banned :: Akun Dikunci 😪',
+              result: {
+                message: `Akun Tidak Dapat Digunakan :: ${banned.reason}`
+              }
+            }, HttpStatus.FORBIDDEN);
+          }
         }
         if (selectedUser.verified) {
           const sosmeds = await this.sosmedRepo.find({

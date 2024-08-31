@@ -25,7 +25,7 @@ export class DateAgoPipe implements PipeTransform {
         }
       }
     }
-    return value;
+    return 'Baru saja';
   }
 
 }

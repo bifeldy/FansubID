@@ -48,19 +48,19 @@
       </span>
     </p>
     <p class="px-2 text-truncate" *ngIf="SS.latency">
-      Latency ::
+      Ping Latency ::
       <span class="text-{{ SS.latency > 75 ? 'warning' : 'success' }}">
         {{ SS.latency }} ms
       </span>
     </p>
     <p class="px-2 text-truncate">
-      Nodes ::
+      Web Nodes ::
       <span class="text-success">
         {{ SS.statsServer.nodes }} Pengunjung
       </span>
     </p>
     <p class="px-2 text-truncate">
-      Peers ::
+      Torrent Peers ::
       <span class="text-success">
         {{ SS.statsServer.peers }} Koneksi
       </span>

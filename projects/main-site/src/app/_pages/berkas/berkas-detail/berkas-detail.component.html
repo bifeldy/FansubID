@@ -109,7 +109,7 @@
                     <div class="px-3" *ngIf="lampiran.isDownloading && !lampiran.isCompleted">
                       {{ lampiran.percentage >= 100 ? 'Selesai Mengunduh ... '  : 'Sedang Mengunduh ... ' }}
                       {{ lampiran.totals }} Bytes <br />
-                      {{ lampiran.percentage }}% @ {{ lampiran.speed }} KB/s
+                      {{ lampiran.percentage }}% &#64; {{ lampiran.speed }} KB/s
                       <br />
                       <mat-progress-bar color="accent" [mode]="lampiran.mode" [value]="lampiran.percentage"></mat-progress-bar>
                     </div>
@@ -211,7 +211,7 @@
                     <mat-icon fontIcon="play_arrow" class="me-1"></mat-icon>
                     <span *ngIf="!vjsInit">Mulai Streaming Video</span>
                     <span *ngIf="vjsInit">
-                      Loading ...
+                      Mempersiapkan Font & Subtitle ...
                     </span>
                   </button>
                   <app-vjs-player *ngIf="isHaveDDL && vjsInit && vjsReady"

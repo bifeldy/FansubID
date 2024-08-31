@@ -63,7 +63,7 @@
           </button>
           <button type="button" mat-stroked-button matLine class="col text-truncate" matTooltip="Alamat Surel" color="accent" style="overflow: hidden;" (click)="createMailbox()">
             <mat-icon fontIcon="email" class="me-1"></mat-icon>
-            {{ userData.username }}@{{ ENV.domain }}
+            {{ userData.username }}&#64;{{ ENV.domain }}
           </button>
         </div>
         <div class="row py-3" *ngIf="panelData.length > 0">
