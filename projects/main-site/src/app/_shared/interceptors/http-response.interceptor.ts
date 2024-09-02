@@ -50,17 +50,19 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               }
             }
           }
-          switch ((res as any).status) {
-            case 200:
-              this.toast.success(okMessage, okTitle);
-              break;
-            case 201:
-            case 202:
-              this.toast.info(okMessage, okTitle);
-              break;
-            default:
-              this.toast.warning(okMessage, okTitle);
-              break;
+          if (this.gs.isDesktop) {
+            switch ((res as any).status) {
+              case 200:
+                this.toast.success(okMessage, okTitle);
+                break;
+              case 201:
+              case 202:
+                this.toast.info(okMessage, okTitle);
+                break;
+              default:
+                this.toast.warning(okMessage, okTitle);
+                break;
+            }
           }
           if (request.method === 'GET') {
             this.gs.log(`[SOCKET_TRACK-SET]`, request.url);
