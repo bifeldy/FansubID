@@ -14,7 +14,7 @@ import { CONSTANTS } from '../../constants';
 
 import { environment } from '../../environments/api/environment';
 
-import { RoleModel } from '../../models/req-res.model';
+import { RoleModel, UserModel } from '../../models/req-res.model';
 
 import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
@@ -22,6 +22,7 @@ import { Roles } from '../decorators/roles.decorator';
 import { ApiService } from '../services/api.service';
 import { CryptoService } from '../services/crypto.service';
 import { GlobalService } from '../services/global.service';
+import { AmazonWebService } from '../services/amazon-web.service';
 
 @ApiExcludeController()
 @Controller('/image')
@@ -30,7 +31,8 @@ export class ImageController {
   constructor(
     private api: ApiService,
     private cs: CryptoService,
-    private gs: GlobalService
+    private gs: GlobalService,
+    private aws: AmazonWebService
   ) {
     //
   }
@@ -47,11 +49,8 @@ export class ImageController {
           if (file) {
             const typeArray = file.mimetype.split('/');
             const fileType = typeArray[0];
-            const fileExt = typeArray[1];
-            if (fileType === 'image') {
-              if (fileExt === 'jpeg' || fileExt === 'jpg' || fileExt === 'gif' || fileExt === 'png') {
-                return cb(null, true);
-              }
+            if (fileType.toLowerCase() === 'image') {
+              return cb(null, true);
             }
           }
           return cb(null, false);
@@ -72,36 +71,56 @@ export class ImageController {
       form.append('key', environment.imgbbKey);
       form.append('name', dateTime);
       form.append('image', imgB64);
-      const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
+      const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
       if (res_raw.ok) {
         const res_json: any = await res_raw.json();
         this.gs.log(`[imgBB] 🖼 ${res_raw.status}`, res_json);
         return {
-          info: `😅 201 - ImgBB API :: Upload Image 🤣`,
+          info: `😅 201 - ImgBB S3 API :: Upload Image 🤣`,
           result: {
             id: res_json.data.id,
-            title: res_json.data.title,
             url: res_json.data.image.url,
             mime: res_json.data.image.mime,
-            extension: res_json.data.image.extension,
             size: res_json.data.size,
-            time: res_json.data.time,
-            expiration: res_json.data.expiration,
+            // title: res_json.data.title,
+            // extension: res_json.data.image.extension,
+            // time: res_json.data.time,
+            // expiration: res_json.data.expiration
           },
           imageUrl: res_json.data.image.url
         };
       } else {
-        throw new HttpException({
-          info: `🙄 ${res_raw.status || 400} - ImgBB API :: Upload Image Gagal 😪`,
-          result: {
-            message: 'Data Tidak Lengkap / ImgBB API Down!'
-          }
-        }, res_raw.status || HttpStatus.BAD_REQUEST);
+        try {
+          const user: UserModel = res.locals['user'];
+          const upload = await this.aws.uploadImage(
+            `u${user.id}/img/${dateTime}`,
+            imgB64,
+            req.file.mimetype
+          );
+          this.gs.log(`[awsS3] 🖼 ${res_raw.status}`, upload);
+          return {
+            info: `😅 201 - ImgBB S3 API :: Upload Image 🤣`,
+            result: {
+              id: upload.Key,
+              url: upload.Location,
+              mime: req.file.mimetype,
+              size: req.file.size
+            },
+            imageUrl: upload.Location
+          };
+        } catch (e) {
+          throw new HttpException({
+            info: `🙄 ${res_raw.status || 400} - ImgBB S3 API :: Upload Image Gagal 😪`,
+            result: {
+              message: 'Data Tidak Lengkap / ImgBB S3 API Down!'
+            }
+          }, res_raw.status || HttpStatus.BAD_REQUEST);
+        }
       }
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - ImgBB API :: Upload Image Gagal 😪`,
+        info: `🙄 400 - ImgBB S3 API :: Upload Image Gagal 😪`,
         result: {
           message: 'Data Tidak Lengkap'
         }

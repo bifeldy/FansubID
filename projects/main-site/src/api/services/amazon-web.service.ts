@@ -2,6 +2,7 @@
 import S3 from 'aws-sdk/clients/s3';
 
 // NodeJS Library
+import { Buffer } from 'node:buffer';
 import { createReadStream } from 'node:fs';
 import { PassThrough } from 'node:stream';
 import { URL } from 'node:url';
@@ -67,7 +68,7 @@ export class AmazonWebService {
       url.searchParams.append(q, uri.searchParams.get(q));
     }
     url.searchParams.append('ngsw-bypass', 'true');
-    this.gs.log('[AWS_S3] ⛅', url);
+    this.gs.log('[AWS_S3_DDL_DOWN] ⛅', url);
     return url;
   }
 
@@ -81,8 +82,23 @@ export class AmazonWebService {
     const readStream = createReadStream(`${environment.uploadFolder}/${fullFileName}`);
     readStream.pipe(passThrough);
     const ddl = await upload;
-    this.gs.log('[AWS_S3] ⛅', ddl);
+    this.gs.log('[AWS_S3_DDL_UP] ⛅', ddl);
     return ddl;
+  }
+
+  async uploadImage(fullFileName: string, imgb64: string, mime: string): Promise<S3.ManagedUpload.SendData> {
+    var buf = Buffer.from(imgb64.replace(/^data:image\/\w+;base64,/, ''),'base64');
+    const upload = this.s3().upload({
+      Bucket: environment.s3Compatible.bucket,
+      Key: fullFileName,
+      Body: buf,
+      ACL: 'public-read',
+      ContentEncoding: 'base64',
+      ContentType: mime
+    }).promise();
+    const img = await upload;
+    this.gs.log('[AWS_S3_IMG_UP] ⛅', img);
+    return img;
   }
 
 }
