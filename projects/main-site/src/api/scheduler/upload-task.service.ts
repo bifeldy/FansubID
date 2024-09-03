@@ -187,7 +187,7 @@ export class UploadService {
             relations: ['user_']
           });
           const paksaAutoDdl = (attachment.size <= CONSTANTS.fileSizeAttachmentAutoDdl && attachment.user_.role !== RoleModel.USER);
-          if ((primeCount > 0 || paksaAutoDdl) && attachment.user_.id !== 2 /* TODO :: Hard-coded Bot 'Backup' Account Prevent DDL */) {
+          if ((primeCount > 0 || paksaAutoDdl) && attachment.user_.id !== 2 /* TODO :: Hard-coded Bot 'Backup' Account */) {
             const dateTime = Date.now();
             const fullFileName = `${dateTime}_${files[fIdx].name}`;
             const upload = await this.aws.uploadDdl(`u${attachment.user_.id}/ddl/${fullFileName}`);

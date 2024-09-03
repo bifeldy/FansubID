@@ -32,6 +32,10 @@ interface SECRETS_DATA_TYPE {
   S3_BUCKET: string;
   S3_ACCESS_KEY_ID: string;
   S3_SECRET_ACCESS_KEY: string;
+  // R2_BUCKET: string;
+  // R2_API_TOKEN: string;
+  // R2_ACCESS_KEY_ID: string;
+  // R2_SECRET_ACCESS_KEY: string;
 };
 
 let SECRETS_DATA: SECRETS_DATA_TYPE = null;

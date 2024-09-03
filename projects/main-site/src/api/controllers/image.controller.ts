@@ -81,7 +81,7 @@ export class ImageController {
       });
       const dateTime = Date.now().toString();
       const imgB64 = this.cs.convertToBase64(req.file.buffer);
-      if (primeCount > 0 && user.id !== 2 /* TODO :: Hard-coded Bot 'Backup' Account Prevent DDL */) {
+      if (primeCount > 0 && user.id !== 2 /* TODO :: Hard-coded Bot 'Backup' Account */) {
         const upload = await this.aws.uploadImage(
           `u${user.id}/img/${dateTime}`,
           imgB64,
