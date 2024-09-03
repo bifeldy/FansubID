@@ -122,14 +122,19 @@ export class GlobalService {
     const currentDate = new Date();
     const startTime = st || CONSTANTS.freeTimeStart;
     const endTime = et || CONSTANTS.freeTimeEnd;
+    const stArr: number[] = startTime.split(":").map(n => Number(n));
+    const etArr: number[] = endTime.split(":").map(n => Number(n));
     const startDate = new Date(currentDate.getTime());
-    startDate.setHours(Number(startTime.split(":")[0]));
-    startDate.setMinutes(Number(startTime.split(":")[1]));
-    startDate.setSeconds(Number(startTime.split(":")[2]));
+    startDate.setHours(stArr[0]);
+    startDate.setMinutes(stArr[1]);
+    startDate.setSeconds(stArr[2]);
+    if (etArr[0] < stArr[0]) {
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
     const endDate = new Date(currentDate.getTime());
-    endDate.setHours(Number(endTime.split(":")[0]));
-    endDate.setMinutes(Number(endTime.split(":")[1]));
-    endDate.setSeconds(Number(endTime.split(":")[2]));
+    endDate.setHours(etArr[0]);
+    endDate.setMinutes(etArr[1]);
+    endDate.setSeconds(etArr[2]);
     return startDate < currentDate && endDate > currentDate;
   }
 
