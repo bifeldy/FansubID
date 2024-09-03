@@ -164,6 +164,7 @@ export interface AttachmentModel {
   discord?: string;
   aws_s3?: string;
   pending?: boolean;
+  try_count?: number;
   created_at?: number | Date;
   updated_at?: number | Date;
   user_?: UserModel;

@@ -43,6 +43,9 @@ export class Attachment implements AttachmentModel {
   @Column({ type: 'boolean', default: true })
   pending: boolean;
 
+  @Column({ type: 'int', default: 0 })
+  try_count: number;
+
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   @Index()
   created_at: number | Date;

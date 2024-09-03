@@ -93,157 +93,135 @@ export class UploadService {
     }
   }
 
-  async extractAndUploadVideoAndZip(attachment: AttachmentModel): Promise<void> {
-    const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
-    const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}${attachment.ext ? `.${attachment.ext}` : ''}`);
-    if (fIdx >= 0) {
-      if (attachment.ext === 'mkv') {
-        try {
-          const extractedFiles = await this.mkv.mkvExtract(attachment.name, `${environment.uploadFolder}/${files[fIdx].name}`);
-          for (const ef of extractedFiles) {
-            const fileNameExt = ef.name.split('.');
-            const fileExt = fileNameExt.length > 1 ? fileNameExt.pop().toLowerCase() : null;
-            const fileName = fileNameExt.length > 1 ? fileNameExt.join('.').toLowerCase() : fileNameExt[0];
-            try {
-              const mkvAttachment = this.attachmentRepo.new();
-              mkvAttachment.name = fileName;
-              mkvAttachment.orig = ef.name;
-              mkvAttachment.ext = fileExt;
-              mkvAttachment.size = ef.size;
-              mkvAttachment.pending = environment.production;
-              mkvAttachment.user_ = attachment.user_;
-              mkvAttachment.parent_attachment_ = attachment;
-              if (CONSTANTS.extSubs.includes(fileExt)) {
-                mkvAttachment.mime = 'text/plain';
-              } else if (CONSTANTS.extFonts.includes(fileExt)) {
-                mkvAttachment.mime = `font/${fileExt}`;
-              } else {
-                mkvAttachment.mime = 'application/octet-stream';
+  async uploadVideoAndArchive(attachment: AttachmentModel, fileName: string): Promise<void> {
+    if (environment.production) {
+      try {
+        const primeCount = await this.userPremiumRepo.count({
+          where: [
+            {
+              expired_at: MoreThanOrEqual(new Date()),
+              user_: {
+                id: Equal(attachment.user_.id)
               }
-              let mkvAttachmentDuplicate = null;
-              const otherAttachment1 = await this.attachmentRepo.find({
-                where: [
-                  {
-                    name: Equal(fileName),
-                    ext: Equal(fileExt)
-                  }
-                ]
-              });
-              if (otherAttachment1.length > 0) {
-                for (const oa of otherAttachment1) {
-                  mkvAttachmentDuplicate = oa;
-                  if (oa.google_drive) {
-                    break;
-                  }
-                }
-              }
-              const fileExist = existsSync(`${environment.uploadFolder}/${fileName}.${fileExt}`);
-              if (mkvAttachmentDuplicate) {
-                mkvAttachment.name = mkvAttachmentDuplicate.name;
-                mkvAttachment.orig = mkvAttachmentDuplicate.orig;
-                mkvAttachment.ext = mkvAttachmentDuplicate.ext;
-                mkvAttachment.size = mkvAttachmentDuplicate.size;
-                mkvAttachment.mime = mkvAttachmentDuplicate.mime;
-                mkvAttachment.pending = false;
-                if (mkvAttachmentDuplicate.google_drive) {
-                  mkvAttachment.google_drive = mkvAttachmentDuplicate.google_drive;
-                  this.gs.deleteAttachment(`${fileName}.${fileExt}`);
-                } else {
-                  // Local File Missing
-                  if (!fileExist) {
-                    writeFileSync(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data);
-                  }
-                }
-              } else {
-                // First Time Upload
-                if (!fileExist) {
-                  writeFileSync(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data);
-                }
-              }
-              const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
-              // Upload Video Attachment -- Subtitles, Fonts, etc
-              if (resMkvAttachmentSave.pending) {
-                await this.uploadSubtitleAndFont(resMkvAttachmentSave);
-              }
-            } catch (e2) {
-              this.gs.log('[FILE_SUBTITLE_FONT-EXTRACT_ERROR] 🎼', e2, 'error');
             }
+          ],
+          relations: ['user_']
+        });
+        const paksaAutoDdl = (attachment.size <= CONSTANTS.fileSizeAttachmentAutoDdl && attachment.user_.role !== RoleModel.USER);
+        if ((primeCount > 0 || paksaAutoDdl) && attachment.user_.id !== 2 /* TODO :: Hard-coded Bot 'Backup' Account */) {
+          const dateTime = Date.now();
+          const fullFileName = `${dateTime}_${fileName}`;
+          const upload = await this.aws.uploadDdl(`u${attachment.user_.id}/ddl/${fullFileName}`);
+          let urlFile = upload.Location;
+          if (urlFile.startsWith('http://')) {
+            urlFile = urlFile.slice(7, urlFile.length);
+          } else if (urlFile.startsWith('https://')) {
+            urlFile = urlFile.slice(8, urlFile.length);
           }
-        } catch (e1) {
-          this.gs.log('[MKV_EXTRACT-ERROR] 📂', e1, 'error');
-        }
-      }
-      if (environment.production) {
-        try {
-          const primeCount = await this.userPremiumRepo.count({
-            where: [
-              {
-                expired_at: MoreThanOrEqual(new Date()),
-                user_: {
-                  id: Equal(attachment.user_.id)
-                }
-              }
-            ],
-            relations: ['user_']
-          });
-          const paksaAutoDdl = (attachment.size <= CONSTANTS.fileSizeAttachmentAutoDdl && attachment.user_.role !== RoleModel.USER);
-          if ((primeCount > 0 || paksaAutoDdl) && attachment.user_.id !== 2 /* TODO :: Hard-coded Bot 'Backup' Account */) {
-            const dateTime = Date.now();
-            const fullFileName = `${dateTime}_${files[fIdx].name}`;
-            const upload = await this.aws.uploadDdl(`u${attachment.user_.id}/ddl/${fullFileName}`);
-            let urlFile = upload.Location;
-            if (urlFile.startsWith('http://')) {
-              urlFile = urlFile.slice(7, urlFile.length);
-            } else if (urlFile.startsWith('https://')) {
-              urlFile = urlFile.slice(8, urlFile.length);
-            }
-            const directLink1 = `${environment.s3Compatible.endpoint}/`;
-            if (urlFile.startsWith(directLink1)) {
-              urlFile = urlFile.slice(directLink1.length, urlFile.length);
-            }
-            attachment.aws_s3 = `https://${urlFile}`;
-            attachment.pending = false;
-            await this.attachmentRepo.save(attachment);
-            this.gs.deleteAttachment(files[fIdx].name);
-          } else {
-            const chunkParent = await this.ds.sendAttachment(attachment);
-            attachment.discord = chunkParent;
-            attachment.pending = false;
-            await this.attachmentRepo.save(attachment);
-            this.gs.deleteAttachment(files[fIdx].name);
+          const directLink1 = `${environment.s3Compatible.endpoint}/`;
+          if (urlFile.startsWith(directLink1)) {
+            urlFile = urlFile.slice(directLink1.length, urlFile.length);
           }
-        } catch (e) {
-          this.gs.log('[DDL-ERROR] 💽', e, 'error');
+          attachment.aws_s3 = `https://${urlFile}`;
           attachment.pending = false;
           await this.attachmentRepo.save(attachment);
+          this.gs.deleteAttachment(fileName);
+        } else {
+          const chunkParent = await this.ds.sendAttachment(attachment);
+          attachment.discord = chunkParent;
+          attachment.pending = false;
+          await this.attachmentRepo.save(attachment);
+          this.gs.deleteAttachment(fileName);
         }
-      } else {
+      } catch (e) {
+        this.gs.log('[DDL-ERROR] 💽', e, 'error');
         attachment.pending = false;
         await this.attachmentRepo.save(attachment);
       }
     } else {
+      attachment.pending = false;
+      await this.attachmentRepo.save(attachment);
+    }
+  }
+
+  async extractAndUploadVideoAndArchive(attachment: AttachmentModel, fileName: string): Promise<void> {
+    if (attachment.ext === 'mkv') {
       try {
-        attachment.pending = false;
-        const resSaveAttachment = await this.attachmentRepo.save(attachment);
-        const berkas = await this.berkasRepo.findOneOrFail({
-          where: [
-            {
-              attachment_: {
-                id: Equal(resSaveAttachment.id)
+        const extractedFiles = await this.mkv.mkvExtract(attachment.name, `${environment.uploadFolder}/${fileName}`);
+        for (const ef of extractedFiles) {
+          const fileNameExt = ef.name.split('.');
+          const fileExt = fileNameExt.length > 1 ? fileNameExt.pop().toLowerCase() : null;
+          const fileName = fileNameExt.length > 1 ? fileNameExt.join('.').toLowerCase() : fileNameExt[0];
+          try {
+            const mkvAttachment = this.attachmentRepo.new();
+            mkvAttachment.name = fileName;
+            mkvAttachment.orig = ef.name;
+            mkvAttachment.ext = fileExt;
+            mkvAttachment.size = ef.size;
+            mkvAttachment.pending = environment.production;
+            mkvAttachment.user_ = attachment.user_;
+            mkvAttachment.parent_attachment_ = attachment;
+            if (CONSTANTS.extSubs.includes(fileExt)) {
+              mkvAttachment.mime = 'text/plain';
+            } else if (CONSTANTS.extFonts.includes(fileExt)) {
+              mkvAttachment.mime = `font/${fileExt}`;
+            } else {
+              mkvAttachment.mime = 'application/octet-stream';
+            }
+            let mkvAttachmentDuplicate = null;
+            const otherAttachment1 = await this.attachmentRepo.find({
+              where: [
+                {
+                  name: Equal(fileName),
+                  ext: Equal(fileExt)
+                }
+              ]
+            });
+            if (otherAttachment1.length > 0) {
+              for (const oa of otherAttachment1) {
+                mkvAttachmentDuplicate = oa;
+                if (oa.google_drive) {
+                  break;
+                }
               }
             }
-          ],
-          relations: ['attachment_']
-        });
-        await this.attachmentRepo.remove(resSaveAttachment as any);
-        const download_url: any[] = JSON.parse(berkas.download_url);
-        if (download_url.length <= 0) {
-          await this.berkasRepo.remove(berkas);
+            const fileExist = existsSync(`${environment.uploadFolder}/${fileName}.${fileExt}`);
+            if (mkvAttachmentDuplicate) {
+              mkvAttachment.name = mkvAttachmentDuplicate.name;
+              mkvAttachment.orig = mkvAttachmentDuplicate.orig;
+              mkvAttachment.ext = mkvAttachmentDuplicate.ext;
+              mkvAttachment.size = mkvAttachmentDuplicate.size;
+              mkvAttachment.mime = mkvAttachmentDuplicate.mime;
+              mkvAttachment.pending = false;
+              if (mkvAttachmentDuplicate.google_drive) {
+                mkvAttachment.google_drive = mkvAttachmentDuplicate.google_drive;
+                this.gs.deleteAttachment(`${fileName}.${fileExt}`);
+              } else {
+                // Local File Missing
+                if (!fileExist) {
+                  writeFileSync(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data);
+                }
+              }
+            } else {
+              // First Time Upload
+              if (!fileExist) {
+                writeFileSync(`${environment.uploadFolder}/${fileName}.${fileExt}`, ef.data);
+              }
+            }
+            const resMkvAttachmentSave = await this.attachmentRepo.save(mkvAttachment);
+            // Upload Video Attachment -- Subtitles, Fonts, etc
+            if (resMkvAttachmentSave.pending) {
+              await this.uploadSubtitleAndFont(resMkvAttachmentSave);
+            }
+          } catch (e2) {
+            this.gs.log('[FILE_SUBTITLE_FONT-EXTRACT_ERROR] 🎼', e2, 'error');
+          }
         }
-      } catch (e) {
-        this.gs.log('[FILE_VIDEO_ZIP-UPLOAD_ERROR] 🎼', e, 'error');
+      } catch (e1) {
+        this.gs.log('[MKV_EXTRACT-ERROR] 📂', e1, 'error');
       }
     }
+    await this.uploadVideoAndArchive(attachment, fileName);
   }
 
   @Cron(
@@ -275,7 +253,39 @@ export class UploadService {
             a.pending = false;
             await this.attachmentRepo.save(a);
           } else if (isVideo) {
-            await this.extractAndUploadVideoAndZip(a);
+            const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
+            const fIdx = files.findIndex(f => f.name === a.name || f.name === `${a.name}${a.ext ? `.${a.ext}` : ''}`);
+            if (fIdx >= 0) {
+              a.try_count++;
+              const resSaveAttachment = await this.attachmentRepo.save(a);
+              if (resSaveAttachment.try_count > 1) {
+                await this.uploadVideoAndArchive(resSaveAttachment, files[fIdx].name);
+              } else {
+                await this.extractAndUploadVideoAndArchive(resSaveAttachment, files[fIdx].name);
+              }
+            } else {
+              try {
+                a.pending = false;
+                const resSaveAttachment = await this.attachmentRepo.save(a);
+                const berkas = await this.berkasRepo.findOneOrFail({
+                  where: [
+                    {
+                      attachment_: {
+                        id: Equal(resSaveAttachment.id)
+                      }
+                    }
+                  ],
+                  relations: ['attachment_']
+                });
+                await this.attachmentRepo.remove(resSaveAttachment as any);
+                const download_url: any[] = JSON.parse(berkas.download_url);
+                if (download_url.length <= 0) {
+                  await this.berkasRepo.remove(berkas);
+                }
+              } catch (e) {
+                this.gs.log('[FILE_VIDEO_ARCHIVE-UPLOAD_ERROR] 🎼', e, 'error');
+              }
+            }
           } else if (isFontSubs) {
             await this.uploadSubtitleAndFont(a);
           } else {

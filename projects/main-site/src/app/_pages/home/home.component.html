@@ -170,7 +170,7 @@
             <ng-template #found_>
               <div class="col-6 col-md-4 col-xl-3 p-2" *ngFor="let b of berkasData">
                 <mat-card class="card">
-                  <img mat-card-image [src]="b.image_url" style="height: 128px; object-fit: cover; cursor: pointer;" routerLink="/berkas/{{ b.id }}" />
+                  <img mat-card-image [src]="b.image_url" style="height: 48px; object-fit: cover; cursor: pointer;" routerLink="/berkas/{{ b.id }}" />
                   <mat-card-content class="mb-2" routerLink="/berkas/{{ b.id }}" style="cursor: pointer;">
                     <h3 matLine matTooltip="{{ b.name }}" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
                       <marquee>{{ b.name }}</marquee>
