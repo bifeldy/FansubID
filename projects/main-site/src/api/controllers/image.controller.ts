@@ -103,7 +103,7 @@ export class ImageController {
         form.append('key', environment.imgbbKey);
         form.append('name', dateTime);
         form.append('image', imgB64);
-        const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader, res.locals['abort-controller'].signal);
+        const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
         if (res_raw.ok) {
           const res_json: any = await res_raw.json();
           this.gs.log(`[imgBB] 🖼 ${res_raw.status}`, res_json);
