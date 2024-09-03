@@ -118,10 +118,10 @@ export class GlobalService {
     return '';
   }
 
-  isFreeTime(): boolean {
+  isFreeTime(st: string = null, et: string = null): boolean {
     const currentDate = new Date();
-    const startTime = CONSTANTS.freeTimeStart;
-    const endTime = CONSTANTS.freeTimeEnd;
+    const startTime = st || CONSTANTS.freeTimeStart;
+    const endTime = et || CONSTANTS.freeTimeEnd;
     const startDate = new Date(currentDate.getTime());
     startDate.setHours(Number(startTime.split(":")[0]));
     startDate.setMinutes(Number(startTime.split(":")[1]));
