@@ -50,14 +50,12 @@ export class RegisterMiddleware implements NestMiddleware {
 
   async use(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Next() next: NextFunction): Promise<void | Response<any, Record<string, any>>> {
     try {
-      const st = '23:00:00';
-      const et = '03:00:00';
-      const freeTime = this.gs.isFreeTime(st, et);
+      const freeTime = this.gs.isFreeTime();
       if (!(await this.cfgServerGetOpenForRegister()) || freeTime) {
         throw new HttpException({
           info: '😫 403 - Register API :: Tidak Ada Layanan 💩',
           result: {
-            message: `Pendaftaran Sedang Ditutup!${freeTime ? ` (${st} ~ ${et} [JST/UTC+9])` : ''}`
+            message: `Pendaftaran Sedang Ditutup!${freeTime ? ` (${CONSTANTS.freeTimeStart} ~ ${CONSTANTS.freeTimeEnd} [JST/UTC+9])` : ''}`
           }
         }, HttpStatus.FORBIDDEN);
       } else if (
