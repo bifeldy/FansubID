@@ -186,5 +186,8 @@ export const environment = {
     region: 'auto',
     accessKeyId: SECRETS().S3_ACCESS_KEY_ID,                                                                     // '',
     secretAccessKey: SECRETS().S3_SECRET_ACCESS_KEY                                                              // '',
-  }
+  },
+  ipoChanProxyUrl: [
+    'i.ibb.co'
+  ]
 };

@@ -5,6 +5,10 @@ import { ILike } from 'typeorm';
 
 import { CONSTANTS } from '../../../constants';
 
+import { environment } from '../../../environments/api/environment';
+
+import { GlobalService } from '../../services/global.service';
+
 import { FansubService } from '../../repository/fansub.service';
 import { RssFeedService } from '../../repository/rss-feed.service';
 
@@ -12,6 +16,7 @@ import { RssFeedService } from '../../repository/rss-feed.service';
 export class FansubRssFeedController {
 
   constructor(
+    private gs: GlobalService,
     private fansubRepo: FansubService,
     private rssFeedRepo: RssFeedService
   ) {
@@ -80,7 +85,11 @@ export class FansubRssFeedController {
           f.urls = rf.f_urls;
           f.rss_feed = rf.f_rss_feed;
           f.tags = rf.f_tags;
-          f.image_url = rf.f_image_url;
+          let imgUrl = rf.f_image_url;
+          if (imgUrl?.startsWith('http') && this.gs.includesOneOf(imgUrl, environment.ipoChanProxyUrl)) {
+            imgUrl = `https://crawl.${environment.domain}/?url=${encodeURIComponent(imgUrl)}`;
+          }
+          f.image_url = imgUrl;
           f.view_count = rf.f_view_count;
           f.like_count = rf.f_like_count;
           f.dns_id = rf.f_dns_id;

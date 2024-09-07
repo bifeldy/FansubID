@@ -4,12 +4,17 @@ import { Request, Response } from 'express';
 
 import { CONSTANTS } from '../../../constants';
 
+import { environment } from '../../../environments/api/environment';
+
+import { GlobalService } from '../../services/global.service';
+
 import { UserService } from '../../repository/user.service';
 
 @Controller('/quiz-leaderboard')
 export class QuizLeaderboardController {
 
   constructor(
+    private gs: GlobalService,
     private userRepo: UserService
   ) {
     //
@@ -32,7 +37,7 @@ export class QuizLeaderboardController {
         FROM
           (
             SELECT
-              count(*)
+              count(*) count
             FROM
               users u,
               profile p
@@ -68,6 +73,11 @@ export class QuizLeaderboardController {
             count = l.count;
           }
           delete l.count;
+        }
+        if ('image_url' in l) {
+          if (l.image_url?.startsWith('http') && this.gs.includesOneOf(l.image_url, environment.ipoChanProxyUrl)) {
+            l.image_url = `https://crawl.${environment.domain}/?url=${encodeURIComponent(l.image_url)}`;
+          }
         }
       }
       return {

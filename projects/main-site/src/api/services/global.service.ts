@@ -162,4 +162,13 @@ export class GlobalService {
     return false;
   }
 
+  includesOneOf(text: string, arr: string[]): boolean {
+    for (const a of arr) {
+      if (text?.includes(a)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

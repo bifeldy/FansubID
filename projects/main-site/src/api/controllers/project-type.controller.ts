@@ -5,9 +5,13 @@ import { Equal } from 'typeorm';
 
 import { RoleModel } from '../../models/req-res.model';
 
+import { environment } from '../../environments/api/environment';
+
 import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified-only.decorator';
+
+import { GlobalService } from '../services/global.service';
 
 import { BerkasService } from '../repository/berkas.service';
 import { ProjectTypeService } from '../repository/project-type.service';
@@ -17,6 +21,7 @@ import { ProjectTypeService } from '../repository/project-type.service';
 export class ProjectTypeController {
 
   constructor(
+    private gs: GlobalService,
     private berkasRepo: BerkasService,
     private projectTypeRepo: ProjectTypeService
   ) {
@@ -65,6 +70,11 @@ export class ProjectTypeController {
       ORDER BY
         x.name ASC
     `);
+    for (const p of projects) {
+      if (p.image_url?.startsWith('http') && this.gs.includesOneOf(p.image_url, environment.ipoChanProxyUrl)) {
+        p.image_url = `https://crawl.${environment.domain}/?url=${encodeURIComponent(p.image_url)}`;
+      }
+    }
     return {
       info: `😅 200 - Project API :: List All 🤣`,
       count: projects.length,

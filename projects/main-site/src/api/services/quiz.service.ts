@@ -7,6 +7,8 @@ import { EntityManager } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
+import { environment } from '../../environments/api/environment';
+
 import { QuizCategoryModel, QuizHirakataModel, QuizKanjiModel, QuizModel } from '../../models/quiz.model';
 import { RoomInfoInOutModel } from '../../models/socket-io.model';
 
@@ -85,7 +87,13 @@ export class QuizService {
             DROP TABLE IF EXISTS hirakata_quiz;
             CREATE TABLE hirakata_quiz AS
               SELECT
-                *
+                romaji,
+                hiragana,
+                katakana,
+                category,
+                segment,
+                created_at,
+                updated_at
               FROM
                 hirakata
               WHERE
@@ -107,7 +115,13 @@ export class QuizService {
       `);
       hirakatas = await this.manager.query(`
         SELECT
-          *
+          romaji,
+          hiragana,
+          katakana,
+          category,
+          segment,
+          created_at,
+          updated_at
         FROM
           hirakata_quiz
       `);
@@ -155,7 +169,16 @@ export class QuizService {
             DROP TABLE IF EXISTS nihongo_${category}_quiz;
             CREATE TABLE nihongo_${category}_quiz AS
               SELECT
-                *
+                id,
+                romaji,
+                kana,
+                meaning,
+                category,
+                audio,
+                image_url,
+                user_id,
+                created_at,
+                updated_at
               FROM
                 nihongo
               WHERE
@@ -174,7 +197,16 @@ export class QuizService {
       `);
       nihongo = await this.manager.query(`
         SELECT
-          * 
+          id,
+          romaji,
+          kana,
+          meaning,
+          category,
+          audio,
+          image_url,
+          user_id,
+          created_at,
+          updated_at
         FROM
           nihongo_${category}_quiz
       `);
@@ -182,6 +214,9 @@ export class QuizService {
         delete h.created_at;
         delete h.updated_at;
         delete h.user_id;
+        if (h.image_url?.startsWith('http') && this.gs.includesOneOf(h.image_url, environment.ipoChanProxyUrl)) {
+          h.image_url = `https://crawl.${environment.domain}/?url=${encodeURIComponent(h.image_url)}`;
+        }
       }
       const randomInteger = this.getRandomInt(0, nihongo.length - 1);
       return {
