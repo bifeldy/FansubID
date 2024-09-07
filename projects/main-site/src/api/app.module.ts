@@ -111,6 +111,7 @@ import { DiscordService } from './services/discord.service';
 import { GlobalService } from './services/global.service';
 import { GoogleCloudService } from './services/google-cloud.service';
 import { IdCloudHostService } from './services/idcloudhost.service';
+import { IpoChanService } from './services/ipo-chan.service';
 import { MailService } from './services/mail.service';
 import { MkvExtractService } from './services/mkv-extract.service';
 import { QuizService } from './services/quiz.service';
@@ -273,6 +274,7 @@ import { UserPremiumService } from './repository/user-premium.service';
     GlobalService,
     GoogleCloudService,
     IdCloudHostService,
+    IpoChanService,
     MkvExtractService,
     MailService,
     QuizService,

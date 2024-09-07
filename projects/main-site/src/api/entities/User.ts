@@ -3,6 +3,8 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, CreateDat
 
 import { KartuTandaPendudukModel, ProfileModel, RoleModel, UserModel } from '../../models/req-res.model';
 
+import { IpoChanTransformer } from '../transformers/ipo-chan.transformer';
+
 import { KartuTandaPenduduk } from './KartuTandaPenduduk';
 import { Profile } from './Profile';
 
@@ -19,7 +21,7 @@ export class User implements UserModel {
   @Column({ type: 'text', unique: true })
   email: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   image_url: string;
 
   @Column({ type: 'enum', enum: RoleModel, default: RoleModel.USER })

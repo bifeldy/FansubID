@@ -34,16 +34,22 @@ export class AmazonWebService {
     });
   }
 
-  async getDdl(fileName: string, user: UserModel, expiredSeconds = CONSTANTS.timeDdlS3, customFileName = null, customMimeType = null): Promise<URL> {
-    if (fileName.startsWith('http://')) {
-      fileName = fileName.slice(7, fileName.length);
-    } else if (fileName.startsWith('https://')) {
-      fileName = fileName.slice(8, fileName.length);
+  cleanUrl(originalUrl: string): string {
+    let urlFile = originalUrl;
+    if (urlFile.startsWith('http://')) {
+      urlFile = urlFile.slice(7, urlFile.length);
+    } else if (urlFile.startsWith('https://')) {
+      urlFile = urlFile.slice(8, urlFile.length);
     }
     const directLink1 = `${environment.s3Compatible.endpoint}/`;
-    if (fileName.startsWith(directLink1)) {
-      fileName = fileName.slice(directLink1.length, fileName.length);
+    if (urlFile.startsWith(directLink1)) {
+      urlFile = urlFile.slice(directLink1.length, urlFile.length);
     }
+    return urlFile;
+  }
+
+  async getDdl(fileName: string, user: UserModel, expiredSeconds = CONSTANTS.timeDdlS3, customFileName = null, customMimeType = null): Promise<URL> {
+    fileName = this.cleanUrl(fileName);
     const bucketName = fileName.split('/')[0];
     const directLink2 = `${environment.s3Compatible.bucket}/`;
     if (fileName.startsWith(directLink2)) {
@@ -82,6 +88,7 @@ export class AmazonWebService {
     const readStream = createReadStream(`${environment.uploadFolder}/${fullFileName}`);
     readStream.pipe(passThrough);
     const ddl = await upload;
+    ddl.Location = this.cleanUrl(ddl.Location);
     this.gs.log('[AWS_S3_DDL_UP] ⛅', ddl);
     return ddl;
   }
@@ -97,6 +104,7 @@ export class AmazonWebService {
       ContentType: mime
     }).promise();
     const img = await upload;
+    img.Location = this.cleanUrl(img.Location);
     this.gs.log('[AWS_S3_IMG_UP] ⛅', img);
     return img;
   }

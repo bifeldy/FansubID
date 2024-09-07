@@ -87,15 +87,16 @@ export class ImageController {
           imgB64,
           req.file.mimetype
         );
+        const cdnImageUrl = `https://${upload.Location}`;
         return {
           info: `😅 201 - Gambar API :: Upload Image 🤣`,
           result: {
             id: upload.Key,
-            url: upload.Location,
+            url: cdnImageUrl,
             mime: req.file.mimetype,
             size: req.file.size
           },
-          imageUrl: upload.Location
+          imageUrl: cdnImageUrl
         };
       } else {
         const url = new URL(environment.externalApiImage);

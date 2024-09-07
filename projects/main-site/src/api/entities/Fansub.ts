@@ -3,6 +3,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, Up
 
 import { FansubModel, UserModel } from '../../models/req-res.model';
 
+import { IpoChanTransformer } from '../transformers/ipo-chan.transformer';
+
 import { User } from './User';
 
 @Entity({ name: 'fansub' })
@@ -35,10 +37,10 @@ export class Fansub implements FansubModel {
   @Column({ type: 'text', default: '[]' })
   tags: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   image_url: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   cover_url: string;
 
   @Column({ type: 'int', default: 0 })

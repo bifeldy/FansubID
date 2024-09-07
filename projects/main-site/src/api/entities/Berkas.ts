@@ -3,6 +3,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTabl
 
 import { AnimeModel, AttachmentModel, BerkasModel, DoramaModel, FansubModel, ProjectTypeModel, UserModel } from '../../models/req-res.model';
 
+import { IpoChanTransformer } from '../transformers/ipo-chan.transformer';
+
 import { Anime } from './Anime';
 import { Attachment } from './Attachment';
 import { Dorama } from './Dorama';
@@ -31,7 +33,7 @@ export class Berkas implements BerkasModel {
   @Column({ type: 'text' })
   download_url: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   image_url: string;
 
   @Column({ type: 'text', nullable: true })

@@ -2,6 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, Up
 
 import { NihongoModel, UserModel } from '../../models/req-res.model';
 
+import { IpoChanTransformer } from '../transformers/ipo-chan.transformer';
+
 import { User } from './User';
 
 @Entity({ name: 'nihongo' })
@@ -25,7 +27,7 @@ export class Nihongo implements NihongoModel {
   @Column({ type: 'text', nullable: true })
   audio: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   image_url: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

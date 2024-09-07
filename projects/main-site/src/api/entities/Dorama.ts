@@ -1,5 +1,7 @@
 import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryColumn, Index } from 'typeorm';
 
+import { IpoChanTransformer } from '../transformers/ipo-chan.transformer';
+
 import { DoramaModel } from '../../models/req-res.model';
 
 @Entity({ name: 'dorama' })
@@ -17,7 +19,7 @@ export class Dorama implements DoramaModel {
   @Column({ type: 'text' })
   type: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   image_url: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

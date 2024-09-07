@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Index } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
+import { IpoChanTransformer } from '../transformers/ipo-chan.transformer';
+
 import { ProfileModel } from '../../models/req-res.model';
 
 @Entity({ name: 'profile' })
@@ -12,7 +14,7 @@ export class Profile implements ProfileModel {
   @Column({ type: 'text', default: '// No Description' })
   description: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   cover_url: string;
 
   @Column({ type: 'int', default: 0 })

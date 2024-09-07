@@ -112,17 +112,7 @@ export class UploadService {
           const dateTime = Date.now();
           const fullFileName = `${dateTime}_${fileName}`;
           const upload = await this.aws.uploadDdl(`u${attachment.user_.id}/ddl/${fullFileName}`);
-          let urlFile = upload.Location;
-          if (urlFile.startsWith('http://')) {
-            urlFile = urlFile.slice(7, urlFile.length);
-          } else if (urlFile.startsWith('https://')) {
-            urlFile = urlFile.slice(8, urlFile.length);
-          }
-          const directLink1 = `${environment.s3Compatible.endpoint}/`;
-          if (urlFile.startsWith(directLink1)) {
-            urlFile = urlFile.slice(directLink1.length, urlFile.length);
-          }
-          attachment.aws_s3 = `https://${urlFile}`;
+          attachment.aws_s3 = `https://${upload.Location}`;
           attachment.pending = false;
           await this.attachmentRepo.save(attachment);
           this.gs.deleteAttachment(fileName);

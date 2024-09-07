@@ -2,6 +2,8 @@ import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryColumn, Inde
 
 import { AnimeModel } from '../../models/req-res.model';
 
+import { IpoChanTransformer } from '../transformers/ipo-chan.transformer';
+
 @Entity({ name: 'anime' })
 export class Anime implements AnimeModel {
 
@@ -14,7 +16,7 @@ export class Anime implements AnimeModel {
   @Column({ type: 'text' })
   type: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   image_url: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })

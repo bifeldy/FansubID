@@ -3,6 +3,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, Up
 
 import { NewsModel, UserModel } from '../../models/req-res.model';
 
+import { IpoChanTransformer } from '../transformers/ipo-chan.transformer';
+
 import { User } from './User';
 
 @Entity({ name: 'news' })
@@ -17,7 +19,7 @@ export class News implements NewsModel {
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ type: 'text', default: '/assets/img/favicon.png' })
+  @Column({ type: 'text', default: '/assets/img/favicon.png', transformer: new IpoChanTransformer() })
   image_url: string;
 
   @Column({ type: 'text', default: '[]' })

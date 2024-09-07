@@ -1,5 +1,4 @@
 // 3rd Party Library
-import { FormData } from 'node-fetch';
 import { URL } from 'node:url';
 
 import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from '@nestjs/common';
@@ -7,22 +6,18 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { In, IsNull, Not } from 'typeorm';
 
-import { environment } from '../../../environments/api/environment';
-
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 
-import { ApiService } from '../../services/api.service';
 import { FansubService } from '../../repository/fansub.service';
-import { GlobalService } from '../../services/global.service';
+import { IpoChanService } from '../../services/ipo-chan.service';
 
 @ApiExcludeController()
 @Controller('/fansub-internet-positif')
 export class FansubInternetPositifController {
 
   constructor(
-    private api: ApiService,
     private fansubRepo: FansubService,
-    private gs: GlobalService
+    private ipochan: IpoChanService
   ) {
     //
   }
@@ -56,23 +51,9 @@ export class FansubInternetPositifController {
             fdom.push(domain);
           }
           if (fdom.length > 0) {
-            const url = new URL(environment.externalApiInternetPositif);
-            const form = new FormData();
-            form.append('name', fdom.join('\n'));
-            const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
-            if (res_raw.ok) {
-              const res_json: any = await res_raw.json();
-              this.gs.log(`[apiInternetPositif] 🛡 ${res_raw.status}`, res_json);
-              for (const val of res_json.values) {
-                results[domains[val.Domain]] = val.Status === 'Ada';
-              }
-            } else {
-              throw new HttpException({
-                info: `🙄 ${res_raw.status || 400} - Internet Positif API :: Cek Domain Gagal 😪`,
-                result: {
-                  message: 'Data Tidak Lengkap / Internet Positif API Down!'
-                }
-              }, res_raw.status || HttpStatus.BAD_REQUEST);
+            const values = await this.ipochan.checkDomain(fdom);
+            for (const val of values) {
+              results[domains[val.Domain]] = val.Status === 'Ada';
             }
           }
         }
@@ -87,7 +68,7 @@ export class FansubInternetPositifController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Fansub API :: Gagal Mengecek Domain ${req.query['id']} 😪`,
+        info: `🙄 400 - Fansub Internet Positif API :: Gagal Mengecek Domain ${req.query['id']} 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }
