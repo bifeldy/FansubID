@@ -9,7 +9,6 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    
     "alt-site": {
       "projectType": "application",
       "schematics": {
@@ -102,25 +101,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "alt-site:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "tsConfig": "projects/alt-site/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/alt-site/src/favicon.ico",
-              "projects/alt-site/src/assets"
-            ],
-            "styles": [
-              "projects/alt-site/src/styles.scss"
-            ],
-            "scripts": []
           }
         },
         "lint": {
@@ -284,48 +264,6 @@
             "browserTarget": "main-site:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/main-site/src/test.ts",
-            "polyfills": "projects/main-site/src/polyfills.ts",
-            "tsConfig": "projects/main-site/tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/main-site/src/favicon.ico",
-              "projects/main-site/src/manifest.webmanifest",
-              "projects/main-site/src/robots.txt",
-              "projects/main-site/src/sitemap.template.xml",
-              "projects/main-site/src/yandex_fce02fa8250544ee.html"
-            ],
-            "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/video.js/dist/video-js.min.css",
-              "./node_modules/ngx-toastr/toastr.css",
-              "./node_modules/winbox/dist/css/winbox.min.css",
-              "./node_modules/animate.css/animate.min.css",
-              "./node_modules/ngx-spinner/animations/square-jelly-box.css",
-              "./node_modules/viewerjs/dist/viewer.min.css",
-              "projects/main-site/src/assets/lib/sakura.min.css",
-              "projects/main-site/src/styles.scss"
-            ],
-            "scripts": [
-              "projects/main-site/src/assets/lib/raphael.js",
-              "projects/main-site/src/assets/lib/dmak.js",
-              "projects/main-site/src/assets/lib/dmakLoader.js",
-              "projects/main-site/src/assets/lib/subtitles-octopus.js",
-              "projects/main-site/src/assets/lib/sakura.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-              "./node_modules/winbox/dist/winbox.bundle.js",
-              "./node_modules/webtorrent/webtorrent.min.js",
-              "./node_modules/kuroshiro/dist/kuroshiro.min.js",
-              "./node_modules/kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min.js",
-              "./node_modules/p2p-graph/example/p2p-graph.js",
-              "./node_modules/viewerjs/dist/viewer.min.js"
-            ]
-          }
-        },
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
@@ -428,8 +366,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "projects/main-site/src/**/*.ts",
-              "projects/main-site/src/**/*.html"
+              "projects/main-site/**/*.ts",
+              "projects/main-site/**/*.html"
             ]
           }
         }
