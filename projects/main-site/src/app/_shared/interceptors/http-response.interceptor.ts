@@ -36,21 +36,21 @@ export class HttpResponseInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       tap((res) => {
         if (res instanceof HttpResponse && this.gs.isBrowser) {
-          let okMessage = 'UwUu~ Berhasil~';
-          let okTitle = 'Yeay, Selesai!';
-          if (res) {
-            if ((res as any).body) {
-              if ((res as any).body.info) {
-                okTitle = (res as any).body.info;
-              }
-              if ((res as any).body.result) {
-                if ((res as any).body.result.message) {
-                  okMessage = (res as any).body.result.message;
+          if (this.gs.forceEnableDebugLog) {
+            let okMessage = 'UwUu~ Berhasil~';
+            let okTitle = 'Yeay, Selesai!';
+            if (res) {
+              if ((res as any).body) {
+                if ((res as any).body.info) {
+                  okTitle = (res as any).body.info;
+                }
+                if ((res as any).body.result) {
+                  if ((res as any).body.result.message) {
+                    okMessage = (res as any).body.result.message;
+                  }
                 }
               }
             }
-          }
-          if (this.gs.isDesktop) {
             switch ((res as any).status) {
               case 200:
                 this.toast.success(okMessage, okTitle);
