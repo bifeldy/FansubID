@@ -10,6 +10,7 @@ export class TicketListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    //
   }
 
 }

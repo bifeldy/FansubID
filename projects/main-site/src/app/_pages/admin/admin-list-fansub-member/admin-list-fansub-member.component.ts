@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FansubMemberModel } from '../../../../models/req-res.model';
 
@@ -12,7 +12,7 @@ import { GlobalService } from '../../../_shared/services/global.service';
   templateUrl: './admin-list-fansub-member.component.html',
   styleUrls: ['./admin-list-fansub-member.component.css']
 })
-export class AdminListFansubMemberComponent implements OnInit {
+export class AdminListFansubMemberComponent implements OnInit, OnDestroy {
 
   count = 0;
   page = 1;

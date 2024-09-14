@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { environment } from '../../../environments/app/environment';
@@ -14,7 +14,7 @@ import { WinboxService } from '../../_shared/services/winbox.service';
   templateUrl: './docs.component.html',
   styleUrls: ['./docs.component.css']
 })
-export class DocsComponent implements OnInit {
+export class DocsComponent implements OnInit, OnDestroy {
 
   url = '';
   dnsData = [];

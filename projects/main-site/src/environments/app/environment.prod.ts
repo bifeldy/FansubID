@@ -3,7 +3,7 @@ import { CONSTANTS } from "../../constants";
 export const environment = {
   production: true,
   siteName: 'FansubID',
-  siteDescription: 'Di Kamar Saja!',
+  siteDescription: 'Database Fansub Indonesia!',
   author: 'Bifeldy',
   domain: 'fansub.id',
   baseUrl: 'https://www.fansub.id',
