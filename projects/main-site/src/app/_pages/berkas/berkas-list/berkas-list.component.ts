@@ -137,7 +137,8 @@ export class BerkasListComponent implements OnInit, OnDestroy {
             Tanggal: r.created_at,
             Kunjungan: r.view_count,
             Pemilik: r.user_.username,
-            'Nama Berkas': r.name
+            'Nama Berkas': r.name,
+            DARK: r.r18
           });
         }
         this.tabData[0].data.row = this.berkasData;

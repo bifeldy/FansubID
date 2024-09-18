@@ -207,7 +207,8 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
             Proyek: r.project_type_.name,
             // Image: r.image_url,
             Tanggal: r.created_at,
-            'Nama Berkas': r.name
+            'Nama Berkas': r.name,
+            DARK: r.r18
           });
         }
         this.tabData[1].data.row = this.berkasDorama;

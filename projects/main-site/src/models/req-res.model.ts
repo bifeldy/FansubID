@@ -247,6 +247,7 @@ export interface BerkasModel {
   name?: string;
   description?: string;
   private?: boolean;
+  r18?: boolean;
   download_url?: string;
   image_url?: string;
   sn_code?: string;

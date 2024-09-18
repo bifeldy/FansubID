@@ -47,20 +47,20 @@
               tdc.toUpperCase() === 'JUDUL ANIME' || tdc.toUpperCase() === 'JUDUL DORAMA'
             ) ? 'text-truncate' : ''
           }}">
-            <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'" />
-            <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'KORBAN'" />
-            <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'PELAKU'" />
-            <img matListAvatar [src]="row.foto_fansub" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'FANSUB'" />
-            <img matListAvatar [src]="row.foto_anggota" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" class="me-1" *ngIf="tdc.toUpperCase() === 'ANGGOTA'" />
-            <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'LOGO'" />
-            <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'IMAGE'" />
-            <img matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'POSTER'" />
-            <span *ngIf="tdc.toUpperCase() === 'TANGGAL'" matTooltip="{{ row[tdc] | date:'d MMMM y, hh:mm:ss a z' }}">{{ row[tdc] | dateAgo }}</span>
-            <span *ngIf="tdc.toUpperCase() === 'DEADLINE'">{{ row[tdc] | date:'d/M/yy, HH:mm:ss' }}</span>
-            <span *ngIf="tdc.toUpperCase() === 'ANIME'">{{ row[tdc] || 0 }} Anime</span>
-            <span *ngIf="tdc.toUpperCase() === 'DORAMA'">{{ row[tdc] || 0 }} Dorama</span>
-            <span *ngIf="tdc.toUpperCase() === 'KUNJUNGAN'">{{ row[tdc] }}x Dilihat</span>
-            <span *ngIf="
+            <img matListAvatar [src]="row.foto" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" [style.filter]="row.DARK ? 'brightness(0.75)' : ''" class="me-1" *ngIf="tdc.toUpperCase() === 'PEMILIK' || tdc.toUpperCase() === 'PENULIS'" />
+            <img matListAvatar [src]="row.foto_korban" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" [style.filter]="row.DARK ? 'brightness(0.75)' : ''" class="me-1" *ngIf="tdc.toUpperCase() === 'KORBAN'" />
+            <img matListAvatar [src]="row.foto_pelaku" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" [style.filter]="row.DARK ? 'brightness(0.75)' : ''" class="me-1" *ngIf="tdc.toUpperCase() === 'PELAKU'" />
+            <img matListAvatar [src]="row.foto_fansub" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" [style.filter]="row.DARK ? 'brightness(0.75)' : ''" class="me-1" *ngIf="tdc.toUpperCase() === 'FANSUB'" />
+            <img matListAvatar [src]="row.foto_anggota" style="width: 32px; height: 32px; object-fit: cover; border-radius: 0;" [style.filter]="row.DARK ? 'brightness(0.75)' : ''" class="me-1" *ngIf="tdc.toUpperCase() === 'ANGGOTA'" />
+            <img class="{{ row.DARK ? 'text-muted' : '' }}" matListAvatar [src]="row[tdc]" style="width: 64px; height: 64px; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'LOGO'" />
+            <img class="{{ row.DARK ? 'text-muted' : '' }}" matListAvatar [src]="row[tdc]" style="width: 64px; height: 48px; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'IMAGE'" />
+            <img class="{{ row.DARK ? 'text-muted' : '' }}" matListAvatar [src]="row[tdc]" style="width: 64px; height: 100%; object-fit: cover; border-radius: 0;" *ngIf="tdc.toUpperCase() === 'POSTER'" />
+            <span class="{{ row.DARK ? 'text-muted' : '' }}" *ngIf="tdc.toUpperCase() === 'TANGGAL'" matTooltip="{{ row[tdc] | date:'d MMMM y, hh:mm:ss a z' }}">{{ row[tdc] | dateAgo }}</span>
+            <span class="{{ row.DARK ? 'text-muted' : '' }}" *ngIf="tdc.toUpperCase() === 'DEADLINE'">{{ row[tdc] | date:'d/M/yy, HH:mm:ss' }}</span>
+            <span class="{{ row.DARK ? 'text-muted' : '' }}" *ngIf="tdc.toUpperCase() === 'ANIME'">{{ row[tdc] || 0 }} Anime</span>
+            <span class="{{ row.DARK ? 'text-muted' : '' }}" *ngIf="tdc.toUpperCase() === 'DORAMA'">{{ row[tdc] || 0 }} Dorama</span>
+            <span class="{{ row.DARK ? 'text-muted' : '' }}" *ngIf="tdc.toUpperCase() === 'KUNJUNGAN'">{{ row[tdc] }}x Dilihat</span>
+            <span class="{{ row.DARK ? 'text-muted' : '' }}" *ngIf="
               tdc.toUpperCase() !== 'POSTER' && tdc.toUpperCase() !== 'LOGO' && tdc.toUpperCase() !== 'IMAGE' &&
               tdc.toUpperCase() !== 'TANGGAL' && tdc.toUpperCase() !== 'DEADLINE' && tdc.toUpperCase() !== 'ANIME' &&
               tdc.toUpperCase() !== 'DORAMA' && tdc.toUpperCase() !== 'KUNJUNGAN'
