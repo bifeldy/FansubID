@@ -196,6 +196,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.router.navigate(['/error'], {
           queryParams: {
+            ...this.activatedRoute.snapshot.queryParams,
             returnUrl: '/fansub'
           }
         });
@@ -247,6 +248,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
   showAllRssFeed(): void {
     this.router.navigate(['/rss-feed'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         q: this.fansubSlug
       }
     });
@@ -644,6 +646,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['/login'], {
         queryParams: {
+          ...this.activatedRoute.snapshot.queryParams,
           returnUrl: this.router.url.split('?')[0]
         }
       });

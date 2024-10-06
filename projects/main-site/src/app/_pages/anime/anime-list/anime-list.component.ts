@@ -178,6 +178,7 @@ export class AnimeListComponent implements OnInit, OnDestroy {
   changeSeasonalAnime(): void {
     this.router.navigate(['/anime'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         season: this.selectedSeasonName,
         year: this.currentYear
       }

@@ -132,6 +132,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
                 this.bs.idle();
                 this.router.navigate(['/error'], {
                   queryParams: {
+                    ...this.activatedRoute.snapshot.queryParams,
                     returnUrl: `/fansub/${this.fansubSlug}`
                   }
                 });
@@ -144,6 +145,7 @@ export class FansubEditComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
+              ...this.activatedRoute.snapshot.queryParams,
               returnUrl: `/fansub/${this.fansubSlug}`
             }
           });

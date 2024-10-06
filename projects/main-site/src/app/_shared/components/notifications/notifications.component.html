@@ -6,14 +6,17 @@
   [style.height]="(
     ROUTER.url.startsWith('/news') ||
     ROUTER.url.startsWith('/berkas') ||
+    ROUTER.url.startsWith('/search') ||
     ROUTER.url.startsWith('/fansub')
   ) ? '192px' : '128px'"
   [style.background-position-y]="(
-    ROUTER.url.startsWith('/berkas')
+    ROUTER.url.startsWith('/berkas') ||
+    ROUTER.url.startsWith('/search')
   ) ? '22.5%' : ''"
   *ngIf="GS.bannerImg && (
     ROUTER.url.startsWith('/news') ||
     ROUTER.url.startsWith('/berkas') ||
+    ROUTER.url.startsWith('/search') ||
     ROUTER.url.startsWith('/fansub') ||
     ROUTER.url.startsWith('/anime') ||
     ROUTER.url.startsWith('/dorama')

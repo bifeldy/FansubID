@@ -195,6 +195,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
   changeSeasonalDorama(): void {
     this.router.navigate(['/dorama'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         season: this.selectedSeasonName,
         year: this.currentYear
       }

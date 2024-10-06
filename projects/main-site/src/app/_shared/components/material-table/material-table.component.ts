@@ -117,7 +117,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   applyFilter(event: Event): void {
-    this.searchQuery = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.searchQuery = (event.target as HTMLInputElement).value?.trim().toLowerCase();
     this.router.navigate([this.urlPath], {
       queryParams: {
         ...this.activatedRoute.snapshot.queryParams,

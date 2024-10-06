@@ -76,6 +76,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
+                ...this.activatedRoute.snapshot.queryParams,
                 returnUrl: '/news'
               }
             });

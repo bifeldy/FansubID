@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { environment } from '../../../environments/app/environment';
 
@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private as: AuthService,
     private lms: LeftMenuService,
@@ -194,6 +195,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   openComment(k): void {
     this.router.navigate([k.path], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         comment: k.id
       }
     });

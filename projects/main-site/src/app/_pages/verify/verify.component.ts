@@ -99,6 +99,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         if (re === true) {
           this.as.logout('/login', {
             queryParams: {
+              ...this.activatedRoute.snapshot.queryParams,
               returnUrl: this.returnUrl
             }
           });

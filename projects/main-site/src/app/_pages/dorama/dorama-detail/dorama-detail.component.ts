@@ -139,6 +139,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
+                ...this.activatedRoute.snapshot.queryParams,
                 returnUrl: '/dorama'
               }
             });
@@ -166,6 +167,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
   openSeasonalDorama(): void {
     this.router.navigate(['/dorama'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         season: this.seasonDorama,
         year: this.yearDorama?.getFullYear()
       }

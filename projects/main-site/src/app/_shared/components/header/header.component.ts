@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 import { environment } from '../../../../environments/app/environment';
@@ -39,6 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private lms: LeftMenuService,
     private rps: RightPanelService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private pi: PageInfoService,
     private gs: GlobalService,
     private ss: StatsServerService,
@@ -185,6 +186,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const url = this.router.url.split('?')[0];
     this.router.navigate(['/create/ticket'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         url: (url.startsWith('/') ? environment.baseUrl : '') + url
       }
     });

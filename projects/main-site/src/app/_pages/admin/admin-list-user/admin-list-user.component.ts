@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { environment } from '../../../../environments/app/environment';
 
@@ -41,6 +41,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private bs: BusyService,
     private ds: DialogService,
     private as: AuthService,
@@ -143,6 +144,7 @@ export class AdminListUserComponent implements OnInit, OnDestroy {
     } else if (data.name === 'MAIL') {
       this.router.navigate(['/create/mailbox'], {
         queryParams: {
+          ...this.activatedRoute.snapshot.queryParams,
           to: `${data.row.username}@${environment.domain}`,
           cc: data.row._email
         }

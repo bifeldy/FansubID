@@ -143,6 +143,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
+                ...this.activatedRoute.snapshot.queryParams,
                 returnUrl: '/'
               }
             });
@@ -273,6 +274,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   createMailbox(): void {
     this.router.navigate(['/create/mailbox'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         to: `${this.userData.username}@${environment.domain}`
       }
     });

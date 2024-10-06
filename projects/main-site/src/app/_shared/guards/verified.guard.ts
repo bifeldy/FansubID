@@ -46,6 +46,7 @@ export class VerifiedGuard implements CanActivate {
     }
     this.router.navigate(['/login'], {
       queryParams: {
+        ...route.queryParams,
         returnUrl: state.url
       }
     });

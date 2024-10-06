@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
@@ -48,6 +48,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private clipboard: Clipboard,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
     private as: AuthService,
     private ds: DialogService,
@@ -400,6 +401,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   openComment(k): void {
     this.router.navigate([k.path], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         comment: k.id
       }
     });

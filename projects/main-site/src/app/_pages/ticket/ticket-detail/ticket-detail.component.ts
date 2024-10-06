@@ -98,6 +98,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
         this.bs.idle();
         this.router.navigate(['/error'], {
           queryParams: {
+            ...this.activatedRoute.snapshot.queryParams,
             returnUrl: '/ticket'
           }
         });

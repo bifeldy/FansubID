@@ -144,6 +144,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
+                ...this.activatedRoute.snapshot.queryParams,
                 returnUrl: '/anime'
               }
             });
@@ -164,6 +165,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
   openSeasonalAnime(): void {
     this.router.navigate(['/anime'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         season: this.SEASON,
         year: this.YEAR
       }

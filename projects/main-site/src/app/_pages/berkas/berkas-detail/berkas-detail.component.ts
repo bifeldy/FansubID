@@ -114,6 +114,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
             this.bs.idle();
             this.router.navigate(['/error'], {
               queryParams: {
+                ...this.activatedRoute.snapshot.queryParams,
                 returnUrl: '/berkas'
               }
             });
@@ -131,6 +132,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   login(): void {
     this.router.navigate(['/login'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         returnUrl: this.router.url.split('?')[0]
       }
     });
@@ -139,6 +141,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
   verify(): void {
     this.router.navigate(['/verify'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         returnUrl: this.router.url.split('?')[0]
       }
     });

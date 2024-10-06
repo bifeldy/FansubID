@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
@@ -128,6 +128,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   constructor(
     private as: AuthService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private gs: GlobalService,
     private ss: StatsServerService,
     private rs: ReportService,
@@ -216,6 +217,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   login(): void {
     this.router.navigate(['/login'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         returnUrl: `/${this.reportTrackType}/${this.idSlugUsername}`
       }
     });

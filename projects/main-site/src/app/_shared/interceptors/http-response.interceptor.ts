@@ -102,6 +102,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               this.bs.idle();
               this.router.navigate(['/login'], {
                 queryParams: {
+                  ...this.activatedRoute.snapshot.queryParams,
                   returnUrl: this.router.url.split('?')[0] || '/'
                 }
               });
@@ -111,6 +112,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
                 this.bs.idle();
                 this.router.navigate(['/error'], {
                   queryParams: {
+                    ...this.activatedRoute.snapshot.queryParams,
                     returnUrl: this.activatedRoute.snapshot.parent?.url || '/'
                   }
                 });
@@ -120,6 +122,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               this.bs.idle();
               this.router.navigate(['/verify'], {
                 queryParams: {
+                  ...this.activatedRoute.snapshot.queryParams,
                   returnUrl: this.router.url.split('?')[0] || '/'
                 }
               });

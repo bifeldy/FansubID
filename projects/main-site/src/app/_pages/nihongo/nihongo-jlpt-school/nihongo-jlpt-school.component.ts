@@ -72,7 +72,7 @@ export class NihongoJlptSchoolComponent implements OnInit, OnDestroy {
 
   applyFilter(event): void {
     this.gs.log('[SEARCH_VALUE_CHANGED]', event);
-    this.q = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.q = (event.target as HTMLInputElement).value?.trim().toLowerCase();
     this.resetPaginator();
   }
 

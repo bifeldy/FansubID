@@ -148,6 +148,7 @@ export class TicketCreateComponent implements OnInit, OnDestroy, CanComponentDea
             bypassCanDeactivate: true
           },
           queryParams: {
+            ...this.activatedRoute.snapshot.queryParams,
             secret: res.result.secret
           }
         });

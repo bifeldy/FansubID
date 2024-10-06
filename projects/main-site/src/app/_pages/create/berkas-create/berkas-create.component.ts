@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormArray, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable, firstValueFrom } from 'rxjs';
 import { tap, debounceTime, switchMap, finalize, distinctUntilChanged, retry } from 'rxjs/operators';
@@ -81,6 +81,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
 
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private fb: UntypedFormBuilder,
     private bs: BusyService,
     private anime: AnimeService,
@@ -644,6 +645,7 @@ export class BerkasCreateComponent implements OnInit, OnDestroy, CanComponentDea
   verify(): void {
     this.router.navigate(['/verify'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         returnUrl: this.router.url.split('?')[0]
       },
       state: {

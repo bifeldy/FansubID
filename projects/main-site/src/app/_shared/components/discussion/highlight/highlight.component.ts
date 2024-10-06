@@ -264,6 +264,7 @@ export class HighlightComponent implements OnInit, OnDestroy {
     const url = (k.path.startsWith('/') ? environment.baseUrl : '') + k.path;
     this.router.navigate(['/create/ticket'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         url: `${url}?comment=${k.id}`
       }
     });

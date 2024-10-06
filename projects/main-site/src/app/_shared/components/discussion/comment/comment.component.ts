@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 import { environment } from '../../../../../environments/app/environment';
@@ -43,6 +43,7 @@ export class CommentComponent implements OnInit, OnDestroy {
   constructor(
     private clipboard: Clipboard,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
     private komen: KomentarService,
     private gs: GlobalService,
@@ -248,6 +249,7 @@ export class CommentComponent implements OnInit, OnDestroy {
     const url = (k.path.startsWith('/') ? environment.baseUrl : '') + k.path;
     this.router.navigate(['/create/ticket'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         url: `${url}?comment=${k.id}`
       }
     });

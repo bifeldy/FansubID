@@ -108,6 +108,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           this.bs.idle();
           this.router.navigate(['/error'], {
             queryParams: {
+              ...this.activatedRoute.snapshot.queryParams,
               returnUrl: `/user/${this.username}`
             }
           });
@@ -292,6 +293,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     const adminList = ['bifeldy'];
     this.router.navigate(['/create/mailbox'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         subject: '[ReqUName] Pengajuan Ganti Username',
         to: adminList.map(e => `${e}@${environment.domain}`).join(',')
       }

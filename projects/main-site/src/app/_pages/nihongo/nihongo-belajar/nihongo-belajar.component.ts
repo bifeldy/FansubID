@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NihongoCategoryModel, RoleModel } from '../../../../models/req-res.model';
 
@@ -82,6 +82,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private toast: ToastService,
     private as: AuthService,
     private gs: GlobalService,
@@ -124,7 +125,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
 
   applyFilter(event): void {
     this.gs.log('[BELAJAR_SEARCH_VALUE_CHANGED]', event);
-    this.q = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.q = (event.target as HTMLInputElement).value?.trim().toLowerCase();
     this.resetPaginator();
   }
 
@@ -268,6 +269,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
         this.toast.warning('Khusus Pengguna Terverifikasi', 'Whoops!', null, true);
         this.router.navigate(['/verify'], {
           queryParams: {
+            ...this.activatedRoute.snapshot.queryParams,
             returnUrl: this.router.url.split('?')[0]
           }
         });
@@ -275,6 +277,7 @@ export class NihongoBelajarComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['/login'], {
         queryParams: {
+          ...this.activatedRoute.snapshot.queryParams,
           returnUrl: '/nihongo/belajar'
         }
       });

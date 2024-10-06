@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { GlobalService } from './global.service';
 import { StatsServerService } from './stats-server.service';
@@ -17,6 +18,7 @@ export class RightPanelService {
   componentView = null;
 
   constructor(
+    private router: Router,
     private gs: GlobalService,
     private ss: StatsServerService
   ) {
@@ -29,6 +31,10 @@ export class RightPanelService {
     if (this.componentView) {
       this.closeSidePanel();
     } else {
+      const urlPath = this.router.url.split('?')[0];
+      if (urlPath.includes('/search') && view == 'SearchAllComponent') {
+        return;
+      }
       this.openSidePanel(view);
     }
   }

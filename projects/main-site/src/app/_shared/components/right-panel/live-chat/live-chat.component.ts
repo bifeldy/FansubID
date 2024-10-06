@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CONSTANTS } from '../../../../../constants';
 
@@ -43,7 +43,8 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     private gs: GlobalService,
     private ss: StatsServerService,
     private ls: LocalStorageService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     if (this.gs.isBrowser) {
       //
@@ -188,7 +189,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   applyFilter(event): void {
     this.gs.log('[MESSAGE_VALUE_CHANGED]', event);
-    this.liveChatResult.messageToSend = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.liveChatResult.messageToSend = (event.target as HTMLInputElement).value?.trim().toLowerCase();
     if (this.liveChatResult.messageToSend) {
       this.sendMessage();
     }
@@ -203,6 +204,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
   login(): void {
     this.router.navigate(['/login'], {
       queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
         returnUrl: this.router.url.split('?')[0]
       }
     });

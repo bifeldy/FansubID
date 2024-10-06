@@ -6,6 +6,14 @@
       <mat-icon fontIcon="search" matSuffix></mat-icon>
     </mat-form-field>
   </div>
+  <div class="col-12" *ngIf="!ROUTER.url.includes('/search')">
+    <div class="row px-2">
+      <a routerLink="/search" class="mb-4 col-12" mat-stroked-button color="accent">
+        <mat-icon fontIcon="read_more" class="me-1"></mat-icon>
+        Menuju Ke Halaman Pencarian
+      </a>
+    </div>
+  </div>
   <div class="col-12">
     <div class="row" *ngIf="searchResult.beritaResults.length > 0">
       <div class="col-12">

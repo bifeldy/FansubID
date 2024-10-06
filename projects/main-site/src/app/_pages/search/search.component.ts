@@ -12,9 +12,9 @@ export class SearchComponent implements OnInit {
   constructor(
     private gs: GlobalService
   ) {
-    this.gs.bannerImg = '/assets/img/season/winter.png';
-    this.gs.bgRepeat = true;
-    this.gs.sizeContain = true;
+    this.gs.bannerImg = '/assets/img/banner/search.jpg';
+    this.gs.sizeContain = false;
+    this.gs.bgRepeat = false;
   }
 
   ngOnInit(): void {
