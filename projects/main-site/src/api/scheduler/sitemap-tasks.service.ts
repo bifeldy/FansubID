@@ -121,7 +121,7 @@ export class SitemapService {
               _text: new Date(u.lastmod).toISOString()
             }
           };
-          const idx = existingSitemapList.urlset.url.findIndex(url => url.loc._text == u.url); 
+          const idx = existingSitemapList.urlset.url.findIndex(url => url.loc._text === u.url); 
           if (idx < 0) {
             existingSitemapList.urlset.url.push(sm);
           } else {

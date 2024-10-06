@@ -17,7 +17,7 @@ export class BrowserCacheService {
 
   async clearAllCacheByName(cacheName: string): Promise<boolean[]> {
     const keys = await this.gs.window.caches.keys();
-    const kName = keys.filter((c) => !cacheName || cacheName == c);
+    const kName = keys.filter((c) => !cacheName || cacheName === c);
     return Promise.all(kName.map(k => this.gs.window.caches.delete(k)));
   }
 

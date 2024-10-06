@@ -69,13 +69,23 @@ export class LostAccountFindController {
             }
           }, null, CONSTANTS.timeResetAccount);
           this.ms.sendResetAccountMail(selectedUser, resetToken);
+          const userEmail = selectedUser.email.split('@');
+          let uea = userEmail[0];
+          if (uea.length > 4) {
+            const ln = 3;
+            uea = uea.slice(0, ln) + '･'.repeat(uea.length - ln - 1) + uea.slice(-1);
+          }
+          let ueh = userEmail[1].split('.');
+          if (ueh[0].length > 0) {
+            ueh[0] = ueh[0][0] + '･'.repeat(ueh[0].length - 1);
+          }
           return {
             info: `😅 201 - Lost Account API :: Akun Tersedia 🤣`,
             result: {
               title: `Reset Akun :: ${selectedUser.username}`,
               message: `
                 Silahkan Periksa Email Untuk Mengatur Ulang Akun. <br />
-                Informasi Sudah Dikirimkan Ke '<span class="text-danger">${selectedUser.email}</span>'. <br />
+                Informasi Sudah Dikirimkan Ke '<span class="text-danger">${uea}@${ueh.join('.')}</span>'. <br />
                 Gunakan Data Tersebut Untuk Melengkapi Formulir Pengubahan Kata Sandi. <br />
                 Informasi Tersebut Hanya berlaku selama ${CONSTANTS.timeResetAccount / 60} menit.
               `

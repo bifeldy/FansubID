@@ -72,9 +72,14 @@ export class AdminListCorsComponent implements OnInit, OnDestroy {
             'IP Domain': r.ip_domain,
             'Api Key': r.api_key,
             foto: (r.user_?.image_url || `${environment.baseUrl}/assets/img/favicon.png`),
+            disabled: r.user_ === null,
             Pemilik: (r.user_?.username || 'SYSTEM'),
             Aksi: [
-              { type: 'button', icon: 'layers_clear', name: 'Revoke', row: r }
+              ...((
+                r.user_
+              ) ? [
+                { type: 'button', icon: 'layers_clear', name: 'Revoke', row: r }
+              ] : [])
             ]
           });
         }

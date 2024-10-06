@@ -25,12 +25,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   newsData = [];
   komentarData = [];
+  allBerkasId = [];
   berkasData = [];
   rssFeedData = [];
 
   subsNews = null;
   subsKomenGet = null;
   subsBerkas = null;
+  subsTrusted = null;
   subsRssFeed = null;
   subsUser = null;
 
@@ -68,6 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subsNews?.unsubscribe();
     this.subsKomenGet?.unsubscribe();
     this.subsBerkas?.unsubscribe();
+    this.subsTrusted?.unsubscribe();
     this.subsRssFeed?.unsubscribe();
     this.subsUser?.unsubscribe();
   }
@@ -126,11 +129,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subsBerkas = this.berkas.getAllBerkas('', 1, 12, '', '', false).subscribe({
       next: res => {
         this.gs.log('[HOME_BERKAS_LIST_SUCCESS]', res);
-        this.berkasData = res.results;
+        this.berkasData = [];
+        for (const r of res.results) {
+          this.allBerkasId.push(r.id);
+          this.berkasData.push(r);
+        }
+        if (this.allBerkasId.length > 0) {
+          this.checkTrusted();
+        }
         this.bs.idle();
       },
       error: err => {
         this.gs.log('[HOME_BERKAS_LIST_ERROR]', err, 'error');
+        this.bs.idle();
+      }
+    });
+  }
+
+  checkTrusted():void {
+    this.bs.busy();
+    this.subsTrusted = this.berkas.checkTrusted(this.allBerkasId).subscribe({
+      next: res => {
+        this.gs.log('[HOME_BERKAS_TRUSTED_SUCCESS]', res);
+        for (const b of this.berkasData) {
+          b.trusted = res.results[b.id];
+        }
+        this.bs.idle();
+      },
+      error: err => {
+        this.gs.log('[HOME_BERKAS_TRUSTED_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

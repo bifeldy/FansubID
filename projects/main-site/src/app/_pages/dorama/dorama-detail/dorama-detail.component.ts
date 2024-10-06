@@ -196,6 +196,7 @@ export class DoramaDetailComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[DORAMA_BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
+        this.allBerkasDoramaId = [];
         this.berkasDorama = [];
         for (const r of res.results[this.doramaId]) {
           this.allBerkasDoramaId.push(r.id);

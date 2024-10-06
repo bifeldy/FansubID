@@ -275,6 +275,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[BERKAS_ANIME_SUCCESS]', res);
         this.count = res.count;
+        this.allBerkasFansubId = [];
         this.berkasFansub = [];
         for (const r of res.results[this.fansubData.id]) {
           this.allBerkasFansubId.push(r.id);

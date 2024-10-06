@@ -194,6 +194,7 @@ export class AnimeDetailComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[ANIME_BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
+        this.allBerkasAnimeId = [];
         this.berkasAnime = [];
         for (const r of res.results[this.animeId]) {
           this.allBerkasAnimeId.push(r.id);

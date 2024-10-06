@@ -125,6 +125,7 @@ export class BerkasListComponent implements OnInit, OnDestroy {
       next: res => {
         this.gs.log('[BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
+        this.allBerkasId = [];
         this.berkasData = [];
         for (const r of res.results) {
           this.allBerkasId.push(r.id);
