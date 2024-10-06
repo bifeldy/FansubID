@@ -25,6 +25,8 @@ import { LiveChatComponent } from './live-chat/live-chat.component';
   ],
   exports: [
     RightPanelComponent,
+    SearchAllComponent,
+    AdminNavigationComponent,
     LiveChatComponent
   ]
 })

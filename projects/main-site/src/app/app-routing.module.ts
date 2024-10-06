@@ -27,6 +27,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'search',
+    loadChildren: () => import('./_pages/search/search.module').then(m => m.SearchModule),
+    data: {
+      title: 'Cari Apapun Di Sini',
+      description: 'Pencarian',
+      keywords: 'Search Anything Anywhere'
+    }
+  },
+  {
     path: 'create',
     loadChildren: () => import('./_pages/create/create.module').then(m => m.CreateModule),
     data: {

@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { GlobalService } from '../../../services/global.service';
 import { NewsService } from '../../../services/news.service';
@@ -31,6 +32,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     penggunaResults: []
   };
 
+  subsQueryParam = null;
   subsBerita = null;
   subsKanji = null;
   subsAnime = null;
@@ -51,6 +53,8 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   timedOut8 = null;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private gs: GlobalService,
     private news: NewsService,
     private ds: DialogService,
@@ -76,11 +80,13 @@ export class SearchAllComponent implements OnInit, OnDestroy {
           this.searchResult[key] = value;
         }
       }
+      this.watchUrlRoute();
     }
   }
 
   ngOnDestroy(): void {
     this.ls.setItem(this.gs.localStorageKeys.SearchResults, this.searchResult);
+    this.subsQueryParam?.unsubscribe();
     this.subsBerita?.unsubscribe();
     this.subsKanji?.unsubscribe();
     this.subsAnime?.unsubscribe();
@@ -124,27 +130,42 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     }
   }
 
-  applyFilter(event): void {
+  watchUrlRoute(): void {
+    this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
+      next: qp => {
+        const q = qp['q'];
+        if (q) {
+          this.searchResult.q = q;
+          this.searchResult.beritaResults = [];
+          this.searchResult.kanjiResults = [];
+          this.searchResult.animeResults = [];
+          this.searchResult.doramaResults = [];
+          this.searchResult.fansubResults = [];
+          this.searchResult.rssResults = [];
+          this.searchResult.berkasResults = [];
+          this.searchResult.penggunaResults = [];
+          this.timedOut1 = setTimeout(() => { this.getNews(); }, 1000);
+          this.timedOut2 = setTimeout(() => { this.getKanji(); }, 1000);
+          this.timedOut3 = setTimeout(() => { this.getAnime(); }, 1000);
+          this.timedOut4 = setTimeout(() => { this.getDorama(); }, 1000);
+          this.timedOut5 = setTimeout(() => { this.getFansub(); }, 1000);
+          this.timedOut6 = setTimeout(() => { this.getBerkas(); }, 1000);
+          this.timedOut7 = setTimeout(() => { this.getPengguna(); }, 1000);
+          this.timedOut7 = setTimeout(() => { this.getRss(); }, 1000);
+        }
+      }
+    });
+  }
+
+  applyFilter(event = null): void {
     this.gs.log('[SEARCH_VALUE_CHANGED]', event);
-    this.searchResult.q = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.searchResult.beritaResults = [];
-    this.searchResult.kanjiResults = [];
-    this.searchResult.animeResults = [];
-    this.searchResult.doramaResults = [];
-    this.searchResult.fansubResults = [];
-    this.searchResult.rssResults = [];
-    this.searchResult.berkasResults = [];
-    this.searchResult.penggunaResults = [];
-    if (this.searchResult.q) {
-      this.timedOut1 = setTimeout(() => { this.getNews(); }, 250);
-      this.timedOut2 = setTimeout(() => { this.getKanji(); }, 500);
-      this.timedOut3 = setTimeout(() => { this.getAnime(); }, 750);
-      this.timedOut4 = setTimeout(() => { this.getDorama(); }, 1000);
-      this.timedOut5 = setTimeout(() => { this.getFansub(); }, 1250);
-      this.timedOut6 = setTimeout(() => { this.getBerkas(); }, 1500);
-      this.timedOut7 = setTimeout(() => { this.getPengguna(); }, 1750);
-      this.timedOut7 = setTimeout(() => { this.getRss(); }, 2000);
-    }
+    const q = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.router.navigate(['/anime'], {
+      queryParams: {
+        ...this.activatedRoute.snapshot.queryParams,
+        q
+      }
+    });
   }
 
   openEdict(kana): void {
