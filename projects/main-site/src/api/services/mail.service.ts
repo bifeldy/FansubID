@@ -143,7 +143,7 @@ export class MailService {
         (づ￣ ³￣)づ
         Hai, terima kasih telah mendaftar di ${environment.siteName}.
         Untuk verifikasi akun, silahkan klik link berikut ini.
-        ${environment.baseUrl}/api/verify-sosmed?token=${token}
+        ${environment.baseUrl}/api/verify-sosmed?app=${app.toLowerCase()}&token=${token}
         Jika link di atas tidak berfungsi, silahkan salin link tersebut dan buka di tab baru browser.
         (つ≧▽≦)つ
         Terima kasih.

@@ -336,6 +336,7 @@ export class AppModule {
     mc.apply(ApiKeyMiddleware).exclude(
       { path: '/api/discord-verifikasi', method: RequestMethod.GET },
       { path: '/api/google-verifikasi', method: RequestMethod.GET },
+      { path: '/api/line-verifikasi', method: RequestMethod.GET },
       { path: '/api/aktivasi', method: RequestMethod.GET },
       { path: '/api/verify-sosmed', method: RequestMethod.GET }
     ).forRoutes(

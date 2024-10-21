@@ -89,6 +89,15 @@ export class LoginMiddleware implements NestMiddleware {
                 // Google OAuth2 `refresh_token` Will Never Expire Until Manually Revoked
                 sosmedSelectedOk = true;
               }
+            } else if (s.type === SosMedModel.LINE) {
+              const url = new URL(`${environment.line.api_uri}/oauth2/v2.1/token`);
+              form.append('client_id', environment.line.client_id);
+              form.append('client_secret', environment.line.client_secret);
+              const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
+              if (res_raw.ok) {
+                // Line OAuth2 `refresh_token` Will Expire After 90 Days
+                sosmedSelectedOk = true;
+              }
             }
             // TODO :: Other Social Media Platform
             if (!sosmedSelectedOk) {

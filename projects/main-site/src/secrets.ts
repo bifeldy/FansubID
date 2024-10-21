@@ -27,6 +27,8 @@ interface SECRETS_DATA_TYPE {
   CLOUDFLARE_KEY: string;
   DISCORD_CLIENT_SECRET: string;
   DISCORD_BOT_LOGIN_TOKEN: string;
+  LINE_CLIENT_SECRET: string;
+  LINE_BOT_LOGIN_TOKEN: string;
   MAL_CLIENT_ID: string;
   ID_CLOUD_HOST_API_KEY: string;
   S3_BUCKET: string;
@@ -35,7 +37,8 @@ interface SECRETS_DATA_TYPE {
   // R2_BUCKET: string;
   // R2_API_TOKEN: string;
   // R2_ACCESS_KEY_ID: string;
-  // R2_SECRET_ACCESS_KEY: string;
+  // R2_SECRET_ACCESS_KEY: string;,
+  TELEGRAM_BOT_TOKEN: string;
 };
 
 let SECRETS_DATA: SECRETS_DATA_TYPE = null;

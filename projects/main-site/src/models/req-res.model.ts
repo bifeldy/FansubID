@@ -70,7 +70,8 @@ export enum SosMedModel {
   DISCORD = 'DISCORD',
   DISQUS = 'DISQUS',
   FACEBOOK = 'FACEBOOK',
-  GOOGLE = 'GOOGLE'
+  GOOGLE = 'GOOGLE',
+  LINE = 'LINE'
 }
 
 export interface ProfileModel {

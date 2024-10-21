@@ -18,23 +18,26 @@
               <div class="text-center p-3">
                 <p>
                   === <i>Connect With</i> Discord (?) === <br />
-                  Cukup dengan menghubungkan akun kamu. <br />
                   Lalu kirimkan kode yang muncul disini ke
                   <a href="{{ ENV.discord.join_url }}" target="_blank" class="text-decoration-none text-warning">
                     <i>Channel</i> Khusus BOT
                   </a>. <br />
-                  Status akunmu akan berubah menjadi terverifikasi. <br />
-                  Akun terverifikasi selama akses ke Discord tersambung. <br />
-                  Dimohon untuk tidak <i>Revoke</i> akses. <br />
                   <span class="gradient-text">
                     Akun Discord akan mendapatkan <i>Role</i> khusus.
                   </span> <br />
                   <br />
                   === <i>Connect With</i> Google (?) === <br />
-                  Cukup dengan menghubungkan akun kamu. <br />
-                  Lalu buka tautan yang dikirimkan ke surelmu. <br />
+                  Lalu buka tautan yang dikirimkan ke surel gmail-mu. <br />
+                  <br />
+                  === <i>Connect With</i> LINE (?) === <br />
+                  Lalu kirimkan kode yang muncul disini melalui pesan pribadi
+                  <a href="{{ ENV.line.oa_id }}" target="_blank" class="text-decoration-none text-warning">
+                    <i>Official</i> Akun
+                  </a>. <br />
+                  <br />
+                  <br />
                   Status akunmu akan berubah menjadi terverifikasi. <br />
-                  Akun terverifikasi selama akses ke Google tersambung. <br />
+                  Akun terverifikasi selama akses masih tersambung. <br />
                   Dimohon untuk tidak <i>Revoke</i> akses. <br />
                   <br />
                   .: Alasan pake ginian, biar gak ada BOT :. <br />
@@ -51,6 +54,10 @@
                 <a class="m-1" mat-raised-button color="primary" href="{{ ENV.baseUrl }}/api/google-verifikasi" target="_self">
                   <mat-icon fontIcon="link" class="me-1"></mat-icon>
                   Google
+                </a>
+                <a class="m-1" mat-raised-button color="primary" href="{{ ENV.baseUrl }}/api/line-verifikasi" target="_self">
+                  <mat-icon fontIcon="link" class="me-1"></mat-icon>
+                  LINE
                 </a>
               </div>
             </div>

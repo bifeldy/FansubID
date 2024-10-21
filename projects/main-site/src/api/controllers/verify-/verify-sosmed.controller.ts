@@ -255,6 +255,65 @@ export class VerifySosmedController {
     }
   }
 
+  async lineApp(req: Request, user: UserModel): Promise<any> {
+    const url1 = new URL(`${environment.line.api_uri}/oauth2/v2.1/token`);
+    const form = new URLSearchParams();
+    form.append('client_id', environment.line.client_id);
+    form.append('client_secret', environment.line.client_secret);
+    form.append('grant_type', 'authorization_code');
+    form.append('code', req.body.code);
+    form.append('redirect_uri', `${environment.baseUrl}/verify?app=line`);
+    const res_raw1 = await this.api.postData(url1, form, environment.nodeJsXhrHeader);
+    if (res_raw1.ok) {
+      const res_json1: any = await res_raw1.json();
+      this.gs.log(`[oAuthLine] 🗝 ${res_raw1.status}`, res_json1);
+      const url2 = new URL(`${environment.line.api_uri}/v2/profile`);
+      const res_raw2 = await this.api.getData(url2, {
+        Authorization: `Bearer ${res_json1.access_token}`,
+        ...environment.nodeJsXhrHeader
+      });
+      if (res_raw2.ok) {
+        const res_json2: any = await res_raw2.json();
+        this.gs.log(`[apiLine] 🗝 ${res_raw2.status}`, res_json2);
+        await this.insertOrUpdate(SosMedModel.LINE, user, res_json2.userId, res_json1.refresh_token);
+        return {
+          info: `😅 201 - LINE API :: Masuk & Verify 🤣`,
+          result: {
+            title: `Kirim Token Menggunakan Perintah '/verify' Ke Akun ${environment.siteName} LINE Official Dalam ${CONSTANTS.timeJwtEncryption / 60} Menit!`,
+            message: this.cs.credentialEncode(
+              {
+                line: {
+                  id: res_json2.userId,
+                  // verified: res_json2.verified
+                },
+                user: {
+                  id: user.id,
+                  verified: user.verified
+                }
+              },
+              false,
+              CONSTANTS.timeJwtEncryption
+            )
+          }
+        };
+      } else {
+        throw new HttpException({
+          info: `🙄 ${res_raw2.status || 400} - LINE API :: Gagal Verify 😪`,
+          result: {
+            message: 'Kode oAuth Salah / Expired!'
+          }
+        }, res_raw2.status || HttpStatus.BAD_REQUEST);
+      }
+    } else {
+      throw new HttpException({
+        info: `🙄 ${res_raw1.status || 400} - LINE API :: Gagal Masuk 😪`,
+        result: {
+          message: 'Kode Token Salah / Tidak Valid!'
+        }
+      }, res_raw1.status || HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Post('/')
   @HttpCode(201)
   @FilterApiKeyAccess()
@@ -276,6 +335,8 @@ export class VerifySosmedController {
           return this.discordApp(req, user);
         } else if (sosmed === SosMedModel.GOOGLE) {
           return this.googleApp(req, user);
+        } else if (sosmed === SosMedModel.LINE) {
+          return this.lineApp(req, user);
         }
         // TODO :: Other Social Media Platform
       }

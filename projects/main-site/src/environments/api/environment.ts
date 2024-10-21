@@ -161,6 +161,12 @@ export const environment = {
     loginToken: SECRETS().DISCORD_BOT_LOGIN_TOKEN,                                                                // '',
     channelDdlId: '1087668627718803557',
   },
+  line: {
+    api_uri: 'https://api.line.me',
+    client_id: '2003216840',
+    client_secret: SECRETS().LINE_CLIENT_SECRET,                                                               // '',
+    loginToken: SECRETS().LINE_BOT_LOGIN_TOKEN,                                                                // '',
+  },
   nodeJsXhrHeader: {
     Accept: 'application/json',
     Connection: 'keep-alive',

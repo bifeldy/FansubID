@@ -18,6 +18,9 @@ export const environment = {
     join_url: 'https://discord.gg/xGWdExk',
     guild_id: '342220398022098944'
   },
+  line: {
+    oa_id: 'https://line.me/ti/p/~@616nqkdg'
+  },
   torrent: {
     trackerAnnounce: CONSTANTS.torrentTracker,
     iceServers: [

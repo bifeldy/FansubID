@@ -29,11 +29,10 @@ export class AppController {
   @Get('/discord-verifikasi')
   @HttpCode(301)
   @Redirect()
-  @FilterApiKeyAccess()
   async discordVerify(): Promise<any> {
     return {
       url: `
-        https://discord.com/api/oauth2/authorize
+        ${environment.discord.api_uri}/oauth2/authorize
           ?redirect_uri=${encodeURIComponent(`${environment.baseUrl}/verify?app=discord`)}
           &client_id=${environment.discord.client_id}
           &response_type=code
@@ -46,7 +45,6 @@ export class AppController {
   @Get('/google-verifikasi')
   @HttpCode(301)
   @Redirect()
-  @FilterApiKeyAccess()
   async googleVerify(): Promise<any> {
     return {
       url: `
@@ -59,6 +57,23 @@ export class AppController {
           &service=lso
           &o2v=2
           &flowName=GeneralOAuthFlow
+      `.replace(/\s+/g, '').trim(),
+      statusCode: 301
+    };
+  }
+
+  @Get('/line-verifikasi')
+  @HttpCode(301)
+  @Redirect()
+  async lineVerify(): Promise<any> {
+    return {
+      url: `
+        ${environment.line.api_uri}/oauth2/v2.1/authorize
+          ?redirect_uri=${encodeURIComponent(`${environment.baseUrl}/verify?app=line`)}
+          &client_id=${environment.line.client_id}
+          &response_type=code
+          &scope=${encodeURIComponent('profile')}
+          &client_id=fsid_${Date.now()}
       `.replace(/\s+/g, '').trim(),
       statusCode: 301
     };
