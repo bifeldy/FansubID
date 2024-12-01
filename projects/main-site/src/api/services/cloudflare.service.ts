@@ -20,7 +20,7 @@ export class CloudflareService {
 
   async getDnss(name = '', page = 1, per_page = 10, order = 'name', direction = 'asc', type = 'A,CNAME'): Promise<any> {
     try {
-      const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records?name=${name}&type=${type}&page=${page}&per_page=${per_page}&order=${order}&direction=${direction}&comment=${environment.cloudflare.comment}`);
+      const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/dns_records?name.contains=${name}&type=${type}&page=${page}&per_page=${per_page}&order=${order}&direction=${direction}&comment.contains=${environment.cloudflare.comment}`);
       const res_raw = await this.api.getData(url, {
         Authorization: `Bearer ${environment.cloudflare.key}`,
         ...environment.nodeJsXhrHeader
