@@ -148,7 +148,14 @@ export const environment = {
     key: SECRETS().CLOUDFLARE_KEY,                                                                                // '',
     zoneId: '804863012d6a7700333d781170c4dd95',
     domain: 'fansub.id',
-    comment: 'DOMAIN_KLAIM'
+    comment: 'DOMAIN_KLAIM',
+    r2: {
+      endpoint: SECRETS().R2_ENDPOINT,                                                                            // ''
+      bucket: SECRETS().R2_BUCKET,                                                                                // ''
+      apiToken: SECRETS().R2_API_TOKEN,                                                                           // ''
+      accessKeyId: SECRETS().R2_ACCESS_KEY_ID,                                                                    // ''
+      secretAccessKey: SECRETS().R2_SECRET_ACCESS_KEY                                                             // ''
+    }
   },
   discord: {
     api_uri: 'https://discord.com/api',
@@ -187,7 +194,7 @@ export const environment = {
     mainSite: '01b00d5a-905d-4328-bc8d-bf748f1fc3dc'                                                             // '',
   },
   s3Compatible: {
-    endpoint: 'is3.cloudhost.id',
+    endpoint: SECRETS().S3_ENDPOINT,                                                                             // ''
     bucket: SECRETS().S3_BUCKET,                                                                                 // '',
     region: 'auto',
     accessKeyId: SECRETS().S3_ACCESS_KEY_ID,                                                                     // '',

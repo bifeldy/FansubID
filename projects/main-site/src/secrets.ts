@@ -32,12 +32,14 @@ interface SECRETS_DATA_TYPE {
   MAL_CLIENT_ID: string;
   ID_CLOUD_HOST_API_KEY: string;
   S3_BUCKET: string;
+  S3_ENDPOINT: string;
   S3_ACCESS_KEY_ID: string;
   S3_SECRET_ACCESS_KEY: string;
-  // R2_BUCKET: string;
-  // R2_API_TOKEN: string;
-  // R2_ACCESS_KEY_ID: string;
-  // R2_SECRET_ACCESS_KEY: string;,
+  R2_BUCKET: string;
+  R2_ENDPOINT: string;
+  R2_API_TOKEN: string;
+  R2_ACCESS_KEY_ID: string;
+  R2_SECRET_ACCESS_KEY: string;
   TELEGRAM_BOT_TOKEN: string;
 };
 

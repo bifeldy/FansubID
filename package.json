@@ -55,6 +55,7 @@
     "@socket.io/sticky": "^1.0.4",
     "@types/morgan": "^1.9.3",
     "@uploadx/core": "^6.1.4",
+    "@uploadx/s3": "^6.1.5",
     "abort-controller": "^3.0.0",
     "animate.css": "^4.1.1",
     "aws-sdk": "^2.1540.0",

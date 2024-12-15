@@ -30,7 +30,7 @@ export class AmazonWebService {
     return new S3({
       endpoint: `https://${environment.s3Compatible.endpoint}`,
       accessKeyId: environment.s3Compatible.accessKeyId,
-      secretAccessKey: environment.s3Compatible.secretAccessKey,
+      secretAccessKey: environment.s3Compatible.secretAccessKey
     });
   }
 
