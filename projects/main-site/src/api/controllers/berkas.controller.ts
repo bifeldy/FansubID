@@ -477,50 +477,55 @@ export class BerkasController {
         delete file.user_.created_at;
         delete file.user_.updated_at;
       }
-      (file as any).download_url = JSON.parse(file.download_url);
-      if (!user.verified) {
-        if (file.attachment_) {
-          (file as any).attachment_ = 'Harap Verifikasi Akun!';
+      if (user) {
+        (file as any).download_url = JSON.parse(file.download_url);
+        if (!user.verified) {
+          if (file.attachment_) {
+            (file as any).attachment_ = 'Harap Verifikasi Akun!';
+          }
+        } else {
+          if ('attachment_' in file && file.attachment_) {
+            delete file.attachment_.created_at;
+            delete file.attachment_.updated_at;
+            const subtitles = await this.attachmentRepo.find({
+              where: [
+                {
+                  ext: In(CONSTANTS.extSubs),
+                  parent_attachment_: {
+                    id: Equal(file.attachment_.id)
+                  }
+                }
+              ],
+              relations: ['parent_attachment_']
+            });
+            for (const s of subtitles) {
+              delete s.created_at;
+              delete s.updated_at;
+              delete s.parent_attachment_;
+            }
+            (file as any).attachment_.subtitles_ = subtitles;
+            const fonts = await this.attachmentRepo.find({
+              where: [
+                {
+                  ext: In(CONSTANTS.extFonts),
+                  parent_attachment_: {
+                    id: Equal(file.attachment_.id)
+                  }
+                }
+              ],
+              relations: ['parent_attachment_']
+            });
+            for (const f of fonts) {
+              delete f.created_at;
+              delete f.updated_at;
+              delete f.parent_attachment_;
+            }
+            (file as any).attachment_.fonts_ = fonts;
+          }
         }
       } else {
-        if ('attachment_' in file && file.attachment_) {
-          delete file.attachment_.created_at;
-          delete file.attachment_.updated_at;
-          const subtitles = await this.attachmentRepo.find({
-            where: [
-              {
-                ext: In(CONSTANTS.extSubs),
-                parent_attachment_: {
-                  id: Equal(file.attachment_.id)
-                }
-              }
-            ],
-            relations: ['parent_attachment_']
-          });
-          for (const s of subtitles) {
-            delete s.created_at;
-            delete s.updated_at;
-            delete s.parent_attachment_;
-          }
-          (file as any).attachment_.subtitles_ = subtitles;
-          const fonts = await this.attachmentRepo.find({
-            where: [
-              {
-                ext: In(CONSTANTS.extFonts),
-                parent_attachment_: {
-                  id: Equal(file.attachment_.id)
-                }
-              }
-            ],
-            relations: ['parent_attachment_']
-          });
-          for (const f of fonts) {
-            delete f.created_at;
-            delete f.updated_at;
-            delete f.parent_attachment_;
-          }
-          (file as any).attachment_.fonts_ = fonts;
-        }
+        file.download_url = null;
+        file.attachment_ = null;
       }
       return {
         info: `😅 200 - Berkas API :: Detail ${req.params['id']} 🤣`,
