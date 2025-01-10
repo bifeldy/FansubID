@@ -71,7 +71,7 @@ export class FansubRssFeedController {
             FROM rss_feed
           ) rf
           LEFT JOIN fansub f ON f.id = rf.fansub_id
-          WHERE rf.r = 1
+          WHERE rf.r = 1 AND f.deleted_at IS NULL
           ORDER BY rf.created_at DESC
         `);
         rslt = rfs.map(rf => {

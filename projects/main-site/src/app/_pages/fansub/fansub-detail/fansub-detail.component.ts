@@ -449,7 +449,7 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
         this.gs.log('[FANSUB_DETAIL_MEMBER_LIST_SUCCESS]', res);
         this.approvedMembers = [];
         this.pendingMembers = [];
-        for (const m of res.results) {
+        for (const m of res.results.filter(fm => fm.user_)) {
           if (m.approved) {
             this.approvedMembers.push(m);
           } else {

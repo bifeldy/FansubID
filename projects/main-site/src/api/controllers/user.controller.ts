@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { Equal, ILike, Not } from 'typeorm';
+import { Equal, ILike, IsNull, Not } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -774,6 +774,7 @@ export class UserController {
         where: [
           {
             approved: true,
+            fansub_: Not(IsNull()),
             user_: {
               username: ILike(req.params['username'])
             }

@@ -2,7 +2,11 @@ import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+import { environment } from '../../../environments/api/environment';
+
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
+import { GlobalService } from '../../services/global.service';
 
 import { BerkasService } from '../../repository/berkas.service';
 
@@ -11,6 +15,7 @@ import { BerkasService } from '../../repository/berkas.service';
 export class FansubDoramaController {
 
   constructor(
+    private gs: GlobalService,
     private berkasRepo: BerkasService
   ) {
     //
@@ -43,6 +48,9 @@ export class FansubDoramaController {
           results[i] = [];
         }
         for (const f of files) {
+          if (f.dorama__image_url?.startsWith('http') && this.gs.includesOneOf(f.dorama__image_url, environment.ipoChanProxyUrl)) {
+            f.dorama__image_url = `https://crawl.${environment.domain}/?url=${encodeURIComponent(f.dorama__image_url)}`;
+          }
           results[f.fansub__id].push({
             id: f.dorama__id,
             slug: f.dorama__slug,

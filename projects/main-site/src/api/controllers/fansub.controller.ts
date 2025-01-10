@@ -5,7 +5,7 @@ import { URL } from 'node:url';
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { Equal, ILike } from 'typeorm';
+import { Equal, ILike, IsNull, Not } from 'typeorm';
 
 import { CONSTANTS } from '../../constants';
 
@@ -503,9 +503,11 @@ export class FansubController {
       const [members, count] = await this.fansubMemberRepo.findAndCount({
         where: [
           {
+            approved: true,
             fansub_: {
               slug: ILike(req.params['slug'])
-            }
+            },
+            user_: Not(IsNull())
           }
         ],
         order: {

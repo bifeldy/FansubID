@@ -2,7 +2,11 @@ import { Controller, HttpCode, HttpException, HttpStatus, Patch, Req, Res } from
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+import { environment } from '../../../environments/api/environment';
+
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
+
+import { GlobalService } from '../../services/global.service';
 
 import { BerkasService } from '../../repository/berkas.service';
 
@@ -11,6 +15,7 @@ import { BerkasService } from '../../repository/berkas.service';
 export class AnimeFansubController {
 
   constructor(
+    private gs: GlobalService,
     private berkasRepo: BerkasService
   ) {
     //
@@ -42,6 +47,12 @@ export class AnimeFansubController {
           results[i] = [];
         }
         for (const f of files) {
+          if (f.fansub__image_url?.startsWith('http') && this.gs.includesOneOf(f.fansub__image_url, environment.ipoChanProxyUrl)) {
+            f.fansub__image_url = `https://crawl.${environment.domain}/?url=${encodeURIComponent(f.fansub__image_url)}`;
+          }
+          if (f.fansub__cover_url?.startsWith('http') && this.gs.includesOneOf(f.fansub__cover_url, environment.ipoChanProxyUrl)) {
+            f.fansub__cover_url = `https://crawl.${environment.domain}/?url=${encodeURIComponent(f.fansub__cover_url)}`;
+          }
           results[f.anime__id].push({
             id: f.fansub__id,
             name: f.fansub__name,

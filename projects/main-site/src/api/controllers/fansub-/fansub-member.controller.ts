@@ -234,9 +234,9 @@ export class FansubMemberController {
           ]
         });
         if (approvedMember.length === 1 || otherMember.role === RoleModel.ADMIN || otherMember.role === RoleModel.MODERATOR) {
-          let approver = null;
+          let approver: UserModel = null;
           if (approvedMember.length === 1) {
-            approver = approvedMember[0];
+            approver = approvedMember[0].user_;
           } else {
             approver = otherMember;
           }
@@ -255,7 +255,7 @@ export class FansubMemberController {
               member.keterangan = req.body.keterangan.substring(0, 10);
             }
             member.approved = true;
-            member.approved_by_ = approver.user_;
+            member.approved_by_ = approver;
             resInfo = `😅 201 - Fansub API :: Berhasil Menyetujui Keanggotaan 🤣`;
             resMember = await this.fansubMemberRepo.save(member);
             if (targetUser.role === RoleModel.USER) {
