@@ -1,4 +1,23 @@
+:root {
+  --bifeldy-background-image: '';
+}
+
 .main_content {
   width: 100%;
   height: calc(100vh - 88px);
+}
+
+.bifeldy-background-image::before {
+  content: '';
+  position: fixed;
+  top: 56px;
+  left: 0px;
+  background-position: center center;
+  background-size: cover;
+  width: 100%;
+  filter: blur(5px);
+  opacity: 0.1;
+  height: calc(100% - 88px);
+  background-image: var(--bifeldy-background-image);
+  z-index: -999999999999;
 }

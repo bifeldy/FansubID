@@ -103,6 +103,7 @@ export class BerkasDetailComponent implements OnInit, OnDestroy {
               this.berkasData.image_url,
               this.berkasData.user_.username
             );
+            this.gs.setCustomBackgroundImage(this.berkasData.image_url);
             this.pi.updatePageHeader(this.berkasData.project_type_.name);
             this.bs.idle();
             if (this.gs.isBrowser) {

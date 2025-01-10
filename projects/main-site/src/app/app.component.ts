@@ -167,33 +167,27 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
         else if (e1 instanceof NavigationEnd) {
-          let activatedRouteChild = this.activatedRoute.firstChild;
-          for (const aRC of activatedRouteChild.children) {
-            activatedRouteChild = aRC;
-          }
-          this.subsRouterChild = activatedRouteChild.data.subscribe({
-            next: e2 => {
-              this.updateBackgroundImage();
-              this.gs.routerData = e2;
-              this.pi.updatePageMetaData(
-                e2['title'],
-                e2['description'],
-                e2['keywords'],
-                (this.gs.bgImgUrl || `${environment.baseUrl}/assets/img/favicon.png`)
-              );
-              this.fs.removeFab();
-              if (this.gs.isBrowser) {
-                if (this.siteContent) {
-                  this.siteContent.elementRef.nativeElement.scrollTop = 0;
-                }
-                const nextUrl = e1.url.split('?')[0];
-                if (this.gs.previousUrl !== nextUrl) {
-                  this.ss.currentChatRoom = [];
-                }
-                this.ss.socketLeaveAndJoinNewRoom(this.gs.previousUrl, nextUrl);
-              }
+          const e2 = this.activatedRoute.snapshot.data;
+          this.updateBackgroundImage();
+          this.gs.setCustomBackgroundImage();
+          this.gs.routerData = e2;
+          this.pi.updatePageMetaData(
+            e2['title'],
+            e2['description'],
+            e2['keywords'],
+            (this.gs.bgImgUrl || `${environment.baseUrl}/assets/img/favicon.png`)
+          );
+          this.fs.removeFab();
+          if (this.gs.isBrowser) {
+            if (this.siteContent) {
+              this.siteContent.elementRef.nativeElement.scrollTop = 0;
             }
-          });
+            const nextUrl = e1.url.split('?')[0];
+            if (this.gs.previousUrl !== nextUrl) {
+              this.ss.currentChatRoom = [];
+            }
+            this.ss.socketLeaveAndJoinNewRoom(this.gs.previousUrl, nextUrl);
+          }
         }
       }
     });

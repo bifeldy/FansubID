@@ -30,10 +30,10 @@
 
     <div class="row">
       <div class="col-md-5 col-xl-4 p-3">
-        <div class="row sticky-top">
+        <div class="row">
           <div class="col">
             <div class="row py-3">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+              <div class="col-12 pt-3">
                 <h2 class="border-bottom-dotted">
                   <b class="text-bifeldy">Rujukan</b>
                 </h2>
@@ -64,7 +64,7 @@
               </div>
             </div>
             <div class="row py-3" *ngIf="AS.currentUserSubject?.value && berkasData.attachment_ && isAwsS3">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+              <div class="col-12 pt-3">
                 <h2 class="border-bottom-dotted">
                   <b class="text-bifeldy">
                     <i>Direct Link</i>
@@ -81,7 +81,7 @@
               </div>
             </div>
             <div class="row py-3" *ngIf="AS.currentUserSubject?.value && berkasData.attachment_">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+              <div class="col-12 pt-3">
                 <h2 class="border-bottom-dotted">
                   <b class="text-bifeldy">
                     <i>Direct Download</i>
@@ -144,7 +144,7 @@
               </div>
             </div>
             <div class="row py-3" *ngIf="!AS.currentUserSubject?.value || (AS.currentUserSubject?.value && berkasData.download_url?.length > 0)">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+              <div class="col-12 pt-3">
                 <h2 class="border-bottom-dotted">
                   <b class="text-bifeldy">
                     Tautan Unduhan
@@ -168,11 +168,11 @@
           </div>
         </div>
       </div>
-      <div class="col-md-7 col-xl-8 p-3 sticky-top">
-        <div class="row sticky-top">
+      <div class="col-md-7 col-xl-8 p-3">
+        <div class="row">
           <div class="col">
             <div class="row py-3" *ngIf="berkasData.description">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+              <div class="col-12 pt-3">
                 <h2 class="border-bottom-dotted">
                   <b class="text-bifeldy">Deskripsi & Informasi</b>
                 </h2>
@@ -182,7 +182,7 @@
               </div>
             </div>
             <div class="row py-3" *ngIf="berkasData.attachment_ && isStreamable">
-              <div class="col-12 pt-3 sticky-top bg-bifeldy">
+              <div class="col-12 pt-3">
                 <h2 class="border-bottom-dotted">
                   <b class="text-bifeldy">Video Stream (Browser Tertentu T.T)</b>
                 </h2>
@@ -229,11 +229,11 @@
             </div>
             <div class="row py-3" *ngIf="SS.mySocket?.id">
               <div class="col-12">
-                <app-report></app-report>
+                <app-report [bgTransparent]="true"></app-report>
               </div>
             </div>
             <div class="row py-3">
-              <div class="col-12 sticky-top bg-bifeldy">
+              <div class="col-12">
                 <h2 class="pt-3 border-bottom-dotted">
                   <b class="text-bifeldy">Komentar</b>
                 </h2>

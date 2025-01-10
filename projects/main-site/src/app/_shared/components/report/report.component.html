@@ -1,5 +1,5 @@
 <div class="row p-0">
-  <div class="col-12 pt-3 sticky-top bg-bifeldy">
+  <div class="col-12 pt-3 {{ bgTransparent ? '' : 'sticky-top bg-bifeldy' }}">
     <h2 class="border-bottom-dotted">
       <span class="float-end text-warning" style="font-size: small; cursor: pointer;" (click)="toggleAllStats()" *ngIf="AS.currentUserSubject?.value">
         {{ toggleAllStatsValue ? 'Sederhana' : 'Selengkapnya' }}
@@ -9,22 +9,22 @@
   </div>
   <div class="col-12">
     <div class="row p-0">
-      <div class="col-12 col-lg-6 py-1 bg-bifeldy" *ngIf="SHOWALLSTATSVERIFIEDONLY && doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0">
+      <div class="col-12 col-lg-6 py-1 {{ bgTransparent ? '' : 'bg-bifeldy' }}" *ngIf="SHOWALLSTATSVERIFIEDONLY && doughnutChartKetertarikanData.length > 0 && doughnutChartKetertarikanLabels.length > 0">
         <canvas baseChart [data]="doughnutChartKetertarikanData" [labels]="doughnutChartKetertarikanLabels" [chartType]="doughnutChartType"
           [options]="doughnutChartKetertarikanOptions" [plugins]="chartPlugins" [legend]="true">
         </canvas>
       </div>
-      <div class="col-12 col-lg-6 py-1 bg-bifeldy" *ngIf="SHOWALLSTATSVERIFIEDONLY && barChartUniqueData.length > 0 && barChartUniqueLabels.length > 0">
+      <div class="col-12 col-lg-6 py-1 {{ bgTransparent ? '' : 'bg-bifeldy' }}" *ngIf="SHOWALLSTATSVERIFIEDONLY && barChartUniqueData.length > 0 && barChartUniqueLabels.length > 0">
         <canvas baseChart [data]="barChartUniqueData" [labels]="barChartUniqueLabels" [chartType]="barChartType"
           [options]="barChartUniqueOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>
       </div>
-      <div class="col-12 col-lg-6 py-1 bg-bifeldy" *ngIf="lineChartVisitorData.length > 0 && lineChartVisitorLabels.length > 0">
+      <div class="col-12 col-lg-6 py-1 {{ bgTransparent ? '' : 'bg-bifeldy' }}" *ngIf="lineChartVisitorData.length > 0 && lineChartVisitorLabels.length > 0">
         <canvas baseChart [data]="lineChartVisitorData" [labels]="lineChartVisitorLabels" [chartType]="lineChartType"
           [options]="lineChartVisitorOptions" [plugins]="chartPlugins" [legend]="false">
         </canvas>
       </div>
-      <div class="col py-1 bg-bifeldy">
+      <div class="col py-1 {{ bgTransparent ? '' : 'bg-bifeldy' }}">
         <div class="row align-items-center h-100">
           <div class="col-12 mx-auto text-center">
             <h2>Penilaian Saya</h2>

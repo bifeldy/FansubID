@@ -1,6 +1,6 @@
 import { Injectable, isDevMode, Inject, PLATFORM_ID } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformServer } from '@angular/common';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
@@ -42,6 +42,8 @@ export class GlobalService {
 
   leftMenuImage = '';
   rightMenuImage = '';
+
+  customBackgroundImage = '';
 
   isBrowser = null;
   document: Document = null;
@@ -90,13 +92,19 @@ export class GlobalService {
     @Inject(PLATFORM_ID) platformId: string,
     @Inject(DOCUMENT) document: Document
   ) {
-    this.isBrowser = isPlatformBrowser(platformId);
+    this.isBrowser = !isPlatformServer(platformId);
     this.document = document;
     this.window = document.defaultView;
     this.isDevMode = isDevMode();
     if (this.isBrowser) {
       this.onResize(null);
       this.weatherJS();
+    }
+  }
+
+  setCustomBackgroundImage(imageUrl: string = ''): void {
+    if (imageUrl !== '/assets/img/favicon.png') {
+      this.customBackgroundImage = imageUrl;
     }
   }
 

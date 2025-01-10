@@ -32,7 +32,7 @@ export class RightPanelService {
       this.closeSidePanel();
     } else {
       const urlPath = this.router.url.split('?')[0];
-      if (urlPath.includes('/search') && view == 'SearchAllComponent') {
+      if (urlPath.includes('/search') && view === 'SearchAllComponent') {
         return;
       }
       this.openSidePanel(view);
