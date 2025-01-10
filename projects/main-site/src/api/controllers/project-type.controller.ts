@@ -131,8 +131,13 @@ export class ProjectTypeController {
       });
       const berkasCount = await this.berkasRepo.count({
         where: [
-          { project_type_: Equal(projectType.id) }
-        ]
+          {
+            project_type_: {
+              id: Equal(projectType.id)
+            }
+          }
+        ],
+        relations: ['project_type_']
       });
       return {
         info: `😅 200 - Project API :: Detail ${req.params['id']} 🤣`,
@@ -212,8 +217,13 @@ export class ProjectTypeController {
       });
       const berkasCount = await this.berkasRepo.count({
         where: [
-          { project_type_: Equal(projectType.id) }
-        ]
+          {
+            project_type_: {
+              id: Equal(projectType.id)
+            }
+          }
+        ],
+        relations: ['project_type_']
       });
       if (berkasCount === 0) {
         const deletedProject = await this.projectTypeRepo.remove(projectType);

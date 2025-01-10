@@ -138,7 +138,9 @@ export class CommentController {
       const [komens, count] = await this.komentarRepo.findAndCount({
         where: [
           {
-            parent_komentar_: Equal(req.params['id']),
+            parent_komentar_: {
+              id: Equal(parseInt(req.params['id']))
+            },
             comment: ILike(`%${req.query['q'] ? req.query['q'] : ''}%`)
           }
         ],
@@ -150,7 +152,7 @@ export class CommentController {
             id: 'DESC'
           })
         },
-        relations: ['user_'],
+        relations: ['parent_komentar_', 'user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10,
         withDeleted: true
@@ -171,7 +173,8 @@ export class CommentController {
               }
             }
           ],
-          relations: ['parent_komentar_']
+          relations: ['parent_komentar_'],
+          withDeleted: true
         });
       }
       return {
@@ -221,7 +224,8 @@ export class CommentController {
               }
             }
           ],
-          relations: ['parent_komentar_']
+          relations: ['parent_komentar_'],
+          withDeleted: true
         });
         return {
           info: `😅 200 - Komentar API :: Detail ${req.body.id} 🤣`,
