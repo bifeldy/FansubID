@@ -167,16 +167,19 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
         else if (e1 instanceof NavigationEnd) {
-          const e2 = this.activatedRoute.snapshot.data;
+          let activatedRouteChild = this.activatedRoute.firstChild;
+          for (const aRC of activatedRouteChild.children) {
+            const e2 = aRC.snapshot.data;
+            this.gs.routerData = e2;
+            this.pi.updatePageMetaData(
+              e2['title'],
+              e2['description'],
+              e2['keywords'],
+              (this.gs.bgImgUrl || `${environment.baseUrl}/assets/img/favicon.png`)
+            );
+          }
           this.updateBackgroundImage();
           this.gs.setCustomBackgroundImage();
-          this.gs.routerData = e2;
-          this.pi.updatePageMetaData(
-            e2['title'],
-            e2['description'],
-            e2['keywords'],
-            (this.gs.bgImgUrl || `${environment.baseUrl}/assets/img/favicon.png`)
-          );
           this.fs.removeFab();
           if (this.gs.isBrowser) {
             if (this.siteContent) {
