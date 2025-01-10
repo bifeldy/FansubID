@@ -29,20 +29,17 @@ export class NewsService {
     return this.newsRepo.metadata;
   }
 
-  find(options: FindManyOptions<News>, withDeleted = false): Promise<News[]> {
-    options.withDeleted = withDeleted;
+  find(options: FindManyOptions<News>): Promise<News[]> {
     this.gs.log('[NEWS_SERVICE-FIND_ALL] 📰', options);
     return this.newsRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<News>, withDeleted = false): Promise<[News[], number]> {
-    options.withDeleted = withDeleted;
+  findAndCount(options: FindManyOptions<News>): Promise<[News[], number]> {
     this.gs.log('[NEWS_SERVICE-FIND_AND_COUNT] 📰', options);
     return this.newsRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<News>, withDeleted = false): Promise<News> {
-    options.withDeleted = withDeleted;
+  findOneOrFail(options: FindOneOptions<News>): Promise<News> {
     this.gs.log('[NEWS_SERVICE-GET_BY] 📰', options);
     return this.newsRepo.findOneOrFail(options);
   }

@@ -15,7 +15,7 @@ import { Roles } from '../decorators/roles.decorator';
 import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
 import { AttachmentService } from '../repository/attachment.service';
-import { DdlFileService } from '../repository/ddl-file';
+import { DdlFileService } from '../repository/ddl-file.service';
 
 import { ApiService } from '../services/api.service';
 import { GlobalService } from '../services/global.service';

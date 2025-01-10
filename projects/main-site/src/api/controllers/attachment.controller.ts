@@ -22,7 +22,7 @@ import { VerifiedOnly } from '../decorators/verified-only.decorator';
 
 import { AttachmentService } from '../repository/attachment.service';
 import { TempAttachmentService } from '../repository/temp-attachment.service';
-import { DdlFileService } from '../repository/ddl-file';
+import { DdlFileService } from '../repository/ddl-file.service';
 
 import { GoogleCloudService } from '../services/google-cloud.service';
 import { GlobalService } from '../services/global.service';

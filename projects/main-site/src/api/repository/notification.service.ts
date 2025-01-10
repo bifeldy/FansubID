@@ -29,20 +29,17 @@ export class NotificationService {
     return this.notificationRepo.metadata;
   }
 
-  find(options: FindManyOptions<Notification>, withDeleted = false): Promise<Notification[]> {
-    options.withDeleted = withDeleted;
+  find(options: FindManyOptions<Notification>): Promise<Notification[]> {
     this.gs.log('[NOTIFICATION_SERVICE-FIND_ALL] 🔔', options);
     return this.notificationRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<Notification>, withDeleted = false): Promise<[Notification[], number]> {
-    options.withDeleted = withDeleted;
+  findAndCount(options: FindManyOptions<Notification>): Promise<[Notification[], number]> {
     this.gs.log('[NOTIFICATION_SERVICE-FIND_AND_COUNT] 🔔', options);
     return this.notificationRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<Notification>, withDeleted = false): Promise<Notification> {
-    options.withDeleted = withDeleted;
+  findOneOrFail(options: FindOneOptions<Notification>): Promise<Notification> {
     this.gs.log('[NOTIFICATION_SERVICE-GET_BY] 🔔', options);
     return this.notificationRepo.findOneOrFail(options);
   }

@@ -46,10 +46,10 @@ export class CommentController {
             id: 'DESC'
           })
         },
+        withDeleted: queryPath ? true : false,
         relations: ['parent_komentar_', 'user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
-        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10,
-        withDeleted: queryPath ? true : false
+        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const k of komens) {
         if (k.deleted_at) {
@@ -67,8 +67,8 @@ export class CommentController {
               }
             }
           ],
-          relations: ['parent_komentar_'],
-          withDeleted: true
+          withDeleted: true,
+          relations: ['parent_komentar_']
         });
       }
       return {
@@ -152,10 +152,10 @@ export class CommentController {
             id: 'DESC'
           })
         },
+        withDeleted: true,
         relations: ['parent_komentar_', 'user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
-        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10,
-        withDeleted: true
+        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const k of komens) {
         if (k.deleted_at) {
@@ -173,8 +173,8 @@ export class CommentController {
               }
             }
           ],
-          relations: ['parent_komentar_'],
-          withDeleted: true
+          withDeleted: true,
+          relations: ['parent_komentar_']
         });
       }
       return {
@@ -206,8 +206,8 @@ export class CommentController {
               path: ILike(req.body.path.split('?')[0])
             }
           ],
-          relations: ['parent_komentar_', 'user_'],
-          withDeleted: true
+          withDeleted: true,
+          relations: ['parent_komentar_', 'user_']
         });
         if (komen.deleted_at) {
           komen.comment = '<span class="gradient-text">Komentar Telah Di Hapus ...</span>';
@@ -224,8 +224,8 @@ export class CommentController {
               }
             }
           ],
-          relations: ['parent_komentar_'],
-          withDeleted: true
+          withDeleted: true,
+          relations: ['parent_komentar_']
         });
         return {
           info: `😅 200 - Komentar API :: Detail ${req.body.id} 🤣`,

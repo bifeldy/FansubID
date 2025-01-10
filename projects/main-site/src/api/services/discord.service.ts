@@ -40,7 +40,7 @@ import { GlobalService } from './global.service';
 
 import { FansubMemberService } from '../repository/fansub-member.service';
 import { UserService } from '../repository/user.service';
-import { DdlFileService } from '../repository/ddl-file';
+import { DdlFileService } from '../repository/ddl-file.service';
 import { SocialMediaService } from '../repository/social-media.service';
 import { ClusterMasterSlaveService } from './cluster-master-slave.service';
 

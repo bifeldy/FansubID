@@ -13,6 +13,7 @@ import { MorganInterceptor, MorganModule } from 'nest-morgan';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { uploadx } from '@uploadx/core';
+import { S3File, S3Storage } from '@uploadx/s3';
 
 import { CONSTANTS } from '../constants';
 
@@ -130,7 +131,7 @@ import { ApiKeyService } from './repository/api-key.service';
 import { AttachmentService } from './repository/attachment.service';
 import { BannedService } from './repository/banned.service';
 import { BerkasService } from './repository/berkas.service';
-import { DdlFileService } from './repository/ddl-file';
+import { DdlFileService } from './repository/ddl-file.service';
 import { DoramaService } from './repository/dorama.service';
 import { EdictService } from './repository/edict.service';
 import { FailToBanService } from './repository/fail-to-ban.service';
@@ -395,6 +396,35 @@ export class AppModule {
     ).forRoutes(
       { path: '/attachment', method: RequestMethod.POST },
       { path: '/attachment', method: RequestMethod.PUT }
+    );
+
+    mc.apply(
+      uploadx.upload({
+        storage: new S3Storage({
+          path: '/fanshare/u0',
+          region: 'auto',
+          allowMIME: CONSTANTS.fileTypeAttachmentAllowed,
+          bucket: environment.cloudflare.r2.bucket,
+          endpoint: `https://${environment.cloudflare.r2.endpoint}`,
+          credentials: {
+            accessKeyId: environment.cloudflare.r2.accessKeyId,
+            secretAccessKey: environment.cloudflare.r2.secretAccessKey
+          },
+          filename: (file: S3File, req) => {
+            return `u0/${file.name}`;
+          },
+          forcePathStyle: true,
+          clientDirectUpload: true,
+          maxUploadSize: CONSTANTS.fileSizeAttachmentTotalLimit,
+          expiration: {
+            maxAge: '3d',
+            purgeInterval: '20min'
+          },
+          logLevel: environment.production ? 'error' : 'debug'
+        })
+      })
+    ).forRoutes(
+      { path: '/fanshare', method: RequestMethod.ALL }
     );
 
   }

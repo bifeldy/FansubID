@@ -29,20 +29,17 @@ export class KartuTandaPendudukService {
     return this.kartuTandaPendudukRepo.metadata;
   }
 
-  find(options: FindManyOptions<KartuTandaPenduduk>, withDeleted = false): Promise<KartuTandaPenduduk[]> {
-    options.withDeleted = withDeleted;
+  find(options: FindManyOptions<KartuTandaPenduduk>): Promise<KartuTandaPenduduk[]> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-FIND_ALL] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.find(options);
   }
 
-  findAndCount(options: FindManyOptions<KartuTandaPenduduk>, withDeleted = false): Promise<[KartuTandaPenduduk[], number]> {
-    options.withDeleted = withDeleted;
+  findAndCount(options: FindManyOptions<KartuTandaPenduduk>): Promise<[KartuTandaPenduduk[], number]> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-FIND_AND_COUNT] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.findAndCount(options);
   }
 
-  findOneOrFail(options: FindOneOptions<KartuTandaPenduduk>, withDeleted = false): Promise<KartuTandaPenduduk> {
-    options.withDeleted = withDeleted;
+  findOneOrFail(options: FindOneOptions<KartuTandaPenduduk>): Promise<KartuTandaPenduduk> {
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-GET_BY] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.findOneOrFail(options);
   }

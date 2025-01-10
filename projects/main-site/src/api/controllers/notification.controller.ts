@@ -47,10 +47,10 @@ export class NotificationController {
             title: 'ASC'
           })
         },
+        withDeleted: true,
         relations: ['user_'],
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
-        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10,
-        withDeleted: true
+        take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
       for (const n of notifications) {
         if ('user_' in n && n.user_) {
