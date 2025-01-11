@@ -30,16 +30,25 @@ export class NotificationService {
   }
 
   find(options: FindManyOptions<Notification>): Promise<Notification[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[NOTIFICATION_SERVICE-FIND_ALL] 🔔', options);
     return this.notificationRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<Notification>): Promise<[Notification[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[NOTIFICATION_SERVICE-FIND_AND_COUNT] 🔔', options);
     return this.notificationRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<Notification>): Promise<Notification> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[NOTIFICATION_SERVICE-GET_BY] 🔔', options);
     return this.notificationRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class NotificationService {
   }
 
   count(options: FindManyOptions<Notification>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[NOTIFICATION_SERVICE-COUNT] 🔔', options);
     return this.notificationRepo.count(options);
   }

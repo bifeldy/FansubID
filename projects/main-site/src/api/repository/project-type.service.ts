@@ -30,16 +30,25 @@ export class ProjectTypeService {
   }
 
   find(options: FindManyOptions<ProjectType>): Promise<ProjectType[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[PROJECT_TYPE_SERVICE-FIND_ALL] 💉', options);
     return this.projectTypeRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<ProjectType>): Promise<[ProjectType[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[PROJECT_TYPE_SERVICE-FIND_AND_COUNT] 💉', options);
     return this.projectTypeRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<ProjectType>): Promise<ProjectType> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[PROJECT_TYPE_SERVICE-GET_BY] 💉', options);
     return this.projectTypeRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class ProjectTypeService {
   }
 
   count(options: FindManyOptions<ProjectType>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[PROJECT_TYPE_SERVICE-COUNT] 💉', options);
     return this.projectTypeRepo.count(options);
   }

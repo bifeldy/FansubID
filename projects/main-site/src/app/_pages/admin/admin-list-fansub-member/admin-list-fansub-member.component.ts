@@ -67,7 +67,7 @@ export class AdminListFansubMemberComponent implements OnInit, OnDestroy {
         this.gs.log('[FANSUB_MEMBER_LIST_SUCCESS]', res);
         const memberDataRow = [];
         this.count = res.count;
-        for (const r of res.results) {
+        for (const r of res.results.filter(x => x.fansub_ && x.user_)) {
           memberDataRow.push({
             foto_fansub: r.fansub_.image_url,
             foto_anggota: r.user_.image_url,

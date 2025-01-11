@@ -30,16 +30,25 @@ export class BerkasService {
   }
 
   find(options: FindManyOptions<Berkas>): Promise<Berkas[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[BERKAS_SERVICE-FIND_ALL] 📂', options);
     return this.berkasRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<Berkas>): Promise<[Berkas[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[BERKAS_SERVICE-FIND_AND_COUNT] 📂', options);
     return this.berkasRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<Berkas>): Promise<Berkas> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[BERKAS_SERVICE-GET_BY] 📂', options);
     return this.berkasRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class BerkasService {
   }
 
   count(options: FindManyOptions<Berkas>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[BERKAS_SERVICE-COUNT] 📂', options);
     return this.berkasRepo.count(options);
   }

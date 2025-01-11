@@ -30,16 +30,25 @@ export class TicketService {
   }
 
   find(options: FindManyOptions<Ticket>): Promise<Ticket[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[TICKET_SERVICE-FIND_ALL] 🎫', options);
     return this.ticketRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<Ticket>): Promise<[Ticket[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[TICKET_SERVICE-FIND_AND_COUNT] 🎫', options);
     return this.ticketRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<Ticket>): Promise<Ticket> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[TICKET_SERVICE-GET_BY] 🎫', options);
     return this.ticketRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class TicketService {
   }
 
   count(options: FindManyOptions<Ticket>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[TICKET_SERVICE-COUNT] 🎫', options);
     return this.ticketRepo.count(options);
   }

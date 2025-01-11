@@ -30,16 +30,25 @@ export class ProfileService {
   }
 
   find(options: FindManyOptions<Profile>): Promise<Profile[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[PROFILE_SERVICE-FIND_ALL] 👬', options);
     return this.profileRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<Profile>): Promise<[Profile[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[PROFILE_SERVICE-FIND_AND_COUNT] 👬', options);
     return this.profileRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<Profile>): Promise<Profile> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[PROFILE_SERVICE-GET_BY] 👬', options);
     return this.profileRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class ProfileService {
   }
 
   count(options: FindManyOptions<Profile>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[PROFILE_SERVICE-COUNT] 👬', options);
     return this.profileRepo.count(options);
   }

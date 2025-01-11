@@ -30,16 +30,25 @@ export class KartuTandaPendudukService {
   }
 
   find(options: FindManyOptions<KartuTandaPenduduk>): Promise<KartuTandaPenduduk[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-FIND_ALL] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<KartuTandaPenduduk>): Promise<[KartuTandaPenduduk[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-FIND_AND_COUNT] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<KartuTandaPenduduk>): Promise<KartuTandaPenduduk> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-GET_BY] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class KartuTandaPendudukService {
   }
 
   count(options: FindManyOptions<KartuTandaPenduduk>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[KARTU_TANDA_PENDUDUK_SERVICE-COUNT] 👨‍👩‍👧‍👦', options);
     return this.kartuTandaPendudukRepo.count(options);
   }

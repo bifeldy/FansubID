@@ -30,16 +30,25 @@ export class NewsService {
   }
 
   find(options: FindManyOptions<News>): Promise<News[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[NEWS_SERVICE-FIND_ALL] 📰', options);
     return this.newsRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<News>): Promise<[News[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[NEWS_SERVICE-FIND_AND_COUNT] 📰', options);
     return this.newsRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<News>): Promise<News> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[NEWS_SERVICE-GET_BY] 📰', options);
     return this.newsRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class NewsService {
   }
 
   count(options: FindManyOptions<News>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[NEWS_SERVICE-COUNT] 📰', options);
     return this.newsRepo.count(options);
   }

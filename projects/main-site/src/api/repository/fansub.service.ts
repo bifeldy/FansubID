@@ -47,16 +47,25 @@ export class FansubService {
   }
 
   find(options: FindManyOptions<Fansub>): Promise<Fansub[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[FANSUB_SERVICE-FIND_ALL] 🍿', options);
     return this.fansubRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<Fansub>): Promise<[Fansub[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[FANSUB_SERVICE-FIND_AND_COUNT] 🍿', options);
     return this.fansubRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<Fansub>): Promise<Fansub> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[FANSUB_SERVICE-GET_BY] 🍿', options);
     return this.fansubRepo.findOneOrFail(options);
   }
@@ -67,6 +76,9 @@ export class FansubService {
   }
 
   count(options: FindManyOptions<Fansub>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[FANSUB_SERVICE-COUNT] 🍿', options);
     return this.fansubRepo.count(options);
   }

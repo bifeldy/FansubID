@@ -30,16 +30,25 @@ export class AttachmentService {
   }
 
   find(options: FindManyOptions<Attachment>): Promise<Attachment[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[ATTACHMENT_SERVICE-FIND_ALL] 💾', options);
     return this.attachmentRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<Attachment>): Promise<[Attachment[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[ATTACHMENT_SERVICE-FIND_AND_COUNT] 💾', options);
     return this.attachmentRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<Attachment>): Promise<Attachment> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[ATTACHMENT_SERVICE-GET_BY] 💾', options);
     return this.attachmentRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class AttachmentService {
   }
 
   count(options: FindManyOptions<Attachment>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[ATTACHMENT_SERVICE-COUNT] 💾', options);
     return this.attachmentRepo.count(options);
   }

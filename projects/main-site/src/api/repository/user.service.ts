@@ -30,16 +30,25 @@ export class UserService {
   }
 
   find(options: FindManyOptions<User>): Promise<User[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[USER_SERVICE-FIND_ALL] 🤖', options);
     return this.userRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<User>): Promise<[User[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[USER_SERVICE-FIND_AND_COUNT] 🤖', options);
     return this.userRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<User>): Promise<User> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[USER_SERVICE-GET_BY] 🤖', options);
     return this.userRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class UserService {
   }
 
   count(options: FindManyOptions<User>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[USER_SERVICE-COUNT] 🤖', options);
     return this.userRepo.count(options);
   }

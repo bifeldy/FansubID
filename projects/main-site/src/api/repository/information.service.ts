@@ -30,16 +30,25 @@ export class InformationService {
   }
 
   find(options: FindManyOptions<Information>): Promise<Information[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[INFORMATION_SERVICE-FIND_ALL] 🔔', options);
     return this.informationRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<Information>): Promise<[Information[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[INFORMATION_SERVICE-FIND_AND_COUNT] 🔔', options);
     return this.informationRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<Information>): Promise<Information> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[INFORMATION_SERVICE-GET_BY] 🔔', options);
     return this.informationRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class InformationService {
   }
 
   count(options: FindManyOptions<Information>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[INFORMATION_SERVICE-COUNT] 🔔', options);
     return this.informationRepo.count(options);
   }

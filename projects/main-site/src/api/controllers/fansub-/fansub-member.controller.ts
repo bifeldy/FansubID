@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { Equal, ILike } from 'typeorm';
+import { Equal, ILike, IsNull, Not } from 'typeorm';
 
 import { FilterApiKeyAccess } from '../../decorators/filter-api-key-access.decorator';
 import { Roles } from '../../decorators/roles.decorator';
@@ -46,9 +46,11 @@ export class FansubMemberController {
           {
             fansub_: {
               slug: ILike(`%${searchQuery}%`)
-            }
+            },
+            user_: Not(IsNull())
           },
           {
+            fansub_: Not(IsNull()),
             user_: {
               username: ILike(`%${searchQuery}%`)
             }

@@ -30,16 +30,25 @@ export class KomentarService {
   }
 
   find(options: FindManyOptions<Komentar>): Promise<Komentar[]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[KOMENTAR_SERVICE-FIND_ALL] 💬', options);
     return this.komentarRepo.find(options);
   }
 
   findAndCount(options: FindManyOptions<Komentar>): Promise<[Komentar[], number]> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[KOMENTAR_SERVICE-FIND_AND_COUNT] 💬', options);
     return this.komentarRepo.findAndCount(options);
   }
 
   findOneOrFail(options: FindOneOptions<Komentar>): Promise<Komentar> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[KOMENTAR_SERVICE-GET_BY] 💬', options);
     return this.komentarRepo.findOneOrFail(options);
   }
@@ -50,6 +59,9 @@ export class KomentarService {
   }
 
   count(options: FindManyOptions<Komentar>): Promise<number> {
+    if (!options.withDeleted) {
+      options.withDeleted = false;
+    }
     this.gs.log('[KOMENTAR_SERVICE-COUNT] 💬', options);
     return this.komentarRepo.count(options);
   }
