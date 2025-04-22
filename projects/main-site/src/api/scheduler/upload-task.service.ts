@@ -109,9 +109,7 @@ export class UploadService {
         });
         const paksaAutoDdl = (attachment.size <= CONSTANTS.fileSizeAttachmentAutoDdl && attachment.user_.role !== RoleModel.USER);
         if ((primeCount > 0 || paksaAutoDdl) && attachment.user_.id !== 2 /* TODO :: Hard-coded Bot 'Backup' Account */) {
-          const dateTime = Date.now();
-          const fullFileName = `${dateTime}_${fileName}`;
-          const upload = await this.aws.uploadDdl(`u${attachment.user_.id}/ddl/${fullFileName}`);
+          const upload = await this.aws.uploadDdl(attachment.user_.id, fileName);
           attachment.aws_s3 = `https://${upload.Location}`;
           attachment.pending = false;
           await this.attachmentRepo.save(attachment);

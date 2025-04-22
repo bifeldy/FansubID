@@ -79,11 +79,10 @@ export class ImageController {
         ],
         relations: ['user_']
       });
-      const dateTime = Date.now().toString();
       const imgB64 = this.cs.convertToBase64(req.file.buffer);
       if (primeCount > 0 && user.id !== 2 /* TODO :: Hard-coded Bot 'Backup' Account */) {
         const upload = await this.aws.uploadImage(
-          `u${user.id}/img/${dateTime}`,
+          user.id,
           imgB64,
           req.file.mimetype
         );
@@ -102,7 +101,7 @@ export class ImageController {
         const url = new URL(environment.externalApiImage);
         const form = new FormData();
         form.append('key', environment.imgbbKey);
-        form.append('name', dateTime);
+        form.append('name', Date.now().toString());
         form.append('image', imgB64);
         const res_raw = await this.api.postData(url, form, environment.nodeJsXhrHeader);
         if (res_raw.ok) {

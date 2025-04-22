@@ -78,14 +78,14 @@ export class AmazonWebService {
     return url;
   }
 
-  async uploadDdl(fullFileName: string): Promise<S3.ManagedUpload.SendData> {
+  async uploadDdl(userId: number, fileName: string): Promise<S3.ManagedUpload.SendData> {
     const passThrough = new PassThrough();
     const upload = this.s3().upload({
       Bucket: environment.s3Compatible.bucket,
-      Key: fullFileName,
+      Key: `u${userId}/ddl/${fileName}`,
       Body: passThrough
     }).promise();
-    const readStream = createReadStream(`${environment.uploadFolder}/${fullFileName}`);
+    const readStream = createReadStream(`${environment.uploadFolder}/${fileName}`);
     readStream.pipe(passThrough);
     const ddl = await upload;
     ddl.Location = this.cleanUrl(ddl.Location);
@@ -93,11 +93,12 @@ export class AmazonWebService {
     return ddl;
   }
 
-  async uploadImage(fullFileName: string, imgb64: string, mime: string): Promise<S3.ManagedUpload.SendData> {
+  async uploadImage(userId: number, imgb64: string, mime: string): Promise<S3.ManagedUpload.SendData> {
     var buf = Buffer.from(imgb64.replace(/^data:image\/\w+;base64,/, ''),'base64');
+    const dateTime = Date.now().toString();
     const upload = this.s3().upload({
       Bucket: environment.s3Compatible.bucket,
-      Key: fullFileName,
+      Key: `u${userId}/img/${dateTime}`,
       Body: buf,
       ACL: 'public-read',
       ContentEncoding: 'base64',
