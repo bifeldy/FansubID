@@ -61,7 +61,7 @@ export class AmazonWebService {
       Expires: expiredSeconds
     };
     if (customFileName) {
-      optParam.ResponseContentDisposition = `attachment; filename ="${customFileName}"`;
+      optParam.ResponseContentDisposition = `attachment; filename="${customFileName}"`;
     }
     if (customMimeType) {
       optParam.ResponseContentType = customMimeType;
@@ -69,7 +69,7 @@ export class AmazonWebService {
     const ddl = await this.s3().getSignedUrlPromise('getObject', optParam);
     const uri = new URL(ddl);
     const url = new URL(`https://${bucketName}/${fileName}`);
-    const sp = ['AWSAccessKeyId', 'Expires', 'Signature'];
+    const sp = ['AWSAccessKeyId', 'Expires', 'Signature', 'response-content-disposition', 'response-content-type'];
     for (const q of sp) {
       url.searchParams.append(q, uri.searchParams.get(q));
     }

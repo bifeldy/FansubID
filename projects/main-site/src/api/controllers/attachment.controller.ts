@@ -61,6 +61,7 @@ export class AttachmentController {
       if (req.query['failed'] === 'true') {
         sqlWhere.discord = IsNull();
         sqlWhere.google_drive = IsNull();
+        sqlWhere.aws_s3 = IsNull();
       }
       const [attachments, count] = await this.attachmentRepo.findAndCount({
         where: [sqlWhere],
