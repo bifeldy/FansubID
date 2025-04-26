@@ -128,7 +128,12 @@ export class MkvExtractService {
               if (!files[currentFile]) {
                 files[currentFile] = {};
               }
-              files[currentFile].name = chunk[1].data.toString().replace(CONSTANTS.regexIllegalFileName, '-');
+              const attachmentFileName = chunk[1].data.toString()
+                .replace(CONSTANTS.regexIllegalFileName, '-')
+                .replace(/\s/g, '_')
+                .replace(/^[-.~]+|[-.~]+$/g, '')
+                .substring(0, 255);
+              files[currentFile].name = attachmentFileName;
             } else if (chunk[1].name === 'FileData') {
               if (!files[currentFile]) {
                 files[currentFile] = {};

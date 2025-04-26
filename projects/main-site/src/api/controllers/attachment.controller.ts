@@ -265,8 +265,8 @@ export class AttachmentController {
             relations: ['user_']
           });
           if (primeCount > 0) {
-            // Active Premium Users Get 4 Hours
-            expiredSeconds = 4 * 60 * 60;
+            // Active Premium Users Get 4x
+            expiredSeconds = 4 * expiredSeconds;
           }
         } catch (e) {
           this.gs.log('[DDL-ERROR] 💽', e, 'error');

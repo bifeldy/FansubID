@@ -69,7 +69,7 @@ export const CONSTANTS = {
   regexEmail: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
   regexEmailMulti: /^[^a-z0-9_]*([a-z0-9_+\-.%]+@[a-z0-9_\-.]+\.[a-z]+[^a-z0-9_]*,{1}[^a-z0-9_]*)*([a-z0-9_+\-.%]+@[a-z0-9_\-.]+\.[a-z]+)[^a-z0-9_]*$/,
   regexEnglishKeyboardKeys: /^[a-zA-Z0-9~`!@#\$%\^&\*\(\)_\-\+={\[\}\]\|\\:;"'<,>\.\?\/  \n]*$/,
-  regexIllegalFileName: /[/\\?%*:|"<>]/g,
+  regexIllegalFileName: /[/\\:*?"<>|]/g,
   regexIpAddress: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
   regexJapaneseKeyboardKeys: /[一-龠ぁ-ゔァ-ヴーａ-ｚＡ-Ｚ０-９々〆〤、。]+/u,
   regexUrl: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
@@ -84,7 +84,7 @@ export const CONSTANTS = {
   timeoutMailWebhookTime: 1 * 60 * 1000, // 1 Minutes
   timeoutReconnectSocketKey: 'TIMEOUT_RECONNECT_SOCKET',
   timeoutReconnectSocketTime: 5 * 1000, // 5 Seconds
-  timeDdlS3: 1 * 60 * 60, // 1 Hours
+  timeDdlS3: 2 * 60 * 60, // 2 Hours
   timeDiscord: 1 * 60 * 1000, // 1 Minutes
   timeJwtEncryption: 3 * 60, // 3 Minutes
   timeLoginRememberMe: 7 * 24 * 60 * 60, // 7 Days
