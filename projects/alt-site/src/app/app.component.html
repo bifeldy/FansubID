@@ -30,7 +30,7 @@
             </li>
             <li>
               <div class="gradient-button">
-                <a href="#">
+                <a routerLink="#">
                   <i class="fa fa-sign-in-alt me-2"></i>
                   Masuk Akun
                 </a>
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-lg-12 my-3">
                   <div class="border-button first-button scroll-to-section">
-                    <a href="#">
+                    <a href="#upload">
                       Unggah Tanpa Akun
                       <i class="ms-2 fa fa-arrow-right"></i>
                     </a>
@@ -145,7 +145,7 @@
   </div>
 </div>
 
-<div id="about" class="about-us section">
+<div id="upload" class="about-us section">
   <div class="container">
     <div class="row">
       <div class="col-12 align-self-center">
@@ -156,9 +156,42 @@
         </div>
         <div class="row">
           <div class="col-12">
+            <div class="box-item mb-0">
+              <h5>
+                <label for="upload" style="display: block; color: #0a58ca;">
+                  Pilih Berkas Untuk Di Unggah Anonim
+                </label>
+              </h5>
+              <input type="file" id="upload" name="upload" accept="image/png, image/jpeg" style="margin: 0.4rem 0; width: 100%;"
+                (change)="uploadAttachment($event)" [disabled]="attachmentSelected !== null"
+              />
+              <div *ngIf="attachmentLimitExceeded">Ukuran Upload Melebihi Batas {{ attachmentLimitExceeded | bytes }} !</div>
+              <div *ngIf="attachmentErrorText">{{ attachmentErrorText }}</div>
+              <div class="row mb-4" *ngFor="let item of uploads$ | async">
+                <div class="col">
+                  <div class="ps-3">
+                    {{ item.status }} :: {{ item.progress }}% &#64; {{ item.speed | bytes }}/s # {{ item.remaining }} detik
+                    <br />
+                    <mat-progress-bar [mode]="'determinate'" [value]="item.progress"></mat-progress-bar>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-4 px-3">
+                  <button type="button" mat-raised-button class="w-100" color="primary"
+                    [disabled]="submitted || item.status === 'complete' || item.status === 'uploading'" (click)="submitAttachment(item)">
+                    <mat-icon fontIcon="attachment" class="me-1"></mat-icon>
+                    Unggah
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="my-5" />
+        <div class="row">
+          <div class="col-12">
             <div class="box-item">
               <h5>
-                <a href="#">[Fansub] Nama Berkas - 88 (BD 720p x264 AAC) [1a2b3c].zip</a>
+                <a routerLink="#">[Fansub] Nama Berkas - 88 (BD 720p x264 AAC) [1a2b3c].zip</a>
               </h5>
               <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
             </div>
@@ -166,7 +199,7 @@
           <div class="col-12">
             <div class="box-item">
               <h5>
-                <a href="#">Aku &amp; Kakak Kembar-ku Di Kebun.3gp</a>
+                <a routerLink="#">Aku &amp; Kakak Kembar-ku Di Kebun.3gp</a>
               </h5>
               <p>88-88-8888 &commat; 88:88:88 PM :: 88x Di Unduh</p>
             </div>
@@ -174,7 +207,7 @@
           <div class="col-12">
             <div class="box-item">
               <h5>
-                <a href="#">Cheat PointBlank Full Hack Gemscool.exe</a>
+                <a routerLink="#">Cheat PointBlank Full Hack Gemscool.exe</a>
               </h5>
               <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
             </div>
@@ -182,7 +215,7 @@
           <div class="col-12">
             <div class="box-item">
               <h5>
-                <a href="#">Koleksi Full 48 Family Lagu + Poster.rar</a>
+                <a routerLink="#">Koleksi Full 48 Family Lagu + Poster.rar</a>
               </h5>
               <p>88-88-8888 &commat; 88:88:88 PM :: 88x Di Unduh</p>
             </div>
@@ -190,7 +223,7 @@
           <div class="col-12">
             <div class="box-item">
               <h5>
-                <a href="#">Arsip Film Vanilla Blue 2000 - 2023.torrent</a>
+                <a routerLink="#">Arsip Film Vanilla Blue 2000 - 2023.torrent</a>
               </h5>
               <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
             </div>
@@ -232,7 +265,7 @@
             <li class="non-function">More Options</li>
           </ul>
           <div class="border-button">
-            <a href="#">Purchase This Plan Now</a>
+            <a routerLink="#">Purchase This Plan Now</a>
           </div>
         </div>
       </div>
@@ -252,7 +285,7 @@
             <li class="non-function">More Options</li>
           </ul>
           <div class="border-button">
-            <a href="#">Purchase This Plan Now</a>
+            <a routerLink="#">Purchase This Plan Now</a>
           </div>
         </div>
       </div>
@@ -272,7 +305,7 @@
             <li>More Options</li>
           </ul>
           <div class="border-button">
-            <a href="#">Purchase This Plan Now</a>
+            <a routerLink="#">Purchase This Plan Now</a>
           </div>
         </div>
       </div>
@@ -294,7 +327,8 @@
             <fieldset>
               <button type="submit" class="main-button">
                 Menuju Halaman Dasbor
-                <i class="ms-2 fa fa-angle-right"></i></button>
+                <i class="ms-2 fa fa-angle-right"></i>
+              </button>
             </fieldset>
           </div>
         </div>
@@ -317,12 +351,12 @@
           <h4>Tautan Lainnya</h4>
           <ul class="mb-3">
             <li>
-              <a href="#">
+              <a routerLink="#">
                 Syarat &amp; Ketentuan
               </a>
             </li>
             <li>
-              <a href="#">
+              <a routerLink="#">
                 Kebijakan Privasi
               </a>
             </li>

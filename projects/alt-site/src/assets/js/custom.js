@@ -144,13 +144,16 @@ $(function() {
       var scrollPos = $(document).scrollTop();
       $('.nav a').each(function () {
           var currLink = $(this);
-          var refElement = $(currLink.attr("href"));
-          if (refElement.position().top <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
+          var refElement = currLink.attr("href");
+          if (refElement.indexOf('#') === 0) {
+            refElement = $(refElement);
+            if (refElement.position().top <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
               $('.nav ul li a').removeClass("active");
               currLink.addClass("active");
-          }
-          else{
-              currLink.removeClass("active");
+            }
+            else{
+                currLink.removeClass("active");
+            }
           }
       });
   }
