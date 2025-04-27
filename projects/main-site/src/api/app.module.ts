@@ -40,6 +40,7 @@ import { DoramaController } from './controllers/dorama.controller';
 import { DoramaBerkasController } from './controllers/dorama-/dorama-berkas.controller';
 import { DoramaFansubController } from './controllers/dorama-/dorama-fansub.controller';
 import { DoramaSeasonalController } from './controllers/dorama-/dorama-seasonal.controller';
+import { FanshareController } from './controllers/fanshare.controller';
 import { FansubController } from './controllers/fansub.controller';
 import { FansubAllController } from './controllers/fansub-/fansub-all.controller';
 import { FansubAnimeController } from './controllers/fansub-/fansub-anime.controller';
@@ -195,6 +196,7 @@ import { UserPremiumService } from './repository/user-premium.service';
     DoramaBerkasController,
     DoramaFansubController,
     DoramaSeasonalController,
+    FanshareController,
     FansubController,
     FansubAllController,
     FansubAnimeController,
@@ -339,7 +341,8 @@ export class AppModule {
       { path: '/api/google-verifikasi', method: RequestMethod.GET },
       { path: '/api/line-verifikasi', method: RequestMethod.GET },
       { path: '/api/aktivasi', method: RequestMethod.GET },
-      { path: '/api/verify-sosmed', method: RequestMethod.GET }
+      { path: '/api/verify-sosmed', method: RequestMethod.GET },
+      { path: '/api/fanshare/u0', method: RequestMethod.ALL }
     ).forRoutes(
       { path: '*', method: RequestMethod.ALL }
     );
@@ -349,7 +352,8 @@ export class AppModule {
       { path: '/api/verify-sosmed', method: RequestMethod.GET },
       { path: '/api/login', method: RequestMethod.POST },
       { path: '/api/register', method: RequestMethod.POST },
-      { path: '/api/lost-account-*', method: RequestMethod.POST }
+      { path: '/api/lost-account-*', method: RequestMethod.POST },
+      { path: '/api/fanshare/u0', method: RequestMethod.ALL }
     ).forRoutes(
       { path: '*', method: RequestMethod.ALL }
     );
@@ -401,17 +405,51 @@ export class AppModule {
     mc.apply(
       uploadx.upload({
         storage: new S3Storage({
-          path: '/fanshare/u0',
+          path: '/fanshare',
           region: 'auto',
-          allowMIME: CONSTANTS.fileTypeAttachmentAllowed,
+          // allowMIME: CONSTANTS.fileTypeAttachmentAllowed,
           bucket: environment.cloudflare.r2.bucket,
           endpoint: `https://${environment.cloudflare.r2.endpoint}`,
           credentials: {
             accessKeyId: environment.cloudflare.r2.accessKeyId,
             secretAccessKey: environment.cloudflare.r2.secretAccessKey
           },
+          requestChecksumCalculation: 'WHEN_REQUIRED',
+          responseChecksumValidation: 'WHEN_REQUIRED',
           filename: (file: S3File, req) => {
-            return `u0/${file.name}`;
+            console.log('filename',);
+            console.log( file);
+            const fileName = file.originalName
+              .replace(CONSTANTS.regexIllegalFileName, '-')
+              .replace(/\s/g, '_')
+              .replace(/^[-.~]+|[-.~]+$/g, '')
+              .substring(0, 255);
+            return `u0/${new Date().getTime()}_${fileName}`;
+          },
+          onCreate: (file: S3File) => {
+            console.log('onCreate');
+            console.log(file);
+            return file;
+          },
+          onUpdate: (file: S3File) => {
+            console.log('onUpdate');
+            console.log(file);
+            return file;
+          },
+          onComplete: (file: S3File) => {
+            console.log('onComplete');
+            console.log(file);
+            return file;
+          },
+          onDelete: (file: S3File) => {
+            console.log('onDelete');
+            console.log(file);
+            return file;
+          },
+          onError: (error) => {
+            console.log('onError');
+            console.log(error);
+            return error;
           },
           forcePathStyle: true,
           clientDirectUpload: true,
@@ -420,7 +458,10 @@ export class AppModule {
             maxAge: '3d',
             purgeInterval: '20min'
           },
-          logLevel: environment.production ? 'error' : 'debug'
+          metaStorageConfig: {
+            directory: 'dist/alt-site/temp'
+          },
+          logLevel: 'debug'
         })
       })
     ).forRoutes(
