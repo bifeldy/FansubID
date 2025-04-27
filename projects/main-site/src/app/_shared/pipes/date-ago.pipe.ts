@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class DateAgoPipe implements PipeTransform {
 
-  transform(value: any, args?: any): any {
+  transform(value: any, args?: any): string {
     if (value) {
       const detik = Math.floor((+new Date() - +new Date(value)) / 1000);
       const intervals = {

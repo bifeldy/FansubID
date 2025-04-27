@@ -404,7 +404,7 @@ export class BerkasController {
               )
               .addFields(
                 { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
-                { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
+                { name: 'Ddl', value: (resFileSave.attachment_ ? `Ya (${this.gs.formatBytes(resFileSave.attachment_.size)})` : 'Tidak'), inline: true }
               )
               .addField('Fansub', fansubEmbedData.join(', '), false)
               .addFields(
@@ -745,7 +745,7 @@ export class BerkasController {
                 )
                 .addFields(
                   { name: 'Jenis', value: resFileSave.project_type_.name.split('_')[1], inline: true },
-                  { name: 'Ddl', value: (resFileSave.attachment_ ? 'Ya' : 'Tidak'), inline: true }
+                  { name: 'Ddl', value: (resFileSave.attachment_ ? `Ya (${this.gs.formatBytes(resFileSave.attachment_.size)})` : 'Tidak'), inline: true }
                 )
                 .addField('Fansub', fansubEmbedData.join(', '), false)
                 .addFields(
