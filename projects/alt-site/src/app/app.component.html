@@ -158,15 +158,15 @@
           <div class="col-12">
             <div class="box-item mb-0">
               <h5>
-                <label for="upload" style="display: block; color: #0a58ca;">
+                <label for="uploadx" style="display: block; color: #0a58ca;">
                   Pilih Berkas Untuk Di Unggah Anonim
                 </label>
               </h5>
-              <input type="file" id="upload" name="upload" accept="image/png, image/jpeg" style="margin: 0.4rem 0; width: 100%;"
+              <input type="file" id="uploadx" name="uploadx" style="margin: 0.4rem 0; width: 100%;"
                 (change)="uploadAttachment($event)" [disabled]="attachmentSelected !== null"
               />
               <div *ngIf="attachmentLimitExceeded">Ukuran Upload Melebihi Batas {{ attachmentLimitExceeded | bytes }} !</div>
-              <div *ngIf="attachmentErrorText">{{ attachmentErrorText }}</div>
+              <div *ngIf="attachmentInfoErrorText">{{ attachmentInfoErrorText }}</div>
               <div class="row mb-4" *ngFor="let item of uploads$ | async">
                 <div class="col">
                   <div class="ps-3">
@@ -187,45 +187,13 @@
           </div>
         </div>
         <hr class="my-5" />
-        <div class="row">
-          <div class="col-12">
+        <div class="row" *ngIf="attachmentData.length > 0; else noData;">
+          <div class="col-12" *ngFor="let attachment of attachmentData">
             <div class="box-item">
               <h5>
-                <a routerLink="#">[Fansub] Nama Berkas - 88 (BD 720p x264 AAC) [1a2b3c].zip</a>
+                <a href="{{ attachment.uri }}">{{ attachment.orig }}</a>
               </h5>
-              <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="box-item">
-              <h5>
-                <a routerLink="#">Aku &amp; Kakak Kembar-ku Di Kebun.3gp</a>
-              </h5>
-              <p>88-88-8888 &commat; 88:88:88 PM :: 88x Di Unduh</p>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="box-item">
-              <h5>
-                <a routerLink="#">Cheat PointBlank Full Hack Gemscool.exe</a>
-              </h5>
-              <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="box-item">
-              <h5>
-                <a routerLink="#">Koleksi Full 48 Family Lagu + Poster.rar</a>
-              </h5>
-              <p>88-88-8888 &commat; 88:88:88 PM :: 88x Di Unduh</p>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="box-item">
-              <h5>
-                <a routerLink="#">Arsip Film Vanilla Blue 2000 - 2023.torrent</a>
-              </h5>
-              <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
+              <p>Size :: {{ attachment.size | bytes }} &commat; Expired :: {{ attachment.expired_at | date:'long' }}</p>
             </div>
           </div>
         </div>
@@ -395,3 +363,49 @@
     </div>
   </div>
 </footer>
+
+
+<ng-template #noData>
+  <div class="row">
+    <div class="col-12">
+      <div class="box-item">
+        <h5>
+          <a routerLink="#">[Fansub] Nama Berkas - 88 (BD 720p x264 AAC) [1a2b3c].zip</a>
+        </h5>
+        <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="box-item">
+        <h5>
+          <a routerLink="#">Aku &amp; Kakak Kembar-ku Di Kebun.3gp</a>
+        </h5>
+        <p>88-88-8888 &commat; 88:88:88 PM :: 88x Di Unduh</p>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="box-item">
+        <h5>
+          <a routerLink="#">Cheat PointBlank Full Hack Gemscool.exe</a>
+        </h5>
+        <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="box-item">
+        <h5>
+          <a routerLink="#">Koleksi Full 48 Family Lagu + Poster.rar</a>
+        </h5>
+        <p>88-88-8888 &commat; 88:88:88 PM :: 88x Di Unduh</p>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="box-item">
+        <h5>
+          <a routerLink="#">Arsip Film Vanilla Blue 2000 - 2023.torrent</a>
+        </h5>
+        <p>88-88-8888 &commat; 88:88:88 AM :: 88x Di Unduh</p>
+      </div>
+    </div>
+  </div>
+</ng-template>

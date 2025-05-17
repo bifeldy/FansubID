@@ -130,6 +130,7 @@ import { VpsBillingService } from './scheduler/vps-billing-task.service';
 import { AnimeService } from './repository/anime.service';
 import { ApiKeyService } from './repository/api-key.service';
 import { AttachmentService } from './repository/attachment.service';
+import { AttachmentFanshareService } from './repository/attachment-fanshare.service';
 import { BannedService } from './repository/banned.service';
 import { BerkasService } from './repository/berkas.service';
 import { DdlFileService } from './repository/ddl-file.service';
@@ -294,6 +295,7 @@ import { UserPremiumService } from './repository/user-premium.service';
     AnimeService,
     ApiKeyService,
     AttachmentService,
+    AttachmentFanshareService,
     BannedService,
     BerkasService,
     DdlFileService,
@@ -426,46 +428,24 @@ export class AppModule {
               .substring(0, 255);
             return `u0/${new Date().getTime()}_${fileName}`;
           },
-          onCreate: (file: S3File) => {
-            console.log('onCreate');
-            console.log(file);
-            return file;
-          },
-          onUpdate: (file: S3File) => {
-            console.log('onUpdate');
-            console.log(file);
-            return file;
-          },
-          onComplete: (file: S3File) => {
-            console.log('onComplete');
-            console.log(file);
-            return file;
-          },
-          onDelete: (file: S3File) => {
-            console.log('onDelete');
-            console.log(file);
-            return file;
-          },
-          onError: (error) => {
-            console.log('onError');
-            console.log(error);
-            return error;
-          },
-          forcePathStyle: true,
-          clientDirectUpload: true,
-          maxUploadSize: CONSTANTS.fileSizeAttachmentTotalLimit,
+          forcePathStyle: false,
+          // clientDirectUpload: true,
+          partSize: CONSTANTS.fileSizeAttachmentChunkLimit,
+          maxUploadSize: CONSTANTS.fileSizeAttachmentAutoDdl,
           expiration: {
             maxAge: '3d',
-            purgeInterval: '20min'
+            purgeInterval: '20min',
+            rolling: true
           },
           metaStorageConfig: {
             directory: 'dist/alt-site/temp'
           },
-          logLevel: 'debug'
+          logLevel: environment.production ? 'error' : 'debug'
         })
       })
     ).forRoutes(
-      { path: '/fanshare', method: RequestMethod.ALL }
+      { path: '/fanshare', method: RequestMethod.POST },
+      { path: '/fanshare', method: RequestMethod.PUT }
     );
 
   }

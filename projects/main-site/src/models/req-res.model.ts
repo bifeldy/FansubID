@@ -172,6 +172,18 @@ export interface AttachmentModel {
   parent_attachment_?: AttachmentModel;
 }
 
+export interface AttachmentFanshareModel {
+  id?: string;
+  name?: string;
+  orig?: string;
+  size?: number;
+  mime?: string;
+  status?: string;
+  created_at?: number | Date;
+  expired_at?: number | Date;
+  user_?: UserModel;
+}
+
 export interface BannedModel {
   id?: string;
   reason?: string;

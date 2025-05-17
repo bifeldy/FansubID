@@ -4,6 +4,7 @@ import { CONSTANTS } from '../../constants';
 
 import { Anime } from '../../api/entities/Anime';
 import { Attachment } from '../../api/entities/Attachment';
+import { AttachmentFanshare } from '../../api/entities/AttachmentFanshare';
 import { ApiKey } from '../../api/entities/ApiKey';
 import { Banned } from '../../api/entities/Banned';
 import { Berkas } from '../../api/entities/Berkas';
@@ -63,6 +64,7 @@ export const environment = {
     entities: [
       Anime,
       Attachment,
+      AttachmentFanshare,
       ApiKey,
       Banned,
       Berkas,
