@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { timeout, retry } from 'rxjs/operators';
 import { UploadState, Uploader, UploadxService } from 'ngx-uploadx';
 
+import { environment } from '../environment';
+
 import { CONSTANTS } from '../../../main-site/src/constants';
 
 @Component({
@@ -148,7 +150,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.subsAttachment) {
       this.subsAttachment.unsubscribe();
     }
-    this.subsAttachment = this.getData(`http://localhost:4200/api/fanshare?q=${this.q}&page=${this.page}&row=${this.row}&sort=${this.sort}&order=${this.order}`).subscribe({
+    this.subsAttachment = this.getData(`${environment.apiUrl}/api/fanshare?q=${this.q}&page=${this.page}&row=${this.row}&sort=${this.sort}&order=${this.order}`).subscribe({
       next: res => {
         console.log('[BERKAS_LIST_SUCCESS]', res);
         this.count = res.count;
