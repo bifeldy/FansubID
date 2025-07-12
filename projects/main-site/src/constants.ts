@@ -91,9 +91,9 @@ export const CONSTANTS = {
   timeResetAccount: 5 * 60, // 5 Minutes
   timeMaxDaysNotification: 7 * 24 * 60 * 60 * 1000, // 7 Days
   torrentIceStunServer: [
-    'stun:stun.cloudflare.com',
+    'stun:stun.cloudflare.com:3478',
     'stun:stun.l.google.com:19302',
-    'stun:tracker.fansub.id:11111'
+    'stun:stun-turn.tracker.fansub.id:3478'
   ],
   torrentTracker: [
     'wss://tracker.fansub.id',

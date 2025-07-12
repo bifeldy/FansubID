@@ -193,7 +193,7 @@ export const environment = {
     apiUrl: 'https://api.idcloudhost.com/v1',
     wsUrl: 'wss://api.idcloudhost.com/v1',
     apiKey: SECRETS().ID_CLOUD_HOST_API_KEY,                                                                     // '',
-    mainSite: '01b00d5a-905d-4328-bc8d-bf748f1fc3dc'                                                             // '',
+    mainSite: '9b645d29-b9f1-4333-b936-6cb58225212b'                                                             // '',
   },
   s3Compatible: {
     endpoint: SECRETS().S3_ENDPOINT,                                                                             // ''
