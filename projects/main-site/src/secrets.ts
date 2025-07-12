@@ -8,6 +8,9 @@ interface SECRETS_DATA_TYPE {
   DOMAIN_ALT: string;
   IP: string;
   BASE_URL: string;
+  DB_HOST: string;
+  DB_PORT: number;
+  DB_USERNAME: string;
   DB_PASSWORD: string;
   RECAPTCHA_SECRET_KEY: string;
   API_PEMERINTAH_KTP_URL: string;

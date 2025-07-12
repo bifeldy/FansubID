@@ -53,10 +53,10 @@ export const environment = {
   baseUrl: SECRETS().BASE_URL,                                                                                    // 'http://localhost:4200',
   typeorm: {
     type: 'postgres',
-    host: 'localhost',
-    port: 5432,
+    host: SECRETS().DB_HOST,                                                                                      // 'localhost',
+    port: SECRETS().DB_PORT,                                                                                      // 5432,
     database: 'fansubid',
-    username: 'postgres',
+    username: SECRETS().DB_USERNAME,                                                                              // 'postgres',
     password: SECRETS().DB_PASSWORD,                                                                              // 'postgres',
     synchronize: true,
     keepConnectionAlive: true,
