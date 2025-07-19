@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { EntityMetadata, Equal, FindManyOptions, FindOneOptions, FindConditions, InsertResult, Repository, UpdateResult, ILike } from 'typeorm';
+import { EntityMetadata, Equal, FindManyOptions, FindOneOptions, FindConditions, InsertResult, Repository, UpdateResult, ILike, IsNull } from 'typeorm';
 
 import { ApiKey } from '../entities/ApiKey';
 
@@ -111,14 +111,11 @@ export class ApiKeyService {
       return { allowed: true, user: null };
     }
     try {
-      if (!key) {
-        throw new Error('Tidak Ada API Key!');
-      }
       const apiKey = await this.findOneOrFail({
         where: [
           {
             ip_domain: ILike(`%${origin}%`),
-            api_key: Equal(key)
+            api_key: key ? Equal(key) : IsNull()
           },
           {
             ip_domain: Equal('*'),
