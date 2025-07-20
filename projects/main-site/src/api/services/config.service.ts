@@ -12,7 +12,7 @@ export class ConfigService {
   domainIpBypass = [
     environment.domain,
     environment.domain_alt,
-    environment.ip,
+    ...environment.ip.split(';').map(i => i.trim()),
     '127.0.0.1',
     '::1',
     'localhost'

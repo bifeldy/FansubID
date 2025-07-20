@@ -115,7 +115,7 @@ export class ApiKeyService {
         where: [
           {
             ip_domain: ILike(`%${origin}%`),
-            api_key: key ? Equal(key) : IsNull()
+            api_key: (key === '' || key === null) ? IsNull() : Equal(key)
           },
           {
             ip_domain: Equal('*'),
