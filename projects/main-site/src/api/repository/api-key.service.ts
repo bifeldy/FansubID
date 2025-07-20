@@ -111,15 +111,16 @@ export class ApiKeyService {
       return { allowed: true, user: null };
     }
     try {
+      const fo = key ? Equal(key) : IsNull();
       const apiKey = await this.findOneOrFail({
         where: [
           {
             ip_domain: ILike(`%${origin}%`),
-            api_key: (key === '' || key === null) ? IsNull() : Equal(key)
+            api_key: fo
           },
           {
             ip_domain: Equal('*'),
-            api_key: Equal(key)
+            api_key: fo
           }
         ],
         relations: ['user_']
