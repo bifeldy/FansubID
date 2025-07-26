@@ -48,7 +48,11 @@ export class GlobalService {
   htmlToText(htmlElementString: string): string {
     if (htmlElementString) {
       const stringText = stripHtml(htmlElementString);
-      return stringText.result;
+      let resStringText = stringText.result?.substring(0, 255);
+      if (resStringText) {
+        resStringText += '...';
+      }
+      return resStringText;
     }
     return '';
   }

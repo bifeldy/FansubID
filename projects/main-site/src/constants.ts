@@ -35,6 +35,7 @@ export const CONSTANTS = {
   extFonts: ['ttf', 'otf', 'woff', 'woff2'],
   extSubs: ['ass', 'srt'],
   externalApiCacheTime: 15 * 60 * 1, // 15 Minutes [v4 seconds, v5 miliseconds]
+  failToBanBlockDuration: 3 * 60 * 60 * 1000, // Approx. Min 3 Hours IP Ban (+ 1 Min Max Cron Delay)
   failToBanMaxCountPerMin: 20, // 20x Http 404 Status Code Lead To Ban
   fileTypeAttachmentAllowed: [
     'video/flv',

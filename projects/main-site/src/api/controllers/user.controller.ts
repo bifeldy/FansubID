@@ -106,6 +106,7 @@ export class UserController {
           delete u.kartu_tanda_penduduk_.updated_at;
         }
         if ('profile_' in u && u.profile_) {
+          delete u.profile_.description;
           delete u.profile_.created_at;
           delete u.profile_.updated_at;
         }

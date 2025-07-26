@@ -303,6 +303,7 @@ export class SocketIoService {
       }
       if ('profile_' in payload.user && payload.user.profile_) {
         delete payload.user.profile_.description;
+        delete payload.user.profile_.created_at;
         delete payload.user.profile_.updated_at;
       }
     } catch (error) {

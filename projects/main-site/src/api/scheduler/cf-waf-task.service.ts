@@ -44,8 +44,7 @@ export class CfWafService {
           try {
             if (_ftb.rule_id) {
               const diffDateMs = startTime.getTime() - new Date(_ftb.updated_at).getTime();
-              // Approx. Min 1 Hours IP Ban (+ 1 Min Max Cron Delay)
-              if (diffDateMs >= 1 * 60 * 60 * 1000) {
+              if (diffDateMs >= CONSTANTS.failToBanBlockDuration) {
                 const resBan = await this.cfs.deleteFailToBan(_ftb.rule_id);
                 if (resBan && resBan.status >= 200 && resBan.status < 400) {
                   await this.ftb.remove(_ftb);

@@ -46,6 +46,7 @@ export class VerifyController {
         delete user.kartu_tanda_penduduk_.updated_at;
       }
       if ('profile_' in user && user.profile_) {
+        delete user.profile_.description;
         delete user.profile_.created_at;
         delete user.profile_.updated_at;
       }
