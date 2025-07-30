@@ -1,6 +1,5 @@
 import idbChunkStore from 'idb-chunk-store';
 import webTorrent from 'webtorrent';
-import bittorrentTracker from 'bittorrent-tracker';
 
 import { Injectable } from '@angular/core';
 
@@ -14,6 +13,7 @@ import { environment } from '../../../environments/app/environment';
 
 import { GlobalService } from './global.service';
 import { LocalStorageService } from './local-storage.service';
+import { ApiService } from './api.service';
 import { ToastService } from './toast.service';
 
 declare const WebTorrent: typeof webTorrent;
@@ -64,6 +64,7 @@ export class TorrentService {
 
   constructor(
     private gs: GlobalService,
+    private api: ApiService,
     private toast: ToastService,
     private ls: LocalStorageService
   ) {
@@ -89,98 +90,33 @@ export class TorrentService {
   }
 
   async checkHealthOnTrackerAndStartDownload(torrentInfo, callback = null, opts = this.torrentOptions): Promise<void> {
-    try {
-      const url = new URL(torrentInfo.magnetHash);
-      const params = new URLSearchParams(url.search);
-      const parsedTorrentInfo = {
-        infoHash: params.get('xt'),
-        announce: params.getAll('tr')
-      };
-      const torrentTracker = {
-        infoHash: parsedTorrentInfo.infoHash,
-        seeds: 0,
-        peers: 0,
-        downloads: 0,
-        trackers: []
-      };
-      const trackers: string[] = environment.torrent.trackerAnnounce;
-      for (const ptia of parsedTorrentInfo.announce) {
-        if (!trackers.includes(ptia)) {
-          trackers.push(ptia);
+    const checkerOpenWebTorrent = new URL(environment.torrent.trackerCheckerApi);
+    checkerOpenWebTorrent.searchParams.append('magnet', torrentInfo.magnetHash);
+    this.api.getData(`/crawl?url=${encodeURIComponent(checkerOpenWebTorrent.toString())}`).subscribe({
+      next: (res: any) => {
+        this.gs.log('[TORRENT_CLIENT_TRACKER-TORRENT_INFO]', res);
+        if (res.seeds <= 0) {
+          this.toast.info('Tidak Ada Seeder!', 'Whoops!', null, true);
         }
-      }
-      const promises: Promise<any>[] = [];
-      for (const tracker of trackers) {
-        promises.push(new Promise((resolve, reject) => {
-          const timedOut = setTimeout(() => {
-            try {
-              reject('Request Timeout!');
-            } catch (e) {
-              this.gs.log('[TORRENT_CLIENT_HEALTH-TIMEOUT]', e, 'error');
-            }
-          }, torrentInfo.trackTimeout);
-          bittorrentTracker.scrape(
-            {
-              announce: tracker,
-              infoHash: torrentTracker.infoHash
-            },
-            (err, result) => {
-              this.gs.log('[TORRENT_CLIENT_HEALTH-ANNOUNCE]', tracker);
-              this.gs.log('[TORRENT_CLIENT_HEALTH-INFO_HASH]', torrentTracker.infoHash);
-              this.gs.log('[TORRENT_CLIENT_HEALTH-ERR]', err);
-              this.gs.log('[TORRENT_CLIENT_HEALTH-RESULT]', result);
-              try {
-                clearTimeout(timedOut);
-                const data = {
-                  announce: tracker,
-                  seeds: 0,
-                  peers: 0,
-                  downloads: 0
-                };
-                if (!err) {
-                  // data.announce = result.announce;
-                  data.seeds = result.complete;
-                  data.peers = result.incomplete;
-                  data.downloads = result.downloaded;
-                  resolve(data);
-                } else {
-                  reject(err.message);
-                }
-              } catch (e) {
-                this.gs.log('[TORRENT_CLIENT_HEALTH-ERROR]', e, 'error');
-              }
-            }
-          );
-        }));
-      }
-      const resPromise = await Promise.allSettled(promises);
-      for (const [idx, rp] of resPromise.entries()) {
-        if (rp.status === 'fulfilled') {
-          torrentTracker.seeds += rp.value.seeds;
-          torrentTracker.peers += rp.value.peers;
-          torrentTracker.downloads += rp.value.downloads;
-        } else {
-          torrentTracker.trackers.push({
-            announce: trackers[idx],
-            error: rp.reason
+        if (res.seeds > 0 || res.peers > 0) {
+          this.webClient.add(torrentInfo.magnetHash, opts, torrent => {
+            this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
+            this.toast.info('Memulai Download ...', 'Download!', null, true);
+            this.processTorrent(torrent, false, callback);
           });
+        } else {
+          if (callback) {
+            callback(null, res);
+          }
+        }
+      },
+      error: (err: any) => {
+        this.gs.log('[TORRENT_CLIENT_HEALTH_ERROR]', err, 'error');
+        if (callback) {
+          callback(err, null);
         }
       }
-      this.gs.log('[TORRENT_CLIENT_TRACKER-TORRENT_INFO]', torrentTracker);
-      if (torrentTracker.seeds <= 0) {
-        this.toast.info('Tidak Ada Seeder!', 'Whoops!', null, true);
-      }
-      this.webClient.add(torrentInfo.magnetHash, opts, torrent => {
-        this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
-        this.toast.info('Memulai Download ...', 'Download!', null, true);
-        this.processTorrent(torrent, false, callback);
-      });
-    } catch (error) {
-      this.gs.log('[TORRENT_CLIENT_TRACKER-ERROR]', error, 'error');
-      if (callback) {
-        callback(error, null);
-      }
-    }
+    });
   }
 
   handleWebClient(): void {

@@ -18,6 +18,7 @@ export const environment = {
     oa_id: 'https://line.me/ti/p/~@616nqkdg'
   },
   torrent: {
+    trackerCheckerApi: 'https://checker.openwebtorrent.com/check',
     trackerAnnounce: CONSTANTS.torrentTracker,
     iceServers: [
       { urls: CONSTANTS.torrentIceStunServer }

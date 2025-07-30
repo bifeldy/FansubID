@@ -1,10 +1,10 @@
 {
-  "name": "main-site",
+  "name": "fansubid",
   "description": "NgeWibu Dari Kamar~",
   "version": "8.1.4.5",
   "author": {
     "name": "B. Bias A. Ch.",
-    "email": "main-site@gmail.com"
+    "email": "bifeldy@gmail.com"
   },
   "homepage": "https://www.fansub.id",
   "scripts": {
@@ -59,7 +59,6 @@
     "abort-controller": "^3.0.0",
     "animate.css": "^4.1.1",
     "aws-sdk": "^2.1540.0",
-    "bittorrent-tracker": "^9.19.0",
     "bootstrap": "^5.1.3",
     "buffer": "^6.0.3",
     "cache-manager": "^3.6.1",
