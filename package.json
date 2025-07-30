@@ -97,6 +97,7 @@
     "ngx-toastr": "^16.2.0",
     "ngx-typed-js": "^2.1.1",
     "ngx-uploadx": "^6.2.0",
+    "node-datachannel": "^0.22.0",
     "node-fetch": "^3.2.3",
     "p2p-graph": "^2.0.0",
     "parse-prometheus-text-format": "^1.1.1",

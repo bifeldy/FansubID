@@ -29,6 +29,9 @@
     "paths": {
       "moment": [
         "./node_modules/moment/min/moment.min.js"
+      ],
+      "node-datachannel/polyfill": [
+        "./node_modules/node-datachannel/src/polyfill/index.ts"
       ]
     },
     "useDefineForClassFields": false

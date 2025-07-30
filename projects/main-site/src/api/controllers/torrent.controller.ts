@@ -1,5 +1,6 @@
 // 3rd Party Library
 import bittorrentTrackerClient from 'bittorrent-tracker/client';
+import nodeDatachannelPolyfill from 'node-datachannel/polyfill';
 
 import { Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
@@ -26,8 +27,9 @@ export class TorrentController {
 
   scrapeTorrent(announce: string, infoHash: string): Promise<any> {
     return new Promise((resolve, reject) => {
+      const dt = new Date().getTime();
       this.sr.addTimeout(
-        `${infoHash}_${announce}`,
+        `${dt}_${infoHash}_${announce}`,
         setTimeout(() => {
           try {
             reject('Request Timeout!');
@@ -39,11 +41,12 @@ export class TorrentController {
       bittorrentTrackerClient.scrape(
         {
           announce,
-          infoHash
+          infoHash,
+          wrtc: nodeDatachannelPolyfill
         },
         (err, result) => {
           try {
-            this.sr.deleteTimeout(`${infoHash}_${announce}`);
+            this.sr.deleteTimeout(`${dt}_${infoHash}_${announce}`);
             const data = {
               announce,
               seeds: 0,
@@ -81,17 +84,20 @@ export class TorrentController {
           trackers: []
         };
         const trackers = req.body.trackList || environment.torrent.trackerAnnounce;
+        const promises: Promise<any>[] = [];
         for (const tracker of trackers) {
-          try {
-            const data = await this.scrapeTorrent(tracker,req.body.magnetHash);
-            torrentTracker.seeds += data.seeds;
-            torrentTracker.peers += data.peers;
-            torrentTracker.downloads += data.downloads;
-            torrentTracker.trackers.push(data);
-          } catch (e) {
+          promises.push(this.scrapeTorrent(tracker,torrentTracker.infoHash));
+        }
+        const resPromise = await Promise.allSettled(promises);
+        for (const [idx, rp] of resPromise.entries()) {
+          if (rp.status === 'fulfilled') {
+            torrentTracker.seeds += rp.value.seeds;
+            torrentTracker.peers += rp.value.peers;
+            torrentTracker.downloads += rp.value.downloads;
+          } else {
             torrentTracker.trackers.push({
-              announce: tracker,
-              error: e
+              announce: trackers[idx],
+              error: rp.reason
             });
           }
         }
