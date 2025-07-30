@@ -190,7 +190,6 @@
             "allowedCommonJsDependencies": [
               "@nestjs/ng-universal/dist/tokens",
               "@videojs/xhr",
-              "bittorrent-tracker/client",
               "buffer/",
               "crypto-js",
               "chart.js",

@@ -1,6 +1,6 @@
 import idbChunkStore from 'idb-chunk-store';
 import webTorrent from 'webtorrent';
-import bittorrentTracker from 'bittorrent-tracker/client';
+import bittorrentTracker from 'bittorrent-tracker';
 
 import { Injectable } from '@angular/core';
 
