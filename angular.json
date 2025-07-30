@@ -190,6 +190,7 @@
             "allowedCommonJsDependencies": [
               "@nestjs/ng-universal/dist/tokens",
               "@videojs/xhr",
+              "bittorrent-tracker/client",
               "buffer/",
               "crypto-js",
               "chart.js",
@@ -281,7 +282,6 @@
               "@nestjs/swagger",
               "@nestjs/websockets",
               "@nestjs/websockets/socket-module",
-              "@roamhq/wrtc",
               "cache-manager",
               "discord.js",
               "ffmpeg-static",
@@ -295,7 +295,6 @@
               "node:path",
               "node:process",
               "node:url",
-              "parse-torrent",
               "pg",
               "puppeteer",
               "puppeteer-extra",

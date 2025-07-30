@@ -24,9 +24,6 @@
       "dom"
     ],
     "paths": {
-      "@roamhq/wrtc": [
-        "./node_modules/@roamhq/wrtc/lib/index.js"
-      ],
       "moment": [
         "./node_modules/moment/min/moment.min.js"
       ]

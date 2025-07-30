@@ -1,5 +1,6 @@
 import idbChunkStore from 'idb-chunk-store';
 import webTorrent from 'webtorrent';
+import bittorrentTracker from 'bittorrent-tracker/client';
 
 import { Injectable } from '@angular/core';
 
@@ -13,7 +14,6 @@ import { environment } from '../../../environments/app/environment';
 
 import { GlobalService } from './global.service';
 import { LocalStorageService } from './local-storage.service';
-import { ApiService } from './api.service';
 import { ToastService } from './toast.service';
 
 declare const WebTorrent: typeof webTorrent;
@@ -64,7 +64,6 @@ export class TorrentService {
 
   constructor(
     private gs: GlobalService,
-    private api: ApiService,
     private toast: ToastService,
     private ls: LocalStorageService
   ) {
@@ -89,8 +88,99 @@ export class TorrentService {
     return this.tableDataRowSubject?.value || [];
   }
 
-  checkHealthOnTracker(torrentInfo: any): Observable<any> {
-    return this.api.postData(`/torrent`, torrentInfo);
+  async checkHealthOnTrackerAndStartDownload(torrentInfo, callback = null, opts = this.torrentOptions): Promise<void> {
+    try {
+      const url = new URL(torrentInfo.magnetHash);
+      const params = new URLSearchParams(url.search);
+      const parsedTorrentInfo = {
+        infoHash: params.get('xt'),
+        announce: params.getAll('tr')
+      };
+      const torrentTracker = {
+        infoHash: parsedTorrentInfo.infoHash,
+        seeds: 0,
+        peers: 0,
+        downloads: 0,
+        trackers: []
+      };
+      const trackers: string[] = environment.torrent.trackerAnnounce;
+      for (const ptia of parsedTorrentInfo.announce) {
+        if (!trackers.includes(ptia)) {
+          trackers.push(ptia);
+        }
+      }
+      const promises: Promise<any>[] = [];
+      for (const tracker of trackers) {
+        promises.push(new Promise((resolve, reject) => {
+          const timedOut = setTimeout(() => {
+            try {
+              reject('Request Timeout!');
+            } catch (e) {
+              this.gs.log('[TORRENT_CLIENT_HEALTH-TIMEOUT]', e, 'error');
+            }
+          }, torrentInfo.trackTimeout);
+          bittorrentTracker.scrape(
+            {
+              announce: tracker,
+              infoHash: torrentTracker.infoHash
+            },
+            (err, result) => {
+              this.gs.log('[TORRENT_CLIENT_HEALTH-ANNOUNCE]', tracker);
+              this.gs.log('[TORRENT_CLIENT_HEALTH-INFO_HASH]', torrentTracker.infoHash);
+              this.gs.log('[TORRENT_CLIENT_HEALTH-ERR]', err);
+              this.gs.log('[TORRENT_CLIENT_HEALTH-RESULT]', result);
+              try {
+                clearTimeout(timedOut);
+                const data = {
+                  announce: tracker,
+                  seeds: 0,
+                  peers: 0,
+                  downloads: 0
+                };
+                if (!err) {
+                  // data.announce = result.announce;
+                  data.seeds = result.complete;
+                  data.peers = result.incomplete;
+                  data.downloads = result.downloaded;
+                  resolve(data);
+                } else {
+                  reject(err.message);
+                }
+              } catch (e) {
+                this.gs.log('[TORRENT_CLIENT_HEALTH-ERROR]', e, 'error');
+              }
+            }
+          );
+        }));
+      }
+      const resPromise = await Promise.allSettled(promises);
+      for (const [idx, rp] of resPromise.entries()) {
+        if (rp.status === 'fulfilled') {
+          torrentTracker.seeds += rp.value.seeds;
+          torrentTracker.peers += rp.value.peers;
+          torrentTracker.downloads += rp.value.downloads;
+        } else {
+          torrentTracker.trackers.push({
+            announce: trackers[idx],
+            error: rp.reason
+          });
+        }
+      }
+      this.gs.log('[TORRENT_CLIENT_TRACKER-TORRENT_INFO]', torrentTracker);
+      if (torrentTracker.seeds <= 0) {
+        this.toast.info('Tidak Ada Seeder!', 'Whoops!', null, true);
+      }
+      this.webClient.add(torrentInfo.magnetHash, opts, torrent => {
+        this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
+        this.toast.info('Memulai Download ...', 'Download!', null, true);
+        this.processTorrent(torrent, false, callback);
+      });
+    } catch (error) {
+      this.gs.log('[TORRENT_CLIENT_TRACKER-ERROR]', error, 'error');
+      if (callback) {
+        callback(error, null);
+      }
+    }
   }
 
   handleWebClient(): void {
@@ -113,7 +203,7 @@ export class TorrentService {
     });
   }
 
-  handleWebTorrent(torrent: Torrent, callback): void {
+  handleWebTorrent(torrent: Torrent, callback = null): void {
     torrent.on('done', () => {
       this.gs.log('[TORRENT_FILE_DONE]', torrent);
       this.toast.success(`Ada Torrent Yang Sudah Selesai Di Download`, 'Yeay, Selesai!', null, true);
@@ -139,7 +229,7 @@ export class TorrentService {
     });
   }
 
-  handleWebWire(wire: Wire, callback): any {
+  handleWebWire(wire: Wire, callback = null): void {
     this.gs.log('[TORRENT_WIRE_CONNECT]', wire);
     let wireName = wire.peerId || 'Unknown!';
     if (wire['remoteAddress'] && wire['remotePort']) {
@@ -156,7 +246,7 @@ export class TorrentService {
     }
   }
 
-  resurrectFiles(callback): void {
+  resurrectFiles(callback = null): void {
     if (!this.flagResurrected) {
       this.flagResurrected = true;
       for (const key in this.torrentsQueue) {
@@ -187,10 +277,12 @@ export class TorrentService {
         }
       }
     }
-    callback(null, null);
+    if (callback) {
+      callback(null, null);
+    }
   }
 
-  processTorrent(torrent: Torrent, completed: boolean, callback): void {
+  processTorrent(torrent: Torrent, completed: boolean, callback = null): void {
     torrent.on('wire', wire => this.handleWebWire(wire, callback));
     this.torrentsQueue[torrent.infoHash] = {
       completed: completed,
@@ -211,40 +303,20 @@ export class TorrentService {
     this.handleWebTorrent(torrent, callback);
   }
 
-  downloadFiles(magnetHash: string, callback, opts = this.torrentOptions): void {
+  downloadFiles(magnetHash: string, callback = null, opts = this.torrentOptions): void {
     this.gs.log('[TORRENT_CLIENT_QUEUE_DOWNLOAD]', magnetHash);
     this.refCallback = callback;
-    this.checkHealthOnTracker({
-      magnetHash,
-      trackTimeout: 1234,
-      trackList: environment.torrent.trackerAnnounce,
-      iceServers: environment.torrent.iceServers
-    }).subscribe({
-      next: (res: any) => {
-        this.gs.log('[TORRENT_CLIENT_HEALTH_SUCCESS]', res.result);
-        if (res.result.seeds <= 0) {
-          this.toast.info('Tidak Ada Seeder!', 'Whoops!', null, true);
-          if (callback) {
-            callback(null, res.result);
-          }
-        } else {
-          this.webClient.add(magnetHash, opts, torrent => {
-            this.gs.log('[TORRENT_FILE_DOWNLOAD_READY]', torrent);
-            this.toast.info('Memulai Download ...', 'Download!', null, true);
-            this.processTorrent(torrent, false, callback);
-          });
-        }
+    this.checkHealthOnTrackerAndStartDownload(
+      {
+        magnetHash,
+        trackTimeout: 12345
       },
-      error: (err: any) => {
-        this.gs.log('[TORRENT_CLIENT_HEALTH_ERROR]', err, 'error');
-        if (callback) {
-          callback(err, null);
-        }
-      }
-    });
+      callback,
+      opts
+    );
   }
 
-  uploadFiles(torrentName: string, files: Array<File>, callback): void {
+  uploadFiles(torrentName: string, files: Array<File>, callback = null): void {
     this.gs.log('[TORRENT_CLIENT_QUEUE_UPLOAD]', files);
     this.gs.log('[TORRENT_CLIENT_QUEUE_UPLOAD]', torrentName);
     this.refCallback = callback;
@@ -258,7 +330,7 @@ export class TorrentService {
     });
   }
 
-  removeTorrent(torrentId, callback, saveLocalStorage = true): void {
+  removeTorrent(torrentId, callback = null, saveLocalStorage = true): void {
     this.tableDataRowSubject.next(this.tableDataRowValue.filter(el => el.infoHash !== torrentId));
     this.webClient.remove(torrentId, {
       destroyStore: true
@@ -276,7 +348,7 @@ export class TorrentService {
     });
   }
 
-  pauseTorrent(torrentId, callback): void {
+  pauseTorrent(torrentId, callback = null): void {
     const torrent = this.webClient.get(torrentId);
     if (torrent) {
       torrent.pause();
@@ -286,7 +358,7 @@ export class TorrentService {
     }
   }
 
-  resumeTorrent(torrentId, callback): void {
+  resumeTorrent(torrentId, callback = null): void {
     const torrent = this.webClient.get(torrentId);
     if (torrent) {
       torrent.resume();

@@ -77,7 +77,6 @@ import { QuizLeaderboardController } from './controllers/quiz-/quiz-leaderboard.
 import { RegisterController } from './controllers/register.controller';
 import { TaskCronJobController } from './controllers/task-cron-job.controller';
 import { TicketController } from './controllers/ticket.controller';
-import { TorrentController } from './controllers/torrent.controller';
 import { UserController } from './controllers/user.controller';
 import { VerifyController } from './controllers/verify.controller';
 import { VerifySosmedController } from './controllers/verify-/verify-sosmed.controller';
@@ -234,7 +233,6 @@ import { UserPremiumService } from './repository/user-premium.service';
     RegisterController,
     TaskCronJobController,
     TicketController,
-    TorrentController,
     UserController,
     VerifyController,
     VerifySosmedController
