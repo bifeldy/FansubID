@@ -1,6 +1,7 @@
 // 3rd Party Library
-import bittorrentTrackerClient from 'bittorrent-tracker/client';
-import wrtc from '@roamhq/wrtc';
+import bittorrentTracker from 'bittorrent-tracker';
+import parseTorrent from 'parse-torrent';
+// import wrtc from '@roamhq/wrtc';
 
 import { Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
@@ -36,13 +37,13 @@ export class TorrentController {
           } catch (e) {
             this.gs.log('[TORRENT_SCRAPE-TIMEOUT] 👣', e, 'error');
           }
-        }, 2345)
+        }, 5000)
       );
-      bittorrentTrackerClient.scrape(
+      bittorrentTracker.scrape(
         {
           announce,
           infoHash,
-          wrtc
+          wrtc: true
         },
         (err, result) => {
           console.log('[TORRENT_SCRAPE-announce] 👣', announce);
@@ -80,14 +81,20 @@ export class TorrentController {
   async addNew(@Req() req: Request, @Res(/* { passthrough: true } */) res: Response): Promise<any> {
     try {
       if ('magnetHash' in req.body) {
+        const parsedTorrentInfo = parseTorrent(req.body.magnetHash);
         const torrentTracker = {
-          infoHash: req.body.magnetHash,
+          infoHash: parsedTorrentInfo.infoHash,
           seeds: 0,
           peers: 0,
           downloads: 0,
           trackers: []
         };
-        const trackers = req.body.trackList || environment.torrent.trackerAnnounce;
+        const trackers: string[] = req.body.trackList || environment.torrent.trackerAnnounce;
+        for (const ptia of parsedTorrentInfo.announce) {
+          if (!trackers.includes(ptia)) {
+            trackers.push(ptia);
+          }
+        }
         const promises: Promise<any>[] = [];
         for (const tracker of trackers) {
           promises.push(this.scrapeTorrent(tracker,torrentTracker.infoHash));
@@ -106,7 +113,7 @@ export class TorrentController {
           }
         }
         res.status(HttpStatus.CREATED).json(classToPlain({
-          info: `😅 200 - Torrent Tracker API :: ${req.body.magnetHash} 🤣`,
+          info: `😅 200 - Torrent Tracker API :: ${parsedTorrentInfo.infoHash} 🤣`,
           result: torrentTracker
         }));
       } else {

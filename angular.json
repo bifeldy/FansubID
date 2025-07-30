@@ -295,6 +295,7 @@
               "node:path",
               "node:process",
               "node:url",
+              "parse-torrent",
               "pg",
               "puppeteer",
               "puppeteer-extra",
