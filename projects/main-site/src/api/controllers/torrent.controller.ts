@@ -1,6 +1,6 @@
 // 3rd Party Library
 import bittorrentTrackerClient from 'bittorrent-tracker/client';
-import nodeDatachannelPolyfill from 'node-datachannel/polyfill';
+import wrtc from '@roamhq/wrtc';
 
 import { Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
@@ -42,9 +42,13 @@ export class TorrentController {
         {
           announce,
           infoHash,
-          wrtc: nodeDatachannelPolyfill
+          wrtc
         },
         (err, result) => {
+          console.log('[TORRENT_SCRAPE-announce] 👣', announce);
+          console.log('[TORRENT_SCRAPE-infoHash] 👣', infoHash);
+          console.log('[TORRENT_SCRAPE-err] 👣', err);
+          console.log('[TORRENT_SCRAPE-result] 👣', result);
           try {
             this.sr.deleteTimeout(`${dt}_${infoHash}_${announce}`);
             const data = {
