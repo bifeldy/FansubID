@@ -13,17 +13,14 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES2022",
-    "module": "es2020",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "resolveJsonModule": true,
     "lib": [
-      "es2020",
+      "es2022",
       "dom"
     ],
     "paths": {
@@ -34,6 +31,9 @@
         "./node_modules/moment/min/moment.min.js"
       ]
     },
+    "moduleResolution": "node",
+    "module": "es2022",
+    "target": "es2022",
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

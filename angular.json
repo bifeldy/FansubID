@@ -281,6 +281,7 @@
               "@nestjs/swagger",
               "@nestjs/websockets",
               "@nestjs/websockets/socket-module",
+              "@roamhq/wrtc",
               "cache-manager",
               "discord.js",
               "ffmpeg-static",
