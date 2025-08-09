@@ -19,6 +19,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ~/app/fansubid
+            git restore .
             git pull
             npm install
             sudo pm2 restart fansubid
