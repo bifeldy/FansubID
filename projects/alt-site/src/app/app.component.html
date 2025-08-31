@@ -62,6 +62,12 @@
                     Bagikan dengan siapa saja.
                   </h5>
                   <h6>* Web ini belum jadi, masih dalam tahap pengembangan ~</h6>
+                  <hr />
+                  <small>
+                    Belum bisa login sehingga masih Anonim. <br />
+                    Riwayat tidak tersimpan untuk dikelola per-orang. <br />
+                    Untuk sementara yang sudah terupload tidak bisa di hapus.
+                  </small>
                 </div>
                 <div class="col-lg-12 my-3">
                   <div class="border-button first-button scroll-to-section">
@@ -94,10 +100,9 @@
           <img src="/assets/images/heading-line-dec.png" />
           <h5>
             Khusus untuk yang ingin mengunggah berkas <u>Anime</u> &amp; <u>Drama</u>,
-            sangat disarankan untuk menggunakan
-            <a href="https://www.fansub.id/berkas" target="_blank">FSID</a>
-            agar lebih mudah dicari dan dikelompokan secara permanen dan tentunya "GRATIS" tanpa biaya &amp; iklan yang mengganggu,
-            hanya saja tampilannya wibu :v
+            sangat disarankan untuk menggunakan <a href="https://www.fansub.id/berkas" target="_blank">FansubID</a>
+            agar lebih mudah dicari dan dikelompokan dan tentunya "GRATIS" juga tanpa biaya &amp; iklan yang
+            mengganggu, hanya saja tampilannya wibu :v
           </h5>
         </div>
       </div>
@@ -193,7 +198,7 @@
               <h5>
                 <a href="{{ attachment.uri }}">{{ attachment.orig }}</a>
               </h5>
-              <p>Size :: {{ attachment.size | bytes }} &commat; Expired :: {{ attachment.expired_at | date:'long' }}</p>
+              <p>{{ attachment.size | bytes }} &commat; {{ attachment.created_at | date:'long' }}</p>
             </div>
           </div>
         </div>

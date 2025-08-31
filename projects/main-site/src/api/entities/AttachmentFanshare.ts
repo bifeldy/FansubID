@@ -31,10 +31,6 @@ export class AttachmentFanshare implements AttachmentFanshareModel {
   @Index()
   created_at: number | Date;
 
-  @Column({ type: 'timestamp with time zone', nullable: true })
-  @Index()
-  expired_at: number | Date;
-
   @ManyToOne(type => User)
   user_: UserModel;
 

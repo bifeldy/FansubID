@@ -180,7 +180,6 @@ export interface AttachmentFanshareModel {
   mime?: string;
   status?: string;
   created_at?: number | Date;
-  expired_at?: number | Date;
   user_?: UserModel;
 }
 

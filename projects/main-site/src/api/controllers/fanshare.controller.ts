@@ -1,5 +1,5 @@
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Put, Req, Res } from '@nestjs/common';
-import { ILike, IsNull, MoreThanOrEqual } from 'typeorm';
+import { ILike, IsNull } from 'typeorm';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 import { Request, Response } from 'express';
@@ -33,10 +33,8 @@ export class FanshareController {
       const queryRow = parseInt(req.query['row'] as string);
       const [attachmentFanshares, count] = await this.attachmentFanshareRepo.findAndCount({
         where: [
-          { orig: ILike(`%${searchQuery}%`), expired_at: MoreThanOrEqual(new Date()), user_: IsNull() },
-          { mime: ILike(`%${searchQuery}%`), expired_at: MoreThanOrEqual(new Date()), user_: IsNull() },
-          { orig: ILike(`%${searchQuery}%`), expired_at: IsNull(), user_: IsNull() },
-          { mime: ILike(`%${searchQuery}%`), expired_at: IsNull(), user_: IsNull() }
+          { orig: ILike(`%${searchQuery}%`), user_: IsNull() },
+          { mime: ILike(`%${searchQuery}%`), user_: IsNull() }
         ],
         order: {
           ...((req.query['sort'] && req.query['order']) ? {
@@ -92,7 +90,6 @@ export class FanshareController {
         attachmentFanshare.mime = file.contentType;
         attachmentFanshare.status = file.status
         attachmentFanshare.created_at = new Date(file.createdAt);
-        attachmentFanshare.expired_at = new Date(file.expiredAt);
         attachmentFanshare.user_ = user;
         const resSaveAttachmentFanshare = await this.attachmentFanshareRepo.save(attachmentFanshare);
         if ('user_' in resSaveAttachmentFanshare && resSaveAttachmentFanshare.user_) {
