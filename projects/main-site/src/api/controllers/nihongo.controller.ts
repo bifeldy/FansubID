@@ -39,7 +39,7 @@ export class NihongoController {
           id ASC
       `);
       return {
-        info: `😅 200 - Nihongo Kana API :: List Kategori '${req.query['category'] ? req.query['category'] : ''}' 🤣`,
+        info: `😅 200 - Nihongo Kana API :: List Kategori 🤣`,
         count: categories.length,
         pages: 1,
         results: categories
@@ -59,9 +59,9 @@ export class NihongoController {
   @HttpCode(200)
   @FilterApiKeyAccess()
   async getAll(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
-    const searchQuery = req.query['q'] || '';
-    const searchCategory = req.query['category'] || '';
     try {
+      const searchQuery = req.query['q'] || '';
+      const searchCategory = req.query['category'] || '';
       const queryPage = parseInt(req.query['page'] as string);
       const queryRow = parseInt(req.query['row'] as string);
       const [kanas, count] = await this.nihongoRepo.findAndCount({
@@ -98,7 +98,7 @@ export class NihongoController {
         }
       }
       return {
-        info: `😅 200 - Nihongo Kana API :: List All '${req.query['category'] ? req.query['category'] : ''}' 🤣`,
+        info: `😅 200 - Nihongo Kana API :: List All 🤣`,
         count,
         pages: Math.ceil(count / (queryRow ? queryRow : 10)),
         results: kanas
