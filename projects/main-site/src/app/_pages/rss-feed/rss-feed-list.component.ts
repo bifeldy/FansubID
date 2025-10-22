@@ -105,7 +105,7 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
     const allFansubId = [...new Set(this.rssFeedData.map(rf => rf.fansub_id))];
     this.subsInternetPositif = this.fansub.checkInternetPositif(allFansubId).subscribe({
       next: res => {
-        this.gs.log('[RSS_FEED_KOMINFO_SUCCESS]', res);
+        this.gs.log('[RSS_FEED_IPOCHAN_SUCCESS]', res);
         for (const rf of this.rssFeedData) {
           if (res.results[rf.fansub_id]) {
             rf.internet_positif = res.results[rf.fansub_id];
@@ -114,7 +114,7 @@ export class RssFeedListComponent implements OnInit, OnDestroy {
         this.bs.idle();
       },
       error: err => {
-        this.gs.log('[RSS_FEED_KOMINFO_ERROR]', err, 'error');
+        this.gs.log('[RSS_FEED_IPOCHAN_ERROR]', err, 'error');
         this.bs.idle();
       }
     });

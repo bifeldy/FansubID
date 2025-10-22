@@ -251,7 +251,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
     }
     this.subsInternetPositif = concat(...chunkHandlers).subscribe({
       next: res => {
-        this.gs.log('[FANSUB_KOMINFO_SUCCESS]', res);
+        this.gs.log('[FANSUB_IPOCHAN_SUCCESS]', res);
         for (const f of this.fansubData) {
           if (res.results[f.id]) {
             f.internet_positif = res.results[f.id];
@@ -259,7 +259,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.gs.log('[FANSUB_KOMINFO_ERROR]', err, 'error');
+        this.gs.log('[FANSUB_IPOCHAN_ERROR]', err, 'error');
         this.bs.idle();
       },
       complete: () => {

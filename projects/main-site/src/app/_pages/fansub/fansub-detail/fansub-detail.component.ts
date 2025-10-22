@@ -208,20 +208,20 @@ export class FansubDetailComponent implements OnInit, OnDestroy {
     this.bs.busy();
     this.subsInternetPositif = this.fansub.checkInternetPositif([this.fansubData.id]).subscribe({
       next: res => {
-        this.gs.log('[FANSUB_KOMINFO_SUCCESS]', res);
+        this.gs.log('[FANSUB_IPOCHAN_SUCCESS]', res);
         if (res.results[this.fansubData.id]) {
           this.notif.addNotif(
             null,
             `${environment.siteName.toUpperCase()}_FANSUB#${this.fansubData.id}`,
             'secondary',
             'Internet Positif',
-            'Halaman website Fansub ini ada di dalam daftar situs yang diblokir oleh Kominfo ~',
+            'Halaman website Fansub ini ada di dalam daftar situs yang diblokir oleh IPOCHAN ~',
             false
           );
         }
       },
       error: err => {
-        this.gs.log('[FANSUB_KOMINFO_ERROR]', err, 'error');
+        this.gs.log('[FANSUB_IPOCHAN_ERROR]', err, 'error');
         this.bs.idle();
       },
       complete: () => {

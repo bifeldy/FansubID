@@ -18,7 +18,7 @@ export class IpoChanService {
     private api: ApiService,
     private gs: GlobalService
   ) {
-    // https://trustpositif.kominfo.go.id
+    // https://trustpositif.komdigi.go.id
   }
 
   async checkDomain(domain_list: string[]): Promise<{ Domain: string, Status: string }[]> {
