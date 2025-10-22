@@ -129,7 +129,7 @@ export class AnimeBerkasController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Anime API :: Gagal Mencari Berkas ${req.query['id']} 😪`,
+        info: `🙄 400 - Anime API :: Gagal Mencari Berkas ${req.query['id'] || req.body.id} 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }

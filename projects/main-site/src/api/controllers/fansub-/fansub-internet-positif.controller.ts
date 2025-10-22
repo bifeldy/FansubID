@@ -68,7 +68,7 @@ export class FansubInternetPositifController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Fansub Internet Positif API :: Gagal Mengecek Domain ${req.query['id']} 😪`,
+        info: `🙄 400 - Fansub Internet Positif API :: Gagal Mengecek Domain ${req.query['id'] || req.body.id} 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }

@@ -82,7 +82,7 @@ export class DoramaFansubController {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new HttpException({
-        info: `🙄 400 - Dorama API :: Gagal Mencari Fansub ${req.query['id']} 😪`,
+        info: `🙄 400 - Dorama API :: Gagal Mencari Fansub ${req.query['id'] || req.body.id} 😪`,
         result: {
           message: 'Data Tidak Lengkap!'
         }
