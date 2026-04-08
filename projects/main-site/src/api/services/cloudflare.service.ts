@@ -202,8 +202,12 @@ export class CloudflareService {
     }
   }
 
-  async createFailToBan(ip_domain: string, mode = 'block', notes = '[404, 429, 5XX] Too Much ...'): Promise<any> {
+  async createFailToBan(ip_domain: string, mode = 'block', notes = null): Promise<any> {
     try {
+      if (!notes) {
+        notes = `[404, 429, 5XX] ${this.gs.toISOStringWithTZ(new Date())}`;
+      }
+
       const url = new URL(`${environment.cloudflare.url}/zones/${environment.cloudflare.zoneId}/firewall/access_rules/rules`);
       const res_raw = await this.api.postData(
         url,
