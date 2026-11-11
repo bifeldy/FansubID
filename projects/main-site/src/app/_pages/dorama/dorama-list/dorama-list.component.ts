@@ -139,7 +139,7 @@ export class DoramaListComponent implements OnInit, OnDestroy {
         this.doramaCountry = [];
         for (const sD of this.seasonalDorama) {
           sD.mdl_id = sD.id;
-          sD.image_url = sD.cover || '/assets/img/favicon.png';
+          sD.image_url = sD.cover;
           if (sD.type && !sD.country) {
             sD.country = sD.type.split(' ')[0];
           }

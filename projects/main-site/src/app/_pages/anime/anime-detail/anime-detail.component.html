@@ -25,7 +25,7 @@
       <div class="col-md-4 col-xl-3 px-3 order-1 order-md-2">
         <div class="row sticky-top pt-3">
           <div class="col-12 pt-4">
-            <img class="anime-image" [src]="animeData.image_url" />
+            <img class="anime-image" [src]="animeData.image_url || '/assets/img/favicon.png'" />
           </div>
           <div class="col-12 text-center pt-3">
             <button type="button" mat-stroked-button class="w-100" color="accent" (click)="openSeasonalAnime()"
@@ -46,7 +46,8 @@
               <mat-icon fontIcon="local_fire_department" class="me-1"></mat-icon>
               {{ animeData.popularity || '?' }} <br />
               <mat-icon fontIcon="label" class="me-1"></mat-icon>
-              {{ animeData.status?.split('_').join(' ').toUpperCase() || '?' }} - {{ animeData.media_type?.toUpperCase() }}
+              {{ animeData.status?.split('_').join(' ').toUpperCase() || '?' }} - {{ animeData.media_type?.toUpperCase()
+              }}
             </button>
           </div>
         </div>
@@ -54,12 +55,14 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <app-material-tab (gridClicked)="openFansub($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
-          [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
+        <app-material-tab (gridClicked)="openFansub($event)" (tableRowClicked)="openFile($event)"
+          (paginatorClicked)="onPaginatorClicked($event)" [tabData]="tabData" [count]="count" [serverSide]="true"
+          (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
           [gridPageFinished]="fansubPageFinished" (gridLoadNextPage)="onFansubLoadNextPage()"></app-material-tab>
       </div>
     </div>
   </div>
-  <div class="anime-banner anime-banner-1 align-items-center" [style.background-image]="'url(' + animeData.image_url + ')'"></div>
+  <div class="anime-banner anime-banner-1 align-items-center"
+    [style.background-image]="'url(' + animeData.image_url || '/assets/img/favicon.png' + ')'"></div>
   <div class="anime-banner anime-banner-2 align-items-center"></div>
 </div>

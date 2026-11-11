@@ -25,7 +25,7 @@
       <div class="col-md-4 col-xl-3 px-3 order-1 order-md-2">
         <div class="row sticky-top pt-3">
           <div class="col-12 pt-4">
-            <img class="dorama-image" [src]="doramaData.image_url" />
+            <img class="dorama-image" [src]="doramaData.image_url || '/assets/img/favicon.png'" />
           </div>
           <div class="col-12 text-center pt-3">
             <button type="button" mat-stroked-button class="w-100" color="accent" (click)="openSeasonalDorama()"
@@ -39,7 +39,8 @@
             </button>
           </div>
           <div class="col-12 text-center pt-3">
-            <button type="button" mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyDramaList" (click)="openRank()">
+            <button type="button" mat-stroked-button class="w-100" color="warn" matTooltip="Buka Ranking Di MyDramaList"
+              (click)="openRank()">
               <mat-icon fontIcon="timeline" class="me-1"></mat-icon>
               {{ doramaData.details?.ranked || '?' }} &nbsp;
               <mat-icon fontIcon="local_fire_department" class="me-1"></mat-icon>
@@ -53,12 +54,14 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <app-material-tab (gridClicked)="openFansub($event)" (tableRowClicked)="openFile($event)" (paginatorClicked)="onPaginatorClicked($event)"
-          [tabData]="tabData" [count]="count" [serverSide]="true" (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
+        <app-material-tab (gridClicked)="openFansub($event)" (tableRowClicked)="openFile($event)"
+          (paginatorClicked)="onPaginatorClicked($event)" [tabData]="tabData" [count]="count" [serverSide]="true"
+          (serverSideFilter)="onServerSideFilter($event)" (serverSideOrder)="onServerSideOrder($event)"
           [gridPageFinished]="fansubPageFinished" (gridLoadNextPage)="onFansubLoadNextPage()"></app-material-tab>
       </div>
     </div>
   </div>
-  <div class="dorama-banner dorama-banner-1 align-items-center" [style.background-image]="'url(' + doramaData.image_url + ')'"></div>
+  <div class="dorama-banner dorama-banner-1 align-items-center"
+    [style.background-image]="'url(' + doramaData.image_url || '/assets/img/favicon.png' + ')'"></div>
   <div class="dorama-banner dorama-banner-2 align-items-center"></div>
 </div>
