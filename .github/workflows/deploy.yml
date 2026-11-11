@@ -37,7 +37,7 @@ jobs:
             git restore .
             git pull
             npm install
-            sudo pm2 restart fansubid
+            pm2 restart fansubid
           '
 
           if [ -n "${SSH_PRIVATE_KEY:-}" ]; then
