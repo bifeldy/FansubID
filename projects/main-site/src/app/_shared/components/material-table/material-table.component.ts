@@ -35,6 +35,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   urlPath = null;
   searchQuery = '';
 
+  subsSort = null;
   subsQueryParam = null;
   timedOut = null;
 
@@ -78,7 +79,7 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   ngOnDestroy(): void {
-    this.sort?.sortChange?.unsubscribe();
+    this.subsSort?.unsubscribe();
     this.subsQueryParam?.unsubscribe();
     if (this.timedOut) {
       clearTimeout(this.timedOut);
@@ -87,22 +88,26 @@ export class MaterialTableComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe({
-      next: (data) => {
-        this.paginator.pageIndex = 0;
-        this.onServerSideOrder(data);
-      }
-    });
-    this.timedOut = setTimeout(() => {
-      this.searchQuery = this.activatedRoute.snapshot.queryParamMap.get('q') || '';
-      this.search();
-      this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
-        next: qp => {
-          this.searchQuery = qp['q'] || '';
-          this.search();
+    if (this.gs.isBrowser) {
+      this.subsSort = this.sort.sortChange.subscribe({
+        next: (data) => {
+          this.paginator.pageIndex = 0;
+          this.onServerSideOrder(data);
         }
       });
-    }, 0);
+      this.timedOut = setTimeout(() => {
+        let isFirstEmit = true;
+        this.subsQueryParam = this.activatedRoute.queryParams.subscribe({
+          next: qp => {
+            this.searchQuery = qp['q'] || '';
+            if (!isFirstEmit || this.searchQuery) {
+              this.search();
+            }
+            isFirstEmit = false;
+          }
+        });
+      }, 0);
+    }
   }
 
   search(): void {

@@ -53,9 +53,15 @@ export class IdCloudHostService {
   onClose(code, data): void {
     const reason = data.toString();
     this.gs.log(`[ID_CLOUD_HOST_SERVICE-ON_CLOSE] ⛈`, { code, reason });
+    if (this.sr.doesExist('timeout', CONSTANTS.timeoutReconnectSocketKey)) {
+      this.sr.deleteTimeout(CONSTANTS.timeoutReconnectSocketKey);
+    }
     this.sr.addTimeout(
       CONSTANTS.timeoutReconnectSocketKey,
       setTimeout(() => {
+        if (this.sr.doesExist('timeout', CONSTANTS.timeoutReconnectSocketKey)) {
+          this.sr.deleteTimeout(CONSTANTS.timeoutReconnectSocketKey);
+        }
         this.startWs();
       }, CONSTANTS.timeoutReconnectSocketTime)
     );
@@ -89,6 +95,14 @@ export class IdCloudHostService {
   }
 
   startWs(): void {
+    if (this.wsMainSite) {
+      this.wsMainSite.removeAllListeners();
+      try {
+        this.wsMainSite.terminate();
+      } catch (e) {
+        // Ignore terminate errors on closed socket
+      }
+    }
     const urlMainSite = this.getStatsUrl('jkt01', environment.idCloudHost.mainSite);
     this.wsMainSite = new WebSocket(urlMainSite);
 

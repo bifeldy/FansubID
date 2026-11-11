@@ -162,7 +162,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.timedOut5 = setTimeout(() => { this.getFansub(); }, 1000);
     this.timedOut6 = setTimeout(() => { this.getBerkas(); }, 1000);
     this.timedOut7 = setTimeout(() => { this.getPengguna(); }, 1000);
-    this.timedOut7 = setTimeout(() => { this.getRss(); }, 1000);
+    this.timedOut8 = setTimeout(() => { this.getRss(); }, 1000);
   }
 
   applyFilter(event = null): void {

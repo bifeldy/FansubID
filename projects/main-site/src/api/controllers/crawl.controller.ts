@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { Browser, Page } from 'puppeteer';
 
-import { CACHE_MANAGER, Controller, Get, HttpCode, HttpStatus, Inject, Req, Res } from '@nestjs/common';
+import { CACHE_MANAGER, Controller, Get, HttpCode, HttpStatus, Inject, OnModuleDestroy, Req, Res } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Cache } from 'cache-manager';
@@ -17,7 +17,7 @@ import { FilterApiKeyAccess } from '../decorators/filter-api-key-access.decorato
 
 @ApiExcludeController()
 @Controller('/crawl')
-export class CrawlController {
+export class CrawlController implements OnModuleDestroy {
 
   prohibitedHeaders = [
     'accept-charset', 'accept-encoding', 'access-control-request-headers', 'access-control-request-method',
@@ -37,20 +37,71 @@ export class CrawlController {
 
   options = {
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage']
   };
 
   browser: Browser = null;
+  browserLaunchPromise: Promise<Browser> = null;
+  idleTimer: NodeJS.Timeout = null;
+  activePages = 0;
+  readonly IDLE_CLOSE_MS = 2 * 60 * 1000;
 
   constructor(
     @Inject(CACHE_MANAGER) private cm: Cache
   ) {
     puppeteer.use(StealthPlugin());
-    this.initialize();
   }
 
-  async initialize(): Promise<void> {
-    this.browser = await puppeteer.launch(this.options);
+  async initialize(): Promise<Browser> {
+    if (this.idleTimer) {
+      clearTimeout(this.idleTimer);
+      this.idleTimer = null;
+    }
+    if (this.browser && this.browser.isConnected()) {
+      return this.browser;
+    }
+    if (!this.browserLaunchPromise) {
+      this.browserLaunchPromise = puppeteer.launch(this.options).then(b => {
+        this.browser = b;
+        this.browserLaunchPromise = null;
+        b.on('disconnected', () => {
+          this.browser = null;
+        });
+        return b;
+      }).catch(err => {
+        this.browserLaunchPromise = null;
+        throw err;
+      });
+    }
+    return this.browserLaunchPromise;
+  }
+
+  scheduleIdleClose(): void {
+    if (this.activePages > 0) {
+      return;
+    }
+    if (this.idleTimer) {
+      clearTimeout(this.idleTimer);
+    }
+    this.idleTimer = setTimeout(async () => {
+      if (this.activePages === 0 && this.browser) {
+        const b = this.browser;
+        this.browser = null;
+        await b.close().catch(() => {});
+      }
+    }, this.IDLE_CLOSE_MS);
+  }
+
+  async onModuleDestroy(): Promise<void> {
+    if (this.idleTimer) {
+      clearTimeout(this.idleTimer);
+      this.idleTimer = null;
+    }
+    if (this.browser) {
+      const b = this.browser;
+      this.browser = null;
+      await b.close().catch(() => {});
+    }
   }
 
   @Get('/')
@@ -78,7 +129,9 @@ export class CrawlController {
         uri = new URL(`https://crawl.${environment.domain}`);
         uri.searchParams.append('url', url);
       }
-      page = await this.browser.newPage();
+      const browser = await this.initialize();
+      page = await browser.newPage();
+      this.activePages++;
       const requestHeaders = { ...req.headers };
       for (const header of [...this.requestHeadersToRemove, ...this.prohibitedHeaders]) {
         delete requestHeaders[header];
@@ -116,19 +169,23 @@ export class CrawlController {
           res.cookie(cookie.name, cookie.value, options as any);
         }
       }
-      await page.close();
-      this.cm.set(req.originalUrl, { status: response.status(), body: responseData }, { ttl: CONSTANTS.externalApiCacheTime });
+      if (responseData && responseData.byteLength <= 1024 * 1024) {
+        this.cm.set(req.originalUrl, { status: response.status(), body: responseData }, { ttl: CONSTANTS.externalApiCacheTime });
+      }
       res.send(responseData);
     } catch (error) {
-      if (page) {
-        await page.close();
-      }
       res.status(HttpStatus.BAD_REQUEST).json(classToPlain({
         info: '🙄 400 - Crawl API :: UR[I/L] Tidak Valid 😪',
         result: {
           message: 'Data Tidak Lengkap!'
         }
       }));
+    } finally {
+      if (page) {
+        this.activePages = Math.max(0, this.activePages - 1);
+        await page.close().catch(() => {});
+      }
+      this.scheduleIdleClose();
     }
   }
 

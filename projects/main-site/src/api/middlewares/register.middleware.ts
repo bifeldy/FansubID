@@ -130,8 +130,9 @@ export class RegisterMiddleware implements NestMiddleware {
             );
             penggunaSave = await this.registrationRepo.save(penggunaSave);
             res.locals['registration'] = penggunaSave;
+            const timeoutKey = `${CONSTANTS.timeoutCancelRegisterKey}-${Date.now()}`;
             this.sr.addTimeout(
-              `${CONSTANTS.timeoutCancelRegisterKey}-${Date.now()}`,
+              timeoutKey,
               setTimeout(async () => {
                 try {
                   const registrationToBeDeleted = await this.registrationRepo.findOneOrFail({
@@ -142,6 +143,10 @@ export class RegisterMiddleware implements NestMiddleware {
                   await this.registrationRepo.remove(registrationToBeDeleted);
                 } catch (err) {
                   this.gs.log('[REGISTER_MIDDLEWARE-ERROR] 🎃', err, 'error');
+                } finally {
+                  if (this.sr.doesExist('timeout', timeoutKey)) {
+                    this.sr.deleteTimeout(timeoutKey);
+                  }
                 }
               }, CONSTANTS.timeoutCancelRegisterTime)
             );

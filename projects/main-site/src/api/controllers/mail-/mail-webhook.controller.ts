@@ -1,5 +1,5 @@
 // NodeJS Library
-import { createReadStream, readdirSync } from 'node:fs';
+import { createReadStream, promises as fsPromises } from 'node:fs';
 
 import { Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, UseInterceptors } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
@@ -39,7 +39,7 @@ export class MailWebhookController {
   }
 
   updateLater(mailId: string): void {
-    if (this.ms.webhook[mailId].timeout) {
+    if (this.ms.webhook[mailId]?.timeout && this.sr.doesExist('timeout', mailId)) {
       this.sr.deleteTimeout(mailId);
     }
     this.ms.webhook[mailId].timeout = true;
@@ -56,9 +56,13 @@ export class MailWebhookController {
             mailbox[key] = value;
           }
           await this.mailboxRepo.save(mailbox);
-          delete this.ms.webhook[mailId];
         } catch (err) {
           this.gs.log('[MAIL_WEBHOOK_TIMEOUT-ERROR] 📧', err, 'error');
+        } finally {
+          delete this.ms.webhook[mailId];
+          if (this.sr.doesExist('timeout', mailId)) {
+            this.sr.deleteTimeout(mailId);
+          }
         }
       }, CONSTANTS.timeoutMailWebhookTime)
     );
@@ -130,7 +134,8 @@ export class MailWebhookController {
           }, HttpStatus.NOT_FOUND);
         }
         let mailboxSave = null;
-        while (!mailboxSave) {
+        let retryCount = 0;
+        while (!mailboxSave && retryCount < 3) {
           try {
             const mailboxs = await this.mailboxRepo.find({
               where: [
@@ -163,9 +168,9 @@ export class MailWebhookController {
                   this.ms.webhook[req.body['Message-Id']].col = {};
                 }
                 this.ms.webhook[req.body['Message-Id']].col.attachment_ = [];
+                const files = await fsPromises.readdir(`${environment.uploadFolder}`, { withFileTypes: true });
                 for (const file of req.files as Express.Multer.File[]) {
                   const fileExt = file.originalname.includes('.') && !file.originalname.endsWith('.') ? file.originalname.split('.').pop().toLowerCase() : null;
-                  const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
                   const fIdx = files.findIndex(f => f.name === file.filename || f.name === `${file.filename}${fileExt ? `.${fileExt}` : ''}`);
                   if (fIdx >= 0) {
                     const attachment = this.attachmentRepo.new();
@@ -231,9 +236,9 @@ export class MailWebhookController {
                 this.updateLater(mailboxSave.mail);
               }
               if ((req.files as Express.Multer.File[])?.length > 0) {
+                const files = await fsPromises.readdir(`${environment.uploadFolder}`, { withFileTypes: true });
                 for (const file of req.files as Express.Multer.File[]) {
                   const fileExt = file.originalname.includes('.') && !file.originalname.endsWith('.') ? file.originalname.split('.').pop().toLowerCase() : null;
-                  const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
                   const fIdx = files.findIndex(f => f.name === file.filename || f.name === `${file.filename}${fileExt ? `.${fileExt}` : ''}`);
                   if (fIdx >= 0) {
                     this.gs.deleteAttachment(files[fIdx].name);
@@ -242,8 +247,12 @@ export class MailWebhookController {
               }
             }
           } catch(e) {
+            retryCount++;
             this.gs.log('[MAIL_WEBHOOK_INSERT-ERROR] 📧', e, 'error');
           }
+        }
+        if (!mailboxSave) {
+          throw new Error('Gagal Menyimpan Email Setelah Beberapa Percobaan!');
         }
         return {
           info: '😍 201 - Mail Webhook API :: Receive New Email 🥰',

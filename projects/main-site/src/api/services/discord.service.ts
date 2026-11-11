@@ -5,6 +5,7 @@ import {
   Message,
   NewsChannel,
   Intents,
+  Options,
   MessageOptions,
   MessageEmbed,
   ColorResolvable,
@@ -114,22 +115,26 @@ export class DiscordService {
   setupBot(): void {
     this.bot = new Client({
       restRequestTimeout: CONSTANTS.timeDiscord,
+      makeCache: Options.cacheWithLimits({
+        MessageManager: 20,
+        PresenceManager: 0,
+        GuildMemberManager: 50,
+        UserManager: 50,
+        ThreadManager: 0,
+        ReactionManager: 0,
+        VoiceStateManager: 0,
+        GuildBanManager: 0,
+        GuildInviteManager: 0,
+        GuildStickerManager: 0,
+        GuildEmojiManager: 0
+      }),
       intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_BANS,
-        Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-        Intents.FLAGS.GUILD_INTEGRATIONS,
-        Intents.FLAGS.GUILD_WEBHOOKS,
-        Intents.FLAGS.GUILD_INVITES,
-        Intents.FLAGS.GUILD_VOICE_STATES,
-        Intents.FLAGS.GUILD_PRESENCES,
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        Intents.FLAGS.GUILD_MESSAGE_TYPING,
         Intents.FLAGS.DIRECT_MESSAGES,
-        Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-        Intents.FLAGS.DIRECT_MESSAGE_TYPING
+        Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
       ],
       partials: [
         'MESSAGE',
@@ -384,8 +389,8 @@ export class DiscordService {
             user.verified = true;
             await this.userRepo.save(user);
             const laboratoryRatsRole = interaction.guild.roles.cache.get(environment.discord.laboratoryRatsRoleId);
-            const member = interaction.guild.members.cache.get(interaction.user.id);
-            if (!member.roles.cache.has(laboratoryRatsRole.id)) {
+            const member = interaction.guild.members.cache.get(interaction.user.id) || await interaction.guild.members.fetch(interaction.user.id);
+            if (member && laboratoryRatsRole && !member.roles.cache.has(laboratoryRatsRole.id)) {
               await member.roles.add(laboratoryRatsRole);
             }
             (interaction.guild.channels.cache.get(environment.discord.channelEventId) as TextChannel).send(
@@ -439,7 +444,7 @@ export class DiscordService {
         await this.cfgGithubSet(data);
         const botGuild = this.bot ? this.bot.guilds.cache.get(environment.discord.guild_id) : null;
         if (botGuild) {
-          const botMember = botGuild.members.cache.get(this.bot.user.id);
+          const botMember = botGuild.members.cache.get(this.bot.user.id) || await botGuild.members.fetch(this.bot.user.id);
           if (botMember) {
             botMember.setNickname(`${environment.siteName} - ${this.cfg.githubGet()?.sha?.slice(0, 7)}`);
           }

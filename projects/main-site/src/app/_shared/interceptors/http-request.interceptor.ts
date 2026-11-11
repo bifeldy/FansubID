@@ -25,7 +25,11 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const urlTarget = request.url;
     const intercept = urlTarget.startsWith(environment.baseUrl) || urlTarget.startsWith(environment.apiUrl);
-    if (this.gs.isBrowser && intercept) {
+    if (!this.gs.isBrowser && urlTarget.startsWith(environment.baseUrl)) {
+      request = request.clone({
+        url: urlTarget.replace(environment.baseUrl, 'http://127.0.0.1:4200')
+      });
+    } else if (this.gs.isBrowser && intercept) {
       request = request.clone({
         withCredentials: !this.gs.isDevMode
       });

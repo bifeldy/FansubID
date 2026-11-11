@@ -154,8 +154,8 @@ export async function app(httpAdapter: AbstractHttpAdapter = null): Promise<INes
 async function bootstrap(): Promise<void> {
   const port = process.env['PORT'] || 4200;
   const totCPUs = os.cpus().length;
-  /* We Will Use Max. 50 % Total CPUs Power */
-  const numCPUs = Number(process.env['MAX_CPUS']) || Math.max(Math.round(totCPUs / 2), 2);
+  /* Default Single-Process Mode (1 CPU) to save RAM on small servers, unless MAX_CPUS > 1 is explicitly set */
+  const numCPUs = Number(process.env['MAX_CPUS']) || 1;
   if (numCPUs <= totCPUs && numCPUs > 1) {
     try {
       const expressApp = express();
@@ -173,7 +173,7 @@ async function bootstrap(): Promise<void> {
         cluster.setupMaster({
           serialization: 'advanced'
         });
-        for (let i = 0; i < numCPUs - 1 /* i Slave(s) & 1 Master CPU */ ; i++) {
+        for (let i = 0; i < numCPUs - 1 /* i Slave(s) & 1 Master CPU */; i++) {
           const worker = cluster.fork();
           gs.log(`[WORKER_${i}] Spawned`, worker.id);
         }

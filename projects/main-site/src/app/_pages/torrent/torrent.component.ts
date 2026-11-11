@@ -100,7 +100,6 @@ export class TorrentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.sort?.sortChange?.unsubscribe();
     this.subsDialog?.unsubscribe();
     this.subsUser?.unsubscribe();
     this.subsTableDataRow?.unsubscribe();

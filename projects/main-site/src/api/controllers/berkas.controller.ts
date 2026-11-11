@@ -1,5 +1,5 @@
 // NodeJS Library
-import { readdirSync } from 'node:fs';
+import { promises as fsPromises } from 'node:fs';
 
 import { Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiBody, ApiExcludeEndpoint, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -60,7 +60,10 @@ export class BerkasController {
             }
           }, HttpStatus.FORBIDDEN);
         }
-        this.sr.deleteTimeout(`${CONSTANTS.timeoutDeleteTempAttachmentKey}@${req.body.attachment_id}`);
+        const timeoutKey = `${CONSTANTS.timeoutDeleteTempAttachmentKey}@${req.body.attachment_id}`;
+        if (this.sr.doesExist('timeout', timeoutKey)) {
+          this.sr.deleteTimeout(timeoutKey);
+        }
         const tempAttachment = await this.tempAttachmentRepo.findOneOrFail({
           where: [
             {
@@ -73,7 +76,7 @@ export class BerkasController {
           relations: ['user_']
         });
         await this.tempAttachmentRepo.remove(tempAttachment);
-        const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
+        const files = await fsPromises.readdir(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name === tempAttachment.name || f.name === `${tempAttachment.name}${tempAttachment.ext ? `.${tempAttachment.ext}` : ''}`);
         if (fIdx >= 0) {
           const attachment = this.attachmentRepo.new();
@@ -643,7 +646,7 @@ export class BerkasController {
             file.r18 = (req.body.r18 === true);
           }
           if ('sn_code' in req.body) {
-            const sn = req.body.sn_code.toUpperCase().replace(/[^A-Z0-9\-]/g,'');
+            const sn = req.body.sn_code.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
             if (!sn) {
               throw new HttpException({
                 info: `🙄 400 - Berkas API :: Gagal Mengubah Berkas ${req.params['id']} 😪`,
@@ -800,7 +803,7 @@ export class BerkasController {
   async deleteById(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<any> {
     try {
       const user: UserModel = res.locals['user'];
-      const berkas =  await this.berkasRepo.findOneOrFail({
+      const berkas = await this.berkasRepo.findOneOrFail({
         where: [
           { id: Equal(req.params['id']) }
         ],

@@ -97,6 +97,7 @@ export class GlobalService {
     this.window = document.defaultView;
     this.isDevMode = isDevMode();
     if (this.isBrowser) {
+      this.forceEnableDebugLog = localStorage.getItem(this.localStorageKeys.DebugLogs) === 'true';
       this.onResize(null);
       this.weatherJS();
     }
@@ -109,9 +110,6 @@ export class GlobalService {
   }
 
   log(message: string, data: any = null, type: string = 'log'): void {
-    if (this.isBrowser) {
-      this.forceEnableDebugLog = localStorage.getItem(this.localStorageKeys.DebugLogs) === 'true';
-    }
     if (this.isDevMode || this.forceEnableDebugLog) {
       let logger = null;
       if (type === 'warn') {

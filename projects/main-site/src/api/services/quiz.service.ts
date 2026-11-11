@@ -58,77 +58,25 @@ export class QuizService {
 
   async getQuizHirakata(): Promise<QuizHirakataModel> {
     try {
-      let hirakatas = await this.manager.query(`
-        DO $$
-          DECLARE
-            random_number DOUBLE PRECISION;
-            select_count BIGINT := ${CONSTANTS.quizOptionsCountHirakata};
-            total_data BIGINT;
-            max_select BIGINT;
-          BEGIN
-            SELECT
-              RANDOM()
-            INTO
-              random_number
-            ;
-            SELECT
-              COUNT(*)
-            INTO
-              total_data
-            FROM
-              hirakata
-            WHERE
-              hiragana IS NOT NULL AND
-              hiragana <> '' AND
-              katakana IS NOT NULL AND
-              katakana <> ''
-            ;
-            max_select := total_data - select_count;
-            DROP TABLE IF EXISTS hirakata_quiz;
-            CREATE TABLE hirakata_quiz AS
-              SELECT
-                romaji,
-                hiragana,
-                katakana,
-                category,
-                segment,
-                created_at,
-                updated_at
-              FROM
-                hirakata
-              WHERE
-                hiragana IS NOT NULL AND
-                hiragana <> '' AND
-                katakana IS NOT NULL AND
-                katakana <> ''
-              OFFSET
-                CASE
-                  WHEN FLOOR(random_number * total_data) >= max_select
-                    THEN max_select
-                  ELSE
-                    FLOOR(random_number * total_data)
-                END
-              LIMIT
-                select_count
-              ;
-        END $$
-      `);
-      hirakatas = await this.manager.query(`
+      const hirakatas = await this.manager.query(`
         SELECT
           romaji,
           hiragana,
           katakana,
           category,
-          segment,
-          created_at,
-          updated_at
+          segment
         FROM
-          hirakata_quiz
+          hirakata
+        WHERE
+          hiragana IS NOT NULL AND
+          hiragana <> '' AND
+          katakana IS NOT NULL AND
+          katakana <> ''
+        ORDER BY
+          RANDOM()
+        LIMIT
+          ${CONSTANTS.quizOptionsCountHirakata}
       `);
-      for (const h of hirakatas) {
-        delete h.created_at;
-        delete h.updated_at;
-      }
       const randomInteger = this.getRandomInt(0, hirakatas.length - 1);
       return {
         randomInteger,
@@ -143,59 +91,7 @@ export class QuizService {
 
   async getQuizCategory(category: string): Promise<QuizCategoryModel> {
     try {
-      let nihongo = await this.manager.query(`
-        DO $$
-          DECLARE
-            random_number DOUBLE PRECISION;
-            select_count BIGINT := ${CONSTANTS.quizOptionsCountCategory};
-            total_data BIGINT;
-            max_select BIGINT;
-          BEGIN
-            SELECT
-              RANDOM()
-            INTO
-              random_number
-            ;
-            SELECT
-              COUNT(*)
-            INTO
-              total_data
-            FROM
-              nihongo
-            WHERE
-              category ILIKE '%${category}%'
-            ;
-            max_select := total_data - select_count;
-            DROP TABLE IF EXISTS nihongo_${category}_quiz;
-            CREATE TABLE nihongo_${category}_quiz AS
-              SELECT
-                id,
-                romaji,
-                kana,
-                meaning,
-                category,
-                audio,
-                image_url,
-                user_id,
-                created_at,
-                updated_at
-              FROM
-                nihongo
-              WHERE
-                category ILIKE '%${category}%'
-              OFFSET
-                CASE
-                  WHEN FLOOR(random_number * total_data) >= max_select
-                  THEN max_select
-                  ELSE
-                  FLOOR(random_number * total_data)
-                END
-              LIMIT 
-                select_count
-              ;
-        END $$
-      `);
-      nihongo = await this.manager.query(`
+      const nihongo = await this.manager.query(`
         SELECT
           id,
           romaji,
@@ -203,17 +99,17 @@ export class QuizService {
           meaning,
           category,
           audio,
-          image_url,
-          user_id,
-          created_at,
-          updated_at
+          image_url
         FROM
-          nihongo_${category}_quiz
-      `);
+          nihongo
+        WHERE
+          category ILIKE $1
+        ORDER BY
+          RANDOM()
+        LIMIT
+          ${CONSTANTS.quizOptionsCountCategory}
+      `, [`%${category}%`]);
       for (const h of nihongo) {
-        delete h.created_at;
-        delete h.updated_at;
-        delete h.user_id;
         if (h.image_url?.startsWith('http') && this.gs.includesOneOf(h.image_url, environment.ipoChanProxyUrl)) {
           h.image_url = `https://crawl.${environment.domain}/?url=${encodeURIComponent(h.image_url)}`;
         }
@@ -232,69 +128,19 @@ export class QuizService {
 
   async getQuizKanji(school = null, jlpt = null): Promise<QuizKanjiModel> {
     try {
-      let sqlQuery = `
-        DO $$
-        DECLARE
-          random_number DOUBLE PRECISION;
-          select_count BIGINT := ${CONSTANTS.quizOptionsCountKanji};
-          total_data BIGINT;
-          max_select BIGINT;
-        BEGIN
-          SELECT RANDOM()
-            INTO random_number;
-          SELECT COUNT(*)
-            INTO total_data
-            FROM kanji
-      `;
+      let sqlQuery = `SELECT * FROM kanji `;
+      const params = [];
       if (school === null && jlpt === null) {
-        sqlQuery += `
-            WHERE translate <> '';
-          max_select := total_data - select_count;
-          DROP TABLE IF EXISTS kanji_all_quiz;
-          CREATE TABLE kanji_all_quiz AS
-            SELECT *
-            FROM kanji
-            WHERE translate <> ''
-        `;
+        sqlQuery += `WHERE translate <> '' `;
       } else if (school !== null) {
-        sqlQuery += `
-            WHERE school::varchar(255) ILIKE '%${school}%';
-          max_select := total_data - select_count;
-          DROP TABLE IF EXISTS kanji_s${school}_quiz;
-          CREATE TABLE kanji_s${school}_quiz AS
-            SELECT *
-            FROM kanji
-            WHERE school::varchar(255) ILIKE '%${school}%'
-        `;
+        sqlQuery += `WHERE school::varchar(255) ILIKE $1 `;
+        params.push(`%${school}%`);
       } else if (jlpt !== null) {
-        sqlQuery += `
-            WHERE jlpt::varchar(255) ILIKE '%${jlpt}%';
-          max_select := total_data - select_count;
-          DROP TABLE IF EXISTS kanji_n${jlpt}_quiz;
-          CREATE TABLE kanji_n${jlpt}_quiz AS
-            SELECT *
-            FROM kanji
-            WHERE jlpt::varchar(255) ILIKE '%${jlpt}%'
-        `;
+        sqlQuery += `WHERE jlpt::varchar(255) ILIKE $1 `;
+        params.push(`%${jlpt}%`);
       }
-      sqlQuery += `
-            OFFSET
-              CASE
-                WHEN FLOOR(random_number * total_data) >= max_select THEN max_select
-                ELSE FLOOR(random_number * total_data)
-              END
-            LIMIT select_count;
-        END $$
-      `;
-      let kanjis = await this.manager.query(sqlQuery);
-      if (school === null && jlpt === null) {
-        sqlQuery = `SELECT * FROM kanji_all_quiz`;
-      } else if (school !== null) {
-        sqlQuery = `SELECT * FROM kanji_s${school}_quiz`;
-      } else if (jlpt !== null) {
-        sqlQuery = `SELECT * FROM kanji_n${jlpt}_quiz`;
-      }
-      kanjis = await this.manager.query(sqlQuery);
+      sqlQuery += `ORDER BY RANDOM() LIMIT ${CONSTANTS.quizOptionsCountKanji}`;
+      const kanjis = await this.manager.query(sqlQuery, params);
       for (const k of kanjis) {
         delete k.created_at;
         delete k.updated_at;

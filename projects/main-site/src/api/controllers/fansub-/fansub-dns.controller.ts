@@ -173,32 +173,50 @@ export class FansubDnsController {
       const dnss = await this.cfs.getDnss(queryName, queryPage, queryRow, querySort, queryOrder);
       if (dnss && dnss.status >= 200 && dnss.status < 400) {
         const records = [];
+        const validRecs = [];
+        const slugConditions = [];
         for (const rec of dnss.results) {
           const fansubSlug = rec.name.split(`.${environment.cloudflare.domain}`)[0].toLowerCase();
           if (CONSTANTS.blacklistedWords.includes(fansubSlug)) {
             continue;
           }
-          try {
-            let fansub = await this.fansubRepo.findOneOrFail({
-              where: [
-                { slug: ILike(fansubSlug) }
-              ]
-            });
-            if (fansub.dns_id !== rec.id) {
-              fansub.dns_id = rec.id;
-              fansub = await this.fansubRepo.save(fansub);
+          rec._fansubSlug = fansubSlug;
+          validRecs.push(rec);
+          slugConditions.push({ slug: ILike(fansubSlug) });
+        }
+        const fansubMap = new Map<string, any>();
+        if (slugConditions.length > 0) {
+          const matchedFansubs = await this.fansubRepo.find({
+            where: slugConditions
+          });
+          for (const f of matchedFansubs) {
+            if (f.slug) {
+              fansubMap.set(f.slug.toLowerCase(), f);
             }
-            delete fansub.urls;
-            delete fansub.tags;
-            delete fansub.view_count;
-            delete fansub.like_count;
-            delete fansub.description;
-            delete fansub.rss_feed;
-            delete fansub.created_at;
-            delete fansub.updated_at;
-            delete fansub.user_;
-            rec.fansub_ = fansub;
-          } catch (e) {
+          }
+        }
+        for (const rec of validRecs) {
+          let fansub = fansubMap.get(rec._fansubSlug) || null;
+          if (fansub) {
+            try {
+              if (fansub.dns_id !== rec.id) {
+                fansub.dns_id = rec.id;
+                fansub = await this.fansubRepo.save(fansub);
+              }
+              delete fansub.urls;
+              delete fansub.tags;
+              delete fansub.view_count;
+              delete fansub.like_count;
+              delete fansub.description;
+              delete fansub.rss_feed;
+              delete fansub.created_at;
+              delete fansub.updated_at;
+              delete fansub.user_;
+              rec.fansub_ = fansub;
+            } catch (e) {
+              rec.fansub_ = null;
+            }
+          } else {
             rec.fansub_ = null;
           }
           let domainIp = '***.***.***.***';
@@ -225,7 +243,7 @@ export class FansubDnsController {
           pages: dnss.pages,
           results: records
         };
-        if (records.length > 0) {
+        if (records.length > 0 && (!user || (user.role !== RoleModel.ADMIN && user.role !== RoleModel.MODERATOR))) {
           this.cm.set(req.originalUrl, { status: dnss.status, body: responseBody }, { ttl: CONSTANTS.externalApiCacheTime });
         }
         return responseBody;

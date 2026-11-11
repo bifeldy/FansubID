@@ -118,12 +118,13 @@ export class FansubCreateComponent implements OnInit, OnDestroy, CanComponentDea
   }
 
   slugValueChanged(): void {
+    this.subsCekFansubSlug?.unsubscribe();
     this.subsCekFansubSlug = this.fg.get('slug').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       tap(() => this.slugInfo = 'Mengecek ...'),
       switchMap(slugQuery => this.fansub.cekSlug({ slug: slugQuery })),
-      retry(-1)
+      retry(3)
     ).subscribe({
       next: res => {
         this.gs.log('[FANSUB_CEK_SLUG_RESULT_SUCCESS]', res);

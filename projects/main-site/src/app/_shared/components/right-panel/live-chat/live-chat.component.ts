@@ -151,6 +151,7 @@ export class LiveChatComponent implements OnInit, AfterViewInit, OnDestroy {
     this.ls.setItem(this.gs.localStorageKeys.LiveChatResults, this.liveChatResult);
     this.subsCurrentRoom?.unsubscribe();
     this.subsGlobalRoom?.unsubscribe();
+    this.subsFansubRoom?.unsubscribe();
     if (this.timedOut) {
       clearTimeout(this.timedOut);
       this.timedOut = null;

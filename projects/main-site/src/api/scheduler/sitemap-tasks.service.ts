@@ -41,7 +41,9 @@ export class SitemapService {
   }
 
   async getNewsUrl(): Promise<void> {
+    this.untrackedUrlsListNews = [];
     const news = await this.newsRepo.find({
+      select: ['id', 'updated_at', 'created_at'],
       order: {
         created_at: 'DESC'
       }
@@ -55,7 +57,9 @@ export class SitemapService {
   }
 
   async getFansubUrl(): Promise<void> {
+    this.untrackedUrlsListFansub = [];
     const fansub = await this.fansubRepo.find({
+      select: ['slug', 'updated_at', 'created_at'],
       order: {
         created_at: 'DESC'
       }
@@ -69,7 +73,9 @@ export class SitemapService {
   }
 
   async getBerkasUrl(): Promise<void> {
+    this.untrackedUrlsListBerkas = [];
     const berkas = await this.berkasRepo.find({
+      select: ['id', 'updated_at', 'created_at', 'private'],
       where: [
         {
           private: false,
@@ -135,6 +141,10 @@ export class SitemapService {
         writeFileSync(`${environment.viewFolder}/sitemap.xml`, xmlString, 'utf8');
       } catch (error) {
         this.gs.log('[CRON_TASK_SITEMAP-ERROR] 🐾', error, 'error');
+      } finally {
+        this.untrackedUrlsListNews = [];
+        this.untrackedUrlsListFansub = [];
+        this.untrackedUrlsListBerkas = [];
       }
       const endTime = new Date();
       const elapsedTime = endTime.getTime() - startTime.getTime();

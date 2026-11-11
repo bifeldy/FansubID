@@ -51,6 +51,21 @@ export class CommentController {
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
+      const komenIds = komens.map(k => k.id);
+      const replyCountMap = new Map<number, number>();
+      if (komenIds.length > 0) {
+        const counts = await this.komentarRepo.instance()
+          .createQueryBuilder('k')
+          .withDeleted()
+          .select('k.parent_komentar_', 'parentId')
+          .addSelect('COUNT(k.id)', 'cnt')
+          .where('k.parent_komentar_ IN (:...ids)', { ids: komenIds })
+          .groupBy('k.parent_komentar_')
+          .getRawMany();
+        for (const row of counts) {
+          replyCountMap.set(Number(row.parentId), Number(row.cnt));
+        }
+      }
       for (const k of komens) {
         if (k.deleted_at) {
           k.comment = '<span class="gradient-text">Komentar Telah Di Hapus ...</span>';
@@ -59,17 +74,7 @@ export class CommentController {
           delete k.user_.created_at;
           delete k.user_.updated_at;
         }
-        (k as any).reply_count = await this.komentarRepo.count({
-          where: [
-            {
-              parent_komentar_: {
-                id: Equal(k.id)
-              }
-            }
-          ],
-          withDeleted: true,
-          relations: ['parent_komentar_']
-        });
+        (k as any).reply_count = replyCountMap.get(k.id) || 0;
       }
       return {
         info: `😅 200 - Komentar API :: List All 🤣`,
@@ -157,6 +162,21 @@ export class CommentController {
         skip: queryPage > 0 ? (queryPage * queryRow - queryRow) : 0,
         take: (queryRow > 0 && queryRow <= 500) ? queryRow : 10
       });
+      const komenIds = komens.map(k => k.id);
+      const replyCountMap = new Map<number, number>();
+      if (komenIds.length > 0) {
+        const counts = await this.komentarRepo.instance()
+          .createQueryBuilder('k')
+          .withDeleted()
+          .select('k.parent_komentar_', 'parentId')
+          .addSelect('COUNT(k.id)', 'cnt')
+          .where('k.parent_komentar_ IN (:...ids)', { ids: komenIds })
+          .groupBy('k.parent_komentar_')
+          .getRawMany();
+        for (const row of counts) {
+          replyCountMap.set(Number(row.parentId), Number(row.cnt));
+        }
+      }
       for (const k of komens) {
         if (k.deleted_at) {
           k.comment = '<span class="gradient-text">Komentar Telah Di Hapus ...</span>';
@@ -165,17 +185,7 @@ export class CommentController {
           delete k.user_.created_at;
           delete k.user_.updated_at;
         }
-        (k as any).reply_count = await this.komentarRepo.count({
-          where: [
-            {
-              parent_komentar_: {
-                id: Equal(k.id)
-              }
-            }
-          ],
-          withDeleted: true,
-          relations: ['parent_komentar_']
-        });
+        (k as any).reply_count = replyCountMap.get(k.id) || 0;
       }
       return {
         info: `😅 200 - Komentar API :: List All 🤣`,

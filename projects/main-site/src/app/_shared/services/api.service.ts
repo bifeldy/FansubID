@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { timeout, retry } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, throwError, timer } from 'rxjs';
 
 import { environment } from '../../../environments/app/environment';
 
@@ -38,7 +38,10 @@ export class ApiService {
     this.prepareOptions(options);
     return this.http.get(this.HTTP_REQ_URL(path), options).pipe(
       timeout(timedOut),
-      retry(retryCount)
+      retry({
+        count: this.gs.isBrowser ? retryCount : 0,
+        delay: (err) => (err?.status >= 400 && err?.status < 500) ? throwError(() => err) : timer(500)
+      })
     );
   }
 
@@ -83,7 +86,10 @@ export class ApiService {
     this.prepareOptions(options);
     return this.http.delete(this.HTTP_REQ_URL(path), options).pipe(
       timeout(timedOut),
-      retry(retryCount)
+      retry({
+        count: this.gs.isBrowser ? retryCount : 0,
+        delay: (err) => (err?.status >= 400 && err?.status < 500) ? throwError(() => err) : timer(500)
+      })
     );
   }
 

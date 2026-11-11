@@ -1,5 +1,5 @@
 // NodeJS Library
-import { readdirSync } from 'node:fs';
+import { promises as fsPromises } from 'node:fs';
 
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Patch, Post, Req, Res } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -123,7 +123,10 @@ export class AttachmentController {
         if (oldDuplicateTempAttachment.length > 0) {
           for (const ota of oldDuplicateTempAttachment) {
             try {
-              this.sr.deleteTimeout(`${CONSTANTS.timeoutDeleteTempAttachmentKey}@${ota.id}`);
+              const oldTimeoutKey = `${CONSTANTS.timeoutDeleteTempAttachmentKey}@${ota.id}`;
+              if (this.sr.doesExist('timeout', oldTimeoutKey)) {
+                this.sr.deleteTimeout(oldTimeoutKey);
+              }
             } catch (e) {
               this.gs.log('[TEMP_ATTACHMENT_DUPLICATED-ERROR] 🚮', e, 'error');
             }
@@ -142,8 +145,9 @@ export class AttachmentController {
           delete resAttachmentSave.user_.created_at;
           delete resAttachmentSave.user_.updated_at;
         }
+        const timeoutKey = `${CONSTANTS.timeoutDeleteTempAttachmentKey}@${resAttachmentSave.id}`;
         this.sr.addTimeout(
-          `${CONSTANTS.timeoutDeleteTempAttachmentKey}@${resAttachmentSave.id}`,
+          timeoutKey,
           setTimeout(async () => {
             try {
               const attachmentToBeDeleted = await this.tempAttachmentRepo.findOneOrFail({
@@ -155,6 +159,10 @@ export class AttachmentController {
               await this.tempAttachmentRepo.remove(attachmentToBeDeleted);
             } catch (e) {
               this.gs.log('[TEMP_ATTACHMENT_DELETE-ERROR] 🚮', e, 'error');
+            } finally {
+              if (this.sr.doesExist('timeout', timeoutKey)) {
+                this.sr.deleteTimeout(timeoutKey);
+              }
             }
           }, CONSTANTS.timeoutDeleteTempAttachmentTime)
         );
@@ -280,7 +288,7 @@ export class AttachmentController {
         );
         res.redirect(301, ddl.toString());
       } else {
-        const files = readdirSync(`${environment.uploadFolder}`, { withFileTypes: true });
+        const files = await fsPromises.readdir(`${environment.uploadFolder}`, { withFileTypes: true });
         const fIdx = files.findIndex(f => f.name === attachment.name || f.name === `${attachment.name}${attachment.ext ? `.${attachment.ext}` : ''}`);
         if (fIdx < 0) {
           throw new Error('Lampiran Tidak Ditemukan!');

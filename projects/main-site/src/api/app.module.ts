@@ -161,6 +161,8 @@ import { TrackService } from './repository/track.service';
 import { UserService } from './repository/user.service';
 import { UserPremiumService } from './repository/user-premium.service';
 
+const chlk = new Chalk({ level: 3 });
+
 @Module({
   imports: [
     AngularUniversalModule.forRoot({
@@ -171,7 +173,7 @@ import { UserPremiumService } from './repository/user-premium.service';
     TypeOrmModule.forFeature(environment.typeorm.entities),
     ThrottlerModule.forRoot({ ttl: 60, limit: 15 }),
     MorganModule,
-    CacheModule.register(),
+    CacheModule.register({ max: 250 }),
     ScheduleModule.forRoot()
   ],
   controllers: [
@@ -250,7 +252,6 @@ import { UserPremiumService } from './repository/user-premium.service';
     {
       provide: APP_INTERCEPTOR,
       useClass: MorganInterceptor((tokens, req, res) => {
-        const chlk = new Chalk({ level: 3 });
         return [
           chlk.yellow(tokens['remote-addr'](req, res)),
           chlk.cyan(new Date(tokens['date'](req, res)).toString()),

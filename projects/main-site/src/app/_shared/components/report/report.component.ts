@@ -239,7 +239,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   setReport(tempReport, refreshReport = false): void {
     this.bs.busy();
-    this.rs.setReport(this.reportTrackType, this.idSlugUsername, { likedislike: tempReport }).subscribe({
+    this.subsSetReport?.unsubscribe();
+    this.subsSetReport = this.rs.setReport(this.reportTrackType, this.idSlugUsername, { likedislike: tempReport }).subscribe({
       next: res => {
         this.gs.log('[LIKE-DISLIKE_SET_REPORT_SUCCESS]', res);
         this.myReport = res.result;
@@ -257,7 +258,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   getReport(): void {
     this.bs.busy();
-    this.rs.getReport(this.reportTrackType, this.idSlugUsername).subscribe({
+    this.subsGetReport?.unsubscribe();
+    this.subsGetReport = this.rs.getReport(this.reportTrackType, this.idSlugUsername).subscribe({
       next: res => {
         this.gs.log('[LIKE-DISLIKE_GET_REPORT_SUCCESS]', res);
         this.doughnutChartKetertarikanLabels = [];

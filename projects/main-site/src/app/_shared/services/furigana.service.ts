@@ -14,8 +14,9 @@ export class FuriganaService {
   enabled = true;
 
   kuroshiro = null;
+  initPromise: Promise<any> = null;
   observer = null;
-  ignoreNodes = [];
+  ignoreNodes = new WeakSet<Node>();
 
   constructor(
     private gs: GlobalService,
@@ -23,14 +24,21 @@ export class FuriganaService {
   ) {
     if (this.gs.isBrowser) {
       this.kuroshiro = new Kuroshiro();
-      this.kuroshiro.init(new KuromojiAnalyzer({
-        dictPath: '/assets/furigana/'
-      }));
     }
   }
 
-  convert(message): any {
+  async ensureInit(): Promise<void> {
+    if (!this.initPromise && this.gs.isBrowser) {
+      this.initPromise = this.kuroshiro.init(new KuromojiAnalyzer({
+        dictPath: '/assets/furigana/'
+      }));
+    }
+    return this.initPromise;
+  }
+
+  async convert(message): Promise<any> {
     this.gs.log('[KUROSHIRO_CONVERT]', message);
+    await this.ensureInit();
     return this.kuroshiro.convert(message, { mode: 'furigana', to: 'hiragana' });
   }
 
@@ -46,18 +54,20 @@ export class FuriganaService {
     if (!this.enabled) return;
     if (this.bs.busyRequestCount > 0) return;
     if (!node.nodeValue.trim()) return;
-    if (node.parentNode.nodeName === 'RUBY') return;
+    if (node.parentNode?.nodeName === 'RUBY') return;
     if (!node.nodeValue.match(/[\u3400-\u9FBF]/)) return;
     const result = await this.convert(node.nodeValue);
-    this.ignoreNodes.push(...this.replace(node, result));
+    for (const newNode of this.replace(node, result)) {
+      this.ignoreNodes.add(newNode);
+    }
   }
 
   watch(mutation): void {
     if (mutation.type === 'childList') {
       for (const node of mutation.addedNodes) {
         this.gs.log('[KUROSHIRO_NODE_WATCHER]', node);
-        if (this.ignoreNodes.includes(node)) {
-          this.ignoreNodes.splice(this.ignoreNodes.indexOf(node), 1);
+        if (this.ignoreNodes.has(node)) {
+          this.ignoreNodes.delete(node);
           continue;
         } else if (node instanceof Text) {
           this.convertAndReplace(node);

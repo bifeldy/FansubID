@@ -158,6 +158,7 @@ export class FansubListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subsFansub?.unsubscribe();
     this.subsAnime?.unsubscribe();
+    this.subsDorama?.unsubscribe();
     this.subsQueryParam?.unsubscribe();
     this.subsInternetPositif?.unsubscribe();
   }
