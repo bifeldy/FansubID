@@ -34,6 +34,7 @@ interface SECRETS_DATA_TYPE {
   LINE_BOT_LOGIN_TOKEN: string;
   MAL_CLIENT_ID: string;
   ID_CLOUD_HOST_API_KEY: string;
+  ID_CLOUD_HOST_VM_UUID: string;
   S3_BUCKET: string;
   S3_ENDPOINT: string;
   S3_ACCESS_KEY_ID: string;
