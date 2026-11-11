@@ -21,7 +21,7 @@ import { BusyService } from '../../../_shared/services/busy.service';
   templateUrl: './dorama-list.component.html',
   styleUrls: ['./dorama-list.component.css'],
   providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]},
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ]
 })
@@ -139,7 +139,10 @@ export class DoramaListComponent implements OnInit, OnDestroy {
         this.doramaCountry = [];
         for (const sD of this.seasonalDorama) {
           sD.mdl_id = sD.id;
-          sD.image_url = sD.cover;
+          sD.image_url = sD.cover || '/assets/img/favicon.png';
+          if (sD.type && !sD.country) {
+            sD.country = sD.type.split(' ')[0];
+          }
           this.doramaCountry.push(sD.country);
         }
         this.doramaCountry = [...new Set<string>(this.doramaCountry)].sort();
