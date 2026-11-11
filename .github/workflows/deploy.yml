@@ -6,20 +6,43 @@ on:
   push:
     branches: [ "master" ]
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: SSH ー RCE
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: |
+      - name: Deploy via Native OpenSSH (Tanpa 3rd-Party Action)
+        env:
+          SSH_HOST: ${{ secrets.HOST }}
+          SSH_PORT: ${{ secrets.PORT }}
+          SSH_USER: ${{ secrets.USERNAME }}
+          SSH_PASSWORD: ${{ secrets.PASSWORD }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          ssh-keyscan -p "${SSH_PORT:-22}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          REMOTE_SCRIPT='
+            set -e
             cd ~/app/fansubid
             git restore .
             git pull
             npm install
             sudo pm2 restart fansubid
+          '
+
+          if [ -n "${SSH_PRIVATE_KEY:-}" ]; then
+            printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_deploy
+            chmod 600 ~/.ssh/id_deploy
+            ssh -i ~/.ssh/id_deploy -p "${SSH_PORT:-22}" -o StrictHostKeyChecking=yes "${SSH_USER}@${SSH_HOST}" "$REMOTE_SCRIPT"
+            rm -f ~/.ssh/id_deploy
+          else
+            sudo apt-get update -qq && sudo apt-get install -y -qq sshpass >/dev/null
+            SSHPASS="$SSH_PASSWORD" sshpass -e ssh -p "${SSH_PORT:-22}" -o StrictHostKeyChecking=yes "${SSH_USER}@${SSH_HOST}" "$REMOTE_SCRIPT"
+          fi
